@@ -21,6 +21,7 @@ class Zone(str, Enum):
     BENCH = "bench"
     DISCARD = "discard"
     PLAYED = "played"
+    ACTIVE = "active"
 
 
 @dataclass(frozen=True)
@@ -34,6 +35,8 @@ class State:
     items_allowed: bool = True
     abilities_allowed: bool = True
     supporters_allowed: bool = True
+    attacks_allowed: bool = True
+    lead_ready: bool = False
 
     def zone(self, card: str) -> str | None:
         return dict(self.locations).get(card)
@@ -176,6 +179,26 @@ def play_gladion(state: State) -> list[Transition]:
     return [("Play Gladion", next_state)]
 
 
+
+def jigglypuff_lead_for_gladion(state: State) -> list[Transition]:
+    """Use Jigglypuff's deterministic Lead attack to prepare Gladion next turn."""
+    if not state.attacks_allowed or not state.lead_ready:
+        return []
+    if (
+        state.zone("Jigglypuff") != Zone.ACTIVE.value
+        or state.zone("Gladion") != Zone.DECK.value
+    ):
+        return []
+
+    next_state = _move(state, "Gladion", Zone.HAND)
+    next_state = replace(
+        next_state,
+        supporter_used=False,
+        turn_index=state.turn_index + 1,
+    )
+    return [("Use Jigglypuff Lead -> Gladion to hand; attack ends turn", next_state)]
+
+
 def advance_supporter_window(state: State) -> list[Transition]:
     return [
         (
@@ -196,6 +219,7 @@ CURRENT_WINDOW_ACTIONS: tuple[Action, ...] = (
     battle_compressor_for_gladion,
     vs_seeker_for_gladion,
     skyla_for_gladion,
+    jigglypuff_lead_for_gladion,
     play_gladion,
 )
 
@@ -223,6 +247,8 @@ def shortest_gladion_line(
 
         for action in actions:
             for label, next_state in action(state):
+                if next_state.turn_index > max_future_windows:
+                    continue
                 if next_state in seen:
                     continue
                 seen.add(next_state)
