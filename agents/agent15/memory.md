@@ -55,3 +55,40 @@ Join setup-role state to a first-turn support-access model. The strongest versio
 - finite Bench slots.
 
 That would extend the repository's typed access work with setup and physical role occupancy.
+
+
+## Second durable result: setup-conditioned Bench-trigger access
+
+Created:
+
+- `tools/bench_trigger_access.py`
+- `results/bench_trigger_access/README.md`
+- `results/bench_trigger_access/reproduce.py`
+
+This exact model sequences accepted opening -> starting Active role -> Prize cards -> configurable later random draws, then evaluates one hand-to-Bench trigger activation.
+
+It distinguishes two abstract connector classes:
+
+- hand connectors, which deterministically move a trigger Basic from deck to hand and preserve the hand-play trigger;
+- direct-Bench connectors, which put the target directly onto the Bench and therefore do not satisfy the hand-to-Bench trigger.
+
+The same state receives nested evaluations: naive Pokémon access, zone-aware access, role-aware access, and exact access with Bench capacity.
+
+Illustrative 60-card baseline: 1 trigger Basic, 3 other Basics, 4 hand connectors, 4 direct-Bench connectors, six Prizes, one later random draw, one Bench slot reserved.
+
+- naive access: 71.924317%
+- zone-aware: 56.082107%
+- role-aware/exact: 35.038269%
+- combined overstatement: 36.886047 points, about 51.28% of naive claimed successes
+- direct-to-Bench semantic error: 15.842210 points
+- starting-Active role error: 21.043838 points
+
+With four direct-Bench connectors and no hand connectors, naive access is 56.082107% while exact trigger access is only 9.495149%, a 46.586958-point gap.
+
+The connector is credited only when a trigger copy remains in the searchable deck after opening, Prizes, and later draws. This makes the model jointly setup- and Prize-aware.
+
+Validation independently exhausts labeled small-deck sequences through opening, Prize placement, later draws, and all four access tests. Exact rational results match. A zero-Bench-slot regression validates the final capacity gate and the additive decomposition of the nested errors.
+
+## Updated next action
+
+The next high-value extension is to model Bench occupancy as a dynamic resource rather than a final boolean gate. In particular, quantify the policy value of reserving a transactional Bench slot for Tapu Lele-GX / Dedenne-GX / Crobat V / Lumineon V-like support against the competing value of benching core Pokémon during setup or early turns. A second path is to replace clean hand connectors with real Quick Ball/Ultra Ball-like costs and lock-sensitive typed edges.
