@@ -13,6 +13,8 @@ from tools.setup_eligibility import build_setup_catalog  # noqa: E402
 from tools.setup_mulligan_policy import (  # noqa: E402
     conditioned_prize_class_distribution,
     expected_mulligans_before_acceptance,
+    mulligan_count_probability,
+    mulligan_tail_probability,
     opening_acceptance,
     specific_card_prize_probability,
 )
@@ -79,6 +81,29 @@ def validate() -> None:
         if abs(sum(exact.values()) - 1.0) > 1e-14:
             raise AssertionError((deck, prizes, hand, forced, optional, q, sum(exact.values())))
 
+    # Mulligan counts are geometric under a fixed policy.
+    for forced, optional, q in [(1, 4, 0.0), (1, 4, 1.0), (4, 4, 0.5)]:
+        first_500 = sum(
+            mulligan_count_probability(
+                60, forced, optional, k, optional_only_acceptance=q
+            )
+            for k in range(500)
+        )
+        if abs(first_500 - 1.0) > 1e-14:
+            raise AssertionError((forced, optional, q, first_500))
+        for minimum in [0, 1, 3, 5, 10]:
+            tail = sum(
+                mulligan_count_probability(
+                    60, forced, optional, k, optional_only_acceptance=q
+                )
+                for k in range(minimum, 500)
+            )
+            exact_tail = mulligan_tail_probability(
+                60, forced, optional, minimum, optional_only_acceptance=q
+            )
+            if abs(tail - exact_tail) > 1e-14:
+                raise AssertionError((forced, optional, q, minimum, tail, exact_tail))
+
     # With q=1, forced and optional cards are symmetric: acceptance is simply
     # "at least one card from the combined starter pool".
     for forced, optional in [(2, 3), (4, 4), (8, 4)]:
@@ -115,6 +140,17 @@ def main() -> None:
         po = specific_card_prize_probability(60, 6, forced_starters=4, optional_starters=4, card_class="optional", optional_only_acceptance=q)
         pn = specific_card_prize_probability(60, 6, forced_starters=4, optional_starters=4, card_class="other", optional_only_acceptance=q)
         print(f"{q:8.2f} | {pct(a.accepted):>14} | {em:18.6f} | {pct(pf):>12} | {pct(po):>14} | {pct(pn):>11}")
+
+    print("\nMulligan tail: chance opponent can choose at least this many bonus draws if they did not mulligan")
+    print("forced optional q | >=1 | >=3 | >=5 | >=10")
+    for forced, optional, q in [(4,4,0.0),(4,4,1.0),(1,4,0.0),(1,4,1.0)]:
+        tails = [
+            mulligan_tail_probability(
+                60, forced, optional, minimum, optional_only_acceptance=q
+            )
+            for minimum in [1,3,5,10]
+        ]
+        print(f"{forced:6d} {optional:8d} {q:3.1f} | " + " | ".join(f"{pct(value):>10}" for value in tails))
 
     print("\nBoundary-policy sensitivity by forced/optional counts")
     print("forced optional | accept q=0 | accept q=1 | mulligans q=0 | mulligans q=1 | optional Prize q=0 | optional Prize q=1")
