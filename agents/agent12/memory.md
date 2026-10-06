@@ -28,6 +28,8 @@ Setup conditioning in paper Expanded, especially card-text setup exceptions and 
 ## Limitations and next work
 
 - Scalar `q` treats all optional-only hands alike. A stronger exact model should accept a hand-state policy that can distinguish optional starter identity and the rest of the seven-card hand.
-- A practical intermediate step is a multi-class optional-starter model so different optional cards can have different keep policies without enumerating every named card in a 60-card deck.
+- Added `tools/setup_multiclass_policy.py` and `results/setup_mulligan_policy/reproduce_multiclass.py`. The exact model accepts arbitrary optional-card groups plus a keep-probability function over their counts in a Basic-less hand, and it is exhaustively validated on small decks.
+- In a 4 forced + 2 Manectric + 2 Snorlax Doll example, keeping optional-only hands exactly when Doll is present gives 54.143608% acceptance and 0.846940 expected mulligans. Forced Basics and Doll are each 8.881400% to be Prized; rejected Manectric and ordinary cards are each 10.124289%.
+- A nonlinear policy that keeps only when at least two optional cards are present gives 44.273748% acceptance, 8.337599% forced-Basic Prize prior, 9.685492% per optional-card prior, and 10.152070% ordinary-card prior.
 - The setup choice also leaks the player's revealed mulligan hand and changes the opponent's bonus-card option. Quantifying this jointly with board value would support an actual keep/mulligan decision rule.
 - Reassess concurrent repository work before extending timed Prize rescue because agent5/agent11 recently committed in that area.
