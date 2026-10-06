@@ -160,3 +160,54 @@ That representation can encode:
 - state-dependent connector availability.
 
 A second useful extension is to add competing target value. When only one connector is available, the model should choose which missing channel receives it according to downstream win probability or line feasibility rather than treating every target as equally urgent.
+
+
+## Multichannel generalization
+
+The two-channel result extends directly to any number of target channels when every shared connector can search any one target and each connector copy has capacity one.
+
+Implementation: `tools/shared_connector_multichannel.py`
+
+Validation: `results/shared_connector_contention/reproduce_multichannel.py`
+
+For a state with target channels indexed by `i`, let `h_i` be the number of copies already accessible in hand and let `d_i` be the number still searchable in the deck. If `c` shared connector copies are accessible, exact joint feasibility requires every channel to exist in hand or deck and:
+
+`c >= number of channels with h_i = 0`
+
+The naive independent-channel calculation asks only whether each missing target could be reached by at least one connector. That allows the same physical connector copy to appear as an out for several channels.
+
+### Three-channel baseline
+
+Use the same 60-card setup as the two-channel baseline, with three target channels, two copies of each target, and no extra random draws.
+
+| Shared connectors | True joint access | Naive joint access | Connector-contention overstatement | Overstatement among naive joint successes |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 0.575181% | 0.575181% | 0.000000% | 0.000000% |
+| 1 | 1.351569% | 11.227080% | 9.875511% | 87.961524% |
+| 2 | 2.427705% | 20.881490% | 18.453785% | 88.373890% |
+| 3 | 3.812661% | 29.614822% | 25.802161% | 87.125835% |
+| 4 | 5.508072% | 37.498991% | 31.990919% | 85.311412% |
+| 5 | 7.508994% | 44.601605% | 37.092611% | 83.164296% |
+| 6 | 9.804720% | 50.986132% | 41.181412% | 80.769830% |
+
+With two shared connectors, the naive graph calls 20.881490% of accepted starts jointly successful. Exact connector capacity supports only 2.427705%. The remaining 18.453785 percentage points are states where the independent reachability calculation reuses physical connector capacity across missing channels.
+
+### Exposure sensitivity for three channels
+
+Keep two shared connectors and two copies of each target.
+
+| Extra random non-Prize draws | True joint access | Naive joint access | Connector-contention overstatement |
+| ---: | ---: | ---: | ---: |
+| 0 | 2.427705% | 20.881490% | 18.453785% |
+| 1 | 3.833613% | 24.074655% | 20.241042% |
+| 2 | 5.591037% | 27.280267% | 21.689230% |
+| 5 | 12.869363% | 36.929641% | 24.060278% |
+| 10 | 30.093903% | 52.650891% | 22.556989% |
+
+The contention term can rise at first as more cards are exposed. Extra exposure raises the probability of seeing a shared connector while several target channels are still missing. With enough exposure, direct target hits increasingly satisfy channels without spending connector capacity.
+
+### Implication for optimization
+
+The size of the error scales sharply with the number of simultaneous needs. This makes raw associativity especially risky for turns that require several independent pieces such as attacker access, evolution access, Energy, a gust effect, and a Prize-recovery line.
+
+A useful general representation is therefore a target-requirement vector plus connector capacities. Search paths should consume finite connector units when the state evaluator tests whether several requirements can be satisfied together.
