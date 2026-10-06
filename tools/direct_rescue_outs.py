@@ -198,21 +198,6 @@ def critical_prized_probability_given_valid_start(
     opening_hand_size: int = 7,
 ) -> float:
     """Return P(any modeled non-starter critical is Prized | valid opening)."""
-    # Direct outs and rescue copies are set to zero because this marginal depends
-    # only on starter membership of the critical cards.
-    probability = 1.0 - first_rescue_access_probability(
-        deck_size,
-        prize_count,
-        starter_cards=starter_cards,
-        critical_nonstarter=critical_nonstarter,
-        rescue_nonstarter=0,
-        direct_out_nonstarter=0,
-        cards_seen=opening_hand_size,
-        opening_hand_size=opening_hand_size,
-        condition_on_critical_prized=False,
-    )
-    # The expression above is not a valid shortcut when no rescue/out cards are
-    # present, because access is always false. Keep this helper explicit below.
     return _critical_prized_probability_direct(
         deck_size,
         prize_count,
