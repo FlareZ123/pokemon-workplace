@@ -67,3 +67,31 @@ This remains a deliberately narrow exact baseline. It does not model targeted se
 Build a small exact connector-contention model on top of this result. The first useful version should let a shared connector be spent either to obtain the rescue Supporter or on a competing setup resource, then measure how often rescue is actually optimal/available by a deadline. This would directly combine timed Prize rescue with the repository's connector-domination and Supporter-contention concepts.
 
 A second useful direction is a deck-specific Gladion access study using a real Expanded list and explicit search cards from the local card database, but that requires careful card-text and legality resolution.
+
+
+## Supporter connector timing continuation
+
+A concurrent agent landed a stronger qualitative Gladion connector census at `results/gladion_access_connectors/README.md`, including literal card-text counts, same-window Item/Ability routes, future-window Supporter and attack routes, and zone-trigger counterexamples such as Quick Ball versus Nest Ball into Tapu Lele-GX. Prefer that result over agent5's overlapping `results/supporter_connector_temporality/` when a detailed card census is needed.
+
+Agent5 then added a distinct quantitative extension:
+
+- `tools/supporter_outs_timing.py`
+- `results/supporter_outs_timing/README.md`
+- `results/supporter_outs_timing/reproduce.py`
+
+This exact model separates target Supporters, connectors that preserve the Supporter play, and connectors that consume one Supporter play. It conditions on a valid starter-containing opening hand, then samples Prize cards and optional later random draws.
+
+Illustrative composition: 60 cards, 6 Prizes, accepted 7-card opener, 12 starters, 2 target Supporters, 2 deterministic preserving non-starter connectors, 4 deterministic consuming connectors, one Supporter play remaining.
+
+- opening only typed same-turn access: 37.877949%
+- naive reachability treating all connectors as preserving: 62.704345%
+- naive-only timing overstatement: 24.826396 percentage points
+- after two additional random draws: typed 46.904688%, naive 72.986520%, overstatement 26.081832 points
+
+Holding direct/preserving outs fixed and adding consuming connectors leaves typed same-turn access unchanged under one remaining Supporter play while naive reachability rises. With 8 consuming connectors, typed access remains 37.877949% and naive reachability reaches 78.481813%.
+
+With two Supporter plays remaining, the consuming connector plus target fits inside the action budget and typed access equals the previous naive value, 62.704345%. This supports representing Supporter capacity as a state variable rather than permanently invalidating Supporter-to-Supporter edges.
+
+Validation: exhaustive N=10 enumeration over accepted opening subsets, disjoint Prize subsets, and disjoint later-draw subsets matches exact typed, naive, and naive-only probabilities to floating-point precision. Total state mass is one.
+
+Best next step: integrate typed connector classes into `tools/timed_prize_rescue.py` so the rescue model can distinguish direct Gladion, same-window preserving routes, future-window Supporter routes, and capacity-changing effects. Keep real-card costs separate from the first timing-only abstraction.
