@@ -15,22 +15,36 @@ Added:
 
 Main findings under a stationary forced-Basic setup policy:
 
-- Mulligan count alone is Bayesian evidence about Basic density. With equal priors on 4-Basic and 12-Basic candidates, observing exactly 3 mulligans then acceptance makes the 4-Basic candidate 93.911786801% likely.
-- A fixed non-Basic diagnostic is slightly more concentrated inside each mulligan as Basic density rises, but full setup-sequence exposure falls sharply because higher-Basic decks mulligan less.
+- Mulligan count alone is Bayesian evidence about Basic density. With equal priors on 4-Basic and 12-Basic candidates, exactly 3 mulligans then acceptance makes the 4-Basic candidate 93.911786801% likely.
 - With 4 forced Basics, a singleton non-Basic diagnostic is exposed at least once before acceptance with probability 15.817220825%.
 - Repeated revealed presence or absence changes posterior beliefs about copy counts.
 - Ordinary forced Basics cannot appear in a revealed mulligan hand; their density is inferred indirectly from mulligan frequency.
 
-Validation is exact. The reproducer exhaustively enumerates a labeled small deck and checks the 60-card formulas.
+Validation is exact through a labeled small-deck exhaustive check and closed-form 60-card assertions.
 
-## Important limitations
+## Completed result: policy-censored setup transcripts
 
-The kernel handles one diagnostic class and assumes forced-Basic acceptance. Optional setup cards and hand-dependent keep choices require integration with `results/setup_mulligan_policy/`.
+Added:
 
-The next high-value extension is a multiclass transcript model that combines:
-- several diagnostic identities;
-- forced and optional starter groups;
-- state-dependent keep policy;
-- Bayesian posterior over candidate archetypes from the entire public setup transcript.
+- `tools/setup_transcript_bayes.py`
+- `results/setup_transcript_bayes/README.md`
+- `results/setup_transcript_bayes/reproduce.py`
 
-After that, connect posterior beliefs to matchup-conditioned DCI/AMR so pre-turn information changes action valuation rather than existing only as a probability report.
+This extends optional-starter setup research into the observer's public transcript.
+
+Example: 60 cards, 4 forced Basics, 2 Manectric, 2 Snorlax Doll, and 4 unrelated diagnostic-X cards.
+
+Key findings:
+
+- Revealed mulligans are selected by keep policy. Accepting every optional-only hand makes Manectric and Snorlax Doll impossible to observe in a rejected hand.
+- Diagnostic X is seen in 42.313703068% of revealed mulligans if every optional-only hand is declined, 43.600178339% under Doll-selective keeping, and 44.964447317% if every optional-only hand is accepted.
+- Despite that per-mulligan enrichment, X's probability of being exposed at least once before setup succeeds falls from 38.876445019% to 26.968245460% to 19.244961978%, because the more permissive policies reveal fewer hands.
+- A revealed one-Manectric rejected hand has zero likelihood under an accept-any-optional policy, so public setup evidence can identify or constrain player policy as well as deck construction.
+
+The reproducer exhaustively validates a small multiclass deck against the closed-form rejected-pattern model.
+
+## Important limitations and next direction
+
+The transcript kernel currently uses tracked-group counts and a stationary keep function. Real setup policies can depend on complete hand identity, turn order, opponent information, and matchup context.
+
+The next high-value step is to value the information itself. Combine candidate matchup posteriors with matchup-dependent actions or lines and measure how much the public setup transcript improves the Bayes-optimal decision. That would connect setup information directly to DCI, AMR, and ALS choice.
