@@ -78,3 +78,34 @@ The typed engine is intentionally a small semantic scaffold, not a full TCG simu
 ## Next highest-value action after typed graph
 
 Add an explicit attack boundary plus a representative attack-based Supporter search, then join the deterministic typed network to the exact timed-access probability model. The combined model should preserve deterministic targeted transitions, stochastic branches, random exposure, and Supporter-window consumption instead of treating all connector cards as equivalent outs.
+
+
+## Clean direct-out combinatorics checkpoint
+
+Added:
+
+- tools/direct_rescue_outs.py
+- results/direct_rescue_outs/README.md
+- results/direct_rescue_outs/reproduce.py
+
+This exact model follows accepted opening -> Prize cards -> later random exposure and conditions on at least one modeled critical non-starter being Prized. It adds O abstract "clean direct outs": non-starter cards already assumed playable before the current Supporter window, each able to search one real Gladion-like rescuer from deck to hand.
+
+Access succeeds when a real rescuer is exposed, or when an out is exposed and a real rescuer remains in the searchable deck. This preserves the distinction between connector and target.
+
+Baseline: 60 cards, 6 Prizes, 7-card accepted opening, 12 starters, 4 critical non-starter singletons, 2 real rescuers, 8 random non-Prize cards seen.
+- P(any critical Prized | valid start) = 35.383108%.
+- 0 clean outs: 24.265475% first-rescue access conditional on a critical Prized.
+- 2 outs: 43.128752%.
+- 4 outs: 57.765545%.
+- 6 outs: 68.998807%.
+- 8 outs: 77.517529%.
+
+Treating outs as literal extra Gladion copies slightly overstates access because an out fails when all true Gladion copies are unavailable to search. At 8 cards seen the overstatement is 0.083261 pp for 1 out, 0.156779 pp for 2, 0.278397 pp for 4, and 0.442446 pp for 8.
+
+The result is deliberately favorable to the connector. Concrete cards such as Secret Box, Computer Search, Call Bell, or Xtransceiver need separate state-specific AMR/cost/timing treatment.
+
+The reproducer has an exhaustive labeled-permutation check on an 8-card regression case and matches the exact combinatorial result.
+
+## Current next step
+
+Integrate typed connector events with the multi-window timed-rescue model. The immediate design target is to preserve physical Gladion topology while letting a connector create a targeted arrival before a Supporter window, with route-specific conditions rather than increasing the Gladion count or cards_seen.
