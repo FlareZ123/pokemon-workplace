@@ -45,17 +45,20 @@ The objective is narrow: recover every modeled critical card that began in the P
 
 ## Isolated optimal policy
 
-Within this restricted objective, the action policy is deterministic.
+The solver treats the rescue decision as a finite-horizon dynamic program.
 
-After the turn's random draw:
+After each random draw it evaluates every relevant legal choice in the abstraction:
 
-1. if a rescue Supporter is already in hand, play one and recover one critical Prize card;
-2. otherwise, if a preserving connector is in hand and a rescuer remains in the deck, search one rescuer and play it immediately;
-3. otherwise, if a consuming connector is in hand and a rescuer remains in the deck, play the connector and put that rescuer into hand for a later turn.
+- take no rescue-related action;
+- play a rescue Supporter already in hand;
+- use one preserving connector to search a rescuer and play it in the same window;
+- use one consuming connector to search a rescuer into hand for a later window.
 
-The preserving search is intentionally just in time. When a rescuer is already available for the current turn, holding the connector preserves option value after future draws. A later draw may supply the next rescuer naturally and make the connector unnecessary. This policy is optimal inside the isolated rescue objective because the connector has no competing modeled use and delaying an unused preserving search cannot reduce the current turn's rescue progress.
+It then selects the action with the highest probability of rescuing every remaining modeled critical Prize before the horizon ends.
 
-Real deck play has competing connector uses, so this isolated optimality claim should not be exported to a full game without an opportunity-cost model.
+The option to wait matters. Even a free preserving connector can sometimes be better held for later information. If a future draw naturally finds a rescuer, the saved connector can then cover a different missing rescue copy. A fixed policy that always searches as soon as possible is therefore slightly suboptimal in some multi-turn states.
+
+The optimization is exact inside the isolated rescue objective. Real play adds competing connector uses and other goals, so this policy should not be exported to a full game without an opportunity-cost model.
 
 ## Illustrative baseline
 
@@ -74,11 +77,11 @@ Condition on at least one modeled critical singleton being initially Prized.
 | Connector package | Rescue by turn 1 | Rescue by turn 2 | Rescue by turn 3 | Rescue by turn 4 |
 | --- | ---: | ---: | ---: | ---: |
 | None | 20.988290% | 23.799232% | 26.377561% | 28.912644% |
-| 2 preserving | 37.309088% | 42.258081% | 46.083579% | 49.706940% |
-| 2 consuming | 20.988290% | 39.478163% | 43.994428% | 47.874305% |
-| 4 preserving | 49.984029% | 56.572661% | 60.820024% | 64.692857% |
-| 4 consuming | 20.988290% | 51.654606% | 57.133550% | 62.052336% |
-| 2 preserving + 2 consuming | 37.309088% | 53.940562% | 59.259539% | 63.373202% |
+| 2 preserving | 37.309088% | 42.258081% | 46.121605% | 49.784411% |
+| 2 consuming | 20.988290% | 39.478163% | 43.994428% | 47.877655% |
+| 4 preserving | 49.984029% | 56.572661% | 60.873648% | 64.797247% |
+| 4 consuming | 20.988290% | 51.654606% | 57.133550% | 62.052351% |
+| 2 preserving + 2 consuming | 37.309088% | 53.940562% | 59.259707% | 63.401261% |
 
 For this setup-conditioned composition,
 
@@ -148,7 +151,7 @@ For the preserved regression case:
 
 The total setup-conditioned state mass is also asserted to be one.
 
-A second labeled-card regression uses a case where eager prefetching is slightly inferior to holding a preserving connector for later information. It verifies the just-in-time policy against exhaustive future draws. A third regression verifies the timing claim: with one rescue turn, adding four consuming connectors leaves the conditional success probability exactly equal to the no-connector baseline.
+A second labeled-card regression uses a case where eager search can be inferior to waiting for later information. It verifies the dynamic optimizer against exhaustive labeled future draws and action choices. A third regression verifies the timing claim: with one rescue turn, adding four consuming connectors leaves the conditional success probability exactly equal to the no-connector baseline.
 
 ## Limitations
 
