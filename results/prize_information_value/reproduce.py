@@ -12,7 +12,9 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from prize_information_value import (  # noqa: E402
     Line,
+    all_lines_blocked_probability,
     evaluate_prize_information,
+    minimal_failure_states,
     prize_state_probabilities,
 )
 
@@ -57,13 +59,12 @@ def _validate_small_population() -> None:
 
 
 def _two_singleton_alternatives() -> None:
-    result = evaluate_prize_information(
-        {"A": 1, "B": 1},
-        [
-            Line("A line", (("A", 1),)),
-            Line("B line", (("B", 1),)),
-        ],
-    )
+    group_sizes = {"A": 1, "B": 1}
+    lines = [
+        Line("A line", (("A", 1),)),
+        Line("B line", (("B", 1),)),
+    ]
+    result = evaluate_prize_information(group_sizes, lines)
 
     fixed = 47 / 53
     adaptive = 1.0 - comb(51, 4) / comb(53, 6)
@@ -71,78 +72,90 @@ def _two_singleton_alternatives() -> None:
     _assert_close(result.k0_value, fixed)
     _assert_close(result.k1_value, adaptive)
     _assert_close(result.information_value, adaptive - fixed)
+    _assert_close(all_lines_blocked_probability(group_sizes, lines), 1.0 - adaptive)
+    assert minimal_failure_states(group_sizes, lines) == [{"A": 1, "B": 1}]
 
     print("Two independent singleton alternatives")
     print(f"  K0 fixed success: {result.k0_value:.9%}")
     print(f"  K1 adaptive success: {result.k1_value:.9%}")
     print(f"  information value: {result.information_value:.9%}")
+    print(f"  minimal cut sets: {minimal_failure_states(group_sizes, lines)}")
     print()
 
 
 def _three_singleton_alternatives() -> None:
-    result = evaluate_prize_information(
-        {"A": 1, "B": 1, "C": 1},
-        [
-            Line("A line", (("A", 1),)),
-            Line("B line", (("B", 1),)),
-            Line("C line", (("C", 1),)),
-        ],
-    )
+    group_sizes = {"A": 1, "B": 1, "C": 1}
+    lines = [
+        Line("A line", (("A", 1),)),
+        Line("B line", (("B", 1),)),
+        Line("C line", (("C", 1),)),
+    ]
+    result = evaluate_prize_information(group_sizes, lines)
 
     fixed = 47 / 53
     adaptive = 1.0 - comb(50, 3) / comb(53, 6)
 
     _assert_close(result.k0_value, fixed)
     _assert_close(result.k1_value, adaptive)
+    _assert_close(all_lines_blocked_probability(group_sizes, lines), 1.0 - adaptive)
+    assert minimal_failure_states(group_sizes, lines) == [{"A": 1, "B": 1, "C": 1}]
 
     print("Three independent singleton alternatives")
     print(f"  K0 fixed success: {result.k0_value:.9%}")
     print(f"  K1 adaptive success: {result.k1_value:.9%}")
     print(f"  information value: {result.information_value:.9%}")
+    print(f"  minimal cut sets: {minimal_failure_states(group_sizes, lines)}")
     print()
 
 
 def _shared_singleton_connector() -> None:
-    result = evaluate_prize_information(
-        {"A": 1, "B": 1, "C": 1},
-        [
-            Line("A via C", (("A", 1), ("C", 1))),
-            Line("B via C", (("B", 1), ("C", 1))),
-        ],
-    )
+    group_sizes = {"A": 1, "B": 1, "C": 1}
+    lines = [
+        Line("A via C", (("A", 1), ("C", 1))),
+        Line("B via C", (("B", 1), ("C", 1))),
+    ]
+    result = evaluate_prize_information(group_sizes, lines)
 
     fixed = comb(51, 6) / comb(53, 6)
     adaptive = (comb(52, 6) - comb(50, 4)) / comb(53, 6)
 
     _assert_close(result.k0_value, fixed)
     _assert_close(result.k1_value, adaptive)
+    _assert_close(all_lines_blocked_probability(group_sizes, lines), 1.0 - adaptive)
+    assert minimal_failure_states(group_sizes, lines) == [
+        {"A": 0, "B": 0, "C": 1},
+        {"A": 1, "B": 1, "C": 0},
+    ]
 
     print("Two alternatives sharing singleton connector C")
     print(f"  K0 fixed success: {result.k0_value:.9%}")
     print(f"  K1 adaptive success: {result.k1_value:.9%}")
     print(f"  information value: {result.information_value:.9%}")
+    print(f"  minimal cut sets: {minimal_failure_states(group_sizes, lines)}")
     print()
 
 
 def _two_copy_alternatives() -> None:
-    result = evaluate_prize_information(
-        {"A": 2, "B": 2},
-        [
-            Line("A line", (("A", 1),)),
-            Line("B line", (("B", 1),)),
-        ],
-    )
+    group_sizes = {"A": 2, "B": 2}
+    lines = [
+        Line("A line", (("A", 1),)),
+        Line("B line", (("B", 1),)),
+    ]
+    result = evaluate_prize_information(group_sizes, lines)
 
     fixed = 1.0 - comb(51, 4) / comb(53, 6)
     adaptive = 1.0 - comb(49, 2) / comb(53, 6)
 
     _assert_close(result.k0_value, fixed)
     _assert_close(result.k1_value, adaptive)
+    _assert_close(all_lines_blocked_probability(group_sizes, lines), 1.0 - adaptive)
+    assert minimal_failure_states(group_sizes, lines) == [{"A": 2, "B": 2}]
 
     print("Two independent two-copy alternatives")
     print(f"  K0 fixed success: {result.k0_value:.9%}")
     print(f"  K1 adaptive success: {result.k1_value:.9%}")
     print(f"  information value: {result.information_value:.9%}")
+    print(f"  minimal cut sets: {minimal_failure_states(group_sizes, lines)}")
     print()
 
 
