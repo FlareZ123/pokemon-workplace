@@ -18,3 +18,5 @@ jobs:
         run: python results/shared_connector_contention/reproduce.py
       - name: Run multichannel exact reproducer
         run: python results/shared_connector_contention/reproduce_multichannel.py
+      - name: Run connector capacity reproducer
+        run: python results/connector_capacity_semantics/reproduce.py
