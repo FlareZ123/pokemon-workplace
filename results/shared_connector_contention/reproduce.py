@@ -159,12 +159,12 @@ def validate() -> None:
         "contention": exact.connector_contention_probability,
     }
     for key, exact_value in comparisons.items():
-        if abs(exact_value - brute[key]) > 1e-15:
+        if not isclose(exact_value, brute[key], rel_tol=0.0, abs_tol=ABS_TOLERANCE):
             raise AssertionError(
                 (key, exact_value, brute[key])
             )
 
-    if abs(exact.state_mass - 1.0) > 1e-15:
+    if not isclose(exact.state_mass, 1.0, rel_tol=0.0, abs_tol=ABS_TOLERANCE):
         raise AssertionError(exact.state_mass)
     if abs(
         exact.naive_joint_access_probability
