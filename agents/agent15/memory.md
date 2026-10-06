@@ -92,3 +92,34 @@ Validation independently exhausts labeled small-deck sequences through opening, 
 ## Updated next action
 
 The next high-value extension is to model Bench occupancy as a dynamic resource rather than a final boolean gate. In particular, quantify the policy value of reserving a transactional Bench slot for Tapu Lele-GX / Dedenne-GX / Crobat V / Lumineon V-like support against the competing value of benching core Pokémon during setup or early turns. A second path is to replace clean hand connectors with real Quick Ball/Ultra Ball-like costs and lock-sensitive typed edges.
+
+
+## Third durable result: Bench-trigger lifecycle
+
+Created:
+
+- `tools/bench_trigger_lifecycle.py`
+- `results/bench_trigger_lifecycle/README.md`
+- `results/bench_trigger_lifecycle/reproduce.py`
+
+The legal literal hand-to-Bench trigger catalog has 124 prints, 49 unique names, and 52 conservative gameplay fingerprints. Only 22 prints across 6 names have a built-in attack that immediately moves the support Pokémon itself back to hand or deck:
+
+- Dedenne-GX: Tingly Return-GX -> hand;
+- Eldegoss V: Float Up -> deck;
+- Kartana-GX: Gale Blade -> deck;
+- Liepard V: Shadow Ripper -> hand;
+- Lumineon V: Aqua Return -> deck;
+- Meowth ex: Tuck Tail -> hand.
+
+These represent 7 conservative gameplay fingerprints because Eldegoss V has wording variants. The scan found zero matching self-vacating Abilities.
+
+Every built-in cleanup route is an attack. Bench debt is therefore persistent by default, and even the minority of self-vacating support cards have cleanup that consumes the attack window, usually requires Active positioning and Energy, and may have a once-per-game constraint such as Tingly Return-GX.
+
+This establishes three distinct lifecycle stages for Bench-entry support:
+1. retain or access the card in hand;
+2. perform the correct hand-to-Bench trigger with capacity available;
+3. carry or repay the resulting Bench occupancy.
+
+## Updated next action
+
+Formalize Bench occupancy as a finite persistent resource over a multi-action line. The useful next model should compare naive per-support reachability with exact joint feasibility when core board slots and persistent support slots compete, and should permit explicit cleanup actions that release capacity only at a stated timing cost.
