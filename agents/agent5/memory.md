@@ -95,3 +95,29 @@ With two Supporter plays remaining, the consuming connector plus target fits ins
 Validation: exhaustive N=10 enumeration over accepted opening subsets, disjoint Prize subsets, and disjoint later-draw subsets matches exact typed, naive, and naive-only probabilities to floating-point precision. Total state mass is one.
 
 Best next step: integrate typed connector classes into `tools/timed_prize_rescue.py` so the rescue model can distinguish direct Gladion, same-window preserving routes, future-window Supporter routes, and capacity-changing effects. Keep real-card costs separate from the first timing-only abstraction.
+
+
+## Turn-by-turn typed Prize rescue
+
+Added:
+
+- `tools/prize_rescue_connector_turns.py`
+- `results/prize_rescue_connector_turns/README.md`
+- `results/prize_rescue_connector_turns/reproduce.py`
+
+This integrates setup-conditioned Prize topology with a turn process. Each rescue turn begins with one random draw and provides one ordinary Supporter play. Idealized one-shot preserving connectors can search a rescue Supporter without consuming that play. Idealized consuming connectors are Supporters that search a rescuer but use the current Supporter window, delaying the fetched rescuer until a later modeled turn.
+
+Baseline: 60 cards, 6 Prizes, valid 7-card opener, 12 starters, 4 non-starter criticals, 2 rescue Supporters. Conditional on any critical being Prized:
+
+- no connectors: rescue all criticals by turns 1/2/3/4 = 20.988290% / 23.799232% / 26.377561% / 28.912644%
+- 2 preserving: 37.309088% / 42.258081% / 46.083579% / 49.706940%
+- 2 consuming: 20.988290% / 39.478163% / 43.994428% / 47.874305%
+- 4 preserving: 49.984029% / 56.572661% / 60.820024% / 64.692857%
+- 4 consuming: 20.988290% / 51.654606% / 57.133550% / 62.052336%
+- 2 preserving + 2 consuming: 37.309088% / 53.940562% / 59.259539% / 63.373202%
+
+The important temporal result is that consuming connectors add exactly zero first-window rescue success under one ordinary Supporter play, while becoming useful from later windows onward. They should therefore be represented as delayed access, not deleted edges and not same-window outs.
+
+Validation uses an independent labeled-card recursion on a small N=10 deck. It exhaustively enumerates accepted opening hands and disjoint Prize sets, then averages over each possible labeled natural draw after search/shuffle transitions. It matches the category-state dynamic program to floating-point precision.
+
+Best continuation: replace one idealized preserving class with concrete connector mechanics. Computer Search is a strong first target because its same-window timing is deterministic while its two-card discard cost links directly to the existing DCI/AMR discard-gate work. Xtransceiver is a complementary stochastic connector target.
