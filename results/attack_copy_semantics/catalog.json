@@ -1,0 +1,365 @@
+{
+  "scope": {
+    "format": "paper Expanded",
+    "expanded_set_count": 108,
+    "legal_prints_scanned": 14836,
+    "copy_detection": "attack text contains the phrase 'as this attack'"
+  },
+  "counts": {
+    "copy_attack_prints": 64,
+    "unique_copy_attack_signatures": 30,
+    "unique_card_names": 30,
+    "source_classes": {
+      "opponent_active_any": 9,
+      "opponent_active_non_gx": 1,
+      "opponent_active_tera": 1,
+      "opponent_any_pokemon": 4,
+      "opponent_chooses_in_play": 1,
+      "opponent_deck_top10": 1,
+      "opponent_hand": 1,
+      "opponent_in_play": 2,
+      "opponent_last_attack": 2,
+      "own_bench_any": 1,
+      "own_bench_fusion_strike": 1,
+      "own_bench_named_n": 1,
+      "own_deck_top_card": 1,
+      "own_discard_dragon": 1,
+      "self_previous_evolution": 3
+    },
+    "signatures_with_direct_non_gx_filter": 3,
+    "signatures_with_structural_same_attack_reentry": 25
+  },
+  "signatures": [
+    {
+      "attack_name": "Apex Dragon",
+      "text": "Choose an attack from a Dragon Pokémon in your discard pile and use it as this attack.",
+      "card_names": ["Regidrago VSTAR"],
+      "print_ids": ["swsh12-136", "swsh12-201"],
+      "source_classes": ["own_discard_dragon"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Assist",
+      "text": "Flip a coin. If heads, choose 1 of your Benched Pokémon's attacks and use it as this attack.",
+      "card_names": ["Liepard"],
+      "print_ids": ["bw7-91"],
+      "source_classes": ["own_bench_any"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Copy Anything",
+      "text": "Choose 1 of your opponent's Pokémon's attacks and use it as this attack. If this Pokémon doesn't have the necessary Energy to use that attack, this attack does nothing.",
+      "card_names": ["Ditto"],
+      "print_ids": ["det1-17"],
+      "source_classes": ["opponent_any_pokemon"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Copycat",
+      "text": "If your opponent's Pokémon used an attack that isn't a GX attack during their last turn, use it as this attack.",
+      "card_names": ["Mimikyu"],
+      "print_ids": ["sm2-58", "sm9-112", "smp-SM99"],
+      "source_classes": ["opponent_last_attack"],
+      "direct_non_gx_filter": true,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Cross Fusion Strike",
+      "text": "Choose 1 of your Benched Fusion Strike Pokémon's attacks and use it as this attack.",
+      "card_names": ["Mew VMAX"],
+      "print_ids": ["me55c-114", "swsh11tg-TG30", "swsh8-114", "swsh8-268", "swsh8-269"],
+      "source_classes": ["own_bench_fusion_strike"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Foul Play",
+      "text": "Choose 1 of the Defending Pokémon's attacks and use it as this attack.",
+      "card_names": ["Zoroark"],
+      "print_ids": ["bw1-71", "bw4-102", "bwp-BW09"],
+      "source_classes": ["opponent_active_any"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Foul Play",
+      "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack.",
+      "card_names": ["Zoroark", "Zoroark BREAK"],
+      "print_ids": ["rsv10pt5-143", "rsv10pt5-62", "xy8-92"],
+      "source_classes": ["opponent_active_any"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Gemstone Mimicry",
+      "text": "Choose 1 of your opponent's Active Tera Pokémon's attacks and use it as this attack.",
+      "card_names": ["Team Rocket's Mimikyu"],
+      "print_ids": ["me2pt5-238", "me2pt5-97", "sv10-87"],
+      "source_classes": ["opponent_active_tera"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": false
+    },
+    {
+      "attack_name": "Genome Hacking",
+      "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack.",
+      "card_names": ["Mew ex"],
+      "print_ids": ["sv3pt5-151", "sv3pt5-193", "sv3pt5-205", "sv4pt5-216", "sv4pt5-232", "svp-53"],
+      "source_classes": ["opponent_active_any"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Haughty Order",
+      "text": "Reveal the top 10 cards of your opponent's deck. You may choose an attack from a Pokémon you find there and use it as this attack. Shuffle the revealed cards into your opponent's deck.",
+      "card_names": ["Team Rocket's Persian ex"],
+      "print_ids": ["sv10-150", "sv10-219"],
+      "source_classes": ["opponent_deck_top10"],
+      "direct_non_gx_filter": false,
+      "optional_selection": true,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Hypnotic Reign",
+      "text": "Your opponent reveals their hand. You may discard a Pokémon you find there and use one of that Pokémon's non-GX attacks as this attack.",
+      "card_names": ["Malamar"],
+      "print_ids": ["sm10-119"],
+      "source_classes": ["opponent_hand"],
+      "direct_non_gx_filter": true,
+      "optional_selection": true,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Imittack",
+      "text": "Choose 1 of the Defending Pokémon's attacks. If this Pokémon has the necessary Energy to use that attack, use it as this attack.",
+      "card_names": ["Kecleon"],
+      "print_ids": ["bw9-94"],
+      "source_classes": ["opponent_active_any"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Max Transform",
+      "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack.",
+      "card_names": ["Ditto VMAX"],
+      "print_ids": ["swsh45-51", "swsh45sv-SV119"],
+      "source_classes": ["opponent_active_any"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Metronome",
+      "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack.",
+      "card_names": ["Clefable", "Clefairy"],
+      "print_ids": ["me2pt5-75", "sv6-79", "xy12-63"],
+      "source_classes": ["opponent_active_any"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Mimed Games",
+      "text": "Your opponent chooses an attack from 1 of their Pokémon in play. Use the chosen attack as this attack.",
+      "card_names": ["Mime Jr."],
+      "print_ids": ["sv4pt5-157", "sv4pt5-31"],
+      "source_classes": ["opponent_chooses_in_play"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Mini-Metronome",
+      "text": "Flip a coin. If heads, choose 1 of your opponent's Active Pokémon's attacks and use it as this attack.",
+      "card_names": ["Clefairy"],
+      "print_ids": ["swsh4-63"],
+      "source_classes": ["opponent_active_any"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Night Joker",
+      "text": "Choose 1 of your Benched N's Pokémon's attacks and use it as this attack.",
+      "card_names": ["N's Zoroark ex"],
+      "print_ids": ["me2pt5-137", "me2pt5-286", "sv9-175", "sv9-185", "sv9-189", "sv9-98"],
+      "source_classes": ["own_bench_named_n"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Nightcap",
+      "text": "You can use this attack only if your opponent has exactly 2 Prize cards remaining. Choose 1 of your opponent's Pokémon's attacks and use it as this attack.",
+      "card_names": ["Nihilego"],
+      "print_ids": ["sm8-106"],
+      "source_classes": ["opponent_any_pokemon"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Nine-Tailed Shapeshifter",
+      "text": "Choose 1 of your opponent's Active Pokémon's attacks and use it as this attack.",
+      "card_names": ["Ninetales V"],
+      "print_ids": ["swsh2-177", "swsh2-26"],
+      "source_classes": ["opponent_active_any"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Pendulum Influence",
+      "text": "Flip a coin. If heads, choose an attack from 1 of your opponent's Pokémon in play and use it as this attack.",
+      "card_names": ["Hypno"],
+      "print_ids": ["sv1-83"],
+      "source_classes": ["opponent_in_play"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Phantom Gate",
+      "text": "Choose 1 of your opponent's Pokémon's attacks and use it as this attack.",
+      "card_names": ["M Gengar-EX"],
+      "print_ids": ["xy4-121", "xy4-35"],
+      "source_classes": ["opponent_any_pokemon"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Recall",
+      "text": "Choose 1 of this Pokémon's attacks from its previous Evolutions and use it as this attack.",
+      "card_names": ["Charizard"],
+      "print_ids": ["g1-RC5"],
+      "source_classes": ["self_previous_evolution"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": false
+    },
+    {
+      "attack_name": "Recall",
+      "text": "Choose an attack from 1 of this Pokémon's previous Evolutions and use it as this attack.",
+      "card_names": ["Empoleon"],
+      "print_ids": ["sm12-56"],
+      "source_classes": ["self_previous_evolution"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": false
+    },
+    {
+      "attack_name": "Secret Attack",
+      "text": "Choose an attack from 1 of this Pokémon's previous Evolutions and use it as this attack.",
+      "card_names": ["Incineroar"],
+      "print_ids": ["swsh12-32"],
+      "source_classes": ["self_previous_evolution"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": false
+    },
+    {
+      "attack_name": "Seek Inspiration",
+      "text": "Discard the top card of your deck, and if that card is a Pokémon that doesn't have a Rule Box, choose 1 of its attacks and use it as this attack. (Pokémon ex, Pokémon V, etc. have Rule Boxes.)",
+      "card_names": ["Slowking"],
+      "print_ids": ["sv7-58"],
+      "source_classes": ["own_deck_top_card"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": false
+    },
+    {
+      "attack_name": "Shadow Imitation",
+      "text": "Choose 1 of your opponent's Active Pokémon's non-GX attacks and use it as this attack.",
+      "card_names": ["Marshadow"],
+      "print_ids": ["sm12-103"],
+      "source_classes": ["opponent_active_non_gx"],
+      "direct_non_gx_filter": true,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Skill Thief",
+      "text": "If you have no cards in your hand, choose an attack from 1 of your opponent's Pokémon in play and use it as this attack.",
+      "card_names": ["Thievul"],
+      "print_ids": ["me5-54", "me5-92"],
+      "source_classes": ["opponent_in_play"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Trickster-GX",
+      "text": "Choose 1 of your opponent's Pokémon's attacks and use it as this attack. (You can't use more than 1 GX attack in a game.)",
+      "card_names": ["Zoroark-GX"],
+      "print_ids": ["sm35-53", "sm35-77", "sm35-77a", "smp-SM84"],
+      "source_classes": ["opponent_any_pokemon"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Try to Imitate",
+      "text": "Flip a coin. If heads, choose 1 of your opponent's Active Pokémon's attacks and use it as this attack.",
+      "card_names": ["Ethan's Sudowoodo"],
+      "print_ids": ["sv10-93"],
+      "source_classes": ["opponent_active_any"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    },
+    {
+      "attack_name": "Watch and Learn",
+      "text": "If your opponent's Pokémon used an attack during his or her last turn, use it as this attack.",
+      "card_names": ["Sudowoodo"],
+      "print_ids": ["xy9-67"],
+      "source_classes": ["opponent_last_attack"],
+      "direct_non_gx_filter": false,
+      "optional_selection": false,
+      "structural_same_attack_reentry": true
+    }
+  ],
+  "notable_chain": {
+    "outer": {
+      "card_id": "smp-SM99",
+      "card_name": "Mimikyu",
+      "attack_name": "Copycat",
+      "text": "If your opponent's Pokémon used an attack that isn't a GX attack during their last turn, use it as this attack."
+    },
+    "middle": {
+      "card_id": "swsh12-136",
+      "card_name": "Regidrago VSTAR",
+      "attack_name": "Apex Dragon",
+      "text": "Choose an attack from a Dragon Pokémon in your discard pile and use it as this attack."
+    },
+    "endpoint": {
+      "card_id": "sm5-100",
+      "card_name": "Dialga-GX",
+      "attack_name": "Timeless-GX",
+      "text": "Take another turn after this one. (Skip the between-turns step.) (You can't use more than 1 GX attack in a game.)"
+    },
+    "text_filter_checks": {
+      "middle_attack_is_non_gx": true,
+      "endpoint_card_is_dragon": true,
+      "middle_has_no_direct_non_gx_filter": true,
+      "all_pass": true
+    }
+  },
+  "interpretation_notes": [
+    "structural_same_attack_reentry is a static hazard flag, not a claim that a practical game state forces an infinite loop.",
+    "source restrictions apply to the immediate selection edge encoded by that attack text; nested copied attacks must be resolved under their own text and current game state.",
+    "energy-cost behavior is not inferred by this catalog; the rulebook and individual copy attack text must be consulted."
+  ]
+}
