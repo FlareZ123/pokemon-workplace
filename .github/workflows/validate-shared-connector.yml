@@ -20,3 +20,5 @@ jobs:
         run: python results/shared_connector_contention/reproduce_multichannel.py
       - name: Run connector capacity reproducer
         run: python results/connector_capacity_semantics/reproduce.py
+      - name: Run connector profile access reproducer
+        run: python results/connector_profile_access/reproduce.py
