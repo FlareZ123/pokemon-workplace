@@ -121,6 +121,7 @@ def bench_entry_rows(card: dict[str, Any]) -> list[dict[str, Any]]:
                 "text": text,
                 "two_prize_rule": prize_rule,
                 "resource_access": bool(RESOURCE_ACCESS_RE.search(text)),
+                "stadium_removal": bool(STADIUM_REMOVAL_RE.search(text)),
             }
         )
     return rows
@@ -177,12 +178,13 @@ def build(resources_root: Path) -> dict[str, Any]:
         capacity_prints, ("name", "effect_type", "cap", "target", "text")
     )
     entry_variants = dedupe(
-        entry_prints, ("name", "ability", "text", "two_prize_rule", "resource_access")
+        entry_prints, ("name", "ability", "text", "two_prize_rule", "resource_access", "stadium_removal")
     )
     cleanup_variants = dedupe(cleanup_prints, ("name", "text"))
 
     resource_access = [row for row in entry_variants if row["resource_access"]]
     two_prize_resource_access = [row for row in resource_access if row["two_prize_rule"]]
+    stadium_removal = [row for row in entry_variants if row["stadium_removal"]]
 
     return {
         "scope": "paper Expanded, Black & White onward, using the repository legality overlay",
@@ -193,11 +195,13 @@ def build(resources_root: Path) -> dict[str, Any]:
             "bench_entry_trigger_text_variants": len(entry_variants),
             "bench_entry_resource_access_text_variants": len(resource_access),
             "bench_entry_two_prize_resource_access_text_variants": len(two_prize_resource_access),
+            "bench_entry_stadium_removal_text_variants": len(stadium_removal),
             "cleanup_trainer_prints": len(cleanup_prints),
             "cleanup_trainer_text_variants": len(cleanup_variants),
         },
         "capacity_effects": capacity_variants,
         "bench_entry_resource_access": resource_access,
+        "bench_entry_stadium_removal": stadium_removal,
         "cleanup_trainers": cleanup_variants,
     }
 
