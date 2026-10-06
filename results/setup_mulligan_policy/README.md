@@ -176,6 +176,26 @@ The low-Basic stress case makes the externality unusually visible. A policy that
 
 This strengthens the case for treating the setup decision as a strategic action. The keep/mulligan policy affects the opening board, Prize priors, and the opponent's possible starting hand size simultaneously.
 
+## Finding 7: optional-starter identity can split the Prize prior again
+
+The scalar `q` model treats all optional setup cards as one class. A player may prefer some optional starters over others. `tools/setup_multiclass_policy.py` generalizes the exact conditioning calculation to any number of optional groups and accepts a policy over the count of each group in a Basic-less hand.
+
+Consider a 60-card deck with four forced Basics, two Manectric, and two Snorlax Doll while going second. Compare three deterministic policies:
+
+| Policy | Opening accepted | Expected failed mulligans | Forced Basic Prized | Manectric Prized | Snorlax Doll Prized | Other card Prized |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| decline every optional-only hand | 39.949963% | 1.503131 | 8.014732% | 10.141805% | 10.141805% | 10.141805% |
+| keep optional-only iff Snorlax Doll is present | 54.143608% | 0.846940 | 8.881400% | 10.124289% | 8.881400% | 10.124289% |
+| keep every optional-only hand | 65.359357% | 0.530003 | 9.299996% | 9.299996% | 9.299996% | 10.107693% |
+
+Under the selective policy, Snorlax Doll has the same accepted-opening Prize prior as a forced Basic, **8.881400%**, because either one can terminate the mulligan sequence. Manectric remains aligned with ordinary cards at **10.124289%** because Manectric-only hands are still rejected.
+
+The model also supports nonlinear policies. If the player accepts an optional-only hand only when at least two optional cards are present, the same 4+2+2 deck accepts **44.273748%** of attempts. Each optional card is Prized with probability **9.685492%**, between the forced-Basic prior of **8.337599%** and ordinary-card prior of **10.152070%**.
+
+This shows that `q` is a useful sensitivity parameter and still loses information when the setup choice depends on card identity or hand composition. Exact K0 priors can require the actual keep rule.
+
+`results/setup_mulligan_policy/reproduce_multiclass.py` checks the generalized formula against exhaustive labeled-hand and Prize enumeration for deterministic, nonlinear, and fractional policies.
+
 ## Validation
 
 The reported probabilities require no Monte Carlo sampling.
