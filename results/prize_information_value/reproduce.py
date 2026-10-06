@@ -4,8 +4,13 @@ from __future__ import annotations
 
 from itertools import combinations
 from math import comb, isclose
+from pathlib import Path
+import sys
 
-from tools.prize_information_value import (
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools"))
+
+from prize_information_value import (  # noqa: E402
     Line,
     evaluate_prize_information,
     prize_state_probabilities,
