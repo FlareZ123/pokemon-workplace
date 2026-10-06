@@ -1,0 +1,24 @@
+name: Validate Bench research
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate Bench capacity geometry
+        run: python results/bench_capacity_geometry/reproduce.py
+      - name: Validate setup Bench policy
+        run: python results/setup_bench_policy/reproduce.py
+      - name: Validate entry payload capacity
+        run: python results/setup_entry_payload_capacity/reproduce.py
+      - name: Validate Bench-aware Quick Ball Lele access
+        run: python results/quick_ball_lele_bench_access/reproduce.py
