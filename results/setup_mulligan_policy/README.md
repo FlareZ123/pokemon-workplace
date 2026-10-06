@@ -196,6 +196,18 @@ This shows that `q` is a useful sensitivity parameter and still loses informatio
 
 `results/setup_mulligan_policy/reproduce_multiclass.py` checks the generalized formula against exhaustive labeled-hand and Prize enumeration for deterministic, nonlinear, and fractional policies.
 
+## Finding 8: under a stationary keep policy, the realized mulligan count does not further change the final Prize prior
+
+The policy changes the accepted-opening Prize distribution, and the number of failed attempts can be large. Once the policy is fixed across attempts, the realized count of earlier mulligans supplies no additional information about the final accepted deck order.
+
+Let each full shuffle produce an independent random deck order `X_i`, and let `A(X_i)` be the event that the policy accepts that opening. If exactly `m` attempts fail before acceptance, the final state comes from `X_{m+1}` conditioned on `A(X_{m+1})`. The preceding rejected orders are independent of `X_{m+1}`. For any final Prize state `S`:
+
+`P(S=s | M=m) = P(S=s | A)`.
+
+This means a player who knows they mulliganed five times should use the same final Prize prior as a player who mulliganed zero times, provided both use the same stationary keep rule and the deck is fully randomized after each rejection.
+
+Two important qualifications remain. The revealed contents of mulligan hands can disclose archetype information to the opponent even though those prior hands do not alter the final Prize distribution. A player who changes their keep rule after repeated mulligans also breaks the stationary-policy assumption, in which case the realized mulligan count can become informative about the final accepted state.
+
 ## Validation
 
 The reported probabilities require no Monte Carlo sampling.
