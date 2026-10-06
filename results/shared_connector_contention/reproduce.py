@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from itertools import combinations
+from math import isclose
 from pathlib import Path
 import sys
 
@@ -10,6 +11,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from shared_connector_contention import shared_connector_contention  # noqa: E402
+
+
+ABS_TOLERANCE = 1e-12
 
 
 def pct(value: float) -> str:
