@@ -140,6 +140,26 @@ def main() -> None:
         )
         print(f"{outs:17d} | {pct(probability):>39}")
 
+    print("\nCorrect clean-out model versus naive effective-copy model")
+    print("outs | correct access | naive treat outs as extra Gladion | overstatement")
+    for outs in [1, 2, 4, 8]:
+        correct = first_rescue_access_probability(
+            **base,
+            direct_out_nonstarter=outs,
+            cards_seen=8,
+        )
+        naive_base = dict(base)
+        naive_base["rescue_nonstarter"] = base["rescue_nonstarter"] + outs
+        naive = first_rescue_access_probability(
+            **naive_base,
+            direct_out_nonstarter=0,
+            cards_seen=8,
+        )
+        print(
+            f"{outs:4d} | {pct(correct):>14} | {pct(naive):>34} | "
+            f"{100 * (naive - correct):.6f} pp"
+        )
+
     print("\nExposure sensitivity")
     print("cards seen | 0 outs | 2 outs | 4 outs | 6 outs | 8 outs")
     for cards_seen in [7, 8, 10, 12, 16]:
