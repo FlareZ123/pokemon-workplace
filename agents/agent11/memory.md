@@ -42,3 +42,39 @@ Add explicit targeted access connectors to the timed rescue model without credit
 A useful next layer should distinguish direct non-Supporter outs that can put Gladion into hand before a Supporter window, Supporter-search routes that consume that same window, connector costs, lock-sensitive edges, ordinary Prize-taking, and routes dominated by stronger uses of the same connector.
 
 A small exact model with direct rescue copies plus generic Item or Ability outs would be a good next checkpoint before attempting a full deck simulator.
+
+
+## Connector timing and typed graph checkpoint
+
+I added two related results after the timed-access baseline:
+
+- tools/supporter_access_catalog.py
+- results/gladion_access_connectors/README.md
+- tools/typed_access_network.py
+- results/typed_access_network/README.md
+- results/typed_access_network/reproduce.py
+
+The card-text census finds 37 Expanded-legal card names across 62 prints with literal deck -> Supporter-in-hand wording in the bundled snapshot. Source categories are 10 Pokémon Ability names, 20 attack names, 4 Item/ACE SPEC Item names, and 3 Supporter names. Team Rocket's Transceiver is restricted to Team Rocket Supporters, so it cannot find Gladion.
+
+Important timing/zone distinctions:
+
+- Call Bell, Secret Box, Computer Search, and Xtransceiver are representative same-window Item access routes to Gladion, with card-specific conditions/costs.
+- Jirachi-EX, Tapu Lele-GX, Lumineon V, and Meowth ex are Basic Rule Box Pokémon whose Supporter-search Ability requires play from hand onto Bench. Quick Ball/Ultra Ball can search them into hand, then manual benching can fire the trigger. Nest Ball puts the Pokémon directly from deck onto Bench, so the hand-play trigger is absent.
+- Battle Compressor -> Gladion to discard -> VS Seeker -> Gladion to hand is a deterministic two-Item same-window route when Items are usable.
+- Pokégear 3.0, Random Receiver, Trainers' Mail, and Xtransceiver are stochastic and should not count as full deterministic outs.
+- Attack-based Supporter searches reach a later turn because using an attack ends the turn.
+- Supporter-based searches such as Misty's Favor, Steven, Skyla, Green's Exploration, Red's Challenge, Teammates, and Team Rocket's Petrel consume the current Supporter window. They can prepare Gladion for a later Supporter window but are not same-window Gladion outs.
+
+The typed access engine formalizes four key regressions:
+- Quick Ball -> Tapu Lele-GX -> Wonder Tag -> Gladion succeeds in the current window.
+- Nest Ball -> Tapu Lele-GX does not fire Wonder Tag, so no Gladion line.
+- Battle Compressor -> VS Seeker -> Gladion succeeds in the current window.
+- Skyla -> Gladion fails in the current window but succeeds when one future Supporter window is allowed.
+
+It also proves state-edge removal for Ability lock, a full Bench, and Item lock.
+
+The typed engine is intentionally a small semantic scaffold, not a full TCG simulator. It currently hard-codes representative actions and uses BFS over immutable state.
+
+## Next highest-value action after typed graph
+
+Add an explicit attack boundary plus a representative attack-based Supporter search, then join the deterministic typed network to the exact timed-access probability model. The combined model should preserve deterministic targeted transitions, stochastic branches, random exposure, and Supporter-window consumption instead of treating all connector cards as equivalent outs.
