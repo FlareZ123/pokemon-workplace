@@ -121,3 +121,36 @@ The important temporal result is that consuming connectors add exactly zero firs
 Validation uses an independent labeled-card recursion on a small N=10 deck. It exhaustively enumerates accepted opening hands and disjoint Prize sets, then averages over each possible labeled natural draw after search/shuffle transitions. It matches the category-state dynamic program to floating-point precision.
 
 Best continuation: replace one idealized preserving class with concrete connector mechanics. Computer Search is a strong first target because its same-window timing is deterministic while its two-card discard cost links directly to the existing DCI/AMR discard-gate work. Xtransceiver is a complementary stochastic connector target.
+
+
+## Corrections and discard-gated turn integration
+
+During extension work, I found that the original `prize_rescue_connector_turns` fixed policy was too eager about preserving connectors. Even a free connector can have option value if held until after later random draws. I corrected the tool to an exact finite-horizon dynamic optimizer over wait, direct rescue, preserving-search rescue, and consuming-search actions. The reproducer now validates the optimized policy against exhaustive labeled future draws and action choices.
+
+The published 2-/4-connector table changed slightly at longer horizons. Correct values include:
+
+- 2 preserving: turns 1/2/3/4 = 37.309088% / 42.258081% / 46.121605% / 49.784411%
+- 4 preserving: 49.984029% / 56.572661% / 60.873648% / 64.797247%
+- 2 preserving + 2 consuming: 37.309088% / 53.940562% / 59.259707% / 63.401261%
+
+Turn-1 and most turn-2 timing conclusions are unchanged. The durable methodological lesson is stronger: connector use should be optimized as a stateful decision, not imposed by an eager-search heuristic.
+
+Added a concrete DCI integration:
+
+- `tools/discard_gated_supporter_access.py`
+- `results/discard_gated_supporter_access/`
+- `tools/prize_rescue_discard_connector.py`
+- `results/prize_rescue_discard_connector/`
+
+The current-window model shows that with 2 target Supporters, 1 connector, 12 protected starters, and 20 disposable non-starters, naive access is 29.837458%. A cost-two gate gives 26.735410% access and a cost-three gate gives 23.525132%. Conditional on the connector route actually being needed, payability is 65.167334% at cost two and 29.119362% at cost three.
+
+The turn optimizer lets later draws change discard payability. Baseline 60 cards, 4 non-starter criticals, 2 rescue Supporters, 1 preserving connector, 12 protected starters, conditioned on any critical Prized:
+
+- ideal cost-zero connector turns 1/2/3/4: 29.653559% / 33.602650% / 36.952742% / 40.187978%
+- 20 disposable, cost two: 27.595597% / 31.986391% / 35.785357% / 39.372988%
+- 20 disposable, cost three: 24.719339% / 29.174533% / 33.306706% / 37.305618%
+- 10 disposable, cost three: 21.678252% / 24.965769% / 28.134006% / 31.376702%
+
+The discard-gated turn solver independently validates against exhaustive labeled openings, Prize sets, future draws, and connector-spending choices.
+
+Best next research: formalize connector domination with at least two competing search targets. Computer Search is the obvious first connector because its any-card search creates a clean allocation decision between Prize rescue and another required channel.
