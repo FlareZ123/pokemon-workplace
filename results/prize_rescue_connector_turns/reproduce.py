@@ -16,67 +16,116 @@ def pct(value: float) -> str:
     return f"{100 * value:.6f}%"
 
 
-def _apply_actions(
+def _action_states(
     cards: list[str],
     critical_remaining: int,
     hand: tuple[int, ...],
     deck: tuple[int, ...],
-) -> tuple[int, tuple[int, ...], tuple[int, ...]]:
-    hand_cards = list(hand)
-    deck_cards = list(deck)
+) -> list[tuple[int, tuple[int, ...], tuple[int, ...]]]:
+    states = [(critical_remaining, hand, deck)]
 
     rescuer = next(
-        (index for index in hand_cards if cards[index] == "R"),
+        (index for index in hand if cards[index] == "R"),
         None,
     )
     if rescuer is not None:
-        hand_cards.remove(rescuer)
-        critical_remaining -= 1
-        return (
-            critical_remaining,
-            tuple(sorted(hand_cards)),
-            tuple(sorted(deck_cards)),
+        next_hand = list(hand)
+        next_hand.remove(rescuer)
+        states.append(
+            (
+                critical_remaining - 1,
+                tuple(sorted(next_hand)),
+                deck,
+            )
         )
 
     preserving = next(
         (
             index
-            for index in hand_cards
+            for index in hand
             if cards[index] in {"PS", "PN"}
         ),
         None,
     )
-    if preserving is not None:
-        rescuer = next(
-            (index for index in deck_cards if cards[index] == "R"),
-            None,
-        )
-        if rescuer is not None:
-            hand_cards.remove(preserving)
-            deck_cards.remove(rescuer)
-            critical_remaining -= 1
-            return (
-                critical_remaining,
-                tuple(sorted(hand_cards)),
-                tuple(sorted(deck_cards)),
-            )
-
-    consuming = next(
-        (index for index in hand_cards if cards[index] == "C"),
+    deck_rescuer = next(
+        (index for index in deck if cards[index] == "R"),
         None,
     )
-    if consuming is not None:
-        rescuer = next(
-            (index for index in deck_cards if cards[index] == "R"),
-            None,
+    if preserving is not None and deck_rescuer is not None:
+        next_hand = list(hand)
+        next_deck = list(deck)
+        next_hand.remove(preserving)
+        next_deck.remove(deck_rescuer)
+        states.append(
+            (
+                critical_remaining - 1,
+                tuple(sorted(next_hand)),
+                tuple(sorted(next_deck)),
+            )
         )
-        if rescuer is not None:
-            hand_cards.remove(consuming)
-            deck_cards.remove(rescuer)
-            hand_cards.append(rescuer)
 
-    return (
-        critical_remaining,
-        tuple(sorted(hand_cards)),
-        tuple(sorted(deck_cards)),
+    consuming = next(
+        (index for index in hand if cards[index] == "C"),
+        None,
     )
+    if consuming is not None and deck_rescuer is not None:
+        next_hand = list(hand)
+        next_deck = list(deck)
+        next_hand.remove(consuming)
+        next_deck.remove(deck_rescuer)
+        next_hand.append(deck_rescuer)
+        states.append(
+            (
+                critical_remaining,
+                tuple(sorted(next_hand)),
+                tuple(sorted(next_deck)),
+            )
+        )
+
+    return states
+
+
+def _labeled_future_success(
+    cards: list[str],
+    turns_remaining: int,
+    critical_remaining: int,
+    hand: tuple[int, ...],
+    deck: tuple[int, ...],
+) -> float:
+    if critical_remaining == 0:
+        return 1.0
+    if turns_remaining == 0 or not deck:
+        return 0.0
+
+    probability = 0.0
+    for drawn in deck:
+        next_deck = list(deck)
+        next_deck.remove(drawn)
+        next_hand = tuple(sorted(hand + (drawn,)))
+
+        best = 0.0
+        for (
+            action_critical,
+            action_hand,
+            action_deck,
+        ) in _action_states(
+            cards,
+            critical_remaining,
+            next_hand,
+            tuple(sorted(next_deck)),
+        ):
+            best = max(
+                best,
+                _labeled_future_success(
+                    cards,
+                    turns_remaining - 1,
+                    action_critical,
+                    action_hand,
+                    action_deck,
+                ),
+            )
+        probability += best
+
+    return probability / len(deck)
+
+
