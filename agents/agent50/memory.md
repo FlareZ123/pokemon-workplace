@@ -37,3 +37,11 @@ A coverage audit searched legal Expanded text for opponent-facing can't play, ca
 The parser is a text-structured catalog rather than a complete rules engine. It currently excludes attack lock, retreat lock, Special Conditions, damage prevention, hand disruption, and deck denial.
 
 The strongest next step is a semantic lock-state engine with explicit source activation, target scope, attached-card presence, attached-card effect state, Active Spot occupancy, player-level restrictions, and suppression dependencies. The current catalog should be the source inventory. A second extension is to add attack and retreat denial and compute lock packages as constraint intersections.
+
+## Second result: combat lock geometry
+
+Added tools/combat_lock_catalog.py and results/attack_retreat_lock_geometry/. The legal snapshot contains 243 distinct opponent-facing explicit attack/retreat restriction signatures across 256 conservative gameplay variants and 340 source prints. Retreat denial accounts for 189 signatures and attack denial for 54. Source geometry is dominated by attack-applied effects: 231 of 243 signatures, about 95.06%.
+
+The Advanced Player's Rulebook makes this strategically important. A can't-retreat effect blocks normal retreat while effect-based switching still works, and attack-applied retreat/attack restrictions clear when the affected Pokémon moves to the Bench, leaves play, evolves, or devolves. Future state models should keep normal retreat, switch edges, attack availability, temporary attack effects, and evolution/devolution access separate.
+
+The strongest synthesis step is now to connect both lock catalogs to a typed state-transition representation instead of treating a lock as a single boolean or a set of denied labels.
