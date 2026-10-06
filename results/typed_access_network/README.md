@@ -84,6 +84,22 @@ Skyla can move Gladion into the hand, while playing Skyla consumes the current S
 
 A reachability graph that ignores action-window consumption would incorrectly label this as current-turn access.
 
+## Attack boundary regression
+
+Jigglypuff (sv3pt5-39) has the deterministic Lead attack:
+
+search the deck for a Supporter card, put it into the hand, then shuffle.
+
+The engine models a ready Active Jigglypuff using Lead to find Gladion. It finds no current-window Gladion play because the attack ends the turn. When one future Supporter window is allowed, the shortest line is:
+
+1. use Lead and put Gladion into the hand;
+2. cross the attack-created turn boundary;
+3. play Gladion in the next modeled Supporter window.
+
+This differs from Skyla in mechanism while producing the same timing consequence. Skyla consumes the Supporter window directly. Lead consumes the remainder of the turn through the attack rule.
+
+If attacks are disabled in the modeled state, the Lead transition disappears.
+
 ## Constraint regressions
 
 The reproducer also verifies three state constraints.
@@ -142,6 +158,8 @@ Expected outcomes:
 | Battle Compressor -> VS Seeker | Current-window Gladion line exists |
 | Skyla | No current-window Gladion line |
 | Skyla with one future window | Future-window Gladion line exists |
+| Jigglypuff Lead | No current-window Gladion line |
+| Jigglypuff Lead with one future window | Future-window Gladion line exists |
 | Quick Ball/Tapu Lele-GX under Ability lock | No Gladion line |
 | Quick Ball/Tapu Lele-GX with full Bench | No Gladion line |
 | Battle Compressor/VS Seeker under Item lock | No Gladion line |
@@ -160,8 +178,6 @@ The implementation also hard-codes a few representative card actions instead of 
 
 Two extensions now have clear value.
 
-First, add an attack boundary and one attack-based Supporter search so the same engine can prove that an attack reaches Gladion only for a later turn.
-
-Second, connect the typed deterministic network to the exact timed-access probability model. The combined model should treat deterministic Items and Abilities as targeted transitions, stochastic Items as probability branches, and generic random draw as the existing cards_seen_by_window process.
+First, connect the typed deterministic network to the exact timed-access probability model. The combined model should treat deterministic Items and Abilities as targeted transitions, stochastic Items as probability branches, and generic random draw as the existing cards_seen_by_window process.
 
 That combination would allow deck-specific Prize-rescue estimates without reducing all access routes to equivalent outs.
