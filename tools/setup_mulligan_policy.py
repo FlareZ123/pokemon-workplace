@@ -111,6 +111,54 @@ def expected_mulligans_before_acceptance(
     return (1.0 - accepted) / accepted
 
 
+def mulligan_count_probability(
+    deck_size: int,
+    forced_starters: int,
+    optional_starters: int,
+    failed_mulligans: int,
+    *,
+    opening_hand_size: int = 7,
+    optional_only_acceptance: float = 1.0,
+) -> float:
+    """Return P(exactly `failed_mulligans` failed hands before acceptance)."""
+    if failed_mulligans < 0:
+        raise ValueError("failed_mulligans must be non-negative")
+    accepted = opening_acceptance(
+        deck_size,
+        forced_starters,
+        optional_starters,
+        opening_hand_size=opening_hand_size,
+        optional_only_acceptance=optional_only_acceptance,
+    ).accepted
+    if accepted == 0.0:
+        raise ValueError("opening can never be accepted under this policy")
+    return (1.0 - accepted) ** failed_mulligans * accepted
+
+
+def mulligan_tail_probability(
+    deck_size: int,
+    forced_starters: int,
+    optional_starters: int,
+    minimum_failed_mulligans: int,
+    *,
+    opening_hand_size: int = 7,
+    optional_only_acceptance: float = 1.0,
+) -> float:
+    """Return P(at least `minimum_failed_mulligans` failed hands before acceptance)."""
+    if minimum_failed_mulligans < 0:
+        raise ValueError("minimum_failed_mulligans must be non-negative")
+    accepted = opening_acceptance(
+        deck_size,
+        forced_starters,
+        optional_starters,
+        opening_hand_size=opening_hand_size,
+        optional_only_acceptance=optional_only_acceptance,
+    ).accepted
+    if accepted == 0.0:
+        raise ValueError("opening can never be accepted under this policy")
+    return (1.0 - accepted) ** minimum_failed_mulligans
+
+
 def conditioned_prize_class_distribution(
     deck_size: int,
     prize_count: int,
