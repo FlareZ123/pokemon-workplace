@@ -46,6 +46,13 @@ def main() -> None:
             "Gladion": "deck",
         }
     )
+    jigglypuff_lead = make_state(
+        {
+            "Jigglypuff": "active",
+            "Gladion": "deck",
+        },
+        lead_ready=True,
+    )
 
     expected_quick = [
         "Quick Ball -> Tapu Lele-GX to hand",
@@ -62,6 +69,10 @@ def main() -> None:
         "Advance to next Supporter window",
         "Play Gladion",
     ]
+    expected_lead_future = [
+        "Use Jigglypuff Lead -> Gladion to hand; attack ends turn",
+        "Play Gladion",
+    ]
 
     assert line_labels(shortest_gladion_line(quick_ball)) == expected_quick
     assert shortest_gladion_line(nest_ball) is None
@@ -70,6 +81,10 @@ def main() -> None:
     assert line_labels(
         shortest_gladion_line(skyla, max_future_windows=1)
     ) == expected_skyla_future
+    assert shortest_gladion_line(jigglypuff_lead) is None
+    assert line_labels(
+        shortest_gladion_line(jigglypuff_lead, max_future_windows=1)
+    ) == expected_lead_future
 
     quick_ability_lock = make_state(
         {
@@ -97,10 +112,19 @@ def main() -> None:
         },
         items_allowed=False,
     )
+    lead_attack_lock = make_state(
+        {
+            "Jigglypuff": "active",
+            "Gladion": "deck",
+        },
+        lead_ready=True,
+        attacks_allowed=False,
+    )
 
     assert shortest_gladion_line(quick_ability_lock) is None
     assert shortest_gladion_line(quick_full_bench) is None
     assert shortest_gladion_line(compressor_item_lock) is None
+    assert shortest_gladion_line(lead_attack_lock, max_future_windows=1) is None
 
     cases = [
         ("Quick Ball -> Tapu Lele-GX", shortest_gladion_line(quick_ball)),
@@ -108,9 +132,12 @@ def main() -> None:
         ("Battle Compressor -> VS Seeker", shortest_gladion_line(compressor_seeker)),
         ("Skyla, current window", shortest_gladion_line(skyla)),
         ("Skyla, one future window", shortest_gladion_line(skyla, max_future_windows=1)),
+        ("Jigglypuff Lead, current window", shortest_gladion_line(jigglypuff_lead)),
+        ("Jigglypuff Lead, one future window", shortest_gladion_line(jigglypuff_lead, max_future_windows=1)),
         ("Quick Ball under Ability lock", shortest_gladion_line(quick_ability_lock)),
         ("Quick Ball with full Bench", shortest_gladion_line(quick_full_bench)),
         ("Compressor/Seeker under Item lock", shortest_gladion_line(compressor_item_lock)),
+        ("Jigglypuff Lead while attacks are disabled", shortest_gladion_line(lead_attack_lock, max_future_windows=1)),
     ]
 
     for name, result in cases:
