@@ -22,3 +22,5 @@ jobs:
         run: python results/connector_capacity_semantics/reproduce.py
       - name: Run connector profile access reproducer
         run: python results/connector_profile_access/reproduce.py
+      - name: Run discard-gated multichannel reproducer
+        run: python results/discard_gated_multichannel_access/reproduce.py
