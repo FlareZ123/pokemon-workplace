@@ -138,6 +138,68 @@ def line_available(line: Line, state: Mapping[str, int], group_sizes: Mapping[st
     )
 
 
+def all_lines_blocked_probability(
+    group_sizes: Mapping[str, int],
+    lines: Sequence[Line],
+    unknown_cards: int = 53,
+    prize_count: int = 6,
+) -> float:
+    """Return the exact probability that the initial Prizes block every line."""
+    _validate_population(group_sizes, unknown_cards, prize_count)
+    _validate_lines(group_sizes, lines)
+
+    return sum(
+        probability
+        for state, probability in prize_state_probabilities(group_sizes, unknown_cards, prize_count)
+        if not any(line_available(line, state, group_sizes) for line in lines)
+    )
+
+
+def minimal_failure_states(
+    group_sizes: Mapping[str, int],
+    lines: Sequence[Line],
+) -> list[dict[str, int]]:
+    """Return componentwise-minimal grouped Prize states that block every line.
+
+    These states are structural cut sets. They do not depend on deck size or
+    Prize count. A returned count says how many copies from that group must be
+    Prized in the minimal blocking state.
+    """
+    if not group_sizes:
+        raise ValueError("group_sizes must contain at least one named group")
+    if any(not name for name in group_sizes):
+        raise ValueError("group names must be non-empty")
+    if any(size < 0 for size in group_sizes.values()):
+        raise ValueError("group sizes must be non-negative")
+    _validate_lines(group_sizes, lines)
+
+    names = tuple(group_sizes)
+    failures: list[dict[str, int]] = []
+
+    for prized_counts in product(*[range(group_sizes[name] + 1) for name in names]):
+        state = dict(zip(names, prized_counts))
+        if any(line_available(line, state, group_sizes) for line in lines):
+            continue
+        failures.append(state)
+
+    minimal: list[dict[str, int]] = []
+    for candidate in failures:
+        dominated = False
+        for other in failures:
+            if other == candidate:
+                continue
+            if all(other[name] <= candidate[name] for name in names) and any(
+                other[name] < candidate[name] for name in names
+            ):
+                dominated = True
+                break
+        if not dominated:
+            minimal.append(candidate)
+
+    minimal.sort(key=lambda state: (sum(state.values()), tuple(state[name] for name in names)))
+    return minimal
+
+
 def evaluate_prize_information(
     group_sizes: Mapping[str, int],
     lines: Sequence[Line],
