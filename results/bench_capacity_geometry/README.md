@@ -41,6 +41,10 @@ The same pass finds 124 legal print records whose Ability text triggers when tha
 
 The resource-access classifier is a discovery heuristic. It is not a complete semantic parser, so the count should be interpreted as a reproducible lower-resolution catalog rather than a definitive taxonomy of every strategically useful Bench trigger.
 
+A separate exact-text flag finds two current legal hand-to-Bench Stadium-removal variants: Pumpkaboo with Pumpkin Pit and Chien-Pao with Snow Sink. Each needs an open Bench slot in order to enter. If that entry Ability removes an eight-slot Stadium and the resulting board exceeds the normal five-slot capacity, the newly played remover is already a Benched Pokémon and can be among the Pokémon the player discards during the contraction. This gives the remover a transient slot requirement with potentially zero residual Bench debt.
+
+For example, with Sky Field active and five Pokémon already Benched, playing Pumpkaboo raises occupancy to six. Pumpkin Pit can discard Sky Field, after which the player must shrink to five. The spent Pumpkaboo can be the discarded occupant. With seven Pokémon already Benched, the same line temporarily reaches eight and then contracts to five, allowing Pumpkaboo plus two pre-existing occupants to be discarded. With eight Pokémon already Benched, the line is unavailable because Pumpkaboo cannot be played onto a full Bench.
+
 The Trainer cleanup scan finds AZ, Acerola, Cassius, Giovanni's Exile, Professor Turo's Scenario, Scoop Up Cyclone, Super Scoop Up, and Volo among the current legal candidates captured by its patterns. Scoop Up Net is excluded because the legality layer marks its Expanded prints banned. Several cleanup lines consume the Supporter window, have targeting restrictions, use the ACE SPEC slot, or depend on a coin flip.
 
 ## Mathematical model
@@ -100,6 +104,8 @@ This yields an important strategic consequence: a Bench restriction can clean up
 
 The same logic makes the loss of an eight-slot expansion dangerous when the expanded Bench contains several live pieces. A board at eight that contracts to five must discard three occupants, so three stale occupants are required to absorb the contraction without discarding a live piece in this simplified model.
 
+A replacement Stadium can make the contraction deeper. If a full eight-slot Sky Field or Area Zero Underdepths board loses its expansion, occupancy first falls to five. A newly active three-slot restriction then forces two additional discards, for five total. A four-slot restriction produces four total discards. The affected player still chooses which occupants to lose, so the relevant disruption measure is the number of forced discards that remain after stale occupants absorb the contraction.
+
 ## Relationship to existing typed-access work
 
 `tools/typed_access_network.py` already models a static `bench_count` and `bench_limit` and correctly removes the Tapu Lele-GX connector line when the Bench is full. The present result identifies two extensions needed for broader simulations:
@@ -119,7 +125,10 @@ This connects Bench geometry to Active Move Realism and connector domination. A 
 - expansions and restrictions combine to the smaller applicable cap;
 - a `(+1, +1, -1)` line from occupancy four fails at capacity five despite ending at five;
 - the same line succeeds at capacity eight;
-- forced contraction selects the lowest modeled continuation-value occupants first.
+- forced contraction selects the lowest modeled continuation-value occupants first;
+- Pumpkaboo and Chien-Pao are detected as hand-to-Bench Stadium removers;
+- a transient remover can erase its own residual Bench debt after an eight-slot effect drops to five, while a completely full eight-slot Bench blocks the entry action;
+- an eight-to-five contraction followed by a three-slot restriction produces five total forced discards.
 
 The mathematical functions are deterministic. The card catalog is deterministic for a fixed bundled database and legality overlay.
 
