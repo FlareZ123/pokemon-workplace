@@ -8,7 +8,15 @@ TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from bench_capacity_model import Occupant, effective_capacity, optimal_forced_discard, route_trace
+from bench_capacity_model import (
+    Occupant,
+    contraction_impact,
+    contraction_path,
+    effective_capacity,
+    entry_then_capacity_drop,
+    optimal_forced_discard,
+    route_trace,
+)
 from bench_resource_catalog import build
 
 
@@ -33,6 +41,9 @@ def main() -> None:
     access_names = {row["name"] for row in catalog["bench_entry_resource_access"]}
     assert {"Tapu Lele-GX", "Dedenne-GX", "Crobat V", "Jirachi-EX", "Lumineon V"} <= access_names
 
+    stadium_removal_names = {row["name"] for row in catalog["bench_entry_stadium_removal"]}
+    assert {"Pumpkaboo", "Chien-Pao"} <= stadium_removal_names
+
     cleanup_names = {row["name"] for row in catalog["cleanup_trainers"]}
     assert "Scoop Up Net" not in cleanup_names
     assert {"AZ", "Scoop Up Cyclone", "Super Scoop Up", "Giovanni's Exile"} <= cleanup_names
@@ -50,6 +61,20 @@ def main() -> None:
 
     expanded_line = route_trace(4, 8, (1, 1, -1))
     assert expanded_line["feasible"] is True
+
+    transient = entry_then_capacity_drop(5, 8, 5)
+    assert transient["entry_legal"] is True
+    assert transient["transient_entry_can_be_discarded"] is True
+    assert transient["final_occupancy"] == 5
+    assert entry_then_capacity_drop(8, 8, 5)["entry_legal"] is False
+
+    stale_buffer = contraction_impact(5, 4, 1)
+    assert stale_buffer["live_removed_after_stale_buffer"] == 0
+    assert contraction_impact(8, 3, 3)["live_removed_after_stale_buffer"] == 2
+
+    parallel_replacement = contraction_path(8, (5, 3))
+    assert parallel_replacement["total_discards"] == 5
+    assert parallel_replacement["occupancy_after"] == 3
 
     board = (
         Occupant("spent two-Prize search support", -2.0),
