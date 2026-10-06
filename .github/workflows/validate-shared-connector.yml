@@ -26,3 +26,5 @@ jobs:
         run: python results/discard_gated_multichannel_access/reproduce.py
       - name: Run shared resource connector reproducer
         run: python results/resource_constrained_connectors/reproduce.py
+      - name: Run multi-output search catalog reproducer
+        run: python results/multi_output_search_catalog/reproduce.py
