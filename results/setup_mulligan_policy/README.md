@@ -20,7 +20,7 @@ A third class is ordinary non-starters. One Basic Pokémon in the current Expand
 Implementation:
 
 - `tools/setup_eligibility.py` catalogs the setup exceptions from the bundled Expanded card pool;
-- `tools/setup_mulligan_policy.py` computes exact opening acceptance, expected mulligans, and accepted-opening-conditioned Prize distributions under an optional-starter keep policy;
+- `tools/setup_mulligan_policy.py` computes exact opening acceptance, the geometric mulligan distribution, expected mulligans, and accepted-opening-conditioned Prize distributions under an optional-starter keep policy;
 - `results/setup_mulligan_policy/reproduce.py` reproduces the findings and exhaustively validates small-deck cases.
 
 ## Rules and card-text basis
@@ -152,6 +152,29 @@ Accepting an optional-only hand does more than choose an Active Pokémon. It als
 In the four-forced, four-optional example, always declining optional-only hands produces **1.503** expected failed openings. Always accepting them produces **0.530**. Under the ordinary setup procedure, an opponent who did not mulligan can choose to draw up to the number of the player's mulligans after Prize cards are set.
 
 A setup decision can therefore trade board quality against information and extra cards granted to the opponent. Any future policy optimizer should value the opening board and the mulligan externality together.
+
+## Finding 6: the mulligan tail can be strategically large
+
+Under a fixed policy, repeated opening attempts are independent after each reshuffle and the accepted-hand probability is `A`. The number `M` of failed openings before acceptance is geometric:
+
+`P(M = k) = (1-A)^k A`,
+
+so the exact tail is
+
+`P(M >= k) = (1-A)^k`.
+
+If the opponent did not mulligan and chooses the maximum permitted bonus draw, `P(M >= k)` is also the probability that the player gives the opponent the option to draw at least `k` extra cards.
+
+| Forced Basics | Optional setup cards | Policy | At least 1 mulligan | At least 3 | At least 5 | At least 10 |
+| ---: | ---: | --- | ---: | ---: | ---: | ---: |
+| 4 | 4 | always decline optional-only | 60.050037% | 21.654085% | 7.808478% | 0.609723% |
+| 4 | 4 | always accept optional-only | 34.640643% | 4.156788% | 0.498804% | 0.002488% |
+| 1 | 4 | always decline optional-only | 88.333333% | 68.924537% | 53.780285% | 28.923190% |
+| 1 | 4 | always accept optional-only | 52.543783% | 14.506546% | 4.005038% | 0.160403% |
+
+The low-Basic stress case makes the externality unusually visible. A policy that chases the sole forced Basic gives the opponent a **53.78%** chance to have at least five optional bonus draws available. Accepting optional-only hands reduces that tail to **4.01%**.
+
+This strengthens the case for treating the setup decision as a strategic action. The keep/mulligan policy affects the opening board, Prize priors, and the opponent's possible starting hand size simultaneously.
 
 ## Validation
 
