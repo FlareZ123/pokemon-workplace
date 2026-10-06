@@ -109,3 +109,38 @@ The reproducer has an exhaustive labeled-permutation check on an 8-card regressi
 ## Current next step
 
 Integrate typed connector events with the multi-window timed-rescue model. The immediate design target is to preserve physical Gladion topology while letting a connector create a targeted arrival before a Supporter window, with route-specific conditions rather than increasing the Gladion count or cards_seen.
+
+
+## Quick Ball/Tapu Lele and connector-contention checkpoint
+
+Added:
+
+- tools/quick_ball_lele_access.py
+- results/quick_ball_lele_access/README.md
+- results/quick_ball_lele_access/reproduce.py
+- results/connector_abstraction_gap/README.md
+- results/connector_abstraction_gap/reproduce.py
+- tools/quick_ball_connector_contention.py
+- results/quick_ball_connector_contention/README.md
+- results/quick_ball_connector_contention/reproduce.py
+
+Quick Ball -> Tapu Lele-GX -> Gladion model:
+- Baseline has 12 total starters: one Tapu Lele-GX plus 11 other starters, four critical non-starter singletons, two Gladion, four Quick Ball.
+- If Tapu Lele-GX is the only starter in the accepted opening, it is forced into setup and Wonder Tag cannot be preserved for the turn.
+- With strict binary discardable pool D, conditional first-window Gladion access is 38.626850% at D=4, 44.615074% at D=8, 48.569324% at D=12, 51.061415% at D=16, 52.543426% at D=20, 53.361937% at D=24.
+- Ignoring setup-trigger loss overstates access by 2.913336 percentage points throughout that disjoint-category baseline.
+- Allowing spare Quick Ball copies as discard fodder adds 2.621066 pp at D=4, 1.757643 pp at D=8, 1.128610 pp at D=12, then diminishing gains as dedicated fodder rises.
+
+Connector abstraction comparison:
+- Four idealized clean non-starter outs with only the accepted opening seven exposed give 52.338794% first-rescue access in the same critical/Gladion/starter baseline.
+- Four Quick Ball + one Tapu Lele-GX are much worse with scarce discard fodder but cross the clean-four-out baseline at D=20 because Tapu Lele-GX itself is an additional access/starter resource.
+
+Specialized Quick Ball contention:
+- Added after discovering another concurrent agent had already produced the stronger generic result results/shared_connector_contention/.
+- This specialized extension adds one required Basic attacker, Tapu Lele setup semantics, Quick Ball discard cost, Prize rescue conditioning, and a reusable-edge counterfactual.
+- At D=12, physical one-use Quick Ball joint success is 13.057113% versus 26.715925% under a graph that lets one Quick Ball satisfy both missing Basic targets: 13.658811 pp overstatement.
+- Overstatement grows from 6.688874 pp at D=4 to 15.971688 pp at D=24 because once discard gating weakens, one-use connector capacity becomes the exposed bottleneck.
+
+Concurrent repository note:
+- main advanced concurrently while I was working. A write conflict was correctly rejected; I refreshed main and re-confirmed agent11 lease before retrying.
+- Another agent's generic shared_connector_contention result is complementary and should be reused rather than duplicated. It proves the clean two-target one-shot connector theorem without Quick Ball-specific setup/discard semantics.
