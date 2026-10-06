@@ -1,0 +1,152 @@
+{
+  "scope": "stationary forced-Basic setup policy; 60-card deck and 7-card opening unless overridden",
+  "density_examples": [
+    {
+      "name": "4 Basics / 4 diagnostic",
+      "deck_size": 60,
+      "hand_size": 7,
+      "forced_basics": 4,
+      "diagnostic_cards": 4,
+      "mulligan_probability": 0.6005003742553344,
+      "expected_failed_mulligans": 1.503131256095683,
+      "diagnostic_seen_given_mulligan": 0.4231370306842005,
+      "ever_diagnostic_before_acceptance": 0.3887644501857918
+    },
+    {
+      "name": "8 Basics / 4 diagnostic",
+      "deck_size": 60,
+      "hand_size": 7,
+      "forced_basics": 8,
+      "diagnostic_cards": 4,
+      "mulligan_probability": 0.3464064289681811,
+      "expected_failed_mulligans": 0.5300028095767744,
+      "diagnostic_seen_given_mulligan": 0.4496444731738849,
+      "ever_diagnostic_before_acceptance": 0.19244961978239736
+    },
+    {
+      "name": "12 Basics / 4 diagnostic",
+      "deck_size": 60,
+      "hand_size": 7,
+      "forced_basics": 12,
+      "diagnostic_cards": 4,
+      "mulligan_probability": 0.1906466927107365,
+      "expected_failed_mulligans": 0.23555435060772445,
+      "diagnostic_seen_given_mulligan": 0.47954568814883336,
+      "ever_diagnostic_before_acceptance": 0.10149436388352479
+    },
+    {
+      "name": "1 Basic / 4 diagnostic",
+      "deck_size": 60,
+      "hand_size": 7,
+      "forced_basics": 1,
+      "diagnostic_cards": 4,
+      "mulligan_probability": 0.8833333333333333,
+      "expected_failed_mulligans": 7.571428571428569,
+      "diagnostic_seen_given_mulligan": 0.4051647236149989,
+      "ever_diagnostic_before_acceptance": 0.7541593632599706
+    }
+  ],
+  "mulligan_count_bayes_equal_prior": {
+    "candidates": [
+      {
+        "name": "4-Basic candidate",
+        "deck_size": 60,
+        "hand_size": 7,
+        "forced_basics": 4,
+        "diagnostic_cards": 4,
+        "mulligan_probability": 0.6005003742553344,
+        "expected_failed_mulligans": 1.503131256095683,
+        "diagnostic_seen_given_mulligan": 0.4231370306842005,
+        "ever_diagnostic_before_acceptance": 0.3887644501857918
+      },
+      {
+        "name": "12-Basic candidate",
+        "deck_size": 60,
+        "hand_size": 7,
+        "forced_basics": 12,
+        "diagnostic_cards": 4,
+        "mulligan_probability": 0.1906466927107365,
+        "expected_failed_mulligans": 0.23555435060772445,
+        "diagnostic_seen_given_mulligan": 0.47954568814883336,
+        "ever_diagnostic_before_acceptance": 0.10149436388352479
+      }
+    ],
+    "posterior_by_exact_failed_mulligans": {
+      "0": {
+        "4-Basic candidate": 0.33047826979417416,
+        "12-Basic candidate": 0.6695217302058258
+      },
+      "1": {
+        "4-Basic candidate": 0.6085731846317793,
+        "12-Basic candidate": 0.39142681536822066
+      },
+      "2": {
+        "4-Basic candidate": 0.8304274821603669,
+        "12-Basic candidate": 0.16957251783963312
+      },
+      "3": {
+        "4-Basic candidate": 0.939117868005863,
+        "12-Basic candidate": 0.0608821319941369
+      },
+      "5": {
+        "4-Basic candidate": 0.9935080803082637,
+        "12-Basic candidate": 0.006491919691736338
+      }
+    }
+  },
+  "revealed_content_bayes_equal_prior": {
+    "candidates": [
+      {
+        "name": "4-copy diagnostic",
+        "deck_size": 60,
+        "hand_size": 7,
+        "forced_basics": 4,
+        "diagnostic_cards": 4,
+        "mulligan_probability": 0.6005003742553344,
+        "expected_failed_mulligans": 1.503131256095683,
+        "diagnostic_seen_given_mulligan": 0.4231370306842005,
+        "ever_diagnostic_before_acceptance": 0.3887644501857918
+      },
+      {
+        "name": "2-copy diagnostic",
+        "deck_size": 60,
+        "hand_size": 7,
+        "forced_basics": 4,
+        "diagnostic_cards": 2,
+        "mulligan_probability": 0.6005003742553344,
+        "expected_failed_mulligans": 1.503131256095683,
+        "diagnostic_seen_given_mulligan": 0.23636363636363633,
+        "ever_diagnostic_before_acceptance": 0.2621481240455814
+      }
+    ],
+    "posterior_by_sequence": {
+      "one_mulligan_one_copy_then_accept": {
+        "4-copy diagnostic": 0.611879576891782,
+        "2-copy diagnostic": 0.3881204231082181
+      },
+      "two_mulligans_one_copy_each_then_accept": {
+        "4-copy diagnostic": 0.7130901236140237,
+        "2-copy diagnostic": 0.2869098763859763
+      },
+      "one_mulligan_two_copies_then_accept": {
+        "4-copy diagnostic": 0.8313891834570519,
+        "2-copy diagnostic": 0.16861081654294804
+      },
+      "two_mulligans_zero_copies_then_accept": {
+        "4-copy diagnostic": 0.36332214249692657,
+        "2-copy diagnostic": 0.6366778575030735
+      }
+    }
+  },
+  "singleton_example": {
+    "name": "4 Basics / singleton diagnostic",
+    "deck_size": 60,
+    "hand_size": 7,
+    "forced_basics": 4,
+    "diagnostic_cards": 1,
+    "mulligan_probability": 0.6005003742553344,
+    "expected_failed_mulligans": 1.503131256095683,
+    "diagnostic_seen_given_mulligan": 0.125,
+    "ever_diagnostic_before_acceptance": 0.15817220825309716
+  }
+}
