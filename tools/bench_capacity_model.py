@@ -50,6 +50,77 @@ def route_trace(start_occupancy: int, capacity: int, deltas: tuple[int, ...]) ->
     }
 
 
+def entry_then_capacity_drop(
+    start_occupancy: int, capacity_before: int, capacity_after: int
+) -> dict[str, Any]:
+    if start_occupancy >= capacity_before:
+        return {
+            "start_occupancy": start_occupancy,
+            "capacity_before": capacity_before,
+            "capacity_after": capacity_after,
+            "entry_legal": False,
+            "reason": "no Bench slack for the entry action",
+        }
+
+    occupancy_after_entry = start_occupancy + 1
+    forced_discards = max(0, occupancy_after_entry - capacity_after)
+    transient_entry_can_be_discarded = forced_discards > 0
+    preexisting_discards_if_entry_is_chosen = max(
+        0, forced_discards - int(transient_entry_can_be_discarded)
+    )
+    return {
+        "start_occupancy": start_occupancy,
+        "capacity_before": capacity_before,
+        "capacity_after": capacity_after,
+        "entry_legal": True,
+        "occupancy_after_entry": occupancy_after_entry,
+        "peak_occupancy": occupancy_after_entry,
+        "forced_discards": forced_discards,
+        "transient_entry_can_be_discarded": transient_entry_can_be_discarded,
+        "preexisting_discards_if_entry_is_chosen": preexisting_discards_if_entry_is_chosen,
+        "final_occupancy": min(occupancy_after_entry, capacity_after),
+    }
+
+
+def contraction_impact(occupancy: int, new_capacity: int, stale_occupants: int) -> dict[str, int]:
+    forced_discards = max(0, occupancy - new_capacity)
+    stale_available = min(max(0, stale_occupants), occupancy)
+    stale_removed = min(forced_discards, stale_available)
+    live_removed = forced_discards - stale_removed
+    return {
+        "occupancy_before": occupancy,
+        "capacity_after": new_capacity,
+        "forced_discards": forced_discards,
+        "stale_occupants_before": stale_available,
+        "stale_removed": stale_removed,
+        "live_removed_after_stale_buffer": live_removed,
+    }
+
+
+def contraction_path(occupancy: int, capacities: tuple[int, ...]) -> dict[str, Any]:
+    current = occupancy
+    total_discards = 0
+    steps = []
+    for capacity in capacities:
+        discarded = max(0, current - capacity)
+        current -= discarded
+        total_discards += discarded
+        steps.append(
+            {
+                "capacity": capacity,
+                "discarded": discarded,
+                "occupancy_after": current,
+            }
+        )
+    return {
+        "occupancy_before": occupancy,
+        "capacity_path": list(capacities),
+        "steps": steps,
+        "total_discards": total_discards,
+        "occupancy_after": current,
+    }
+
+
 def optimal_forced_discard(occupants: tuple[Occupant, ...], new_capacity: int) -> dict[str, Any]:
     discard_count = max(0, len(occupants) - new_capacity)
     ordered = sorted(occupants, key=lambda occupant: (occupant.continuation_value, occupant.name))
@@ -108,14 +179,34 @@ def build_examples() -> dict[str, Any]:
 
     stale_absorption = []
     for occupancy, new_capacity in ((5, 4), (5, 3), (8, 5), (8, 4), (8, 3)):
+        forced_discards = max(0, occupancy - new_capacity)
         stale_absorption.append(
             {
                 "occupancy_before": occupancy,
                 "capacity_after": new_capacity,
-                "forced_discards": max(0, occupancy - new_capacity),
-                "minimum_stale_occupants_for_zero_live_loss": max(0, occupancy - new_capacity),
+                "forced_discards": forced_discards,
+                "minimum_stale_occupants_for_zero_live_loss": forced_discards,
             }
         )
+
+    stale_buffer_examples = {
+        "roadblock_from_five_with_one_stale": contraction_impact(5, 4, 1),
+        "dust_field_from_five_with_two_stale": contraction_impact(5, 3, 2),
+        "parallel_from_eight_with_three_stale": contraction_impact(8, 3, 3),
+    }
+
+    expansion_replacement_examples = {
+        "sky_field_leaves_then_parallel": contraction_path(8, (5, 3)),
+        "sky_field_leaves_then_collapsed": contraction_path(8, (5, 4)),
+        "area_zero_leaves_then_parallel": contraction_path(8, (5, 3)),
+    }
+
+    entry_removal_examples = {
+        "remover_from_four_under_sky_field": entry_then_capacity_drop(4, 8, 5),
+        "remover_from_five_under_sky_field": entry_then_capacity_drop(5, 8, 5),
+        "remover_from_seven_under_sky_field": entry_then_capacity_drop(7, 8, 5),
+        "remover_from_full_eight_slot_bench": entry_then_capacity_drop(8, 8, 5),
+    }
 
     return {
         "definitions": {
@@ -128,6 +219,9 @@ def build_examples() -> dict[str, Any]:
         "route_examples": route_examples,
         "contraction_examples": contraction_examples,
         "stale_absorption": stale_absorption,
+        "stale_buffer_examples": stale_buffer_examples,
+        "expansion_replacement_examples": expansion_replacement_examples,
+        "entry_removal_examples": entry_removal_examples,
     }
 
 
