@@ -45,3 +45,11 @@ Added tools/combat_lock_catalog.py and results/attack_retreat_lock_geometry/. Th
 The Advanced Player's Rulebook makes this strategically important. A can't-retreat effect blocks normal retreat while effect-based switching still works, and attack-applied retreat/attack restrictions clear when the affected Pokémon moves to the Bench, leaves play, evolves, or devolves. Future state models should keep normal retreat, switch edges, attack availability, temporary attack effects, and evolution/devolution access separate.
 
 The strongest synthesis step is now to connect both lock catalogs to a typed state-transition representation instead of treating a lock as a single boolean or a set of denied labels.
+
+## Third result: typed lock-state kernel
+
+Added tools/lock_state_kernel.py and results/typed_lock_state_kernel/. The kernel separates Item, Tool, Supporter, Stadium, and Special Energy play channels. Per-Pokémon state separately records Tool attachment, Tool-effect operation, and temporary attack/retreat restrictions.
+
+Regression cases preserve three rules-derived distinctions: Item lock leaves Tool play available; temporary attack/retreat effects clear on the relevant position/evolution state change; Tool-effect suppression can leave attachment true. The Jamming Tower regression therefore keeps Garbotoxin's attached-Tool condition true while turning Stealthy Hood protection off.
+
+This is intended as a semantic bridge to the repository's typed_access_network.py. A future integration should attach lock permissions to typed transition edges rather than expanding the existing broad booleans without target or card-class scope.
