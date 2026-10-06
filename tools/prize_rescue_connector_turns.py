@@ -126,30 +126,7 @@ def _success_from_state(
         else:
             deck_other -= 1
 
-        # Within this isolated rescue objective, using a preserving connector to
-        # secure a needed rescuer cannot reduce the chance of completing rescue.
-        searches = min(
-            hand_preserving,
-            deck_rescue,
-            max(0, critical_remaining - hand_rescue),
-        )
-        hand_preserving -= searches
-        deck_rescue -= searches
-        hand_rescue += searches
-
-        next_critical = critical_remaining
-        if hand_rescue > 0:
-            # Play one rescue Supporter. It becomes a Prize card and cannot be
-            # reused within this no-ordinary-Prize-taking model.
-            hand_rescue -= 1
-            next_critical -= 1
-        elif hand_consuming > 0 and deck_rescue > 0:
-            # Spend this turn's Supporter play to fetch a rescuer for a later turn.
-            hand_consuming -= 1
-            deck_rescue -= 1
-            hand_rescue += 1
-
-        probability += (count / deck_size) * _success_from_state(
+        next_critical = critical_remaining\n        if hand_rescue > 0:\n            # Preserve search flexibility when a rescuer is already available.\n            hand_rescue -= 1\n            next_critical -= 1\n        elif hand_preserving > 0 and deck_rescue > 0:\n            # Search just in time, then play the fetched rescuer this turn.\n            hand_preserving -= 1\n            deck_rescue -= 1\n            next_critical -= 1\n        elif hand_consuming > 0 and deck_rescue > 0:\n            # This search uses the Supporter play, so the rescuer waits.\n            hand_consuming -= 1\n            deck_rescue -= 1\n            hand_rescue += 1\n        probability += (count / deck_size) * _success_from_state(
             turns_remaining - 1,
             next_critical,
             hand_rescue,
