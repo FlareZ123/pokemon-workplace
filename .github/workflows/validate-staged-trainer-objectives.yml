@@ -1,0 +1,24 @@
+name: Validate staged Trainer objectives
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/staged_trainer_objectives.py"
+      - "tools/acquired_trainer_execution_capacity.py"
+      - "results/staged_trainer_objectives/**"
+      - ".github/workflows/validate-staged-trainer-objectives.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce staged Trainer objectives
+        run: python results/staged_trainer_objectives/reproduce.py
