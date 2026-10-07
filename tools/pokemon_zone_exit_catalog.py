@@ -96,6 +96,11 @@ def catalog_pokemon_zone_exits(
                     continue
 
                 pokemon_destination, attachment_destination = routing
+                timing_class = (
+                    "knockout_triggered"
+                    if "knocked out" in text.lower()
+                    else "direct_effect"
+                )
                 rows.append(
                     {
                         "id": card["id"],
@@ -106,6 +111,7 @@ def catalog_pokemon_zone_exits(
                         "effect_name": effect_name,
                         "pokemon_destination": pokemon_destination,
                         "attachment_destination": attachment_destination,
+                        "timing_class": timing_class,
                         "text": " ".join(text.split()),
                         "legality_source": legality_source,
                     }
@@ -118,6 +124,10 @@ def catalog_pokemon_zone_exits(
         )
         for row in rows
     )
+    timing_print_counts = Counter(
+        row["timing_class"]
+        for row in rows
+    )
 
     route_unique_names: dict[tuple[str, str], set[str]] = {}
     for row in rows:
@@ -127,10 +137,26 @@ def catalog_pokemon_zone_exits(
         )
         route_unique_names.setdefault(key, set()).add(row["name"])
 
+    timing_unique_names: dict[str, set[str]] = {}
+    for row in rows:
+        timing_unique_names.setdefault(
+            row["timing_class"],
+            set(),
+        ).add(row["name"])
+
     return {
         "summary": {
             "prints": len(rows),
             "unique_names": len({row["name"] for row in rows}),
+            "timing_print_counts": dict(
+                sorted(timing_print_counts.items())
+            ),
+            "timing_unique_name_counts": {
+                timing: len(names)
+                for timing, names in sorted(
+                    timing_unique_names.items()
+                )
+            },
             "route_print_counts": {
                 f"{pokemon}->{attachment}": count
                 for (pokemon, attachment), count
