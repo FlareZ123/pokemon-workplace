@@ -1,0 +1,25 @@
+name: Validate identity liveness
+
+on:
+  push:
+    paths:
+      - "tools/identity_liveness.py"
+      - "tools/identity_materialization.py"
+      - "tools/physical_zone_count.py"
+      - "results/identity_liveness/**"
+      - ".github/workflows/validate-identity-liveness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check identity liveness gate
+        run: python results/identity_liveness/reproduce.py
