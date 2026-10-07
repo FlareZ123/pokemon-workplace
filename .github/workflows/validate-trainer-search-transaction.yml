@@ -1,0 +1,29 @@
+name: Validate Trainer search transaction
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/trainer_search_transaction.py"
+      - "tools/search_zone_transition.py"
+      - "tools/discard_cost_witness.py"
+      - "tools/turn_action_budget.py"
+      - "tools/lock_state_kernel.py"
+      - "tools/typed_search_target_allocator.py"
+      - "tools/trainer_search_profile_compiler.py"
+      - "results/trainer_search_transaction/**"
+      - ".github/workflows/validate-trainer-search-transaction.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Trainer search transaction
+        run: python results/trainer_search_transaction/reproduce.py
