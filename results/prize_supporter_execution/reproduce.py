@@ -11,6 +11,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from board_action_quota_derivation import derive_board_action_quotas  # noqa: E402
+from board_object_kernel import make_board, make_pokemon  # noqa: E402
+from turn_action_budget import TurnActionBudget  # noqa: E402
 from prize_supporter_execution import (  # noqa: E402
     analyze_prized_supporter_execution,
     analyze_with_dual_brains,
@@ -124,6 +127,40 @@ def main() -> None:
         Fraction(1, 1),
     )
 
+    active = make_pokemon("active", "Test Active", print_id="test-active")
+    zone = make_pokemon(
+        "dual-brains",
+        "Magnezone",
+        print_id="bw8-46",
+        abilities_enabled=True,
+    )
+    board = make_board(active, (zone,))
+    live_budget = derive_board_action_quotas(board, TurnActionBudget())
+    live_board_line = analyze_prized_supporter_execution(
+        supporter_limit=live_budget.supporter_play_limit,
+    )
+    _assert_close(
+        live_board_line.gladion_execution_probability,
+        Fraction(1, 1),
+    )
+
+    suppressed_budget = derive_board_action_quotas(
+        board,
+        TurnActionBudget(),
+        suppressed_ability_object_ids=frozenset({"dual-brains"}),
+    )
+    suppressed_board_line = analyze_prized_supporter_execution(
+        supporter_limit=suppressed_budget.supporter_play_limit,
+    )
+    _assert_close(
+        suppressed_board_line.gladion_execution_probability,
+        Fraction(0, 1),
+    )
+    _assert_close(
+        suppressed_board_line.peonia_execution_probability,
+        Fraction(0, 1),
+    )
+
     locked_channel = analyze_prized_supporter_execution(
         supporter_limit=0,
     )
@@ -173,6 +210,17 @@ def main() -> None:
         "  Gladion: "
         f"hand={dual.gladion_hand_access_probability:.9f}, "
         f"execute={dual.gladion_execution_probability:.9f}"
+    )
+
+    print()
+    print("Board-derived Dual Brains:")
+    print(
+        "  live Gladion execution="
+        f"{live_board_line.gladion_execution_probability:.9f}"
+    )
+    print(
+        "  suppressed Gladion execution="
+        f"{suppressed_board_line.gladion_execution_probability:.9f}"
     )
 
     print()
