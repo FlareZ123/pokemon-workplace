@@ -83,6 +83,8 @@ class SwapSimulationResult:
     baseline_only_successes: int
     secret_box_in_hand: int
     secret_box_stellar_only: int
+    accessible_baseline_failures: int
+    unrescued_accessible_baseline_failures: int
     incremental_jet_in_hand: int
     incremental_jet_needs_gnh: int
     incremental_started_with_gnh_or_tag_call: int
@@ -552,6 +554,8 @@ def simulate_swap(
     baseline_only_successes = 0
     secret_box_in_hand = 0
     secret_box_stellar_only = 0
+    accessible_baseline_failures = 0
+    unrescued_accessible_baseline_failures = 0
     incremental_jet_in_hand = 0
     incremental_jet_needs_gnh = 0
     incremental_started_with_gnh_or_tag_call = 0
@@ -582,6 +586,11 @@ def simulate_swap(
         )
         secret_box_in_hand += int(box_in_hand)
         secret_box_stellar_only += int(box_stellar)
+        box_accessible = box_in_hand or box_stellar
+        if box_accessible and not baseline_ok:
+            accessible_baseline_failures += 1
+            if not secret_ok:
+                unrescued_accessible_baseline_failures += 1
 
         if baseline_ok and not secret_ok:
             baseline_only_successes += 1
@@ -602,6 +611,10 @@ def simulate_swap(
         baseline_only_successes=baseline_only_successes,
         secret_box_in_hand=secret_box_in_hand,
         secret_box_stellar_only=secret_box_stellar_only,
+        accessible_baseline_failures=accessible_baseline_failures,
+        unrescued_accessible_baseline_failures=(
+            unrescued_accessible_baseline_failures
+        ),
         incremental_jet_in_hand=incremental_jet_in_hand,
         incremental_jet_needs_gnh=incremental_jet_needs_gnh,
         incremental_started_with_gnh_or_tag_call=(
