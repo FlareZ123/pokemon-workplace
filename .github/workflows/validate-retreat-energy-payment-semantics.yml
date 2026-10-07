@@ -1,0 +1,26 @@
+name: Validate retreat Energy payment semantics
+
+on:
+  push:
+    paths:
+      - "tools/board_position_kernel.py"
+      - "results/board_position_kernel/**"
+      - "results/retreat_energy_payment_semantics/**"
+      - ".github/workflows/validate-retreat-energy-payment-semantics.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check board-position and retreat-payment regressions
+        run: |
+          python results/board_position_kernel/reproduce.py
+          python results/retreat_energy_payment_semantics/reproduce.py
