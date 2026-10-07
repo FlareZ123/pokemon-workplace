@@ -1,0 +1,24 @@
+name: Validate effect-order authority overlap
+
+on:
+  push:
+    paths:
+      - "tools/effect_order_authority.py"
+      - "tools/effect_order_authority_overlap.py"
+      - "results/effect_order_authority_overlap/**"
+      - ".github/workflows/validate-effect-order-authority-overlap.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run authority overlap regression
+        run: python results/effect_order_authority_overlap/reproduce.py
