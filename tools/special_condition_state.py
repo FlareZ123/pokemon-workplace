@@ -29,6 +29,11 @@ CHECKUP_ORDER = (
     ConditionKind.PARALYZED,
 )
 CHECKUP_CONDITION_BLOCK = "__special_condition_block__"
+ROTATION_CONDITIONS = frozenset({
+    ConditionKind.ASLEEP,
+    ConditionKind.PARALYZED,
+    ConditionKind.CONFUSED,
+})
 
 DEFAULT_DAMAGE_COUNTERS = {
     ConditionKind.POISONED: 1,
@@ -65,6 +70,10 @@ class SpecialConditionState:
         kinds = [condition.kind for condition in self.conditions]
         if len(kinds) != len(set(kinds)):
             raise ValueError("each Special Condition kind may appear at most once")
+        if sum(kind in ROTATION_CONDITIONS for kind in kinds) > 1:
+            raise ValueError(
+                "Asleep, Paralyzed, and Confused are mutually exclusive"
+            )
 
     def get(self, kind: ConditionKind) -> ConditionInstance | None:
         for condition in self.conditions:
