@@ -38,6 +38,8 @@ class AttackDef:
     is_gx: bool = False
     copy_selector: CopySelector | None = None
     effect_label: str | None = None
+    pre_event: str | None = None
+    post_event: str | None = None
     progress_delta: int = 0
 
 
@@ -47,6 +49,7 @@ class State:
     gx_used_by: frozenset[str] = frozenset()
     last_declared_attack: tuple[tuple[str, str], ...] = ()
     progress: int = 0
+    events: tuple[str, ...] = ()
 
     def last_attack_for(self, player: str) -> str | None:
         return dict(self.last_declared_attack).get(player)
@@ -129,6 +132,9 @@ def _candidate_attacks(
         elif selector.source == "opponent_in_play":
             opponent = opponent_of(actor_player)
             cards = [p for p in state.pokemon if p.owner == opponent and p.zone in {"active", "bench"}]
+        elif selector.source == "opponent_revealed":
+            opponent = opponent_of(actor_player)
+            cards = [p for p in state.pokemon if p.owner == opponent and p.zone == "revealed"]
         else:
             raise ValueError(f"Unsupported copy source: {selector.source}")
 
@@ -184,6 +190,8 @@ def resolve_attack(
 
         if body.progress_delta:
             current = replace(current, progress=current.progress + body.progress_delta)
+        if body.pre_event is not None:
+            current = replace(current, events=current.events + (body.pre_event,))
 
         body_chain.append(body_attack_id)
         candidates = _candidate_attacks(
@@ -194,6 +202,10 @@ def resolve_attack(
         )
 
         if body.copy_selector is None:
+            if body.effect_label is not None:
+                current = replace(current, events=current.events + (body.effect_label,))
+            if body.post_event is not None:
+                current = replace(current, events=current.events + (body.post_event,))
             trace.append(
                 TraceStep(
                     depth=depth,
@@ -225,7 +237,10 @@ def resolve_attack(
                 progress=current.progress,
             )
         )
-        return execute(selected, current, depth + 1)
+        current = execute(selected, current, depth + 1)
+        if body.post_event is not None:
+            current = replace(current, events=current.events + (body.post_event,))
+        return current
 
     next_state = execute(declared_attack_id, state, 0)
     next_state = next_state.with_last_attack(actor_player, declared_attack_id)
