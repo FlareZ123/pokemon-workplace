@@ -21,6 +21,7 @@ The connector results formalize several distinct reasons a search route can be l
 - [discard_gated_supporter_access/](discard_gated_supporter_access/) and [discard_cost_amr/](discard_cost_amr/) quantify discard costs as real access gates rather than flavor text.
 - [resource_constrained_connectors/](resource_constrained_connectors/), [compound_connector_constraints/](compound_connector_constraints/), [shared_connector_contention/](shared_connector_contention/), and [multi_channel_connector/](multi_channel_connector/) extend the same principle to multiple resources and competing channels.
 - [connector_option_value/](connector_option_value/), [connector_marginal_regime/](connector_marginal_regime/), and [connector_slot_marginals/](connector_slot_marginals/) study how the value of an additional connector changes with the surrounding resource regime.
+- [raichu_prize_access/](raichu_prize_access/) applies those ideas to Harto Miki's 2024 Aichi Raichu/Electrode list. Under a conservative 12-card discard pool and one later random draw, its direct Alolan Raichu package reaches the singleton in 30.623976% of valid-start states. Computer Search's ability to switch from direct Raichu search to Gladion search after discovering Raichu is Prized adds 4.515319 percentage points within Raichu-Prized states, while the two-card discard gate remains the dominant modeled constraint.
 
 **Working synthesis:** connector evaluation should preserve at least search eligibility, output multiplicity, payment costs, action-window costs, and competing uses of the same connector.
 
