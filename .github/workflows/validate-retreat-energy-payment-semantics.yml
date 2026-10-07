@@ -4,7 +4,10 @@ on:
   push:
     paths:
       - "tools/board_position_kernel.py"
+      - "tools/board_object_kernel.py"
       - "results/board_position_kernel/**"
+      - "results/board_object_kernel/**"
+      - "results/energy_board_conservation/**"
       - "results/retreat_energy_payment_semantics/**"
       - ".github/workflows/validate-retreat-energy-payment-semantics.yml"
   workflow_dispatch:
@@ -23,4 +26,6 @@ jobs:
       - name: Check board-position and retreat-payment regressions
         run: |
           python results/board_position_kernel/reproduce.py
+          python results/board_object_kernel/reproduce.py
+          python results/energy_board_conservation/reproduce.py
           python results/retreat_energy_payment_semantics/reproduce.py
