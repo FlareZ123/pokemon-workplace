@@ -63,9 +63,25 @@ class AuthorityAssessment:
 
 
 TPCI_FEB_2026 = "tpci_professor_feb_2026"
-ASIA_LOST_CITY_REUNICLUS_QA = "pokemon_asia_lost_city_reuniclus_qa"\nJAPAN_LOST_CITY_REUNICLUS_QA = "pokemon_japan_lost_city_reuniclus_qa"
+ASIA_LOST_CITY_REUNICLUS_QA = "pokemon_asia_lost_city_reuniclus_qa"
+JAPAN_LOST_CITY_QA = "pokemon_japan_lost_city_qa"
 ADVANCED_RULEBOOK_3_4 = "advanced_rulebook_3_4"
-LOST_CITY_REUNICLUS = "lost_city_reuniclus"\nLOST_CITY_LOST_OUT = "lost_city_lost_out"
+
+LOST_CITY_REUNICLUS = "lost_city_reuniclus"
+LOST_CITY_LOST_OUT = "lost_city_lost_out"
+
+
+def _owner_claim(
+    source_id: str,
+    scope_note: str,
+) -> tuple[AuthorityClaim, ...]:
+    return (
+        AuthorityClaim(
+            source_id,
+            OrderingAuthority.KNOCKED_OUT_POKEMON_OWNER,
+            scope_note,
+        ),
+    )
 
 
 def _claims_for_source(
@@ -98,20 +114,31 @@ def _claims_for_source(
             )
         return ()
 
-    if source_id in {ASIA_LOST_CITY_REUNICLUS_QA, JAPAN_LOST_CITY_REUNICLUS_QA}:
+    if source_id == ASIA_LOST_CITY_REUNICLUS_QA:
         if context.interaction_id == LOST_CITY_REUNICLUS:
-            return (
-                AuthorityClaim(
-                    source_id,
-                    OrderingAuthority.KNOCKED_OUT_POKEMON_OWNER,
-                    "Reuniclus owner chooses Persistent Cells versus Lost City.",
-                ),
+            return _owner_claim(
+                source_id,
+                "Reuniclus owner chooses Persistent Cells versus Lost City.",
+            )
+        return ()
+
+    if source_id == JAPAN_LOST_CITY_QA:
+        if context.interaction_id == LOST_CITY_REUNICLUS:
+            return _owner_claim(
+                source_id,
+                "Reuniclus owner chooses Persistent Cells versus Lost City.",
+            )
+        if context.interaction_id == LOST_CITY_LOST_OUT:
+            return _owner_claim(
+                source_id,
+                "Knocked Out Pokemon owner chooses Lost Out versus Lost City.",
             )
         return ()
 
     if source_id == ADVANCED_RULEBOOK_3_4:
         if (
-            context.trigger_kind == TriggerKind.POKEMON_KNOCKED_OUT
+            context.timing_window == TimingWindow.DURING_TURN
+            and context.trigger_kind == TriggerKind.POKEMON_KNOCKED_OUT
             and context.simultaneous_knockout_count >= 2
         ):
             return (
