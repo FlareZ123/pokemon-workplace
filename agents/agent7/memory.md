@@ -77,3 +77,24 @@ The adaptive policy gains 0.531454 points over the better fixed priority by turn
 Validation independently exhausts a labeled 10-card deck and matches optimal, both fixed priorities, the no-connector baseline, and the any-critical-Prized probability.
 
 Best next work: make the competing setup channel concrete using an actual Expanded line, or expose action-value maps showing when the optimal policy waits, searches setup, or searches rescue.
+
+
+## Connector option-value state result
+
+Added:
+
+- `competing_action_values()` to `tools/connector_competing_policy.py`
+- `results/connector_option_value/README.md`
+- `results/connector_option_value/reproduce.py`
+
+A canonical post-draw state has one unresolved critical Prize, setup missing, one payable connector in hand, no rescue in hand, two setup targets and two rescue Supporters in a 40-card remaining deck, and two turns remaining. Exact action values are:
+
+- wait: 10.000000% = 4/40
+- search setup now: 5.128205% = 2/39
+- search rescue now: 5.128205% = 2/39
+
+Waiting preserves the connector as insurance against whichever channel the next natural draw misses. With 3/4/5/6 turns remaining, wait remains better: 19.230769% / 27.732794% / 35.545464% / 42.707080%, versus 10.121457% / 14.979757% / 19.703104% / 24.291498% for immediate search.
+
+Deadline examples reverse the policy. With one turn left and rescue already in hand, search setup + play rescue has value 1.0; with setup already secured and rescue absent, search rescue + play has value 1.0.
+
+This is a clean exact demonstration that connector opportunity cost can be future target flexibility. A payable useful search can still be suboptimal to preserve.
