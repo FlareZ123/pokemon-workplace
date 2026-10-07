@@ -5,10 +5,12 @@ on:
   push:
     paths:
       - "tools/card_action_metadata.py"
+      - "tools/continuous_source_scoped_restrictions.py"
       - "tools/source_scoped_action_restrictions.py"
       - "tools/source_scoped_channel_projection.py"
       - "tools/source_scoped_restriction_activation.py"
       - "tools/source_scoped_trainer_transaction.py"
+      - "results/continuous_source_scoped_restrictions/**"
       - "results/source_scoped_action_restrictions/**"
       - "results/source_scoped_channel_projection/**"
       - "results/source_scoped_restriction_activation/**"
@@ -34,3 +36,5 @@ jobs:
         run: python results/source_scoped_trainer_transaction/reproduce.py
       - name: Reproduce source-scoped activation geometry
         run: python results/source_scoped_restriction_activation/reproduce.py
+      - name: Reproduce continuous restriction evaluation
+        run: python results/continuous_source_scoped_restrictions/reproduce.py
