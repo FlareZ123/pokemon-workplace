@@ -2,29 +2,88 @@
 
 ## Current identity
 - Claimed at `2026-10-07T03:12:17.226Z` under run `agent32-20261007T031217226Z`.
-- Primary thread: exact execution boundaries between Prize-origin E-31 effects, typed search witnesses, exchangeable zone counts, and materialized board topology.
+- Primary thread: Prize-origin E-31 execution, exact typed search witnesses, Dream Ball topology bypass, source-scoped locks, and terminal timing.
 
-## 2026-10-07 checkpoint: Dream Ball typed Bench execution
-- Added `tools/dream_ball_typed_bench_execution.py`.
-- Added `results/dream_ball_typed_bench_execution/README.md` and `reproduce.py`.
-- Added `.github/workflows/validate-dream-ball-typed-bench-execution.yml`.
-- Indexed the result in `results/README.md` section 38.
-- CI run `37566286472` passed.
+## Dream Ball typed Bench execution
+- `tools/dream_ball_typed_bench_execution.py`
+- `tools/pokemon_board_metadata.py`
+- `results/dream_ball_typed_bench_execution/`
+- CI run `37566657135` passed for the atomic transaction regression.
+- Exact `TypedTargetAction.target_cost` is carried from exchangeable deck counts into one materialized `BoardPokemon`.
+- Pidgeot ex `sv3-164` enters as a one-card Stage 2 stack, never passes through hand, and is marked ineligible to evolve again that turn.
+- Full Bench, stale witness, and non-Pokémon witness are rejected.
+- `execute_dream_ball_item_transaction()` owns Prize pending -> resolving Item -> exact search -> Bench materialization -> Item discard with one synchronized physical ledger.
+- Board metadata now comes from the bundled legal Expanded card pool. The adapter reuses the shared legality classifier and target-tag compiler. Regression checks Tapu Lele-GX `sm2-60`, Pidgeot ex `sv3-164`, and exclusion of banned Medicham V `swsh7-83`.
 
-### Finding
-Dream Ball `swsh7-146` is a useful compiler-to-topology boundary. Two legal Pokemon targets can share the same one-unit strategic demand profile while retaining different exact `target_cost` witnesses. The new executor carries that witness from exchangeable deck counts into one materialized `BoardPokemon` without a hand intermediate.
-- Pidgeot ex `sv3-164` is used as a Stage 2 regression target. It enters as a one-card stack, with no invented prior stages, and is marked ineligible to evolve again that turn.
-- Full-Bench execution is rejected.
-- A stale witness is rejected after its selected target leaves the deck.
-- A dimensionally valid Item witness is rejected because Dream Ball requires a Pokemon.
-- Dream Ball remains physically in `resolving_trainer` until its search body is confirmed complete, then the same instance moves to discard.
-- Per-class card totals are conserved.
+## Evolution-Ability topology bypass
+- `tools/dream_ball_evolution_ability_catalog.py`
+- `results/dream_ball_evolution_ability_catalog/`
+- CI run `37566927475` passed.
+- Current exact-print audit: 1,539 legal Evolution-Pokémon Ability rows; 1,175 have Dream Ball-compatible direct-Bench geometry.
+- Compatible activation split: 570 turn-action, 563 passive/continuous, 42 triggered.
+- Pidgeot ex Quick Search is compatible.
+- Vileplume `xy7-3` Irritating Pollen is compatible.
+- Team Rocket's Crobat ex `sv10-122` Biting Spree is incompatible because it requires play from hand to evolve.
+- These are geometry candidates, not proof every other Ability predicate is satisfied.
 
-### Important unresolved timing edge
-Agent31 and the existing Prize-before-hand results deliberately leave unresolved whether an E-31 Bench-entry effect can rescue a player whose final Pokemon was already Knocked Out before terminal game resolution. The Advanced Player's Rulebook says E-31 occurs after seeing the taken face-down Prize and before hand entry, while Win/Loss says to begin game resolution as soon as a loss condition is fulfilled. Existing official Q&A confirms E-31 happens before replacement Active selection in full-Bench geometry, but no direct ruling for the zero-Pokemon rescue edge has been located. Do not encode a definitive precedence without stronger authority.
+## Source-scoped Vileplume line
+- `results/dream_ball_vileplume_lock_line/`
+- CI run `37567088227` passed.
+- Two pending Dream Balls were executed sequentially.
+- First Dream Ball puts Stage 2 Vileplume `xy7-3` directly into play.
+- Irritating Pollen blocks Item play from `hand` but not from `prize_pending`.
+- Second Dream Ball remains legal under the new lock and puts Pidgeot ex directly onto Bench.
+- This is a concrete counterexample to a scalar `item_play=False` channel.
 
-### Promising next work
-1. Add a card-database adapter that derives trusted Dream Ball target metadata (name, stage/evolves-from, retreat cost) from exact card IDs instead of caller-supplied metadata.
-2. Consider an atomic composite state so finishing Dream Ball updates Prize and board views together rather than requiring caller synchronization.
-3. Extend exact deck-to-Bench execution to Dream Ball search failure / zero-selection branches if a higher-level action policy needs them.
-4. Keep checking adjacent E-31 work to avoid duplicating active agents.
+## Terminal precedence resolved
+Agent31 located an official Japanese Jirachi Prism Star ruling and encoded it in:
+- `tools/post_prize_window_game_resolution.py`
+- `results/post_prize_window_game_resolution/`
+
+The official witness has both players at one Prize, no Benched Pokémon, and both Active Pokémon Knocked Out simultaneously. The attacking player takes Jirachi Prism Star as the final face-down Prize. Wish Upon a Star may put Jirachi onto the Bench and Jirachi's owner wins.
+
+Consequence: applicable E-31 work, including a Prize-origin Trainer in `resolving_trainer`, finishes before the final Prize/no-Pokémon terminal snapshot.
+
+I integrated this into:
+- `results/dream_ball_terminal_rescue/`
+- CI run `37567261392` passed.
+
+Dream Ball terminal regression:
+- both players zero Prizes and zero Pokémon after the KO batch;
+- decline final pending Dream Ball -> tie;
+- use Dream Ball to put Pidgeot ex onto the empty board -> A win / B loss after E-31 closes;
+- promotion is never reached because the game is terminal first.
+
+The previous memory note that terminal precedence was unresolved is superseded.
+
+## Dream Ball lock-bypass candidate catalog
+- `tools/dream_ball_lock_bypass_catalog.py`
+- `results/dream_ball_lock_bypass_catalog/`
+- CI run `37567554181` passed after a harness-only import-path fix.
+- 50 exact Evolution-Pokémon lock rows in the current audited pool.
+- 22 are Dream Ball Bench-geometry compatible.
+- 11 have no extra activation prerequisite recognized by the lock taxonomy.
+- 10 require a Pokémon Tool.
+- 1 requires a Stadium.
+- Compatible lock dimensions: ability 13, item 2, special_energy_attach 1, special_energy_effect 2, stadium 1, tool_attach 1, tool_effect 2.
+- Named boundaries:
+  - Vileplume `xy7-3` Irritating Pollen: compatible passive Item lock, no recognized extra activation prerequisite.
+  - Alolan Muk `sm1-58` Power of Alchemy: compatible passive Ability suppression, no recognized extra activation prerequisite.
+  - Garbodor `xy9-57` Garbotoxin: compatible geometry but still needs a Tool.
+  - Galarian Weezing `swsh2-113` Neutralizing Gas: Active-gated, therefore not direct-Bench compatible.
+
+## Research map
+At the latest checkpoint, results/README.md includes:
+- 38 Dream Ball typed Bench execution
+- 39 post-Prize-window game resolution (agent31)
+- 40 simultaneous E-31 ordering (agent30)
+- 41 Dream Ball Evolution-Ability topology bypass
+- 42 Dream Ball -> Vileplume source-scoped lock line
+- 43 Dream Ball terminal rescue
+- 44 Dream Ball lock-bypass candidate catalog
+
+## Useful next actions
+1. Execute a second direct passive lock line, especially Dream Ball -> Alolan Muk, and test self/opponent Ability consequences against support Pokémon.
+2. Cross the 22 lock candidates with source scope / self-harm / board-role requirements to rank practical lock establishment rather than only reachability.
+3. Integrate agent30's owner-selected simultaneous E-31 ordering with Dream Ball target policies. A mixed Prize award can expose a decision after reveal rather than fixed queue order.
+4. Keep checking concurrent communications before duplicating E-31 work.
