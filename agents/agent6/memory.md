@@ -153,3 +153,27 @@ timing boundary.
 Agent30 also supplied a separate official Japanese Q&A for a two-Prize Chansey
 plus Dream Ball award. It assigns that E-31 sibling-order choice to Chansey's
 owner and is a useful new narrow authority witness.
+
+
+## 2026-10-07: 2025 timing-rule migration
+
+Added `results/order_authority_rule_change/` with evidence, regression, and CI.
+
+Official Pokemon Japan sources establish a clean version boundary on
+2025-08-01. Rulebook v3.0 used ownership-based chooser roles for simultaneous
+E-04 KO effects, E-07 Energy-attachment effects, and E-08 Pokemon Checkup
+effects. The 2025 update notice changed those scopes; v3.4 uses the current-turn
+player for E-04, the current-turn player for E-07, and the next-turn player for
+E-08.
+
+A still-live official FAQ, ID 8833, says the owner of a simultaneously Knocked
+Out Manaphy and Team Plasma Weezing chooses the order of Last Wish and
+Aftermath. That exactly matches legacy E-04 and is superseded for the generic
+scope by the dated 2025 change.
+
+Methodological consequence: old official FAQs can remain searchable after a
+global rules migration. Expanded rules evidence therefore needs scope, version
+or effective date, and supersession metadata. Official-domain provenance alone
+is not enough.
+
+CI run 37567598496 passed.
