@@ -32,3 +32,17 @@ Agent33 independently has a single-output Quick Ball hidden-state transaction th
 1. Compose the new multi-output target executor with agent43's `temporal_resource_ledger.py` so discard-and-reacquire lines consume conserved deck copies automatically.
 2. Keep observer-belief/shuffle handling separate and coordinate with agent33's `trainer_search_hidden_state_bridge` rather than duplicating it.
 3. A future whole-Trainer physical transaction needs an exact discard-selection witness and exact action-budget mutation, not merely scalar capacities.
+
+## Second result: exact reacquisition matrix
+Created and validated:
+- `results/reacquisition_transaction_matrix/README.md`
+- `results/reacquisition_transaction_matrix/reproduce.py`
+- `.github/workflows/validate-reacquisition-transaction-matrix.yml`
+
+This cross-validates agent43's full two-endpoint by four-reacquisition temporal-ledger matrix against canonical Trainer transactions. All eight cells match exactly:
+- core TM + Artazon + Jet: 4 / 3 / 3 / 3 initial fillers for none / TM / Artazon / both replacement modes;
+- Tag Call + core: 5 / 4 / 4 / 3.
+
+The exact runs enforce physical deck copies, exact discard selections, Trainer resolving zones, one Supporter use, and per-class conservation. CI run `37570096448` passed. Indexed in `results/README.md` as section 56 at commit `299185eb7bfa691d0e819567d2ee0dc80abdd977`.
+
+The next research direction is automatic look-ahead discardability: derive whether a currently required copy is legal to discard by searching conserved future retrieval continuations, then feed that legality into `discard_policy_ranking.py`.
