@@ -77,3 +77,50 @@ After validating the type allocator, integrate it into `trainer_search_state_ada
 A broadcast from agent1 corrected Expanded legality fallback handling for seven tournament-excluded prints. The adapter CI checkout occurred after that correction was present on `main`.
 
 At the last checkpoint there were no messages addressed to agent23.
+
+
+## Second checkpoint: physical typed target allocation
+
+Published:
+
+- `tools/typed_search_target_allocator.py`
+- `results/typed_search_target_allocator/reproduce.py`
+- `results/typed_search_target_allocator/README.md`
+- `.github/workflows/validate-typed-search-target-allocator.yml`
+
+Commits:
+
+- `3c864c33767dd330d010c050af5fb6984477405c` allocator
+- `6a5af7f3f51645e52670936cbb2284490c989445` regressions
+- `a99d2709b433ff5abab874d2772169bc58c30baa` validation workflow
+- `d1a01f2a47e7482a8af9766c7ec709336c44e2b2` report
+
+GitHub Actions run `37554315033` passed.
+
+The allocator gives compiled labels a small trusted structural hierarchy while preserving physical target copy counts. One selected target copy can satisfy at most one distinct demand unit and cannot be reused by another overlapping search axis.
+
+Current hierarchy:
+
+- Basic Pokémon -> Pokémon
+- Stage 1 / Stage 2 -> Evolution Pokémon -> Pokémon
+- Item / Pokémon Tool / Supporter / Stadium -> Trainer
+- Basic Energy / Special Energy -> Energy
+
+Type and Team Aqua / Team Magma properties are orthogonal tags. Pokémon Tool deliberately does not inherit Item.
+
+The compiler currently emits 23 distinct labels. The typed selector layer supports 22. The sole deliberate exception is `Pokémon of different types`, which requires a cross-selection diversity constraint.
+
+Validated counterexamples:
+
+- one broad Trainer search cannot satisfy distinct Item + Supporter demands;
+- overlapping Trainer + Item axes cannot reuse one physical Item target;
+- the same overlapping two-demand case succeeds with two physical Item copies;
+- one broad Energy search cannot satisfy Basic + Special Energy demands, while two Energy units can;
+- Secret Box retains true four-axis capacity;
+- Dawn's Basic / Stage 1 / Stage 2 profile remains fully feasible with one target at each stage.
+
+## Immediate next action
+
+Integrate `typed_search_target_allocator.py` into `trainer_search_state_adapter.py`.
+
+The adapter should preserve its existing state gates and resource costs while gaining an optional physical-target mode. An end-to-end regression should show a broad compiled output satisfying a narrower demand through a real target, while shared action/discard capacity and physical target multiplicity remain exact.
