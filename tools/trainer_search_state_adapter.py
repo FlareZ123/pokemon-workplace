@@ -25,6 +25,11 @@ from trainer_search_profile_compiler import (
     CompiledTrainerSearchProfile,
     SearchOutput,
 )
+from typed_search_target_allocator import (
+    DemandChannel,
+    TargetGroup,
+    enumerate_typed_target_profiles,
+)
 
 
 RESOURCE_NAMES = (
@@ -35,10 +40,19 @@ RESOURCE_NAMES = (
 
 
 @dataclass(frozen=True)
+class TypedTrainerSearchAdaptation:
+    """Typed connector plus the shared capacities required to evaluate it."""
+
+    connector: ResourceConnectorType
+    resource_capacities: tuple[int, ...]
+    resource_names: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class TrainerSearchState:
     """State variables needed to compile one search card into legal actions."""
 
-    target_counts: tuple[tuple[str, int], ...]
+    target_counts: tuple[tuple[str, int], ...] = ()
     discardable_cards: int = 0
     supporter_plays_remaining: int = 1
     stadium_plays_remaining: int = 1
@@ -254,4 +268,121 @@ def adapt_compiled_search_profile(
         name=profile.name,
         copies=copies,
         profiles=ordered_actions,
+    )
+
+
+def adapt_compiled_search_profile_typed(
+    profile: CompiledTrainerSearchProfile,
+    demands: Sequence[DemandChannel],
+    targets: Sequence[TargetGroup],
+    state: TrainerSearchState,
+    *,
+    copies: int = 1,
+    play_condition_met: bool | None = None,
+) -> TypedTrainerSearchAdaptation | None:
+    """Compile one card using semantic selectors and physical target depletion.
+
+    The returned resource vector begins with the ordinary state resources
+    (discardable cards, Supporter plays, Stadium plays) and appends one capacity
+    for each physical target group. ResourceActionProfile costs therefore carry
+    target depletion into the shared connector solver, including across several
+    copies of the same connector.
+    """
+
+    if copies < 0:
+        raise ValueError("copies must be non-negative")
+    if copies == 0:
+        return None
+
+    demand_channels = tuple(demands)
+    target_groups = tuple(targets)
+    if not demand_channels:
+        raise ValueError("demands cannot be empty")
+    if not _action_class_allowed(profile.action_class, state):
+        return None
+    if (
+        profile.play_condition is not None
+        and play_condition_met is not True
+    ):
+        return None
+
+    resource_capacities = (
+        state.resource_capacities
+        + tuple(target.copies for target in target_groups)
+    )
+    resource_names = (
+        RESOURCE_NAMES
+        + tuple(
+            f"target:{index}:{target.name}"
+            for index, target in enumerate(target_groups)
+        )
+    )
+
+    actions: set[ResourceActionProfile] = set()
+
+    base_cost = _action_cost(profile, state)
+    if base_cost is not None:
+        base_allocation = enumerate_typed_target_profiles(
+            profile.base_outputs,
+            target_groups,
+            demand_channels,
+        )
+        for action in base_allocation.actions:
+            actions.add(
+                ResourceActionProfile(
+                    output=action.output,
+                    cost=base_cost + action.target_cost,
+                )
+            )
+
+    if (
+        profile.conditional_outputs
+        and profile.optional_discard_other_cards > 0
+    ):
+        conditional_cost = _action_cost(
+            profile,
+            state,
+            extra_discard=profile.optional_discard_other_cards,
+        )
+        if conditional_cost is not None:
+            all_outputs = (
+                profile.base_outputs
+                + profile.conditional_outputs
+            )
+            base_axis_count = len(profile.base_outputs)
+            allocation = enumerate_typed_target_profiles(
+                all_outputs,
+                target_groups,
+                demand_channels,
+            )
+            for action in allocation.actions:
+                if not any(action.axis_usage[base_axis_count:]):
+                    continue
+                actions.add(
+                    ResourceActionProfile(
+                        output=action.output,
+                        cost=conditional_cost + action.target_cost,
+                    )
+                )
+
+    if not actions:
+        return None
+
+    connector = ResourceConnectorType(
+        name=profile.name,
+        copies=copies,
+        profiles=tuple(
+            sorted(
+                actions,
+                key=lambda action: (
+                    action.cost,
+                    action.output,
+                ),
+            )
+        ),
+    )
+    return TypedTrainerSearchAdaptation(
+        connector=connector,
+        resource_capacities=resource_capacities,
+        resource_names=resource_names,
     )
