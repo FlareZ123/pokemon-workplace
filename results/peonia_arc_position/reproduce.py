@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from fractions import Fraction
+import json
 from math import isclose
 from pathlib import Path
 import sys
@@ -11,6 +12,17 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from peonia_arc_position import analyze_peonia_arc_position  # noqa: E402
+
+
+def _card_by_id(card_id: str) -> dict:
+    set_id = card_id.split("-", 1)[0]
+    path = ROOT / "resources" / "cards" / "en" / f"{set_id}.json"
+    cards = json.loads(path.read_text(encoding="utf-8"))
+    return next(card for card in cards if card["id"] == card_id)
+
+
+def _trainer_text(card: dict) -> str:
+    return " ".join(card.get("rules") or [])
 
 
 def _assert_close(actual: float, expected: Fraction) -> None:
@@ -64,6 +76,30 @@ def _labeled_shuffled_success(
 
 
 def main() -> None:
+    peonia = _card_by_id("swsh6-149")
+    arc_phone = _card_by_id("swsh11-152")
+    trekking_shoes = _card_by_id("swsh10-156")
+
+    assert "Put up to 3 Prize cards into your hand" in _trainer_text(peonia)
+    assert (
+        "switch that card with 1 of your face-down Prize cards"
+        in _trainer_text(arc_phone)
+    )
+    assert (
+        "Look at the top card of your deck. You may put that card into your hand."
+        in _trainer_text(trekking_shoes)
+    )
+
+    manual_path = (
+        ROOT
+        / "resources"
+        / "manual"
+        / "EN_advanced_manual-2025-transcription-structured.md"
+    )
+    manual = manual_path.read_text(encoding="utf-8")
+    assert "players can use any number of Item cards during their turn" in manual
+    assert "players may only use one Supporter during their turn" in manual
+
     prize_count = 6
 
     print("Peonia -> Arc Phone singleton target")
