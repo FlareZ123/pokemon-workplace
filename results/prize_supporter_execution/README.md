@@ -113,6 +113,22 @@ The same physical Prize policy now converts its entire hand-access probability i
 
 Board state has changed the value of the recovery line without changing the Prize posterior or the search cards.
 
+## Ability lock changes the same-turn recovery ranking
+
+The regression derives the extra Supporter quota from a physical `bw8-46` Magnezone object.
+
+With Dual Brains live, the same-turn execution ranking is:
+
+`Gladion = 1 > Peonia line = 2/3 > Arc Phone line = 1/6`.
+
+The same board is then evaluated with the existing Neutralizing Gas lock profile. The lock layer marks the Dual Brains object as suppressed, and board-derived Supporter capacity returns from two to one.
+
+The ranking becomes:
+
+`Arc Phone line = 1/6 > Peonia line = Gladion = 0`.
+
+The Prize posterior is unchanged. Ability state changes the downstream execution capacity and changes which recovery line is best.
+
 ## Evidence
 
 The regression verifies the bundled card texts for:
