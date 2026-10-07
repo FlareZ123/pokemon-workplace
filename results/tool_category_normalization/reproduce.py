@@ -16,21 +16,21 @@ summary = summarize_legacy_tool_normalization(RESOURCES)
 counts = summary["counts"]
 
 assert counts["legal_expanded_prints"] == 14829
-assert counts["changed_tool_prints"] == 213
-assert counts["changed_tool_names"] == 168
+assert counts["changed_tool_prints"] == 211
+assert counts["changed_tool_names"] == 167
 assert counts["dual_item_tool_prints"] == 30
 assert counts["obsolete_item_rule_prints"] == 213
 assert counts["raw_legal_gameplay_fingerprints"] == 10416
 assert counts["normalized_legal_gameplay_fingerprints"] == 10416
 assert summary["changed_by_series"] == {
     "Black & White": 22,
-    "Sun & Moon": 62,
+    "Sun & Moon": 60,
     "Sword & Shield": 69,
     "XY": 60,
 }
 assert summary["obsolete_item_rule_phrases"] == {
     "You may play any number of Item cards during your turn.": 69,
-    "You may play as many Item cards as you like during your turn (before your attack).": 144,
+    "You may play as many Item cards as you like during your turn (before your attack).": 142,
 }
 
 cards = {}
