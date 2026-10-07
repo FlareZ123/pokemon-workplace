@@ -307,6 +307,7 @@ def evolve(
     object_id: str,
     *,
     new_card_name: str,
+    new_print_id: str | None = None,
     new_tags: Iterable[str] | None = None,
 ) -> BoardState | None:
     """Replace the top card identity while preserving persistent board state."""
@@ -319,6 +320,7 @@ def evolve(
     evolved = replace(
         pokemon,
         card_name=new_card_name,
+        print_id=new_print_id,
         tags=(
             frozenset(new_tags)
             if new_tags is not None
