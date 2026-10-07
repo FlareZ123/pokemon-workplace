@@ -45,6 +45,7 @@ from lock_state_kernel import (
     suppress_tool_effect,
 )
 from prize_belief_kernel import PrizeBelief
+from turn_action_budget import TurnAction, TurnActionBudget
 
 
 class Zone(str, Enum):
@@ -77,6 +78,7 @@ class UnifiedState:
     attack_reductions: tuple[tuple[str, int], ...] = ()
     attacks_allowed: bool = True
     gladion_played: bool = False
+    turn_budget: TurnActionBudget | None = None
 
     def zone(self, card: str) -> str | None:
         return dict(self.locations).get(card)
@@ -143,6 +145,36 @@ def validate_state(state: UnifiedState) -> None:
             )
 
 
+def effective_turn_budget(state: UnifiedState) -> TurnActionBudget:
+    """Return the authoritative turn budget, projecting legacy flags if needed."""
+    if state.turn_budget is not None:
+        return state.turn_budget
+    return TurnActionBudget(
+        supporter_used=state.bench.supporter_used,
+        stadium_play_used=state.stadium_used,
+        manual_energy_attachment_used=state.manual_attachment_used,
+        turn_ended=state.bench.turn_ended,
+    )
+
+
+def consume_turn_action(state: UnifiedState, action: TurnAction) -> UnifiedState | None:
+    """Consume one action from the canonical budget and mirror legacy flags."""
+    next_budget = effective_turn_budget(state).consume(action)
+    if next_budget is None:
+        return None
+    return replace(
+        state,
+        turn_budget=next_budget,
+        bench=replace(
+            state.bench,
+            supporter_used=next_budget.supporter_used,
+            turn_ended=next_budget.turn_ended,
+        ),
+        stadium_used=next_budget.stadium_play_used,
+        manual_attachment_used=next_budget.manual_energy_attachment_used,
+    )
+
+
 def _move(state: UnifiedState, card: str, zone: Zone) -> UnifiedState:
     locations = dict(state.locations)
     locations[card] = zone.value
@@ -158,7 +190,7 @@ def _add_bench_resident(
     trigger_name: str | None = None,
 ) -> UnifiedState | None:
     bench = state.bench
-    if bench.turn_ended or len(bench.residents) >= bench.capacity:
+    if effective_turn_budget(state).turn_ended or len(bench.residents) >= bench.capacity:
         return None
     resident = BenchResident(
         name=name,
@@ -182,7 +214,7 @@ def apply_lock(state: UnifiedState, dimension: str) -> UnifiedState:
 
 
 def quick_ball_for_tapu_lele(state: UnifiedState) -> list[Transition]:
-    if state.bench.turn_ended or not state.channels.item_play:
+    if effective_turn_budget(state).turn_ended or not state.channels.item_play:
         return []
     if (
         state.zone("Quick Ball") != Zone.HAND.value
@@ -253,18 +285,15 @@ def play_tapu_lele_from_hand(state: UnifiedState) -> list[Transition]:
 def play_gladion(state: UnifiedState) -> list[Transition]:
     if (
         not state.channels.supporter_play
-        or state.bench.supporter_used
-        or state.bench.turn_ended
+        or not effective_turn_budget(state).can(TurnAction.SUPPORTER)
         or state.zone("Gladion") != Zone.HAND.value
     ):
         return []
 
     next_state = _move(state, "Gladion", Zone.DISCARD)
-    next_state = replace(
-        next_state,
-        bench=replace(next_state.bench, supporter_used=True),
-        gladion_played=True,
-    )
+    next_state = consume_turn_action(next_state, TurnAction.SUPPORTER)
+    assert next_state is not None
+    next_state = replace(next_state, gladion_played=True)
     return [("Play Gladion", next_state)]
 
 
@@ -311,7 +340,7 @@ def attach_tool_to_active(
     """Attach one modeled Tool while keeping Item and Tool channels distinct."""
 
     if (
-        state.bench.turn_ended
+        effective_turn_budget(state).turn_ended
         or not state.channels.tool_play
         or state.active_name is None
         or state.active_pokemon.tool_attached
@@ -349,9 +378,8 @@ def active_tool_protects(state: UnifiedState) -> bool:
 
 def attach_dce_to_active(state: UnifiedState) -> UnifiedState | None:
     if (
-        state.bench.turn_ended
-        or not state.channels.special_energy_play
-        or state.manual_attachment_used
+        not state.channels.special_energy_play
+        or not effective_turn_budget(state).can(TurnAction.MANUAL_ENERGY_ATTACHMENT)
         or state.active_name is None
         or state.zone("Double Colorless Energy") != Zone.HAND.value
     ):
@@ -361,9 +389,10 @@ def attach_dce_to_active(state: UnifiedState) -> UnifiedState | None:
         return None
 
     next_state = _move(state, "Double Colorless Energy", Zone.ATTACHED)
+    next_state = consume_turn_action(next_state, TurnAction.MANUAL_ENERGY_ATTACHMENT)
+    assert next_state is not None
     next_state = replace(
         next_state,
-        manual_attachment_used=True,
         attached_energy_cards=next_state.attached_energy_cards
         + (
             AttachedEnergyCard(
@@ -380,22 +409,19 @@ def attach_dce_to_active(state: UnifiedState) -> UnifiedState | None:
 
 def play_thunder_mountain(state: UnifiedState) -> UnifiedState | None:
     if (
-        state.bench.turn_ended
-        or not state.channels.stadium_play
-        or state.stadium_used
+        not state.channels.stadium_play
+        or not effective_turn_budget(state).can(TurnAction.STADIUM_PLAY)
         or state.zone("Thunder Mountain Prism Star") != Zone.HAND.value
     ):
         return None
 
     next_state = _move(state, "Thunder Mountain Prism Star", Zone.STADIUM)
+    next_state = consume_turn_action(next_state, TurnAction.STADIUM_PLAY)
+    assert next_state is not None
     reductions = next_state.attack_reductions
     if "Lightning" in next_state.active_tags:
         reductions = reductions + (("L", 1),)
-    return replace(
-        next_state,
-        stadium_used=True,
-        attack_reductions=reductions,
-    )
+    return replace(next_state, attack_reductions=reductions)
 
 
 def attack_ready(
