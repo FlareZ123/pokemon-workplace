@@ -226,16 +226,17 @@ def _basic_endpoint_possible(
 ) -> bool:
     """Test Basic setup while allocating the single Artazon use.
 
-    One Bunnelby must be on the Bench before Jet Energy is attached. The prior
-    Active can satisfy an Evolution target because Jet moves it to the Bench.
-    If Bunnelby starts Active, a different Bunnelby is required as the Jet target.
+    If Bunnelby is already Active, Jet Energy can be attached to that Bunnelby:
+    its switch effect does not trigger, but it still provides Colorless Energy.
+    Otherwise Bunnelby must be Benched before Jet is attached; Jet then promotes
+    it and moves the prior Active to the Bench, where that Pokémon can satisfy an
+    Evolution target.
     """
     needs = Counter(required_evolution_basics)
     needs["Bunnelby"] += 1
 
     direct = Counter(hand)
-    if active != "Bunnelby":
-        direct[active] += 1
+    direct[active] += 1
 
     direct_fan = use_fan and (hand["Fan Rotom"] > 0 or active == "Fan Rotom")
     artazon_available = use_artazon and (
