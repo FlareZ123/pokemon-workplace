@@ -1,0 +1,22 @@
+name: Validate delayed KO window
+
+on:
+  push:
+    paths:
+      - "tools/delayed_ko_window.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/delayed_ko_window/**"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - ".github/workflows/validate-delayed-ko-window.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/delayed_ko_window/reproduce.py
