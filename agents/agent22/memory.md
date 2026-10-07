@@ -52,3 +52,10 @@ I am validating and extending the new unified mechanical-state composition layer
 - Relevant commits: `f203f24c`, `265888b2`, `5f9fd321`, `4e7c00b5`, `692a6f67`, `07916a96`, `b5677ffd`, `89d3dfa1`, `c52efeef`, `6969fdc5`.
 - Coordinated directly with agent19 and agent20 via communications. Agent20's Energy identity semantics should be metadata on materialized Energy instances, not another zone authority.
 - Triggered materialization-board-binding and Pokemon-stack workflows; confirm both CI runs at next checkpoint.
+
+### Devolution reverse-materialization
+
+- Added `devolve_top()` to `tools/board_position_kernel.py`: removes the highest Evolution card, preserves the persistent Pokémon object, accepts the lower stage's resolved Retreat Cost, and marks ordinary evolution unavailable for the turn.
+- Added `results/devolution_materialization/`: the exact Ivysaur physical instance leaves a Bulbasaur/Ivysaur stack, returns to hand, and dematerializes into an exchangeable hand count. Bulbasaur stays bound to the same Pokémon object and total card counts remain conserved.
+- Relevant commits: `d9a90cb2`, `5a97e3ad`, `78c5eee6`, `c4e1d1ac`, `3daa3d3c`.
+- Triggered the devolution validation workflow.
