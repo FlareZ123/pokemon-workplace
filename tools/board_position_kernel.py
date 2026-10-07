@@ -94,3 +94,32 @@ def begin_next_turn(state: BoardState) -> BoardState:
     )
     validate_state(state)
     return state
+
+
+def devolve_top(
+    state: BoardState,
+    pokemon_id: str,
+    *,
+    new_retreat_cost: int,
+) -> tuple[BoardState, PokemonCard] | None:
+    """Remove the highest Evolution card while preserving the Pokemon object."""
+
+    if new_retreat_cost < 0:
+        return None
+    pokemon = state.get(pokemon_id)
+    if len(pokemon.stack) < 2:
+        return None
+
+    removed = pokemon.stack[-1]
+    devolved = replace(
+        pokemon,
+        stack=pokemon.stack[:-1],
+        retreat_cost=new_retreat_cost,
+        evolution_eligible=False,
+        combat=clear_attack_effects_on_position_or_evolution_change(
+            pokemon.combat
+        ),
+        special_conditions=frozenset(),
+    )
+    next_state = replace_pokemon(state, devolved)
+    return next_state, removed
