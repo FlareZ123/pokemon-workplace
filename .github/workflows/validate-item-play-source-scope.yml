@@ -1,0 +1,25 @@
+name: Validate Item play source scope
+
+on:
+  push:
+    paths:
+      - "tools/item_play_source_scope.py"
+      - "tools/before_hand_prize_profiles.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/prize_origin_item_lock_scope/**"
+      - ".github/workflows/validate-item-play-source-scope.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Item-play source-zone scope
+        run: python results/prize_origin_item_lock_scope/reproduce.py
