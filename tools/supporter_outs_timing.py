@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from math import comb
 from typing import Iterator
 
+from lock_state_kernel import PlayerChannels
 from turn_action_budget import TurnAction, TurnActionBudget
 
 
@@ -91,6 +92,7 @@ def same_turn_supporter_access(
     extra_random_draws: int = 0,
     supporter_plays_remaining: int | None = None,
     turn_budget: TurnActionBudget | None = None,
+    player_channels: PlayerChannels | None = None,
 ) -> SupporterAccessResult:
     """Return exact same-turn access to a target Supporter.
 
@@ -109,7 +111,9 @@ def same_turn_supporter_access(
 
     Callers may provide either an explicit "supporter_plays_remaining" value or a
     canonical "turn_budget". When a budget is supplied, remaining Supporter quota
-    is derived from its current usage, limit, and turn-ended state.
+    is derived from its current usage, limit, and turn-ended state. An optional
+    "player_channels" state then applies play permission; Supporter lock reduces
+    executable capacity to zero without mutating quota history.
 
     "naive_access_probability" is the reachability result obtained by incorrectly
     treating both connector classes as if they preserve the Supporter play. It is
@@ -155,6 +159,8 @@ def same_turn_supporter_access(
 
     if supporter_plays_remaining < 0:
         raise ValueError("supporter_plays_remaining must be non-negative")
+    if player_channels is not None and not player_channels.supporter_play:
+        supporter_plays_remaining = 0
 
     filler_starters = starter_cards - preserving_starter_connectors
     filler_nonstarters = deck_size - starter_cards - used_nonstarters
