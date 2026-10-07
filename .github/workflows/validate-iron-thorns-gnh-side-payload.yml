@@ -1,0 +1,23 @@
+name: Validate Iron Thorns Guzma Hala side payload
+
+on:
+  push:
+    paths:
+      - "tools/iron_thorns_gnh_side_payload.py"
+      - "results/iron_thorns_gnh_side_payload/**"
+      - ".github/workflows/validate-iron-thorns-gnh-side-payload.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check multi-output side payload
+        run: python results/iron_thorns_gnh_side_payload/reproduce.py
