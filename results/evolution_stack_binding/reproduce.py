@@ -28,20 +28,24 @@ def main() -> None:
     )
     tool = ToolAttachment("tool", "Air Balloon", print_id="me1-166")
     active = make_pokemon(
-        "active", "Bulbasaur", tags=("Grass", "Basic"),
+        "active", "Bulbasaur", print_id="base-print", tags=("Grass", "Basic"),
         energy=(energy,), tool=tool, temporary_attack_lock=True,
         damage_counters=4, special_conditions=("Poisoned",),
     )
     pivot = make_pokemon("pivot", "Pivot", tags=("Basic",))
     board = make_board(active, (pivot,))
 
-    bulba = StackCard("bulba", "Bulbasaur", 0, 80, tags=frozenset({"Grass", "Basic"}))
+    bulba = StackCard(
+        "bulba", "Bulbasaur", 0, 80,
+        tags=frozenset({"Grass", "Basic"}), print_id="base-print",
+    )
     ivy = StackCard(
-        "ivy", "Ivysaur", 1, 110, "Bulbasaur", frozenset({"Grass", "Stage 1"})
+        "ivy", "Ivysaur", 1, 110, "Bulbasaur",
+        frozenset({"Grass", "Stage 1"}), print_id="ivy-print",
     )
     venus = StackCard(
         "venus", "Mega Venusaur ex", 2, 380, "Ivysaur",
-        frozenset({"Grass", "Stage 2", "MEGA", "ex"}),
+        frozenset({"Grass", "Stage 2", "MEGA", "ex"}), print_id="venus-print",
     )
     pivot_card = StackCard("pivot-card", "Pivot", 0, 100, tags=frozenset({"Basic"}))
     state = make_evolution_state(
@@ -71,6 +75,7 @@ def main() -> None:
     assert first is not None
     evolved = first.state.board.get("active")
     assert evolved.card_name == "Ivysaur"
+    assert evolved.print_id == "ivy-print"
     assert evolved.damage_counters == 4
     assert evolved.energy == (energy,) and evolved.tool == tool
     assert not evolved.pokemon_state.temporary_attack_lock
@@ -84,6 +89,7 @@ def main() -> None:
     second = ordinary_evolve(ready, first.ledger, "active", venus)
     assert second is not None
     assert second.state.board.get("active").card_name == "Mega Venusaur ex"
+    assert second.state.board.get("active").print_id == "venus-print"
     assert [card.instance_id for card in second.state.stack("active").cards] == [
         "bulba", "ivy", "venus"
     ]
@@ -93,6 +99,7 @@ def main() -> None:
     assert devolved.removed_instance_id == "venus"
     assert not devolved.knockout_required
     assert devolved.state.board.get("active").card_name == "Ivysaur"
+    assert devolved.state.board.get("active").print_id == "ivy-print"
     assert devolved.ledger.instance("venus").zone == "hand"
     assert devolved.ledger.instance("venus").board_object_id is None
     assert not devolved.state.stack("active").evolution_eligible
@@ -156,6 +163,7 @@ def main() -> None:
     )
     assert candy_devolved is not None and candy_devolved.knockout_required
     assert candy_devolved.state.board.get("candy").card_name == "Bulbasaur"
+    assert candy_devolved.state.board.get("candy").print_id == "base-print"
     assert candy_devolved.ledger.instance("venus").zone == "deck"
     assert candy_devolved.ledger.instance("venus").board_object_id is None
 
