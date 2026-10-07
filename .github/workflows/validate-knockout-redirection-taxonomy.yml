@@ -1,0 +1,24 @@
+name: Validate Knock Out redirection taxonomy
+
+on:
+  push:
+    paths:
+      - "tools/knockout_redirection_taxonomy.py"
+      - "tools/physical_transition_text_catalog.py"
+      - "results/knockout_redirection_taxonomy/**"
+      - ".github/workflows/validate-knockout-redirection-taxonomy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check redirection taxonomy coverage
+        run: python results/knockout_redirection_taxonomy/reproduce.py
