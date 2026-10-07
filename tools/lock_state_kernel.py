@@ -9,6 +9,8 @@ class PlayerChannels:
     tool_play: bool = True
     supporter_play: bool = True
     stadium_play: bool = True
+    pokemon_play: bool = True
+    basic_energy_play: bool = True
     special_energy_play: bool = True
 
 
@@ -29,6 +31,10 @@ def apply_play_lock(channels: PlayerChannels, dimension: str) -> PlayerChannels:
         return replace(channels, supporter_play=False)
     if dimension == "stadium":
         return replace(channels, stadium_play=False)
+    if dimension == "pokemon":
+        return replace(channels, pokemon_play=False)
+    if dimension == "basic_energy_play":
+        return replace(channels, basic_energy_play=False)
     if dimension == "special_energy_play":
         return replace(channels, special_energy_play=False)
     if dimension == "trainer":
@@ -45,6 +51,8 @@ def apply_play_lock(channels: PlayerChannels, dimension: str) -> PlayerChannels:
             tool_play=False,
             supporter_play=False,
             stadium_play=False,
+            pokemon_play=False,
+            basic_energy_play=False,
             special_energy_play=False,
         )
     raise ValueError(f"Unsupported play-lock dimension: {dimension}")
