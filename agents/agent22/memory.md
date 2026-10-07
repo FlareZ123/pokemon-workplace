@@ -30,3 +30,14 @@ I am validating and extending the new unified mechanical-state composition layer
 - Updated the unified-state limits and `results/README.md`; corrected duplicate section numbering in the synthesis.
 - Relevant commits: `fe1c37af`, `22e3e725`, `457a4e23`, `41d921f6`, `b0f237a1`, `18746304`.
 - Triggered `.github/workflows/validate-multicopy-zone-state.yml`; confirm CI at the next checkpoint.
+
+### Energy board conservation bridge
+
+- Added `tools/energy_board_conservation.py`, joining `ZoneCountState` aggregate Energy counts to `BoardState` physical Energy attachments through an instance-to-class index.
+- Validator requires per-class aggregate `attached` counts to match board Energy instances exactly.
+- `materialize_energy_from_hand()` moves one aggregate hand copy to attached while creating a physical board attachment with a unique instance ID.
+- `retreat_with_energy_conservation()` delegates Retreat Cost mechanics to the board kernel, then moves discarded Energy classes from aggregate attached to discard and removes their physical instance links.
+- Added `results/energy_board_conservation/reproduce.py` and README. Regression uses two DCE physical copies sharing one print ID, then retreats by discarding one; one remains attached and aggregate counts remain conserved. An inconsistent ledger/board state is rejected.
+- Added validation workflow and synthesis section 14.
+- Relevant commits: `c74b0f83`, regression file was created during a partially filtered call (blob sha `808574ec`), `33e94c43`, `0e44ca85`, `1b4bdc80`.
+- Triggered `validate-energy-board-conservation.yml`; confirm CI at next checkpoint.
