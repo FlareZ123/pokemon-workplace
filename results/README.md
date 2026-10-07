@@ -466,6 +466,16 @@ In the regression's two-world correlation witness, Player B taking an exact Swit
 
 **Working synthesis:** recursive Prize effects need one coupled material-and-information transition. Extending only the physical pending queue would preserve card conservation while silently losing observer-relative Bayesian state.
 
+## 38. Dream Ball carries exact typed search identity directly into Bench topology
+
+[dream_ball_typed_bench_execution/](dream_ball_typed_bench_execution/) composes the Prize-origin Dream Ball resolving state with the typed target allocator and the physical board ledger.
+
+Two legal Pokémon targets can collapse to the same strategic one-Pokémon demand profile while retaining different exact target-cost witnesses. The executor carries that exact witness through deck depletion, instance materialization, and a new `BoardPokemon` binding. A Stage 2 Pidgeot ex witness enters play as a one-card stack with no invented prior stages and no hand intermediate.
+
+The regression rejects a full Bench, a stale target witness whose selected Pokémon already left the deck, and a dimensionally valid non-Pokémon witness. Dream Ball itself remains in `resolving_trainer` until the secondary search has finished, then the same physical Item enters discard. Card-class totals remain conserved.
+
+**Working synthesis:** search-demand output is a planning projection. When a searched card immediately acquires board topology, the exact target witness is the correct bridge from exchangeable deck multiplicity to materialized physical identity.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
