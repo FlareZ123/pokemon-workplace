@@ -22,6 +22,7 @@ from dream_ball_typed_bench_execution import (
     DreamBallBenchTarget,
     dream_ball_target_from_metadata,
     execute_dream_ball_bench_search,
+    execute_dream_ball_item_transaction,
 )
 from identity_materialization import (
     CardInstance,
