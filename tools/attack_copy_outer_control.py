@@ -19,6 +19,7 @@ from typing import Literal
 
 ControlStage = Literal["declaration", "body"]
 ControlKind = Literal["coin_heads", "actor_hand_empty", "opponent_prizes_exact"]
+InvocationMode = Literal["declared", "copied_body"]
 ControlOutcome = Literal[
     "proceed",
     "declaration_illegal",
@@ -81,6 +82,7 @@ def evaluate_outer_control(
     actor_hand_size: int | None = None,
     opponent_prizes_remaining: int | None = None,
     coin_heads: bool | None = None,
+    invocation_mode: InvocationMode = "declared",
 ) -> ControlOutcome:
     """Evaluate one classified control without mutating game state."""
 
@@ -92,11 +94,11 @@ def evaluate_outer_control(
             raise ValueError("opponent Prize count is required")
         if opponent_prizes_remaining < 0:
             raise ValueError("opponent Prize count cannot be negative")
-        return (
-            "proceed"
-            if opponent_prizes_remaining == control.exact_value
-            else "declaration_illegal"
-        )
+        if opponent_prizes_remaining == control.exact_value:
+            return "proceed"
+        if invocation_mode == "copied_body":
+            return "resolve_without_copy"
+        return "declaration_illegal"
 
     if control.kind == "actor_hand_empty":
         if actor_hand_size is None:
