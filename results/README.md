@@ -674,6 +674,18 @@ The new growable cross-player context begins with either side's pending set empt
 
 **Working synthesis:** atomic KO disposal does not imply fixed KO membership. Trigger execution must be allowed to enlarge the pending set before the batch is frozen.
 
+
+## 57. Discard legality can be derived from future replacement continuations
+
+[continuation_aware_discard_policy/](continuation_aware_discard_policy/) turns transient payload discardability into an executable policy seam. It enumerates exact current discard witnesses, runs caller-supplied legal continuations, retains only branches that satisfy the endpoint, and applies DCI-style scoring only after that future-feasibility filter.
+
+In the three-filler Secret Box state, the policy is given every legal Guzma & Hala retrieval rather than a chosen reacquisition mode. With replacement TM and Artazon both still in deck, Tag Call + TM, Tag Call + Artazon, and TM + Artazon are all future-feasible for the TM + Artazon + Jet endpoint. With only TM replaceable, only Tag Call + TM survives. With only Artazon replaceable, only Tag Call + Artazon survives. With neither replacement available, no two-card discard can preserve the endpoint. If Tag Call is also required, both replacement channels are needed and only TM + Artazon is safe.
+
+An illustrative DCI ranking then prefers Tag Call + TM among the already-safe witnesses. Removing the replacement TM removes that witness before scoring.
+
+**Working synthesis:** discardability is a continuation property. Current-hand value, endpoint obligations, live replacement copies, deadlines, and connector availability jointly determine whether a copy can be spent. Scalar DCI is safest as a ranking objective over continuation-valid exact witnesses.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -705,6 +717,7 @@ Particularly foundational components include:
 - `identity_materialization.py`
 - `card_class_namespace.py`
 - `temporal_resource_ledger.py`
+- `continuation_discard_policy.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
