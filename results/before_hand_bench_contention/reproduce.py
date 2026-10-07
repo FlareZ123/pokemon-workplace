@@ -54,7 +54,7 @@ def build_state():
 
     ledger = IdentityLedger(
         ZoneCountState.from_mapping({("sm2-60", "deck"): 1}),
-        tuple(instances),
+        tuple(sorted(instances, key=lambda row: row.instance_id)),
     )
     board = PromotionPendingState(
         ledger,
