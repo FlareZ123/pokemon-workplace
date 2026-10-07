@@ -20,10 +20,12 @@ from identity_materialization import (
     materialize,
     put_in_play_instance,
 )
+from pokemon_board_metadata import PokemonBoardMetadata
 from promotion_pending_conservation import PromotionPendingState
 from search_zone_transition import SearchZoneTarget, apply_typed_search_action
 from top_prize_physical_bridge import TopPrizePhysicalState
 from typed_search_target_allocator import (
+    TargetGroup,
     TypedTargetAction,
     selector_from_label,
 )
@@ -47,6 +49,30 @@ class DreamBallBenchTarget:
             raise ValueError("card_name must be non-empty")
         if self.retreat_cost < 0:
             raise ValueError("retreat_cost must be non-negative")
+
+
+def dream_ball_target_from_metadata(
+    metadata: PokemonBoardMetadata,
+    *,
+    copies: int,
+) -> DreamBallBenchTarget:
+    """Bind exact database metadata to one typed Dream Ball search target."""
+
+    if copies < 0:
+        raise ValueError("copies must be non-negative")
+    return DreamBallBenchTarget(
+        SearchZoneTarget(
+            metadata.card_id,
+            TargetGroup(
+                metadata.name,
+                copies,
+                metadata.tags,
+            ),
+        ),
+        metadata.name,
+        metadata.retreat_cost,
+        metadata.evolves_from,
+    )
 
 
 @dataclass(frozen=True)
