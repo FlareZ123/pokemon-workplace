@@ -5,7 +5,9 @@ on:
     paths:
       - "tools/official_print_errata.py"
       - "tools/build_expanded_legality_baseline.py"
+      - "tools/reprint_errata_resolution.py"
       - "results/print_specific_errata_audit/**"
+      - "results/reprint_errata_resolution/**"
       - ".github/workflows/validate-agent3-print-specific-errata.yml"
   workflow_dispatch:
 
@@ -18,3 +20,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: python results/print_specific_errata_audit/reproduce.py
+      - run: python results/reprint_errata_resolution/reproduce.py
