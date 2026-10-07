@@ -31,17 +31,35 @@ def one(rows, *, card_id: str, source_name: str | None = None):
 def main() -> None:
     rows = compile_position_effect_profiles(ROOT / "resources")
 
-    assert len(rows) == 149
-    assert len({row.name for row in rows}) == 88
+    assert len(rows) == 316
+    assert len({row.name for row in rows}) == 190
     assert Counter((row.source_kind, row.kind) for row in rows) == Counter(
         {
             ("trainer", PositionEffectKind.SELF_SWITCH): 17,
             ("trainer", PositionEffectKind.OPPONENT_FORCED_SWITCH): 2,
             ("trainer", PositionEffectKind.TARGETED_GUST): 29,
+            ("attack", PositionEffectKind.SELF_SWITCH): 167,
             ("attack", PositionEffectKind.OPPONENT_FORCED_SWITCH): 71,
             ("attack", PositionEffectKind.TARGETED_GUST): 30,
         }
     )
+
+    attack_self_switches = tuple(
+        row
+        for row in rows
+        if row.source_kind == "attack"
+        and row.kind == PositionEffectKind.SELF_SWITCH
+    )
+    assert len(attack_self_switches) == 167
+    assert sum(row.optional for row in attack_self_switches) == 58
+
+    buneary = one(rows, card_id="me2-83", source_name="Run Around")
+    tapu_fini = one(rows, card_id="sm3-39", source_name="Aqua Ring")
+    golisopod = one(rows, card_id="sm3-17", source_name="Crossing Cut-GX")
+    assert not buneary.optional
+    assert tapu_fini.optional
+    assert not golisopod.optional
+    assert buneary.kind == tapu_fini.kind == golisopod.kind == PositionEffectKind.SELF_SWITCH
 
     switch = one(rows, card_id="bw1-104")
     assert switch.kind == PositionEffectKind.SELF_SWITCH
@@ -97,6 +115,15 @@ def main() -> None:
             make_pokemon("opp-bench-b", "Target B"),
         ),
     )
+
+    attack_pivot = execute_position_effect(
+        tapu_fini,
+        actor,
+        opponent,
+        chosen_object_id="actor-bench",
+    )
+    assert attack_pivot is not None
+    assert attack_pivot.actor_board.active_id == "actor-bench"
 
     own_switch = execute_position_effect(
         switch,
