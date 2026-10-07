@@ -11,6 +11,13 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from typing import Callable, Iterable
 
+from energy_action_budget import (
+    EnergyRouteProfile,
+    EnergyRouteType,
+    evaluate_energy_routes,
+    unit,
+)
+
 
 @dataclass(frozen=True)
 class PokemonRef:
@@ -22,6 +29,7 @@ class PokemonRef:
     subtypes: tuple[str, ...] = ()
     attacks: tuple[str, ...] = ()
     has_rule_box: bool = False
+    attached_energy_units: tuple[frozenset[str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -32,6 +40,7 @@ class CopySelector:
     required_subtype: str | None = None
     require_no_rule_box: bool = False
     move_selected_source_to: str | None = None
+    require_selected_energy: bool = False
 
 
 @dataclass(frozen=True)
@@ -55,6 +64,7 @@ class AttackDef:
     post_event: str | None = None
     progress_delta: int = 0
     turn_boundary_effect: TurnBoundaryEffect | None = None
+    energy_cost: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -83,6 +93,7 @@ class TraceStep:
     body_attack_name: str
     selected_attack_id: str | None
     progress: int
+    selected_body_executed: bool | None = None
 
 
 @dataclass(frozen=True)
@@ -200,6 +211,42 @@ def _candidate_attacks(
     }
 
 
+
+def _selected_attack_energy_ready(
+    *,
+    actor_card_id: str,
+    selected_attack: AttackDef,
+    state: State,
+) -> bool:
+    if not selected_attack.energy_cost:
+        return True
+
+    actor = next(
+        (card for card in state.pokemon if card.card_id == actor_card_id),
+        None,
+    )
+    if actor is None or not actor.attached_energy_units:
+        return False
+
+    route = EnergyRouteType(
+        "attached Energy on copying Pokémon",
+        1,
+        (
+            EnergyRouteProfile(
+                units=tuple(
+                    unit(*sorted(types))
+                    for types in actor.attached_energy_units
+                ),
+            ),
+        ),
+    )
+    return evaluate_energy_routes(
+        selected_attack.energy_cost,
+        {},
+        set(),
+        (route,),
+    ).exact_feasible
+
 def resolve_attack(
     *,
     actor_player: str,
@@ -294,6 +341,7 @@ def resolve_attack(
                     body_attack_name=body.name,
                     selected_attack_id=None,
                     progress=current.progress,
+                    selected_body_executed=None,
                 )
             )
             return current
@@ -308,6 +356,33 @@ def resolve_attack(
             )
 
         selector = body.copy_selector
+        if (
+            selector is not None
+            and selector.require_selected_energy
+            and not _selected_attack_energy_ready(
+                actor_card_id=actor_card_id,
+                selected_attack=attacks[selected],
+                state=current,
+            )
+        ):
+            trace.append(
+                TraceStep(
+                    depth=depth,
+                    declared_attack_id=declared_attack_id,
+                    body_attack_id=body_attack_id,
+                    body_attack_name=body.name,
+                    selected_attack_id=selected,
+                    progress=current.progress,
+                    selected_body_executed=False,
+                )
+            )
+            if body.post_event is not None:
+                current = replace(
+                    current,
+                    events=current.events + (body.post_event,),
+                )
+            return current
+
         if selector is not None and selector.move_selected_source_to is not None:
             source_ids = candidate_sources.get(selected, ())
             if not source_ids:
@@ -349,6 +424,7 @@ def resolve_attack(
                 body_attack_name=body.name,
                 selected_attack_id=selected,
                 progress=current.progress,
+                selected_body_executed=True,
             )
         )
         current = execute(selected, current, depth + 1)
