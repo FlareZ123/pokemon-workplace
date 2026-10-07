@@ -218,7 +218,7 @@ Any simulator, validator, optimizer, or card index should therefore avoid using 
 
 The handbook's Copycat example is a concrete counterexample to exact-text identity as a complete reprint rule: the two database fingerprints differ even though official tournament guidance treats the effects as functionally identical. Reprint equivalence therefore needs an errata-aware semantic layer rather than a name lookup or raw-text equality test.
 
-[reprint_errata_resolution/](reprint_errata_resolution/) adds the first authoritative normalization layer before free-form semantic review. Fifteen name-wide Trainer errata entries yield 44 additional historical candidates across 11 names, all beyond the 106 exact-fingerprint candidates. The 4,260-print same-name pool now partitions into 106 exact candidates, 44 official-errata candidates, and 4,110 semantic-review cases. Among historical Trainer prints, exact fingerprinting plus errata resolves 46 of 168 candidates.
+[reprint_errata_resolution/](reprint_errata_resolution/) now separates 106 exact current-semantic candidates, 42 historically bridged candidates, 44 name-wide errata candidates, 34 known non-equivalent prints, and 4,034 unresolved semantic-review prints within the 4,260-print same-name pool. [reprint_divergence_predicates/](reprint_divergence_predicates/) adds a first structured semantic-difference layer: five historical benchmark rows contain explicit `excluding ...` clauses, three Great Ball rows are superseded by current name-wide errata, and two Life Herb rows expose the reachable predicate `target is Pokémon-ex`. The current Scizor ex witness makes those two Life Herb printings known non-equivalent in present paper Expanded.
 
 ## 11. Cross-kernel composition needs one canonical physical state
 
