@@ -1,10 +1,10 @@
 """Joint planner for Trainer acquisition actions and downstream objectives.
 
 Acquisition actions are assumed to be semantically validated before entering this
-planner. Each action adds known Trainer classes to hand, consumes its own Trainer
-play window, and may consume a shared discardable-card pool. The resulting hand
-and remaining turn windows are then evaluated by the acquired-Trainer execution
-capacity solver.
+planner. Each action consumes a physical searchable-card pool, adds those cards
+to hand, consumes its own Trainer play window, and may consume a shared
+discardable-card pool. The resulting hand and remaining turn windows are then
+evaluated by the acquired-Trainer execution-capacity solver.
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ _ACTION_CLASSES = frozenset(
 
 @dataclass(frozen=True)
 class TrainerAcquisitionAction:
-    """One available acquisition action with trusted hand outputs."""
+    """One available acquisition action with trusted deck-to-hand outputs."""
 
     name: str
     action_class: str
@@ -51,7 +51,9 @@ class TrainerAcquisitionAction:
             not card_class or count <= 0
             for card_class, count in self.hand_outputs
         ):
-            raise ValueError("hand outputs require non-empty classes and positive counts")
+            raise ValueError(
+                "hand outputs require non-empty classes and positive counts"
+            )
 
 
 @dataclass(frozen=True)
@@ -79,6 +81,7 @@ class StagedTrainerObjectiveResult:
     discard_spent: int
     execution_result: TrainerExecutionCapacityResult
     hand_after_acquisition: tuple[tuple[str, int], ...]
+    searchable_after_acquisition: tuple[tuple[str, int], ...]
     windows_after_acquisition: tuple[ExecutionTurnWindow, ...]
 
 
@@ -134,6 +137,7 @@ def _zero_execution_result() -> TrainerExecutionCapacityResult:
 def evaluate_staged_trainer_objectives(
     initial_hand: Mapping[str, int],
     *,
+    searchable_cards: Mapping[str, int],
     discardable_cards: int,
     acquisition_actions: Sequence[TrainerAcquisitionAction],
     acquisition_requirements: Sequence[TrainerAcquisitionRequirement] = (),
@@ -143,6 +147,9 @@ def evaluate_staged_trainer_objectives(
 ) -> StagedTrainerObjectiveResult:
     """Choose acquisition actions, then score acquisition and execution goals.
 
+    Every search output is removed from searchable_cards before it is added to
+    hand, so alternative search routes cannot duplicate one physical target.
+
     Tie breaking prefers lower discard expenditure, then fewer acquisition
     actions, after maximizing completed objective units.
     """
@@ -151,6 +158,8 @@ def evaluate_staged_trainer_objectives(
         raise ValueError("discardable_cards must be non-negative")
     if any(count < 0 for count in initial_hand.values()):
         raise ValueError("initial hand counts must be non-negative")
+    if any(count < 0 for count in searchable_cards.values()):
+        raise ValueError("searchable card counts must be non-negative")
 
     action_types = tuple(acquisition_actions)
     acquire_goals = tuple(acquisition_requirements)
@@ -168,6 +177,7 @@ def evaluate_staged_trainer_objectives(
 
     hand_classes = sorted(
         set(initial_hand)
+        | set(searchable_cards)
         | {
             card_class
             for action in action_types
@@ -176,8 +186,25 @@ def evaluate_staged_trainer_objectives(
         | {goal.card_class for goal in acquire_goals}
         | {goal.card_class for goal in execute_goals}
     )
-    initial_hand_tuple = tuple(initial_hand.get(card_class, 0) for card_class in hand_classes)
-    hand_index = {card_class: index for index, card_class in enumerate(hand_classes)}
+    hand_index = {
+        card_class: index
+        for index, card_class in enumerate(hand_classes)
+    }
+    initial_hand_tuple = tuple(
+        initial_hand.get(card_class, 0)
+        for card_class in hand_classes
+    )
+    initial_searchable_tuple = tuple(
+        searchable_cards.get(card_class, 0)
+        for card_class in hand_classes
+    )
+
+    for action in action_types:
+        for card_class, _count in action.hand_outputs:
+            if card_class not in searchable_cards:
+                raise ValueError(
+                    f"searchable_cards has no explicit count for {card_class!r}"
+                )
 
     action_units = tuple(
         action
@@ -195,9 +222,9 @@ def evaluate_staged_trainer_objectives(
 
     def score_terminal(
         hand_state: tuple[int, ...],
+        searchable_state: tuple[int, ...],
         remaining_discard: int,
         current_windows: tuple[ExecutionTurnWindow, ...],
-        used_actions: tuple[str, ...],
     ):
         hand_map = {
             card_class: count
@@ -221,13 +248,23 @@ def evaluate_staged_trainer_objectives(
         key = (
             completed,
             -discard_spent,
-            -len(used_actions),
         )
-        return key, acquired_units, execution, discard_spent, hand_map
+        searchable_map = {
+            card_class: count
+            for card_class, count in zip(hand_classes, searchable_state)
+        }
+        return (
+            key,
+            execution,
+            discard_spent,
+            hand_map,
+            searchable_map,
+        )
 
     def visit(
         action_index: int,
         hand_state: tuple[int, ...],
+        searchable_state: tuple[int, ...],
         remaining_discard: int,
         current_windows: tuple[ExecutionTurnWindow, ...],
         used_actions: tuple[str, ...],
@@ -237,12 +274,18 @@ def evaluate_staged_trainer_objectives(
         if action_index == len(action_units):
             terminal = score_terminal(
                 hand_state,
+                searchable_state,
                 remaining_discard,
                 current_windows,
-                used_actions,
             )
-            if best is None or terminal[0] > best[0]:
-                best = terminal + (used_actions, current_windows)
+            candidate = terminal + (used_actions, current_windows)
+            candidate_key = (
+                terminal[0][0],
+                terminal[0][1],
+                -len(used_actions),
+            )
+            if best is None or candidate_key > best[0]:
+                best = (candidate_key,) + candidate[1:]
             return
 
         action = action_units[action_index]
@@ -250,6 +293,7 @@ def evaluate_staged_trainer_objectives(
         visit(
             action_index + 1,
             hand_state,
+            searchable_state,
             remaining_discard,
             current_windows,
             used_actions,
@@ -263,13 +307,20 @@ def evaluate_staged_trainer_objectives(
             return
 
         next_hand = list(hand_state)
+        next_searchable = list(searchable_state)
         for card_class, count in action.hand_outputs:
-            next_hand[hand_index[card_class]] += count
+            index = hand_index[card_class]
+            if next_searchable[index] < count:
+                return
+            next_searchable[index] -= count
+            next_hand[index] += count
+
         next_windows = list(current_windows)
         next_windows[acquisition_window_index] = consumed
         visit(
             action_index + 1,
             tuple(next_hand),
+            tuple(next_searchable),
             remaining_discard - action.discard_cost,
             tuple(next_windows),
             used_actions + (action.name,),
@@ -278,6 +329,7 @@ def evaluate_staged_trainer_objectives(
     visit(
         0,
         initial_hand_tuple,
+        initial_searchable_tuple,
         discardable_cards,
         window_tuple,
         (),
@@ -286,15 +338,15 @@ def evaluate_staged_trainer_objectives(
         raise AssertionError("staged planner produced no terminal state")
 
     (
-        _key,
-        _acquired_units,
+        key,
         execution,
         discard_spent,
         hand_map,
+        searchable_map,
         used_actions,
         final_windows,
     ) = best
-    maximum_completed = best[0][0]
+    maximum_completed = key[0]
 
     return StagedTrainerObjectiveResult(
         exact_joint_feasible=maximum_completed == total_objective_units,
@@ -305,5 +357,6 @@ def evaluate_staged_trainer_objectives(
         discard_spent=discard_spent,
         execution_result=execution,
         hand_after_acquisition=tuple(sorted(hand_map.items())),
+        searchable_after_acquisition=tuple(sorted(searchable_map.items())),
         windows_after_acquisition=final_windows,
     )
