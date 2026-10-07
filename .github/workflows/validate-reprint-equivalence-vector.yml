@@ -1,0 +1,23 @@
+name: validate reprint equivalence vector
+
+on:
+  push:
+    paths:
+      - "tools/reprint_equivalence_vector.py"
+      - "results/reprint_equivalence_vector/**"
+      - ".github/workflows/validate-reprint-equivalence-vector.yml"
+  pull_request:
+    paths:
+      - "tools/reprint_equivalence_vector.py"
+      - "results/reprint_equivalence_vector/**"
+      - ".github/workflows/validate-reprint-equivalence-vector.yml"
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.reprint_equivalence_vector.reproduce
