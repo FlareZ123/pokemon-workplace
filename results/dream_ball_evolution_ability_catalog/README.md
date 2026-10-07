@@ -24,7 +24,7 @@ It keeps only Pokémon classified as Evolution Pokémon and records every Abilit
 
 For Dream Ball direct Bench entry, only `in_play` and `bench_required` are called geometry-compatible.
 
-This is deliberately weaker than "the Ability works." Other predicates, once-per-turn history, resource costs, locks, and game-state conditions still have to be checked by downstream semantics.
+This is deliberately weaker than "the Ability works." Other predicates, once-per-turn history, resource costs, locks, and game-state conditions still have to be checked by downstream semantics. Activation timing is classified separately: a leading event clause such as `Once during your turn, when ...` remains event-triggered because the once-per-turn phrase limits frequency rather than creating a freely callable action.
 
 ## Audited counts
 
@@ -41,11 +41,13 @@ Therefore 1,175 exact rows are compatible with Dream Ball's direct Bench geometr
 
 Among those 1,175 compatible rows:
 
-- 570 contain a once-per-turn or as-often-as-you-like turn-action wording;
+- 559 are classified as freely callable turn actions;
 - 563 are classified as passive or continuous;
-- 42 are classified as triggered.
+- 53 are classified as event-triggered.
 
 These are card-print counts, not unique strategic effects. Reprints and functionally similar cards can appear more than once.
+
+Across all 1,539 Evolution Ability rows, the timing classifier now reports 617 turn actions, 241 triggered Abilities, and 681 passive/continuous Abilities. The previous lexical precedence produced 645 turn actions and 213 triggered rows. The correction therefore reclassifies 28 exact rows without changing any geometry assignment.
 
 ## Named witnesses
 
