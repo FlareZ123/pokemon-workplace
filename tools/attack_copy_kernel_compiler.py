@@ -16,7 +16,8 @@ class CompiledCopyAttack:
     card_name: str
     attack_index: int
     source_class: str
-    definition: AttackDef
+    definition: AttackDef | None
+    unsupported_outer_condition: str | None
 
 
 def _base_selector(source_class: str) -> CopySelector:
@@ -79,15 +80,6 @@ def _apply_contract(
 
 def compile_copy_attacks(resources_root: Path) -> tuple[CompiledCopyAttack, ...]:
     contracts = build_contracts(resources_root)["contracts"]
-    contract_by_key = {
-        (row["attack_name"], tuple(row["print_ids"])): row
-        for row in contracts
-    }
-
-    contract_for_print: dict[tuple[str, str, str], dict] = {}
-    for row in contracts:
-        for print_id in row["print_ids"]:
-            contract_for_print[(print_id, row["attack_name"], row.get("trailing_semantics", ""))] = row
 
     output: list[CompiledCopyAttack] = []
     for card in legal_cards(resources_root):
@@ -107,6 +99,15 @@ def compile_copy_attacks(resources_root: Path) -> tuple[CompiledCopyAttack, ...]
                     f"{attack.get('name')!r}; found {len(matches)}"
                 )
             contract = matches[0]
+            lowered_text = text.casefold()
+            unsupported_outer_condition = None
+            if "flip a coin" in lowered_text:
+                unsupported_outer_condition = "coin_flip_gate"
+            elif "only if your opponent has exactly 2 prize cards remaining" in lowered_text:
+                unsupported_outer_condition = "opponent_prizes_exact_2"
+            elif "if you have no cards in your hand" in lowered_text:
+                unsupported_outer_condition = "actor_hand_empty"
+
             source_classes = tuple(contract["source_classes"])
             if len(source_classes) != 1:
                 raise ValueError(
@@ -117,6 +118,9 @@ def compile_copy_attacks(resources_root: Path) -> tuple[CompiledCopyAttack, ...]
                 _base_selector(source_class),
                 contract,
             )
+            if "doesn't have a rule box" in lowered_text:
+                from dataclasses import replace
+                selector = replace(selector, require_no_rule_box=True)
 
             semantics = set(contract["non_tail_semantics"])
             pre_event = None
@@ -126,15 +130,17 @@ def compile_copy_attacks(resources_root: Path) -> tuple[CompiledCopyAttack, ...]
             if "post_copy_continuation" in semantics:
                 post_event = "shuffle_revealed"
 
-            definition = AttackDef(
-                attack_id=f"{card['id']}:attack:{attack_index}",
-                name=attack.get("name") or "",
-                is_gx=(attack.get("name") or "").endswith("-GX"),
-                copy_selector=selector,
-                pre_event=pre_event,
-                post_event=post_event,
-                energy_cost=tuple(attack.get("cost") or ()),
-            )
+            definition = None
+            if unsupported_outer_condition is None:
+                definition = AttackDef(
+                    attack_id=f"{card['id']}:attack:{attack_index}",
+                    name=attack.get("name") or "",
+                    is_gx=(attack.get("name") or "").endswith("-GX"),
+                    copy_selector=selector,
+                    pre_event=pre_event,
+                    post_event=post_event,
+                    energy_cost=tuple(attack.get("cost") or ()),
+                )
             output.append(
                 CompiledCopyAttack(
                     card_id=card["id"],
@@ -142,6 +148,7 @@ def compile_copy_attacks(resources_root: Path) -> tuple[CompiledCopyAttack, ...]
                     attack_index=attack_index,
                     source_class=source_class,
                     definition=definition,
+                    unsupported_outer_condition=unsupported_outer_condition,
                 )
             )
 
