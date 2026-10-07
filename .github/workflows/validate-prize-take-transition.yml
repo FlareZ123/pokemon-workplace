@@ -1,0 +1,26 @@
+name: Validate Prize-take truth and belief transition
+
+on:
+  push:
+    paths:
+      - "tools/prize_take_transition.py"
+      - "tools/prize_belief_kernel.py"
+      - "tools/identity_materialization.py"
+      - "tools/multicopy_zone_state.py"
+      - "results/prize_take_transition/**"
+      - ".github/workflows/validate-prize-take-transition.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize-take truth and belief transition
+        run: python results/prize_take_transition/reproduce.py
