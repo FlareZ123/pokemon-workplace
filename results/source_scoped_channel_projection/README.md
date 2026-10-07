@@ -12,9 +12,9 @@ Regression: `results/source_scoped_channel_projection/reproduce.py`
 
 ## Result
 
-Among the 106 print-level direct restrictions in the source-scoped audit, **94 restrictions project exactly into the existing hand-action channels**. This is 88.679245% of the audited family.
+Among the 106 print-level direct restrictions in the source-scoped audit, **92 restrictions project exactly into the existing hand-action channels**. This is 86.792453% of the audited family.
 
-The remaining **12 restrictions** retain typed predicates. Their richer requirements overlap:
+The remaining **14 restrictions** retain typed predicates. Their richer requirements overlap:
 
 | Reason richer state is required | Print-level rows |
 | --- | ---: |
@@ -24,8 +24,12 @@ The remaining **12 restrictions** retain typed predicates. Their richer requirem
 | Pokémon-with-Ability selector | 2 |
 | Energy attachment to a specific target | 2 |
 | Printed card exception | 1 |
+| Unresolved exclusive choice | 2 |
 
 Rows can appear under more than one reason.
+
+
+Exclusive-choice profiles are retained as residual state until the printed branch is known. Once Echoing Madness or Allergy Storm is resolved to one concrete category, that resolved restriction becomes safely projectable.
 
 ## Exact projection
 
@@ -33,7 +37,7 @@ The bridge maps ordinary hand restrictions onto `PlayerChannels` only when the m
 
 Examples include Item, Tool, Supporter, Stadium, Trainer-wide, all-card, and Special-Energy restrictions. A Tool-attachment prohibition maps to the Tool hand channel because playing a Tool from hand is its attachment action. A Special-Energy attachment prohibition maps to the Special Energy hand channel.
 
-The regression checks every one of the 94 projectable restrictions against a representative family of hand attempts. The direct typed predicate and the channel projection agree for every tested attempt.
+The regression checks every one of the 92 projectable restrictions against a representative family of hand attempts. The direct typed predicate and the channel projection agree for every tested attempt.
 
 ## Residual predicates
 
@@ -57,11 +61,11 @@ This preserves the earlier Vileplume / Dream Ball result. Irritating Pollen proj
 
 A scalar channel model is useful when treated as a **verified projection** of richer legality state. The projection should expose residual predicates whenever card identity, action mode, target relation, or an exception matters.
 
-For the current audited family, this hybrid representation preserves the compact fast path for 94 restrictions and keeps exact transaction semantics for the remaining 12.
+For the current audited family, this hybrid representation preserves the compact fast path for 92 restrictions and keeps exact transaction semantics for the remaining 14.
 
 ## Limits
 
-The 88.679245% figure describes the current conservative direct restriction family in the bundled snapshot. It is not a percentage of every lock effect in Expanded.
+The 86.792453% figure describes the current conservative direct restriction family in the bundled snapshot. It is not a percentage of every lock effect in Expanded.
 
 Source activation, duration, ownership, attack timing, Stadium prerequisites, coin outcomes, and causal Ability suppression remain outside this projection layer. Those facts determine which restrictions are active before this bridge is applied.
 
