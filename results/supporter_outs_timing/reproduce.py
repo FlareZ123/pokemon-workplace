@@ -9,6 +9,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from lock_state_kernel import PlayerChannels, apply_play_lock  # noqa: E402
 from supporter_outs_timing import same_turn_supporter_access  # noqa: E402
 from turn_action_budget import TurnAction, TurnActionBudget  # noqa: E402
 
@@ -236,6 +237,34 @@ def validate() -> None:
     )
     if ended_access.typed_access_probability != 0.0:
         raise AssertionError("ended turn retained Supporter access")
+
+    supporter_locked = apply_play_lock(PlayerChannels(), "supporter")
+    locked_access = same_turn_supporter_access(
+        60,
+        6,
+        starter_cards=12,
+        target_supporters=2,
+        preserving_nonstarter_connectors=2,
+        consuming_connectors=4,
+        turn_budget=dual_budget,
+        player_channels=supporter_locked,
+    )
+    if locked_access.typed_access_probability != 0.0:
+        raise AssertionError("Supporter lock should deny play despite unused quota")
+
+    trainer_locked = apply_play_lock(PlayerChannels(), "trainer")
+    trainer_locked_access = same_turn_supporter_access(
+        60,
+        6,
+        starter_cards=12,
+        target_supporters=2,
+        preserving_nonstarter_connectors=2,
+        consuming_connectors=4,
+        turn_budget=dual_budget,
+        player_channels=trainer_locked,
+    )
+    if trainer_locked_access.typed_access_probability != 0.0:
+        raise AssertionError("Trainer lock should deny Supporter play")
 
 
 def main() -> None:
