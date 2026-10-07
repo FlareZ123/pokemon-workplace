@@ -26,12 +26,16 @@ def switch_active(state: BoardState, promote_id: str) -> BoardTransition | None:
     return None if next_state is None else BoardTransition(next_state)
 
 
-def _minimal_payment(selected: tuple[Attachment, ...], cost: int) -> bool:
+def _valid_retreat_payment(selected: tuple[Attachment, ...], cost: int) -> bool:
+    """Validate the exact physical Energy cards selected for a Retreat Cost."""
+
     if cost == 0:
         return not selected
-    total = sum(card.retreat_units for card in selected)
-    return bool(selected) and total >= cost and all(
-        total - card.retreat_units < cost for card in selected
+    return (
+        bool(selected)
+        and len(selected) <= cost
+        and all(card.retreat_units > 0 for card in selected)
+        and sum(card.retreat_units for card in selected) >= cost
     )
 
 
@@ -52,7 +56,7 @@ def normal_retreat(
     selected = tuple(by_id[card_id] for card_id in selected_ids)
     if any(card.kind != AttachmentKind.ENERGY for card in selected):
         return None
-    if not _minimal_payment(selected, active.retreat_cost):
+    if not _valid_retreat_payment(selected, active.retreat_cost):
         return None
     discarded = frozenset(selected_ids)
     paid = replace(active, attachments=tuple(
