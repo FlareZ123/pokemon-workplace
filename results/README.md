@@ -729,6 +729,14 @@ With two replacement copies, the TM discard fails only when both are Prized, rai
 **Working synthesis:** continuation-aware discardability has a world-conditional legality layer and a belief-level risk layer. K1 can change the safe-discard witness family even when the visible hand is unchanged. Redundant replacement copies reduce catastrophic Prize risk but do not eliminate it.
 
 
+## 57. KO-trigger cascades are deferred until the active effect completes
+
+[knockout_trigger_deferral/](knockout_trigger_deferral/) combines the 2025/2026 non-interruption ruling with growable KO membership. A concrete Gastly `sm10-67` and Gengar ex `me55-90` witness starts with only Gengar ex pending, resolves Fainting Spell heads to add the Attacking Gastly to the KO set, and records Gastly's Swelling Spite as newly triggered. Swelling Spite cannot start while Fainting Spell remains active; it becomes ready only after Fainting Spell's final modeled step completes.
+
+The new `TriggerDeferralState` keeps ready effects unordered, so choosing among simultaneous triggers remains upstream in the effect-order authority layer. After the cascade completes, the grown two-player KO membership is frozen into the existing fixed-batch promotion and disposal protocol, preserving physical-card totals.
+
+**Working synthesis:** trigger scheduling needs both dynamic readiness and a non-interruptible active effect. Newly triggered work can enlarge future state while the current effect still owns the execution window.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
