@@ -1,0 +1,27 @@
+name: Validate causal lock canonical budget
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/ability_lock_canonical_budget.py"
+      - "tools/ability_lock_causal_state.py"
+      - "tools/board_action_quota_derivation.py"
+      - "tools/canonical_turn_budget_owner.py"
+      - "tools/turn_action_budget.py"
+      - "results/ability_lock_canonical_budget/**"
+      - ".github/workflows/validate-ability-lock-canonical-budget.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce causal lock canonical budget bridge
+        run: python results/ability_lock_canonical_budget/reproduce.py
