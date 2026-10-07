@@ -174,6 +174,7 @@ def main() -> None:
         prizes_a,
         context.state_for("A"),
         pokemon_id="a-jirachi",
+        during_your_turn=True,
     )
     assert jirachi is not None
     assert jirachi.after_board.promotion_candidates == ("a-jirachi",)
