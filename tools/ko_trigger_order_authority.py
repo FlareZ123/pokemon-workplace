@@ -65,7 +65,7 @@ class AuthorityAssessment:
 TPCI_FEB_2026 = "tpci_professor_feb_2026"
 ASIA_LOST_CITY_REUNICLUS_QA = "pokemon_asia_lost_city_reuniclus_qa"\nJAPAN_LOST_CITY_REUNICLUS_QA = "pokemon_japan_lost_city_reuniclus_qa"
 ADVANCED_RULEBOOK_3_4 = "advanced_rulebook_3_4"
-LOST_CITY_REUNICLUS = "lost_city_reuniclus"
+LOST_CITY_REUNICLUS = "lost_city_reuniclus"\nLOST_CITY_LOST_OUT = "lost_city_lost_out"
 
 
 def _claims_for_source(
