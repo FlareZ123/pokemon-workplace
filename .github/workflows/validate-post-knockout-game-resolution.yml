@@ -1,0 +1,25 @@
+name: Validate post-Knock-Out game resolution
+
+on:
+  push:
+    paths:
+      - "tools/post_knockout_game_resolution.py"
+      - "tools/knockout_phase_resolution.py"
+      - "tools/simultaneous_knockout_conservation.py"
+      - "results/post_knockout_game_resolution/**"
+      - ".github/workflows/validate-post-knockout-game-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check post-Knock-Out game resolution
+        run: python results/post_knockout_game_resolution/reproduce.py
