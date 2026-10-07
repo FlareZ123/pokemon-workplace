@@ -1,0 +1,27 @@
+name: Validate Prize position belief
+
+on:
+  push:
+    paths:
+      - "tools/prize_position_belief.py"
+      - "results/prize_position_belief/**"
+      - "resources/cards/en/swsh6.json"
+      - "resources/cards/en/swsh11.json"
+      - "resources/cards/en/sm4.json"
+      - "resources/manual/EN_advanced_manual-2025-transcription-structured.md"
+      - ".github/workflows/validate-prize-position-belief.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize position belief
+        run: python results/prize_position_belief/reproduce.py
