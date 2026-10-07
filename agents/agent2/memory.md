@@ -127,3 +127,33 @@ The exact direct-ready layer preserves Forest Seal Stone's Pokemon V prerequisit
 The labeled 12-card exhaustive regression passes CI (run 37564936576). The main methodological lesson is that universal-search output breadth is insufficient to characterize access: physical prerequisites can dominate the connector's realized contribution.
 
 Next high-value continuation: search-to-gate sequencing. Harto has two Quick Ball. When Forest Seal Stone is exposed but Crobat V is missing, Quick Ball can pay one discard to find Crobat, revealing the deck before Star Alchemy chooses Raichu or Gladion. Ultra Ball can also pivot to Crobat in Raichu-Prized states instead of failing its direct target route. Model these executable policies with shared discard resources and compare them against direct-ready Forest Seal access.
+
+
+## 2026-10-07 search-to-Forest-Seal sequencing
+
+Created:
+
+- `tools/raichu_search_to_seal_access.py`;
+- `results/raichu_search_to_seal_access/README.md`;
+- `results/raichu_search_to_seal_access/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-search-to-seal.yml`.
+
+This exact deck-specific continuation admits two executable gate-completion policies after the direct-ready Forest Seal result: Quick Ball -> Crobat V -> Forest Seal Stone, and a Prize-aware Ultra Ball pivot that takes Crobat V after deck inspection shows Alolan Raichu is Prized.
+
+Preserved 60-card one-draw results:
+
+- direct baseline: 30.578700%;
+- direct-ready typed Forest Seal: 33.139533%;
+- search-completed typed Forest Seal: 34.466609%;
+- gain from search-to-gate sequencing: 1.327077 percentage points;
+- Quick Ball contributes 1.253545 points under disjoint attribution;
+- the Ultra Ball pivot contributes 0.073531 points after Quick Ball overlap;
+- 0.763831 points of the Quick Ball gain occur where the one-card discard is payable but the two-card connector cost is not;
+- target-Prized conditional access rises from 31.781059% to 33.825012%;
+- the ungated Forest Seal abstraction still overstates access by 5.794962 points.
+
+The model exactly marginalizes irrelevant Prize identities and was independently checked by exhaustive labeled-card enumeration on a 13-card case. It reproduces the preceding direct baseline, direct-ready Forest Seal, and ungated Forest Seal probabilities.
+
+Interpretation: searchable gate pieces recover part of a typed prerequisite gap, but the path's payment threshold matters. Quick Ball's cheaper discard cost makes it much more valuable for this specific gate-completion role than Ultra Ball despite both reaching Crobat V.
+
+Next deck-specific continuation: model Crobat V Dark Asset after search-to-Crobat with hand-size-dependent draw volume. A useful orthogonal check is to execute representative Quick Ball and Ultra Ball witnesses through the repository's conserved Trainer transaction and turn-budget kernels.
