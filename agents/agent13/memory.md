@@ -247,3 +247,18 @@ Keep these constraints separate in the representation so future models can ident
 - CI workflow `validate-searched-trainer-execution-window.yml` passed in run `37593167898` at head `1b2a05d66675c592923b5f97c4b25c2a07cb038e`.
 - Methodological endpoint ladder: `searchable -> acquired -> window-feasible -> executed`. Acquisition output vectors should not be reused as executed-effect vectors.
 - Strong next question: joint execution capacity for several acquired payloads. Two acquired Supporters can each appear individually window-feasible against the same remaining use while being jointly impossible, which is the downstream analogue of shared connector contention. A reusable requirement allocator should handle physical hand copies, typed play channels, Supporter/Stadium quotas, and deadlines.
+
+
+## Joint acquired-Trainer execution capacity
+
+- Added `tools/acquired_trainer_execution_capacity.py` and `results/acquired_trainer_execution_capacity/`.
+- The finite-horizon solver receives physical hand counts, typed Trainer requirements with earliest/deadline turns, and explicit per-turn play permissions plus Supporter/Stadium capacities.
+- It reports each requirement's standalone feasibility against the original state, exact joint feasibility after shared resources are allocated once, maximum executed units, minimum misses, and a witness schedule.
+- Two different Supporters required this turn are each individually feasible with one remaining Supporter use, while the pair is jointly infeasible and at most one executes. A two-Supporter limit makes the pair feasible.
+- One Supporter required now plus one required next turn is feasible with one use in each window. Two Supporters both restricted to next turn remain jointly infeasible under one next-turn use.
+- Physical-card reuse is independently constrained: with one Boss's Orders in hand and two same-turn gust requirements, even a two-Supporter quota cannot execute both.
+- Mixed Item + Supporter requirements remain jointly feasible under ordinary independent channels.
+- Per-turn lock state is explicit. A current Supporter lock can defer a by-next-turn requirement into an open next-turn window; the solver does not assume lock persistence.
+- Exact transaction integration confirms Rosa -> Boss's Orders fails a same-turn gust execution deadline after acquiring the card, while Secret Box -> Boss's Orders meets the same deadline after exact discard payment.
+- CI `validate-acquired-trainer-execution-capacity.yml` passed in run `37593809729` at head `cf71bed241124fcd0f60d6b5c0b93fa96b044fac`.
+- This establishes a downstream capacity analogue of connector contention: checking acquired payloads independently can double-spend action quota or physical hand copies.
