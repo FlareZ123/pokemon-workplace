@@ -45,6 +45,8 @@ Technical Machine: Evolution costs one Colorless Energy and evolves up to two Be
 
 Jet Energy both supplies the Colorless Energy and switches the Benched Bunnelby into the Active Spot.
 
+If Bunnelby starts in the Active Spot, Jet Energy can instead be attached directly to it. The switch clause does not apply in that case, while Jet Energy still supplies the Colorless Energy needed for Evolution. This avoids requiring a second Bunnelby in those openings.
+
 Guzma & Hala can obtain a Stadium, a Pokémon Tool, and a Special Energy after discarding two other cards. This means one Supporter can supply Artazon, Technical Machine: Evolution, and Jet Energy.
 
 Fan Rotom's Fan Call can search for up to three Colorless Pokémon with 100 HP or less during the first turn. In this list, the relevant Fan Call targets include Bunnelby, Pidgey, and Lillipup.
@@ -76,13 +78,13 @@ A matched Monte Carlo run used 500,000 accepted-opening trials with seed `202610
 | Endpoint | Endpoint-aware probability | Approx. 95% Monte Carlo half-width |
 | --- | ---: | ---: |
 | Guzma & Hala access | 71.7356% | 0.1248 pp |
-| Bunnelby double-Evolution core | 69.0818% | 0.1281 pp |
-| Pidgeot ex Stage 2 established | 58.7272% | 0.1365 pp |
-| Stoutland Stage 2 established | 47.9258% | 0.1385 pp |
-| Pidgeot ex + Stoutland Stage 2 | 41.5690% | 0.1366 pp |
-| Vileplume Item lock established | 32.9538% | 0.1303 pp |
-| Vileplume Item lock + Pidgeot ex | 23.4156% | 0.1174 pp |
-| Vileplume Item lock + Stoutland Stage 2 | 19.2330% | 0.1092 pp |
+| Bunnelby double-Evolution core | 69.5594% | 0.1275 pp |
+| Pidgeot ex Stage 2 established | 59.5132% | 0.1361 pp |
+| Stoutland Stage 2 established | 48.5640% | 0.1385 pp |
+| Pidgeot ex + Stoutland Stage 2 | 41.8568% | 0.1367 pp |
+| Vileplume Item lock established | 36.3388% | 0.1333 pp |
+| Vileplume Item lock + Pidgeot ex | 23.5712% | 0.1176 pp |
+| Vileplume Item lock + Stoutland Stage 2 | 19.3596% | 0.1095 pp |
 
 The Pidgeot and Stoutland rows mean that the Stage 2 is in play after the second Evolution attack. Stoutland's Sentinel requires Stoutland to be Active, so that row does not imply immediate Supporter lock. Vileplume's Irritating Pollen is an in-play Ability, so the Vileplume endpoint does establish Item lock as the turn passes.
 
@@ -115,7 +117,7 @@ The broader planner still targets the same Bunnelby, Jet Energy, and TM: Evoluti
 
 ## Finding 1: the headline ALS is genuinely high-AMR within its stated route
 
-The Guzma & Hala access rate is about 71.7%, and about 69.1% of accepted openings reach the Bunnelby plus TM: Evolution plus Jet Energy core.
+The Guzma & Hala access rate is about 71.7%, and about 69.6% of accepted openings reach the Bunnelby plus TM: Evolution plus Jet Energy core.
 
 The gap between those values is small because Guzma & Hala covers the Tool and Special Energy channels simultaneously. Artazon and Fan Rotom cover much of the Basic access channel.
 
@@ -129,9 +131,9 @@ The matched 500,000-state comparison is:
 
 | Endpoint | Greedy Artazon -> Fan | Endpoint-aware routing | Improvement |
 | --- | ---: | ---: | ---: |
-| Vileplume Item lock | 25.4210% | 32.9538% | +7.5328 pp |
-| Item lock + Pidgeot ex | 21.2934% | 23.4156% | +2.1222 pp |
-| Item lock + Stoutland Stage 2 | 17.4674% | 19.2330% | +1.7656 pp |
+| Vileplume Item lock | 25.8682% | 36.3388% | +10.4706 pp |
+| Item lock + Pidgeot ex | 21.3422% | 23.5712% | +2.2290 pp |
+| Item lock + Stoutland Stage 2 | 17.5082% | 19.3596% | +1.8514 pp |
 
 The other modeled endpoints are unchanged by this routing choice.
 
@@ -143,11 +145,11 @@ A 120,000-trial sensitivity run used the same seed for each configuration.
 
 | Configuration | Core | Pidgeot | Stoutland | Pidgeot + Stoutland | Item lock | Item + Pidgeot | Item + Stoutland |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Full endpoint-aware model | 69.0300% | 58.7300% | 48.0617% | 41.7217% | 33.1683% | 23.6725% | 19.5583% |
-| No Stellar Wish | 66.5225% | 56.6225% | 46.3892% | 40.2858% | 31.9650% | 22.9083% | 18.9350% |
-| No Fan Rotom | 68.9617% | 27.3033% | 22.6175% | 7.4700% | 27.4775% | 8.9233% | 7.4233% |
-| No Artazon | 23.3050% | 12.6108% | 10.5533% | 7.4658% | 5.2950% | 2.4458% | 2.0667% |
-| No Fan Rotom or Artazon | 15.1658% | 3.7525% | 3.1900% | 0.5642% | 3.6325% | 0.6567% | 0.5642% |
+| Full endpoint-aware model | 69.5333% | 59.5450% | 48.7208% | 42.0217% | 36.6125% | 23.8300% | 19.7033% |
+| No Stellar Wish | 67.0258% | 57.4375% | 47.0483% | 40.5858% | 35.4092% | 23.0658% | 19.0800% |
+| No Fan Rotom | 69.4650% | 30.7975% | 25.4492% | 7.6867% | 30.9800% | 9.1658% | 7.6383% |
+| No Artazon | 27.3725% | 12.7725% | 10.6958% | 7.4758% | 5.4292% | 2.4458% | 2.0667% |
+| No Fan Rotom or Artazon | 19.2942% | 3.9033% | 3.3225% | 0.5642% | 3.7667% | 0.6567% | 0.5642% |
 
 Fan Rotom is especially important for establishing multiple Colorless evolution lines because Fan Call can cover Bunnelby, Pidgey, and Lillipup with one Ability.
 
