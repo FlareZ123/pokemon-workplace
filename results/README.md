@@ -324,6 +324,18 @@ The regression gives each player one surviving Bench Pokémon, marks both Active
 **Working synthesis:** KO routing needs three semantic states per physical instance: unassigned, explicitly assigned to the ordinary discard sink, and explicitly assigned elsewhere. Destination conflict detection, order-selection authority, and physical execution should remain separate layers.
 
 
+## 26. Per-turn action budgets are shared mechanical state
+
+[turn_action_budget/](turn_action_budget/) extracts the ordinary once-per-turn Supporter, Stadium-play, manual Energy attachment, and Retreat channels plus the attack / voluntary-end boundary into one immutable budget.
+
+The integration review found a concrete split-state failure in the unified kernel: `BenchState.turn_ended` already blocked Bench additions and Supporter play, while several ordinary Item, Tool, manual-Energy, and Stadium actions could still be called after that boundary. Those transitions are now explicitly gated, and the unified-state regression passes in CI.
+
+[turn_budget_integration/](turn_budget_integration/) adds a non-breaking bridge from the current split flags in `BenchState`, `UnifiedState`, and `BoardState` into one `TurnActionBudget`. The bridge also round-trips a chosen budget back into the legacy fields, providing a staged path toward canonical ownership.
+
+**Working synthesis:** action bandwidth should have one canonical owner in composed planners. Specialized kernels can retain local compatibility fields during migration, while policy search should query and consume one shared budget.
+
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -335,6 +347,8 @@ Particularly foundational components include:
 - `typed_access_network.py`
 - `typed_energy_access.py`
 - `energy_action_budget.py`
+- `turn_action_budget.py`
+- `legacy_turn_budget_bridge.py`
 - `bench_capacity_model.py`
 - `lock_effect_catalog.py`
 - `prize_belief_decision.py`
@@ -350,7 +364,7 @@ Particularly foundational components include:
 
 Several larger questions remain promising:
 
-1. **General conservation across unified state layers.** The repository now has conserved materialization paths for Energy, evolution stacks, Tools, movement, simultaneous Knock Outs, zone-routing recovery, cross-player promotion ordering, post-KO terminal resolution, and physical Prize taking with the taker's belief update. The next shared-kernel problems are competing replacement effects, opponent-specific Prize knowledge, promotion-pending physical state, and action budgets.
+1. **General conservation across unified state layers.** The repository now has conserved materialization paths for Energy, evolution stacks, Tools, movement, simultaneous Knock Outs, zone-routing recovery, cross-player promotion ordering, post-KO terminal resolution, and physical Prize taking with the taker's belief update. The next shared-kernel problems are competing replacement effects, opponent-specific Prize knowledge, promotion-pending physical state, and migrating the now-explicit turn budget into canonical composite ownership.
 2. **Compiler from card text to transitions.** A validated semantic island now compiles multi-output Trainer deck-search text through typed physical-target feasibility. The larger open problem is extending the same auditable approach to more wording families and then materializing successful compiled actions into canonical zone / instance state without guessing ambiguous semantics.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Errata-aware reprint equivalence.** Name-wide Trainer errata now provides an authoritative layer above exact fingerprints while Copycat and Rainbow Energy remain positive and negative semantic boundary cases. The next layer should cover print-specific errata and a small auditable semantic grammar without turning same-name cards into automatic matches.
