@@ -24,6 +24,13 @@ from unified_state_kernel import consume_turn_action, make_state
 
 
 @dataclass(frozen=True)
+class TimelessPhantomPriorDamageBand:
+    first_target_min: int
+    first_target_max: int
+    second_target_min: int
+
+
+@dataclass(frozen=True)
 class TimelessPhantomHpWindow:
     first_damage_before_phantom: int
     first_hp_survival_threshold: int
@@ -80,6 +87,47 @@ def derive_timeless_phantom_hp_window(
         second_damage_total=second_prior_damage + phantom,
         second_hp_ko_ceiling=second_prior_damage + phantom,
         phantom_counter_damage=counter_damage,
+    )
+
+
+def derive_timeless_phantom_prior_damage_band(
+    *,
+    first_target_hp: int,
+    second_target_hp: int,
+    timeless_damage_context: DamageContext | None = None,
+    phantom_damage_context: DamageContext | None = None,
+    phantom_counter_count: int = 6,
+) -> TimelessPhantomPriorDamageBand | None:
+    """Return 10-damage-step prior-damage requirements for two target HPs."""
+
+    if (
+        first_target_hp <= 0
+        or second_target_hp <= 0
+        or first_target_hp % 10
+        or second_target_hp % 10
+    ):
+        raise ValueError("target HP must be a positive multiple of 10")
+
+    base = derive_timeless_phantom_hp_window(
+        timeless_damage_context=timeless_damage_context,
+        phantom_damage_context=phantom_damage_context,
+        phantom_counter_count=phantom_counter_count,
+    )
+    timeless = base.first_damage_before_phantom
+    phantom = base.second_damage_total
+    counter_damage = base.phantom_counter_damage
+
+    first_min = max(0, first_target_hp - timeless - counter_damage)
+    first_max = first_target_hp - timeless - 10
+    second_min = max(0, second_target_hp - phantom)
+
+    if first_min > first_max or second_min >= second_target_hp:
+        return None
+
+    return TimelessPhantomPriorDamageBand(
+        first_target_min=first_min,
+        first_target_max=first_max,
+        second_target_min=second_min,
     )
 
 
