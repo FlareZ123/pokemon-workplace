@@ -17,6 +17,8 @@ RESOURCE_ACCESS_RE = re.compile(
     re.IGNORECASE,
 )
 
+STADIUM_REMOVAL_RE = re.compile(r"discard (?:a|any) stadium (?:card )?in play", re.IGNORECASE)
+
 CLEANUP_PATTERNS = [
     re.compile(r"put 1 of your pok[eé]mon.*into your hand", re.IGNORECASE),
     re.compile(r"put 1 of your pok[eé]mon in play into your hand", re.IGNORECASE),
