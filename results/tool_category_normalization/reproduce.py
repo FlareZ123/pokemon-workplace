@@ -14,6 +14,7 @@ from tools.tool_category_normalization import (
 RESOURCES = ROOT / "resources"
 summary = summarize_legacy_tool_normalization(RESOURCES)
 counts = summary["counts"]
+print("tool normalization counts:", counts)
 
 assert counts["legal_expanded_prints"] == 14829
 assert counts["changed_tool_prints"] == 211
