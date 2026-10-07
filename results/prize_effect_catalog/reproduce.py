@@ -71,7 +71,17 @@ def main() -> None:
     )
     require(
         rows,
+        "swsh7-146",
+        {"before_hand_prize_trigger"},
+    )
+    require(
+        rows,
         "swsh7-165",
+        {"before_hand_prize_trigger"},
+    )
+    require(
+        rows,
+        "xy11-102",
         {"before_hand_prize_trigger"},
     )
     require(
