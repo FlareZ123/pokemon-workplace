@@ -23,6 +23,7 @@ APEX = "regidrago:apex-dragon"
 TIMELESS = "dialga:timeless-gx"
 SHADOW = "marshadow:shadow-imitation"
 FOUL = "zoroark:foul-play"
+HAUGHTY = "persian:haughty-order"
 
 ATTACKS = {
     COPYCAT: AttackDef(
@@ -45,6 +46,13 @@ ATTACKS = {
         FOUL,
         "Foul Play",
         copy_selector=CopySelector("opponent_active"),
+    ),
+    HAUGHTY: AttackDef(
+        HAUGHTY,
+        "Haughty Order",
+        copy_selector=CopySelector("opponent_revealed"),
+        pre_event="reveal_top_10",
+        post_event="shuffle_revealed",
     ),
 }
 
@@ -272,6 +280,33 @@ def test_active_slot_binding_still_allows_apex_escape() -> None:
     assert "P1" in result.state.gx_used_by
 
 
+
+def test_copy_body_continuation_resumes_outer_text() -> None:
+    state = State(
+        pokemon=(
+            PokemonRef(
+                "p2-revealed-dialga",
+                "Dialga-GX",
+                "P2",
+                "revealed",
+                types=("Dragon",),
+                attacks=(TIMELESS,),
+            ),
+        )
+    )
+    result = resolve_attack(
+        actor_player="P1",
+        actor_card_id="p1-persian",
+        declared_attack_id=HAUGHTY,
+        attacks=ATTACKS,
+        state=state,
+        choose=choose_exact((TIMELESS,)),
+    )
+    assert result.body_chain == (HAUGHTY, TIMELESS)
+    assert result.state.events == ("reveal_top_10", "extra_turn", "shuffle_revealed")
+    assert result.state.last_attack_for("P1") == HAUGHTY
+
+
 def main() -> None:
     test_nested_copycat_apex_timeless()
     test_last_attack_identity_is_outer_attack()
@@ -280,6 +315,7 @@ def main() -> None:
     test_no_progress_reentry_is_detected()
     test_active_slot_binding_blocks_naive_foul_play_escape()
     test_active_slot_binding_still_allows_apex_escape()
+    test_copy_body_continuation_resumes_outer_text()
     print("copy-resolution kernel regressions passed")
 
 
