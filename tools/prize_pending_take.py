@@ -113,6 +113,49 @@ def stage_prize_takes(
     return PrizePendingTakeState(remaining, pending)
 
 
+def stage_additional_prize_front(
+    state: PrizePendingTakeState,
+    *,
+    position: int,
+) -> PrizePendingTakeState:
+    """Take one additional Prize and make it the next pending card."""
+
+    if not 0 <= position < len(state.physical.prize_instance_ids):
+        raise IndexError("Prize position out of range")
+
+    instance_id = state.physical.prize_instance_ids[position]
+    pending = PendingPrize(
+        instance_id,
+        not state.physical.face_up[position],
+    )
+
+    ledger = move_instance(
+        state.physical.ledger,
+        instance_id,
+        "prize_pending",
+    )
+    assert_conserved(state.physical.ledger, ledger)
+
+    remaining_ids = (
+        state.physical.prize_instance_ids[:position]
+        + state.physical.prize_instance_ids[position + 1 :]
+    )
+    remaining_face_up = (
+        state.physical.face_up[:position]
+        + state.physical.face_up[position + 1 :]
+    )
+    physical = TopPrizePhysicalState(
+        ledger,
+        state.physical.top_instance_id,
+        remaining_ids,
+        remaining_face_up,
+    )
+    return PrizePendingTakeState(
+        physical,
+        (pending,) + state.pending,
+    )
+
+
 def resolve_next_pending_prize(
     state: PrizePendingTakeState,
     *,
