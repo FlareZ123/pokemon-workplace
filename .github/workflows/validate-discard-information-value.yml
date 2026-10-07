@@ -1,0 +1,28 @@
+name: Validate discard information value
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/belief_discard_decision.py"
+      - "tools/belief_weighted_discard_policy.py"
+      - "tools/continuation_discard_policy.py"
+      - "tools/prize_belief_kernel.py"
+      - "tools/trainer_search_profile_compiler.py"
+      - "tools/trainer_search_transaction.py"
+      - "results/discard_information_value/**"
+      - ".github/workflows/validate-discard-information-value.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce discard information value
+        run: python results/discard_information_value/reproduce.py
