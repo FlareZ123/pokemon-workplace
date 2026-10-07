@@ -22,8 +22,8 @@ digits is compiled as fixed damage.
 
 Variable `+`, `-`, and `×` expressions remain unsupported by this layer.
 
-In the current effectively legal Expanded snapshot, this covers **16,139 of
-20,003** attack-print rows.
+In the current effectively legal Expanded snapshot, this covers **16,128 of
+19,992** attack-print rows.
 
 ### Exact damage-counter templates
 
