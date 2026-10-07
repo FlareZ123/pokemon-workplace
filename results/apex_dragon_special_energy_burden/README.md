@@ -11,15 +11,25 @@ This compares two exact attachment states that each provide enough Energy for Ap
 
 The comparison measures the minimum number of physical Energy cards needed to achieve the largest applicable discard for each supported copied attack instruction.
 
+## Correction note
+
+An earlier revision incorrectly treated Double Dragon Energy as eligible for Ultra Necrozma-GX's Photon Geyser instruction, `Discard all basic Psychic Energy from this Pokémon`.
+
+That was a parser error. The earlier grammar recognized the word `basic` but discarded the qualifier before the Special Energy solver ran. Double Dragon Energy is a Special Energy card, so it is not eligible for a Basic Energy-only discard even though it can provide Psychic Energy while attached to a Dragon Pokémon.
+
+The corrected solver preserves Energy card category separately from the Energy types and units a card currently provides.
+
 ## Rules basis
 
-Three rulebook principles interact here.
+Four rulebook principles interact here.
 
 First, a copied attack normally uses the selected attack's effects and damage without requiring its printed attack cost.
 
 Second, one Energy card can provide several Energy units. The Ignition Energy ruling explicitly says one card providing three Energy can satisfy a discard-three requirement.
 
 Third, an Energy that provides every type cannot be treated as lacking a relevant type. The rulebook's Crimson Blaster example says an every-type Energy must be discarded by an all-Fire-Energy instruction.
+
+Fourth, Basic Energy and Special Energy are separate card categories. A Special Energy can provide a type such as Psychic without thereby becoming a Basic Psychic Energy card.
 
 Double Dragon Energy's card text says that, while attached to a Dragon Pokémon, it provides every type of Energy and two Energy at a time.
 
@@ -33,29 +43,28 @@ A historical 2015 PokéBeach ruling discussion about Kingdra and Double Dragon E
 
 | Minimum Energy cards discarded | Basic Grass/Grass/Fire | Double Dragon Energy + Fire |
 | --- | ---: | ---: |
-| 0 | 5 | 0 |
-| 1 | 11 | 23 |
+| 0 | 5 | 1 |
+| 1 | 11 | 22 |
 | 2 | 7 | 12 |
 | 3 | 12 | 0 |
 
-Across the 35 signatures, **27** change either the minimum physical-card burden or the amount of the typed requirement that can be fulfilled.
+Across the 35 signatures, **26** change either the minimum physical-card burden or the amount of the typed requirement that can be fulfilled.
 
-The Special Energy state compresses every deterministic discard into one or two physical cards because only two Energy cards are attached. At the same time, DDE's every-type property activates typed discard requirements that were impossible in the Basic-only state.
+The Special Energy state compresses most deterministic discards into one or two physical cards because only two Energy cards are attached. At the same time, DDE's every-type property activates typed discard requirements that were impossible in the Basic-only state, except where the instruction specifically requires Basic Energy.
 
-## The zero-burden reversal
+## Typed-discard reversal
 
-All five signatures that discarded zero cards in the Basic Grass/Grass/Fire state become one-card DDE discards in the DDE plus Fire state:
+Four of the five signatures that discarded zero cards in the Basic Grass/Grass/Fire state become one-card DDE discards:
 
 - Hydreigon, **Dragonblast**, discard 2 Darkness Energy;
 - Zygarde, **Core Enforcer**, discard Darkness plus Fairy;
-- Kingdra, **Dragon Blast**, discard Water plus Lightning, represented by two text signatures;
-- Ultra Necrozma-GX, **Photon Geyser**, discard all basic Psychic Energy.
+- Kingdra, **Dragon Blast**, discard Water plus Lightning, represented by two text signatures.
 
-The first four exact signatures have independent fixed output in the Basic-only analysis. Their typed discard instruction fails against Grass/Grass/Fire and the rest of the attack can still resolve.
+Those four exact signatures have independent fixed output in the Basic-only analysis. Their typed discard instruction fails against Grass/Grass/Fire and the rest of the copied attack can still resolve.
 
-Once DDE is attached, the same instruction sees a valid provider of those types. DDE supplies two Energy units and every type, so the modeled minimum-card discard becomes the DDE card itself.
+Once DDE is attached, the same instructions see a valid provider of those types. DDE supplies two Energy units and every type, so the modeled minimum-card discard becomes the DDE card itself.
 
-Photon Geyser has different output semantics because its bonus scales with cards discarded in this way. It remains in the burden comparison while retaining that quantity-coupled flag from the earlier catalog.
+Ultra Necrozma-GX's **Photon Geyser** is the exception. Its text requires **basic Psychic Energy**. DDE can provide Psychic Energy, but it remains Special Energy, so the DDE card is not eligible. Photon Geyser therefore stays at zero discarded cards in both controlled states.
 
 ## Generic discard compression
 
@@ -69,7 +78,9 @@ This is a useful warning about metrics. Physical card loss and Energy-unit loss 
 
 Double Dragon Energy can make a copied endpoint cheaper in physical cards while making typed discard clauses more applicable.
 
-A deck optimizer or simulator therefore needs the actual attached Energy-card identities before it can estimate the post-attack resource state. Counting total Energy units alone misses card recovery and attachment-card loss. Counting Energy cards alone misses how many Energy units disappear and which typed instructions become live.
+A deck optimizer or simulator therefore needs the actual attached Energy-card identities before it can estimate the post-attack resource state. Counting total Energy units alone misses card recovery, card category, and attachment-card loss. Counting Energy cards alone misses how many Energy units disappear and which typed instructions become live.
+
+The Basic Energy qualifier is a separate semantic axis from Energy type. A Special Energy that provides Psychic Energy is still not a Basic Psychic Energy card. This distinction needs to survive parsing and state compilation.
 
 This interaction also changes DCI-style evaluation. Losing one DDE card can remove two Energy units and a flexible type provider at once, which can be strategically more expensive than losing one Basic Energy despite the same physical card count.
 
@@ -79,9 +90,10 @@ This interaction also changes DCI-style evaluation. Losing one DDE card can remo
 
 - a physical card identity supplied by the caller;
 - an integer number of Energy units currently provided;
-- the set of Energy types each provided unit can satisfy.
+- the set of Energy types each provided unit can satisfy;
+- whether the physical card is Basic Energy when an instruction requires that category.
 
-For typed requirements, each provided unit is treated as one capacity slot. A two-unit every-type provider can therefore satisfy two required typed units.
+For typed requirements, each provided unit is treated as one capacity slot. A two-unit every-type provider can therefore satisfy two required typed units. A `basic_only` gate filters out Special Energy cards before typed matching.
 
 The solver returns the minimum number of physical cards that can achieve the maximum applicable part of a discard instruction, plus all subsets tied at that minimum card count.
 
@@ -92,8 +104,9 @@ This is a preservation-oriented lower bound. It does not claim that minimum phys
 - The copy and partial-resolution behavior is rules-derived from the Advanced Player's Rulebook.
 - The Energy-card versus Energy-unit distinction is directly rules-derived from the Ignition Energy example.
 - The every-type obligation is directly rules-derived from section D-08.
+- The Basic-versus-Special category distinction is directly rules-derived from the Energy Cards section.
 - DDE's two-unit, every-type profile comes from its bundled card text.
-- One DDE satisfying two differently typed units is a rules-derived implementation assumption with secondary historical ruling corroboration.
+- One DDE satisfying two differently typed Energy units is a rules-derived implementation assumption with secondary historical ruling corroboration.
 - The 35-signature comparison is computational output from the bundled snapshot.
 
 ## Limitations
@@ -102,7 +115,7 @@ The two attachment states are controlled scenarios. Real Regidrago states may in
 
 The solver receives already-active provider profiles. It does not evaluate whether a conditional Special Energy effect is active.
 
-The comparison covers the deterministic first-sentence discard grammar supported by `apex_dragon_discard_burden.py`. Choice-based Dragon Burst and Savage Wing instructions remain outside the aggregate table.
+The comparison covers the deterministic first-sentence discard grammar supported by `apex_dragon_discard_burden.py`. Choice-based Dragon Burst and Savage Wing instructions remain outside the aggregate table. Both contain Basic Energy qualifiers, so any later extension must preserve that category restriction too.
 
 The metric minimizes physical cards discarded. A strategically optimal line may deliberately discard a different legal subset because of recovery effects, future attack requirements, Special Energy side effects, or matchup considerations.
 
