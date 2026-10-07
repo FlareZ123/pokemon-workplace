@@ -1,0 +1,28 @@
+name: Validate belief-weighted replacement safety
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/belief_weighted_discard_policy.py"
+      - "tools/continuation_discard_policy.py"
+      - "tools/prize_belief_kernel.py"
+      - "tools/trainer_search_profile_compiler.py"
+      - "tools/typed_search_retrieval.py"
+      - "tools/trainer_search_transaction.py"
+      - "results/belief_weighted_replacement_safety/**"
+      - ".github/workflows/validate-belief-weighted-replacement-safety.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce belief-weighted replacement safety
+        run: python results/belief_weighted_replacement_safety/reproduce.py
