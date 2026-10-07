@@ -686,6 +686,15 @@ An illustrative DCI ranking then prefers Tag Call + TM among the already-safe wi
 **Working synthesis:** discardability is a continuation property. Current-hand value, endpoint obligations, live replacement copies, deadlines, and connector availability jointly determine whether a copy can be spent. Scalar DCI is safest as a ranking objective over continuation-valid exact witnesses.
 
 
+
+## 58. Canonical Trainer execution can carry causal provenance without expanding the physical state
+
+[trainer_transaction_provenance/](trainer_transaction_provenance/) synchronizes the canonical Trainer-search transaction state with an origin-labeled resource ledger. Each searched card receives hand-arrival provenance such as `0:Secret Box`, exact discard witnesses preserve that provenance, and forgetting origins must reproduce the canonical post-transaction zone counts exactly.
+
+In the concrete Secret Box into Guzma & Hala line, the TM retrieved by Secret Box later appears in discard with origin `0:Secret Box`, while the replacement TM in hand has origin `1:Guzma & Hala`. A second regression puts an initial TM and a Secret-Box-retrieved TM in the same hand. The physical transaction “discard one TM” has two valid provenance witnesses, yet both project to the same physical post-state.
+
+**Working synthesis:** provenance is valuable for causal resource-flow auditing, while exchangeable same-class provenance histories can usually be quotiented for mechanical continuation. Keeping a compact canonical state plus an optional synchronized provenance layer avoids forcing historical identity into ordinary game-state execution.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
