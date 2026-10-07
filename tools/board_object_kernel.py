@@ -458,3 +458,56 @@ def knock_out(
     )
     next_state.validate()
     return next_state, knocked_out
+
+
+def move_energy_between_pokemon(
+    state: BoardState,
+    instance_id: str,
+    *,
+    source_object_id: str,
+    target_object_id: str,
+) -> BoardState | None:
+    """Move one physical Energy attachment between two in-play Pokemon."""
+
+    if source_object_id == target_object_id:
+        return None
+    try:
+        source = state.get(source_object_id)
+        target = state.get(target_object_id)
+    except KeyError:
+        return None
+
+    matches = tuple(
+        energy
+        for energy in source.energy
+        if energy.instance_id == instance_id
+    )
+    if len(matches) != 1:
+        return None
+    moved = matches[0]
+
+    next_source = replace(
+        source,
+        energy=tuple(
+            energy
+            for energy in source.energy
+            if energy.instance_id != instance_id
+        ),
+    )
+    next_target = replace(
+        target,
+        energy=target.energy + (moved,),
+    )
+    next_state = replace(
+        state,
+        objects=tuple(
+            next_source
+            if row.object_id == source_object_id
+            else next_target
+            if row.object_id == target_object_id
+            else row
+            for row in state.objects
+        ),
+    )
+    next_state.validate()
+    return next_state
