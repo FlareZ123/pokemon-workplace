@@ -1,0 +1,26 @@
+name: Validate Knock Out redirection conflicts
+
+on:
+  push:
+    paths:
+      - "tools/knockout_redirection_routes.py"
+      - "tools/knockout_redirection_conflicts.py"
+      - "tools/knockout_redirection_taxonomy.py"
+      - "results/knockout_redirection_routes/**"
+      - "results/knockout_redirection_conflicts/**"
+      - ".github/workflows/validate-knockout-redirection-conflicts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run redirection conflict regression
+        run: python results/knockout_redirection_conflicts/reproduce.py
