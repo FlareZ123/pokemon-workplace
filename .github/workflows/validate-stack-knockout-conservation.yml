@@ -1,0 +1,26 @@
+name: Validate stack Knock Out conservation
+
+on:
+  push:
+    paths:
+      - "tools/stack_knockout_conservation.py"
+      - "tools/board_position_state.py"
+      - "tools/board_position_kernel.py"
+      - "tools/identity_materialization.py"
+      - "results/stack_knockout_conservation/**"
+      - ".github/workflows/validate-stack-knockout-conservation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check whole-stack Knock Out conservation
+        run: python results/stack_knockout_conservation/reproduce.py
