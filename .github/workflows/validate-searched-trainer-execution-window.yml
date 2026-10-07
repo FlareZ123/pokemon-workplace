@@ -1,0 +1,27 @@
+name: Validate searched Trainer execution window
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/acquired_trainer_action_window.py"
+      - "tools/trainer_search_transaction.py"
+      - "tools/trainer_search_state_adapter.py"
+      - "tools/turn_action_budget.py"
+      - "tools/lock_state_kernel.py"
+      - "results/searched_trainer_execution_window/**"
+      - ".github/workflows/validate-searched-trainer-execution-window.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce searched Trainer execution-window result
+        run: python results/searched_trainer_execution_window/reproduce.py
