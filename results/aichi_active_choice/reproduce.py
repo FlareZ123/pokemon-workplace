@@ -6,7 +6,6 @@ from aichi_active_choice import ANY_ROUTE_ENDPOINTS, simulate_active_choice
 def main() -> None:
     trials = 100_000
     result = simulate_active_choice(trials, seed=20261007)
-    total_oracle_gain = 0
 
     print(f"trials={trials}")
     for endpoint in ANY_ROUTE_ENDPOINTS:
@@ -17,10 +16,11 @@ def main() -> None:
         b_gain = result.bunnelby_first_gains.get(endpoint, 0)
         b_loss = result.bunnelby_first_losses.get(endpoint, 0)
 
-        assert oracle >= default
-        assert oracle_gain == oracle - default
-        assert bunnelby - default == b_gain - b_loss
-        total_oracle_gain += oracle_gain
+        assert oracle == default
+        assert oracle_gain == 0
+        assert bunnelby == default
+        assert b_gain == 0
+        assert b_loss == 0
 
         print(
             endpoint,
@@ -31,9 +31,6 @@ def main() -> None:
             f"b_loss={b_loss}",
             f"oracle_gain={oracle_gain}",
         )
-
-    assert total_oracle_gain > 0
-    print(f"total_oracle_gain_events={total_oracle_gain}")
 
 
 if __name__ == "__main__":
