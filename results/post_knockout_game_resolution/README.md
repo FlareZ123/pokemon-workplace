@@ -18,7 +18,7 @@ The Advanced Player's Rulebook orders Knock Out resolution as:
 
 The Win and Loss section says a player loses when the opponent has taken all Prize cards, when that player has no Pokémon in play, or when that player cannot draw at the beginning of their turn. It then gives an explicit 11-row table for cases where Prize completion and no-Pokémon conditions occur simultaneously.
 
-This means a state engine needs a terminal check after the complete Knock Out set and Prize awards are known. Requiring a replacement Active before evaluating that terminal snapshot can add a decision to a game that has already ended.
+This means a state engine needs a terminal check after the complete Knock Out set and Prize-taking effects that can change the board have resolved. Requiring a replacement Active before evaluating that terminal snapshot can add a decision to a game that has already ended.
 
 ## A compact form of the 11-row table
 
@@ -49,7 +49,7 @@ Prize awards are then applied to each player's remaining Prize count. The resolv
 - Prize cards remaining afterward;
 - surviving Pokémon count.
 
-The terminal table is evaluated from that post-award snapshot before any replacement-Active policy is needed.
+The count-level resolver evaluates the terminal table from a post-award snapshot before replacement-Active policy. For Prize cards with E-31 before-hand effects that can change the board, the stronger `post_prize_window_game_resolution` adapter waits until the pending Prize window is empty and uses the resulting physical Pokémon counts.
 
 ## Regression examples
 
@@ -91,7 +91,7 @@ The 11-row rulebook table admits a simple loss-condition-count representation, a
 
 ## Limits
 
-This result tracks Prize counts, not the physical identity of Prize cards moved to hand. The existing Prize belief layer also does not yet implement Prize-taking transitions. A future integration should update physical hidden-zone truth and the player's belief state together.
+This result is a count-level kernel. Later repository work adds exact Prize identity, observer-relative belief updates, the E-31 pending window, and board-changing before-hand Prize effects. Callers handling those effects should use `post_prize_window_game_resolution` for the final terminal boundary.
 
 The `prize_award` value is supplied by upstream card semantics. This module does not decide whether a Knocked Out Pokémon awards one, two, three, fewer, or modified Prize cards.
 
