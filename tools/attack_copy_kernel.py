@@ -44,6 +44,7 @@ class CopySelector:
     require_selected_energy: bool = False
     required_name_prefix: str | None = None
     chooser: str = "actor"
+    optional_selection: bool = False
 
     def __post_init__(self) -> None:
         if self.chooser not in {"actor", "opponent"}:
@@ -139,7 +140,7 @@ class MissingCopyChooser(CopyResolutionError):
     pass
 
 
-ChoicePolicy = Callable[[AttackDef, tuple[str, ...], State], str]
+ChoicePolicy = Callable[[AttackDef, tuple[str, ...], State], str | None]
 SourceChoicePolicy = Callable[
     [AttackDef, str, tuple[str, ...], State],
     str,
@@ -373,11 +374,32 @@ def resolve_attack(
             )
             return current
 
-        if not candidates:
-            raise IllegalCopyTarget(f"no legal copy targets for {body_attack_id}")
-
         selector = body.copy_selector
         assert selector is not None
+
+        if not candidates:
+            if not selector.optional_selection:
+                raise IllegalCopyTarget(
+                    f"no legal copy targets for {body_attack_id}"
+                )
+            trace.append(
+                TraceStep(
+                    depth=depth,
+                    declared_attack_id=declared_attack_id,
+                    body_attack_id=body_attack_id,
+                    body_attack_name=body.name,
+                    selected_attack_id=None,
+                    progress=current.progress,
+                    selected_body_executed=False,
+                )
+            )
+            if body.post_event is not None:
+                current = replace(
+                    current,
+                    events=current.events + (body.post_event,),
+                )
+            return current
+
         if selector.chooser == "actor":
             choose_attack = choose
         else:
@@ -388,6 +410,28 @@ def resolve_attack(
             choose_attack = choose_opponent
 
         selected = choose_attack(body, candidates, current)
+        if selected is None:
+            if not selector.optional_selection:
+                raise IllegalCopyTarget(
+                    f"{body_attack_id} requires a selected attack"
+                )
+            trace.append(
+                TraceStep(
+                    depth=depth,
+                    declared_attack_id=declared_attack_id,
+                    body_attack_id=body_attack_id,
+                    body_attack_name=body.name,
+                    selected_attack_id=None,
+                    progress=current.progress,
+                    selected_body_executed=False,
+                )
+            )
+            if body.post_event is not None:
+                current = replace(
+                    current,
+                    events=current.events + (body.post_event,),
+                )
+            return current
         if selected not in candidates:
             raise IllegalCopyTarget(
                 f"choice {selected!r} is not legal for {body_attack_id}; candidates={candidates!r}"
@@ -479,12 +523,12 @@ def resolve_attack(
     )
 
 
-def choose_exact(sequence: Iterable[str]) -> ChoicePolicy:
+def choose_exact(sequence: Iterable[str | None]) -> ChoicePolicy:
     remaining = iter(sequence)
 
     def choose(_attack: AttackDef, candidates: tuple[str, ...], _state: State) -> str:
         selected = next(remaining)
-        if selected not in candidates:
+        if selected is not None and selected not in candidates:
             raise IllegalCopyTarget(f"expected {selected!r}; candidates={candidates!r}")
         return selected
 
