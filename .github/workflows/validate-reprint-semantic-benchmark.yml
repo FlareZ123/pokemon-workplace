@@ -1,0 +1,26 @@
+name: Validate official reprint semantic benchmark
+
+on:
+  push:
+    paths:
+      - "tools/reprint_semantic_benchmark.py"
+      - "tools/reprint_errata_resolution.py"
+      - "resources/sets/en.json"
+      - "resources/cards/en/**"
+      - "results/reprint_semantic_benchmark/**"
+      - ".github/workflows/validate-reprint-semantic-benchmark.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check official reprint semantic benchmark
+        run: python results/reprint_semantic_benchmark/reproduce.py
