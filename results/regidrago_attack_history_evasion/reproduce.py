@@ -30,6 +30,7 @@ APEX = "regidrago:apex-dragon"
 TIMELESS = "dialga:timeless-gx"
 ITCHY = "budew:itchy-pollen"
 RETRIBUTION = "koraidon:retribution-strike"
+TRIFROST = "kyurem:trifrost"
 COPYCAT = "mimikyu:copycat"
 
 ATTACKS = {
@@ -56,6 +57,7 @@ ATTACKS = {
         "Retribution Strike",
         energy_cost=("Colorless", "Colorless"),
     ),
+    TRIFROST: AttackDef(TRIFROST, "Trifrost"),
     COPYCAT: AttackDef(
         COPYCAT,
         "Copycat",
@@ -139,6 +141,14 @@ def initial_copy_state() -> State:
                 "discard",
                 types=("Dragon",),
                 attacks=(TIMELESS,),
+            ),
+            PokemonRef(
+                "p1-kyurem",
+                "Kyurem",
+                "P1",
+                "discard",
+                types=("Dragon",),
+                attacks=(TRIFROST,),
             ),
             PokemonRef(
                 "p1-budew",
@@ -330,8 +340,9 @@ def repeat_apex_exposes_counter() -> State:
         declared_attack_id=APEX,
         attacks=ATTACKS,
         state=state,
-        choose=choose_exact((ITCHY,)),
+        choose=choose_exact((TRIFROST,)),
     )
+    assert second_apex.body_chain == (APEX, TRIFROST)
     assert second_apex.state.last_attack_for("P1") == APEX
 
     closed = close_declared_attack(
@@ -364,8 +375,9 @@ def main() -> None:
     mimikyu = card("sm2", "sm2-58")
     budew = card("sv8pt5", "sv8pt5-4")
     koraidon = card("sv5", "sv5-120")
+    kyurem = card("sv6pt5", "sv6pt5-47")
     dde = card("xy6", "xy6-97")
-    for row in (regidrago, dialga, mimikyu, budew, koraidon, dde):
+    for row in (regidrago, dialga, mimikyu, budew, koraidon, kyurem, dde):
         legal(row)
 
     assert attack(budew, "Itchy Pollen")["cost"] == ["Free"]
@@ -374,6 +386,8 @@ def main() -> None:
         "Itchy Pollen",
     )["text"]
     assert koraidon["types"] == ["Dragon"]
+    assert kyurem["types"] == ["Dragon"]
+    assert "110 damage to 3" in attack(kyurem, "Trifrost")["text"]
     assert attack(koraidon, "Retribution Strike")["cost"] == [
         "Colorless",
         "Colorless",
