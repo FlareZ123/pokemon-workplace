@@ -98,3 +98,26 @@ Waiting preserves the connector as insurance against whichever channel the next 
 Deadline examples reverse the policy. With one turn left and rescue already in hand, search setup + play rescue has value 1.0; with setup already secured and rescue absent, search rescue + play has value 1.0.
 
 This is a clean exact demonstration that connector opportunity cost can be future target flexibility. A payable useful search can still be suboptimal to preserve.
+
+
+## One-slot marginal continuation
+
+Added:
+
+- `tools/connector_slot_marginals.py`
+- `results/connector_slot_marginals/README.md`
+- `results/connector_slot_marginals/reproduce.py`
+
+Fixed-size baseline: 60 cards, 6 Prizes, valid 7-card opener, 12 protected starters, target A=3, target B=2, one connector, 20 disposable non-starters, discard cost 2.
+
+Baseline realistic joint access is 7.607900%; a connector-naive gated model gives 12.120417%.
+
+Replacing one protected filler slot gives:
+
+- +1 target A: realistic +1.878295 pp, naive +1.500789 pp
+- +1 target B: realistic +2.744034 pp, naive +2.405112 pp
+- +1 disposable: realistic +0.139238 pp, naive +0.360143 pp
+
+Thus the naive model understates direct redundancy while overvaluing an extra disposable card by 2.5865x. The realistic B-out / disposable marginal ratio is 19.7074, while the naive model compresses it to 6.6782. Direct outs can relieve shared-connector contention; extra discardability improves payability but does not increase connector output capacity.
+
+Best continuation: map these marginals across target counts, discard costs, and disposable densities to identify bottleneck regimes.
