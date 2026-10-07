@@ -49,6 +49,8 @@ This is a directed cycle. The resolver reports the strongly connected component 
 
 It does not arbitrarily choose one source, apply both, or invent a simultaneous fixed point.
 
+A later setup-specific result at `results/ability_lock_setup_precedence/` supplies official first-player precedence for a reciprocal two-Active cycle at game setup. This graph remains a history-free snapshot layer, so unrelated cyclic states still remain unresolved here.
+
 ## Protection changes the dependency graph
 
 Stealthy Hood on Weezing blocks the opponent-sourced Lazy effect. That removes one edge from the graph, leaving Neutralizing Gas as the active suppressor.
