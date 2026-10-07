@@ -1,0 +1,26 @@
+name: Validate sequential Trainer replenishment
+
+on:
+  push:
+    paths:
+      - "tools/trainer_search_transaction.py"
+      - "tools/trainer_search_profile_compiler.py"
+      - "tools/discard_cost_witness.py"
+      - "tools/search_zone_transition.py"
+      - "tools/typed_search_target_allocator.py"
+      - "results/sequential_trainer_replenishment/**"
+      - ".github/workflows/validate-sequential-trainer-replenishment.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/sequential_trainer_replenishment/reproduce.py
