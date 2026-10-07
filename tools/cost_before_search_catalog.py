@@ -122,9 +122,18 @@ def iter_expanded_cards(resources_root: Path) -> Iterable[dict]:
 
 
 def build_catalog(resources_root: Path = Path("resources")) -> dict:
+    cards = tuple(iter_expanded_cards(resources_root))
+    legal_search_trainers = tuple(
+        card
+        for card in cards
+        if card.get("supertype") == "Trainer"
+        and classify_effective_legality(card)[0] == "Legal"
+        and SEARCH_RE.search(normalize_space(" ".join(card.get("rules") or [])))
+        is not None
+    )
     prints = tuple(
         row
-        for card in iter_expanded_cards(resources_root)
+        for card in cards
         if (row := scan_card(card)) is not None
     )
 
@@ -160,9 +169,19 @@ def build_catalog(resources_root: Path = Path("resources")) -> dict:
         for mode in entry["discard_modes"]:
             mode_counts[mode] += 1
 
+    search_names = {card["name"] for card in legal_search_trainers}
+    matched_names = {row.name for row in prints}
+
     return {
+        "search_trainer_print_count": len(legal_search_trainers),
+        "search_trainer_unique_names": len(search_names),
         "print_count": len(prints),
         "unique_names": len(names),
+        "unique_name_share_of_search_trainers": (
+            len(matched_names) / len(search_names)
+            if search_names
+            else 0.0
+        ),
         "unique_gameplay_fingerprints": len(
             {row.gameplay_fingerprint for row in prints}
         ),
