@@ -24,6 +24,7 @@ from trainer_search_transaction import (
 from turn_action_budget import TurnActionBudget
 from typed_search_target_allocator import (
     BASIC_ENERGY,
+    BASIC_POKEMON,
     ITEM,
     POKEMON_TOOL,
     SPECIAL_ENERGY,
