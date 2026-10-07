@@ -1,0 +1,26 @@
+name: Validate attack-copy fixture compiler
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_catalog.py"
+      - "tools/attack_copy_execution_phases.py"
+      - "tools/attack_copy_kernel.py"
+      - "tools/attack_copy_fixture_compiler.py"
+      - "results/attack_copy_fixture_compiler/**"
+      - ".github/workflows/validate-attack-copy-fixtures.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run fixture compiler regression
+        run: python results/attack_copy_fixture_compiler/reproduce.py
