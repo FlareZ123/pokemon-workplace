@@ -34,6 +34,19 @@ def main() -> None:
     )
     assert ability["text"] == "During your turn, you may play 2 Supporter cards."
 
+    surge_cards = json.loads(
+        (ROOT / "resources" / "cards" / "en" / "sm10.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    surge = next(card for card in surge_cards if card["id"] == "sm10-178")
+    surge_status, _ = classify_effective_legality(surge)
+    assert surge_status == "Banned"
+    assert any(
+        "play 3 Supporter cards" in rule
+        for rule in surge.get("rules", [])
+    )
+
     base = TurnActionBudget()
     ordinary = derive_action_quotas(base)
     assert ordinary.supporter_play_limit == 1
