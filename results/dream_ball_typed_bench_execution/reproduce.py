@@ -22,6 +22,7 @@ from dream_ball_typed_bench_execution import (
     DreamBallBenchTarget,
     dream_ball_target_from_metadata,
     execute_dream_ball_bench_search,
+    execute_dream_ball_item_no_target_transaction,
     execute_dream_ball_item_transaction,
 )
 from identity_materialization import (
@@ -234,6 +235,23 @@ def main() -> None:
     assert atomic.after_board.ledger.exchangeable.count("sv3-164", "deck") == 0
     assert_conserved(initial_atomic, atomic.after_board.ledger)
 
+    # A typed deck search can legally select no target even when a matching
+    # Pokemon exists. Dream Ball still resolves and discards, while the board
+    # and deck target remain unchanged.
+    initial_none, prizes_none, board_none = make_pending_state()
+    no_target = execute_dream_ball_item_no_target_transaction(
+        prizes_none,
+        board_none,
+        profile=dream_ball,
+        during_own_turn=True,
+    )
+    assert no_target.after_prizes.physical.ledger == no_target.after_board.ledger
+    assert no_target.after_board.ledger.instance("dream-ball").zone == "discard"
+    assert no_target.after_board.ledger.exchangeable.count("sv3-164", "deck") == 1
+    assert no_target.after_board.ledger.exchangeable.count("sm2-60", "deck") == 1
+    assert no_target.after_board.pokemon == board_none.pokemon
+    assert_conserved(initial_none, no_target.after_board.ledger)
+
     # The same demand profile has a second exact Pokemon witness. It produces a
     # different materialized board object rather than aliasing the Pidgeot line.
     basic_action = next(
@@ -340,6 +358,7 @@ def main() -> None:
                 "stale_witness_rejected": stale_rejected,
                 "non_pokemon_witness_rejected": non_pokemon_rejected,
                 "atomic_prize_board_transaction": True,
+                "legal_no_target_search_branch": True,
                 "card_totals_conserved": True,
             },
             indent=2,
