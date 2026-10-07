@@ -883,6 +883,16 @@ In the Arc Phone correlation witness, privately taking B leaves the opponent at 
 **Working synthesis:** a card leaving a hidden physical zone does not automatically end its information-state relevance. Latent identity should survive until the destination determines who can observe the card, especially when that identity remains correlated with top-deck or remaining-Prize state.
 
 
+## 69. Exact private search target can coexist with observer-marginalized beliefs
+
+[private_search_target_physical/](private_search_target_physical/) binds the private-target belief kernel to exact physical card movement.
+
+In a six-card world, exact physical truth has A plus filler Prized, X privately selected into hand, and Y as the sampled shuffled top. The actor, who knows both K1 and the private target, assigns P(top=Y)=1/3. The opponent, who knows only that a uniform private selection occurred, assigns P(top=Y)=1/6. Both posteriors retain positive support on exact truth top=Y, Prizes=(A, filler), and per-class card totals are conserved.
+
+The bridge also rejects a branch that tries to privately select singleton A while the exact ledger places A in Prize.
+
+**Working synthesis:** exact physical identity and observer-relative knowledge can diverge safely. A simulator may materialize one shared private hand instance as truth while exposing that identity only through observer-specific belief transitions. Public revealed search, private arbitrary search, and K1 are therefore distinct composition layers.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
