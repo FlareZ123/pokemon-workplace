@@ -1,0 +1,28 @@
+name: Validate reacquisition transaction matrix
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/temporal_resource_ledger.py"
+      - "tools/trainer_search_profile_compiler.py"
+      - "tools/typed_search_retrieval.py"
+      - "tools/search_zone_transition.py"
+      - "tools/discard_cost_witness.py"
+      - "tools/trainer_search_transaction.py"
+      - "results/reacquisition_transaction_matrix/**"
+      - ".github/workflows/validate-reacquisition-transaction-matrix.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce full reacquisition matrix
+        run: python results/reacquisition_transaction_matrix/reproduce.py
