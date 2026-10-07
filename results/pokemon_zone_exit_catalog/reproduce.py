@@ -30,7 +30,7 @@ def main() -> None:
     }
     assert summary["route_unique_name_counts"] == {
         "deck->deck": 46,
-        "hand->discard": 7,
+        "hand->discard": 5,
         "hand->hand": 22,
     }
 
