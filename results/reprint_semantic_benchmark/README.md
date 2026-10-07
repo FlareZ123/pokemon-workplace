@@ -23,10 +23,13 @@ The historical positive set contains **76 Trainer printings across 15 names**.
 
 Under the repository's current resolver:
 
-- **26** are already captured by the official name-wide errata layer;
-- **50** remain in `semantic_review`.
+- **41** resolve through the narrow historical bridge whose Black & White-onward counterpart already existed by the 2012 evidence date;
+- **26** resolve through current name-wide errata;
+- **3** Copycat prints resolve through the current Tournament Handbook's explicit semantic example;
+- **2** Life Herb prints are now known non-equivalent in current Expanded because their Pokémon-ex target exclusion is reachable again;
+- **4** remain in `semantic_review`.
 
-Those 50 cases form a concrete positive target set for the next semantic normalizer.
+This partition is why the 76 rows are best treated as historical compatibility evidence rather than unconditional current positives.
 
 The 76 historical positives by name are:
 
@@ -48,7 +51,7 @@ The 76 historical positives by name are:
 | Full Heal | 1 |
 | Recycle | 1 |
 
-The errata resolver already absorbs the Potion, PlusPower, Great Ball, and Rare Candy cases that are covered by current official name-wide errata, leaving wording-normalization work concentrated in the other families.
+The resolver now covers most benchmark rows through dated historical bridges, current errata, and the official Copycat example. The remaining four semantic-review rows are Fisherman, two Pokédex printings, and the no-exclusion Life Herb `pl1-108`. The two excluded-target Life Herb printings are current negative witnesses rather than unresolved positives.
 
 ## Why this is useful
 
@@ -61,7 +64,7 @@ The benchmark therefore gives a semantic compiler both kinds of guardrail:
 - source-backed positive cases it should eventually recognize;
 - a source-backed same-name negative case it must keep separate.
 
-The benchmark also exposes coverage numerically. A semantic normalizer can report how many of the 50 unresolved historical positives it recovers, while regression tests ensure it does not collapse the Rainbow Energy negative boundary.
+The benchmark also exposes coverage numerically. A semantic normalizer can report how the four unresolved historical compatibility rows move, while regression tests preserve the current Copycat positive, Rainbow Energy negative, and Life Herb format-relative negative boundaries.
 
 ## Evidence classes
 
@@ -84,7 +87,7 @@ Run:
 
 `python results/reprint_semantic_benchmark/reproduce.py`
 
-The reproducer asserts the 76 / 15 benchmark size, the 26 / 50 current-resolver split, the per-name counts, and the current Copycat / Rainbow Energy boundary pairs.
+The reproducer asserts the 76 / 15 benchmark size, the current 41 / 26 / 3 / 2 / 4 resolver partition, the per-name counts, and the Copycat / Rainbow Energy boundary pairs.
 
 ## Limitations
 
@@ -96,4 +99,4 @@ The current positive and negative boundary set is tiny. Future benchmark growth 
 
 ## Next work
 
-Build an auditable Trainer semantic normalizer and score it against the 50 unresolved historical positives. Start with mechanically narrow families such as Switch, Energy Search, Energy Switch, Super Scoop Up, Recycle, and Copycat, then add more grammar only when each transformation has a rules-grounded justification.
+Resolve the four remaining semantic-review rows with small rules-grounded transformations. Fisherman's explicit fewer-than-four clause and the Pokédex top-card wording are promising because the Advanced Player's Rulebook already specifies how undersized numbered effects and deck-top operations behave. Keep Life Herb `pl1-108` separate until its damage-counter wording is normalized explicitly.
