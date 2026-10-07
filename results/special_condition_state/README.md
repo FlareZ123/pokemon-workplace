@@ -42,6 +42,23 @@ while one is ordinary Poisoned and places 1 counter during Checkup, and the othe
 
 The reproducer confirms that both states have the same legacy name projection while producing different counter amounts. Therefore the name set is not a sufficient mechanical state representation once irregular Special Conditions are in scope.
 
+## Additional basic-rules authority
+
+The bundled advanced manual intentionally focuses on deeper mechanics and does
+not restate every basic Special Condition coexistence rule. The official
+Pokémon TCG rulebook fills that gap:
+
+- Asleep, Confused, and Paralyzed share the rotated-card state; whichever
+  happened last is the only one of those three that remains;
+- Poisoned and Burned use markers and coexist with the rotated-card condition;
+- Poisoned and Burned can also coexist with one another.
+
+Official rulebook source:
+https://assets.pokemon.com/assets/cms2-en-uk/pdf/trading-card-game/rulebook/par_rulebook_en.pdf
+
+This authority required a correction to the first version of the regression,
+which had allowed one Pokémon to be both Confused and Paralyzed.
+
 ## Finding 2: the condition instance needs a local payload
 
 The minimal representation added here stores one `ConditionInstance` per condition kind:
@@ -50,9 +67,13 @@ The minimal representation added here stores one `ConditionInstance` per conditi
 - condition-local base damage-counter amount when that condition has one;
 - optional provenance label for debugging/evidence.
 
-Applying a newer instance of the same condition kind replaces the old instance. This directly represents the manual's regular/irregular replacement rule.
+Applying a newer instance of the same condition kind replaces the old instance.
+This directly represents the manual's regular/irregular replacement rule.
 
-The kernel deliberately does not infer cross-kind exclusivity rules that are not stated in the bundled advanced manual. Those can be layered in from a basic-rules authority later.
+The basic-rules authority adds one cross-kind invariant: applying Asleep,
+Paralyzed, or Confused clears either of the other two if present. Poisoned and
+Burned remain independently stackable. The state validator rejects manually
+constructed states that violate the rotated-card exclusivity rule.
 
 ## Finding 3: condition payload and external modifiers are different layers
 
@@ -131,15 +152,20 @@ The regression checks:
 - latest regular/irregular same-kind application replaces the previous payload;
 - the rulebook's 4-plus-3 Burned example equals 7 counters;
 - multiple base replacements collapse to the highest amount while additive modifiers stack;
+- applying Paralyzed replaces Confused in the rotated-card condition slot;
+- applying Asleep then replaces Paralyzed while preserving Poisoned and Burned;
 - Confused is excluded from the Checkup condition sequence;
-- the condition block preserves `Poisoned -> Burned -> Asleep -> Paralyzed` among conditions that are present;
+- the condition block preserves the rulebook order among conditions that are legally present;
 - two Checkup effects produce exactly 6 abstract schedules;
 - three Checkup effects produce exactly 24 abstract schedules;
 - no enumerated Checkup effect appears inside the Special Condition block.
 
 ## Limits
 
-This result does not implement the full basic-rule recovery mechanics for Burned, Asleep, Paralyzed, or Confused. It also does not decide same-kind/cross-kind coexistence beyond the manual's explicit regular/irregular same-kind replacement rule.
+This result does not yet implement the full basic-rule recovery mechanics for
+Burned, Asleep, Paralyzed, or Confused. Cross-kind coexistence is now enforced
+from the official basic rulebook, while recovery coin flips and turn-sensitive
+Paralysis recovery remain separate work.
 
 It does not resolve Knock Outs, effects triggered by damage-counter placement, Ability suppression, or continuous-effect eligibility changes during Checkup. Those are composition problems for the existing board, trigger, lock, and KO kernels.
 
