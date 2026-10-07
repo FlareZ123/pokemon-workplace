@@ -177,3 +177,51 @@ Dive. Golduck uses discard rather than deck routing, so whole-stack discard
 semantics should be separately rule-validated before treating it as the same
 physical exit family.
 
+### Zone-exit timing, geometry, and atomic batches
+
+The legality-aware catalog now separates destination routing from timing:
+143 matched rows are direct effects and three are Knock Out-triggered routing
+effects: Rescue Scarf `bw6-115`, Splash Energy `xy9-113`, and Celebi
+`xyp-XY93`. This prevents destination metadata from bypassing the KO trigger
+pipeline.
+
+`tools/pokemon_zone_exit_catalog.py` now preserves the exact matched
+`routing_text` separately from the full effect text.
+
+`tools/pokemon_zone_exit_target_geometry.py` compiles all 143 direct rows into
+12 literal target families. Current print counts:
+- self 76
+- own_one 26
+- opponent_active 11
+- opponent_bench_one 7
+- own_bench_one 6
+- opponent_one 4
+- own_any_number 3
+- opponent_bench_one_and_self 3
+- opponent_bench_all 2
+- opponent_bench_all_except_one 2
+- unqualified_one_to_your_hand 2
+- both_active 1
+
+CI run `37578213323` passed after tightening classification to the exact
+routing clause and using full text only for multi-clause/antecedent resolution.
+
+`tools/batch_zone_exit_conservation.py` adds atomic same-player multi-object
+removal. It validates the whole selected set first, routes all selected physical
+stacks/attachments, and returns `PromotionPendingState` so an Active selected
+inside the batch does not trigger an intermediate promotion. The empty batch is
+supported for attack text using `any number`. CI run `37578355675` passed.
+
+Relevant commits:
+- `2bc2a98d82c561854b9cd3eda64aeb1a5de40d9a` timing partition
+- `ba6926adc8a6bca8445f3e4b6010cb81baf887b2` routing-clause provenance
+- `5234a63dc108371d29fbf6174e6803ea15e732eb` target compiler
+- `58fda409a6f39f0067c23351cd33130989f7c930` passing target classifier
+- `95d8de7256728c397e771b84828f69d3b0779717` batch transition
+- `a0acd8e583863b15914f180b0e1488b5de58402a` batch regression
+- `d5d37375e3f2edcfc005edd89587c23e46c08917` batch CI
+- `1d92c72557c0b7fb3b11cc9a90f5092b6a1d5cfe` research-map integration
+
+Next useful directions include target-set branching/complexity, compilation of
+card-specific target filters, and per-object routing/replacement effects.
+
