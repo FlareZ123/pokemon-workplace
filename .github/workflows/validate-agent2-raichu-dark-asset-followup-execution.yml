@@ -1,0 +1,21 @@
+name: Validate agent2 Raichu Dark Asset follow-up execution
+
+on:
+  push:
+    paths:
+      - "tools/raichu_search_to_crobat_execution.py"
+      - "tools/raichu_dark_asset_followup_execution.py"
+      - "results/raichu_dark_asset_followup_execution/**"
+      - ".github/workflows/validate-agent2-raichu-dark-asset-followup-execution.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run physical bounded follow-up regression
+        run: PYTHONPATH=tools python results/raichu_dark_asset_followup_execution/reproduce.py
