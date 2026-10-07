@@ -1037,3 +1037,14 @@ The executor preserves the E-20 dependency. If the first self-switch cannot occu
 Two apparent additional records are left uncompiled because the bundled English text contains obvious-looking typos (`xyp-XY122` “The,” and `me55-20` “oppoennt”). The compiler leaves those uncertain rather than silently repairing source data.
 
 **Working synthesis:** compound card text should compile to ordered, gated transition programs. For movement, reachability depends on both printed order and whether earlier effects actually occurred.
+
+
+## Position-changing Abilities require activation geometry
+
+[position_ability_profiles/](position_ability_profiles/) compiles a conservative pure-movement Ability island with **52 legal print-level profiles across 23 card names**: 22 self-switch profiles, 17 actor-chosen targeted gusts, and 13 opponent-chosen force-outs.
+
+The profiles preserve source position, chooser authority, and activation timing. Keldeo-EX's Rush In can promote only its own Benched source object, Solgaleo-GX's Ultra Road can choose any Benched replacement, Umbreon VMAX's Dark Signal requires the hand-evolution event, and Tornadus's Sudden Cyclone requires hand-to-Bench entry. Event-triggered profiles cannot execute unless the caller explicitly supplies a satisfied trigger, and Ability lock remains an execution gate.
+
+The supporting Ability classifier was also corrected so a leading event clause retains control even when prefixed by "Once during your turn." Across 1,539 exact legal Evolution-Ability rows, 28 rows move from the turn-action class to the triggered class; among 1,175 Dream Ball geometry-compatible rows, 11 move to triggered. Geometry itself is unchanged.
+
+**Working synthesis:** movement access depends on effect semantics, source geometry, event history, and lock state. A planner that exposes every in-play movement Ability as a free edge overstates realistic access and can invent illegal lines.
