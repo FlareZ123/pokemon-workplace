@@ -108,15 +108,22 @@ def apply_condition(
     state: SpecialConditionState,
     condition: ConditionInstance,
 ) -> SpecialConditionState:
-    """Apply a condition, replacing an older instance of the same kind.
+    """Apply one Special Condition with replacement/coexistence rules.
 
-    This captures the manual's explicit rule that a newer regular/irregular
-    version of a Special Condition replaces the previous version of that same
-    condition. Cross-kind exclusivity belongs to the basic-rules layer and is
-    deliberately outside this evidence-bounded helper.
+    A newer instance of the same condition replaces the old one. Asleep,
+    Paralyzed, and Confused share the rotated-card slot, so applying one also
+    clears the other two. Poisoned and Burned remain independently stackable.
     """
 
-    kept = tuple(row for row in state.conditions if row.kind != condition.kind)
+    kept = tuple(
+        row
+        for row in state.conditions
+        if row.kind != condition.kind
+        and not (
+            condition.kind in ROTATION_CONDITIONS
+            and row.kind in ROTATION_CONDITIONS
+        )
+    )
     ordered = tuple(sorted(kept + (condition,), key=lambda row: row.kind.value))
     return SpecialConditionState(ordered)
 
