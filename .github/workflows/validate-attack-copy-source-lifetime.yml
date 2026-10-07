@@ -1,0 +1,23 @@
+name: Validate attack-copy source lifetime
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_kernel.py"
+      - "results/attack_copy_source_lifetime/**"
+      - ".github/workflows/validate-attack-copy-source-lifetime.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run physical source lifetime regression
+        run: python results/attack_copy_source_lifetime/reproduce.py
