@@ -44,9 +44,32 @@ def main() -> None:
     )
     assert not asia.has_conflict
 
+    japan = assess_ordering_authority(
+        lost_city_context,
+        (JAPAN_LOST_CITY_QA,),
+    )
+    assert (
+        japan.resolved_authority
+        == OrderingAuthority.KNOCKED_OUT_POKEMON_OWNER
+    )
+
+    asia_japan = assess_ordering_authority(
+        lost_city_context,
+        (ASIA_LOST_CITY_REUNICLUS_QA, JAPAN_LOST_CITY_QA),
+    )
+    assert (
+        asia_japan.resolved_authority
+        == OrderingAuthority.KNOCKED_OUT_POKEMON_OWNER
+    )
+    assert not asia_japan.has_conflict
+
     combined = assess_ordering_authority(
         lost_city_context,
-        (TPCI_FEB_2026, ASIA_LOST_CITY_REUNICLUS_QA),
+        (
+            TPCI_FEB_2026,
+            ASIA_LOST_CITY_REUNICLUS_QA,
+            JAPAN_LOST_CITY_QA,
+        ),
     )
     assert combined.resolved_authority is None
     assert combined.has_conflict
@@ -54,6 +77,26 @@ def main() -> None:
         OrderingAuthority.CURRENT_PLAYER,
         OrderingAuthority.KNOCKED_OUT_POKEMON_OWNER,
     }
+
+    lost_out_context = OrderingContext(
+        timing_window=TimingWindow.DURING_TURN,
+        trigger_kind=TriggerKind.POKEMON_KNOCKED_OUT,
+        simultaneous_knockout_count=1,
+        interaction_id=LOST_CITY_LOST_OUT,
+    )
+    japan_lost_out = assess_ordering_authority(
+        lost_out_context,
+        (JAPAN_LOST_CITY_QA,),
+    )
+    assert (
+        japan_lost_out.resolved_authority
+        == OrderingAuthority.KNOCKED_OUT_POKEMON_OWNER
+    )
+    tpci_japan_lost_out = assess_ordering_authority(
+        lost_out_context,
+        (TPCI_FEB_2026, JAPAN_LOST_CITY_QA),
+    )
+    assert tpci_japan_lost_out.has_conflict
 
     # The local 2025 Advanced Player's Rulebook text only states a controller
     # for the narrower case where several Pokemon are Knocked Out together.
