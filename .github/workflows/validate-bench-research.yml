@@ -26,3 +26,5 @@ jobs:
         run: python results/bench_capacity_lock_interactions/reproduce.py
       - name: Validate Bench refresh lines
         run: python results/bench_refresh_lines/reproduce.py
+      - name: Validate bulk Bench refresh
+        run: python results/bench_bulk_refresh/reproduce.py
