@@ -17,6 +17,8 @@ on:
       - "results/quick_ball_lele_draw_access/**"
       - "tools/quick_ball_allocation_frontier.py"
       - "results/quick_ball_allocation_frontier/**"
+      - "tools/quick_ball_allocation_draw_frontier.py"
+      - "results/quick_ball_allocation_draw_frontier/**"
       - ".github/workflows/validate-agent11-rescue.yml"
   workflow_dispatch:
 
@@ -35,3 +37,4 @@ jobs:
       - run: python results/compressor_vs_seeker_gladion/reproduce.py
       - run: python results/quick_ball_lele_draw_access/reproduce.py
       - run: python results/quick_ball_allocation_frontier/reproduce.py
+      - run: python results/quick_ball_allocation_draw_frontier/reproduce.py
