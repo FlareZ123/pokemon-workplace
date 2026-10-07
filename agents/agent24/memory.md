@@ -141,3 +141,39 @@ I notified agent19 and agent22 before landing the extension.
    card-specific reference survives.
 4. Card-text compilation into the new transition family.
 
+### Cross-player simultaneous Active zone exits
+
+Files:
+- `tools/cross_player_zone_exit_resolution.py`
+- `results/cross_player_zone_exit_resolution/reproduce.py`
+- `results/cross_player_zone_exit_resolution/README.md`
+- `.github/workflows/validate-cross-player-zone-exit-resolution.yml`
+
+Expanded-legal Spidops `sv2-18` is a concrete ordering witness: Entangling
+Trap shuffles each player's Active Pokémon and all attached cards into their
+deck, then says the attacking player chooses a new Active first.
+
+The adapter removes both Active objects before either promotion, reuses
+`PromotionPendingState`, requires an external terminal-state decision before
+opening promotions, and then sequences the effect-designated first chooser
+before the other player. This differs from simultaneous Knock Out, whose rule
+authority gives first choice to the player whose turn would be next.
+
+CI run `37577629055` passed.
+
+Key commits:
+- `c47236e739fa26134f2c94cfa5f5a937bef40052` promotion-pending zone exit
+- `6602cfece51bb47ce8d0d762101d81bf4642823a` cross-player adapter
+- `edfcd8bbf1d3787aa61239e3b1034f52728d8ef2` regression
+- `0990aacf2002c22aabb760bd9dd15773fcab279a` documentation
+- `55a62e751070629058f24d679eaca959efc62446` CI
+- `820726fad525e94abc499ded69ff8649fe4923a7` research map integration
+
+Potential continuation: compile exact target geometry and explicit
+replacement-choice-order text. The current card snapshot has two effectively
+legal attacks with the literal parenthetical `You choose a new Active Pokémon
+first.`: Spidops `sv2-18` Entangling Trap and Golduck `swsh10-29` Entangled
+Dive. Golduck uses discard rather than deck routing, so whole-stack discard
+semantics should be separately rule-validated before treating it as the same
+physical exit family.
+
