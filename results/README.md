@@ -1166,7 +1166,15 @@ The conserved evolution-stack regression confirms both authorized physical branc
 
 ## Prized Supporter access can miss the execution window
 
-[prize_supporter_execution/](prize_supporter_execution/) bridges physical Prize access to the canonical turn-action budget. For a known Prized Supporter among six unknown positions, Arc Phone -> Trekking Shoes has 1/6 hand-access and same-turn execution probability. Peonia -> Arc Phone -> Trekking Shoes raises hand access to 2/3, yet ordinary same-turn Supporter execution is 0 because Peonia has consumed the one-Supporter channel. With Magnezone bw8-46's Dual Brains raising the Supporter limit to two, the Peonia line converts the full 2/3 access probability into execution probability.
+[prize_supporter_execution/](prize_supporter_execution/) bridges physical Prize access to the canonical turn-action budget. For a known Prized Supporter among six unknown positions, Arc Phone -> Trekking Shoes has 1/6 hand-access and same-turn execution probability. Peonia -> Arc Phone -> Trekking Shoes raises hand access to 2/3, yet ordinary same-turn Supporter execution is 0 because Peonia has consumed the one-Supporter channel. Gladion reaches the known Prized target with probability 1 but likewise has ordinary same-turn execution probability 0. Dual Brains changes those execution probabilities to 2/3 and 1 respectively, while Neutralizing Gas removes the board-derived extra quota and makes the Item-only line best again. A next-turn execution deadline resets ordinary Supporter usage, making Gladion's recovered target fully executable on the following turn under the stated persistence assumptions.
 
 **Working synthesis:** card access and executable access are distinct state variables. A connector can improve hidden-zone recovery while consuming the exact action quota required by its payload; quota-changing board effects can reverse that line evaluation without changing the Prize posterior.
+
+## Regidrago delayed double-KO windows are state-dependent
+
+[regidrago_timeless_phantom_state_windows/](regidrago_timeless_phantom_state_windows/) generalizes the Timeless-GX -> Phantom Dive line beyond undamaged printed HP. If the first target has prior damage D_A, resolved Timeless damage T, and later receives K damage-counter value, its delayed-KO condition is D_A + T < HP_A <= D_A + T + K. The second Active target is in range when HP_B <= D_B + P for prior damage D_B and resolved Phantom Dive damage P. Attack-effect immunity remains a separate gate because Phantom Dive's Bench counters are an effect rather than attack damage.
+
+Concrete baseline bands show how prior chip damage opens the line against larger attackers: Iron Thorns ex at 230 HP needs 20-70 prior damage as the first target, Regidrago VSTAR at 280 needs 70-120, and Shadow Rider Calyrex VMAX at 320 needs 110-160. The full executor exhaustively matches the closed-form thresholds across multiple prior-damage and damage-modifier families.
+
+**Working synthesis:** target-selection value depends on live damage state and on the channel by which later damage is delivered. Printed HP alone is an insufficient range classifier for multi-attack ALSes that mix ordinary damage with effect-placed counters.
 
