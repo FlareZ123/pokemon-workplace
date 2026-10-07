@@ -16,6 +16,8 @@ from dataclasses import dataclass
 from math import comb
 from typing import Iterator
 
+from turn_action_budget import TurnAction, TurnActionBudget
+
 
 @dataclass(frozen=True)
 class SupporterAccessResult:
@@ -87,7 +89,8 @@ def same_turn_supporter_access(
     consuming_connectors: int = 0,
     opening_hand_size: int = 7,
     extra_random_draws: int = 0,
-    supporter_plays_remaining: int = 1,
+    supporter_plays_remaining: int | None = None,
+    turn_budget: TurnActionBudget | None = None,
 ) -> SupporterAccessResult:
     """Return exact same-turn access to a target Supporter.
 
@@ -103,6 +106,10 @@ def same_turn_supporter_access(
     reducing "supporter_plays_remaining". A consuming connector first spends one
     Supporter play, so it can only search and then play the target in the same turn
     when at least two Supporter plays remain.
+
+    Callers may provide either an explicit "supporter_plays_remaining" value or a
+    canonical "turn_budget". When a budget is supplied, remaining Supporter quota
+    is derived from its current usage, limit, and turn-ended state.
 
     "naive_access_probability" is the reachability result obtained by incorrectly
     treating both connector classes as if they preserve the Supporter play. It is
@@ -137,6 +144,15 @@ def same_turn_supporter_access(
     post_prize_deck = deck_size - opening_hand_size - prize_count
     if not 0 <= extra_random_draws <= post_prize_deck:
         raise ValueError("extra_random_draws must fit in the post-Prize deck")
+    if turn_budget is not None:
+        if supporter_plays_remaining is not None:
+            raise ValueError(
+                "provide either supporter_plays_remaining or turn_budget, not both"
+            )
+        supporter_plays_remaining = turn_budget.remaining(TurnAction.SUPPORTER)
+    elif supporter_plays_remaining is None:
+        supporter_plays_remaining = 1
+
     if supporter_plays_remaining < 0:
         raise ValueError("supporter_plays_remaining must be non-negative")
 
