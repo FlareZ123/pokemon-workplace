@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from functools import lru_cache
 
 from iron_thorns_turn1_probability import (
     COUNTS,
@@ -51,6 +52,7 @@ def route_reachable(hand: list[int], deck: list[int]) -> bool:
     )
 
 
+@lru_cache(maxsize=None)
 def exact_probability(bonus_draws: int) -> float:
     if bonus_draws < 0:
         raise ValueError("bonus_draws must be nonnegative")
@@ -122,11 +124,51 @@ def exact_probability(bonus_draws: int) -> float:
     return success
 
 
+
+def opponent_mulligan_probability(
+    basic_count: int,
+    deck_size: int = DECK_SIZE,
+    opening_size: int = OPENING_SIZE,
+) -> float:
+    if basic_count <= 0 or basic_count > deck_size:
+        raise ValueError("basic_count must be between 1 and deck_size")
+    return math.comb(deck_size - basic_count, opening_size) / math.comb(
+        deck_size,
+        opening_size,
+    )
+
+
+def matchup_adjusted_probability(opponent_basic_count: int) -> float:
+    """Integrate bonus cards over the opponent's repeated-mulligan distribution."""
+    q = opponent_mulligan_probability(opponent_basic_count)
+    after_prizes = DECK_SIZE - OPENING_SIZE - PRIZE_COUNT
+    max_bonus = after_prizes - 1
+
+    probability = 0.0
+    for mulligans in range(max_bonus):
+        probability += (
+            (1.0 - q)
+            * q**mulligans
+            * exact_probability(mulligans)
+        )
+
+    # If the opponent somehow mulligans at least max_bonus times, taking more
+    # than max_bonus cards would leave no card for the mandatory turn draw.
+    # Collapse that geometric tail onto the largest rational bonus choice.
+    probability += q**max_bonus * exact_probability(max_bonus)
+    return probability
+
 def main() -> None:
     for bonus_draws in range(7):
         print(
             bonus_draws,
             f"{exact_probability(bonus_draws):.12%}",
+        )
+    for opponent_basics in (4, 14):
+        print(
+            f"opponent_basics={opponent_basics}",
+            f"mulligan_probability={opponent_mulligan_probability(opponent_basics):.12%}",
+            f"matchup_adjusted={matchup_adjusted_probability(opponent_basics):.12%}",
         )
 
 
