@@ -909,6 +909,16 @@ In the exact regression, Computer Search plus two specified fodder cards begin i
 
 **Working synthesis:** unrestricted private search needs an action-level transaction distinct from selector-limited typed search. One play can jointly change action state, hand/discard material, private deck knowledge, observer beliefs, exact target identity, and shuffled-top topology while preserving one shared physical world.
 
+## 71. Materialized hand instances must contribute to canonical hand size
+
+[materialized_hand_size_continuation/](materialized_hand_size_continuation/) closes a projection gap between aggregate zone counts and exact physical identity.
+
+After the atomic Computer Search transaction, Crobat V remains exchangeable in hand while the privately searched X exists as a materialized hand instance. Physical hand size is 2 although the exchangeable hand count is 1. After Crobat V is materialized from hand into play, physical hand size is 1 and exchangeable hand count is 0. A draw-to-six continuation therefore draws 5; an exchangeable-only projection incorrectly predicts 6.
+
+The new physical_zone_count helper derives zone cardinality from exchangeable counts plus materialized instances.
+
+**Working synthesis:** materialization changes representation while the card can remain in the same game zone. Hand size, deck size, discard size, Lost Zone size, and other physical zone metrics must project across both identity layers whenever materialized instances can occupy those zones.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
