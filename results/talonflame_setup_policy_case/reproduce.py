@@ -127,7 +127,7 @@ def validate_deck_and_card_pool() -> None:
     assert _effective_status(ultra_ball) == "Legal"
     assert "Item" in ultra_ball["subtypes"]
     assert "Discard 2 cards" in ultra_ball["rules"][0]
-    assert "Search your deck for a Pokémon" in ultra_ball["rules"][0]
+    assert "search your deck for a Pokémon" in ultra_ball["rules"][0]
 
 
 def policy_metrics(policy) -> tuple[float, float]:
