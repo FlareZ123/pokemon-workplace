@@ -213,3 +213,112 @@ def shortest_volt_cyclone_setup(
                 seen.add(next_state)
                 queue.append((next_state, line + [label]))
     return None
+
+
+def crispin_for_bagon(state: EnergyAccessState) -> list[Transition]:
+    """Search Fire + Water, attach one by effect, and put the other in hand."""
+    if not state.supporters_allowed or state.supporter_used:
+        return []
+    if (
+        state.zone("Crispin") != Zone.HAND.value
+        or state.zone("Fire Energy") != Zone.DECK.value
+        or state.zone("Water Energy") != Zone.DECK.value
+        or state.zone("Bagon") != Zone.ACTIVE.value
+    ):
+        return []
+
+    transitions: list[Transition] = []
+    for attached_card, attached_symbol, hand_card in (
+        ("Fire Energy", "R", "Water Energy"),
+        ("Water Energy", "W", "Fire Energy"),
+    ):
+        next_state = _move(state, "Crispin", Zone.DISCARD)
+        next_state = _move(next_state, attached_card, Zone.ATTACHED)
+        next_state = _move(next_state, hand_card, Zone.HAND)
+        next_state = replace(
+            next_state,
+            supporter_used=True,
+            attached_units=state.attached_units + (attached_symbol,),
+        )
+        transitions.append(
+            (
+                f"Play Crispin; attach {attached_card} by effect, {hand_card} to hand",
+                next_state,
+            )
+        )
+    return transitions
+
+
+def attach_basic_energy_to_bagon(state: EnergyAccessState) -> list[Transition]:
+    if (
+        not state.manual_attachment_allowed
+        or state.manual_attachment_used
+        or state.zone("Bagon") != Zone.ACTIVE.value
+    ):
+        return []
+
+    transitions: list[Transition] = []
+    for card, symbol in (("Fire Energy", "R"), ("Water Energy", "W")):
+        if state.zone(card) != Zone.HAND.value:
+            continue
+        next_state = _move(state, card, Zone.ATTACHED)
+        next_state = replace(
+            next_state,
+            manual_attachment_used=True,
+            attached_units=state.attached_units + (symbol,),
+        )
+        transitions.append((f"Attach {card} to Bagon", next_state))
+    return transitions
+
+
+def dragon_claw_ready(state: EnergyAccessState) -> bool:
+    if not state.attacks_allowed or state.zone("Bagon") != Zone.ACTIVE.value:
+        return False
+    if not state.attached_units:
+        return False
+    route = EnergyRouteType(
+        "already attached Energy",
+        1,
+        (
+            EnergyRouteProfile(
+                units=tuple(unit(symbol) for symbol in state.attached_units),
+            ),
+        ),
+    )
+    return evaluate_energy_routes(
+        ("R", "W"),
+        {},
+        {"Dragon", "Basic"},
+        (route,),
+    ).exact_feasible
+
+
+CRISPIN_BAGON_ACTIONS: tuple[Action, ...] = (
+    crispin_for_bagon,
+    attach_basic_energy_to_bagon,
+)
+
+
+def shortest_dragon_claw_setup(
+    initial_state: EnergyAccessState,
+    *,
+    max_actions: int = 4,
+) -> tuple[list[str], EnergyAccessState] | None:
+    """Return the shortest represented Crispin line that pays Bagon's RW attack."""
+    queue: deque[tuple[EnergyAccessState, list[str]]] = deque(
+        [(initial_state, [])]
+    )
+    seen = {initial_state}
+    while queue:
+        state, line = queue.popleft()
+        if dragon_claw_ready(state):
+            return line, state
+        if len(line) >= max_actions:
+            continue
+        for action in CRISPIN_BAGON_ACTIONS:
+            for label, next_state in action(state):
+                if next_state in seen:
+                    continue
+                seen.add(next_state)
+                queue.append((next_state, line + [label]))
+    return None
