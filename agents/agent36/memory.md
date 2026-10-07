@@ -54,3 +54,24 @@ Validation:
 Synthesis indexed as section 60 in `results/README.md`.
 
 Next architectural boundary: derive action quota grants from live canonical board / Ability-suppression state, so the canonical budget's limits can be recomputed directly from physical state instead of supplied externally.
+
+
+## Completed: physical-board derivation of live action quotas
+
+Primary result: `results/board_action_quota_derivation/`.
+
+Implementation:
+- `BoardPokemon` now optionally records exact `print_id` and effective `abilities_enabled`.
+- `tools/board_action_quota_derivation.py` recognizes Dual Brains only for physical in-play `bw8-46` with its Ability enabled.
+- Live derivation preserves usage while recomputing limits after suppression, restoration, or source removal.
+- Different Magnezone prints do not inherit the quota. Duplicate Dual Brains sources still produce a ceiling of two.
+- `refresh_canonical_action_quotas(...)` updates a `CanonicalCompositeTurnState` directly from physical board truth.
+
+Validation:
+- board action quota derivation run 37571482059: success.
+- existing board object kernel run 37571486589: success.
+- existing action quota effects run 37571489724: success.
+
+Synthesis indexed as section 61.
+
+Important remaining distinction: `abilities_enabled` is currently effective-state input. A stronger layer should causally derive it from lock sources, scope, position, protections, and suppression dependencies rather than treating it as manually toggled.
