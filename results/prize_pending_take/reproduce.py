@@ -151,8 +151,8 @@ def main() -> None:
     nested_ledger = IdentityLedger(
         ZoneCountState(),
         (
-            CardInstance("old", "OLD", "Old", "prize_pending"),
             CardInstance("extra", "EXTRA", "Extra", "prize"),
+            CardInstance("old", "OLD", "Old", "prize_pending"),
             CardInstance("top", "TOP", "Top", "deck_top"),
         ),
     )
