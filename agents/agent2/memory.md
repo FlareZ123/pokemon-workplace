@@ -82,3 +82,48 @@ Do not interpret 30.623976% as full-deck Raichu consistency. The model intention
 
 Best next extension: add Forest Seal Stone as a typed any-card connector gated by a Pokemon V and Tool attachment. In Harto's list, the relevant Pokemon V is Crobat V x2. Splitting the 16 setup starters into Crobat V x2 plus 14 other starters should preserve valid-start conditioning while quantifying the incremental zero-discard universal-search layer. After that, add draw-engine transitions and Battle Compressor.
 
+
+
+## 2026-10-07 correction: Giratina setup/discard overlap
+
+Re-auditing `tools/raichu_prize_access.py` exposed two repository-integrity problems: the checked-in reproducer had syntax corruption, and the exact state partition treated the 16 setup starters and 12-card discard pool as disjoint even though Giratina belongs to both groups.
+
+The implementation now cross-classifies Giratina as a disposable starter and materializes the mandatory Active Pokemon before the action snapshot. If Giratina is the only opening starter it leaves the hand for the Active Spot; if another starter can satisfy setup, the narrow access policy preserves Giratina as possible discard fodder.
+
+Corrected one-draw baseline:
+
+- valid opening: 90.077711%;
+- Raichu Prized: 10.052903%;
+- two-card discard gate payable: 48.619573%;
+- Ultra Ball + direct Gladion: 26.964142%;
+- static Computer Search: 30.126094%;
+- zone-adaptive Computer Search: 30.578700%;
+- conditional Raichu-Prized adaptive access: 29.209000%.
+
+Computer Search's adaptive fallback adds 4.502243 percentage points inside Raichu-Prized states. The earlier published 30.623976% / 4.515319-point values were slightly high because of the disjoint-category error.
+
+Added `.github/workflows/validate-agent2-raichu-prize-access.yml`; the corrected baseline and labeled small-case regression now pass CI.
+
+## 2026-10-07 Forest Seal Stone typed gate
+
+Created:
+
+- `tools/raichu_forest_seal_access.py`;
+- `results/raichu_forest_seal_access/README.md`;
+- `results/raichu_forest_seal_access/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-forest-seal.yml`.
+
+The exact direct-ready layer preserves Forest Seal Stone's Pokemon V prerequisite using Harto's two Crobat V. With one later random draw:
+
+- corrected pre-Stone baseline: 30.578700%;
+- Forest Seal Stone exposed: 12.874837%;
+- Crobat V available in play/hand: 27.432224%;
+- both gate pieces ready: 3.264545%;
+- typed Forest Seal Stone access: 33.139533%;
+- hypothetical ungated Forest Seal access: 40.261571%;
+- omitting the Crobat V gate overstates access by 7.122039 percentage points;
+- conditional on Raichu being Prized, typed access is 31.781059% versus 38.935680% ungated.
+
+The labeled 12-card exhaustive regression passes CI (run 37564936576). The main methodological lesson is that universal-search output breadth is insufficient to characterize access: physical prerequisites can dominate the connector's realized contribution.
+
+Next high-value continuation: search-to-gate sequencing. Harto has two Quick Ball. When Forest Seal Stone is exposed but Crobat V is missing, Quick Ball can pay one discard to find Crobat, revealing the deck before Star Alchemy chooses Raichu or Gladion. Ultra Ball can also pivot to Crobat in Raichu-Prized states instead of failing its direct target route. Model these executable policies with shared discard resources and compare them against direct-ready Forest Seal access.
