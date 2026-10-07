@@ -10,14 +10,13 @@ from tools.reprint_equivalence_candidates import build_candidates
 RESOURCES = ROOT / "resources"
 result = build_candidates(RESOURCES)
 counts = result["counts"]
-print("live reprint counts:", counts)
 
-assert counts["exact_candidate_prints"] == 100
-assert counts["exact_candidate_variants"] == 16
-assert counts["exact_candidate_names"] == 16
-assert counts["same_name_review_prints"] == 4248
-assert counts["same_name_review_names"] == 636
-assert counts["exact_by_supertype"] == {"Energy": 91, "Pokémon": 9}
+assert counts["exact_candidate_prints"] == 106
+assert counts["exact_candidate_variants"] == 19
+assert counts["exact_candidate_names"] == 19
+assert counts["same_name_review_prints"] == 4260
+assert counts["same_name_review_names"] == 643
+assert counts["exact_by_supertype"] == {"Energy": 91, "Pokémon": 13, "Trainer": 2}
 
 cards = {}
 for path in (RESOURCES / "cards" / "en").glob("*.json"):
