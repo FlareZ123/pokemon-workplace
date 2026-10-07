@@ -44,3 +44,24 @@ Study Regidrago-side counterplay against the Mimikyu response:
 - Apex Dragon's declared identity is what Copycat sees, regardless of copied body.
 - Determine which CL2026 Aichi Regidrago lists contained realistic direct attackers or alternative declared attacks that could avoid exposing Apex Dragon in the preceding turn.
 - Preserve exact print identity and Energy/position requirements before calling any fallback realistic.
+
+
+## Completed result: Regidrago attack-history evasion
+
+Artifacts:
+- \`results/regidrago_attack_history_evasion/aichi_2026_published_regidrago.json\`
+- \`results/regidrago_attack_history_evasion/reproduce.py\`
+- \`results/regidrago_attack_history_evasion/README.md\`
+- \`.github/workflows/validate-regidrago-attack-history-evasion.yml\`
+- CI run 37593639997 passed after correcting the repeat-Apex branch to copy Kyurem's Trifrost, a legal Dragon-discard payload.
+
+Durable findings:
+- If Regidrago declares Apex Dragon -> Timeless-GX, copied Timeless grants Regidrago another turn before the opponent can respond.
+- Last-declared-attack state is overwritten by a new direct attack during that bonus turn. Budew Itchy Pollen or Koraidon ex Retribution Strike therefore removes Apex Dragon from Mimikyu Copycat's immediate target on the following Shadow Rider turn.
+- Declaring Apex Dragon again on the bonus turn preserves Apex Dragon as the last declared attack and allows Copycat -> Apex Dragon -> Timeless-GX when the Shadow Rider payload is ready.
+- All 9 published detailed CL2026 Aichi Regidrago lists contain Budew, totaling 12 copies (1.33/list). 5/9 contain Koraidon ex TEF 120. They contain 34 Double Dragon Energy total (3.78/list).
+- Budew's Itchy Pollen has no Energy requirement. Koraidon ex is Dragon, Retribution Strike costs [C][C], and one Double Dragon Energy supplies two Energy on Dragon.
+- Empirical scope is the 9 published detailed lists. Tournament history classifies 11 top-32 finishes as Regidrago, but two lack detailed lists in the aggregation.
+
+Next:
+- quantify Budew history-cover AMR after Timeless-GX, especially promotion routes and the cost of retreating Regidrago VSTAR.
