@@ -9,6 +9,7 @@ on:
       - "results/damage_reaction_kernel/**"
       - "resources/cards/en/sv9.json"
       - "resources/cards/en/sv10.json"
+      - "resources/cards/en/sv7.json"
       - ".github/workflows/validate-damage-reaction-kernel.yml"
   workflow_dispatch:
 
