@@ -148,3 +148,14 @@ It treats the root attack as the **declared attack identity** and resolves one o
 5. **No-progress recursion safety**: Apex Dragon choosing Apex Dragon again from a discarded Regidrago VSTAR is detected as a repeated copy configuration rather than expanded forever.
 
 The cycle key in this small kernel includes the attacking card, body attack, explicit progress channel, and GX-use state. That is sufficient for the transitions currently modeled. A broader simulator that mutates zones, damage, Energy, or other state during copied bodies should include those state channels in its recurrence key as well.
+
+
+## Copy-edge correlation: pairwise reachability is insufficient
+
+The kernel exposes a second modeling requirement beyond edge-local restrictions: two individually legal copy edges may still fail to compose because they reference the same state variable.
+
+A concrete regression uses **Shadow Imitation** and **Foul Play**. Shadow Imitation can select a non-GX attack from the opponent's Active Pokémon. If that chosen attack is Foul Play, Foul Play then selects an attack from the opponent's Active Pokémon. Both edges are bound to the same current Active slot. A GX attack on a different Benched Pokémon is therefore unavailable to the inner Foul Play even though the abstract relations "Shadow Imitation can copy Foul Play" and "Foul Play can copy GX attacks" are each true in some states.
+
+The companion regression contrasts **Apex Dragon**. If the opponent's Active Regidrago VSTAR supplies Apex Dragon to Shadow Imitation, the inner Apex Dragon reads the copying player's discard pile. That is a different state variable, so a Dragon GX attack such as Timeless-GX can be selected there.
+
+This is a copy-specific instance of a broader graph-modeling warning already present elsewhere in the repository: pairwise access does not prove composable access. A copy graph should retain the source object or state variable attached to every edge, then unify those variables when paths are composed.
