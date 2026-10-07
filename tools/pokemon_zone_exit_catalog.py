@@ -53,16 +53,17 @@ def _effect_rows(card: dict[str, Any]) -> tuple[tuple[str, str, str], ...]:
     return tuple(rows)
 
 
-def _routing(text: str) -> tuple[str, str] | None:
+def _routing(text: str) -> tuple[str, str, str] | None:
     normalized = " ".join(text.split())
 
     combined = _COMBINED_ROUTE_RE.search(normalized)
     if combined is not None:
         destination = combined.group(1).lower()
-        return destination, destination
+        return destination, destination, combined.group(0)
 
-    if _SPLIT_HAND_DISCARD_RE.search(normalized) is not None:
-        return "hand", "discard"
+    split = _SPLIT_HAND_DISCARD_RE.search(normalized)
+    if split is not None:
+        return "hand", "discard", split.group(0)
 
     return None
 
@@ -95,7 +96,11 @@ def catalog_pokemon_zone_exits(
                 if routing is None:
                     continue
 
-                pokemon_destination, attachment_destination = routing
+                (
+                    pokemon_destination,
+                    attachment_destination,
+                    routing_text,
+                ) = routing
                 timing_class = (
                     "knockout_triggered"
                     if "knocked out" in text.lower()
@@ -112,6 +117,7 @@ def catalog_pokemon_zone_exits(
                         "pokemon_destination": pokemon_destination,
                         "attachment_destination": attachment_destination,
                         "timing_class": timing_class,
+                        "routing_text": routing_text,
                         "text": " ".join(text.split()),
                         "legality_source": legality_source,
                     }
