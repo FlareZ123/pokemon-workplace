@@ -1,0 +1,24 @@
+name: Validate Prize slot visibility
+
+on:
+  push:
+    paths:
+      - "tools/prize_slot_visibility.py"
+      - "tools/prize_position_belief.py"
+      - "results/prize_slot_visibility/**"
+      - ".github/workflows/validate-prize-slot-visibility.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize slot visibility
+        run: python results/prize_slot_visibility/reproduce.py
