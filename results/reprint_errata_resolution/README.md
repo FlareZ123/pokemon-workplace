@@ -15,12 +15,12 @@ They currently resolve as:
 - 106 exact current-semantic fingerprint candidates;
 - 42 historical-official reprint candidates;
 - 44 name-wide official-errata candidates;
-- 32 known non-equivalent prints;
-- 4,036 unresolved semantic-review prints.
+- 34 known non-equivalent prints;
+- 4,034 unresolved semantic-review prints.
 
 The positive high-confidence candidate set contains 192 prints.
 
-For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 2, the historical official bridge resolves 41, and name-wide errata resolves 44. That gives 87 positive Trainer candidates before free-form semantic comparison.
+For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 2, the historical official bridge resolves 41, name-wide errata resolves 44, and the contextual Life Herb witness rules out 2. That gives 87 positive Trainer candidates and 2 known-negative Trainer prints before free-form semantic comparison.
 
 ## Evidence ladder
 
@@ -64,7 +64,9 @@ Thirty historical Special Darkness Energy and Metal Energy prints collide by nam
 
 The Tournament Handbook explicitly says Team Rocket Rainbow Energy number 17 is not functionally identical to the later damage-counter version because damage and damage counters are distinct mechanics. Team Rocket number 80 has the same gameplay fingerprint as number 17, so the negative evidence propagates to that exact duplicate.
 
-This yields 32 known non-equivalent historical prints across three names.
+Two historical Life Herb printings add a fourth negative name. Their printed text excludes Pokémon-ex targets, while current Life Herb does not, and current Expanded contains a directly legal Pokémon-ex witness. The predicate derivation lives in [../reprint_divergence_predicates/](../reprint_divergence_predicates/).
+
+This yields 34 known non-equivalent historical prints across four names.
 
 ## Current-semantics normalization
 
@@ -98,6 +100,7 @@ Positive candidate states remain separate so downstream code can choose its evid
 - base1-96 Double Colorless Energy resolves through the same historical bridge.
 - gym1-18 Misty resolves by exact current-semantic fingerprint.
 - base5-17 and base5-80 Rainbow Energy resolve as known non-equivalent.
+- ex5-90 and ex6-93 Life Herb resolve as known non-equivalent because the current format realizes their Pokémon-ex target exclusion.
 - old Special Darkness Energy and Metal Energy resolve as known non-equivalent to current Basic cards.
 - Copycat wording variants that lack exact or historical bridge evidence remain semantic-review cases.
 
@@ -107,7 +110,7 @@ The Advanced Player's Rulebook says the latest updated card text applies when ca
 
 The current TCG Errata resource supplies both name-wide and print-specific corrections.
 
-The Tournament Handbook requires identical names and functionally identical text for reprint legality, and gives Copycat and Rainbow Energy as positive and negative examples.
+The Tournament Handbook requires identical names and functionally identical text for reprint legality, and gives Copycat and Rainbow Energy as positive and negative examples. The Life Herb predicate result adds a current-format negative witness derived from reachable target scope.
 
 The 2012 Modified-Legal Reprint List supplies exact historical print evidence for the 42-print no-reference bridge.
 
