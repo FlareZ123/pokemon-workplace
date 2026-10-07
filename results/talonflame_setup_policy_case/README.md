@@ -47,13 +47,14 @@ neither.
 
 ## Exact optional-only hand composition
 
-Classify the 60 cards into five disjoint groups:
+Classify the 60 cards into six disjoint groups:
 
 | Group | Copies |
 | --- | ---: |
 | Forced Basics | 9 |
 | Gale Wings Talonflame | 4 |
-| Immediate Ralts-search cards: Ultra Ball or Brigette | 6 |
+| Brigette | 2 |
+| Ultra Ball | 4 |
 | Energy: Fairy or Double Colorless | 11 |
 | Other cards | 30 |
 
@@ -61,11 +62,15 @@ Conditioned on drawing an optional-only hand:
 
 | Property | Probability |
 | --- | ---: |
-| Contains Ultra Ball or Brigette | 56.701738% |
+| Contains Brigette | 23.377071% |
+| Contains Ultra Ball | 42.009651% |
+| Brigette without Ultra Ball | 14.692088% |
+| Ultra Ball without Brigette | 33.324667% |
+| Contains both search channels | 8.684983% |
+| Contains Brigette or Ultra Ball | 56.701738% |
 | Contains any Energy | 80.531053% |
-| Contains either search or Energy | 93.677027% |
-| Contains both | 43.555765% |
-| Contains neither | 6.322973% |
+| Contains search or Energy | 93.677027% |
+| Contains neither search nor Energy | 6.322973% |
 
 This is an exact multivariate-hypergeometric calculation.
 
@@ -130,20 +135,21 @@ also changes the initial Prize prior.
 
 Specific-card Prize probabilities are:
 
-| Policy | Forced Basic | Talonflame | Search card | Energy | Other |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Decline optional-only | 9.434569% | 10.099782% | 10.099782% | 10.099782% | 10.099782% |
-| Search filter | 9.622837% | 9.888846% | 9.975810% | 10.097176% | 10.097176% |
-| Search-or-Aero filter | 9.726599% | 9.765785% | 10.058002% | 10.058002% | 10.080381% |
-| Accept all optional-only | 9.743086% | 9.743086% | 10.071061% | 10.071061% | 10.071061% |
+| Policy | Forced Basic | Talonflame | Brigette | Ultra Ball | Energy | Other |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Decline optional-only | 9.434569% | 10.099782% | 10.099782% | 10.099782% | 10.099782% | 10.099782% |
+| Search filter | 9.622837% | 9.888846% | 9.975810% | 9.975810% | 10.097176% | 10.097176% |
+| Search-or-Aero filter | 9.726599% | 9.765785% | 10.058002% | 10.058002% | 10.058002% | 10.080381% |
+| Accept all optional-only | 9.743086% | 9.743086% | 10.071061% | 10.071061% | 10.071061% | 10.071061% |
 
-Under the search filter, a search card is slightly less likely to be Prized
-than Energy or filler because optional-only hands containing search cards are
-preferentially accepted.
+Under the search filter, both search channels are slightly less likely to be
+Prized than Energy or filler because optional-only hands containing either
+channel are preferentially accepted.
 
-Under the search-or-Aero filter, individual search cards and Energy cards have
-the same Prize probability. The policy treats the presence of either class as
-sufficient to keep, even though the class sizes differ.
+Under the search-or-Aero filter, individual Brigette, Ultra Ball, and Energy
+cards have the same Prize probability. The policy treats the presence of any
+one of those cards as sufficient to keep, even though their class sizes and
+execution costs differ.
 
 ## Strategic interpretation
 
@@ -159,11 +165,17 @@ Talonflame-only hands can differ in at least three strategically relevant ways:
 The same Talonflame card therefore has different practical setup value across
 hands and turn orders while its setup legality remains unchanged.
 
-The result also illustrates the distinction between access and AMR. Ultra Ball
-is mechanically available in every modeled search-out opener, but its discard
-cost can consume valuable cards. A richer Gardevoir-specific hand-value model
-would need DCI for those two discards, Supporter contention around Brigette,
-and the value of delaying board development in exchange for Aero Blitz.
+The result also illustrates the distinction between access and AMR. Among all
+optional-only hands, **33.324667%** contain Ultra Ball without Brigette and
+therefore expose the two-card discard payment if the player wants immediate
+Ralts access. **14.692088%** contain Brigette without Ultra Ball and instead
+expose the Supporter-for-turn cost. Another **8.684983%** contain both channels,
+so the player can choose which resource to spend.
+
+Those channel shares are mechanical facts about the opening distribution. A
+richer Gardevoir-specific hand-value model would need DCI for Ultra Ball's two
+discards, Supporter contention around Brigette, and the value of delaying board
+development in exchange for Aero Blitz.
 
 ## Reproduction
 
