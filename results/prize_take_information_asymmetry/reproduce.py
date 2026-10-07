@@ -12,7 +12,7 @@ from prize_take_conservation import take_observed_random_prize
 from prize_take_information_asymmetry import (
     expected_group_count,
     group_probability,
-    remove_unobserved_prize,
+    remove_unobserved_random_prize,
     remove_unobserved_prizes,
 )
 
@@ -60,7 +60,7 @@ def main() -> None:
     assert_close(group_probability(taker, "B"), 1.0 / 4.0)
 
     # The opponent sees the Prize count fall but not the card identity.
-    observer = remove_unobserved_prize(belief)
+    observer = remove_unobserved_random_prize(belief)
     assert observer.prize_count == 1
     assert_close(observer.probability_mass(), 1.0)
     assert_close(group_probability(observer, "A"), 1.0 / 5.0)
@@ -101,7 +101,7 @@ def main() -> None:
 
     empty = PrizeBelief.from_exact({}, prize_count=0)
     try:
-        remove_unobserved_prize(empty)
+        remove_unobserved_random_prize(empty)
     except ValueError:
         pass
     else:
