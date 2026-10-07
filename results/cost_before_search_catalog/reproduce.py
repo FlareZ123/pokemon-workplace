@@ -35,6 +35,10 @@ def main() -> None:
     result = build_catalog(ROOT / "resources")
     names = {entry["name"] for entry in result["names"]}
 
+    if result["search_trainer_print_count"] != 390:
+        raise AssertionError(result["search_trainer_print_count"])
+    if result["search_trainer_unique_names"] != 163:
+        raise AssertionError(result["search_trainer_unique_names"])
     if result["print_count"] != 54:
         raise AssertionError(result["print_count"])
     if result["unique_names"] != 16:
@@ -52,6 +56,11 @@ def main() -> None:
     if result["stochastic_names"] != ["Cram-o-matic"]:
         raise AssertionError(result["stochastic_names"])
 
+    print(
+        "search_trainers="
+        f"{result['search_trainer_print_count']} prints / "
+        f"{result['search_trainer_unique_names']} names"
+    )
     print(f"prints={result['print_count']}")
     print(f"unique_names={result['unique_names']}")
     print(f"gameplay_fingerprints={result['unique_gameplay_fingerprints']}")
