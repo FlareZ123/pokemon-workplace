@@ -66,3 +66,16 @@ Key regression: Vileplume `xy7-3` Irritating Pollen blocks an Item action source
 This strengthens the earlier typed lock-state work: broad `PlayerChannels` booleans are compatibility projections for ordinary hand actions. Transaction-level legality needs source-zone and target semantics.
 
 Next useful integration is to connect the predicate to a canonical action-permission adapter so Trainer transactions, manual attachments, evolution actions, and special Prize-origin plays can share one legality check. Preserve the current causal Ability-lock state as the upstream source-activation layer rather than recomputing Ability precedence inside the action predicate.
+
+
+## Fifth result: safe source-scoped channel projection
+
+Added `tools/source_scoped_channel_projection.py` and `results/source_scoped_channel_projection/`.
+
+Of the 106 direct source-scoped restrictions, 94 (88.679245%) project exactly into the existing `PlayerChannels` hand-action booleans. Twelve require residual typed predicates. The overlapping residual reasons are six evolution selectors, four target-relation cases, two ACE SPEC selectors, two Pokémon-with-Ability selectors, two target-specific Energy restrictions, and one printed card exception.
+
+The bridge applies coarse channels only to hand actions. It keeps all restrictions available for exact checks on other source zones. The regression proves equivalence between direct typed predicates and channel projection across all 94 projectable rows and preserves the Vileplume / Prize-pending Dream Ball boundary.
+
+The architectural rule is now sharper: `PlayerChannels` should be a derived compatibility projection rather than canonical lock truth. Canonical permission state should retain the active source-scoped restrictions plus residual semantics, with causal Ability-lock state upstream of source activation.
+
+Next work should connect this bridge to one real transaction executor while preserving backward compatibility, ideally `trainer_search_transaction.py` for hand Trainers and `before_hand_prize_executor.py` for Prize-origin Items.
