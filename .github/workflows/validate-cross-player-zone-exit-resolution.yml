@@ -1,0 +1,28 @@
+name: Validate cross-player zone exit resolution
+
+on:
+  push:
+    paths:
+      - "tools/cross_player_zone_exit_resolution.py"
+      - "tools/stack_zone_exit_conservation.py"
+      - "tools/promotion_pending_conservation.py"
+      - "tools/stack_knockout_conservation.py"
+      - "tools/identity_materialization.py"
+      - "tools/board_position_state.py"
+      - "results/cross_player_zone_exit_resolution/**"
+      - ".github/workflows/validate-cross-player-zone-exit-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check simultaneous Active zone-exit resolution
+        run: python results/cross_player_zone_exit_resolution/reproduce.py
