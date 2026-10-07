@@ -159,3 +159,52 @@ A concrete regression uses **Shadow Imitation** and **Foul Play**. Shadow Imitat
 The companion regression contrasts **Apex Dragon**. If the opponent's Active Regidrago VSTAR supplies Apex Dragon to Shadow Imitation, the inner Apex Dragon reads the copying player's discard pile. That is a different state variable, so a Dragon GX attack such as Timeless-GX can be selected there.
 
 This is a copy-specific instance of a broader graph-modeling warning already present elsewhere in the repository: pairwise access does not prove composable access. A copy graph should retain the source object or state variable attached to every edge, then unify those variables when paths are composed.
+
+
+## Static composition graph
+
+`tools/attack_copy_composition.py` builds an existential compatibility graph over the 30 distinct copy-attack signatures and then applies a limited correlation-aware composition check.
+
+For the current snapshot:
+
+- the graph has **681** legal pairwise copy edges out of **900** possible directed pairs when self-edges are included, for density **0.756667**;
+- **26** signatures have a static self-copy edge;
+- the strongly connected component sizes are **23, 1, 1, 1, 1, 1, 1, 1**;
+- the legal GX endpoint pool contains **606** print-level GX attack rows, **193** distinct GX attack-name/text signatures, and **171** Pokémon names;
+- Apex Dragon can directly select **18** distinct GX attack signatures under its Dragon-discard filter.
+
+The pairwise graph is deliberately permissive. Each edge says only that some state can make that single selection legal.
+
+### Non-GX gates and nested GX reachability
+
+Three copy signatures directly prohibit choosing a GX attack: **Copycat**, **Hypnotic Reign**, and **Shadow Imitation**.
+
+If pairwise edges are composed naively, each has 19 non-GX copy intermediaries that themselves can select at least one GX attack signature. Once the current correlation model unifies repeated singleton state variables, the counts become:
+
+| Outer non-GX gate | Naive intermediaries | Correlation-aware intermediaries |
+| --- | ---: | ---: |
+| Copycat | 19 | 18 |
+| Hypnotic Reign | 19 | 19 |
+| Shadow Imitation | 19 | 10 |
+
+Copycat loses **Watch and Learn** as a GX bypass because both attacks read the same opponent-last-attack variable. If Copycat selected Watch and Learn, the nested Watch and Learn sees that same previous attack identity again.
+
+Shadow Imitation loses nine intermediaries whose nested selector is also tied to the opponent Active slot. For example, Shadow Imitation can copy Foul Play from the opponent's Active Zoroark, but the copied Foul Play still sees that same Active Zoroark. A GX attack on a different Pokémon does not satisfy the inner edge.
+
+Apex Dragon remains available for all three non-GX gates because its inner selector moves to a different state resource, the copying player's Dragon Pokémon in the discard pile.
+
+Under the deliberately existential assumptions of this static model, each of the three non-GX gates can still reach all **193** distinct GX attack signatures through at least one correlation-aware intermediary. This is a reachability statement only. It does not imply realistic access, useful effects, or acceptable setup cost.
+
+Regression: `results/attack_copy_semantics/reproduce_composition.py`
+
+## Continuations around copied bodies
+
+A copy effect is not always a tail call.
+
+Team Rocket's Persian ex provides a current example. **Haughty Order** reveals the top 10 cards of the opponent's deck, may execute an attack found there as Haughty Order, and then shuffles the revealed cards back into the opponent's deck. The printed cleanup instruction comes after the copy instruction.
+
+The executable kernel therefore supports pre-copy and post-copy events and resumes the outer body after the selected body resolves. A regression records the order:
+
+`reveal top 10 -> execute Timeless-GX body -> shuffle revealed cards`
+
+This matters for a general rules engine because copied attack bodies can contain state changes, Knock Outs, switching, or turn-level effects before control returns to remaining outer text. A stack of execution frames is a safer representation than destructive replacement of the current attack.
