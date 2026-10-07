@@ -1,0 +1,27 @@
+name: Validate attached Tool Retreat modifiers
+
+on:
+  push:
+    paths:
+      - "tools/attached_tool_retreat_modifiers.py"
+      - "tools/retreat_cost_semantics.py"
+      - "tools/board_object_kernel.py"
+      - "results/attached_tool_retreat_modifiers/**"
+      - ".github/workflows/validate-attached-tool-retreat-modifiers.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Tool Retreat modifiers
+        run: |
+          python results/attached_tool_retreat_modifiers/reproduce.py
+          python results/retreat_cost_semantics/reproduce.py
