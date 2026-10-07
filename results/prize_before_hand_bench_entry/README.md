@@ -38,7 +38,7 @@ No card is copied or recreated. Conservation is checked from the pregame class c
 
 A player can reach a state where their prior Active has already been discarded and no surviving Pokémon remain. At the physical level, a face-down Chansey Prize can then enter the empty Bench during the Prize window and create a future promotion candidate.
 
-The regression proves that geometry without deciding the separate win/loss-precedence question. Whether game resolution is already terminal before such an E-31 effect can matter remains delegated to the game-resolution layer until an authoritative ruling is found for that exact edge.
+The regression proves that geometry. The later `post_prize_window_game_resolution` result resolves the win/loss precedence with an official Jirachi Prism Star ruling: an E-31 Bench-entry effect can change the Pokémon-in-play count before the terminal snapshot is evaluated.
 
 ## Official full-Bench validation
 
@@ -73,6 +73,6 @@ The current executable island does not yet cover:
 - Greedy Dice;
 - observer-belief updates for an additional Prize staged from inside an E-31 effect;
 - card-text compilation from the atom catalog into these executable functions;
-- terminal precedence for a player with zero Pokémon before a Prize Bench-entry effect resolves.
+- general card-text compilation from the atom catalog into these executable functions.
 
 Those are separate semantic layers rather than assumptions hidden inside this transition.
