@@ -737,6 +737,18 @@ The new `TriggerDeferralState` keeps ready effects unordered, so choosing among 
 
 **Working synthesis:** trigger scheduling needs both dynamic readiness and a non-interruptible active effect. Newly triggered work can enlarge future state while the current effect still owns the execution window.
 
+
+## Direct-to-Bench search is now compiled and physically distinct from hand search
+
+[direct_bench_search_profile_compiler/](direct_bench_search_profile_compiler/) compiles a conservative literal family of effectively legal effects whose complete search body puts Basic Pokémon directly from the deck onto the Bench. The current snapshot contains **101 print-level profiles across 76 names**: 95 attack profiles, five Nest Ball prints, and Battle VIP Pass. The compiler preserves maximum output, explicit `up to` wording, attack cost, source action class, and Battle VIP Pass's first-turn condition while excluding nearby HP-gated, coin-gated, arbitrary-count, distinct-type, and extra-effect families.
+
+[direct_bench_search_execution/](direct_bench_search_execution/) carries an exact selected copy into `StackBoardMaterialState`. Each selected card is removed from the physical deck count, materialized as a stable in-play instance, bound to a new Basic Pokémon board object, and checked for card-class conservation. The executor rejects stale target counts and non-Basic targets.
+
+The capacity regression preserves the Advanced Player's Rulebook's source-sensitive C-11 boundary. A full-Bench Nest Ball cannot be used, while a full-Bench Call for Family attack resolves its search body without searching. When only one Bench slot remains, Battle VIP Pass can place one exact copy but cannot materialize two.
+
+**Working synthesis:** `deck -> hand` and `deck -> Bench` are different connector destinations. Direct placement spends Bench capacity immediately and carries action-class-specific legality, so a card-text compiler or reachability graph should preserve destination, current board capacity, and source action class before claiming executable access.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -748,6 +760,8 @@ Particularly foundational components include:
 - `typed_access_network.py`
 - `typed_energy_access.py`
 - `trainer_search_materialization.py`
+- `direct_bench_search_profile_compiler.py`
+- `direct_bench_search_execution.py`
 - `energy_action_budget.py`
 - `turn_action_budget.py`
 - `legacy_turn_budget_bridge.py`
