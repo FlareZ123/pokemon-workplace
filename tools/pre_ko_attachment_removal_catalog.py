@@ -24,7 +24,7 @@ def matching_discard_clauses(text: str) -> tuple[tuple[str, tuple[str, ...]], ..
             continue
 
         lower = clause.lower()
-        if re.search(r"\\bdiscard\\b", lower) is None:
+        if re.search(r"\bdiscard\b", lower) is None:
             continue
         if (
             "opponent's active pokémon" not in lower
