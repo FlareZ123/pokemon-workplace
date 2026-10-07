@@ -23,11 +23,15 @@ In both cases the physical source has already left the zone that exposed its att
 
 The copy kernel now carries source provenance for card-backed copy candidates.
 
-For each candidate attack it can retain the exact physical `PokemonRef.card_id` values that supplied that attack. A selector may declare a required source-zone commit, such as moving the selected source to the discard pile.
+For each candidate attack it can retain the exact physical `PokemonRef.card_id` values that supplied that attack. Source movement is phase-sensitive.
 
-The sequence is:
+Hypnotic Reign follows:
 
-`discover candidate source -> choose attack -> choose exact physical source when needed -> commit source movement -> execute snapshotted attack ID`
+`discover eligible hand source -> optionally choose attack and exact source -> discard selected source -> execute snapshotted attack ID`
+
+Seek Inspiration follows a different order:
+
+`identify modeled top card -> discard top card -> test post-discard eligibility -> if eligible choose attack -> execute snapshotted attack ID`
 
 The attack body therefore remains executable after its source leaves the lookup zone.
 
@@ -41,15 +45,13 @@ The kernel now rejects that under-specified state with `AmbiguousCopySource`. Su
 
 This is a small conservation requirement: effect semantics can depend on card identity even when attack semantics are identical.
 
-## Eligibility before commitment
+## Eligibility and commitment order
 
-Source eligibility is evaluated before mutation.
+The two witnesses have different ordering.
 
-The regression also verifies:
+For Hypnotic Reign, the non-GX predicate is part of the optional hand-source choice. An ineligible GX-only hand source remains in hand.
 
-- Hypnotic Reign rejects a GX endpoint and leaves its source in hand;
-- Seek Inspiration rejects a Rule Box source and leaves the top card in its original modeled zone;
-- an eligible Seek Inspiration source moves to discard before the selected endpoint body completes.
+For Seek Inspiration, the top card is discarded first. Eligibility is tested on the discarded card afterward. The regression therefore verifies that a Rule Box Pokémon still moves from the modeled top of the deck to the discard pile even though no copied body executes.
 
 ## Cycle detection implication
 
