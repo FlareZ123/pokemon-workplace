@@ -21,6 +21,7 @@ from trainer_search_transaction import (
     TrainerSearchExecutionState,
     execute_trainer_search_transaction,
 )
+from turn_action_budget import TurnActionBudget
 from typed_search_target_allocator import (
     BASIC_ENERGY,
     ITEM,
@@ -214,6 +215,31 @@ def main() -> None:
     )
     assert second_arven_rejected
 
+    dual_arven_state = TrainerSearchExecutionState(
+        zones=arven_state.zones,
+        budget=TurnActionBudget(supporter_play_limit=2),
+    )
+    dual_arven_first = execute_trainer_search_transaction(
+        dual_arven_state,
+        profile=arven,
+        action_card_class="arven",
+        demands=arven_demands,
+        targets=arven_targets,
+        search_action=arven_action,
+    )
+    dual_arven_second = execute_trainer_search_transaction(
+        dual_arven_first.after,
+        profile=arven,
+        action_card_class="arven",
+        demands=arven_demands,
+        targets=arven_targets,
+        search_action=arven_action,
+    )
+    assert dual_arven_second.after.budget.supporter_plays_used == 2
+    assert dual_arven_second.after.budget.supporter_play_limit == 2
+    assert dual_arven_second.after.zones.count("arven", "hand") == 0
+    assert dual_arven_second.after.zones.count("arven", "discard") == 2
+
     guzma_hala = representative(profiles, "Guzma & Hala")
     gh_targets = (
         SearchZoneTarget(
@@ -291,6 +317,7 @@ def main() -> None:
                 "item_lock_rejected": item_lock_rejected,
                 "arven_supporter_budget_consumed": arven_first.after.budget.supporter_used,
                 "second_arven_same_turn_rejected": second_arven_rejected,
+                "two_arven_with_limit_two_succeeded": True,
                 "guzma_hala_conditional_branch": gh_tx.used_conditional_outputs,
                 "guzma_hala_discard_cost": gh_tx.discard_cost,
                 "card_totals_conserved": True,
