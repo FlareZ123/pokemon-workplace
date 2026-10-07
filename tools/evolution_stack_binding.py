@@ -58,7 +58,8 @@ def ordinary_evolve(
         return None
 
     board = board_evolve(
-        state.board, object_id, new_card_name=card.card_name, new_tags=card.tags,
+        state.board, object_id, new_card_name=card.card_name,
+        new_print_id=card.print_id, new_tags=card.tags,
     )
     if board is None:
         return None
@@ -84,7 +85,8 @@ def devolve_top(
     removed = stack.top
     exposed = stack.cards[-2]
     board = board_evolve(
-        state.board, object_id, new_card_name=exposed.card_name, new_tags=exposed.tags,
+        state.board, object_id, new_card_name=exposed.card_name,
+        new_print_id=exposed.print_id, new_tags=exposed.tags,
     )
     if board is None:
         return None
