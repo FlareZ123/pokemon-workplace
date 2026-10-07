@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "tools/active_source_scoped_restrictions.py"
+      - "tools/active_source_trainer_transaction.py"
       - "tools/attack_restriction_turn_windows.py"
       - "tools/attack_source_scoped_restrictions.py"
       - "tools/card_action_metadata.py"
@@ -14,6 +15,7 @@ on:
       - "tools/source_scoped_restriction_activation.py"
       - "tools/source_scoped_trainer_transaction.py"
       - "results/active_source_scoped_restrictions/**"
+      - "results/active_source_trainer_transaction/**"
       - "results/attack_restriction_turn_windows/**"
       - "results/attack_source_scoped_restrictions/**"
       - "results/continuous_source_scoped_restrictions/**"
@@ -50,3 +52,5 @@ jobs:
         run: python results/attack_restriction_turn_windows/reproduce.py
       - name: Reproduce active restriction aggregation
         run: python results/active_source_scoped_restrictions/reproduce.py
+      - name: Reproduce live-source Trainer transaction gating
+        run: python results/active_source_trainer_transaction/reproduce.py
