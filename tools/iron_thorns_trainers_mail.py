@@ -162,8 +162,93 @@ def _mail_success_probability(
             for index in range(len(deck))
         )
 
-        options = [
-            _mail_success_probability(
+        reveal_gnh, reveal_tag, reveal_thunder, _, _, reveal_other, _ = reveal
+
+        # Observable policy only. It depends on the current hand and the four
+        # cards just revealed, never on hidden Prize composition.
+        #
+        # A revealed Thunder Mountain is a guaranteed direct completion when
+        # DCE is already in hand. Otherwise G&H is the strongest direct
+        # connector, followed by Tag Call, then Thunder Mountain. An unrelated
+        # Trainer is taken only to remove one card from the deck before a later
+        # Mail. If none of those targets is present, take nothing.
+        if dce_hand > 0 and thunder_hand == 0 and reveal_thunder:
+            continuation = _mail_success_probability(
+                gnh_hand,
+                tag_hand,
+                thunder_hand + 1,
+                dce_hand,
+                mail_hand - 1,
+                gnh_deck,
+                tag_deck,
+                thunder_deck - 1,
+                dce_deck,
+                mail_deck,
+                other_trainer_deck,
+                nontrainer_deck,
+            )
+        elif reveal_gnh:
+            continuation = _mail_success_probability(
+                gnh_hand + 1,
+                tag_hand,
+                thunder_hand,
+                dce_hand,
+                mail_hand - 1,
+                gnh_deck - 1,
+                tag_deck,
+                thunder_deck,
+                dce_deck,
+                mail_deck,
+                other_trainer_deck,
+                nontrainer_deck,
+            )
+        elif reveal_tag:
+            continuation = _mail_success_probability(
+                gnh_hand,
+                tag_hand + 1,
+                thunder_hand,
+                dce_hand,
+                mail_hand - 1,
+                gnh_deck,
+                tag_deck - 1,
+                thunder_deck,
+                dce_deck,
+                mail_deck,
+                other_trainer_deck,
+                nontrainer_deck,
+            )
+        elif reveal_thunder:
+            continuation = _mail_success_probability(
+                gnh_hand,
+                tag_hand,
+                thunder_hand + 1,
+                dce_hand,
+                mail_hand - 1,
+                gnh_deck,
+                tag_deck,
+                thunder_deck - 1,
+                dce_deck,
+                mail_deck,
+                other_trainer_deck,
+                nontrainer_deck,
+            )
+        elif reveal_other:
+            continuation = _mail_success_probability(
+                gnh_hand,
+                tag_hand,
+                thunder_hand,
+                dce_hand,
+                mail_hand - 1,
+                gnh_deck,
+                tag_deck,
+                thunder_deck,
+                dce_deck,
+                mail_deck,
+                other_trainer_deck - 1,
+                nontrainer_deck,
+            )
+        else:
+            continuation = _mail_success_probability(
                 gnh_hand,
                 tag_hand,
                 thunder_hand,
@@ -177,83 +262,8 @@ def _mail_success_probability(
                 other_trainer_deck,
                 nontrainer_deck,
             )
-        ]
 
-        reveal_gnh, reveal_tag, reveal_thunder, _, _, reveal_other, _ = reveal
-
-        if reveal_gnh:
-            options.append(
-                _mail_success_probability(
-                    gnh_hand + 1,
-                    tag_hand,
-                    thunder_hand,
-                    dce_hand,
-                    mail_hand - 1,
-                    gnh_deck - 1,
-                    tag_deck,
-                    thunder_deck,
-                    dce_deck,
-                    mail_deck,
-                    other_trainer_deck,
-                    nontrainer_deck,
-                )
-            )
-
-        if reveal_tag:
-            options.append(
-                _mail_success_probability(
-                    gnh_hand,
-                    tag_hand + 1,
-                    thunder_hand,
-                    dce_hand,
-                    mail_hand - 1,
-                    gnh_deck,
-                    tag_deck - 1,
-                    thunder_deck,
-                    dce_deck,
-                    mail_deck,
-                    other_trainer_deck,
-                    nontrainer_deck,
-                )
-            )
-
-        if reveal_thunder:
-            options.append(
-                _mail_success_probability(
-                    gnh_hand,
-                    tag_hand,
-                    thunder_hand + 1,
-                    dce_hand,
-                    mail_hand - 1,
-                    gnh_deck,
-                    tag_deck,
-                    thunder_deck - 1,
-                    dce_deck,
-                    mail_deck,
-                    other_trainer_deck,
-                    nontrainer_deck,
-                )
-            )
-
-        if reveal_other:
-            options.append(
-                _mail_success_probability(
-                    gnh_hand,
-                    tag_hand,
-                    thunder_hand,
-                    dce_hand,
-                    mail_hand - 1,
-                    gnh_deck,
-                    tag_deck,
-                    thunder_deck,
-                    dce_deck,
-                    mail_deck,
-                    other_trainer_deck - 1,
-                    nontrainer_deck,
-                )
-            )
-
-        total += Fraction(ways, denominator) * max(options)
+        total += Fraction(ways, denominator) * continuation
 
     return total
 
