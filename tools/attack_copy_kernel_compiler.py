@@ -7,6 +7,7 @@ from pathlib import Path
 
 from attack_copy_contracts import build as build_contracts
 from attack_copy_kernel import AttackDef, CopySelector
+from attack_copy_outer_control import CopyOuterControl, classify_outer_control
 from simple_attack_board_semantics import legal_cards
 
 
@@ -17,6 +18,8 @@ class CompiledCopyAttack:
     attack_index: int
     source_class: str
     definition: AttackDef | None
+    guarded_definition: AttackDef | None
+    outer_control: CopyOuterControl | None
     unsupported_outer_condition: str | None
 
 
@@ -78,6 +81,20 @@ def _apply_contract(
     return selector
 
 
+def _legacy_outer_condition(control: CopyOuterControl | None) -> str | None:
+    """Preserve the old coarse label for callers that have not migrated yet."""
+
+    if control is None:
+        return None
+    if control.kind == "coin_heads":
+        return "coin_flip_gate"
+    if control.kind == "opponent_prizes_exact":
+        return f"opponent_prizes_exact_{control.exact_value}"
+    if control.kind == "actor_hand_empty":
+        return "actor_hand_empty"
+    raise AssertionError(control.kind)
+
+
 def compile_copy_attacks(resources_root: Path) -> tuple[CompiledCopyAttack, ...]:
     contracts = build_contracts(resources_root)["contracts"]
 
@@ -100,13 +117,7 @@ def compile_copy_attacks(resources_root: Path) -> tuple[CompiledCopyAttack, ...]
                 )
             contract = matches[0]
             lowered_text = text.casefold()
-            unsupported_outer_condition = None
-            if "flip a coin" in lowered_text:
-                unsupported_outer_condition = "coin_flip_gate"
-            elif "only if your opponent has exactly 2 prize cards remaining" in lowered_text:
-                unsupported_outer_condition = "opponent_prizes_exact_2"
-            elif "if you have no cards in your hand" in lowered_text:
-                unsupported_outer_condition = "actor_hand_empty"
+            outer_control = classify_outer_control(text)
 
             source_classes = tuple(contract["source_classes"])
             if len(source_classes) != 1:
@@ -130,17 +141,19 @@ def compile_copy_attacks(resources_root: Path) -> tuple[CompiledCopyAttack, ...]
             if "post_copy_continuation" in semantics:
                 post_event = "shuffle_revealed"
 
-            definition = None
-            if unsupported_outer_condition is None:
-                definition = AttackDef(
-                    attack_id=f"{card['id']}:attack:{attack_index}",
-                    name=attack.get("name") or "",
-                    is_gx=(attack.get("name") or "").endswith("-GX"),
-                    copy_selector=selector,
-                    pre_event=pre_event,
-                    post_event=post_event,
-                    energy_cost=tuple(attack.get("cost") or ()),
-                )
+            candidate_definition = AttackDef(
+                attack_id=f"{card['id']}:attack:{attack_index}",
+                name=attack.get("name") or "",
+                is_gx=(attack.get("name") or "").endswith("-GX"),
+                copy_selector=selector,
+                pre_event=pre_event,
+                post_event=post_event,
+                energy_cost=tuple(attack.get("cost") or ()),
+            )
+            definition = candidate_definition if outer_control is None else None
+            guarded_definition = (
+                candidate_definition if outer_control is not None else None
+            )
             output.append(
                 CompiledCopyAttack(
                     card_id=card["id"],
@@ -148,7 +161,11 @@ def compile_copy_attacks(resources_root: Path) -> tuple[CompiledCopyAttack, ...]
                     attack_index=attack_index,
                     source_class=source_class,
                     definition=definition,
-                    unsupported_outer_condition=unsupported_outer_condition,
+                    guarded_definition=guarded_definition,
+                    outer_control=outer_control,
+                    unsupported_outer_condition=_legacy_outer_condition(
+                        outer_control
+                    ),
                 )
             )
 
