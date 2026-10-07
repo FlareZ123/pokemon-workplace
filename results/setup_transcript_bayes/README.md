@@ -10,8 +10,6 @@ Implementation: `tools/setup_transcript_bayes.py`
 
 Reproducer: `results/setup_transcript_bayes/reproduce.py`
 
-Preserved examples: `results/setup_transcript_bayes/model_examples.json`
-
 ## Model
 
 The model tracks forced Basics plus any number of non-Basic groups. Some tracked groups may be optional setup starters, while others can be ordinary diagnostic cards.
