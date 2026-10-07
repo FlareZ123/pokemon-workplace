@@ -1,11 +1,8 @@
-"""Materialize an exact typed search action into exchangeable zone counts.
+"""Execute exact typed deck-search choices against exchangeable zone counts.
 
-A typed search demand profile can alias several distinct physical target choices.
-This bridge therefore requires the richer TypedTargetAction, whose target_cost
-vector records which searchable target groups were actually consumed.
-
-Deck and hand copies remain exchangeable here. Stable per-copy instance identity
-is intentionally not introduced until topology or persistent history requires it.
+Demand-first search actions and retrieval-first search actions share the same
+physical target-cost vector. This module applies that exact vector to canonical
+zone counts while keeping off-board copies exchangeable.
 """
 
 from __future__ import annotations
@@ -14,6 +11,7 @@ from dataclasses import dataclass
 from typing import Sequence
 
 from multicopy_zone_state import ZoneCountState
+from typed_search_retrieval import TypedRetrievalAction
 from typed_search_target_allocator import TargetGroup, TypedTargetAction
 
 
@@ -42,52 +40,34 @@ class SearchZoneTransition:
     moves: tuple[SearchZoneMove, ...]
 
 
-def apply_typed_search_action(
+def _apply_target_cost(
     state: ZoneCountState,
     targets: Sequence[SearchZoneTarget],
-    action: TypedTargetAction,
+    target_cost: tuple[int, ...],
     *,
-    source_zone: str = "deck",
-    destination_zone: str = "hand",
+    source_zone: str,
+    destination_zone: str,
 ) -> SearchZoneTransition:
-    """Move the exact target copies chosen by one typed search action.
-
-    The target order must be the same order used when the TypedTargetAction was
-    produced. Each target binds that allocator position to the semantic card
-    class used by ZoneCountState.
-    """
-
     bound_targets = tuple(targets)
 
     if not source_zone or not destination_zone:
         raise ValueError("zones must be non-empty")
     if source_zone == destination_zone:
         raise ValueError("source and destination zones must differ")
-    if len(action.target_cost) != len(bound_targets):
+    if len(target_cost) != len(bound_targets):
         raise ValueError("target_cost length does not match bound targets")
+    if any(value < 0 for value in target_cost):
+        raise ValueError("target_cost cannot be negative")
 
     card_classes = tuple(target.card_class for target in bound_targets)
     if len(card_classes) != len(set(card_classes)):
         raise ValueError("bound target card classes must be unique")
 
-    if any(value < 0 for value in action.target_cost):
-        raise ValueError("target_cost cannot be negative")
-    if any(value < 0 for value in action.output):
-        raise ValueError("action output cannot be negative")
-    if any(value < 0 for value in action.axis_usage):
-        raise ValueError("axis usage cannot be negative")
-
-    selected_units = sum(action.target_cost)
-    if selected_units != sum(action.axis_usage):
-        raise ValueError("target consumption must equal search-axis usage")
-    if selected_units != sum(action.output):
-        raise ValueError("target consumption must equal supplied demand units")
-
-    for bound, cost in zip(bound_targets, action.target_cost):
+    for bound, cost in zip(bound_targets, target_cost):
         if cost > bound.group.copies:
             raise ValueError(
                 f"action consumes {cost} copies of {bound.group.name!r}, "
-                f"but the allocator target group exposes only {bound.group.copies}"
+                f"but the target group exposes only {bound.group.copies}"
             )
         available = state.count(bound.card_class, source_zone)
         if cost > available:
@@ -98,7 +78,7 @@ def apply_typed_search_action(
 
     after = state
     moves: list[SearchZoneMove] = []
-    for bound, cost in zip(bound_targets, action.target_cost):
+    for bound, cost in zip(bound_targets, target_cost):
         if cost == 0:
             continue
         after = after.move(
@@ -123,4 +103,58 @@ def apply_typed_search_action(
         before=state,
         after=after,
         moves=tuple(moves),
+    )
+
+
+def apply_typed_search_action(
+    state: ZoneCountState,
+    targets: Sequence[SearchZoneTarget],
+    action: TypedTargetAction,
+    *,
+    source_zone: str = "deck",
+    destination_zone: str = "hand",
+) -> SearchZoneTransition:
+    """Execute a demand-first typed search action."""
+
+    if any(value < 0 for value in action.output):
+        raise ValueError("action output cannot be negative")
+    if any(value < 0 for value in action.axis_usage):
+        raise ValueError("axis usage cannot be negative")
+
+    selected_units = sum(action.target_cost)
+    if selected_units != sum(action.axis_usage):
+        raise ValueError("target consumption must equal search-axis usage")
+    if selected_units != sum(action.output):
+        raise ValueError("target consumption must equal supplied demand units")
+
+    return _apply_target_cost(
+        state,
+        targets,
+        action.target_cost,
+        source_zone=source_zone,
+        destination_zone=destination_zone,
+    )
+
+
+def apply_typed_retrieval_action(
+    state: ZoneCountState,
+    targets: Sequence[SearchZoneTarget],
+    action: TypedRetrievalAction,
+    *,
+    source_zone: str = "deck",
+    destination_zone: str = "hand",
+) -> SearchZoneTransition:
+    """Execute a retrieval-first action without requiring immediate demand use."""
+
+    if any(value < 0 for value in action.axis_usage):
+        raise ValueError("axis usage cannot be negative")
+    if sum(action.target_cost) != sum(action.axis_usage):
+        raise ValueError("target consumption must equal search-axis usage")
+
+    return _apply_target_cost(
+        state,
+        targets,
+        action.target_cost,
+        source_zone=source_zone,
+        destination_zone=destination_zone,
     )
