@@ -14,6 +14,9 @@ sys.path.insert(0, str(ROOT / "tools"))
 from board_action_quota_derivation import derive_board_action_quotas  # noqa: E402
 from board_object_kernel import make_board, make_pokemon  # noqa: E402
 from turn_action_budget import TurnActionBudget  # noqa: E402
+from single_source_ability_lock_geometry import (  # noqa: E402
+    single_source_suppressed_object_ids,
+)
 from prize_supporter_execution import (  # noqa: E402
     analyze_prized_supporter_execution,
     analyze_with_dual_brains,
@@ -42,6 +45,7 @@ def main() -> None:
     trekking_shoes = _card_by_id("swsh10-156")
     magnezone = _card_by_id("bw8-46")
     gladion = _card_by_id("sm4-95")
+    weezing_card = _card_by_id("swsh2-113")
 
     assert "Supporter" in peonia.get("subtypes", [])
     assert "Put up to 3 Prize cards into your hand" in _trainer_text(peonia)
@@ -56,6 +60,13 @@ def main() -> None:
 
     assert "Supporter" in gladion.get("subtypes", [])
     assert "Look at your face-down Prize cards and put 1 of them into your hand." in _trainer_text(gladion)
+
+    neutralizing_gas = next(
+        ability
+        for ability in weezing_card.get("abilities", [])
+        if ability["name"] == "Neutralizing Gas"
+    )
+    assert "opponent's Pokémon in play have no Abilities" in neutralizing_gas["text"]
 
     dual_brains = next(
         ability
@@ -164,13 +175,35 @@ def main() -> None:
         Fraction(1, 1),
     )
 
+    weezing = make_pokemon(
+        "weezing",
+        "Galarian Weezing",
+        print_id="swsh2-113",
+        abilities_enabled=True,
+    )
+    opponent_board = make_board(weezing, ())
+    gas_suppression = single_source_suppressed_object_ids(
+        board,
+        opponent_board,
+        source_owner="opponent",
+        source_object_id="weezing",
+    )
+    assert gas_suppression == frozenset({"active", "dual-brains"})
+
     suppressed_budget = derive_board_action_quotas(
         board,
         TurnActionBudget(),
         suppressed_ability_object_ids=frozenset({"dual-brains"}),
     )
+    gas_budget = derive_board_action_quotas(
+        board,
+        TurnActionBudget(),
+        suppressed_ability_object_ids=gas_suppression,
+    )
+    assert gas_budget.supporter_play_limit == 1
+
     suppressed_board_line = analyze_prized_supporter_execution(
-        supporter_limit=suppressed_budget.supporter_play_limit,
+        supporter_limit=gas_budget.supporter_play_limit,
     )
     _assert_close(
         suppressed_board_line.gladion_execution_probability,
@@ -180,6 +213,34 @@ def main() -> None:
         suppressed_board_line.peonia_execution_probability,
         Fraction(0, 1),
     )
+    assert max(
+        (
+            live_board_line.direct_execution_probability,
+            "arc",
+        ),
+        (
+            live_board_line.peonia_execution_probability,
+            "peonia",
+        ),
+        (
+            live_board_line.gladion_execution_probability,
+            "gladion",
+        ),
+    )[1] == "gladion"
+    assert max(
+        (
+            suppressed_board_line.direct_execution_probability,
+            "arc",
+        ),
+        (
+            suppressed_board_line.peonia_execution_probability,
+            "peonia",
+        ),
+        (
+            suppressed_board_line.gladion_execution_probability,
+            "gladion",
+        ),
+    )[1] == "arc"
 
     locked_channel = analyze_prized_supporter_execution(
         supporter_limit=0,
