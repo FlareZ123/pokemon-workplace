@@ -1,0 +1,50 @@
+{
+  "card_text_anchors": {
+    "pumpkaboo": "Pumpkaboo swsh7-76 / Pumpkin Pit: when played from hand onto the Bench, it may discard a Stadium in play.",
+    "chien_pao": "Chien-Pao sv8-56 / Snow Sink has the same relevant hand-to-Bench Stadium-discard geometry.",
+    "sky_field": "Sky Field xy6-89 lets each player have 8 Benched Pokémon while it is in play.",
+    "area_zero": "Area Zero Underdepths sv7-131: a player with a Tera Pokémon in play can have up to 8 Benched Pokémon; otherwise the expansion does not apply.",
+    "collapsed": "Collapsed Stadium swsh9-137/swsh11-215 restricts each player to 4 Benched Pokémon."
+  },
+  "plans": {
+    "pumpkaboo_from_full_four": null,
+    "pumpkaboo_with_one_slack": [
+      "Bench Pumpkin Pit remover and discard Stadium",
+      "Bench ordinary entrant"
+    ],
+    "sky_field_from_full_four": [
+      "play Sky Field",
+      "Bench ordinary entrant"
+    ],
+    "area_zero_two_entry_plan": [
+      "play Area Zero Underdepths",
+      "Bench Tera entrant",
+      "Bench ordinary entrant"
+    ]
+  },
+  "area_zero_forced_order": {
+    "tera_first": {
+      "first": "tera",
+      "first_legal": true,
+      "capacity_after_first": 8,
+      "occupancy_after_first": 5,
+      "second_legal": true,
+      "final_capacity": 8,
+      "final_occupancy": 6
+    },
+    "ordinary_first": {
+      "first": "ordinary",
+      "first_legal": true,
+      "capacity_after_first": 5,
+      "occupancy_after_first": 5,
+      "second_legal": false,
+      "final_capacity": 5,
+      "final_occupancy": 5
+    }
+  },
+  "findings": {
+    "bootstrap_threshold": "a Bench-triggered Stadium remover cannot unlock a full restricted Bench because it must enter the Bench before its removal Ability can resolve",
+    "cross_channel_tradeoff": "direct Stadium replacement can restore capacity from zero slack because it spends Stadium bandwidth rather than Bench slack",
+    "conditional_expansion_order": "after Area Zero replaces a restriction with no Tera in play, the first reopened default slot must be used by a Tera before additional entrants can exploit capacity 8"
+  }
+}
