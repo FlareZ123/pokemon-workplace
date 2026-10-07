@@ -11,10 +11,12 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from dream_ball_evolution_ability_catalog import (
     ACTIVATION_PASSIVE,
+    ACTIVATION_TRIGGERED,
     ACTIVATION_TURN_ACTION,
     GEOMETRY_HAND_EVOLVE_TRIGGER,
     GEOMETRY_IN_PLAY,
     build_dream_ball_evolution_ability_catalog,
+    classify_ability_activation,
     summarize_catalog,
 )
 
@@ -33,6 +35,14 @@ def exact(rows, card_id: str, ability_name: str):
 
 
 def main() -> None:
+    assert classify_ability_activation(
+        "Once during your turn, when you play this Pokémon from your hand to "
+        "evolve 1 of your Pokémon, you may use this Ability. Draw 2 cards."
+    ) == ACTIVATION_TRIGGERED
+    assert classify_ability_activation(
+        "Once during your turn, you may use this Ability. Draw 2 cards."
+    ) == ACTIVATION_TURN_ACTION
+
     rows = build_dream_ball_evolution_ability_catalog(ROOT / "resources")
     summary = summarize_catalog(rows)
 
