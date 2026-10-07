@@ -1,9 +1,11 @@
 from datetime import date
 from pathlib import Path
+import sys
 
 from tools.audit_set_fallback_legality import audit
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 result = audit(ROOT / "resources", as_of=date(2026, 10, 7))
 
 assert result["fallback_print_count"] == 191
