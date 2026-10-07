@@ -1,0 +1,22 @@
+name: Validate regional card source
+
+on:
+  push:
+    paths:
+      - "tools/regional_card_source.py"
+      - "tools/aichi_card_name_resolution.py"
+      - "tools/aichi_setup_inference.py"
+      - "results/regional_card_source/reproduce.py"
+      - ".github/workflows/validate-regional-card-source.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce regional source resolution
+        run: python results/regional_card_source/reproduce.py
