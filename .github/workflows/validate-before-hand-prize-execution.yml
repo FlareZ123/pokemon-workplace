@@ -1,0 +1,27 @@
+name: Validate before-hand Prize execution
+
+on:
+  push:
+    paths:
+      - "tools/before_hand_prize_executor.py"
+      - "tools/before_hand_prize_profiles.py"
+      - "tools/prize_pending_take.py"
+      - "tools/item_play_source_scope.py"
+      - "tools/identity_materialization.py"
+      - "results/before_hand_prize_execution/**"
+      - ".github/workflows/validate-before-hand-prize-execution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize-origin before-hand execution
+        run: python results/before_hand_prize_execution/reproduce.py
