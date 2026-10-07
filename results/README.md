@@ -173,7 +173,7 @@ For a represented state where Quick Ball and its discard are already in hand whi
 
 This matches the independent closed form exactly.
 
-**Working synthesis:** probabilistic beliefs should weight mechanically valid physical states. Specialized subsystems should avoid owning competing copies of physical card location. The current kernel is still a scaffold, with per-Pokémon board identity and multi-copy belief instantiation remaining open.
+**Working synthesis:** probabilistic beliefs should weight mechanically valid physical states. Specialized subsystems should avoid owning competing copies of physical card location. The current unified kernel is still a scaffold; `board_object_kernel.py` now supplies per-Pokémon movement state, while conservation across exchangeable zone counts, materialized board objects, and hidden-state beliefs remains open.
 
 ## 12. Multi-copy zone state needs multiplicity before object identity
 
@@ -186,7 +186,17 @@ The result therefore separates two stages of identity:
 - keep gameplay-equivalent copies aggregated by per-zone multiplicity while they remain exchangeable;
 - materialize explicit board-object identity only when attachment topology, damage/evolution state, temporary effects, hidden-information distinctions, or other history makes copies non-exchangeable.
 
-This provides a state-compression path for the unified kernel: replace the current unique-string zone scaffold with count-preserving card classes, then assign object identity only where mechanics require it.
+This provides a state-compression path for the unified kernel: replace the current unique-string zone scaffold with count-preserving card classes, then assign object identity only where mechanics require it. The new board-object kernel supplies that materialized side; the remaining gap is a conservation adapter between them.
+
+## 13. Board objects preserve topology and physical copy identity
+
+[board_object_kernel/](board_object_kernel/) models Active/Bench Pokémon as persistent objects whose Energy, Tool, damage, temporary effects, and Special Conditions follow the correct Pokémon through switching, retreat, evolution, and Bench contraction.
+
+The kernel distinguishes normal retreat from effect-based switching, including once-per-turn retreat bandwidth and Special Condition / temporary-effect clearing. It also represents multi-unit Energy payments by physical attached cards.
+
+A follow-up identity audit separates **physical instance ID** from **database print ID**. Two physical Double Colorless Energy copies may share one print ID while carrying distinct instance IDs on the board. This prevents the repository's print-level `card_id` concept from being misused as a unique game-object key.
+
+Together with [multicopy_zone_state/](multicopy_zone_state/), this suggests a hybrid state representation: keep exchangeable off-board copies aggregated by class and zone, then materialize instance identity when attachment topology or persistent history makes copies non-exchangeable.
 
 ## Reusable infrastructure
 
@@ -204,13 +214,14 @@ Particularly foundational components include:
 - `prize_belief_decision.py`
 - `unified_state_kernel.py`
 - `multicopy_zone_state.py`
+- `board_object_kernel.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
 
 Several larger questions remain promising:
 
-1. **Unified state representation beyond the prototype.** `unified_state_kernel/` now composes Bench, lock, Energy, and Prize-belief state around one canonical zone map, but per-Pokémon board identity, switching/retreat, damage, evolution, and multi-copy belief instantiation still need a stronger shared kernel.
+1. **Conservation across unified state layers.** `unified_state_kernel/`, `multicopy_zone_state/`, and `board_object_kernel/` now cover typed global state, exchangeable repeated copies, and materialized per-Pokémon topology separately. The next shared-kernel problem is moving cards between those layers without duplication or loss while preserving hidden-state beliefs and action budgets.
 2. **Compiler from card text to transitions.** Several models still use targeted or precompiled transitions. A conservative semantic compiler could reduce manual modeling while retaining auditable fallbacks for ambiguous text.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Official reprint equivalence.** The current conservative gameplay fingerprint is useful for research, but tournament-functional reprint equivalence still needs an explicit official-policy layer.
