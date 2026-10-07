@@ -9,6 +9,7 @@ sys.path.insert(0, str(ROOT))
 from tools.apex_dragon_special_energy_burden import build  # noqa: E402
 from tools.energy_discard_solver import (  # noqa: E402
     ENERGY_TYPES,
+    minimum_basic_named_card_subsets,
     minimum_card_subsets_generic,
     minimum_card_subsets_typed,
 )
@@ -26,6 +27,7 @@ def main() -> None:
         "units": 1,
         "types": ["Fire"],
         "basic": True,
+        "basic_energy_name": "Fire",
     }
 
     generic_two = minimum_card_subsets_generic([dde, fire], 2)
@@ -41,15 +43,45 @@ def main() -> None:
     assert typed_pair["minimum_cards"] == 1
     assert typed_pair["subsets"] == [[0]]
 
-    basic_psychic = minimum_card_subsets_typed(
+    basic_psychic = minimum_basic_named_card_subsets(
         [dde, fire],
-        ["Psychic"],
-        basic_only=True,
+        "Psychic",
+        1,
     )
     assert basic_psychic["full"] is False
-    assert basic_psychic["matched_units"] == 0
+    assert basic_psychic["matched_cards"] == 0
     assert basic_psychic["minimum_cards"] == 0
     assert basic_psychic["subsets"] == [[]]
+
+    burned_grass = {
+        "name": "Basic Grass Energy",
+        "units": 2,
+        "types": ["Fire"],
+        "basic": True,
+        "basic_energy_name": "Grass",
+    }
+    basic_grass = minimum_basic_named_card_subsets(
+        [burned_grass],
+        "Grass",
+        1,
+    )
+    assert basic_grass["full"] is True
+    assert basic_grass["minimum_cards"] == 1
+
+    basic_fire = minimum_basic_named_card_subsets(
+        [burned_grass],
+        "Fire",
+        1,
+    )
+    assert basic_fire["full"] is False
+    assert basic_fire["minimum_cards"] == 0
+
+    converted_fire_units = minimum_card_subsets_typed(
+        [burned_grass],
+        ["Fire", "Fire"],
+    )
+    assert converted_fire_units["full"] is True
+    assert converted_fire_units["minimum_cards"] == 1
 
     result = build(ROOT / "resources")
     assert result["counts"] == {
