@@ -1,0 +1,24 @@
+name: Validate before-hand Prize destination gate
+
+on:
+  push:
+    paths:
+      - "tools/before_hand_prize_executor.py"
+      - "tools/prize_destination_overrides.py"
+      - "results/prize_before_hand_destination_gate/**"
+      - ".github/workflows/validate-prize-before-hand-destination-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check before-hand Prize destination gate
+        run: python results/prize_before_hand_destination_gate/reproduce.py
