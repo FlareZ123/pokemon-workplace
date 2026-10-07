@@ -90,7 +90,7 @@ def compile_prize_effect(text: str) -> tuple[str, ...]:
     if _has(r"discards? any Prize cards they would take .* instead of putting those cards into their hand", text):
         atoms.add("taken_prize_to_discard")
 
-    if _has(r"took (?:this card|this Pokémon) as a face-down Prize card.*before you put it into your hand", text):
+    if _has(r"took (?:this card|this Pokémon|it) as a face-down Prize card.*before you put it into your hand", text):
         atoms.add("before_hand_prize_trigger")
 
     return tuple(sorted(atoms))
