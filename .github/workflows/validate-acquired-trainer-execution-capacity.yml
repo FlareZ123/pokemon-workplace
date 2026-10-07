@@ -1,0 +1,27 @@
+name: Validate acquired Trainer execution capacity
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/acquired_trainer_execution_capacity.py"
+      - "tools/acquired_trainer_action_window.py"
+      - "tools/trainer_search_transaction.py"
+      - "tools/turn_action_budget.py"
+      - "tools/lock_state_kernel.py"
+      - "results/acquired_trainer_execution_capacity/**"
+      - ".github/workflows/validate-acquired-trainer-execution-capacity.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce acquired Trainer execution capacity
+        run: python results/acquired_trainer_execution_capacity/reproduce.py
