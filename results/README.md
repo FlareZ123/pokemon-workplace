@@ -771,6 +771,14 @@ With two replacement copies, K0 already prefers the TM discard because recovery 
 **Working synthesis:** information value is decision-specific. K1 is valuable when different Prize worlds prefer different exact continuation-aware discard witnesses; redundant recovery can both increase line reliability and reduce the marginal value of inspection.
 
 
+## 61. Live Supporter quota can be derived from exact physical board state
+
+[board_action_quota_derivation/](board_action_quota_derivation/) connects the canonical turn budget to exact in-play source identity. `BoardPokemon` now optionally records a Pokémon print ID and effective Ability activity, allowing the quota layer to recognize Dual Brains only on the legal Magnezone print `bw8-46`.
+
+After one Supporter has been played, an active Dual Brains source yields limit 2 and leaves one use. Suppressing that physical object's Abilities reduces the live limit to 1 without erasing usage; restoring the Ability reopens the second use; removing the source from play removes the grant. A different Magnezone print does not create the quota, and two active Dual Brains sources still establish a ceiling of two.
+
+**Working synthesis:** quota limits should be derived from physical source identity and current effect activity, while the canonical turn budget preserves usage history. Ability suppression, source removal, quota exhaustion, and Supporter lock are distinct state transitions.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -789,6 +797,7 @@ Particularly foundational components include:
 - `legacy_turn_budget_bridge.py`
 - `canonical_turn_budget_owner.py`
 - `action_quota_effects.py`
+- `board_action_quota_derivation.py`
 - `turn_sequence_kernel.py`
 - `canonical_turn_sequence_owner.py`
 - `bench_capacity_model.py`
