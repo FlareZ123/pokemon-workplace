@@ -47,9 +47,16 @@ The regression requires at least one legal Potion profile with the literal
 amount granularity, and executes exact 30-damage and over-heal cases on the
 board-position state.
 
-The CI output also reports the discovered profile population and heal-amount
-distribution. Those counts should be treated as properties of the bundled
-English snapshot under the current conservative parser.
+The passing CI scan finds 304 profiles across 187 card names:
+
+- 293 self-healing attack profiles;
+- 11 selected-own-Pokémon Trainer profiles;
+- heal amounts of 10 (60 profiles), 20 (65), 30 (160), 40 (8), 50 (5),
+  60 (2), and 200 (4).
+
+The 11 Trainer profiles are all legal Potion printings in this snapshot. These
+counts are properties of the bundled English snapshot under the current
+conservative parser.
 
 ## Strategic use
 
