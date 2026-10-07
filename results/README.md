@@ -174,6 +174,16 @@ Echoing Madness and Allergy Storm are explicit branch-sensitive counterexamples 
 **Working synthesis:** continuous Ability restrictions should be derived from live source geometry and effective Abilities. Attack-applied restrictions should become temporal state after their application gate succeeds.
 
 
+[continuous_source_scoped_restrictions/](continuous_source_scoped_restrictions/) executes the 29 continuous Ability profiles from effective Ability state plus local board geometry.
+
+[attack_source_scoped_restrictions/](attack_source_scoped_restrictions/) resolves all 77 attack application gates into a concrete restriction or no effect.
+
+[attack_restriction_turn_windows/](attack_restriction_turn_windows/) gives those concrete attack effects player-relative lifetimes and verifies extra-turn behavior with the shared turn scheduler.
+
+**Working synthesis:** source-scoped hand denial now has separate owners for activation, gate resolution, temporal lifetime, and attempted-action legality. This prevents stale board-derived locks and turn-order assumptions from leaking into transaction code.
+
+
+
 
 
 
