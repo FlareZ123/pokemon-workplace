@@ -63,86 +63,6 @@ def _double_ko(
     phantom_context: DamageContext | None,
     boss,
 ) -> bool:
-    targets = (
-        ("Iron Thorns ex", "sv6-77", 230, (20, 70), 30),
-        ("Regidrago VSTAR", "swsh12-136", 280, (70, 120), 80),
-        ("Shadow Rider Calyrex VMAX", "swsh6-75", 320, (110, 160), 120),
-    )
-    for name, card_id, hp, first_band, second_min in targets:
-        card = _card(card_id)
-        assert card["name"] == name
-        assert int(card["hp"]) == hp
-        assert (card.get("legalities") or {}).get("expanded") == "Legal"
-
-        band = derive_timeless_phantom_prior_damage_band(
-            first_target_hp=hp,
-            second_target_hp=hp,
-        )
-        assert band is not None
-        assert (
-            band.first_target_min,
-            band.first_target_max,
-        ) == first_band
-        assert band.second_target_min == second_min
-
-        assert _double_ko(
-            first_hp=hp,
-            second_hp=200,
-            first_prior_damage=band.first_target_min,
-            second_prior_damage=0,
-            timeless_context=None,
-            phantom_context=None,
-            boss=boss,
-        )
-        assert _double_ko(
-            first_hp=hp,
-            second_hp=200,
-            first_prior_damage=band.first_target_max,
-            second_prior_damage=0,
-            timeless_context=None,
-            phantom_context=None,
-            boss=boss,
-        )
-        if band.first_target_min >= 10:
-            assert not _double_ko(
-                first_hp=hp,
-                second_hp=200,
-                first_prior_damage=band.first_target_min - 10,
-                second_prior_damage=0,
-                timeless_context=None,
-                phantom_context=None,
-                boss=boss,
-            )
-        assert not _double_ko(
-            first_hp=hp,
-            second_hp=200,
-            first_prior_damage=band.first_target_max + 10,
-            second_prior_damage=0,
-            timeless_context=None,
-            phantom_context=None,
-            boss=boss,
-        )
-
-        assert _double_ko(
-            first_hp=180,
-            second_hp=hp,
-            first_prior_damage=0,
-            second_prior_damage=band.second_target_min,
-            timeless_context=None,
-            phantom_context=None,
-            boss=boss,
-        )
-        if band.second_target_min >= 10:
-            assert not _double_ko(
-                first_hp=180,
-                second_hp=hp,
-                first_prior_damage=0,
-                second_prior_damage=band.second_target_min - 10,
-                timeless_context=None,
-                phantom_context=None,
-                boss=boss,
-            )
-
     actor = make_board(make_pokemon("regidrago", "Regidrago VSTAR"))
     result = execute_timeless_phantom_line(
         actor,
@@ -249,6 +169,86 @@ def main() -> None:
                     second_prior_damage,
                     window,
                 )
+
+    targets = (
+        ("Iron Thorns ex", "sv6-77", 230, (20, 70), 30),
+        ("Regidrago VSTAR", "swsh12-136", 280, (70, 120), 80),
+        ("Shadow Rider Calyrex VMAX", "swsh6-75", 320, (110, 160), 120),
+    )
+    for name, card_id, hp, first_band, second_min in targets:
+        card = _card(card_id)
+        assert card["name"] == name
+        assert int(card["hp"]) == hp
+        assert (card.get("legalities") or {}).get("expanded") == "Legal"
+
+        band = derive_timeless_phantom_prior_damage_band(
+            first_target_hp=hp,
+            second_target_hp=hp,
+        )
+        assert band is not None
+        assert (
+            band.first_target_min,
+            band.first_target_max,
+        ) == first_band
+        assert band.second_target_min == second_min
+
+        assert _double_ko(
+            first_hp=hp,
+            second_hp=200,
+            first_prior_damage=band.first_target_min,
+            second_prior_damage=0,
+            timeless_context=None,
+            phantom_context=None,
+            boss=boss,
+        )
+        assert _double_ko(
+            first_hp=hp,
+            second_hp=200,
+            first_prior_damage=band.first_target_max,
+            second_prior_damage=0,
+            timeless_context=None,
+            phantom_context=None,
+            boss=boss,
+        )
+        if band.first_target_min >= 10:
+            assert not _double_ko(
+                first_hp=hp,
+                second_hp=200,
+                first_prior_damage=band.first_target_min - 10,
+                second_prior_damage=0,
+                timeless_context=None,
+                phantom_context=None,
+                boss=boss,
+            )
+        assert not _double_ko(
+            first_hp=hp,
+            second_hp=200,
+            first_prior_damage=band.first_target_max + 10,
+            second_prior_damage=0,
+            timeless_context=None,
+            phantom_context=None,
+            boss=boss,
+        )
+
+        assert _double_ko(
+            first_hp=180,
+            second_hp=hp,
+            first_prior_damage=0,
+            second_prior_damage=band.second_target_min,
+            timeless_context=None,
+            phantom_context=None,
+            boss=boss,
+        )
+        if band.second_target_min >= 10:
+            assert not _double_ko(
+                first_hp=180,
+                second_hp=hp,
+                first_prior_damage=0,
+                second_prior_damage=band.second_target_min - 10,
+                timeless_context=None,
+                phantom_context=None,
+                boss=boss,
+            )
 
     actor = make_board(make_pokemon("regidrago", "Regidrago VSTAR"))
     immune = execute_timeless_phantom_line(
