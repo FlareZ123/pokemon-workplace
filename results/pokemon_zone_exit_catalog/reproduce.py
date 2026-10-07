@@ -23,6 +23,14 @@ def main() -> None:
 
     assert summary["prints"] == 146
     assert summary["unique_names"] == 73
+    assert summary["timing_print_counts"] == {
+        "direct_effect": 143,
+        "knockout_triggered": 3,
+    }
+    assert summary["timing_unique_name_counts"] == {
+        "direct_effect": 70,
+        "knockout_triggered": 3,
+    }
     assert summary["route_print_counts"] == {
         "deck->deck": 85,
         "hand->discard": 12,
@@ -66,6 +74,18 @@ def main() -> None:
         swoobat["pokemon_destination"],
         swoobat["attachment_destination"],
     ) == ("hand", "hand")
+
+    rescue_scarf = _row(rows, "bw6-115")
+    assert rescue_scarf["timing_class"] == "knockout_triggered"
+
+    splash_energy = _row(rows, "xy9-113")
+    assert splash_energy["timing_class"] == "knockout_triggered"
+
+    celebi = _row(rows, "xyp-XY93")
+    assert celebi["timing_class"] == "knockout_triggered"
+
+    for direct in (scoop, cassius, az, accelgor, swoobat):
+        assert direct["timing_class"] == "direct_effect"
 
     banned_ids = {
         "swsh2-22",
