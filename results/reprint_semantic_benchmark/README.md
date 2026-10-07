@@ -23,7 +23,8 @@ The historical positive set contains **76 Trainer printings across 15 names**.
 
 Under the repository's current resolver:
 
-- **41** resolve through the narrow historical bridge whose Black & White-onward counterpart already existed by the 2012 evidence date;
+- **3** are exact current-semantic fingerprint candidates after generic Trainer category boilerplate is removed;
+- **38** resolve through the narrow historical bridge whose Black & White-onward counterpart already existed by the 2012 evidence date;
 - **26** resolve through current name-wide errata;
 - **3** Copycat prints resolve through the current Tournament Handbook's explicit semantic example;
 - **2** Life Herb prints are now known non-equivalent in current Expanded because their Pokémon-ex target exclusion is reachable again;
@@ -51,7 +52,7 @@ The 76 historical positives by name are:
 | Full Heal | 1 |
 | Recycle | 1 |
 
-The resolver now covers most benchmark rows through dated historical bridges, current errata, and the official Copycat example. The remaining four semantic-review rows are Fisherman, two Pokédex printings, and the no-exclusion Life Herb `pl1-108`. The two excluded-target Life Herb printings are current negative witnesses rather than unresolved positives.
+The resolver now covers most benchmark rows through exact normalized identity, dated historical bridges, current errata, and the official Copycat example. The remaining four semantic-review rows are Fisherman, two Pokédex printings, and the no-exclusion Life Herb `pl1-108`. The two excluded-target Life Herb printings are current negative witnesses rather than unresolved positives.
 
 ## Why this is useful
 
@@ -87,7 +88,7 @@ Run:
 
 `python results/reprint_semantic_benchmark/reproduce.py`
 
-The reproducer asserts the 76 / 15 benchmark size, the current 41 / 26 / 3 / 2 / 4 resolver partition, the per-name counts, and the Copycat / Rainbow Energy boundary pairs.
+The reproducer asserts the 76 / 15 benchmark size, the current 3 / 38 / 26 / 3 / 2 / 4 resolver partition, the per-name counts, and the Copycat / Rainbow Energy boundary pairs.
 
 ## Limitations
 
