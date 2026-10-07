@@ -76,8 +76,9 @@ def main() -> None:
     salamence = one(rows, card_id="sm7-106", ability_name="Dragon Wind")
     assert salamence.source_geometry == GEOMETRY_ACTIVE
 
-    swellow = one(rows, card_id="xy1-103", ability_name="Drive Off")
-    assert swellow.source_geometry == GEOMETRY_HAND_BENCH_TRIGGER
+    tornadus = one(rows, card_id="swsh9-126", ability_name="Sudden Cyclone")
+    assert tornadus.source_geometry == GEOMETRY_HAND_BENCH_TRIGGER
+    assert tornadus.activation == ACTIVATION_TRIGGERED
 
     actor = make_board(
         make_pokemon("actor-active", "Attacker"),
