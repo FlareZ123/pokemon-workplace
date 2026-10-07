@@ -9,6 +9,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from multicopy_zone_state import ZoneCountState
+from search_zone_transition import SearchZoneTarget, apply_typed_retrieval_action
 from trainer_search_profile_compiler import compile_multi_output_trainer_profiles
 from typed_search_retrieval import (
     enumerate_typed_retrieval_actions,
@@ -90,6 +92,33 @@ def main() -> None:
         for action in satisfying
     }
 
+    zone_targets = tuple(
+        SearchZoneTarget(card_class, target)
+        for card_class, target in zip(
+            ("stadium", "tool", "dce"),
+            targets,
+        )
+    )
+    before = ZoneCountState.from_mapping(
+        {
+            ("stadium", "deck"): 1,
+            ("tool", "deck"): 1,
+            ("dce", "deck"): 1,
+        }
+    )
+    full_after = apply_typed_retrieval_action(
+        before,
+        zone_targets,
+        full_payload,
+    ).after
+    assert full_after.count("stadium", "hand") == 1
+    assert full_after.count("tool", "hand") == 1
+    assert full_after.count("dce", "hand") == 1
+    assert all(
+        before.total(card_class) == full_after.total(card_class)
+        for card_class in ("stadium", "tool", "dce")
+    )
+
     print(
         json.dumps(
             {
@@ -99,6 +128,7 @@ def main() -> None:
                 "full_side_payload_retrieval": list(full_payload.target_cost),
                 "both_satisfy_same_immediate_demand": True,
                 "demand_first_full_payload_preserved": False,
+                "full_payload_zone_execution": True,
             },
             indent=2,
             sort_keys=True,
