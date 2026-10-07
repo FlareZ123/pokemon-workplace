@@ -343,9 +343,77 @@ def main() -> None:
     )
     assert gh_base_tx.discard_cost == 0
     assert not gh_base_tx.used_conditional_outputs
+    assert not gh_base_tx.optional_discard_paid
     assert gh_base_tx.after.zones.count("gh_stadium", "hand") == 1
     assert gh_base_tx.after.zones.count("gh_tool", "deck") == 1
     assert gh_base_tx.after.zones.count("gh_special", "deck") == 1
+
+    gh_paid_base_state = TrainerSearchExecutionState(
+        zones=ZoneCountState.from_mapping(
+            {
+                ("guzma_hala", "hand"): 1,
+                ("gh_fodder_a", "hand"): 1,
+                ("gh_fodder_b", "hand"): 1,
+                ("gh_stadium", "deck"): 1,
+                ("gh_tool", "deck"): 1,
+                ("gh_special", "deck"): 1,
+            }
+        )
+    )
+    gh_paid_base_selection = enumerate_discard_selections(
+        gh_paid_base_state.zones,
+        gh_candidates,
+        2,
+    )[0]
+    gh_paid_base_tx = execute_trainer_retrieval_transaction(
+        gh_paid_base_state,
+        profile=guzma_hala,
+        action_card_class="guzma_hala",
+        targets=gh_targets,
+        retrieval_action=gh_base_retrieval,
+        discard_candidates=gh_candidates,
+        discard_selection=gh_paid_base_selection,
+        pay_optional_discard=True,
+    )
+    assert gh_paid_base_tx.discard_cost == 2
+    assert gh_paid_base_tx.optional_discard_paid
+    assert not gh_paid_base_tx.used_conditional_outputs
+    assert gh_paid_base_tx.after.zones.count("gh_stadium", "hand") == 1
+    assert gh_paid_base_tx.after.zones.count("gh_tool", "deck") == 1
+    assert gh_paid_base_tx.after.zones.count("gh_special", "deck") == 1
+
+    gh_zero_retrieval = next(
+        action
+        for action in gh_retrievals
+        if action.target_cost == (0, 0, 0)
+    )
+    free_zero_rejected = expect_value_error(
+        lambda: execute_trainer_retrieval_transaction(
+            gh_paid_base_state,
+            profile=guzma_hala,
+            action_card_class="guzma_hala",
+            targets=gh_targets,
+            retrieval_action=gh_zero_retrieval,
+        )
+    )
+    assert free_zero_rejected
+
+    gh_discard_only_tx = execute_trainer_retrieval_transaction(
+        gh_paid_base_state,
+        profile=guzma_hala,
+        action_card_class="guzma_hala",
+        targets=gh_targets,
+        retrieval_action=gh_zero_retrieval,
+        discard_candidates=gh_candidates,
+        discard_selection=gh_paid_base_selection,
+        pay_optional_discard=True,
+    )
+    assert gh_discard_only_tx.discard_cost == 2
+    assert gh_discard_only_tx.optional_discard_paid
+    assert not gh_discard_only_tx.used_conditional_outputs
+    assert gh_discard_only_tx.after.zones.count("gh_stadium", "deck") == 1
+    assert gh_discard_only_tx.after.zones.count("gh_tool", "deck") == 1
+    assert gh_discard_only_tx.after.zones.count("gh_special", "deck") == 1
 
     gh_raw_tx = execute_trainer_retrieval_transaction(
         gh_state,
