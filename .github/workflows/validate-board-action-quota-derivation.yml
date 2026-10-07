@@ -1,0 +1,26 @@
+name: Validate board action quota derivation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/board_object_kernel.py"
+      - "tools/action_quota_effects.py"
+      - "tools/board_action_quota_derivation.py"
+      - "tools/canonical_turn_budget_owner.py"
+      - "results/board_action_quota_derivation/**"
+      - ".github/workflows/validate-board-action-quota-derivation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce physical quota derivation
+        run: python results/board_action_quota_derivation/reproduce.py
