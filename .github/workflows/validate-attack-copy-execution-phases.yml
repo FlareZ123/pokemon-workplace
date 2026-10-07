@@ -1,0 +1,23 @@
+name: Validate attack-copy execution phases
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_execution_phases.py"
+      - "results/attack_copy_execution_phases/**"
+      - ".github/workflows/validate-attack-copy-execution-phases.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run attack-copy execution phase regression
+        run: python results/attack_copy_execution_phases/reproduce.py
