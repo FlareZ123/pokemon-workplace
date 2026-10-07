@@ -5,9 +5,12 @@ on:
     paths:
       - "tools/special_condition_state.py"
       - "tools/conditioned_board_state.py"
+      - "tools/checkup_order_value.py"
       - "tools/board_object_kernel.py"
+      - "tools/effect_order_authority.py"
       - "results/special_condition_state/**"
       - "results/conditioned_board_state/**"
+      - "results/checkup_order_value/**"
       - ".github/workflows/validate-special-condition-state.yml"
   workflow_dispatch:
 
@@ -26,3 +29,5 @@ jobs:
         run: python results/special_condition_state/reproduce.py
       - name: Reproduce conditioned board synchronization
         run: python results/conditioned_board_state/reproduce.py
+      - name: Reproduce Checkup ordering value
+        run: python results/checkup_order_value/reproduce.py
