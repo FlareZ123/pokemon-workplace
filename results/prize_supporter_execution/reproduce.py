@@ -84,6 +84,10 @@ def main() -> None:
         Fraction(1, 6),
     )
     _assert_close(
+        ordinary.direct_next_turn_execution_probability,
+        Fraction(1, 6),
+    )
+    _assert_close(
         ordinary.peonia_hand_access_probability,
         Fraction(2, 3),
     )
@@ -92,12 +96,20 @@ def main() -> None:
         Fraction(0, 1),
     )
     _assert_close(
+        ordinary.peonia_next_turn_execution_probability,
+        Fraction(2, 3),
+    )
+    _assert_close(
         ordinary.gladion_hand_access_probability,
         Fraction(1, 1),
     )
     _assert_close(
         ordinary.gladion_execution_probability,
         Fraction(0, 1),
+    )
+    _assert_close(
+        ordinary.gladion_next_turn_execution_probability,
+        Fraction(1, 1),
     )
 
     dual = analyze_with_dual_brains()
@@ -119,11 +131,19 @@ def main() -> None:
         Fraction(2, 3),
     )
     _assert_close(
+        dual.peonia_next_turn_execution_probability,
+        Fraction(2, 3),
+    )
+    _assert_close(
         dual.gladion_hand_access_probability,
         Fraction(1, 1),
     )
     _assert_close(
         dual.gladion_execution_probability,
+        Fraction(1, 1),
+    )
+    _assert_close(
+        dual.gladion_next_turn_execution_probability,
         Fraction(1, 1),
     )
 
@@ -185,18 +205,21 @@ def main() -> None:
     print(
         "  Arc Phone -> Trekking Shoes: "
         f"hand={ordinary.direct_hand_access_probability:.9f}, "
-        f"execute={ordinary.direct_execution_probability:.9f}"
+        f"execute-now={ordinary.direct_execution_probability:.9f}, "
+        f"execute-next={ordinary.direct_next_turn_execution_probability:.9f}"
     )
     print(
         "  Peonia -> Arc Phone -> Trekking Shoes: "
         f"hand={ordinary.peonia_hand_access_probability:.9f}, "
-        f"execute={ordinary.peonia_execution_probability:.9f}"
+        f"execute-now={ordinary.peonia_execution_probability:.9f}, "
+        f"execute-next={ordinary.peonia_next_turn_execution_probability:.9f}"
     )
 
     print(
         "  Gladion: "
         f"hand={ordinary.gladion_hand_access_probability:.9f}, "
-        f"execute={ordinary.gladion_execution_probability:.9f}"
+        f"execute-now={ordinary.gladion_execution_probability:.9f}, "
+        f"execute-next={ordinary.gladion_next_turn_execution_probability:.9f}"
     )
 
     print()
