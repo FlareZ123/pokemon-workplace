@@ -1,0 +1,24 @@
+name: Validate Aichi Prize Supporter information
+
+on:
+  push:
+    paths:
+      - "tools/aichi_prize_supporter_information.py"
+      - "tools/aichi_vileplume_als.py"
+      - "results/aichi_prize_supporter_information/**"
+      - ".github/workflows/validate-aichi-prize-supporter-information.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Aichi Prize Supporter information
+        run: python results/aichi_prize_supporter_information/reproduce.py
