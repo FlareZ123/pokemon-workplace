@@ -20,4 +20,4 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python results/release_legality/reproduce.py
+      - run: python -m results.release_legality.reproduce
