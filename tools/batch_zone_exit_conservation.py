@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from identity_materialization import assert_conserved
 from promotion_pending_conservation import PromotionPendingState
 from stack_knockout_conservation import StackBoardMaterialState
 from stack_zone_exit_conservation import (
@@ -90,6 +91,7 @@ def leave_play_batch_before_promotion(
         board.evolution_allowed,
         board.bench_capacity,
     )
+    assert_conserved(state.ledger, pending.ledger)
 
     return BatchZoneExitTransition(
         pending,
