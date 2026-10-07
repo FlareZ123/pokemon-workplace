@@ -67,13 +67,26 @@ A simulator that labels the copied body simply `Supporter` can incorrectly try t
 
 A simulator that forgets the physical card's Supporter identity can fail to enforce Impersonation's selection requirement, fail to move the selected copy from hand to discard, or lose zone-sensitive effects such as the Shiftry interaction.
 
+## Official Q&A: Supporter lock does not block attack-copied effect
+
+The official Japanese Q&A also contains a direct lock witness for Liepard [Team Plasma] / Silent Claw and Stoutland / Sentinel.
+
+The bundled English Stoutland `bw7-122` text says:
+
+`As long as this Pokémon is your Active Pokémon, your opponent can't play any Supporter cards from his or her hand.`
+
+Silent Claw discards a Supporter from the opponent's hand and uses that Supporter's effect as the attack's effect. The official Q&A asks whether Silent Claw can still use the discarded Supporter's effect while Sentinel is active and answers **yes**.
+
+Official Q&A search:
+https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%81%8A%E3%81%AB%E3%81%B3&page=859&regulation=all&regulation_faq_main_item1=all
+
+This directly validates the action-channel distinction. Sentinel removes the ordinary `play Supporter from hand` edge. It does not erase an attack edge whose body is delegated from a Supporter card.
+
 ## Lock implication
 
-Hand-scoped Supporter prohibitions and modifications should test the actual action and zone they name.
+Hand-scoped Supporter prohibitions and modifications must test the actual action and zone they name.
 
-For example, an effect that says a player cannot **play Supporter cards from their hand** denies the ordinary play edge. Impersonation instead discards a Supporter and delegates its body to an attack. A planner should therefore avoid applying a play-from-hand gate merely because the delegated text originated on a Supporter card.
-
-This is a card-text and rules-grammar consequence. The official Shiftry Q&A provides a concrete zone-sensitive analogue, while this result does not claim a separate located Q&A for every Supporter-lock card.
+The Stoutland ruling proves the lock case directly. The Shiftry ruling independently proves the zone-sensitive text-replacement case. Together they show that a planner cannot infer Supporter-play gating from the origin card's type alone.
 
 ## Relation to the action-budget work
 
