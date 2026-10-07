@@ -24,6 +24,7 @@ TIMELESS = "dialga:timeless-gx"
 SHADOW = "marshadow:shadow-imitation"
 FOUL = "zoroark:foul-play"
 HAUGHTY = "persian:haughty-order"
+TRICKSTER = "zoroark-gx:trickster-gx"
 
 ATTACKS = {
     COPYCAT: AttackDef(
@@ -53,6 +54,12 @@ ATTACKS = {
         copy_selector=CopySelector("opponent_revealed"),
         pre_event="reveal_top_10",
         post_event="shuffle_revealed",
+    ),
+    TRICKSTER: AttackDef(
+        TRICKSTER,
+        "Trickster-GX",
+        is_gx=True,
+        copy_selector=CopySelector("opponent_in_play"),
     ),
 }
 
@@ -307,11 +314,70 @@ def test_copy_body_continuation_resumes_outer_text() -> None:
     assert result.state.last_attack_for("P1") == HAUGHTY
 
 
+
+
+def test_declared_gx_copy_can_execute_gx_body_once() -> None:
+    state = State(
+        pokemon=(
+            PokemonRef(
+                "p2-dialga-active",
+                "Dialga-GX",
+                "P2",
+                "active",
+                types=("Dragon",),
+                attacks=(TIMELESS,),
+            ),
+        )
+    )
+    result = resolve_attack(
+        actor_player="P1",
+        actor_card_id="p1-zoroark-gx",
+        declared_attack_id=TRICKSTER,
+        attacks=ATTACKS,
+        state=state,
+        choose=choose_exact((TIMELESS,)),
+    )
+    assert result.body_chain == (TRICKSTER, TIMELESS)
+    assert result.state.gx_used_by == frozenset({"P1"})
+    assert result.state.last_attack_for("P1") == TRICKSTER
+
+
+def test_declared_gx_copy_is_blocked_if_gx_was_already_used() -> None:
+    state = State(
+        pokemon=(
+            PokemonRef(
+                "p2-dialga-active",
+                "Dialga-GX",
+                "P2",
+                "active",
+                types=("Dragon",),
+                attacks=(TIMELESS,),
+            ),
+        ),
+        gx_used_by=frozenset({"P1"}),
+    )
+    try:
+        resolve_attack(
+            actor_player="P1",
+            actor_card_id="p1-zoroark-gx",
+            declared_attack_id=TRICKSTER,
+            attacks=ATTACKS,
+            state=state,
+            choose=choose_exact((TIMELESS,)),
+        )
+    except GXAlreadyUsed:
+        pass
+    else:
+        raise AssertionError("Trickster-GX ignored the pre-existing GX-use resource")
+
+
 def main() -> None:
     test_nested_copycat_apex_timeless()
     test_last_attack_identity_is_outer_attack()
     test_apex_uses_current_players_discard()
     test_gx_resource_applies_to_copied_endpoint()
+    test_declared_gx_copy_can_execute_gx_body_once()
+    test_declared_gx_copy_is_blocked_if_gx_was_already_used()
     test_no_progress_reentry_is_detected()
     test_active_slot_binding_blocks_naive_foul_play_escape()
     test_active_slot_binding_still_allows_apex_escape()
