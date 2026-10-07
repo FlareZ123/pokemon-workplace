@@ -19,11 +19,13 @@ def main() -> None:
         "name": "Double Dragon Energy",
         "units": 2,
         "types": list(ENERGY_TYPES),
+        "basic": False,
     }
     fire = {
         "name": "Basic Fire",
         "units": 1,
         "types": ["Fire"],
+        "basic": True,
     }
 
     generic_two = minimum_card_subsets_generic([dde, fire], 2)
@@ -39,6 +41,16 @@ def main() -> None:
     assert typed_pair["minimum_cards"] == 1
     assert typed_pair["subsets"] == [[0]]
 
+    basic_psychic = minimum_card_subsets_typed(
+        [dde, fire],
+        ["Psychic"],
+        basic_only=True,
+    )
+    assert basic_psychic["full"] is False
+    assert basic_psychic["matched_units"] == 0
+    assert basic_psychic["minimum_cards"] == 0
+    assert basic_psychic["subsets"] == [[]]
+
     result = build(ROOT / "resources")
     assert result["counts"] == {
         "signatures_compared": 35,
@@ -49,10 +61,11 @@ def main() -> None:
             "3": 12,
         },
         "dde_fire_minimum_card_burden": {
-            "1": 23,
+            "0": 1,
+            "1": 22,
             "2": 12,
         },
-        "changed_signatures": 27,
+        "changed_signatures": 26,
     }
 
     zero_to_one = [
@@ -61,7 +74,7 @@ def main() -> None:
         if row["basic_ggf"]["minimum_cards"] == 0
         and row["dde_fire"]["minimum_cards"] == 1
     ]
-    assert len(zero_to_one) == 5
+    assert len(zero_to_one) == 4
 
     hydreigon = [
         row
@@ -71,6 +84,18 @@ def main() -> None:
     ]
     assert len(hydreigon) == 1
     assert hydreigon[0]["dde_fire"]["matched_units"] == 2
+
+    photon = [
+        row
+        for row in result["signatures"]
+        if row["card_name"] == "Ultra Necrozma-GX"
+        and row["attack_name"] == "Photon Geyser"
+    ]
+    assert len(photon) == 1
+    assert photon[0]["first_discard"]["basic_only"] is True
+    assert photon[0]["basic_ggf"]["minimum_cards"] == 0
+    assert photon[0]["dde_fire"]["minimum_cards"] == 0
+    assert photon[0]["dde_fire"]["matched_units"] == 0
 
     print(result["counts"])
 
