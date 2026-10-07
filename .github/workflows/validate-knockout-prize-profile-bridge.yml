@@ -1,0 +1,26 @@
+name: Validate KO Prize profile bridge
+
+on:
+  push:
+    paths:
+      - "tools/knockout_prize_profile_bridge.py"
+      - "tools/stack_board_profile_binding.py"
+      - "tools/pokemon_card_profile.py"
+      - "tools/post_knockout_game_resolution.py"
+      - "results/knockout_prize_profile_bridge/**"
+      - ".github/workflows/validate-knockout-prize-profile-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check printed Prize awards from KO profiles
+        run: python results/knockout_prize_profile_bridge/reproduce.py
