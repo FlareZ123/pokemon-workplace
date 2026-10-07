@@ -46,11 +46,18 @@ class BeforeHandItemResolutionState:
         ):
             raise ValueError("resolving Item cannot remain in pending queue")
 
+    def pending_state(self) -> PrizePendingTakeState:
+        """Expose the queue while keeping the Item physically resolving."""
+
+        return PrizePendingTakeState(
+            self.physical,
+            self.remaining_pending,
+        )
+
 
 @dataclass(frozen=True)
-class BeforeHandItemResolution:
+class BeforeHandItemEffectOutcome:
     resolving: BeforeHandItemResolutionState
-    after: PrizePendingTakeState
     additional_prize_awards: int
 
 
@@ -215,13 +222,13 @@ def begin_before_hand_item_play(
     )
 
 
-def finish_before_hand_item_play(
+def resolve_before_hand_item_effect(
     state: BeforeHandItemResolutionState,
     *,
     secondary_effect_resolved: bool = False,
     coin_heads: bool | None = None,
-) -> BeforeHandItemResolution:
-    """Finish the Prize-origin Item, then restore the pending queue."""
+) -> BeforeHandItemEffectOutcome:
+    """Resolve the Item body while leaving the Item in its resolving zone."""
 
     profile = state.profile
     if profile.searches_pokemon_to_bench and not secondary_effect_resolved:
@@ -229,11 +236,40 @@ def finish_before_hand_item_play(
     if not profile.searches_pokemon_to_bench and secondary_effect_resolved:
         raise ValueError("unexpected secondary-effect completion marker")
 
-    additional = _extra_prize_awards(profile, coin_heads=coin_heads)
+    return BeforeHandItemEffectOutcome(
+        state,
+        _extra_prize_awards(profile, coin_heads=coin_heads),
+    )
+
+
+def finish_before_hand_item_play(
+    outcome: BeforeHandItemEffectOutcome,
+    *,
+    continuation_state: PrizePendingTakeState | None = None,
+    additional_prizes_resolved: bool = False,
+) -> PrizePendingTakeState:
+    """Discard the Item only after any nested extra-Prize sequence completes."""
+
+    if outcome.additional_prize_awards:
+        if not additional_prizes_resolved:
+            raise ValueError("nested additional Prize resolution is incomplete")
+    elif additional_prizes_resolved:
+        raise ValueError("no additional Prize award requires acknowledgement")
+
+    state = (
+        outcome.resolving.pending_state()
+        if continuation_state is None
+        else continuation_state
+    )
+    item = state.physical.ledger.instance(
+        outcome.resolving.item_instance_id
+    )
+    if item.zone != RESOLVING_TRAINER_ZONE:
+        raise ValueError("resolving Item left its resolution zone unexpectedly")
 
     ledger = move_instance(
         state.physical.ledger,
-        state.item_instance_id,
+        outcome.resolving.item_instance_id,
         "discard",
     )
     assert_conserved(state.physical.ledger, ledger)
@@ -244,12 +280,7 @@ def finish_before_hand_item_play(
         state.physical.prize_instance_ids,
         state.physical.face_up,
     )
-    after = PrizePendingTakeState(
+    return PrizePendingTakeState(
         physical,
-        state.remaining_pending,
-    )
-    return BeforeHandItemResolution(
-        state,
-        after,
-        additional,
+        state.pending,
     )
