@@ -62,6 +62,7 @@ Energy access is another area where raw card counts collapse important distincti
 - [crispin_attachment_channels/](crispin_attachment_channels/) verifies that attachment by a Supporter effect and the ordinary once-per-turn attachment are independent channels. Crispin can attach one Energy by effect, put another into hand, and still leave the normal attachment available.
 - [typed_energy_access/](typed_energy_access/) moves these distinctions into explicit state transitions.
 - [multi_unit_energy_semantics/](multi_unit_energy_semantics/) and [apex_dragon_special_energy_burden/](apex_dragon_special_energy_burden/) address multi-unit and Special Energy behavior.
+- [energy_identity_semantics/](energy_identity_semantics/) separates physical card name/category from current Energy type and unit provision. Its rulebook-backed Charizard/Meganium regression represents a Basic Grass Energy card that currently provides two Fire Energy without becoming Basic Fire Energy.
 
 Concrete implications include:
 
