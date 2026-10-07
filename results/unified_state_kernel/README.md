@@ -181,6 +181,8 @@ The current kernel does not parse arbitrary card text.
 
 The Prize adapter supports only one physical card per mapped group. Multi-copy groups need explicit identity-to-count allocation before they can be converted into deterministic zones safely.
 
+The canonical location scaffold is also keyed by one unique string per modeled card. It cannot represent two gameplay-equivalent copies under the same key in different zones at once. [../multicopy_zone_state/](../multicopy_zone_state/) formalizes the stronger contract: keep exchangeable copies as per-zone counts, then materialize explicit object identity when topology or history differentiates them.
+
 The Bench model still assumes unique modeled resident names. It does not yet attach per-Pokémon Energy, Tool, damage, evolution, or Ability state to every resident.
 
 The Active representation is singular and does not yet support switching/retreat as first-class transitions.
