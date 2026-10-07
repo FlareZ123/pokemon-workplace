@@ -1,0 +1,16 @@
+name: Validate Aichi Active discard flexibility
+on:
+  push:
+    paths:
+      - tools/aichi_active_discard_flexibility.py
+      - .github/workflows/validate-aichi-active-discard-flexibility.yml
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python tools/aichi_active_discard_flexibility.py
