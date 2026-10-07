@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from supporter_outs_timing import same_turn_supporter_access  # noqa: E402
+from turn_action_budget import TurnAction, TurnActionBudget  # noqa: E402
 
 
 def pct(value: float) -> str:
@@ -172,6 +173,69 @@ def validate() -> None:
                 ordinary.naive_access_probability,
             )
         )
+
+    # Canonical action budgets must reproduce the explicit capacity interface.
+    ordinary_budget = same_turn_supporter_access(
+        60,
+        6,
+        starter_cards=12,
+        target_supporters=2,
+        preserving_nonstarter_connectors=2,
+        consuming_connectors=4,
+        turn_budget=TurnActionBudget(),
+    )
+    if abs(
+        ordinary_budget.typed_access_probability
+        - ordinary.typed_access_probability
+    ) > 1e-15:
+        raise AssertionError("ordinary budget projection changed exact access")
+
+    dual_budget = TurnActionBudget().with_limit(TurnAction.SUPPORTER, 2)
+    expanded_from_budget = same_turn_supporter_access(
+        60,
+        6,
+        starter_cards=12,
+        target_supporters=2,
+        preserving_nonstarter_connectors=2,
+        consuming_connectors=4,
+        turn_budget=dual_budget,
+    )
+    if abs(
+        expanded_from_budget.typed_access_probability
+        - expanded_capacity.typed_access_probability
+    ) > 1e-15:
+        raise AssertionError("two-Supporter budget changed exact access")
+
+    after_one = dual_budget.consume(TurnAction.SUPPORTER)
+    assert after_one is not None
+    one_left_from_budget = same_turn_supporter_access(
+        60,
+        6,
+        starter_cards=12,
+        target_supporters=2,
+        preserving_nonstarter_connectors=2,
+        consuming_connectors=4,
+        turn_budget=after_one,
+    )
+    if abs(
+        one_left_from_budget.typed_access_probability
+        - ordinary.typed_access_probability
+    ) > 1e-15:
+        raise AssertionError("spent Dual Brains quota did not reduce to one play")
+
+    ended = dual_budget.consume(TurnAction.END_TURN)
+    assert ended is not None
+    ended_access = same_turn_supporter_access(
+        60,
+        6,
+        starter_cards=12,
+        target_supporters=2,
+        preserving_nonstarter_connectors=2,
+        consuming_connectors=4,
+        turn_budget=ended,
+    )
+    if ended_access.typed_access_probability != 0.0:
+        raise AssertionError("ended turn retained Supporter access")
 
 
 def main() -> None:
