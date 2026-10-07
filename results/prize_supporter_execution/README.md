@@ -75,6 +75,24 @@ Under the ordinary one-Supporter rule:
 
 This is an extreme access-versus-execution counterexample. Perfect recovery does not complete a same-turn line when the recovery action consumes the payload's action channel.
 
+## The turn boundary reverses the ordinary ranking
+
+If the recovered Supporter is required on the next turn instead of the current turn, the ordinary Supporter budget resets before execution.
+
+Assuming the recovered card remains in hand and the same quota ceiling applies next turn:
+
+| Route | Execute this turn | Execute next turn |
+| --- | ---: | ---: |
+| Arc Phone -> Trekking Shoes | 1/6 | 1/6 |
+| Peonia -> Arc Phone -> Trekking Shoes | 0 | 2/3 |
+| Gladion | 0 | 1 |
+
+The current-turn objective favors the direct Item route over either Supporter-based recovery line.
+
+The next-turn objective favors Gladion because its perfect recovery survives the turn boundary and the ordinary Supporter usage count resets.
+
+This is a temporal connector-dominance reversal caused only by the execution deadline.
+
 ## Dual Brains changes the line value
 
 The bundled Expanded-legal Magnezone `bw8-46` has Dual Brains:
