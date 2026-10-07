@@ -93,6 +93,7 @@ def main() -> None:
     ]
     assert tool_candidates
     assert all(ITEM not in candidate.tags for candidate in tool_candidates)
+    assert untyped_basic_energy_names == []
 
     assert len(labels) == 23
     assert len(candidates) == 14829
