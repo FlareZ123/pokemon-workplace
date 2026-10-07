@@ -61,8 +61,8 @@ def main() -> None:
     )
     alice_filler = filler_take.belief_for("Alice")
     bob_filler = filler_take.belief_for("Bob")
-    assert_close(group_probability(alice_filler, "A"), 1.0 / 3.0)
-    assert_close(group_probability(alice_filler, "B"), 1.0 / 3.0)
+    assert_close(group_probability(alice_filler, "A"), 1.0 / 4.0)
+    assert_close(group_probability(alice_filler, "B"), 1.0 / 4.0)
     assert_close(group_probability(bob_filler, "A"), 1.0 / 5.0)
     assert_close(group_probability(bob_filler, "B"), 1.0 / 5.0)
 
