@@ -1,0 +1,25 @@
+name: Validate Trainer transaction provenance
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/trainer_transaction_provenance.py"
+      - "tools/temporal_resource_ledger.py"
+      - "tools/trainer_search_transaction.py"
+      - "results/trainer_transaction_provenance/**"
+      - ".github/workflows/validate-trainer-transaction-provenance.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Trainer transaction provenance
+        run: python results/trainer_transaction_provenance/reproduce.py
