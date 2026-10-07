@@ -1,0 +1,27 @@
+name: Validate Ability lock precedence quota bridge
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/ability_lock_setup_precedence.py"
+      - "tools/ability_lock_dependency_graph.py"
+      - "tools/single_source_ability_lock_geometry.py"
+      - "tools/board_action_quota_derivation.py"
+      - "tools/turn_action_budget.py"
+      - "results/ability_lock_precedence_quota_bridge/**"
+      - ".github/workflows/validate-ability-lock-precedence-quota-bridge.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Ability lock precedence quota bridge
+        run: python results/ability_lock_precedence_quota_bridge/reproduce.py
