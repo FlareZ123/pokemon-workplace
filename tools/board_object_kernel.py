@@ -259,7 +259,16 @@ def retreat(
     outgoing = state.get(state.active_id)
     if outgoing.pokemon_state.temporary_retreat_lock:
         return None
-    if outgoing.special_conditions & {"Asleep", "Paralyzed"}:
+
+    escape_board_active = (
+        outgoing.tool is not None
+        and outgoing.tool.card_name == "Escape Board"
+        and outgoing.pokemon_state.tool_effect_enabled
+    )
+    if (
+        outgoing.special_conditions & {"Asleep", "Paralyzed"}
+        and not escape_board_active
+    ):
         return None
 
     requested = tuple(discard_energy_ids)
