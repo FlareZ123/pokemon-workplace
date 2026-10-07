@@ -60,6 +60,18 @@ The sequence is:
 
 Card-class totals remain conserved from the initial state through the final ordinary board states.
 
+## Authoritative full-Bench counterexample
+
+The Japanese official Pokémon Card Game Expanded Q&A supplies a concrete sequencing witness.
+
+It asks about a state where the player has five Benched Pokémon and a Great Tusk ex at 50 remaining HP. Great Tusk ex uses Gigant Tusk, Knocks Out the opponent's Active, and is also Knocked Out. The Prize taken is Chansey with Lucky Bonus. The official answer says Lucky Bonus cannot be used.
+
+Source: https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%83%A9%E3%83%83%E3%82%AD%E3%83%BC%E3%83%9C%E3%83%BC%E3%83%8A%E3%82%B9&regulation_faq_main_item1=BW
+
+This distinguishes the phase order mechanically. Before replacement Active selection, all five surviving Pokémon still occupy the Bench, so Lucky Bonus has no open Bench slot. If promotion had already occurred, one of those five Pokémon would occupy the Active Spot and the Bench would have one open slot.
+
+The regression mirrors that geometry: immediately after Active disposal, `bench_occupancy == 5` and `open_bench_slots == 0`; after the later promotion, occupancy falls to four and one slot opens. The later slot does not retroactively make Lucky Bonus usable.
+
 ## Information-value witness
 
 The regression includes a deliberately small decision illustration.
