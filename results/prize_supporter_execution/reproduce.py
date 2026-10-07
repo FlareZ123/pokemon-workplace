@@ -38,6 +38,7 @@ def main() -> None:
     arc_phone = _card_by_id("swsh11-152")
     trekking_shoes = _card_by_id("swsh10-156")
     magnezone = _card_by_id("bw8-46")
+    gladion = _card_by_id("sm4-95")
 
     assert "Supporter" in peonia.get("subtypes", [])
     assert "Put up to 3 Prize cards into your hand" in _trainer_text(peonia)
@@ -49,6 +50,9 @@ def main() -> None:
         "Look at the top card of your deck. You may put that card into your hand."
         in _trainer_text(trekking_shoes)
     )
+
+    assert "Supporter" in gladion.get("subtypes", [])
+    assert "Look at your face-down Prize cards and put 1 of them into your hand." in _trainer_text(gladion)
 
     dual_brains = next(
         ability
@@ -84,6 +88,14 @@ def main() -> None:
         ordinary.peonia_execution_probability,
         Fraction(0, 1),
     )
+    _assert_close(
+        ordinary.gladion_hand_access_probability,
+        Fraction(1, 1),
+    )
+    _assert_close(
+        ordinary.gladion_execution_probability,
+        Fraction(0, 1),
+    )
 
     dual = analyze_with_dual_brains()
     assert dual.supporter_limit == 2
@@ -103,6 +115,14 @@ def main() -> None:
         dual.peonia_execution_probability,
         Fraction(2, 3),
     )
+    _assert_close(
+        dual.gladion_hand_access_probability,
+        Fraction(1, 1),
+    )
+    _assert_close(
+        dual.gladion_execution_probability,
+        Fraction(1, 1),
+    )
 
     locked_channel = analyze_prized_supporter_execution(
         supporter_limit=0,
@@ -119,6 +139,10 @@ def main() -> None:
         locked_channel.peonia_hand_access_probability,
         Fraction(0, 1),
     )
+    _assert_close(
+        locked_channel.gladion_hand_access_probability,
+        Fraction(0, 1),
+    )
 
     print("Ordinary one-Supporter turn:")
     print(
@@ -132,12 +156,23 @@ def main() -> None:
         f"execute={ordinary.peonia_execution_probability:.9f}"
     )
 
+    print(
+        "  Gladion: "
+        f"hand={ordinary.gladion_hand_access_probability:.9f}, "
+        f"execute={ordinary.gladion_execution_probability:.9f}"
+    )
+
     print()
     print("Dual Brains turn:")
     print(
         "  Peonia -> Arc Phone -> Trekking Shoes: "
         f"hand={dual.peonia_hand_access_probability:.9f}, "
         f"execute={dual.peonia_execution_probability:.9f}"
+    )
+    print(
+        "  Gladion: "
+        f"hand={dual.gladion_hand_access_probability:.9f}, "
+        f"execute={dual.gladion_execution_probability:.9f}"
     )
 
     print()
