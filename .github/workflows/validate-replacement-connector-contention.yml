@@ -1,0 +1,28 @@
+name: Validate replacement connector contention
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/bounded_state_planner.py"
+      - "tools/continuation_discard_policy.py"
+      - "tools/turn_action_budget.py"
+      - "tools/trainer_search_profile_compiler.py"
+      - "tools/typed_search_retrieval.py"
+      - "tools/trainer_search_transaction.py"
+      - "results/replacement_connector_contention/**"
+      - ".github/workflows/validate-replacement-connector-contention.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce replacement connector contention
+        run: python results/replacement_connector_contention/reproduce.py
