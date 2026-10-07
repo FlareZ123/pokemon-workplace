@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "tools/attack_copy_kernel_compiler.py"
+      - "tools/attack_copy_outer_control.py"
       - "tools/attack_copy_contracts.py"
       - "tools/attack_copy_catalog.py"
       - "tools/attack_copy_execution_phases.py"
