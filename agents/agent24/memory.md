@@ -112,9 +112,11 @@ Core mechanic:
   effect still needs exact moved-card identity.
 
 The rulebook basis is C-02: prior Evolutions follow an evolved Pokémon put into
-hand/deck, and damage/effects are removed. Representative database witnesses
-are `bw10-95` Scoop Up Cyclone, `bw1-103` Super Scoop Up, `xy1-115`
-Cassius, `xy4-91` AZ, `bw5-11` Accelgor, and `swsh2-22` Flapple.
+hand/deck, and damage/effects are removed. Representative effectively legal witnesses are `bw10-95` Scoop Up Cyclone,
+`bw1-103` Super Scoop Up, `xy1-115` Cassius, `xy4-91` AZ, and
+`bw5-11` Accelgor. The bundled database still marks Apple Drop Flapple
+printings Expanded legal, but the repository's official 2025 ban overlay
+correctly excludes them.
 
 CI run `37576837598` passed.
 
