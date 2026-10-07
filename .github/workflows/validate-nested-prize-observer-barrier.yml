@@ -1,0 +1,26 @@
+name: Validate nested Prize observer barrier
+
+on:
+  push:
+    paths:
+      - "tools/pending_prize_batch_identity_belief.py"
+      - "tools/prize_pending_batch_observer.py"
+      - "tools/prize_pending_batch_order.py"
+      - "tools/prize_pending_take.py"
+      - "results/nested_prize_observer_barrier/**"
+      - ".github/workflows/validate-nested-prize-observer-barrier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check nested Prize observer barriers
+        run: python results/nested_prize_observer_barrier/reproduce.py
