@@ -29,6 +29,7 @@ from typed_search_target_allocator import (
     SearchSelector,
     close_tags,
     selector_from_label,
+    validate_closed_tags,
 )
 
 
@@ -117,7 +118,9 @@ def semantic_tags_for_card(card: dict[str, Any]) -> frozenset[str]:
         if "Special" in subtypes:
             tags.add(SPECIAL_ENERGY)
 
-    return close_tags(tags)
+    closed = close_tags(tags)
+    validate_closed_tags(closed)
+    return closed
 
 
 def load_legal_target_candidates(
