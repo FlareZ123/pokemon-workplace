@@ -11,6 +11,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable, Mapping, Sequence
 
+from lock_state_kernel import PlayerChannels
+from turn_action_budget import TurnAction, TurnActionBudget
+
 
 WILDCARD = "*"
 COLORLESS = "C"
@@ -62,6 +65,52 @@ def unit(*types: str) -> EnergyUnit:
     """Construct one Energy unit with the given specific-type capabilities."""
 
     return EnergyUnit(frozenset(types))
+
+
+TURN_ACTION_RESOURCE_KEYS = frozenset(
+    {"supporter_play", "stadium_play", "manual_attachment", "retreat"}
+)
+
+
+def with_turn_action_capacities(
+    resources: Mapping[str, int],
+    budget: TurnActionBudget,
+    *,
+    player_channels: PlayerChannels | None = None,
+) -> dict[str, int]:
+    """Merge canonical turn bandwidth into an Energy-route resource map.
+
+    The helper owns its four action-resource keys. Callers must not provide
+    competing values for them.
+    """
+
+    overlap = TURN_ACTION_RESOURCE_KEYS & set(resources)
+    if overlap:
+        raise ValueError(
+            "turn action capacities already supplied explicitly: "
+            + ", ".join(sorted(overlap))
+        )
+
+    supporter = budget.remaining(TurnAction.SUPPORTER)
+    stadium = budget.remaining(TurnAction.STADIUM_PLAY)
+    if player_channels is not None:
+        if not player_channels.supporter_play:
+            supporter = 0
+        if not player_channels.stadium_play:
+            stadium = 0
+
+    result = dict(resources)
+    result.update(
+        {
+            "supporter_play": supporter,
+            "stadium_play": stadium,
+            "manual_attachment": budget.remaining(
+                TurnAction.MANUAL_ENERGY_ATTACHMENT
+            ),
+            "retreat": budget.remaining(TurnAction.RETREAT),
+        }
+    )
+    return result
 
 
 def _normalize_cost(cost: Iterable[str]) -> tuple[str, ...]:
