@@ -1,0 +1,23 @@
+name: Validate zone exit branching
+
+on:
+  push:
+    paths:
+      - "tools/zone_exit_branching.py"
+      - "results/zone_exit_branching/**"
+      - ".github/workflows/validate-zone-exit-branching.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check zone-exit branching
+        run: python results/zone_exit_branching/reproduce.py
