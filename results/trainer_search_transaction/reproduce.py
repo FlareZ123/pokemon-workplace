@@ -320,6 +320,33 @@ def main() -> None:
         for action in gh_retrievals
         if action.target_cost == (1, 1, 1)
     )
+    gh_base_retrieval = next(
+        action
+        for action in gh_retrievals
+        if action.target_cost == (1, 0, 0)
+    )
+    gh_base_tx = execute_trainer_retrieval_transaction(
+        TrainerSearchExecutionState(
+            zones=ZoneCountState.from_mapping(
+                {
+                    ("guzma_hala", "hand"): 1,
+                    ("gh_stadium", "deck"): 1,
+                    ("gh_tool", "deck"): 1,
+                    ("gh_special", "deck"): 1,
+                }
+            )
+        ),
+        profile=guzma_hala,
+        action_card_class="guzma_hala",
+        targets=gh_targets,
+        retrieval_action=gh_base_retrieval,
+    )
+    assert gh_base_tx.discard_cost == 0
+    assert not gh_base_tx.used_conditional_outputs
+    assert gh_base_tx.after.zones.count("gh_stadium", "hand") == 1
+    assert gh_base_tx.after.zones.count("gh_tool", "deck") == 1
+    assert gh_base_tx.after.zones.count("gh_special", "deck") == 1
+
     gh_raw_tx = execute_trainer_retrieval_transaction(
         gh_state,
         profile=guzma_hala,
