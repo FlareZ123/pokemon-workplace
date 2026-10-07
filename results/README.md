@@ -454,6 +454,16 @@ A second witness begins with no surviving Pokémon after Active disposal and sho
 
 **Working synthesis:** before-hand Prize text is an executable hidden-zone phase, and some effects can change board geometry or recursively create more Prize work before promotion becomes legal.
 
+## 37. Recursive additional Prize-taking preserves observer asymmetry
+
+[prize_pending_observer_extra/](prize_pending_observer_extra/) extends the pending-Prize queue across effects that take another face-down Prize before the current pending window has finished.
+
+The adapter moves the selected exact Prize instance to the front of `prize_pending` and updates every observer's joint top/Prize belief at the same transition. The taker privately learns the additional Prize identity; an uninformed opponent observes only the public Prize-position removal.
+
+In the regression's two-world correlation witness, Player B taking an exact Switch as the additional Prize makes B certain the hidden deck top is Other, while Player A remains at 50% because the Prize identity was private. The same material truth remains inside every observer's posterior support and card-class totals stay conserved.
+
+**Working synthesis:** recursive Prize effects need one coupled material-and-information transition. Extending only the physical pending queue would preserve card conservation while silently losing observer-relative Bayesian state.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
