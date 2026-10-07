@@ -5,12 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from typing import Mapping
 
-from before_hand_prize_executor import RESOLVING_TRAINER_ZONE
 from post_knockout_game_resolution import Resolution, resolve_prize_and_board_loss_conditions
 from promotion_pending_conservation import (
     PostKnockOutPromotionContext,
     PostKnockOutStage,
-    unresolved_prize_count,
+    unresolved_prize_window_count,
 )
 
 
@@ -19,24 +18,6 @@ class PrizeWindowResolution:
     context: PostKnockOutPromotionContext
     resolution: Resolution
 
-
-def unresolved_prize_window_count(
-    context: PostKnockOutPromotionContext,
-) -> int:
-    """Count cards whose before-hand Prize work has not finished."""
-
-    total = unresolved_prize_count(context)
-    for _player_id, state in context.players:
-        total += sum(
-            row.zone == RESOLVING_TRAINER_ZONE
-            for row in state.ledger.instances
-        )
-        total += sum(
-            count
-            for _card_class, zone, count in state.ledger.exchangeable.counts
-            if zone == RESOLVING_TRAINER_ZONE
-        )
-    return total
 
 
 def resolve_after_prize_window(
