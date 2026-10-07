@@ -2,12 +2,16 @@ from __future__ import annotations
 
 from collections import Counter
 from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools"))
 
 from direct_bench_search_profile_compiler import compile_direct_bench_search_profiles
 
 
 def main() -> None:
-    rows = compile_direct_bench_search_profiles(Path("resources"))
+    rows = compile_direct_bench_search_profiles(ROOT / "resources")
 
     assert len(rows) == 101
     assert len({row.name for row in rows}) == 76
