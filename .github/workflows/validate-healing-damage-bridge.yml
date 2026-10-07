@@ -1,0 +1,27 @@
+name: Validate healing damage bridge
+
+on:
+  push:
+    paths:
+      - "tools/healing_damage_bridge.py"
+      - "tools/healing_profile_compiler.py"
+      - "tools/board_object_kernel.py"
+      - "tools/damage_board_bridge.py"
+      - "tools/damage_calculation_kernel.py"
+      - "results/healing_damage_bridge/**"
+      - ".github/workflows/validate-healing-damage-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check healing to KO-threshold bridge
+        run: python results/healing_damage_bridge/reproduce.py
