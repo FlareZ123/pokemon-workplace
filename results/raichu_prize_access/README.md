@@ -49,9 +49,10 @@ The exact model partitions the 60-card list into:
 2. two Gladion;
 3. three Ultra Ball;
 4. one Computer Search;
-5. a caller-defined pool of currently acceptable discard cards;
-6. 16 setup-eligible starters;
-7. protected or otherwise unmodeled cards.
+5. currently acceptable discard cards that are not setup starters;
+6. setup starters that are also currently acceptable discards;
+7. setup starters that are not currently acceptable discards;
+8. protected or otherwise unmodeled cards.
 
 Opening hands are conditioned on containing at least one of the 16 setup starters. Six Prize cards are then sampled from the remaining deck. The model can expose additional unbiased random cards before the action snapshot.
 
@@ -61,6 +62,8 @@ The preserved baseline exposes one additional random card and uses a **12-card c
 - Giratina.
 
 This is a state-dependent DCI policy assumption, not a claim that those cards are free. Energy in the discard pile is structurally useful to Extra Energy Bomb, and Giratina has a discard-pile Ability, so these 12 are natural candidates for a first conservative pool. Some games may preserve Energy, and other cards may become cheaper discards. Sensitivity results are therefore reported.
+
+Giratina is also one of the 16 setup-eligible Basics, so the model cross-classifies it instead of treating starter status and discardability as disjoint. If Giratina is the only setup-eligible Basic in the opening seven, setup moves it to the Active Spot and it is unavailable to pay a later discard cost. If another starter can satisfy setup, the narrow access policy preserves Giratina in hand as a possible discard. This phase transition is the reason the corrected baseline differs slightly from the earlier disjoint-category calculation.
 
 Only those designated cards pay Ultra Ball or Computer Search in the baseline. Spare connectors, Gladion, setup Pokemon, and other resources remain protected.
 
@@ -109,13 +112,13 @@ Baseline assumptions:
 | Valid opening before conditioning | 90.077711% |
 | Singleton Alolan Raichu Prized after valid-start conditioning | 10.052903% |
 | Alolan Raichu already exposed in hand | 12.874837% |
-| Two-card connector cost payable from modeled pool | 48.735852% |
-| Ultra Ball + direct Gladion, Computer Search removed | 26.999305% |
-| Add Computer Search as only another direct Raichu search | 30.170056% |
-| Full zone-adaptive Computer Search | **30.623976%** |
+| Two-card connector cost payable from modeled pool | 48.619573% |
+| Ultra Ball + direct Gladion, Computer Search removed | 26.964142% |
+| Add Computer Search as only another direct Raichu search | 30.126094% |
+| Full zone-adaptive Computer Search | **30.578700%** |
 | Zone-adaptive access if connector discard costs are ignored | 50.261185% |
 
-The result is deliberately a direct-access component. It is not a claim that the full list sees Alolan Raichu only 30.62% of the time. Dedenne-GX, Crobat V, Squawkabilly ex, Forest Seal Stone, Quick Ball chains, Battle Compressor sequencing, repeated turns, Rescue Stretcher after discard, and other deck actions are outside this layer.
+The result is deliberately a direct-access component. It is not a claim that the full list sees Alolan Raichu only 30.58% of the time. Dedenne-GX, Crobat V, Squawkabilly ex, Forest Seal Stone, Quick Ball chains, Battle Compressor sequencing, repeated turns, Rescue Stretcher after discard, and other deck actions are outside this layer.
 
 ## Finding 1: a singleton non-starter is slightly more likely than 10% to be Prized after legal setup conditioning
 
@@ -127,24 +130,24 @@ The correction is small in this 16-starter deck. It is still useful because this
 
 ## Finding 2: Computer Search's zone-adaptive role is measurable
 
-Treating Computer Search as merely a fourth direct Raichu search gives 30.170056% modeled access after one random draw.
+Treating Computer Search as merely a fourth direct Raichu search gives 30.126094% modeled access after one random draw.
 
-Allowing the actual any-card fallback to Gladion raises that to **30.623976%**, an overall gain of **0.453921 percentage points**.
+Allowing the actual any-card fallback to Gladion raises that to **30.578700%**, an overall gain of **0.452606 percentage points**.
 
 The average masks where the value lives. Conditional on Alolan Raichu being Prized:
 
 - static Computer Search / direct Gladion access: **24.706757%**;
-- zone-adaptive Computer Search access: **29.222076%**.
+- zone-adaptive Computer Search access: **29.209000%**.
 
-The any-card fallback therefore adds **4.515319 percentage points** inside the target-Prized states.
+The any-card fallback therefore adds **4.502243 percentage points** inside the target-Prized states.
 
 This is a concrete example of a connector whose best output depends on a hidden zone that becomes known during the connector's own resolution.
 
 ## Finding 3: Computer Search contributes through two different mechanisms
 
-Removing Computer Search entirely leaves the modeled Ultra Ball + direct Gladion package at 26.999305%.
+Removing Computer Search entirely leaves the modeled Ultra Ball + direct Gladion package at 26.964142%.
 
-Adding Computer Search with its full semantics raises access to 30.623976%, a total gain of **3.624671 percentage points**.
+Adding Computer Search with its full semantics raises access to 30.578700%, a total gain of **3.614558 percentage points**.
 
 Most of that gain comes from Computer Search acting as an additional direct target search when Raichu is in the deck. A smaller but strategically concentrated part comes from its ability to switch outputs and find Gladion when Raichu is Prized.
 
@@ -152,19 +155,19 @@ A graph representation should therefore preserve both the connector's output dom
 
 ## Finding 4: discard payability remains the largest modeled gate
 
-Under the strict 12-card discard policy, a two-card connector cost is payable from the exposed hand in **48.735852%** of baseline states.
+Under the strict 12-card discard policy, a two-card connector cost is payable from the exposed hand in **48.619573%** of baseline states.
 
-If the discard costs are ignored while every other modeled constraint is kept, zone-adaptive access rises from 30.623976% to 50.261185%. The resulting **19.637208-point gap** is a property of this conservative DCI policy, not an estimate of full-game loss.
+If the discard costs are ignored while every other modeled constraint is kept, zone-adaptive access rises from 30.578700% to 50.261185%. The resulting **19.682485-point gap** is a property of this conservative DCI policy, not an estimate of full-game loss.
 
 Discard-pool sensitivity after one random draw:
 
 | Modeled disposable pool | Cost payable | Zone-adaptive access | Access if Raichu is Prized |
 | ---: | ---: | ---: | ---: |
-| 8 | 27.197529% | 23.593319% | 27.149862% |
-| 11 | 43.503683% | 28.873930% | 28.707494% |
-| 12 | 48.735852% | 30.623976% | 29.222076% |
-| 15 | 63.068768% | 35.576846% | 30.673224% |
-| 20 | 81.080688% | 42.224503% | 32.604622% |
+| 8 | 27.063796% | 23.545002% | 27.135762% |
+| 11 | 43.380288% | 28.826789% | 28.693841% |
+| 12 | 48.619573% | 30.578700% | 29.209000% |
+| 15 | 62.978597% | 35.539628% | 30.662584% |
+| 20 | 81.033604% | 42.203041% | 32.598636% |
 
 The Prize-rescue side is less sensitive than the unprized direct-search side because a Gladion already in hand requires no discard cost.
 
@@ -174,10 +177,10 @@ Using the 12-card discard policy:
 
 | Extra random cards exposed | Raichu naturally exposed | Ultra Ball + direct Gladion | Static Computer Search | Zone-adaptive Computer Search | Access if Raichu is Prized |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 0 | 11.199353% | 21.715422% | 24.097338% | 24.423367% | 24.938166% |
-| 1 | 12.874837% | 26.999305% | 30.170056% | 30.623976% | 29.222076% |
-| 2 | 14.550321% | 32.437630% | 36.358038% | 36.945326% | 33.501409% |
-| 3 | 16.225805% | 37.879690% | 42.471170% | 43.191361% | 37.717065% |
+| 0 | 11.199353% | 21.684606% | 24.058320% | 24.383186% | 24.926589% |
+| 1 | 12.874837% | 26.964142% | 30.126094% | 30.578700% | 29.209000% |
+| 2 | 14.550321% | 32.399684% | 36.311162% | 36.897046% | 33.487437% |
+| 3 | 16.225805% | 37.840484% | 42.423293% | 43.142047% | 37.702773% |
 
 Extra exposure helps by naturally finding the target, by finding connectors or Gladion, and by increasing the chance of accumulating two acceptable discard cards.
 
@@ -207,6 +210,8 @@ The labeled exhaustive result matches the category model to floating-point preci
 - target-Prized conditional access.
 
 The complete conditioned state mass is also asserted to equal one.
+
+The labeled regression uses disjoint starter and disposable classes, while the 60-card Harto baseline separately exercises the Giratina overlap and setup-movement rule.
 
 ## Limitations
 
