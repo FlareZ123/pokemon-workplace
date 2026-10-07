@@ -79,3 +79,22 @@ Counterexample: after discarding current TM, Arven can individually restore TM a
 This establishes that replacement safety needs joint resource-constrained reachability rather than independent access edges. CI run `37570856019` passed. Indexed as section 58 in `results/README.md` at commit `a1d469e499322232a4432808f6b18cabfed349be`.
 
 Next direction under investigation: belief-weighted replacement safety when the restoring copy may be Prized, so discard legality/risk can differ between K0 and K1 information states.
+
+## Fifth result: belief-weighted replacement safety
+Created and validated:
+- `tools/belief_weighted_discard_policy.py`
+- `results/belief_weighted_replacement_safety/README.md`
+- `results/belief_weighted_replacement_safety/reproduce.py`
+- `.github/workflows/validate-belief-weighted-replacement-safety.yml`
+
+Each exact discard is evaluated world-by-world under `PrizeBelief`, using continuation-aware physical reachability, then weighted by belief mass.
+
+Concrete TM/Arven result:
+- one uncertain replacement among a 53-card pool with 6 Prizes: discarding current TM is safe with probability 47/53 = 88.679245283%; fodder is 100%;
+- K1 unprized replacement: TM safety = 1;
+- K1 Prized replacement: TM safety = 0;
+- two uncertain replacements: TM safety = 98.911465893%, failing only if both are Prized.
+
+CI run `37571158199` passed. Indexed as section 59 in `results/README.md` at commit `2cb260189194e814931d68b2ce215e6888febd90`.
+
+Next direction: compute decision value of acquiring K1 before a discard deadline, including the opportunity cost of the information action and asymmetric success/failure utilities.
