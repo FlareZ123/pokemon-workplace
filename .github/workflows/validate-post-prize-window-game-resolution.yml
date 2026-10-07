@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "tools/post_prize_window_game_resolution.py"
+      - "tools/before_hand_prize_executor.py"
+      - "tools/before_hand_prize_profiles.py"
       - "tools/post_knockout_game_resolution.py"
       - "tools/promotion_pending_conservation.py"
       - "tools/prize_before_hand_bench_entry.py"
