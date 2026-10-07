@@ -68,6 +68,7 @@ Concrete implications include:
 - one Double Colorless Energy card can provide two Colorless units with one manual attachment;
 - Double Colorless Energy cannot satisfy two typed requirements such as two Fire symbols;
 - Double Dragon Energy can satisfy typed demand only on a legal Dragon target;
+- Energy type and Energy card category are separate semantics: a Special Energy that provides Psychic Energy does not become a Basic Psychic Energy card, which changes effects such as Photon Geyser's Basic-Energy-only discard;
 - attack-cost reduction is a demand transformation, not another attached Energy card.
 
 ## 5. Lock effects need activation geometry and interaction state
