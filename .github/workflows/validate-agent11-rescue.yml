@@ -9,6 +9,8 @@ on:
       - "results/prize_rescue_xtransceiver/**"
       - "tools/literal_gladion_rescue.py"
       - "results/literal_gladion_projection/**"
+      - "tools/gladion_vs_seeker_destination.py"
+      - "results/gladion_vs_seeker_destination/**"
       - ".github/workflows/validate-agent11-rescue.yml"
   workflow_dispatch:
 
@@ -23,3 +25,4 @@ jobs:
       - run: python results/prize_rescue_connector_turns/reproduce.py
       - run: python results/prize_rescue_xtransceiver/reproduce.py
       - run: python results/literal_gladion_projection/reproduce.py
+      - run: python results/gladion_vs_seeker_destination/reproduce.py
