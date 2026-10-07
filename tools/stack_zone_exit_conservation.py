@@ -39,7 +39,7 @@ class PendingZoneExitTransition:
     attachment_card_ids: tuple[str, ...]
 
 
-def _validate_destination(zone: str) -> None:
+def validate_zone_exit_destination(zone: str) -> None:
     if not zone:
         raise ValueError("destination zone must be non-empty")
     if zone in BOARD_RELATION_ZONES:
@@ -87,7 +87,7 @@ def _remove_board_object(
     return next_board, pokemon
 
 
-def _route_removed_pokemon(
+def route_removed_pokemon_cards(
     ledger,
     pokemon: BoardPokemon,
     *,
@@ -130,8 +130,8 @@ def leave_play_before_promotion(
 ) -> PendingZoneExitTransition | None:
     """Remove one board object without inventing an immediate replacement Active."""
 
-    _validate_destination(pokemon_destination)
-    _validate_destination(attachment_destination)
+    validate_zone_exit_destination(pokemon_destination)
+    validate_zone_exit_destination(attachment_destination)
 
     if state.board is None:
         return None
@@ -148,7 +148,7 @@ def leave_play_before_promotion(
     )
     active_id = None if pokemon_id == board.active_id else board.active_id
 
-    ledger, pokemon_card_ids, attachment_card_ids = _route_removed_pokemon(
+    ledger, pokemon_card_ids, attachment_card_ids = route_removed_pokemon_cards(
         state.ledger,
         pokemon,
         pokemon_destination=pokemon_destination,
@@ -194,8 +194,8 @@ def leave_play_with_conservation(
     counts.
     """
 
-    _validate_destination(pokemon_destination)
-    _validate_destination(attachment_destination)
+    validate_zone_exit_destination(pokemon_destination)
+    validate_zone_exit_destination(attachment_destination)
 
     if state.board is None:
         return None
@@ -209,7 +209,7 @@ def leave_play_with_conservation(
         return None
 
     board, pokemon = removed
-    ledger, pokemon_card_ids, attachment_card_ids = _route_removed_pokemon(
+    ledger, pokemon_card_ids, attachment_card_ids = route_removed_pokemon_cards(
         state.ledger,
         pokemon,
         pokemon_destination=pokemon_destination,
