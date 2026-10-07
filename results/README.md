@@ -338,6 +338,8 @@ The integration review found a concrete split-state failure in the unified kerne
 
 **Working synthesis:** action bandwidth should have one canonical owner in composed planners. Specialized kernels can retain local compatibility fields during migration, while policy search should query and consume one shared budget.
 
+The canonical budget now feeds the exact `supporter_outs_timing` probability model and the exact `energy_action_budget` route solver. Both integrations apply play permission separately from remaining quota, and both have passing CI regressions.
+
 
 
 ## 27. Prize information is observer-relative and visibility-sensitive
@@ -359,16 +361,6 @@ Named regressions cover Gladion, Hisuian Heavy Ball, Peonia, Rotom Dex, Redeemab
 **Working synthesis:** Prize mechanics are better represented as ordered multi-axis transition programs than card-level labels. The atom catalog is a conservative semantic island and still leaves typed selection, optionality, counts, ordering, stochastic gates, and full referent resolution for later compiler layers.
 
 
-## 30. Turn-action limits can change with live board effects
-
-[action_quota_effects/](action_quota_effects/) uses Expanded-legal Magnezone `bw8-46` as a counterexample to boolean action usage. Dual Brains permits two Supporter cards during its controller's turn, so after one Supporter the state simultaneously has `used > 0` and remaining Supporter quota.
-
-The quota model therefore separates usage count from current limit. Active quota grants recompute limits from the basic-rule baseline, so suppressing the granting Ability after one Supporter can reduce the limit from two to one without erasing the earlier play. Restoring the Ability reopens the second use. If two Supporters were already played before suppression, the coherent historical state is `used = 2, limit = 1`, with no further use available.
-
-**Working synthesis:** action limits belong to live board state. Play permission, quota, and usage history are separate variables, and Ability suppression can change quota without changing history.
-
-
-
 ## 29. Typed search execution must preserve the exact target witness
 
 [typed_search_zone_transition/](typed_search_zone_transition/) closes one part of the compiler-to-state boundary by moving the exact targets chosen by a `TypedTargetAction` from exchangeable deck counts into exchangeable hand counts.
@@ -378,6 +370,16 @@ A generic one-Energy demand provides a concrete aliasing counterexample: one Bas
 The bridge validates current source-zone availability and per-card-class conservation, and rejects stale exact actions after their selected target leaves the source zone. It deliberately keeps searched deck/hand copies exchangeable rather than inventing stable instance IDs.
 
 **Working synthesis:** demand satisfaction is an evaluation projection, not a sufficient execution record. Policy search should carry the exact target-allocation witness until the chosen action has mutated canonical zone state.
+
+
+
+## 30. Turn-action limits can change with live board effects
+
+[action_quota_effects/](action_quota_effects/) uses Expanded-legal Magnezone `bw8-46` as a counterexample to boolean action usage. Dual Brains permits two Supporter cards during its controller's turn, so after one Supporter the state simultaneously has `used > 0` and remaining Supporter quota.
+
+The quota model therefore separates usage count from current limit. Active quota grants recompute limits from the basic-rule baseline, so suppressing the granting Ability after one Supporter can reduce the limit from two to one without erasing the earlier play. Restoring the Ability reopens the second use. If two Supporters were already played before suppression, the coherent historical state is `used = 2, limit = 1`, with no further use available.
+
+**Working synthesis:** action limits belong to live board state. Play permission, quota, and usage history are separate variables, and Ability suppression can change quota without changing history.
 
 
 
