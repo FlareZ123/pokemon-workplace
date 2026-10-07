@@ -110,9 +110,12 @@ def semantic_tags_for_card(card: dict[str, Any]) -> frozenset[str]:
         tags.add(ENERGY)
         if "Basic" in subtypes:
             tags.add(BASIC_ENERGY)
-            energy_type = _ENERGY_TYPE_NAMES.get(
-                (card.get("name") or "").removesuffix(" Energy")
+            energy_name = (
+                (card.get("name") or "")
+                .removesuffix(" Energy")
+                .removeprefix("Basic ")
             )
+            energy_type = _ENERGY_TYPE_NAMES.get(energy_name)
             if energy_type is not None:
                 tags.add(f"{TYPE_PREFIX}{energy_type}")
         if "Special" in subtypes:
