@@ -54,6 +54,45 @@ class TrainerSearchTransaction:
     after: TrainerSearchExecutionState
     discard_cost: int
     used_conditional_outputs: bool
+    optional_discard_paid: bool = False
+
+
+def _split_axis_usage(
+    profile: CompiledTrainerSearchProfile,
+    axis_usage: tuple[int, ...],
+) -> tuple[tuple[int, ...], tuple[int, ...]]:
+    base_count = len(profile.base_outputs)
+    conditional_count = len(profile.conditional_outputs)
+    if len(axis_usage) == base_count:
+        return axis_usage, (0,) * conditional_count
+    if len(axis_usage) == base_count + conditional_count:
+        return (
+            axis_usage[:base_count],
+            axis_usage[base_count:],
+        )
+    raise ValueError("axis usage length does not match compiled search outputs")
+
+
+def _resolve_optional_payment(
+    profile: CompiledTrainerSearchProfile,
+    conditional_usage: tuple[int, ...],
+    pay_optional_discard: bool | None,
+) -> bool:
+    if profile.optional_discard_other_cards <= 0:
+        if pay_optional_discard is True:
+            raise ValueError("profile has no optional discard branch")
+        if any(conditional_usage):
+            raise ValueError("conditional outputs require an optional branch")
+        return False
+
+    paid = (
+        any(conditional_usage)
+        if pay_optional_discard is None
+        else pay_optional_discard
+    )
+    if any(conditional_usage) and not paid:
+        raise ValueError("conditional search output requires optional discard")
+    return paid
 
 
 def _validated_branch(
@@ -61,94 +100,121 @@ def _validated_branch(
     demands: Sequence[DemandChannel],
     targets: Sequence[SearchZoneTarget],
     action: TypedTargetAction,
-) -> tuple[int, bool]:
+    *,
+    pay_optional_discard: bool | None,
+) -> tuple[int, bool, bool]:
     target_groups = tuple(target.group for target in targets)
     demand_channels = tuple(demands)
+    base_usage, conditional_usage = _split_axis_usage(
+        profile,
+        action.axis_usage,
+    )
+    optional_paid = _resolve_optional_payment(
+        profile,
+        conditional_usage,
+        pay_optional_discard,
+    )
 
     base = enumerate_typed_target_profiles(
         profile.base_outputs,
         target_groups,
         demand_channels,
     )
-    base_axis_count = len(profile.base_outputs)
-    conditional_usage = action.axis_usage[base_axis_count:]
+    base_action = TypedTargetAction(
+        output=action.output,
+        target_cost=action.target_cost,
+        axis_usage=base_usage,
+    )
+    base_valid = base_action in base.actions
 
-    if not any(conditional_usage):
-        base_action = TypedTargetAction(
-            output=action.output,
-            target_cost=action.target_cost,
-            axis_usage=action.axis_usage[:base_axis_count],
-        )
-        if base_action in base.actions:
-            return profile.required_discard_other_cards, False
-
-    if (
-        profile.conditional_outputs
-        and profile.optional_discard_other_cards > 0
-    ):
-        all_outputs = profile.base_outputs + profile.conditional_outputs
-        allocation = enumerate_typed_target_profiles(
-            all_outputs,
-            target_groups,
-            demand_channels,
-        )
-        if (
-            action in allocation.actions
-            and any(conditional_usage)
-        ):
+    if not optional_paid:
+        if base_valid:
             return (
-                profile.required_discard_other_cards
-                + profile.optional_discard_other_cards,
-                True,
+                profile.required_discard_other_cards,
+                False,
+                False,
             )
+        raise ValueError("search action is not valid for the base branch")
 
-    raise ValueError("search action is not valid for this compiled profile")
+    all_outputs = profile.base_outputs + profile.conditional_outputs
+    allocation = enumerate_typed_target_profiles(
+        all_outputs,
+        target_groups,
+        demand_channels,
+    )
+    full_action = TypedTargetAction(
+        output=action.output,
+        target_cost=action.target_cost,
+        axis_usage=base_usage + conditional_usage,
+    )
+    if full_action not in allocation.actions:
+        raise ValueError("search action is not valid for the paid branch")
+
+    return (
+        profile.required_discard_other_cards
+        + profile.optional_discard_other_cards,
+        any(conditional_usage),
+        True,
+    )
 
 
 def _validated_retrieval_branch(
     profile: CompiledTrainerSearchProfile,
     targets: Sequence[SearchZoneTarget],
     action: TypedRetrievalAction,
-) -> tuple[int, bool]:
-    if not any(action.target_cost):
-        raise ValueError("transaction requires a nonzero retrieval")
-
+    *,
+    pay_optional_discard: bool | None,
+) -> tuple[int, bool, bool]:
     target_groups = tuple(target.group for target in targets)
+    base_usage, conditional_usage = _split_axis_usage(
+        profile,
+        action.axis_usage,
+    )
+    optional_paid = _resolve_optional_payment(
+        profile,
+        conditional_usage,
+        pay_optional_discard,
+    )
+
     base = enumerate_typed_retrieval_actions(
         profile.base_outputs,
         target_groups,
     )
-    base_axis_count = len(profile.base_outputs)
-    conditional_usage = action.axis_usage[base_axis_count:]
+    base_action = TypedRetrievalAction(
+        target_cost=action.target_cost,
+        axis_usage=base_usage,
+    )
+    base_valid = base_action in base
 
-    if not any(conditional_usage):
-        base_action = TypedRetrievalAction(
-            target_cost=action.target_cost,
-            axis_usage=action.axis_usage[:base_axis_count],
-        )
-        if base_action in base:
-            return profile.required_discard_other_cards, False
-
-    if (
-        profile.conditional_outputs
-        and profile.optional_discard_other_cards > 0
-    ):
-        all_outputs = profile.base_outputs + profile.conditional_outputs
-        retrievals = enumerate_typed_retrieval_actions(
-            all_outputs,
-            target_groups,
-        )
-        if (
-            action in retrievals
-            and any(conditional_usage)
-        ):
+    if not optional_paid:
+        if not any(action.target_cost) and not profile.discards_entire_hand:
+            raise ValueError("free zero-retrieval search has no represented effect")
+        if base_valid:
             return (
-                profile.required_discard_other_cards
-                + profile.optional_discard_other_cards,
-                True,
+                profile.required_discard_other_cards,
+                False,
+                False,
             )
+        raise ValueError("retrieval action is not valid for the base branch")
 
-    raise ValueError("retrieval action is not valid for this compiled profile")
+    all_outputs = profile.base_outputs + profile.conditional_outputs
+    retrievals = enumerate_typed_retrieval_actions(
+        all_outputs,
+        target_groups,
+    )
+    full_action = TypedRetrievalAction(
+        target_cost=action.target_cost,
+        axis_usage=base_usage + conditional_usage,
+    )
+    if full_action not in retrievals:
+        raise ValueError("retrieval action is not valid for the paid branch")
+
+    return (
+        profile.required_discard_other_cards
+        + profile.optional_discard_other_cards,
+        any(conditional_usage),
+        True,
+    )
 
 
 def _discard_entire_hand(
