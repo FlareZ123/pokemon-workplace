@@ -795,6 +795,16 @@ For Dual Brains, active Wobbuffet suppresses a non-Psychic Magnezone but exempts
 
 **Working synthesis:** a global Ability-allowed flag loses source position, target position, owner scope, target traits, and protection. The predicate layer can be derived exactly for one source; mutually suppressing continuous sources still require a separate dependency-resolution rule rather than a naive union.
 
+## 64. Continuous Ability-lock composition is a source-dependency problem
+
+[ability_lock_dependency_graph/](ability_lock_dependency_graph/) composes the single-source suppression predicates into a graph whose nodes are physically live lock sources and whose edges mean one source would suppress another source.
+
+Acyclic graphs can be resolved without pretending every candidate source remains active. Tool-attached Garbotoxin opposite Active Bide Barricade yields a one-way edge because Garbodor is Psychic and therefore exempt from Wobbuffet's effect; Garbotoxin remains active and suppresses Wobbuffet.
+
+Active Neutralizing Gas opposite Active Slaking/Lazy yields a two-source cycle because each source suppresses the other's Pokémon. The resolver marks that component unresolved and produces no final suppression overlay. Stealthy Hood on Weezing removes the incoming Lazy edge and resolves the graph; Jamming Tower blanks Hood and recreates the cycle.
+
+**Working synthesis:** continuous lock composition requires source-dependency resolution between the predicate layer and the final target overlay. Acyclic components can be solved; cyclic components should remain explicit until timing/history semantics are supported by stronger authority rather than being assigned an arbitrary fixed point.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -816,6 +826,7 @@ Particularly foundational components include:
 - `board_action_quota_derivation.py`
 - `garbotoxin_suppression.py`
 - `single_source_ability_lock_geometry.py`
+- `ability_lock_dependency_graph.py`
 - `turn_sequence_kernel.py`
 - `canonical_turn_sequence_owner.py`
 - `bench_capacity_model.py`
