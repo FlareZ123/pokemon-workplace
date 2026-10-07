@@ -11,6 +11,25 @@ def main() -> None:
     assert result.trials == 100_000
     assert result.incremental_successes == 4_175
     assert result.missing_families == 0
+    assert result.family_size_total == 80_912
+    assert result.family_size_min == 4
+    assert result.family_size_max == 70
+    assert result.singleton_floor_histogram == (
+        (0, 3_577),
+        (1, 498),
+        (2, 90),
+        (3, 10),
+    )
+    assert result.singleton_free_states == 3_577
+    assert result.any_forced_singleton_states == 0
+    assert result.forced_singleton_counts == ()
+    assert result.protection_cut_histogram == (
+        (1, 1),
+        (2, 120),
+        (3, 1_008),
+        (4, 2_752),
+        (5, 294),
+    )
 
     print(f"trials={result.trials}")
     print(f"incremental_successes={result.incremental_successes}")
