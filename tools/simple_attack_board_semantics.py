@@ -52,6 +52,8 @@ class CompiledAttackBoardSemantics:
     take_another_turn: bool
     skip_pokemon_checkup: bool
     is_gx_attack: bool
+    ignore_weakness_resistance: bool
+    ignore_defender_effects: bool
     raw_damage: str
     raw_text: str
 
@@ -178,6 +180,19 @@ def compile_attack(
         )
     )
 
+    lowered_text = raw_text.casefold()
+    ignore_weakness_resistance = (
+        "damage isn't affected by weakness or resistance" in lowered_text
+        or "damage isn't affected by weakness, resistance" in lowered_text
+    )
+    ignore_defender_effects = (
+        "damage isn't affected by" in lowered_text
+        and (
+            "effects on your opponent's active pokémon" in lowered_text
+            or "effects on the defending pokémon" in lowered_text
+        )
+    )
+
     return CompiledAttackBoardSemantics(
         card_id=card["id"],
         card_name=card["name"],
@@ -189,6 +204,8 @@ def compile_attack(
         take_another_turn=extra_turn,
         skip_pokemon_checkup=skip_checkup,
         is_gx_attack=(attack.get("name") or "").endswith("-GX"),
+        ignore_weakness_resistance=ignore_weakness_resistance,
+        ignore_defender_effects=ignore_defender_effects,
         raw_damage=raw_damage,
         raw_text=raw_text,
     )
