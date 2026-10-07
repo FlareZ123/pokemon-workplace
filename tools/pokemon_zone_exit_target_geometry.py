@@ -18,6 +18,7 @@ class ZoneExitTargetProfile:
     source_kind: str
     effect_name: str
     target_geometry: str
+    target_filter: str
     pokemon_destination: str
     attachment_destination: str
     text: str
@@ -111,6 +112,29 @@ def _target_geometry(text: str, routing_text: str) -> str:
     )
 
 
+def _target_filter(
+    text: str,
+    routing_text: str,
+    geometry: str,
+) -> str:
+    routing_lower = routing_text.lower()
+    lower = text.lower()
+
+    if "colorless pokémon that has any damage counters on it" in routing_lower:
+        return "colorless_and_damaged"
+    if "pokémon that has any damage counters on it" in routing_lower:
+        return "damaged"
+    if "basic pokémon" in routing_lower:
+        return "basic"
+    if "except any corviknight" in routing_lower:
+        return "exclude_name_corviknight"
+    if "benched combee" in lower:
+        return "name_combee"
+    if geometry == "unqualified_one_to_your_hand":
+        return "unqualified_scope"
+    return "none"
+
+
 def compile_zone_exit_target_profiles(
     resources_root: Path = Path("resources"),
 ) -> dict[str, Any]:
@@ -120,15 +144,21 @@ def compile_zone_exit_target_profiles(
     for row in catalog["rows"]:
         if row["timing_class"] != "direct_effect":
             continue
+        geometry = _target_geometry(
+            row["text"],
+            row["routing_text"],
+        )
         profiles.append(
             ZoneExitTargetProfile(
                 card_id=row["id"],
                 name=row["name"],
                 source_kind=row["source_kind"],
                 effect_name=row["effect_name"],
-                target_geometry=_target_geometry(
+                target_geometry=geometry,
+                target_filter=_target_filter(
                     row["text"],
                     row["routing_text"],
+                    geometry,
                 ),
                 pokemon_destination=row["pokemon_destination"],
                 attachment_destination=row["attachment_destination"],
@@ -140,10 +170,21 @@ def compile_zone_exit_target_profiles(
         profile.target_geometry
         for profile in profiles
     )
+    filter_print_counts = Counter(
+        profile.target_filter
+        for profile in profiles
+    )
     unique_names: dict[str, set[str]] = {}
     for profile in profiles:
         unique_names.setdefault(
             profile.target_geometry,
+            set(),
+        ).add(profile.name)
+
+    filter_unique_names: dict[str, set[str]] = {}
+    for profile in profiles:
+        filter_unique_names.setdefault(
+            profile.target_filter,
             set(),
         ).add(profile.name)
 
@@ -153,6 +194,15 @@ def compile_zone_exit_target_profiles(
             "unique_names": len(
                 {profile.name for profile in profiles}
             ),
+            "filter_print_counts": dict(
+                sorted(filter_print_counts.items())
+            ),
+            "filter_unique_name_counts": {
+                target_filter: len(names)
+                for target_filter, names in sorted(
+                    filter_unique_names.items()
+                )
+            },
             "geometry_print_counts": dict(
                 sorted(print_counts.items())
             ),
