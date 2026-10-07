@@ -1,5 +1,6 @@
-"""Reproduce the scoped effect-order authority catalog."""
+"""Reproduce the scoped effect-order authority catalog from bundled rules."""
 
+from collections import Counter
 from pathlib import Path
 import sys
 
@@ -11,9 +12,36 @@ from effect_order_authority import (
     OrderAuthorityContext,
     ordering_player,
 )
+from rulebook_order_authority_audit import audit_rulebook
 
 
 def main() -> None:
+    manual = (
+        ROOT
+        / "resources"
+        / "manual"
+        / "EN_advanced_manual-2025-transcription-structured.md"
+    )
+    evidence = audit_rulebook(manual)
+    evidence_counts = Counter(row.case for row in evidence)
+    assert evidence_counts == {
+        "damaged_pokemon_triggers": 1,
+        "multi_pokemon_ko_triggers": 1,
+        "energy_attachment_triggers": 1,
+        "pokemon_checkup_effects": 2,
+        "end_of_turn_effects": 1,
+    }
+    assert {
+        (row.case, row.chooser_role)
+        for row in evidence
+    } == {
+        ("damaged_pokemon_triggers", "affected_pokemon_player"),
+        ("multi_pokemon_ko_triggers", "current_turn_player"),
+        ("energy_attachment_triggers", "current_turn_player"),
+        ("pokemon_checkup_effects", "next_turn_player"),
+        ("end_of_turn_effects", "current_turn_player"),
+    }
+
     context = OrderAuthorityContext(
         current_turn_player="A",
         next_turn_player="B",
