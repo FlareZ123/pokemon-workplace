@@ -98,26 +98,23 @@ def test_duplicate_hypnotic_sources_require_physical_choice() -> None:
     }
 
 
-def test_hypnotic_non_gx_filter_applies_before_source_commit() -> None:
+def test_hypnotic_non_gx_filter_leaves_ineligible_source_in_hand() -> None:
     state = State(
         pokemon=(
             PokemonRef("p2-gx", "GX Source", "P2", "hand", attacks=(GX_ENDPOINT,)),
         )
     )
-    try:
-        resolve_attack(
-            actor_player="P1",
-            actor_card_id="p1-malamar",
-            declared_attack_id=HYPNOTIC,
-            attacks=ATTACKS,
-            state=state,
-            choose=choose_exact((GX_ENDPOINT,)),
-        )
-    except IllegalCopyTarget:
-        pass
-    else:
-        raise AssertionError("Hypnotic Reign accepted a GX endpoint")
-    assert zones(state) == {"p2-gx": "hand"}
+    result = resolve_attack(
+        actor_player="P1",
+        actor_card_id="p1-malamar",
+        declared_attack_id=HYPNOTIC,
+        attacks=ATTACKS,
+        state=state,
+        choose=choose_exact(()),
+    )
+    assert result.body_chain == (HYPNOTIC,)
+    assert result.trace[0].selected_body_executed is False
+    assert zones(result.state) == {"p2-gx": "hand"}
 
 
 def test_seek_moves_selected_top_card_before_body_completes() -> None:
@@ -146,7 +143,7 @@ def test_seek_moves_selected_top_card_before_body_completes() -> None:
     assert zones(result.state) == {"p1-top": "discard"}
 
 
-def test_seek_rule_box_filter_blocks_before_movement() -> None:
+def test_seek_discards_ineligible_rule_box_before_copy_check() -> None:
     state = State(
         pokemon=(
             PokemonRef(
@@ -159,27 +156,24 @@ def test_seek_rule_box_filter_blocks_before_movement() -> None:
             ),
         )
     )
-    try:
-        resolve_attack(
-            actor_player="P1",
-            actor_card_id="p1-slowking",
-            declared_attack_id=SEEK,
-            attacks=ATTACKS,
-            state=state,
-            choose=choose_exact((ENDPOINT,)),
-        )
-    except IllegalCopyTarget:
-        pass
-    else:
-        raise AssertionError("Seek Inspiration accepted a Rule Box source")
-    assert zones(state) == {"p1-top-rulebox": "deck_top"}
+    result = resolve_attack(
+        actor_player="P1",
+        actor_card_id="p1-slowking",
+        declared_attack_id=SEEK,
+        attacks=ATTACKS,
+        state=state,
+        choose=choose_exact(()),
+    )
+    assert result.body_chain == (SEEK,)
+    assert result.trace[0].selected_body_executed is False
+    assert zones(result.state) == {"p1-top-rulebox": "discard"}
 
 
 def main() -> None:
     test_duplicate_hypnotic_sources_require_physical_choice()
-    test_hypnotic_non_gx_filter_applies_before_source_commit()
+    test_hypnotic_non_gx_filter_leaves_ineligible_source_in_hand()
     test_seek_moves_selected_top_card_before_body_completes()
-    test_seek_rule_box_filter_blocks_before_movement()
+    test_seek_discards_ineligible_rule_box_before_copy_check()
     print("attack-copy source lifetime regression: PASS")
 
 
