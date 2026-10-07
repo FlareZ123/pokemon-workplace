@@ -1,0 +1,25 @@
+name: Validate attack-copy turn boundary
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_kernel.py"
+      - "tools/attack_copy_turn_boundary_bridge.py"
+      - "tools/canonical_turn_sequence_owner.py"
+      - "results/attack_copy_turn_boundary_bridge/**"
+      - ".github/workflows/validate-attack-copy-turn-boundary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run copied turn-boundary regression
+        run: python results/attack_copy_turn_boundary_bridge/reproduce.py
