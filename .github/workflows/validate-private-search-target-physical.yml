@@ -1,0 +1,29 @@
+name: Validate private search target physical bridge
+
+on:
+  push:
+    paths:
+      - "tools/private_search_target_belief.py"
+      - "tools/private_search_target_physical.py"
+      - "tools/deck_search_shuffle_physical_belief.py"
+      - "tools/deck_search_shuffle_topology.py"
+      - "tools/deck_search_target_signal_physical.py"
+      - "tools/identity_materialization.py"
+      - "tools/top_prize_physical_bridge.py"
+      - "results/private_search_target_physical/**"
+      - ".github/workflows/validate-private-search-target-physical.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check private search target physical bridge
+        run: python results/private_search_target_physical/reproduce.py
