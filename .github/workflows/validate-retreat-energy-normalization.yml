@@ -1,0 +1,29 @@
+name: Validate Retreat Energy normalization
+
+on:
+  push:
+    paths:
+      - "tools/retreat_energy_normalization.py"
+      - "tools/restricted_special_energy_attachment.py"
+      - "tools/retreat_dynamic_energy_units.py"
+      - "tools/retreat_energy_transaction.py"
+      - "results/retreat_energy_normalization/**"
+      - ".github/workflows/validate-retreat-energy-normalization.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Retreat Energy normalization
+        run: |
+          python results/retreat_energy_normalization/reproduce.py
+          python results/restricted_special_energy_revalidation/reproduce.py
+          python results/retreat_dynamic_special_energy_providers/reproduce.py
