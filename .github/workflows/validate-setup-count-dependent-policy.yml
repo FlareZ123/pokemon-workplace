@@ -1,0 +1,24 @@
+name: Validate count-dependent setup policy
+
+on:
+  push:
+    paths:
+      - "tools/setup_hand_value_policy.py"
+      - "tools/setup_count_dependent_policy.py"
+      - "results/setup_count_dependent_policy/**"
+      - ".github/workflows/validate-setup-count-dependent-policy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check count-dependent setup policy
+        run: python results/setup_count_dependent_policy/reproduce.py
