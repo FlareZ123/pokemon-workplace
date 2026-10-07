@@ -282,6 +282,27 @@ def unresolved_prize_count(context: PostKnockOutPromotionContext) -> int:
     return total
 
 
+
+
+def unresolved_prize_window_count(
+    context: PostKnockOutPromotionContext,
+) -> int:
+    """Count cards whose E-31 Prize-window work is still unresolved."""
+
+    total = unresolved_prize_count(context)
+    for _player_id, state in context.players:
+        total += sum(
+            row.zone == "resolving_trainer"
+            for row in state.ledger.instances
+        )
+        total += sum(
+            count
+            for _card_class, zone, count in state.ledger.exchangeable.counts
+            if zone == "resolving_trainer"
+        )
+    return total
+
+
 def advance_after_prizes(
     context: PostKnockOutPromotionContext,
     *,
@@ -291,7 +312,7 @@ def advance_after_prizes(
 
     if context.stage != PostKnockOutStage.PRIZES:
         return None
-    if unresolved_prize_count(context):
+    if unresolved_prize_window_count(context):
         return None
     return replace(
         context,
