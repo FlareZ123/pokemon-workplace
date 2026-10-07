@@ -1,0 +1,26 @@
+name: Validate Prize destination overrides
+
+on:
+  push:
+    paths:
+      - "tools/prize_destination_overrides.py"
+      - "tools/prize_pending_take.py"
+      - "tools/top_prize_physical_bridge.py"
+      - "tools/identity_materialization.py"
+      - "results/prize_destination_override_conflicts/**"
+      - ".github/workflows/validate-prize-destination-overrides.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize destination overrides
+        run: python results/prize_destination_override_conflicts/reproduce.py
