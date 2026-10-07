@@ -19,7 +19,7 @@ OFFICIAL_BAN_OVERLAY = {
 GENERIC_ALL = re.compile(r"^Discard all Energy (?:attached to|from) this Pokémon$", re.I)
 GENERIC_N = re.compile(r"^Discard (an|\d+) Energy (?:attached to|from) this Pokémon$", re.I)
 TYPED_N = re.compile(
-    r"^Discard (all|an|a|\d+) (?:basic )?([A-Za-z]+) Energy (?:attached to|from) this Pokémon$",
+    r"^Discard (all|an|a|\d+) (?:(basic) )?([A-Za-z]+) Energy (?:attached to|from) this Pokémon$",
     re.I,
 )
 TYPED_PAIR = re.compile(
