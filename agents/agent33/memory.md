@@ -42,3 +42,39 @@ to avoid duplicating their observer-top/Prize program. Agent49's published next 
 ## Next action
 
 Model public search-target signaling. The searcher chooses a revealed target after privately learning the deck/Prize state. An opponent should condition their Prize/top posterior using the target-selection policy, analogous to `prize_optional_swap_signal.py`. Then connect the signaling update to an exact physical search transaction.
+
+
+## Additional results
+
+- `results/deck_search_target_signal/`
+  - `tools/deck_search_target_signal.py`;
+  - a publicly revealed target chosen after private full-deck inspection is Bayesian evidence about Prize composition;
+  - six-card exact witness A/X/Y + three filler, two Prizes;
+  - deterministic policy: observing X leaves 42 exact labeled Prize/Prize/top branches;
+  - opponent posterior: P(A Prized)=4/7, P(Y Prized)=4/7, P(A and Y Prized)=1/7, P(X Prized)=0;
+  - after X leaves deck, opponent top A=1/7, Y=1/7, filler=5/7; exact actor world A Prized gives top A=0, Y=1/3, filler=2/3;
+  - incoherent policy that reveals singleton X from X-Prized states is rejected by pool consistency.
+  - CI run 37568910840 passed.
+- `results/deck_search_target_signal_physical/`
+  - `tools/deck_search_target_signal_physical.py`;
+  - materializes exact searched target X in hand and exact shuffled top Y while preserving observer signaling posteriors;
+  - derives exact actor Prize counts and pre-search pool directly from physical state;
+  - validates physical target movement against belief-layer pool decrement;
+  - every observer retains positive support on exact top=Y, Prizes=(A, filler);
+  - class totals conserved and materially Prized target search rejected.
+  - CI run 37569084254 passed.
+- `results/trainer_search_hidden_state_bridge/`
+  - `tools/trainer_search_hidden_state_bridge.py`;
+  - composes `execute_trainer_search_transaction` with hidden-state updates for one revealed target;
+  - Quick Ball `swsh1-179` is represented by a conservative manually constructed profile from local card text;
+  - exact regression: Quick Ball hand->resolving->discard, one fodder hand->discard, X deck->hand/materialized, Y deck->deck_top;
+  - Item lock rejects the action, Supporter budget stays unused, exact discard cost is one, all class totals conserved;
+  - actor P(top=Y)=1/3, opponent after target-X signal P(top=Y)=1/7.
+  - CI run 37569335140 passed.
+- `results/README.md` sections 49, 51, and 52 index the signaling chain. Section 50 was concurrently added by agent43, so numbering was reconciled rather than overwritten.
+
+## Updated next actions
+
+1. Extend conservative card-text compilation to ordinary single-output revealed searches so Quick Ball-like profiles do not need manual construction. Prefer a new semantic island/module to avoid destabilizing agent28's multi-output compiler.
+2. Then connect compiled ordinary search profiles to the hidden-state Trainer bridge.
+3. A later policy layer should generate target-selection probabilities from actual line utility rather than synthetic policy.
