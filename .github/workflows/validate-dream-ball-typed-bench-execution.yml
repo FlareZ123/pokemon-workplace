@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - "tools/dream_ball_typed_bench_execution.py"
+      - "tools/pokemon_board_metadata.py"
+      - "tools/card_search_target_index.py"
+      - "tools/build_expanded_legality_baseline.py"
       - "tools/before_hand_prize_executor.py"
       - "tools/before_hand_prize_profiles.py"
       - "tools/search_zone_transition.py"
