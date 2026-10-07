@@ -1,0 +1,78 @@
+# Exact first-turn Volt Cyclone probability for the Aichi Iron Thorns list
+
+## Question
+
+How often does the named Iron Thorns ex ALS reach Volt Cyclone on the first turn going second when opening hands, six Prize cards, and the first draw are modeled exactly?
+
+This result uses Kazuma Kashi's sixth-place Iron Thorns list from the 2026 CL Aichi Open League.
+
+Implementation: `tools/iron_thorns_turn1_probability.py`
+
+Reproducer: `results/iron_thorns_turn1_probability/reproduce.py`
+
+## Scoped package
+
+The exact list has:
+
+- 4 Iron Thorns ex;
+- 2 Guzma & Hala;
+- 2 Tag Call;
+- 1 Thunder Mountain Prism Star;
+- 1 Double Colorless Energy;
+- 1 Gladion.
+
+The probability space conditions on an accepted seven-card opening. Since Iron Thorns ex is the list's only Basic Pokémon, one of the four copies becomes the starting Active. Six Prize cards are then sampled and one card is drawn for the first turn.
+
+The calculation uses exact multivariate hypergeometric opening and Prize allocations, followed by the exact first-draw probability.
+
+## Baseline named route
+
+The baseline permits two routes.
+
+A direct route succeeds when both Thunder Mountain and Double Colorless Energy are already in hand.
+
+The Guzma & Hala route succeeds when Guzma & Hala is in hand, or Tag Call in hand can fetch a Guzma & Hala still in the deck, and every missing member of the Thunder Mountain plus Double Colorless package remains searchable from the deck.
+
+Guzma & Hala's two-card optional discard is mechanically payable in this timing model. At the start of the first turn the player has seven cards in hand after promoting one opening Basic and drawing. Playing Guzma & Hala directly, or playing Tag Call and then Guzma & Hala, leaves six other cards available before the optional discard.
+
+The exact accepted-opening probability of reaching the attack through these represented routes is **33.781505711%**.
+
+Its successful mass separates into:
+
+- direct Thunder Mountain + Double Colorless in hand: **1.278355134%**;
+- Guzma & Hala package: **32.503150577%**.
+
+This is a scoped route probability rather than a claim about every possible line in the 60-card list.
+
+## K0/K1 extension with Gladion
+
+Gladion creates an information problem.
+
+Before the first deck search, the player is in a K0-like state and does not know whether an absent singleton is in the deck or in the Prize cards. If Guzma & Hala is available, choosing it is the attack-maximizing represented action when a required singleton is absent from hand because the missing singleton is much more likely to be in the deck than among six Prize cards.
+
+Tag Call can change that state. When Tag Call is in hand and can fetch Guzma & Hala from the deck, the search exposes the deck contents and therefore the Prize composition by elimination before the Supporter is chosen. If exactly one attack-package singleton is Prized, the other is already in hand, and Gladion is also in hand, the player can switch from the planned Guzma & Hala line to Gladion.
+
+The information-aware represented policy reaches Volt Cyclone in **34.008906144%** of accepted openings, an increase of **0.227400433 percentage points**.
+
+The added successful mass is:
+
+- Gladion as the only represented route to a Prized singleton: **0.181384268 points**;
+- Tag Call establishes K1 and enables a Gladion pivot: **0.046016166 points**.
+
+This is a concrete example where deck search has value beyond the card it fetches.
+
+## What the result does not include
+
+The model intentionally omits Trainers' Mail top-four lookups, other indirect access routes, opponent mulligan bonus draws, and tactical reasons to prefer a different action even when Volt Cyclone is reachable.
+
+It also treats the goal as binary first-turn attack reachability. It does not value the post-attack Energy move, board position, disruption, or matchup context.
+
+Because the omitted routes can only add possibilities to this specific reachability question, the reported probability is best interpreted as an exact probability for the represented package rather than a complete deck-wide ceiling.
+
+## Relationship to other results
+
+`results/iron_thorns_integrated_als/` validates the action sequence and typed Energy endpoint.
+
+`results/aichi_setup_inference/` models public mulligan information from this same tournament.
+
+The present result adds full opening, Prize, and first-draw combinatorics and shows how K0/K1 changes the Gladion branch.
