@@ -61,6 +61,26 @@ The added successful mass is:
 
 This is a concrete example where deck search has value beyond the card it fetches.
 
+## Opponent mulligan bonus draws
+
+The setup rules let a player draw bonus cards when the opponent mulligans. For this reachability objective, taking every available bonus draw is favorable.
+
+`tools/iron_thorns_mulligan_bonus.py` extends the exact state enumeration by drawing the bonus cards after Prize placement and before the normal first-turn draw.
+
+| Opponent mulligan bonus cards taken | Represented Volt Cyclone probability |
+| ---: | ---: |
+| 0 | 34.008906144% |
+| 1 | 37.884578127% |
+| 2 | 41.551388399% |
+| 3 | 45.013092009% |
+| 4 | 48.274114878% |
+| 5 | 51.339472431% |
+| 6 | 54.214691396% |
+
+The first opponent mulligan therefore adds **3.875671983 percentage points** to this scoped first-turn attack probability.
+
+This connects the public setup process to ALS consistency in two ways: mulligans expose information and the bonus cards can materially improve the executing player's resource access.
+
 ## What the result does not include
 
 The model intentionally omits Trainers' Mail top-four lookups, other indirect access routes, opponent mulligan bonus draws, and tactical reasons to prefer a different action even when Volt Cyclone is reachable.
