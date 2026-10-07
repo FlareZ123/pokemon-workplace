@@ -72,11 +72,9 @@ Slowking `sv7-58` discards the top card of the user's deck. If that card is an e
 
 The source Pokémon is already in the discard pile when its attack body executes.
 
-These cards show that a resolver should snapshot the chosen attack definition at selection time. It should not preserve only a live query such as "an eligible attack from the opponent's hand" and re-run that query immediately before nested execution.
+These cards show that a resolver must preserve source information across zone movement, while the exact ordering depends on the card text.
 
-A stronger phase model is:
-
-`discover source -> select attack -> commit required source movement -> execute snapshotted attack body`
+Hypnotic Reign chooses an eligible hand source before discarding that selected source. Seek Inspiration discards the top card before determining whether that discarded card qualifies to supply an attack.
 
 The selected attack body's semantics survive the source card leaving the zone that originally made it discoverable.
 
@@ -100,14 +98,7 @@ So a parser needs semantic roles, not only prefix/suffix positions.
 
 A robust copy resolver needs at least these conceptual phases:
 
-1. establish any outer attack prerequisites and stochastic branches;
-2. discover candidate source objects;
-3. select an attack and snapshot its executable definition;
-4. apply selected-target-dependent legality checks;
-5. perform any source-zone mutation required by the outer attack;
-6. execute the selected attack body as a nested frame;
-7. resume genuine outer post-copy continuation;
-8. finish the declared attack and only then cross the turn boundary.
+A robust resolver should represent semantic phases explicitly rather than impose one universal linear template. In particular, source movement may happen before eligibility, as with Seek Inspiration, or after source selection, as with Hypnotic Reign. Selected-target gates such as Energy checks occur after an attack has been identified. Nested body execution can then return to mandatory outer continuation before the declared attack crosses the turn boundary.
 
 This phase model complements the existing findings on declared attack identity, edge-local restrictions, copy-stack recursion, source-variable correlation, and outer-text resumption.
 
