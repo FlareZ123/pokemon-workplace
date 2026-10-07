@@ -25,6 +25,7 @@ from unified_state_kernel import (  # noqa: E402
     gladion_access_probability,
     make_state,
     play_tapu_lele_from_hand,
+    quick_ball_for_tapu_lele,
     play_thunder_mountain,
     shortest_gladion_line,
     suppress_active_tool_effect,
@@ -90,6 +91,10 @@ def main() -> None:
     ) is None
     full_bench = _full_bench_gladion_base()
     assert shortest_gladion_line(full_bench) is None
+
+    # Once the turn has ended, ordinary current-turn actions are unavailable.
+    ended_gladion = _gladion_base(bench=BenchState(turn_ended=True))
+    assert quick_ball_for_tapu_lele(ended_gladion) == []
 
     # Direct deck-to-Bench placement reaches Lele but never emits the hand-play
     # condition required for Wonder Tag.
@@ -192,6 +197,13 @@ def main() -> None:
 
     stadium_locked = apply_lock(dce_attached, "stadium")
     assert play_thunder_mountain(stadium_locked) is None
+
+    ended_tool = replace(tool_base, bench=BenchState(turn_ended=True))
+    assert attach_tool_to_active(ended_tool, card="Stealthy Hood") is None
+
+    ended_energy = replace(energy, bench=BenchState(turn_ended=True))
+    assert attach_dce_to_active(ended_energy) is None
+    assert play_thunder_mountain(ended_energy) is None
 
     # Dynamic Bench contraction changes both Bench residency and canonical zones.
     cores = tuple(
