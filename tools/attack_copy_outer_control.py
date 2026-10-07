@@ -45,7 +45,7 @@ class CopyOuterControl:
 
 _PRIZE_GATE = re.compile(
     r"^You can use this attack only if your opponent has exactly "
-    r"(\\d+) Prize cards remaining\\.",
+    r"(\d+) Prize cards remaining\.",
     re.IGNORECASE,
 )
 
@@ -53,7 +53,7 @@ _PRIZE_GATE = re.compile(
 def classify_outer_control(text: str) -> CopyOuterControl | None:
     """Classify audited control text around an attack-copy clause."""
 
-    normalized = re.sub(r"\\s+", " ", text).strip()
+    normalized = re.sub(r"\s+", " ", text).strip()
     lowered = normalized.casefold()
     if "as this attack" not in lowered:
         return None
