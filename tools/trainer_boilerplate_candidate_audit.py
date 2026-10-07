@@ -10,16 +10,21 @@ from tools.build_expanded_legality_baseline import (
     has_tournament_ban_rule,
     load_json,
 )
-from tools.current_card_semantics import (
-    current_semantic_fingerprint,
-    normalize_current_card_semantics,
-)
+from tools.official_print_errata import normalize_print_specific_errata
+from tools.tool_category_normalization import normalize_legacy_tool_category
 from tools.reprint_negative_evidence import collect_known_non_equivalent_ids
 from tools.trainer_boilerplate_normalization import normalize_trainer_boilerplate
 
 
+def pre_boilerplate_semantic_fingerprint(card: dict[str, Any]) -> str:
+    normalized = normalize_print_specific_errata(card)
+    normalized = normalize_legacy_tool_category(normalized)
+    return gameplay_fingerprint(normalized)
+
+
 def boilerplate_semantic_fingerprint(card: dict[str, Any]) -> str:
-    normalized = normalize_current_card_semantics(card)
+    normalized = normalize_print_specific_errata(card)
+    normalized = normalize_legacy_tool_category(normalized)
     normalized = normalize_trainer_boilerplate(normalized)
     return gameplay_fingerprint(normalized)
 
@@ -48,7 +53,7 @@ def audit_boilerplate_candidate_delta(resources_root: Path) -> dict[str, Any]:
         if classify_effective_legality(card)[0] != "Legal":
             continue
         legal_names.add(card["name"])
-        legal_by_current[current_semantic_fingerprint(card)].append(card)
+        legal_by_current[pre_boilerplate_semantic_fingerprint(card)].append(card)
         legal_by_candidate[boilerplate_semantic_fingerprint(card)].append(card)
 
     newly_exact: list[dict[str, Any]] = []
@@ -62,7 +67,7 @@ def audit_boilerplate_candidate_delta(resources_root: Path) -> dict[str, Any]:
         if (card.get("legalities") or {}).get("unlimited") == "Banned":
             continue
 
-        current_targets = legal_by_current.get(current_semantic_fingerprint(card), ())
+        current_targets = legal_by_current.get(pre_boilerplate_semantic_fingerprint(card), ())
         candidate_targets = legal_by_candidate.get(
             boilerplate_semantic_fingerprint(card), ()
         )
