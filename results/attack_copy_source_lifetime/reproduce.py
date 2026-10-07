@@ -31,6 +31,7 @@ ATTACKS = {
             "opponent_hand",
             require_non_gx=True,
             move_selected_source_to="discard",
+            optional_selection=True,
         ),
     ),
     SEEK: AttackDef(
@@ -39,7 +40,7 @@ ATTACKS = {
         copy_selector=CopySelector(
             "own_deck_top",
             require_no_rule_box=True,
-            move_selected_source_to="discard",
+            precommit_source_to="discard",
         ),
     ),
     ENDPOINT: AttackDef(
