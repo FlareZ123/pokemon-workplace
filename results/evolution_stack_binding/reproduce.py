@@ -49,11 +49,20 @@ def main() -> None:
         (PokemonStack("active", (bulba,)), PokemonStack("pivot", (pivot_card,))),
     )
     identities = ledger(
-        CardInstance("bulba", "bulba-class", "Bulbasaur", "active"),
-        CardInstance("energy", "dce-class", "Double Colorless Energy", "attached", "active"),
+        CardInstance(
+            "bulba", "bulba-class", "Bulbasaur", "in_play", board_object_id="active"
+        ),
+        CardInstance(
+            "energy", "dce-class", "Double Colorless Energy",
+            "attached", attached_to="active",
+        ),
         CardInstance("ivy", "ivy-class", "Ivysaur", "hand"),
-        CardInstance("pivot-card", "pivot-class", "Pivot", "bench"),
-        CardInstance("tool", "balloon-class", "Air Balloon", "attached", "active"),
+        CardInstance(
+            "pivot-card", "pivot-class", "Pivot", "in_play", board_object_id="pivot"
+        ),
+        CardInstance(
+            "tool", "balloon-class", "Air Balloon", "attached", attached_to="active"
+        ),
         CardInstance("venus", "venus-class", "Mega Venusaur ex", "hand"),
     )
     validate_ledger_binding(state, identities)
@@ -67,7 +76,8 @@ def main() -> None:
     assert not evolved.pokemon_state.temporary_attack_lock
     assert not evolved.special_conditions
     assert [card.instance_id for card in first.state.stack("active").cards] == ["bulba", "ivy"]
-    assert first.ledger.instance("ivy").zone == "active"
+    assert first.ledger.instance("ivy").zone == "in_play"
+    assert first.ledger.instance("ivy").board_object_id == "active"
     assert ordinary_evolve(first.state, first.ledger, "active", venus) is None
 
     ready = begin_next_turn(first.state)
@@ -84,6 +94,7 @@ def main() -> None:
     assert not devolved.knockout_required
     assert devolved.state.board.get("active").card_name == "Ivysaur"
     assert devolved.ledger.instance("venus").zone == "hand"
+    assert devolved.ledger.instance("venus").board_object_id is None
     assert not devolved.state.stack("active").evolution_eligible
     assert ordinary_evolve(devolved.state, devolved.ledger, "active", venus) is None
 
@@ -100,8 +111,12 @@ def main() -> None:
         ),
     )
     direct_ledger = ledger(
-        CardInstance("direct-ivy", "ivy-class", "Ivysaur", "active"),
-        CardInstance("pivot-card", "pivot-class", "Pivot", "bench"),
+        CardInstance(
+            "direct-ivy", "ivy-class", "Ivysaur", "in_play", board_object_id="direct"
+        ),
+        CardInstance(
+            "pivot-card", "pivot-class", "Pivot", "in_play", board_object_id="pivot"
+        ),
     )
     validate_ledger_binding(direct_state, direct_ledger)
     assert devolve_top(
@@ -124,9 +139,16 @@ def main() -> None:
         ),
     )
     candy_ledger = ledger(
-        CardInstance("bulba", "bulba-class", "Bulbasaur", "active"),
-        CardInstance("candy-pivot-card", "pivot-class", "Pivot", "bench"),
-        CardInstance("venus", "venus-class", "Mega Venusaur ex", "active"),
+        CardInstance(
+            "bulba", "bulba-class", "Bulbasaur", "in_play", board_object_id="candy"
+        ),
+        CardInstance(
+            "candy-pivot-card", "pivot-class", "Pivot",
+            "in_play", board_object_id="candy-pivot",
+        ),
+        CardInstance(
+            "venus", "venus-class", "Mega Venusaur ex", "in_play", board_object_id="candy"
+        ),
     )
     validate_ledger_binding(candy_state, candy_ledger)
     candy_devolved = devolve_top(
@@ -135,6 +157,7 @@ def main() -> None:
     assert candy_devolved is not None and candy_devolved.knockout_required
     assert candy_devolved.state.board.get("candy").card_name == "Bulbasaur"
     assert candy_devolved.ledger.instance("venus").zone == "deck"
+    assert candy_devolved.ledger.instance("venus").board_object_id is None
 
     print("evolution stack binding regressions passed")
 
