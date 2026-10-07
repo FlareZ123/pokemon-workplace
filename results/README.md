@@ -174,6 +174,8 @@ The result is a concrete first composition of the repository's typed-access and 
 
 [iron_thorns_trainers_mail/](iron_thorns_trainers_mail/) performs that next transition exactly. Recursive top-four Trainers' Mail search raises the narrow route to **38.821051379%** for Kazuma, **46.623420409%** for Ryoya, and **37.195582431%** for Kohei. The result keeps Mail's target restrictions and reshuffle behavior explicit and shows that connector density interacts with DCE payload density.
 
+[aichi_regional_draw_engine/](aichi_regional_draw_engine/) adds the Japanese-only draw engines missing from the bundled English card snapshot. Palace Book, Palace Belt, and Player's Ceremony account for every unresolved copy in the three preserved Aichi Iron Thorns lists. Palace Belt and Player's Ceremony are typed Guzma & Hala outputs, so omitting them removes real search edges. In the exact accepted-opening + six-Prize + first-draw model, a Palace Book or Player's Ceremony end-turn draw option is ready in **51.6974395%** of Kazuma states, **66.4787229%** of Ryoya states, and **44.4343565%** of Kohei states; Kazuma and Kohei can assemble Palace Belt plus Player's Ceremony in **33.7815057%** and **38.0806800%** of modeled states before scoring the two-card discard's DCI or Tool contention.
+
 [trainers_mail_prize_belief/](trainers_mail_prize_belief/) isolates the information content of Mail misses. Starting from a missing singleton with six Prize slots and 46 deck cards, four consecutive top-four misses raise the Prize posterior from **11.5385%** to only **15.8025%**. A full deck search is qualitatively stronger because it collapses the deck-versus-Prize uncertainty and can support a precise G&H/Gladion pivot.
 
 ## 10. Legality and card identity must remain explicit
