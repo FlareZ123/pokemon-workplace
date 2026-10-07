@@ -1,0 +1,26 @@
+name: Expanded legality regressions
+
+on:
+  push:
+    paths:
+      - "tools/build_expanded_legality_baseline.py"
+      - "tools/card_identity.py"
+      - "tools/deck_validator.py"
+      - "tools/audit_set_fallback_legality.py"
+      - "results/deck_validator/reproduce.py"
+      - "results/set_fallback_legality_audit/reproduce.py"
+      - ".github/workflows/expanded-legality-regressions.yml"
+  workflow_dispatch:
+
+jobs:
+  legality:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run deck validator regressions
+        run: python results/deck_validator/reproduce.py
+      - name: Run set-fallback audit regressions
+        run: python results/set_fallback_legality_audit/reproduce.py
