@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from math import comb
 from pathlib import Path
 import sys
 
@@ -46,17 +47,27 @@ DECK = {
 
 FORCED_BASICS = 9
 OPTIONAL_TALONFLAME = 4
-DIRECT_RALTS_SEARCH = 6
+BRIGETTE = 2
+ULTRA_BALL = 4
 ENERGY = 11
 OTHER = 30
+FEATURE_GROUPS = (BRIGETTE, ULTRA_BALL, ENERGY)
 
 
-def direct_search(state: SetupHandState) -> bool:
+def has_brigette(state: SetupHandState) -> bool:
     return state.feature_counts[0] > 0
 
 
-def aero_ready(state: SetupHandState) -> bool:
+def has_ultra_ball(state: SetupHandState) -> bool:
     return state.feature_counts[1] > 0
+
+
+def direct_search(state: SetupHandState) -> bool:
+    return has_brigette(state) or has_ultra_ball(state)
+
+
+def aero_ready(state: SetupHandState) -> bool:
+    return state.feature_counts[2] > 0
 
 
 def policy_decline(state: SetupHandState) -> float:
@@ -77,7 +88,15 @@ def policy_accept_all(state: SetupHandState) -> float:
 
 def validate_deck_and_card_pool() -> None:
     assert sum(DECK.values()) == 60
-    assert FORCED_BASICS + OPTIONAL_TALONFLAME + DIRECT_RALTS_SEARCH + ENERGY + OTHER == 60
+    assert (
+        FORCED_BASICS
+        + OPTIONAL_TALONFLAME
+        + BRIGETTE
+        + ULTRA_BALL
+        + ENERGY
+        + OTHER
+        == 60
+    )
 
     sets = load_json(ROOT / "resources" / "sets" / "en.json")
     expanded_sets = {
@@ -135,7 +154,7 @@ def policy_metrics(policy) -> tuple[float, float]:
         60,
         FORCED_BASICS,
         (OPTIONAL_TALONFLAME,),
-        (DIRECT_RALTS_SEARCH, ENERGY),
+        FEATURE_GROUPS,
         policy,
     )
     return acceptance, (1.0 - acceptance) / acceptance
@@ -148,11 +167,11 @@ def prize_rates(policy) -> tuple[float, ...]:
             6,
             forced_starters=FORCED_BASICS,
             optional_group_sizes=(OPTIONAL_TALONFLAME,),
-            feature_group_sizes=(DIRECT_RALTS_SEARCH, ENERGY),
+            feature_group_sizes=FEATURE_GROUPS,
             optional_policy=policy,
             class_index=index,
         )
-        for index in range(5)
+        for index in range(6)
     )
 
 
@@ -163,7 +182,7 @@ def main() -> None:
         60,
         FORCED_BASICS,
         (OPTIONAL_TALONFLAME,),
-        (DIRECT_RALTS_SEARCH, ENERGY),
+        FEATURE_GROUPS,
     )
     optional_only = [
         (state, mass)
@@ -171,31 +190,34 @@ def main() -> None:
         if state.forced_in_hand == 0 and sum(state.optional_counts) > 0
     ]
     optional_mass = sum(mass for _, mass in optional_only)
-    search_mass = sum(
-        mass for state, mass in optional_only if direct_search(state)
-    )
-    aero_mass = sum(
-        mass for state, mass in optional_only if aero_ready(state)
-    )
-    union_mass = sum(
-        mass
-        for state, mass in optional_only
-        if direct_search(state) or aero_ready(state)
-    )
-    both_mass = sum(
-        mass
-        for state, mass in optional_only
-        if direct_search(state) and aero_ready(state)
-    )
+
+    def conditional(predicate) -> float:
+        return (
+            sum(mass for state, mass in optional_only if predicate(state))
+            / optional_mass
+        )
 
     print("optional-only mass", optional_mass)
-    print("conditional direct-search", search_mass / optional_mass)
-    print("conditional aero-ready", aero_mass / optional_mass)
-    print("conditional search-or-aero", union_mass / optional_mass)
-    print("conditional both", both_mass / optional_mass)
+    print("conditional Brigette", conditional(has_brigette))
+    print("conditional Ultra Ball", conditional(has_ultra_ball))
+    print("conditional Brigette-only", conditional(
+        lambda state: has_brigette(state) and not has_ultra_ball(state)
+    ))
+    print("conditional Ultra-Ball-only", conditional(
+        lambda state: has_ultra_ball(state) and not has_brigette(state)
+    ))
+    print("conditional both search channels", conditional(
+        lambda state: has_brigette(state) and has_ultra_ball(state)
+    ))
+    print("conditional direct-search", conditional(direct_search))
+    print("conditional aero-ready", conditional(aero_ready))
+    print(
+        "conditional search-or-aero",
+        conditional(lambda state: direct_search(state) or aero_ready(state)),
+    )
     print(
         "conditional neither",
-        1.0 - union_mass / optional_mass,
+        conditional(lambda state: not direct_search(state) and not aero_ready(state)),
     )
 
     policies = (
@@ -209,12 +231,8 @@ def main() -> None:
         print(name, "acceptance", acceptance, "mulligans", mulligans)
         print(name, "Prize rates", prize_rates(policy))
 
-    # In an optional-only opening, none of the four Ralts are in hand. Prize
-    # cards are then chosen from the 53 remaining cards. A Brigette/Ultra Ball
-    # route therefore fails specifically from all four Ralts being Prized with
-    # this exact hypergeometric probability.
-    from math import comb
-
+    # Optional-only hands contain no Ralts, so all four remain in the 53-card
+    # deck before the six Prize cards are set.
     all_ralts_prized = comb(49, 2) / comb(53, 6)
     print("all 4 Ralts prized after optional-only hand", all_ralts_prized)
 
