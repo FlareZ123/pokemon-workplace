@@ -1022,3 +1022,14 @@ The profile preserves action class, attack metadata, simple Trainer play conditi
 The rulebook-backed distinction is strategically material. An attack that switches out the opponent's Active applies its switching effect to that old Active, while an attack that gusts a selected Benched Pokémon applies its effect to the selected Bench target. The regression demonstrates that an effect-immunity overlay can therefore block Bayleef's Push Down and Clefairy's Follow Me in opposite geometries even though both successful transitions are board swaps.
 
 **Working synthesis:** position access is not just a reachability edge. Opponent-chosen force-out and actor-chosen gust expose different reachable state sets and different immunity targets; planners should preserve chooser authority and effect target before treating two movement effects as substitutable. Current card text must also be applied before compilation: three legal Black & White Pokémon Catcher records in the bundled snapshot still contain the pre-errata unconditional switch text, while the current official erratum requires a heads coin flip. The compiler now normalizes those records and refuses execution without an explicit heads result.
+
+
+## 68. Two-sided pivot effects form a dependent movement program
+
+[compound_position_effects/](compound_position_effects/) compiles **19 legal clean-text profiles across 10 names** whose move body first switches the attacking Pokémon and only afterward forces the opponent to switch. Twelve use `If you do`; seven use the older `Then` construction.
+
+The executor preserves the E-20 dependency. If the first self-switch cannot occur, the second movement is skipped. If the first succeeds while the second is impossible or blocked, the first movement remains. This produces a directional dependency that two independent graph edges cannot represent.
+
+Two apparent additional records are left uncompiled because the bundled English text contains obvious-looking typos (`xyp-XY122` “The,” and `me55-20` “oppoennt”). The compiler leaves those uncertain rather than silently repairing source data.
+
+**Working synthesis:** compound card text should compile to ordered, gated transition programs. For movement, reachability depends on both printed order and whether earlier effects actually occurred.
