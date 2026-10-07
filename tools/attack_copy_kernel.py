@@ -376,3 +376,22 @@ def choose_exact(sequence: Iterable[str]) -> ChoicePolicy:
         return selected
 
     return choose
+
+
+def choose_source_exact(sequence: Iterable[str]) -> SourceChoicePolicy:
+    remaining = iter(sequence)
+
+    def choose_source(
+        _attack: AttackDef,
+        _selected_attack_id: str,
+        source_ids: tuple[str, ...],
+        _state: State,
+    ) -> str:
+        selected_source = next(remaining)
+        if selected_source not in source_ids:
+            raise IllegalCopyTarget(
+                f"expected source {selected_source!r}; sources={source_ids!r}"
+            )
+        return selected_source
+
+    return choose_source
