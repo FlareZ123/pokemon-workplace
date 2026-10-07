@@ -13,7 +13,7 @@ Regression:
 
 ## Why a top-card name is insufficient
 
-`board_object_kernel.py` preserves one in-play Pokémon object through movement and evolution, but it stores only the current top-card name. Devolution and ordinary evolution timing depend on the physical cards underneath that top card.
+`board_object_kernel.py` preserves one in-play Pokémon object through movement and evolution. The current top card now carries both its name and exact print ID, while devolution and ordinary evolution timing still require the physical cards underneath that top card.
 
 The Advanced Player's Rulebook establishes that ordinary evolution preserves attached cards and damage, an Active Pokémon loses Special Conditions and attack effects when it evolves, a Pokémon played or evolved during the current turn cannot ordinarily evolve again that turn, and devolution removes the highest Stage Evolution card while leaving lower cards, damage, and attachments in place.
 
@@ -23,7 +23,7 @@ A directly placed Stage 1 or Stage 2 with no lower physical card cannot be devol
 
 `EvolutionState` wraps the existing board-object state with one `PokemonStack` per board object.
 
-Each `StackCard` has a unique physical instance ID, card name, stage rank, HP, `evolves_from` name, and top-card tags.
+Each `StackCard` has a unique physical instance ID, card name, optional exact print ID, stage rank, HP, `evolves_from` name, and top-card tags. When an exact print ID is known, `EvolutionState` requires the board object's current top-print identity to agree with the physical stack.
 
 Stage ranks must increase through a physical stack, so both ordinary `Basic -> Stage 1 -> Stage 2` stacks and Rare Candy-style `Basic -> Stage 2` stacks are representable.
 
@@ -31,13 +31,17 @@ The same card instance IDs are materialized in `IdentityLedger` using its shared
 
 ## Findings
 
-**Ordinary evolution is ledger-conserving.** The regression starts with ME1 Bulbasaur Active, Ivysaur and Mega Venusaur ex materialized in hand, plus physical Double Colorless Energy and Air Balloon attachments. Evolution appends Ivysaur to the same stack, moves its ledger instance from `hand` to `in_play` bound to the same board object, preserves damage and attachments, clears represented Active transient state, and marks that stack ineligible for another ordinary evolution during the same turn. `begin_next_turn` restores ordinary evolution eligibility.
+**Ordinary evolution is ledger-conserving.** The regression starts with Bulbasaur Active, Ivysaur and Mega Venusaur ex materialized in hand, plus physical Double Colorless Energy and Air Balloon attachments. Evolution appends Ivysaur to the same stack, moves its ledger instance from `hand` to `in_play` bound to the same board object, updates the board object's top-print identity, preserves damage and attachments, clears represented Active transient state, and marks that stack ineligible for another ordinary evolution during the same turn. `begin_next_turn` restores ordinary evolution eligibility.
 
-**Devolution depends on physical stack depth.** `devolve_top()` removes the top physical card, moves its ledger instance out of the board relation to the effect's destination zone, exposes the next physical card, and makes the resulting stack ineligible for ordinary evolution during that turn. A one-card Stage 1 stack cannot be devolved, so top-card metadata alone does not invent a Basic underneath a directly placed Evolution Pokémon.
+**Devolution depends on physical stack depth.** `devolve_top()` removes the top physical card, moves its ledger instance out of the board relation to the effect's destination zone, exposes the next physical card, restores that card's exact print ID on the board object, and makes the resulting stack ineligible for ordinary evolution during that turn. A one-card Stage 1 stack cannot be devolved, so top-card metadata alone does not invent a Basic underneath a directly placed Evolution Pokémon.
 
 **Skipped stages remain visible.** A Rare Candy-style `Bulbasaur -> Mega Venusaur ex` physical stack can use stage ranks `0 -> 2`. Devolution removes Mega Venusaur ex and exposes Bulbasaur directly. No synthetic Ivysaur is created.
 
 **Devolution can expose a Knock Out.** The regression gives the evolved object 9 damage counters and then exposes an 80 HP Bulbasaur. The transition reports `knockout_required=True`. Full Knock Out processing remains outside this narrow adapter.
+
+## Exact-print convergence
+
+Exact print identity is strategically material because board-derived Ability-lock geometry resolves sources by `BoardPokemon.print_id`. Keeping the previous Basic's print ID after evolving could leave a nonexistent lock source active, while failing to expose the lower print after devolution could hide one. The evolution adapter therefore propagates top-print identity with the physical stack. If a direct board evolution knows only the new card name, the board kernel clears the old print ID rather than preserving a known-stale value.
 
 ## Identity convergence
 
