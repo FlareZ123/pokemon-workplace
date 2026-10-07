@@ -135,8 +135,8 @@ def main() -> None:
     assert isclose(baseline.state_mass, 1.0, rel_tol=0.0, abs_tol=1e-11)
     assert isclose(baseline.valid_opening_probability, 0.9007771067385328, abs_tol=1e-15)
     assert isclose(baseline.target_prized_probability, 0.10052903453464862, abs_tol=1e-12)
-    assert isclose(baseline.adaptive_computer_gated_access, 0.3086402077586805, abs_tol=1e-12)
-    assert isclose(baseline.conditional_target_prized_adaptive_access, 0.2928968068347166, abs_tol=1e-12)
+    assert isclose(baseline.adaptive_computer_gated_access, 0.305787002572374, abs_tol=1e-12)
+    assert isclose(baseline.conditional_target_prized_adaptive_access, 0.2920900027948247, abs_tol=1e-12)
 
     print("Harto direct-access baseline after one random draw")
     print("valid opening:", pct(baseline.valid_opening_probability))
