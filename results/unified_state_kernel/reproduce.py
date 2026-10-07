@@ -116,7 +116,26 @@ def main() -> None:
         card="Stealthy Hood",
     )
     assert hood_attached is not None
+    assert hood_attached.active_tool_name == "Stealthy Hood"
     assert active_tool_protects(hood_attached)
+
+    # Tool identity must survive composition. A generic attached-Tool boolean
+    # is insufficient because only Stealthy Hood grants this protection.
+    choice_base = make_state(
+        {
+            "Iron Thorns ex": Zone.ACTIVE.value,
+            "Choice Band": Zone.HAND.value,
+        },
+        active_name="Iron Thorns ex",
+        active_tags=frozenset({"Lightning", "Basic"}),
+    )
+    choice_attached = attach_tool_to_active(
+        choice_base,
+        card="Choice Band",
+    )
+    assert choice_attached is not None
+    assert choice_attached.active_tool_name == "Choice Band"
+    assert not active_tool_protects(choice_attached)
 
     hood_suppressed = suppress_active_tool_effect(hood_attached)
     assert hood_suppressed.active_pokemon.tool_attached
@@ -266,6 +285,7 @@ def main() -> None:
                 "item_lock_access": 0.0,
                 "full_bench_access": 0.0,
                 "tool_attach_under_item_lock": True,
+                "non_hood_tool_grants_stealthy_hood_protection": False,
                 "tool_effect_after_suppression": False,
                 "volt_cyclone_ready_after_dce_and_thunder_mountain": True,
                 "contraction_discards": [
