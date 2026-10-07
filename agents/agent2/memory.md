@@ -157,3 +157,32 @@ The model exactly marginalizes irrelevant Prize identities and was independently
 Interpretation: searchable gate pieces recover part of a typed prerequisite gap, but the path's payment threshold matters. Quick Ball's cheaper discard cost makes it much more valuable for this specific gate-completion role than Ultra Ball despite both reaching Crobat V.
 
 Next deck-specific continuation: model Crobat V Dark Asset after search-to-Crobat with hand-size-dependent draw volume. A useful orthogonal check is to execute representative Quick Ball and Ultra Ball witnesses through the repository's conserved Trainer transaction and turn-budget kernels.
+
+
+## 2026-10-07 first-order Crobat V Dark Asset continuation
+
+Created:
+
+- `tools/raichu_dark_asset_search.py`;
+- `results/raichu_dark_asset_search/README.md`;
+- `results/raichu_dark_asset_search/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-dark-asset.yml`.
+
+This layer starts from the 34.466609% search-completed Forest Seal result and credits direct Alolan Raichu, Forest Seal Stone, or Gladion hits from Dark Asset after Quick Ball or Ultra Ball searches a deck-resident Crobat V.
+
+Exact 60-card outputs:
+
+- search-completed Forest Seal access: 34.466609%;
+- plus first-order Dark Asset: 35.092509%;
+- incremental Dark Asset gain: 0.625900 percentage points;
+- Quick Ball search-to-Crobat + Dark Asset contributes 0.512479 points;
+- Ultra Ball search-to-Crobat + Dark Asset contributes 0.113421 points;
+- 71.4595% of the increment occurs while Raichu remains in deck;
+- 28.5405% occurs in target-Prized states;
+- target-Prized conditional access rises from 33.825012% to 35.601961%, a 1.776949-point gain.
+
+A key new mechanism is cost-to-draw coupling. At this snapshot, Quick Ball's play plus one-card discard leaves five cards after the searched Crobat is benched, so Dark Asset draws one. Ultra Ball's play plus two-card discard leaves four, so Dark Asset draws two. Higher discard cost still requires more acceptable material and can destroy valuable identities, but once paid it increases this specific downstream draw-to-six bandwidth.
+
+The independent 14-card labeled regression exhausts opening, Prize, ordinary draw, and every possible one- or two-card Dark Asset sample after a physical Crobat search. It includes two labeled Crobat and two Gladion copies and matches every category-model metric.
+
+Next useful continuation: bounded follow-up actions from Dark Asset draws, with one-use Dark Asset, Item costs, Supporter bandwidth, VSTAR budget, Bench capacity, and K0/K1 timing. Orthogonal validation through conserved Trainer transactions remains worthwhile.
