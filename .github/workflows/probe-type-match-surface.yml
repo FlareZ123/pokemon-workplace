@@ -1,0 +1,20 @@
+name: Probe type match surface
+
+on:
+  push:
+    paths:
+      - "tools/type_match_surface.py"
+      - "tools/pokemon_card_profile.py"
+      - "results/type_match_surface/**"
+      - ".github/workflows/probe-type-match-surface.yml"
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/type_match_surface/reproduce.py
