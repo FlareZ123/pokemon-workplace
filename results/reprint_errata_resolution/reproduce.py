@@ -23,11 +23,11 @@ assert counts["historical_official_reprint_candidate_prints"] == 39
 assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
-assert counts["known_non_equivalent_prints"] == 34
-assert counts["known_non_equivalent_names"] == 4
+assert counts["known_non_equivalent_prints"] == 50
+assert counts["known_non_equivalent_names"] == 12
 assert counts["official_semantic_candidate_prints"] == 3
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 4024
+assert counts["semantic_review_prints"] == 4008
 assert counts["high_confidence_candidate_prints"] == 202
 assert counts["exact_fingerprint_trainer_candidate_prints"] == 12
 assert counts["trainer_same_name_review_pool_prints"] == 168
@@ -40,9 +40,17 @@ assert summary["official_semantic_candidate_ids"] == ["ecard1-138", "ex15-73", "
 
 assert summary["known_non_equivalent_by_name"] == {
     "Darkness Energy": 15,
+    "Devolution Spray": 1,
     "Life Herb": 2,
+    "Magnetic Storm": 1,
+    "Master Ball": 5,
+    "Max Revive": 1,
     "Metal Energy": 15,
+    "Pokémon Breeder": 3,
+    "Pokémon Center": 3,
+    "Power Plant": 1,
     "Rainbow Energy": 2,
+    "Revive": 1,
 }
 
 assert summary["historical_official_candidates_by_name"] == {
@@ -77,6 +85,14 @@ assert resolver.resolve("base5-80").kind == "known_non_equivalent"
 assert resolver.resolve("dp2-119").kind == "known_non_equivalent"
 assert resolver.resolve("ex5-90").kind == "known_non_equivalent"
 assert resolver.resolve("ex6-93").kind == "known_non_equivalent"
+assert resolver.resolve("ex11-99").kind == "known_non_equivalent"
+assert resolver.resolve("base1-76").kind == "known_non_equivalent"
+assert resolver.resolve("base1-85").kind == "known_non_equivalent"
+assert resolver.resolve("gym2-117").kind == "known_non_equivalent"
+assert resolver.resolve("base1-89").kind == "known_non_equivalent"
+assert resolver.resolve("base1-72").kind == "known_non_equivalent"
+assert resolver.resolve("ecard2-139").kind == "known_non_equivalent"
+assert resolver.resolve("ex5-91").kind == "known_non_equivalent"
 assert resolver.resolve("base1-95").kind == "historical_official_reprint_candidate"
 assert resolver.resolve("base1-96").kind == "historical_official_reprint_candidate"
 assert resolver.resolve("dp4-99").kind == "official_errata_candidate"
