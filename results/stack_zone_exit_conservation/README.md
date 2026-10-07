@@ -29,11 +29,14 @@ Black & White onward examples from the provided card database are:
 | Super Scoop Up | `bw1-103` | on heads, Pokémon stack to hand; all attached cards to hand |
 | Cassius | `xy1-115` | Pokémon stack to deck; all attached cards to deck |
 | AZ | `xy4-91` | Pokémon stack to hand; all attached cards to discard |
-| Accelgor | `bw5-11` | Deck and Cover shuffles the attacking Pokémon stack and all attached cards into the deck |
-| Flapple | `swsh2-22` | Apple Drop can shuffle a Stage 1 Pokémon stack and all attached cards into the deck |
+| Accelgor | `bw5-11` | Deck and Cover shuffles the attacking Stage 1 Pokémon stack and all attached cards into the deck |
 
-The database marks each cited printing Expanded legal, and every cited set is
-Black & White or later.
+The repository's effective paper Expanded legality model treats every cited
+printing as legal. Each cited set is Black & White or later.
+
+The bundled database still labels Flapple `swsh2-22` and its Apple Drop
+reprints Expanded legal, but the repository's official 2025 ban overlay marks
+those printings banned. They are therefore excluded as legality witnesses.
 
 ## Representation
 
