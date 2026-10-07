@@ -120,12 +120,12 @@ def _partial_prize_inspection(text: str) -> bool:
 
 def _ability_timing_bucket(text: str) -> str:
     lowered = text.lower()
+    if "when you play" in lowered and "from your hand" in lowered:
+        return "play_from_hand_trigger"
     if "once during your turn" in lowered or "as often as you like during your turn" in lowered:
         return "announced_during_turn"
     if "during your turn, you may search your deck" in lowered:
         return "announced_during_turn"
-    if "when you play" in lowered and "from your hand" in lowered:
-        return "play_from_hand_trigger"
     if "when " in lowered or "whenever " in lowered or lowered.startswith("if "):
         return "other_conditional_or_triggered"
     return "other"
