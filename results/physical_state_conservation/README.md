@@ -223,8 +223,11 @@ copies that can drift out of synchronization.
    enclosing effect has finished referring to an exact moved card and identity
    can safely collapse back into exchangeable counts.
 5. **Board-kernel convergence.** `board_object_kernel.py` and the richer
-   `board_position_state.py` / `board_position_kernel.py` overlap. The
-   stack-bearing representation currently captures more physical structure.
+   `board_position_state.py` / `board_position_kernel.py` still overlap.
+   `attack_copy_physical_ko_bridge` now shows that copied attack damage and
+   effect counters can run directly on the stack-bearing representation and
+   feed a pending simultaneous-KO batch without a board conversion, but other
+   specialized kernels still use the lightweight board.
 6. **Card-text compilation.** Conservation consumes resolved semantics. A
    conservative compiler still needs to choose the correct transition family
    and constraints from card text.
@@ -246,6 +249,7 @@ Core detailed results:
 - [simultaneous_knockout_conservation/](../simultaneous_knockout_conservation/)
 - [knockout_zone_routing/](../knockout_zone_routing/)
 - [cross_player_knockout_resolution/](../cross_player_knockout_resolution/)
+- [attack_copy_physical_ko_bridge/](../attack_copy_physical_ko_bridge/)
 
 This synthesis should be revised when any supporting mechanic is falsified or
 superseded.
