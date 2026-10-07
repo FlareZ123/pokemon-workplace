@@ -1,0 +1,19 @@
+name: Validate Regidrago attack-history evasion
+
+on:
+  push:
+    paths:
+      - "results/regidrago_attack_history_evasion/**"
+      - ".github/workflows/validate-regidrago-attack-history-evasion.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run attack-history evasion regression
+        run: PYTHONPATH=tools python results/regidrago_attack_history_evasion/reproduce.py
