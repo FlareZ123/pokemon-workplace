@@ -14,16 +14,24 @@ RESOURCES = ROOT / "resources"
 summary = summarize_negative_reprint_evidence(RESOURCES)
 
 assert summary["counts"] == {
-    "known_non_equivalent_prints": 34,
-    "names": 4,
+    "known_non_equivalent_prints": 50,
+    "names": 12,
 }
 assert summary["prints_by_name"] == {
     "Darkness Energy": 15,
+    "Devolution Spray": 1,
     "Life Herb": 2,
+    "Magnetic Storm": 1,
+    "Master Ball": 5,
+    "Max Revive": 1,
     "Metal Energy": 15,
+    "Pokémon Breeder": 3,
+    "Pokémon Center": 3,
+    "Power Plant": 1,
     "Rainbow Energy": 2,
+    "Revive": 1,
 }
-assert len(collect_known_non_equivalent_ids(RESOURCES)) == 34
+assert len(collect_known_non_equivalent_ids(RESOURCES)) == 50
 
 resolver = build_reprint_resolver(RESOURCES)
 for card_id in summary["card_ids"]:
