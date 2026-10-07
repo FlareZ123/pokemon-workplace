@@ -110,6 +110,20 @@ def main() -> None:
     else:
         raise AssertionError("declined swap accepted a Prize position")
 
+    try:
+        resolve_optional_top_prize_swap(
+            observers,
+            actor_id="actor",
+            actor_observed_top="X",
+            swap_probability_by_top={"X": 0.0, "Y": 1.0},
+            observed_swap=True,
+            position=0,
+        )
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("accepted an actor decision with zero policy probability")
+
     print("Observer-indexed top/Prize swap regressions passed")
 
 
