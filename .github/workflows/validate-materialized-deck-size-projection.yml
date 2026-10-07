@@ -1,0 +1,27 @@
+name: Validate materialized deck size projection
+
+on:
+  push:
+    paths:
+      - "tools/physical_zone_count.py"
+      - "tools/physical_deck_projection.py"
+      - "tools/computer_search_private_transaction.py"
+      - "tools/deck_search_shuffle_topology.py"
+      - "tools/identity_materialization.py"
+      - "results/materialized_deck_size_projection/**"
+      - ".github/workflows/validate-materialized-deck-size-projection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check materialized deck-size projection
+        run: python results/materialized_deck_size_projection/reproduce.py
