@@ -291,6 +291,15 @@ Expanded-legal Huntail `sv10-55` provides the concrete counterexample to uncondi
 
 **Working synthesis:** conservation and destination choice are separate concerns. The identity ledger should preserve copy totals while card/effect semantics select the zone each removed physical instance enters.
 
+
+## 23. Cross-player simultaneous Knock Outs contain ordered promotion decisions
+
+[cross_player_knockout_resolution/](cross_player_knockout_resolution/) composes two pending KO batches with the rule that, when both Active Pokémon are Knocked Out simultaneously, the player whose turn would be next promotes first.
+
+The regression gives each player one surviving Bench Pokémon, marks both Active Pokémon Knocked Out, and sets Player B as the next player. The legal decision protocol is `B -> A`: an attempted A-first promotion is rejected, B commits a surviving promotion, then A chooses after that visible decision. Only after both required choices are recorded are both KO batches physically disposed.
+
+**Working synthesis:** simultaneity of the physical event does not imply simultaneity of downstream choices. Promotion order is an information boundary that a policy model should expose explicitly.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -317,7 +326,7 @@ Particularly foundational components include:
 
 Several larger questions remain promising:
 
-1. **General conservation across unified state layers.** Energy attachment/movement, Pokémon evolution/devolution stacks, Tools, simultaneous Knock Out disposal, and KO-trigger destination routing now have aggregate-to-instance conservation bridges. The next shared-kernel problems are cross-player simultaneous resolution and promotion ordering, competing replacement effects, hidden-state beliefs, and action budgets.
+1. **General conservation across unified state layers.** The repository now has conserved materialization paths for Energy, evolution stacks, Tools, movement, simultaneous Knock Outs, zone-routing recovery, and cross-player promotion ordering. The next shared-kernel problems are competing replacement effects, post-KO Prize/win resolution, hidden-state beliefs, and action budgets.
 2. **Compiler from card text to transitions.** A validated semantic island now compiles multi-output Trainer deck-search text through typed physical-target feasibility. The larger open problem is extending the same auditable approach to more wording families and then materializing successful compiled actions into canonical zone / instance state without guessing ambiguous semantics.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Errata-aware reprint equivalence.** The repository now has an exact-fingerprint candidate scanner and an official Copycat counterexample showing why equality is incomplete. The next layer should normalize authoritative errata and semantic equivalence without turning same-name cards into automatic matches.
