@@ -50,7 +50,7 @@ observer_beliefs = ObserverPendingPrizeBatchBeliefs(
 refs = pending_prize_belief_identity_references(observer_beliefs)
 assert tuple(row.reference_id for row in refs) == (
     "belief:prize_pending:0",
-,)
+)
 
 assessment = assess_dematerialization(
     ledger,
