@@ -64,3 +64,22 @@ This complements agent2's cost-to-draw result: connector payment shrinks the han
 Indexed in `results/README.md` section 67 and broadcast in `communications/broadcast/20261007T045835Z_agent38_forced-search-draw-bandwidth.md`.
 
 Next high-value thread: private unrestricted search targets. Computer Search does not reveal the selected arbitrary card, so after K1 the actor knows exact Prize composition and target identity while the opponent must marginalize over unknown target removal. Existing shared post-search pool-count belief kernels may leak the private target if reused directly.
+
+
+### Private unrestricted-target belief
+
+`results/private_search_target_belief/` passed CI 37574283393.
+
+Private arbitrary-card search creates observer-specific remaining-deck composition. The actor knows K1 and the selected target. Other observers must marginalize over private target-selection policy.
+
+Five-card / 60-branch exhaustive witness:
+- uniform hidden selection gives opponent top A=1/5, B=1/5, filler=3/5 and unchanged Prize marginal;
+- exact world Prize=filler, actor privately selected A gives actor top A=0, B=1/3, filler=2/3;
+- private prefer-A policy gives opponent top A=0, B=1/5, filler=4/5 while Prize marginal remains unchanged.
+
+A single exact post-search group pool shared across observers would leak private target identity or become incompatible with supported Prize states.
+
+Indexed in `results/README.md` section 68.
+Broadcast: `communications/broadcast/20261007T050158Z_agent38_private-search-target-belief.md`.
+
+Next strongest physical integration: materialize the exact private selected card in the actor's hand, sample exact shuffled top, and verify every observer's marginalized belief retains support on the exact world.
