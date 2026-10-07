@@ -12,7 +12,10 @@ from energy_action_budget import (  # noqa: E402
     EnergyRouteType,
     evaluate_energy_routes,
     unit,
+    with_turn_action_capacities,
 )
+from lock_state_kernel import PlayerChannels, apply_play_lock  # noqa: E402
+from turn_action_budget import TurnAction, TurnActionBudget  # noqa: E402
 
 
 def load_cards() -> dict[str, dict]:
@@ -331,6 +334,82 @@ def main() -> None:
         {"Lightning", "Basic"},
         (guzma_hala_compiled,),
     ).exact_feasible
+
+    # Canonical turn-budget projection reproduces the action capacities used by
+    # the exact Energy solver.
+    base_budget = TurnActionBudget()
+    canonical_caps = with_turn_action_capacities(
+        {"discardable_cards": 2},
+        base_budget,
+    )
+    canonical_thorns = evaluate_energy_routes(
+        ("L", "C", "C"),
+        canonical_caps,
+        {"Lightning", "Basic"},
+        (guzma_hala_compiled,),
+    )
+    assert canonical_thorns.exact_feasible
+
+    manual_spent = base_budget.consume(TurnAction.MANUAL_ENERGY_ATTACHMENT)
+    assert manual_spent is not None
+    no_manual_caps = with_turn_action_capacities({}, manual_spent)
+    assert not evaluate_energy_routes(
+        ("C", "C"),
+        no_manual_caps,
+        {"Basic"},
+        (dce_route,),
+    ).exact_feasible
+
+    supporter_locked = apply_play_lock(PlayerChannels(), "supporter")
+    locked_welder_caps = with_turn_action_capacities(
+        {"fire_energy_in_hand": 3},
+        base_budget,
+        player_channels=supporter_locked,
+    )
+    assert not evaluate_energy_routes(
+        ("R", "R", "R"),
+        locked_welder_caps,
+        {"Basic"},
+        (welder_route, manual_fire),
+    ).exact_feasible
+
+    stadium_locked = apply_play_lock(PlayerChannels(), "stadium")
+    locked_stadium_caps = with_turn_action_capacities(
+        {"discardable_cards": 2},
+        base_budget,
+        player_channels=stadium_locked,
+    )
+    assert not evaluate_energy_routes(
+        ("L", "C", "C"),
+        locked_stadium_caps,
+        {"Lightning", "Basic"},
+        (guzma_hala_compiled,),
+    ).exact_feasible
+
+    ended_budget = base_budget.consume(TurnAction.END_TURN)
+    assert ended_budget is not None
+    ended_caps = with_turn_action_capacities(
+        {"discardable_cards": 2},
+        ended_budget,
+    )
+    assert not evaluate_energy_routes(
+        ("L", "C", "C"),
+        ended_caps,
+        {"Lightning", "Basic"},
+        (guzma_hala_compiled,),
+    ).exact_feasible
+
+    try:
+        with_turn_action_capacities(
+            {"manual_attachment": 1},
+            base_budget,
+        )
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "turn action adapter must reject duplicate action-capacity keys"
+        )
 
     print(
         json.dumps(
