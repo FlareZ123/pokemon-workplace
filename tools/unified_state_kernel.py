@@ -182,7 +182,7 @@ def apply_lock(state: UnifiedState, dimension: str) -> UnifiedState:
 
 
 def quick_ball_for_tapu_lele(state: UnifiedState) -> list[Transition]:
-    if not state.channels.item_play:
+    if state.bench.turn_ended or not state.channels.item_play:
         return []
     if (
         state.zone("Quick Ball") != Zone.HAND.value
@@ -311,7 +311,8 @@ def attach_tool_to_active(
     """Attach one modeled Tool while keeping Item and Tool channels distinct."""
 
     if (
-        not state.channels.tool_play
+        state.bench.turn_ended
+        or not state.channels.tool_play
         or state.active_name is None
         or state.active_pokemon.tool_attached
         or state.zone(card) != Zone.HAND.value
@@ -348,7 +349,8 @@ def active_tool_protects(state: UnifiedState) -> bool:
 
 def attach_dce_to_active(state: UnifiedState) -> UnifiedState | None:
     if (
-        not state.channels.special_energy_play
+        state.bench.turn_ended
+        or not state.channels.special_energy_play
         or state.manual_attachment_used
         or state.active_name is None
         or state.zone("Double Colorless Energy") != Zone.HAND.value
@@ -378,7 +380,8 @@ def attach_dce_to_active(state: UnifiedState) -> UnifiedState | None:
 
 def play_thunder_mountain(state: UnifiedState) -> UnifiedState | None:
     if (
-        not state.channels.stadium_play
+        state.bench.turn_ended
+        or not state.channels.stadium_play
         or state.stadium_used
         or state.zone("Thunder Mountain Prism Star") != Zone.HAND.value
     ):
