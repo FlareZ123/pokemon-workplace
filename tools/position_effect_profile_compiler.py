@@ -3,9 +3,8 @@
 The compiler recognizes complete Trainer effect bodies and complete attack-text
 bodies whose only outside-damage instruction is one of the rulebook's three
 position-change families: self switch, opponent-chosen forced switch, or
-actor-chosen targeted gust. Historical English wordings normalize to the same
-semantic kinds while chooser authority and attack-effect target geometry remain
-explicit.
+actor-chosen targeted gust. Historical English wording and the current
+Pokemon Catcher erratum are normalized before semantic compilation.
 """
 
 from __future__ import annotations
@@ -51,6 +50,7 @@ class PositionEffectProfile:
     play_condition: str | None = None
     attack_cost: tuple[str, ...] = ()
     attack_damage: str | None = None
+    coin_heads_required: bool = False
 
     def __post_init__(self) -> None:
         if self.source_kind not in {"trainer", "attack"}:
@@ -106,6 +106,15 @@ _MEANINGS: dict[str, _Meaning] = {
     ),
 }
 
+_COIN_HEADS_PREFIX = "Flip a coin. If heads, "
+_POKEMON_CATCHER_STALE = (
+    "Switch your opponent's Active Pokémon with 1 of his or her Benched Pokémon."
+)
+_POKEMON_CATCHER_CURRENT = (
+    "Flip a coin. If heads, switch 1 of your opponent's Benched Pokémon "
+    "with his or her Active Pokémon."
+)
+
 
 def _load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -113,6 +122,34 @@ def _load_json(path: Path) -> Any:
 
 def _normalized(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
+
+
+def _current_rules(card: dict[str, Any]) -> tuple[str, ...]:
+    """Apply the movement-relevant current-text erratum before compilation."""
+
+    rules = tuple(_normalized(rule) for rule in (card.get("rules") or ()))
+    if card.get("name") != "Pokémon Catcher":
+        return rules
+    return tuple(
+        _POKEMON_CATCHER_CURRENT if rule == _POKEMON_CATCHER_STALE else rule
+        for rule in rules
+    )
+
+
+def _parse_movement(text: str) -> tuple[_Meaning, bool] | None:
+    normalized = _normalized(text)
+    direct = _MEANINGS.get(normalized)
+    if direct is not None:
+        return direct, False
+
+    if not normalized.startswith(_COIN_HEADS_PREFIX):
+        return None
+    body = normalized[len(_COIN_HEADS_PREFIX):]
+    if not body:
+        return None
+    canonical_body = body[0].upper() + body[1:]
+    gated = _MEANINGS.get(canonical_body)
+    return None if gated is None else (gated, True)
 
 
 def _legal_expanded_cards(resources_root: Path) -> tuple[dict[str, Any], ...]:
@@ -152,8 +189,7 @@ def _is_reminder_rule(rule: str) -> bool:
 
 
 def _is_simple_play_condition(rule: str) -> bool:
-    lower = rule.casefold()
-    return lower.startswith(
+    return rule.casefold().startswith(
         ("you can use this card only", "you can play this card only")
     )
 
@@ -163,23 +199,24 @@ def _trainer_profile(card: dict[str, Any]) -> PositionEffectProfile | None:
     if action_class is None:
         return None
 
-    rules = tuple(_normalized(rule) for rule in (card.get("rules") or ()))
-    matched = tuple(rule for rule in rules if rule in _MEANINGS)
+    rules = _current_rules(card)
+    matched = tuple(
+        (rule, parsed)
+        for rule in rules
+        if (parsed := _parse_movement(rule)) is not None
+    )
     if len(matched) != 1:
         return None
 
-    effect_text = matched[0]
+    effect_text, (meaning, coin_heads_required) = matched[0]
     other = tuple(
         rule
         for rule in rules
         if rule != effect_text and not _is_reminder_rule(rule)
     )
-    if any(not _is_simple_play_condition(rule) for rule in other):
-        return None
-    if len(other) > 1:
+    if len(other) > 1 or any(not _is_simple_play_condition(rule) for rule in other):
         return None
 
-    meaning = _MEANINGS[effect_text]
     return PositionEffectProfile(
         card_id=card["id"],
         name=card["name"],
@@ -191,6 +228,7 @@ def _trainer_profile(card: dict[str, Any]) -> PositionEffectProfile | None:
         effect_target=meaning.target,
         effect_text=effect_text,
         play_condition=other[0] if other else None,
+        coin_heads_required=coin_heads_required,
     )
 
 
@@ -201,9 +239,10 @@ def _attack_profiles(card: dict[str, Any]) -> tuple[PositionEffectProfile, ...]:
     profiles: list[PositionEffectProfile] = []
     for attack in card.get("attacks") or ():
         effect_text = _normalized(attack.get("text") or "")
-        meaning = _MEANINGS.get(effect_text)
-        if meaning is None:
+        parsed = _parse_movement(effect_text)
+        if parsed is None:
             continue
+        meaning, coin_heads_required = parsed
         profiles.append(
             PositionEffectProfile(
                 card_id=card["id"],
@@ -217,6 +256,7 @@ def _attack_profiles(card: dict[str, Any]) -> tuple[PositionEffectProfile, ...]:
                 effect_text=effect_text,
                 attack_cost=tuple(attack.get("cost") or ()),
                 attack_damage=attack.get("damage"),
+                coin_heads_required=coin_heads_required,
             )
         )
     return tuple(profiles)
