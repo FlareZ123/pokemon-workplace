@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from iron_thorns_mulligan_bonus import exact_probability as bonus_probability  # noqa: E402
 from iron_thorns_turn1_probability import (  # noqa: E402
     accepted_opening_probability,
     baseline_route,
@@ -53,6 +54,18 @@ def main() -> None:
         0.000906921338669032,
     )
     assert_close(informed - baseline, 0.002274004332680123)
+
+    expected_bonus = (
+        0.34008906143861073,
+        0.3788457812695931,
+        0.4155138839854457,
+        0.4501309200874209,
+        0.4827411487803291,
+        0.5133947243143232,
+        0.5421469139646088,
+    )
+    for bonus_draws, expected in enumerate(expected_bonus):
+        assert_close(bonus_probability(bonus_draws), expected)
 
     print("All Iron Thorns turn-one probability checks passed.")
     print("Baseline represented route:", f"{baseline:.12%}")
