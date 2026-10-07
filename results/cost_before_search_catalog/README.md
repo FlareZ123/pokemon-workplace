@@ -24,9 +24,10 @@ The scan is intentionally conservative. It does not reinterpret effects whose pr
 
 The current bundled paper-Expanded card pool contains:
 
-- **54 legal prints** matching the conservative pattern;
-- **16 distinct card names**;
-- **23 distinct gameplay fingerprints** across those prints.
+- **390 legal Trainer prints across 163 names** with literal `search your deck` text;
+- **54 legal prints** matching the conservative cost-before-search pattern;
+- **16 distinct matching card names**, or about **9.82%** of search-Trainer names;
+- **23 distinct gameplay fingerprints** across those matching prints.
 
 The 16 names are:
 
