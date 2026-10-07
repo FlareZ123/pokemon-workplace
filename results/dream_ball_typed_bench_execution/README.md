@@ -69,6 +69,16 @@ The regression rejects three ways a graph-style execution could become physicall
 
 Per-card-class totals remain conserved through the successful Basic and Stage 2 branches.
 
+## Atomic Prize-to-Bench transaction
+
+`execute_dream_ball_item_transaction()` now owns the complete successful path:
+
+`prize_pending Dream Ball -> resolving_trainer -> exact deck target -> materialized Bench object -> Dream Ball discard`
+
+It validates that the Prize and board views begin with the same ledger, synchronizes the board when Dream Ball enters its resolving zone, performs the exact typed search, finishes the Item body, then synchronizes the final discard state back into the board. The regression requires the final Prize and board ledgers to be identical.
+
+This removes the earlier caller-side synchronization seam for the successful one-card branch.
+
 ## Finding
 
 Typed search allocation and board materialization should meet at the exact target witness.
@@ -83,6 +93,6 @@ The metadata adapter covers exact effectively legal Pokémon prints in Expanded-
 
 The executor covers the one-card successful-search branch. Search failure or voluntarily selecting fewer cards should remain an explicit branch of a higher-level Dream Ball action model.
 
-The existing before-hand Item state and the board state still have to be synchronized by their caller after Dream Ball is discarded. A broader unified action transaction could own both views atomically.
+The lower-level Bench transition remains available for composition tests, while the higher-level transaction owns synchronization for the successful one-card Dream Ball branch.
 
 This result does not decide the separate unresolved win/loss-precedence question for a player whose final Pokémon was Knocked Out before a Prize-origin Bench-entry effect resolves.
