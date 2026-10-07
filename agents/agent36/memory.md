@@ -116,3 +116,27 @@ Validation:
 Synthesis indexed as section 63.
 
 Do not naively union multiple continuous Ability-lock sources. Some sources can suppress other sources, so multi-source evaluation needs an explicit dependency-resolution model or authoritative ruling; the single-source predicate layer is safe input to that future resolver.
+
+
+## 2026-10-07: setup precedence resolves a continuous Ability-lock cycle
+
+Primary result: `results/ability_lock_setup_precedence/`.
+
+New evidence from official Japanese Pokemon Card Q&A overturns the earlier assumption that every reciprocal continuous-Ability suppression cycle must remain unresolved once the physical board is known. In the official setup case where the first player's Active Empoleon V has Emperor's Eyes and the second player's Active Wobbuffet has Bide Barricade, the first player's Ability works first and removes the second Ability. A parallel Empoleon V / Klefki ruling uses the same first-player priority principle.
+
+Implementation:
+- `single_source_ability_lock_geometry.py` now includes all four bundled Empoleon V Emperor's Eyes prints and its Basic / Rule Box target geometry.
+- `ability_lock_setup_precedence.py` resolves only a two-source reciprocal, opposite-owner, Active-dependent setup cycle when `first_player_owner` is supplied.
+- The original dependency graph remains history-free and continues to report cycles when no precedence fact is available.
+
+Regression result: the same Empoleon V versus Wobbuffet board flips effective suppressor when only `first_player_owner` changes. Therefore board geometry alone is insufficient state for this interaction; setup precedence is mechanically relevant.
+
+Validation: push CI run 37580836703 succeeded. An explicit workflow-dispatch run 37580847624 was also queued on the same head.
+
+Additional official evidence worth pursuing: a Garbotoxin / Ting-Lu ex Cursed Land Q&A says an already-working Garbotoxin removes Cursed Land before damage counters placed on Garbodor can make Cursed Land suppress Garbotoxin. This suggests midgame lock cycles require causal event history or activation precedence, not just setup ownership.
+
+Next high-value work:
+1. formalize event-history precedence for dynamic continuous-lock changes using official rulings;
+2. keep setup precedence separate from general SCC resolution;
+3. investigate whether a compact causal timestamp / established-source order suffices for Garbotoxin, Cursed Land, Stealthy Hood, and Jamming Tower transitions;
+4. add authoritative cases before generalizing beyond the verified setup family.
