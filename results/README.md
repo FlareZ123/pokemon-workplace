@@ -124,6 +124,12 @@ Multiple locks can compete for the single Active Spot, so a model that stores on
 
 Related typed state work appears in [typed_lock_state_kernel/](typed_lock_state_kernel/) and [bench_capacity_lock_interactions/](bench_capacity_lock_interactions/).
 
+[ability_lock_dependency_graph/](ability_lock_dependency_graph/) composes continuous Ability-lock sources through an explicit source-suppression dependency graph. Acyclic source hierarchies resolve mechanically, while a history-free snapshot retains cyclic strongly connected components as unresolved.
+
+[ability_lock_setup_precedence/](ability_lock_setup_precedence/) adds official setup-order evidence for one such cycle. Empoleon V's Emperor's Eyes and Wobbuffet's Bide Barricade form reciprocal suppression edges, yet the official Japanese Q&A gives the first player's Ability precedence. The same physical board therefore has different effective lock states depending on first-player ownership.
+
+**Working synthesis:** continuous lock state can depend on causal precedence in addition to board geometry. A simulator should preserve the event or setup fact that established precedence instead of forcing every suppression cycle into a timeless fixed point.
+
 ## 6. Attack semantics require identity, execution body, and timing
 
 [attack_copy_semantics/](attack_copy_semantics/) shows that copied attacks should be represented as nested execution rather than replacement of the outer attack object.
