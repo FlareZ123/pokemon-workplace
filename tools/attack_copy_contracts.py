@@ -30,7 +30,14 @@ def build(resources_root: Path) -> dict[str, Any]:
             "selected_energy_gate": (
                 phase["selected_attack_energy_gate_position"] is not None
             ),
-            "source_zone_commit": phase["source_lifetime_pattern"] is not None,
+            "selected_source_zone_commit": (
+                phase["source_lifetime_pattern"]
+                == "selected_source_discarded_from_opponent_hand_before_body"
+            ),
+            "preselection_source_zone_commit": (
+                phase["source_lifetime_pattern"]
+                == "top_card_discarded_before_eligibility_and_body"
+            ),
             "post_copy_continuation": (
                 phase["trailing_semantics"] == "post_copy_cleanup"
             ),
