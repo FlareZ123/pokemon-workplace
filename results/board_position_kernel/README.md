@@ -23,7 +23,7 @@ The kernel consumes resolved values such as current effective Retreat Cost. It d
 
 **Normal retreat consumes explicit physical resources.** A Bulbasaur with effective Retreat Cost 2 discards two selected one-unit Energy cards. Their physical IDs are returned by the transition. Damage and Air Balloon remain with the same Pokémon instance after movement.
 
-**Retreat payment needs Energy units.** One Double Colorless Energy can pay a two-Colorless Retreat Cost. Payments are required to be minimally sufficient, preventing unrelated extra Energy cards from being discarded through the retreat action.
+**Retreat payment needs Energy units plus physical-card cardinality.** One Double Colorless Energy can pay a two-Colorless Retreat Cost. An official Dashing Pouch ruling also permits two Double Colorless Energy cards to be selected for a Retreat Cost of two. The kernel therefore accepts a payment when every selected card currently provides Energy, the selected cards jointly provide at least the numeric Retreat Cost, and the number of selected physical Energy cards does not exceed that cost. This preserves legal multi-unit overfill while still rejecting arbitrary extra one-unit cards.
 
 **Evolution needs stack identity.** The Bulbasaur -> Ivysaur -> Mega Venusaur ex regression appends each evolution card to the same physical stack. Damage and attachments persist. Active-only transient state clears. Same-turn ordinary double evolution is rejected, while `begin_next_turn` restores ordinary evolution eligibility.
 
