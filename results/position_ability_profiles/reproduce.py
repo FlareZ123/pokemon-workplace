@@ -77,7 +77,7 @@ def main() -> None:
     assert salamence.source_geometry == GEOMETRY_ACTIVE
 
     swellow = one(rows, card_id="xy1-103", ability_name="Drive Off")
-    assert swellow.source_geometry != GEOMETRY_HAND_BENCH_TRIGGER
+    assert swellow.source_geometry == GEOMETRY_HAND_BENCH_TRIGGER
 
     actor = make_board(
         make_pokemon("actor-active", "Attacker"),
