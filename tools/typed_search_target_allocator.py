@@ -90,9 +90,22 @@ class UnsupportedSearchSelector(ValueError):
 class SearchSelector:
     label: str
     required_tags: frozenset[str]
+    distinct_prefix: str | None = None
 
     def matches(self, target: "TargetGroup") -> bool:
         return self.required_tags <= target.tags
+
+    def diversity_value(self, target: "TargetGroup") -> str | None:
+        if self.distinct_prefix is None:
+            return None
+        values = sorted(
+            tag
+            for tag in target.tags
+            if tag.startswith(self.distinct_prefix)
+        )
+        if len(values) != 1:
+            return None
+        return values[0]
 
 
 @dataclass(frozen=True)
@@ -106,6 +119,11 @@ class TargetGroup:
     def __post_init__(self) -> None:
         if self.copies < 0:
             raise ValueError("copies must be non-negative")
+        if self.selector.distinct_prefix is not None:
+            raise ValueError(
+                "cross-card diversity selectors are search-axis constraints, "
+                "not simple demand selectors"
+            )
         closed = close_tags(self.tags)
         validate_closed_tags(closed)
         object.__setattr__(self, "tags", closed)
@@ -210,8 +228,10 @@ def selector_from_label(label: str) -> SearchSelector:
         )
 
     if normalized == "pokemon of different types":
-        raise UnsupportedSearchSelector(
-            "different-types search is a cross-selection diversity constraint"
+        return SearchSelector(
+            label=label,
+            required_tags=frozenset({POKEMON}),
+            distinct_prefix=TYPE_PREFIX,
         )
 
     pokemon_type = re.fullmatch(r"([a-z]+) pokemon", normalized)
@@ -312,14 +332,26 @@ def enumerate_typed_target_profiles(
     )
     zero_output = (0,) * len(demand_channels)
     zero_usage = (0,) * len(output_axes)
+    zero_distinct = tuple(
+        frozenset()
+        for _ in output_axes
+    )
 
     states: set[
         tuple[
             tuple[int, ...],
             tuple[int, ...],
             tuple[int, ...],
+            tuple[frozenset[str], ...],
         ]
-    ] = {(initial_remaining, zero_output, zero_usage)}
+    ] = {
+        (
+            initial_remaining,
+            zero_output,
+            zero_usage,
+            zero_distinct,
+        )
+    }
 
     for axis_index, output in enumerate(output_axes):
         output_selector = selector_from_label(output.label)
@@ -328,16 +360,24 @@ def enumerate_typed_target_profiles(
                 tuple[int, ...],
                 tuple[int, ...],
                 tuple[int, ...],
+                tuple[frozenset[str], ...],
             ]
         ] = set()
 
-        for remaining, supplied, usage in states:
+        for remaining, supplied, usage, distinct_values in states:
             axis_limit = _axis_limit(
                 output,
                 target_groups,
                 remaining,
             )
-            layer = {(remaining, supplied, usage)}
+            layer = {
+                (
+                    remaining,
+                    supplied,
+                    usage,
+                    distinct_values,
+                )
+            }
             next_axis_states.update(layer)
 
             for _ in range(axis_limit):
@@ -346,18 +386,32 @@ def enumerate_typed_target_profiles(
                         tuple[int, ...],
                         tuple[int, ...],
                         tuple[int, ...],
+                        tuple[frozenset[str], ...],
                     ]
                 ] = set()
                 for (
                     current_remaining,
                     current_supplied,
                     current_usage,
+                    current_distinct,
                 ) in layer:
                     for target_index, target in enumerate(target_groups):
                         if current_remaining[target_index] <= 0:
                             continue
                         if not output_selector.matches(target):
                             continue
+
+                        diversity_value = output_selector.diversity_value(
+                            target
+                        )
+                        if output_selector.distinct_prefix is not None:
+                            if diversity_value is None:
+                                continue
+                            if (
+                                diversity_value
+                                in current_distinct[axis_index]
+                            ):
+                                continue
 
                         for demand_index, demand in enumerate(demand_channels):
                             if current_supplied[demand_index] >= demand.copies:
@@ -371,11 +425,18 @@ def enumerate_typed_target_profiles(
                             increased[demand_index] += 1
                             next_usage = list(current_usage)
                             next_usage[axis_index] += 1
+                            next_distinct = list(current_distinct)
+                            if diversity_value is not None:
+                                next_distinct[axis_index] = (
+                                    next_distinct[axis_index]
+                                    | frozenset({diversity_value})
+                                )
                             following.add(
                                 (
                                     tuple(reduced),
                                     tuple(increased),
                                     tuple(next_usage),
+                                    tuple(next_distinct),
                                 )
                             )
 
@@ -400,7 +461,12 @@ def enumerate_typed_target_profiles(
                     ),
                     axis_usage=usage,
                 )
-                for remaining, supplied, usage in states
+                for (
+                    remaining,
+                    supplied,
+                    usage,
+                    _distinct_values,
+                ) in states
                 if any(supplied)
             },
             key=lambda action: (
