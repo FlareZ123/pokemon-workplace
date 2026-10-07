@@ -1,0 +1,24 @@
+name: Validate Prize swap signaling
+
+on:
+  push:
+    paths:
+      - "tools/prize_optional_swap_signal.py"
+      - "tools/prize_top_swap_belief.py"
+      - "results/prize_optional_swap_signal/**"
+      - ".github/workflows/validate-prize-swap-signaling.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check optional Prize swap signaling
+        run: python results/prize_optional_swap_signal/reproduce.py
