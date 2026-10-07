@@ -8,7 +8,11 @@ from tools.build_expanded_legality_baseline import classify_effective_legality, 
 from tools.current_card_semantics import current_semantic_fingerprint
 
 TOURNAMENT_HANDBOOK_NEGATIVE_SOURCE = "Tournament Handbook reprint example: Rainbow Energy"
+CONTEXTUAL_DIVERGENCE_SOURCE = (
+    "Current Expanded target-scope divergence: Life Herb excludes Pokémon-ex"
+)
 EXPLICIT_NEGATIVE_EXEMPLAR_ID = "base5-17"
+CONTEXTUAL_NON_EQUIVALENT_IDS = frozenset({"ex5-90", "ex6-93"})
 STRUCTURAL_ENERGY_COLLISION_NAMES = frozenset({"Darkness Energy", "Metal Energy"})
 
 
@@ -56,6 +60,36 @@ def collect_known_non_equivalent_ids(resources_root: Path) -> dict[str, str]:
             continue
         if current_semantic_fingerprint(card) == exemplar_fingerprint:
             result[card["id"]] = TOURNAMENT_HANDBOOK_NEGATIVE_SOURCE
+
+    current_life_herb = legal_by_name.get("Life Herb", [])
+    if not current_life_herb:
+        raise ValueError("Expected a current legal Expanded Life Herb")
+    if any(
+        "excluding Pokémon-ex" in " ".join(target.get("rules") or ())
+        for target in current_life_herb
+    ):
+        raise ValueError("Current legal Life Herb unexpectedly retains Pokémon-ex exclusion")
+
+    pokemon_ex_witnesses = [
+        card
+        for card in cards
+        if card["_set_id"] in expanded_sets
+        and classify_effective_legality(card)[0] == "Legal"
+        and any(
+            "When Pokémon-ex has been Knocked Out" in rule
+            for rule in (card.get("rules") or ())
+        )
+    ]
+    if not pokemon_ex_witnesses:
+        raise ValueError("No current legal Expanded Pokémon-ex witness found")
+
+    for card_id in CONTEXTUAL_NON_EQUIVALENT_IDS:
+        card = cards_by_id[card_id]
+        if card["_set_id"] in expanded_sets or card.get("name") != "Life Herb":
+            raise ValueError(f"Unexpected contextual divergence identity: {card_id}")
+        if "excluding Pokémon-ex" not in " ".join(card.get("rules") or ()):
+            raise ValueError(f"Life Herb exclusion missing from source text: {card_id}")
+        result[card_id] = CONTEXTUAL_DIVERGENCE_SOURCE
 
     return dict(sorted(result.items()))
 
