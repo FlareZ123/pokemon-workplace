@@ -603,6 +603,24 @@ A 200,000-state seeded Aichi probe found that 23,665 of 27,552 raw Secret Box-ac
 
 **Working synthesis:** discardability can be copy-local and transient. An endpoint-required card class can supply discard material when a later legal search restores the requirement before its deadline. Temporal planners therefore need exact generated identities, retention requirements, and reacquisition availability in addition to scalar resource production.
 
+
+## 51. Exact physical target movement preserves revealed-search signaling
+
+[deck_search_target_signal_physical/](deck_search_target_signal_physical/) binds the public target-signal posterior to exact card movement. In the six-card witness, A plus filler are materially Prized, X is the revealed searched target, and Y is materialized as one exact shuffled-top branch. X becomes a stable hand instance, Y becomes `deck_top`, the actor retains P(top=Y)=1/3, and the opponent's target-conditioned posterior gives P(top=Y)=1/7. Both observers keep positive support on top=Y and Prizes=(A, filler), and all card-class totals are conserved.
+
+The bridge independently derives K1 composition and pre-search pool counts from the exact ledger, then verifies that the physical target movement removes exactly the same group/count assumed by the belief update. A search attempt for a materially Prized singleton is rejected by the physical deck state.
+
+**Working synthesis:** a public target label and a physical searched copy are distinct pieces of state that must agree. The signal changes observer knowledge, while exact zone movement determines material truth.
+
+## 52. A one-target Trainer search can execute mechanics and hidden information atomically
+
+[trainer_search_hidden_state_bridge/](trainer_search_hidden_state_bridge/) composes the existing atomic Trainer transaction with exact Prize truth and observer-relative search signaling. A Quick Ball regression enforces Item play permission, one exact discard, typed Basic-Pokémon target selection, the resolving-Trainer boundary, K1 Prize conditioning, public target-X signaling, exact searched-copy materialization, shuffle, and exact top materialization in one immutable transition.
+
+In the exact world, Quick Ball and one fodder card enter discard, searched X becomes a materialized hand instance, and Y becomes the sampled shuffled top. The actor assigns P(top=Y)=1/3 while the opponent assigns 1/7 after observing target X. Item lock rejects the same transaction, the Supporter budget remains unspent, every observer retains positive support on exact truth, and card-class totals remain conserved.
+
+**Working synthesis:** connector execution should join action legality, payment, exact target identity, information acquisition, information leakage, and shuffle consequences. A reachability edge such as "Quick Ball reaches X" omits several mechanically and strategically relevant state transitions.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
