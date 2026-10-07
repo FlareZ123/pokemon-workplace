@@ -4,8 +4,10 @@ on:
   push:
     paths:
       - "tools/trainer_name_reuse_divergence.py"
+      - "tools/trainer_optionality_divergence.py"
       - "tools/reprint_negative_evidence.py"
       - "results/trainer_name_reuse_divergence/**"
+      - "results/trainer_optionality_divergence/**"
       - "results/reprint_negative_evidence/**"
       - "results/reprint_errata_resolution/**"
       - ".github/workflows/validate-trainer-name-reuse-divergence.yml"
@@ -27,5 +29,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m results.trainer_name_reuse_divergence.reproduce
+      - run: python -m results.trainer_optionality_divergence.reproduce
       - run: python -m results.reprint_negative_evidence.reproduce
       - run: python -m results.reprint_errata_resolution.reproduce
