@@ -1,0 +1,23 @@
+name: Validate forced Supporter execution
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/forced_supporter_execution.py"
+      - "results/forced_supporter_execution/**"
+      - ".github/workflows/validate-forced-supporter-execution.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce forced Supporter execution
+        run: python results/forced_supporter_execution/reproduce.py
