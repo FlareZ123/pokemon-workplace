@@ -59,6 +59,13 @@ Special Energy instance.
 The regression also requires real compiled Crushing Hammer and Enhanced Hammer
 profiles from the effectively legal bundled snapshot.
 
+The passing CI scan finds 213 profiles across 130 card names. The largest
+families are coin-gated Active-target attacks that discard any Energy (89
+profiles), deterministic Active-target attacks that discard any Energy (58),
+and deterministic Active-target attacks that discard Special Energy (38).
+The snapshot contains 11 compiled Crushing Hammer printings and 8 compiled
+Enhanced Hammer printings.
+
 ## Why quantity is restricted to one
 
 The rulebook includes Energy cards that can provide multiple units of Energy.
