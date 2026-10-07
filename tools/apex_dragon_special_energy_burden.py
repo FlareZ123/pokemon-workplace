@@ -7,16 +7,36 @@ from typing import Any
 from tools.apex_dragon_discard_burden import build as build_basic_catalog
 from tools.energy_discard_solver import (
     ENERGY_TYPES,
+    all_basic_named_cards,
     all_cards_providing_type,
     all_energy_cards,
+    minimum_basic_named_card_subsets,
     minimum_card_subsets_generic,
     minimum_card_subsets_typed,
 )
 
 BASIC_GGF = [
-    {"name": "Basic Grass A", "units": 1, "types": ["Grass"], "basic": True},
-    {"name": "Basic Grass B", "units": 1, "types": ["Grass"], "basic": True},
-    {"name": "Basic Fire", "units": 1, "types": ["Fire"], "basic": True},
+    {
+        "name": "Basic Grass A",
+        "units": 1,
+        "types": ["Grass"],
+        "basic": True,
+        "basic_energy_name": "Grass",
+    },
+    {
+        "name": "Basic Grass B",
+        "units": 1,
+        "types": ["Grass"],
+        "basic": True,
+        "basic_energy_name": "Grass",
+    },
+    {
+        "name": "Basic Fire",
+        "units": 1,
+        "types": ["Fire"],
+        "basic": True,
+        "basic_energy_name": "Fire",
+    },
 ]
 
 DDE_FIRE = [
@@ -26,7 +46,13 @@ DDE_FIRE = [
         "types": list(ENERGY_TYPES),
         "basic": False,
     },
-    {"name": "Basic Fire", "units": 1, "types": ["Fire"], "basic": True},
+    {
+        "name": "Basic Fire",
+        "units": 1,
+        "types": ["Fire"],
+        "basic": True,
+        "basic_energy_name": "Fire",
+    },
 ]
 
 
@@ -62,24 +88,47 @@ def solve_requirement(
         result = minimum_card_subsets_generic(cards, parsed["count"])
     elif kind == "typed_count":
         energy_type = parsed["energy_type"]
+        basic_named = bool(parsed.get("basic_only", False))
         if parsed["count"] == "all":
-            indexes = all_cards_providing_type(
-                cards,
-                energy_type,
-                basic_only=bool(parsed.get("basic_only", False)),
+            indexes = (
+                all_basic_named_cards(cards, energy_type)
+                if basic_named
+                else all_cards_providing_type(cards, energy_type)
             )
             units = sum(cards[index]["units"] for index in indexes)
             return {
                 "full": True,
                 "matched_units": units,
+                "matched_cards": len(indexes) if basic_named else None,
+                "requirement_basis": (
+                    "basic_named_cards" if basic_named else "provided_energy_units"
+                ),
                 "minimum_cards": len(indexes),
                 "minimum_card_subsets": [indexes],
                 "energy_units_lost_range_for_minimum_card_subsets": [units, units],
             }
+        if basic_named:
+            result = minimum_basic_named_card_subsets(
+                cards,
+                energy_type,
+                parsed["count"],
+            )
+            subsets = result["subsets"]
+            return {
+                "full": result["full"],
+                "matched_units": result["matched_cards"],
+                "matched_cards": result["matched_cards"],
+                "requirement_basis": "basic_named_cards",
+                "minimum_cards": result["minimum_cards"],
+                "minimum_card_subsets": subsets,
+                "energy_units_lost_range_for_minimum_card_subsets": _unit_range(
+                    cards,
+                    subsets,
+                ),
+            }
         result = minimum_card_subsets_typed(
             cards,
             [energy_type] * parsed["count"],
-            basic_only=bool(parsed.get("basic_only", False)),
         )
     elif kind == "typed_pair":
         result = minimum_card_subsets_typed(
