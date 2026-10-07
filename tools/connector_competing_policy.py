@@ -559,3 +559,150 @@ def competing_connector_success(
         no_connector_success_probability=no_connector_success,
         conditional_no_connector_success=no_connector_success / any_critical,
     )
+
+
+def competing_action_values(
+    *,
+    turns_remaining: int,
+    critical_remaining: int,
+    setup_secured: bool,
+    rescue_in_hand: int,
+    connector_in_hand: int,
+    disposable_in_hand: int,
+    setup_in_deck: int,
+    rescue_in_deck: int,
+    connector_in_deck: int,
+    disposable_in_deck: int,
+    other_in_deck: int,
+    discard_cost: int,
+) -> dict[str, float]:
+    """Return exact action values for a state after the current natural draw.
+
+    Each value is the probability of completing setup plus all modeled Prize
+    rescues by the horizon when the named action is taken now and future turns
+    are optimized.
+
+    The state is evaluated after the current turn's natural draw. Therefore,
+    every returned action transitions directly to the next modeled turn.
+    """
+
+    if turns_remaining <= 0:
+        raise ValueError("turns_remaining must be positive")
+    if min(
+        critical_remaining,
+        rescue_in_hand,
+        connector_in_hand,
+        disposable_in_hand,
+        setup_in_deck,
+        rescue_in_deck,
+        connector_in_deck,
+        disposable_in_deck,
+        other_in_deck,
+        discard_cost,
+    ) < 0:
+        raise ValueError("state counts and discard_cost must be non-negative")
+    if connector_in_hand + connector_in_deck > 1:
+        raise ValueError("the model contains at most one universal connector")
+
+    next_turns = turns_remaining - 1
+    values: dict[str, float] = {
+        "wait": _optimal_success_from_state(
+            next_turns,
+            critical_remaining,
+            setup_secured,
+            rescue_in_hand,
+            connector_in_hand,
+            disposable_in_hand,
+            setup_in_deck,
+            rescue_in_deck,
+            connector_in_deck,
+            disposable_in_deck,
+            other_in_deck,
+            discard_cost,
+        )
+    }
+
+    if critical_remaining > 0 and rescue_in_hand > 0:
+        values["play_rescue"] = _optimal_success_from_state(
+            next_turns,
+            critical_remaining - 1,
+            setup_secured,
+            rescue_in_hand - 1,
+            connector_in_hand,
+            disposable_in_hand,
+            setup_in_deck,
+            rescue_in_deck,
+            connector_in_deck,
+            disposable_in_deck,
+            other_in_deck,
+            discard_cost,
+        )
+
+    connector_payable = (
+        connector_in_hand > 0 and disposable_in_hand >= discard_cost
+    )
+    if connector_payable:
+        if not setup_secured and setup_in_deck > 0:
+            values["search_setup"] = _optimal_success_from_state(
+                next_turns,
+                critical_remaining,
+                True,
+                rescue_in_hand,
+                connector_in_hand - 1,
+                disposable_in_hand - discard_cost,
+                setup_in_deck - 1,
+                rescue_in_deck,
+                connector_in_deck,
+                disposable_in_deck,
+                other_in_deck,
+                discard_cost,
+            )
+            if critical_remaining > 0 and rescue_in_hand > 0:
+                values["search_setup_play_rescue"] = (
+                    _optimal_success_from_state(
+                        next_turns,
+                        critical_remaining - 1,
+                        True,
+                        rescue_in_hand - 1,
+                        connector_in_hand - 1,
+                        disposable_in_hand - discard_cost,
+                        setup_in_deck - 1,
+                        rescue_in_deck,
+                        connector_in_deck,
+                        disposable_in_deck,
+                        other_in_deck,
+                        discard_cost,
+                    )
+                )
+
+        if critical_remaining > 0 and rescue_in_deck > 0:
+            values["search_rescue_hold"] = _optimal_success_from_state(
+                next_turns,
+                critical_remaining,
+                setup_secured,
+                rescue_in_hand + 1,
+                connector_in_hand - 1,
+                disposable_in_hand - discard_cost,
+                setup_in_deck,
+                rescue_in_deck - 1,
+                connector_in_deck,
+                disposable_in_deck,
+                other_in_deck,
+                discard_cost,
+            )
+            values["search_rescue_play"] = _optimal_success_from_state(
+                next_turns,
+                critical_remaining - 1,
+                setup_secured,
+                rescue_in_hand,
+                connector_in_hand - 1,
+                disposable_in_hand - discard_cost,
+                setup_in_deck,
+                rescue_in_deck - 1,
+                connector_in_deck,
+                disposable_in_deck,
+                other_in_deck,
+                discard_cost,
+            )
+
+    return values
