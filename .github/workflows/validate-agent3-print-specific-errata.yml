@@ -6,8 +6,11 @@ on:
       - "tools/official_print_errata.py"
       - "tools/build_expanded_legality_baseline.py"
       - "tools/reprint_errata_resolution.py"
+      - "tools/current_card_semantics.py"
+      - "tools/tool_category_normalization.py"
       - "results/print_specific_errata_audit/**"
       - "results/reprint_errata_resolution/**"
+      - "results/tool_category_normalization/**"
       - ".github/workflows/validate-agent3-print-specific-errata.yml"
   workflow_dispatch:
 
@@ -21,3 +24,4 @@ jobs:
           python-version: "3.12"
       - run: python results/print_specific_errata_audit/reproduce.py
       - run: python results/reprint_errata_resolution/reproduce.py
+      - run: python results/tool_category_normalization/reproduce.py
