@@ -146,7 +146,7 @@ def _success_from_state(
         if critical_remaining > 0 and hand_rescue > 0:
             actions.append(
                 (
-                    critical_remainining - 1,
+                    critical_remaining - 1,
                     acquired,
                     hand_rescue - 1,
                     hand_connector,
@@ -219,7 +219,7 @@ def _success_from_state(
             if critical_remaining > 0 and hand_rescue > 0:
                 actions.append(
                     (
-                        critical_remainining - 1,
+                        critical_remaining - 1,
                         True,
                         hand_rescue - 1,
                         hand_connector - 1,
