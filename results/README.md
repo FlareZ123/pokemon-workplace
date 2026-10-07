@@ -75,6 +75,8 @@ A route can begin and end within the legal Bench limit while still being impossi
 
 Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench_capacity_lock_interactions/](bench_capacity_lock_interactions/), [bench_capacity_transition/](bench_capacity_transition/), [bench_release_catalog/](bench_release_catalog/), [bench_trigger_access/](bench_trigger_access/), and [typed_bench_state_kernel/](typed_bench_state_kernel/).
 
+[interturn_bench_debt_policy/](interturn_bench_debt_policy/) adds a cross-turn action-budget coupling: a spent Crobat V on the fifth Bench slot can be removed by AZ when Bench entry is the only future need, but ordinary one-Supporter bandwidth cannot both use AZ and play another required Supporter on that same turn. A two-Supporter quota restores the line. In the exact four-out toy draw layer, a 4->5 draw improvement has a 16.769152% break-even probability for this future Supporter/Bench collision.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
