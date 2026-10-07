@@ -60,7 +60,7 @@ def main() -> None:
         basic("Pivot", 20),
     ), active_id="multi")
     assert normal_retreat(multi, "p20", discard_energy_ids=("dce",)) is not None
-    assert normal_retreat(multi, "p20", discard_energy_ids=("dce", "extra")) is None
+    assert normal_retreat(multi, "p20", discard_energy_ids=("dce", "extra")) is not None
 
     evo_tool = Attachment("evo-tool", "Air Balloon", AttachmentKind.TOOL)
     evo_energy = Attachment("evo-energy", "Grass", AttachmentKind.ENERGY, 1)
@@ -89,6 +89,7 @@ def main() -> None:
         "switch_consumes_retreat_action": False,
         "full_bench_normal_retreat": True,
         "dce_alone_pays_two_retreat_units": True,
+        "dce_plus_lightning_can_pay_two_retreat_units": True,
         "same_turn_double_evolution_allowed": False,
         "next_turn_stage_two_name": second.state.get("evo").name,
     }, indent=2, sort_keys=True))
