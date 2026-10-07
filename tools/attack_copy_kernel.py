@@ -21,6 +21,7 @@ class PokemonRef:
     types: tuple[str, ...] = ()
     subtypes: tuple[str, ...] = ()
     attacks: tuple[str, ...] = ()
+    has_rule_box: bool = False
 
 
 @dataclass(frozen=True)
@@ -29,6 +30,8 @@ class CopySelector:
     require_non_gx: bool = False
     required_type: str | None = None
     required_subtype: str | None = None
+    require_no_rule_box: bool = False
+    move_selected_source_to: str | None = None
 
 
 @dataclass(frozen=True)
@@ -110,7 +113,15 @@ class ConflictingTurnBoundaryEffect(CopyResolutionError):
     pass
 
 
+class AmbiguousCopySource(CopyResolutionError):
+    pass
+
+
 ChoicePolicy = Callable[[AttackDef, tuple[str, ...], State], str]
+SourceChoicePolicy = Callable[
+    [AttackDef, str, tuple[str, ...], State],
+    str,
+]
 
 
 def opponent_of(player: str) -> str:
@@ -127,12 +138,13 @@ def _candidate_attacks(
     attack: AttackDef,
     attacks: dict[str, AttackDef],
     state: State,
-) -> tuple[str, ...]:
+) -> tuple[tuple[str, ...], dict[str, tuple[str, ...]]]:
     selector = attack.copy_selector
     if selector is None:
-        return ()
+        return (), {}
 
     candidates: list[str] = []
+    sources: dict[str, list[str]] = {}
     if selector.source == "opponent_last_attack":
         attack_id = state.last_attack_for(opponent_of(actor_player))
         if attack_id is not None:
@@ -142,6 +154,8 @@ def _candidate_attacks(
             cards = [p for p in state.pokemon if p.owner == actor_player and p.zone == "discard"]
         elif selector.source == "own_bench":
             cards = [p for p in state.pokemon if p.owner == actor_player and p.zone == "bench"]
+        elif selector.source == "own_deck_top":
+            cards = [p for p in state.pokemon if p.owner == actor_player and p.zone == "deck_top"]
         elif selector.source == "opponent_active":
             opponent = opponent_of(actor_player)
             cards = [p for p in state.pokemon if p.owner == opponent and p.zone == "active"]
@@ -151,6 +165,9 @@ def _candidate_attacks(
         elif selector.source == "opponent_revealed":
             opponent = opponent_of(actor_player)
             cards = [p for p in state.pokemon if p.owner == opponent and p.zone == "revealed"]
+        elif selector.source == "opponent_hand":
+            opponent = opponent_of(actor_player)
+            cards = [p for p in state.pokemon if p.owner == opponent and p.zone == "hand"]
         else:
             raise ValueError(f"Unsupported copy source: {selector.source}")
 
@@ -159,15 +176,28 @@ def _candidate_attacks(
                 continue
             if selector.required_subtype is not None and selector.required_subtype not in card.subtypes:
                 continue
-            candidates.extend(card.attacks)
+            if selector.require_no_rule_box and card.has_rule_box:
+                continue
+            for attack_id in card.attacks:
+                candidate = attacks[attack_id]
+                if selector.require_non_gx and candidate.is_gx:
+                    continue
+                candidates.append(attack_id)
+                sources.setdefault(attack_id, []).append(card.card_id)
 
-    filtered = []
-    for attack_id in candidates:
-        candidate = attacks[attack_id]
-        if selector.require_non_gx and candidate.is_gx:
-            continue
-        filtered.append(attack_id)
-    return tuple(filtered)
+    if selector.source == "opponent_last_attack":
+        filtered = []
+        for attack_id in candidates:
+            candidate = attacks[attack_id]
+            if selector.require_non_gx and candidate.is_gx:
+                continue
+            filtered.append(attack_id)
+        candidates = filtered
+
+    return tuple(candidates), {
+        attack_id: tuple(source_ids)
+        for attack_id, source_ids in sources.items()
+    }
 
 
 def resolve_attack(
@@ -178,6 +208,7 @@ def resolve_attack(
     attacks: dict[str, AttackDef],
     state: State,
     choose: ChoicePolicy,
+    choose_source: SourceChoicePolicy | None = None,
     max_depth: int = 32,
 ) -> Resolution:
     if declared_attack_id not in attacks:
@@ -187,7 +218,14 @@ def resolve_attack(
     body_chain: list[str] = []
     gx_used_before_resolution = actor_player in state.gx_used_by
     seen: set[
-        tuple[str, str, int, frozenset[str], TurnBoundaryEffect | None]
+        tuple[
+            str,
+            str,
+            int,
+            frozenset[str],
+            TurnBoundaryEffect | None,
+            tuple[tuple[str, str], ...],
+        ]
     ] = set()
 
     def execute(body_attack_id: str, current: State, depth: int) -> State:
@@ -201,6 +239,7 @@ def resolve_attack(
             current.progress,
             current.gx_used_by,
             current.pending_turn_boundary,
+            tuple(sorted((card.card_id, card.zone) for card in current.pokemon)),
         )
         if cycle_key in seen:
             raise CopyCycleError(
@@ -235,7 +274,7 @@ def resolve_attack(
             current = replace(current, events=current.events + (body.pre_event,))
 
         body_chain.append(body_attack_id)
-        candidates = _candidate_attacks(
+        candidates, candidate_sources = _candidate_attacks(
             actor_player=actor_player,
             attack=body,
             attacks=attacks,
@@ -266,6 +305,40 @@ def resolve_attack(
         if selected not in candidates:
             raise IllegalCopyTarget(
                 f"choice {selected!r} is not legal for {body_attack_id}; candidates={candidates!r}"
+            )
+
+        selector = body.copy_selector
+        if selector is not None and selector.move_selected_source_to is not None:
+            source_ids = candidate_sources.get(selected, ())
+            if not source_ids:
+                raise IllegalCopyTarget(
+                    f"copy source for {selected!r} cannot be materialized"
+                )
+            if len(source_ids) == 1:
+                selected_source = source_ids[0]
+            else:
+                if choose_source is None:
+                    raise AmbiguousCopySource(
+                        f"multiple physical sources supply {selected!r}: {source_ids!r}"
+                    )
+                selected_source = choose_source(
+                    body,
+                    selected,
+                    source_ids,
+                    current,
+                )
+                if selected_source not in source_ids:
+                    raise IllegalCopyTarget(
+                        f"source choice {selected_source!r} is not legal; sources={source_ids!r}"
+                    )
+            current = replace(
+                current,
+                pokemon=tuple(
+                    replace(card, zone=selector.move_selected_source_to)
+                    if card.card_id == selected_source
+                    else card
+                    for card in current.pokemon
+                ),
             )
 
         trace.append(
