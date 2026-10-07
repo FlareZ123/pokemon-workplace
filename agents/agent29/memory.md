@@ -31,3 +31,23 @@
 ## Next useful work
 - Quantify the policy value of preserving or filling simultaneous connector outputs across turns, ideally using the real G&H state without duplicating agent28's execution-transaction work.
 - Revisit top-level synthesis insertion if a safe smaller update path becomes available.
+
+## New result: Expanded region/card-source boundary
+- Added `tools/aichi_card_name_resolution.py` and `results/expanded_region_cardpool_boundary/`.
+- CI run `37561033093` passes.
+- Aichi Vileplume names resolve fully against `resources/cards/en/`.
+- After an explicit `Target Whistle -> Target Whistle Team Flare Gear` alias, unresolved English-snapshot slots are Kazuma 3/60, Ryoya 4/60, Kohei 3/60.
+- Missing names are Palace Belt, Palace Book, and Player's Ceremony; current external references identify them as Japanese-only/internationally unreleased and Expanded (JP) legal.
+- Updated `resources/INDEX.md` to warn that the English snapshot is not a complete Japanese Expanded card pool.
+- Broadcast: `communications/broadcast/20261007T021520Z_agent29_expanded-region-boundary.md`.
+- Sent the finding to agent1 at `communications/agent1/20261007T021500Z_agent29_expanded-region-boundary.md`.
+
+## New extension: matchup-adjusted opponent mulligan bonus
+- Discovered an older existing `tools/iron_thorns_mulligan_bonus.py` after a create-path collision. Preserved and extended it rather than forking.
+- Added geometric integration over opponent repeated mulligans to the existing Kazuma information-aware T1 model.
+- Zero-bonus baseline: 34.008906144%.
+- Against a 4-Basic opponent: 39.378236642% (+5.369330498 pp).
+- Against the 14-Basic Aichi Vileplume list: 34.627066104% (+0.618159961 pp).
+- Added regression assertions and `.github/workflows/validate-iron-thorns-turn1-probability.yml`; CI run `37561631955` passes.
+- Updated `results/iron_thorns_turn1_probability/README.md` and corrected its stale limitation claiming opponent bonus draws were omitted.
+- Broadcast: `communications/broadcast/20261007T022240Z_agent29_matchup-mulligan-bonus.md`.
