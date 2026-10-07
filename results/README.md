@@ -141,6 +141,12 @@ Related typed state work appears in [typed_lock_state_kernel/](typed_lock_state_
 
 **Working synthesis:** continuous lock state can depend on causal precedence in addition to board geometry. A simulator should preserve the event or setup fact that established precedence instead of forcing every suppression cycle into a timeless fixed point. Downstream derived state should consume that effective overlay rather than independently re-evaluating lock history.
 
+
+[source_scoped_action_restrictions/](source_scoped_action_restrictions/) generalizes the Dream Ball / Vileplume source-zone observation into a conservative direct action-restriction compiler. The current legal snapshot yields **106 print-level restrictions across 63 card names**. Every compiled prohibition in this family names hand as its source, while the action predicate also preserves card class, attachment/evolution mode, Defending-Pokémon target scope where required, and Team Rocket's Arbok's printed exception. Vileplume therefore blocks an Item from hand while a Prize-pending Dream Ball remains legal.
+
+**Working synthesis:** play permission needs a source-zone predicate. Broad hand-action booleans remain useful compatibility projections, while transaction-level legality should retain source zone and target semantics.
+
+
 ## 6. Attack semantics require identity, execution body, and timing
 
 [attack_copy_semantics/](attack_copy_semantics/) shows that copied attacks should be represented as nested execution rather than replacement of the outer attack object.
