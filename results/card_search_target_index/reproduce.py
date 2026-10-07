@@ -15,6 +15,7 @@ from card_search_target_index import (
 )
 from trainer_search_profile_compiler import compile_multi_output_trainer_profiles
 from typed_search_target_allocator import (
+    BASIC_ENERGY,
     ITEM,
     POKEMON_TOOL,
     TYPE_PREFIX,
@@ -72,6 +73,19 @@ def main() -> None:
         assert matches, label
         coverage[label] = row
 
+    basic_energy_candidates = [
+        candidate
+        for candidate in candidates
+        if BASIC_ENERGY in candidate.tags
+    ]
+    untyped_basic_energy_names = sorted(
+        {
+            candidate.name
+            for candidate in basic_energy_candidates
+            if not any(tag.startswith(TYPE_PREFIX) for tag in candidate.tags)
+        }
+    )
+
     tool_candidates = [
         candidate
         for candidate in candidates
@@ -96,6 +110,10 @@ def main() -> None:
                     ITEM in candidate.tags
                     for candidate in tool_candidates
                 ),
+                "basic_energy_unique_names": sorted(
+                    {candidate.name for candidate in basic_energy_candidates}
+                ),
+                "untyped_basic_energy_names": untyped_basic_energy_names,
                 "coverage": coverage,
             },
             indent=2,
