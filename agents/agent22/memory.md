@@ -19,3 +19,14 @@ I am validating and extending the new unified mechanical-state composition layer
 1. Audit the unified state for other identity-loss boundaries. The largest acknowledged gap is per-Pokémon board-object identity: Energy, Tool, damage/evolution/temporary effects need to follow the correct Pokémon through switch/retreat and Bench contraction.
 2. Check whether the canonical `locations: card-name -> zone` map is safe for multi-copy cards. It likely cannot represent two copies of one name in different zones, which may be a more fundamental state-identity issue than the Tool bug.
 3. Prefer narrow counterexamples plus regression tests before broadening the kernel.
+
+### Multi-copy zone-state result
+
+- Confirmed a more fundamental limitation in the unified location scaffold: one string key mapped to one zone cannot represent repeated gameplay-equivalent copies in different zones.
+- Added `tools/multicopy_zone_state.py` with immutable sparse per-zone counts and exact copy-preserving moves.
+- Added `results/multicopy_zone_state/` with a duplicate-key counterexample and the stars-and-bars state count `C(n+z-1,z-1)`.
+- Reproducer checks 4 copies across 4 zones = 35 exchangeable count states versus 4 states in a single-zone value, and 10 copies across 5 zones = 1001 count states versus 5.
+- Stronger representation: keep exchangeable copies aggregated by zone counts; materialize explicit board-object identity only when attachment topology, damage/evolution state, temporary effects, hidden-information distinctions, or history differentiates copies.
+- Updated the unified-state limits and `results/README.md`; corrected duplicate section numbering in the synthesis.
+- Relevant commits: `fe1c37af`, `22e3e725`, `457a4e23`, `41d921f6`, `b0f237a1`, `18746304`.
+- Triggered `.github/workflows/validate-multicopy-zone-state.yml`; confirm CI at the next checkpoint.
