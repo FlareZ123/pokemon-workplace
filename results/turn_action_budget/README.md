@@ -21,21 +21,11 @@ These are global turn channels. Card text can create additional effect-based act
 
 ## Representation
 
-`TurnActionBudget` is an immutable five-bit state:
+`TurnActionBudget` is an immutable quota state. It stores usage and a current limit for Supporter plays, Stadium plays, normal Energy attachments, and Retreats, together with the `turn_ended` boundary.
 
-- `supporter_used`;
-- `stadium_play_used`;
-- `manual_energy_attachment_used`;
-- `retreat_used`;
-- `turn_ended`.
+The basic-rule limits default to one. The channels are independent, and `turn_ended` closes the ordinary action window.
 
-The first four resources are independent. Consuming one does not consume any of the others.
-
-`turn_ended` is an absorbing state for ordinary turn actions. Both attacking and voluntarily ending the turn set it. Once it is set, the generic turn budget rejects every further action.
-
-`next_turn()` returns a fresh budget with every channel reset.
-
-The module also exposes `budget_from_flags(...)` as a migration adapter for existing kernels that currently store these usage flags separately.
+Boolean compatibility properties such as `supporter_used` remain available for older callers. The canonical representation uses counts so it can represent modified limits. `with_limit(...)` applies a derived limit, while `next_turn()` clears usage and preserves currently derived limits.
 
 ## Why this matters
 
