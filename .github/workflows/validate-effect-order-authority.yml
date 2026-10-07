@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "tools/effect_order_authority.py"
+      - "tools/rulebook_order_authority_audit.py"
+      - "resources/manual/EN_advanced_manual-2025-transcription-structured.md"
       - "results/effect_order_authority/**"
       - ".github/workflows/validate-effect-order-authority.yml"
   workflow_dispatch:
