@@ -57,6 +57,28 @@ def main() -> None:
     for action in TurnAction:
         assert not ended.can(action)
 
+    # A modified quota can be projected for policy use even though the old
+    # booleans cannot store the full state.
+    dual_brains = project_composite_turn_budget(
+        unified,
+        board,
+        supporter_play_limit=2,
+    )
+    first_supporter = dual_brains.consume(TurnAction.SUPPORTER)
+    assert first_supporter is not None
+    assert first_supporter.can(TurnAction.SUPPORTER)
+    second_supporter = first_supporter.consume(TurnAction.SUPPORTER)
+    assert second_supporter is not None
+    assert second_supporter.supporter_plays_used == 2
+    try:
+        apply_budget_to_unified(unified, second_supporter)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "legacy booleans must reject lossy two-Supporter reverse sync"
+        )
+
     target = TurnActionBudget(
         supporter_used=True,
         stadium_play_used=False,
