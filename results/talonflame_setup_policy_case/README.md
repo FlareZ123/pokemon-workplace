@@ -55,8 +55,9 @@ Classify the 60 cards into six disjoint groups:
 | Gale Wings Talonflame | 4 |
 | Brigette | 2 |
 | Ultra Ball | 4 |
+| Skyla | 1 |
 | Energy: Fairy or Double Colorless | 11 |
-| Other cards | 30 |
+| Other cards | 29 |
 
 Conditioned on drawing an optional-only hand:
 
@@ -66,18 +67,22 @@ Conditioned on drawing an optional-only hand:
 | Contains Ultra Ball | 42.009651% |
 | Brigette without Ultra Ball | 14.692088% |
 | Ultra Ball without Brigette | 33.324667% |
-| Contains both search channels | 8.684983% |
+| Contains both direct search channels | 8.684983% |
 | Contains Brigette or Ultra Ball | 56.701738% |
+| Contains Skyla | 12.336303% |
+| Contains Brigette, Ultra Ball, or Skyla | 62.791853% |
+| Skyla is the only modeled search connector | 6.090115% |
 | Contains any Energy | 80.531053% |
-| Contains search or Energy | 93.677027% |
-| Contains neither search nor Energy | 6.322973% |
+| Contains connector search or Energy | 94.873140% |
+| Contains neither connector search nor Energy | 5.126860% |
 
 This is an exact multivariate-hypergeometric calculation.
 
 ### Mechanical Ralts access
 
 Brigette can search Basic Pokémon directly. Ultra Ball can search Ralts after
-discarding two cards.
+discarding two cards. Skyla adds a two-step connector:
+`Skyla -> Ultra Ball -> Ralts`.
 
 For this narrow mechanical-access test, every optional-only opener containing
 Ultra Ball has enough cards remaining in hand to pay its two-card discard
@@ -87,9 +92,13 @@ mechanically legal Ultra Ball route unattractive.
 
 Because an optional-only hand contains no Ralts, all four Ralts remain in the
 53-card deck before the six Prize cards are set. The exact chance that all four
-Ralts then become Prized is only **0.005123%**. Thus the hand-level search
-criterion is an extremely close approximation to actual Ralts availability,
-while still having a precisely quantified Prize failure mode.
+Ralts then become Prized is only **0.005123%**.
+
+When Skyla is the only modeled search connector, all four Ultra Ball copies
+also remain in the 53-card deck. The chance all four Ultra Ball are Prized is
+another **0.005123%**. Those two failure events cannot occur together in six
+Prize cards, so the Skyla-only connector fails from these Prize configurations
+with exact probability **0.010245%**.
 
 ## Turn order creates a downstream policy split
 
@@ -101,12 +110,13 @@ exception.
 Therefore the Energy-based Aero Blitz route is immediately available on the
 first turn only when the Talonflame player goes second.
 
-This creates two simple line-aware filters:
+This creates three line-aware filters:
 
-- **search filter:** keep a Talonflame-only opener if it contains Ultra Ball or
-  Brigette;
-- **search-or-Aero filter:** going second, keep if it contains one of those
-  search cards or any Energy that can pay Aero Blitz.
+- **direct-search filter:** keep if the opener contains Ultra Ball or Brigette;
+- **connector-search filter:** also accept the Skyla -> Ultra Ball -> Ralts
+  connector;
+- **connector-or-Aero filter:** going second, also accept any Energy that can
+  pay Aero Blitz.
 
 These are line filters rather than claims of globally optimal play.
 
@@ -115,18 +125,22 @@ These are line filters rather than claims of globally optimal play.
 | Optional-only policy | Acceptance per shuffle | Expected failed mulligans |
 | --- | ---: | ---: |
 | Decline every Talonflame-only hand | 70.022521% | 0.428112 |
-| Keep only immediate-search hands | 77.786732% | 0.285566 |
-| Keep search-or-Aero hands | 82.849786% | 0.207004 |
+| Keep direct-search hands | 77.786732% | 0.285566 |
+| Keep connector-search hands | 78.620656% | 0.271930 |
+| Keep connector-or-Aero hands | 83.013570% | 0.204622 |
 | Keep every Talonflame-only hand | 83.715595% | 0.194521 |
 
-The going-second search-or-Aero filter captures most of the mulligan reduction
-available from unconditional Talonflame acceptance. Relative to accepting every
-Talonflame-only hand, it gives up only **0.865809 percentage points** of
-per-attempt acceptance while rejecting the 6.323% of optional-only hands that
-lack both modeled lines.
+Skyla adds **6.090115 percentage points** of line coverage among optional-only
+hands beyond Brigette and Ultra Ball already in hand.
 
-The going-first search filter is much more selective because the attack route
-is unavailable during that first turn.
+The going-second connector-or-Aero filter captures most of the mulligan
+reduction available from unconditional Talonflame acceptance. Relative to
+accepting every Talonflame-only hand, it gives up only **0.702025 percentage
+points** of per-attempt acceptance while rejecting the 5.127% of optional-only
+hands that lack every modeled connector and Energy.
+
+The going-first connector-search filter remains much more selective because
+the attack route is unavailable during that first turn.
 
 ## K0 Prize priors also change
 
@@ -135,21 +149,22 @@ also changes the initial Prize prior.
 
 Specific-card Prize probabilities are:
 
-| Policy | Forced Basic | Talonflame | Brigette | Ultra Ball | Energy | Other |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Decline optional-only | 9.434569% | 10.099782% | 10.099782% | 10.099782% | 10.099782% | 10.099782% |
-| Search filter | 9.622837% | 9.888846% | 9.975810% | 9.975810% | 10.097176% | 10.097176% |
-| Search-or-Aero filter | 9.726599% | 9.765785% | 10.058002% | 10.058002% | 10.058002% | 10.080381% |
-| Accept all optional-only | 9.743086% | 9.743086% | 10.071061% | 10.071061% | 10.071061% | 10.071061% |
+| Policy | Forced Basic | Talonflame | Brigette | Ultra Ball | Skyla | Energy | Other |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Decline optional-only | 9.434569% | 10.099782% | 10.099782% | 10.099782% | 10.099782% | 10.099782% | 10.099782% |
+| Direct-search filter | 9.622837% | 9.888846% | 9.975810% | 9.975810% | 10.097176% | 10.097176% | 10.097176% |
+| Connector-search filter | 9.640847% | 9.868145% | 9.990076% | 9.990076% | 9.990076% | 10.095732% | 10.095732% |
+| Connector-or-Aero filter | 9.729744% | 9.761742% | 10.060493% | 10.060493% | 10.060493% | 10.060493% | 10.079188% |
+| Accept all optional-only | 9.743086% | 9.743086% | 10.071061% | 10.071061% | 10.071061% | 10.071061% | 10.071061% |
 
-Under the search filter, both search channels are slightly less likely to be
-Prized than Energy or filler because optional-only hands containing either
-channel are preferentially accepted.
+Under the direct-search filter, Brigette and Ultra Ball are slightly less
+likely to be Prized than Skyla, Energy, or filler because only those direct
+channels affect the keep decision.
 
-Under the search-or-Aero filter, individual Brigette, Ultra Ball, and Energy
-cards have the same Prize probability. The policy treats the presence of any
-one of those cards as sufficient to keep, even though their class sizes and
-execution costs differ.
+Under the connector-search filter, Brigette, Ultra Ball, and Skyla have the
+same specific-card Prize probability. Under connector-or-Aero, Energy joins
+that symmetry class because any one of those cards is sufficient for the
+modeled keep rule.
 
 ## Strategic interpretation
 
@@ -169,8 +184,14 @@ The result also illustrates the distinction between access and AMR. Among all
 optional-only hands, **33.324667%** contain Ultra Ball without Brigette and
 therefore expose the two-card discard payment if the player wants immediate
 Ralts access. **14.692088%** contain Brigette without Ultra Ball and instead
-expose the Supporter-for-turn cost. Another **8.684983%** contain both channels,
-so the player can choose which resource to spend.
+expose the Supporter-for-turn cost. Another **8.684983%** contain both direct
+channels, so the player can choose which resource to spend.
+
+Skyla demonstrates connector accumulation rather than free access. It rescues
+another **6.090115%** of optional-only hands under the modeled search criterion,
+yet that path spends the Supporter channel and still requires Ultra Ball's
+two-card discard. Counting Skyla as one more "out" without those costs would
+overstate its practical equivalence to Brigette or Ultra Ball already in hand.
 
 Those channel shares are mechanical facts about the opening distribution. A
 richer Gardevoir-specific hand-value model would need DCI for Ultra Ball's two
