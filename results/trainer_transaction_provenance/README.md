@@ -69,7 +69,7 @@ The provenance bridge therefore returns **two** valid witnesses:
 
 Both project to the same physical zone counts.
 
-This ambiguity is strategically meaningful. A physical class-count state can prove legality while leaving unresolved which historical copy a policy conceptually spent. If provenance affects discard valuation, the planner must preserve the branch or choose it explicitly rather than inferring one from the canonical counts.
+This ambiguity is useful for causal accounting. For ordinary same-class copies, both witnesses have the same mechanical continuation after provenance is projected away. A gameplay planner can therefore quotient the histories unless a higher-level analysis explicitly needs historical attribution. Provenance still records which upstream action supplied the copy described as discard material.
 
 ## Relation to concurrent search materialization
 
@@ -82,11 +82,11 @@ This bridge addresses the complementary side of the transaction: exact discarded
 Two representations serve different jobs:
 
 - canonical physical state should remain compact and exchangeable where physical copies are strategically indistinguishable;
-- provenance state should be retained when a policy cares how a card entered the current zone or which earlier action generated it.
+- provenance state should be retained for causal accounting, audit, or analyses that explicitly attribute resources to earlier actions.
 
 A projection relation can keep both synchronized without forcing every game-state consumer to pay the cost of historical identity.
 
-This is especially useful for DCI and AMR. “This TM is discardable because Guzma & Hala will replace it” is a claim about one line's history and continuation, while “one TM is in hand and one remains in deck” is a physical-state claim.
+This is especially useful for auditing DCI and AMR explanations. “Secret Box supplied the TM that funded Guzma & Hala” is a causal resource-flow claim, while “one TM is in hand and one remains in deck” is a physical-state claim. The future legality of the line depends on the physical state and live replacement route; arbitrary history labels on exchangeable same-class copies should not change that legality.
 
 ## Validation
 
