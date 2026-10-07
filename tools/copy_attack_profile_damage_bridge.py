@@ -74,7 +74,8 @@ def materialize_profiled_copy_program(
     attacker_types: tuple[str, ...] | None = None,
     weakness_enabled: bool = True,
     resistance_enabled: bool = True,
-    ignore_weakness_resistance: bool = False,
+    ignore_weakness_resistance: bool | None = None,
+    ignore_defender_effects: bool | None = None,
 ) -> PhysicalBoardEventProgram:
     """Compile opponent-facing board effects with printed type stages.
 
@@ -101,10 +102,22 @@ def materialize_profiled_copy_program(
     if not live_attacker_types:
         raise ValueError("attacking Pokemon must have at least one current type")
 
-    if ignore_weakness_resistance:
+    ignore_wr = (
+        semantics.ignore_weakness_resistance
+        if ignore_weakness_resistance is None
+        else ignore_weakness_resistance
+    )
+    ignore_effects = (
+        semantics.ignore_defender_effects
+        if ignore_defender_effects is None
+        else ignore_defender_effects
+    )
+
+    if ignore_wr:
         context = DamageContext(
             attack=AttackDamage(semantics.fixed_damage or 0),
             ignore_weakness_resistance=True,
+            ignore_defender_effects=ignore_effects,
         )
     else:
         stages = resolve_printed_type_stages(
@@ -118,6 +131,7 @@ def materialize_profiled_copy_program(
             weakness_multiplier=stages.weakness_multiplier,
             weakness_addition=stages.weakness_addition,
             resistance_reduction=stages.resistance_reduction,
+            ignore_defender_effects=ignore_effects,
         )
 
     return replace(base, damage_context=context)
