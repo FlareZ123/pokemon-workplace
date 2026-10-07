@@ -1,0 +1,27 @@
+name: Validate observer top Prize beliefs
+
+on:
+  push:
+    paths:
+      - "tools/observer_top_prize_beliefs.py"
+      - "tools/prize_optional_swap_signal.py"
+      - "tools/prize_top_swap_belief.py"
+      - "tools/prize_slot_visibility.py"
+      - "tools/prize_position_belief.py"
+      - "results/observer_top_prize_beliefs/**"
+      - ".github/workflows/validate-observer-top-prize-beliefs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check observer-indexed Prize/top beliefs
+        run: python results/observer_top_prize_beliefs/reproduce.py
