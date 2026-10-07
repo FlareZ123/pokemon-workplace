@@ -787,6 +787,14 @@ With one Supporter already used, opposing Garbotoxin reduces Dual Brains from li
 
 **Working synthesis:** suppression dependencies are best represented as derived overlays over physical attachment/effect state. This lets locks disappear and be recomputed without destroying the target's unsuppressed Ability state, while preserving the Tool-attachment versus Tool-effect distinction required by Garbotoxin and Jamming Tower.
 
+## 63. Continuous Ability locks require source and target geometry before dependency resolution
+
+[single_source_ability_lock_geometry/](single_source_ability_lock_geometry/) generalizes the suppression overlay to five verified source families while deliberately evaluating one live source at a time. Profiles preserve exact print families, activation geometry, owner scope, target tags, target position, exemptions, and Stealthy Hood protection.
+
+For Dual Brains, active Wobbuffet suppresses a non-Psychic Magnezone but exempts a Psychic-tagged target; Galarian Weezing and Slaking require the opponent source to be Active; Slaking does not suppress its owner's Magnezone; Benched Gastrodon suppresses Magnezone only while the target is also a Benched Stage 2; Garbotoxin retains its Tool-attached geometry. Opponent-sourced locks are removed by live Stealthy Hood and restored by Jamming Tower.
+
+**Working synthesis:** a global Ability-allowed flag loses source position, target position, owner scope, target traits, and protection. The predicate layer can be derived exactly for one source; mutually suppressing continuous sources still require a separate dependency-resolution rule rather than a naive union.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -807,6 +815,7 @@ Particularly foundational components include:
 - `action_quota_effects.py`
 - `board_action_quota_derivation.py`
 - `garbotoxin_suppression.py`
+- `single_source_ability_lock_geometry.py`
 - `turn_sequence_kernel.py`
 - `canonical_turn_sequence_owner.py`
 - `bench_capacity_model.py`
