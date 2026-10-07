@@ -83,6 +83,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [interturn_bench_slack_exposure/](interturn_bench_slack_exposure/) shows that preloaded slack itself is exposed during the opponent window. After a release leaves occupancy 4 under capacity 5, Collapsed Stadium can reduce capacity to 4, force zero discards, and still erase the reserved slot entirely. Immediate materialization avoids that specific future-entry failure when the required entrant is retained through contraction, at the cost of sacrificing other board value.
 
+[bench_capacity_restoration_bootstrap/](bench_capacity_restoration_bootstrap/) adds recoverability and bootstrap thresholds. A full four-of-four Collapsed Stadium Bench cannot use Pumpkin Pit/Snow Sink to unlock itself because those removers must legally enter the Bench before discarding the Stadium. Direct Stadium replacement can restore capacity from zero slack. Area Zero Underdepths is sequence-sensitive: with no Tera initially in play, replacing Collapsed reopens only the fifth slot; using that slot for the Tera activates capacity eight, while using it for an ordinary entrant first strands the Tera and blocks the expansion.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
