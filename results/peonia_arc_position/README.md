@@ -110,6 +110,28 @@ For the shuffled counterfactual, the regression separately enumerates every post
 
 Both calculations match the closed forms exactly for one, two, and three Peonia selections.
 
+## Same-turn hand access with Trekking Shoes
+
+The bundled Expanded-legal Trekking Shoes print `swsh10-156` says:
+
+`Look at the top card of your deck. You may put that card into your hand.`
+
+This supplies a deterministic same-turn endpoint after a successful Arc Phone target selection.
+
+The concrete sequence is:
+
+`Peonia -> Arc Phone -> Trekking Shoes`.
+
+Peonia uses the turn's Supporter channel. Arc Phone and Trekking Shoes are both Items, and the Advanced Player's Rulebook permits any number of Item cards during a turn. Conditional on all three Trainers already being available, no applicable lock, and the singleton target starting somewhere in the six face-down Prizes, the three-selection Peonia line therefore puts the target into hand during the same turn with the same exact probability:
+
+`2/3 = 66.666666667%`.
+
+Under the shuffle-after-Peonia counterfactual, the same-turn hand-access probability is:
+
+`7/12 = 58.333333333%`.
+
+The regression verifies the bundled texts of all three Trainers and the Item/Supporter action rules in addition to the positional calculation.
+
 ## Interpretation
 
 The result provides a concrete policy-level consequence of the position-state counterexample.
