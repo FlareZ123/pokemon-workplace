@@ -17,6 +17,7 @@ on:
       - "tools/source_scoped_channel_projection.py"
       - "tools/source_scoped_restriction_activation.py"
       - "tools/source_scoped_trainer_transaction.py"
+      - "tools/target_bound_attack_restrictions.py"
       - "results/active_source_scoped_restrictions/**"
       - "results/active_source_trainer_transaction/**"
       - "results/attack_restriction_turn_windows/**"
@@ -29,6 +30,7 @@ on:
       - "results/source_scoped_channel_projection/**"
       - "results/source_scoped_restriction_activation/**"
       - "results/source_scoped_trainer_transaction/**"
+      - "results/target_bound_attack_restrictions/**"
       - ".github/workflows/validate-source-scoped-action-permissions.yml"
 
 permissions:
@@ -62,6 +64,8 @@ jobs:
         run: python results/attack_source_scoped_restrictions/reproduce.py
       - name: Reproduce attack restriction turn windows
         run: python results/attack_restriction_turn_windows/reproduce.py
+      - name: Reproduce target-bound attack restrictions
+        run: python results/target_bound_attack_restrictions/reproduce.py
       - name: Reproduce active restriction aggregation
         run: python results/active_source_scoped_restrictions/reproduce.py
       - name: Reproduce live-source Trainer transaction gating
