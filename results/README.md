@@ -131,7 +131,21 @@ In the reported 500,000 accepted-opening simulation, the modeled Guzma & Hala ro
 
 A broader modeled planner found only a small increment outside the named route for the same core objective, supporting the usefulness of the ALS abstraction for this deck while preserving the stated simulation scope and exclusions.
 
-## 9. Legality and card identity must remain explicit
+## 9. Iron Thorns ex: composing access with attack readiness
+
+[iron_thorns_integrated_als/](iron_thorns_integrated_als/) composes Item, Supporter, discard, Stadium, manual-attachment, Prize-zone, and typed-Energy constraints for the named Iron Thorns ex line rather than validating each segment independently.
+
+The deterministic state search finds the five-action baseline:
+
+`Tag Call -> Guzma & Hala -> Thunder Mountain + Double Colorless Energy -> play Stadium -> attach DCE -> Volt Cyclone`
+
+and removes the line when any required action channel or searched resource is unavailable.
+
+[iron_thorns_named_line_probability/](iron_thorns_named_line_probability/) then evaluates the narrow named route exactly against the three published 2026 Aichi Iron Thorns lists. Conditioned on a legal seven-card opening and the first draw going second, the route succeeds in **33.781505711%** of accepted starts for the one-DCE Kazuma and Kohei lists and **39.107850627%** for Ryoya's three-DCE list. These figures exclude Trainers' Mail and other broader access routes, so they are route probabilities rather than full attack probabilities.
+
+The result is a concrete first composition of the repository's typed-access and typed-Energy layers. It also identifies Trainers' Mail as a high-value next transition because connector failure dominates the remaining narrow-route state mass.
+
+## 10. Legality and card identity must remain explicit
 
 [expanded_legality_baseline/](expanded_legality_baseline/) demonstrates that the bundled database is a search resource rather than a complete legality oracle. The maintained baseline applies confirmed official ban updates missing from the snapshot.
 
