@@ -63,6 +63,45 @@ def main() -> None:
     assert setup_continues.basis == "setup_first_player"
     assert setup_continues.resolution.player_suppressed_object_ids == frozenset()
 
+    # Causal precedence must be advanced across every lock-relevant event.
+    # If an intermediate source deactivation is skipped, a later identical
+    # source graph can look continuous even though the actual history changed.
+    filler = make_pokemon(
+        "filler",
+        "Opponent filler",
+        print_id="synthetic-filler",
+        tags={"Basic"},
+    )
+    skipped_restored_opponent = make_board(wobbuffet, (filler,))
+    skipped_interrupt = advance_lock_state(
+        setup,
+        setup_player,
+        skipped_restored_opponent,
+    )
+    assert skipped_interrupt.resolved
+    assert skipped_interrupt.basis == "setup_first_player"
+
+    interrupted_opponent = make_board(filler, (wobbuffet,))
+    interrupted = advance_lock_state(
+        setup,
+        setup_player,
+        interrupted_opponent,
+    )
+    assert interrupted.resolved
+    assert interrupted.basis == "snapshot"
+    assert interrupted.resolution.active_sources == (
+        AbilityLockSourceRef("player", "empoleon"),
+    )
+
+    restored = advance_lock_state(
+        interrupted,
+        setup_player,
+        skipped_restored_opponent,
+    )
+    assert not restored.resolved
+    assert restored.basis == "unresolved"
+    assert restored.resolution.active_sources is None
+
     # Snapshot resolution becomes a verified history-dependent cycle after the
     # Garbodor damage condition turns Cursed Land's reverse edge on.
     ting_lu = make_pokemon(
