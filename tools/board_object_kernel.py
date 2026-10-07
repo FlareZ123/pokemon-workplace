@@ -24,25 +24,27 @@ from lock_state_kernel import (
 
 @dataclass(frozen=True)
 class EnergyAttachment:
-    card_id: str
+    instance_id: str
     card_name: str
     units: tuple[str, ...]
+    print_id: str | None = None
 
     def __post_init__(self) -> None:
-        if not self.card_id:
-            raise ValueError("Energy card_id must be non-empty")
+        if not self.instance_id:
+            raise ValueError("Energy instance_id must be non-empty")
         if not self.units:
             raise ValueError("Energy attachment must provide at least one unit")
 
 
 @dataclass(frozen=True)
 class ToolAttachment:
-    card_id: str
+    instance_id: str
     card_name: str
+    print_id: str | None = None
 
     def __post_init__(self) -> None:
-        if not self.card_id:
-            raise ValueError("Tool card_id must be non-empty")
+        if not self.instance_id:
+            raise ValueError("Tool instance_id must be non-empty")
 
 
 @dataclass(frozen=True)
@@ -102,9 +104,9 @@ class BoardState:
 
         attached_ids: list[str] = []
         for pokemon in self.objects:
-            attached_ids.extend(card.card_id for card in pokemon.energy)
+            attached_ids.extend(card.instance_id for card in pokemon.energy)
             if pokemon.tool is not None:
-                attached_ids.append(pokemon.tool.card_id)
+                attached_ids.append(pokemon.tool.instance_id)
         if len(attached_ids) != len(set(attached_ids)):
             raise ValueError("attached physical card IDs must be unique")
 
@@ -244,7 +246,7 @@ def legal_retreat_energy_choices(
                     minimal = False
                     break
             if minimal:
-                choices.append(tuple(cards[index].card_id for index in indices))
+                choices.append(tuple(cards[index].instance_id for index in indices))
 
     return tuple(choices)
 
@@ -281,11 +283,11 @@ def retreat(
 
     discarded = tuple(
         energy for energy in outgoing.energy
-        if energy.card_id in requested_set
+        if energy.instance_id in requested_set
     )
     remaining = tuple(
         energy for energy in outgoing.energy
-        if energy.card_id not in requested_set
+        if energy.instance_id not in requested_set
     )
     moved_outgoing = replace(outgoing, energy=remaining)
     moved_outgoing = _clear_outgoing_active_effects(moved_outgoing)
