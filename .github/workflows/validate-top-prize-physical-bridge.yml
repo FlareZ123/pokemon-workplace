@@ -1,0 +1,26 @@
+name: Validate top Prize physical bridge
+
+on:
+  push:
+    paths:
+      - "tools/top_prize_physical_bridge.py"
+      - "tools/observer_top_prize_beliefs.py"
+      - "tools/identity_materialization.py"
+      - "tools/multicopy_zone_state.py"
+      - "results/top_prize_physical_bridge/**"
+      - ".github/workflows/validate-top-prize-physical-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check physical and observer Prize/top bridge
+        run: python results/top_prize_physical_bridge/reproduce.py
