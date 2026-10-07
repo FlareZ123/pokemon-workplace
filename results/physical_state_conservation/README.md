@@ -74,8 +74,9 @@ Supporting results:
 [energy_board_conservation/](../energy_board_conservation/),
 [pokemon_stack_materialization/](../pokemon_stack_materialization/),
 [devolution_materialization/](../devolution_materialization/),
-[energy_movement_conservation/](../energy_movement_conservation/), and
-[stack_knockout_conservation/](../stack_knockout_conservation/).
+[energy_movement_conservation/](../energy_movement_conservation/),
+[stack_knockout_conservation/](../stack_knockout_conservation/), and
+[stack_zone_exit_conservation/](../stack_zone_exit_conservation/).
 
 ## Physical transition classes
 
@@ -97,6 +98,18 @@ movement is the current example.
 
 The Pokémon board object persists while evolution appends a physical card or
 devolution removes one.
+
+### Object-ending ordinary zone exit
+
+A hand or deck return ends the board object and moves every physical Pokémon
+card in its evolution stack to the Pokémon's resolved destination. Attached
+cards leave their attachment relations at the same boundary, although card text
+can route them to a different ordinary zone.
+
+[stack_zone_exit_conservation/](../stack_zone_exit_conservation/) validates
+Scoop Up Cyclone style hand routing, Cassius style deck routing, and AZ style
+split routing. It can also keep off-board instances materialized until an
+enclosing effect no longer needs exact identity.
 
 ### Relation destruction with zone routing
 
@@ -199,13 +212,16 @@ copies that can drift out of synchronization.
 1. **Competing replacement/redirection effects.** Per-instance destination
    routing exists, but precedence among several applicable effects needs an
    explicit model.
-2. **Prize taking and win/loss after Knock Out.** Physical disposal now has
-   phases, but Prize and game-resolution phases are not composed with them.
+2. **Canonical match-level phase composition.** Physical Knock Out disposal,
+   Prize-pending information, promotion-pending state, and post-Knock-Out game
+   resolution now have concrete adapters, while one shared match authority still
+   needs to compose those phase boundaries consistently.
 3. **Cross-player unified state.** Promotion order is currently a protocol over
    two player states rather than one canonical match object.
-4. **Identity lifetime after recovery.** Default dematerialization is efficient,
-   but effects that later refer to the exact recovered card may require keeping
-   instance identity beyond a zone move.
+4. **Identity lifetime after recovery.** Zone-exit conservation can defer
+   dematerialization, but a general policy still needs to decide when an
+   enclosing effect has finished referring to an exact moved card and identity
+   can safely collapse back into exchangeable counts.
 5. **Board-kernel convergence.** `board_object_kernel.py` and the richer
    `board_position_state.py` / `board_position_kernel.py` overlap. The
    stack-bearing representation currently captures more physical structure.
@@ -226,6 +242,7 @@ Core detailed results:
 - [energy_movement_conservation/](../energy_movement_conservation/)
 - [special_energy_move_conservation/](../special_energy_move_conservation/)
 - [stack_knockout_conservation/](../stack_knockout_conservation/)
+- [stack_zone_exit_conservation/](../stack_zone_exit_conservation/)
 - [simultaneous_knockout_conservation/](../simultaneous_knockout_conservation/)
 - [knockout_zone_routing/](../knockout_zone_routing/)
 - [cross_player_knockout_resolution/](../cross_player_knockout_resolution/)
