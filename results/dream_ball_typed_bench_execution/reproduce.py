@@ -54,7 +54,7 @@ def expect_value_error(fn) -> bool:
     return False
 
 
-def make_resolving_state(profile):
+def make_pending_state():
     initial = IdentityLedger(
         ZoneCountState.from_mapping(
             {
@@ -101,6 +101,11 @@ def make_resolving_state(profile):
         ),
         (PendingPrize("dream-ball", True),),
     )
+    return initial, prizes, board
+
+
+def make_resolving_state(profile):
+    initial, prizes, board = make_pending_state()
     resolving = begin_before_hand_item_play(
         prizes,
         profile,
@@ -108,7 +113,6 @@ def make_resolving_state(profile):
     )
     board = board.with_ledger(resolving.physical.ledger)
     return initial, resolving, board
-
 
 def make_targets(metadata):
     return (
