@@ -12,17 +12,17 @@ from aichi_vileplume_secret_box import simulate_swap
 
 
 def main() -> None:
-    result = simulate_swap(100_000, seed=20261007)
+    result = simulate_swap(500_000, seed=20261007)
 
     expected = {
-        "baseline_successes": 70_709,
-        "secret_box_successes": 74_884,
-        "incremental_successes": 4_175,
+        "baseline_successes": 353_262,
+        "secret_box_successes": 374_047,
+        "incremental_successes": 20_785,
         "baseline_only_successes": 0,
-        "secret_box_in_hand": 12_723,
-        "secret_box_stellar_only": 1_148,
-        "incremental_jet_in_hand": 978,
-        "incremental_jet_needs_gnh": 3_197,
+        "secret_box_in_hand": 63_734,
+        "secret_box_stellar_only": 5_796,
+        "incremental_jet_in_hand": 4_849,
+        "incremental_jet_needs_gnh": 15_936,
         "incremental_started_with_gnh_or_tag_call": 0,
     }
     for field, value in expected.items():
