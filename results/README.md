@@ -230,6 +230,7 @@ Other timing and attack-structure work includes [copied_attack_partial_resolutio
 The setup research models opening acceptance, optional starters, mulligans, and the public information revealed before the first normal turn.
 
 - [setup_mulligan_policy/](setup_mulligan_policy/) studies how optional setup choices change opening and Prize priors.
+- [setup_hand_value_policy/](setup_hand_value_policy/) turns those optional-only choices into an exact hand-state decision rule. With a constant cost per failed mulligan, the optimal stationary policy is a terminal-value threshold; the same keep rule also changes K0 Prize priors for non-starter cards that influence the decision.
 - [setup_transcript_bayes/](setup_transcript_bayes/) shows that revealed mulligans are policy-censored samples. An opponent observing a mulligan sees information about both deck composition and the player's keep policy.
 - [setup_information_value/](setup_information_value/), [mulligan_information_leakage/](mulligan_information_leakage/), and [setup_entry_payload_capacity/](setup_entry_payload_capacity/) extend the setup-state representation.
 - [setup_trigger_role_contention/](setup_trigger_role_contention/) and [setup_bench_policy/](setup_bench_policy/) connect setup choices to later board constraints.
