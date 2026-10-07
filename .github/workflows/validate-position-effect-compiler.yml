@@ -1,0 +1,20 @@
+name: Validate position effect compiler
+
+on:
+  push:
+    paths:
+      - "tools/position_effect_profile_compiler.py"
+      - "tools/position_effect_execution.py"
+      - "results/position_effect_profile_compiler/**"
+      - ".github/workflows/validate-position-effect-compiler.yml"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/position_effect_profile_compiler/reproduce.py
