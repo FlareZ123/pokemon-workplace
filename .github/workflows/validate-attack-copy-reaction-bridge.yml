@@ -1,0 +1,28 @@
+name: Validate attack-copy reaction bridge
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_reaction_bridge.py"
+      - "tools/attack_copy_damage_bridge.py"
+      - "tools/attack_copy_kernel.py"
+      - "tools/damage_reaction_kernel.py"
+      - "tools/damage_board_bridge.py"
+      - "tools/damage_calculation_kernel.py"
+      - "results/attack_copy_reaction_bridge/**"
+      - ".github/workflows/validate-attack-copy-reaction-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check copied attack reaction phase bridge
+        run: python results/attack_copy_reaction_bridge/reproduce.py
