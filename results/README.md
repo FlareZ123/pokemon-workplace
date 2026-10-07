@@ -134,6 +134,8 @@ Related typed state work appears in [typed_lock_state_kernel/](typed_lock_state_
 
 [ability_lock_precedence_quota_bridge/](ability_lock_precedence_quota_bridge/) shows the downstream consequence. On the same Empoleon V + Dual Brains Magnezone versus Wobbuffet board, changing only first-player ownership changes the derived Supporter quota from 2 to 1 because Bide Barricade either remains suppressed or suppresses Magnezone.
 
+[ability_lock_canonical_budget/](ability_lock_canonical_budget/) completes the ownership chain into the canonical turn budget. A resolved causal lock state supplies only the effective suppression overlay; `refresh_canonical_action_quotas` derives the live grants and writes them into the existing `UnifiedState.turn_budget`. An unresolved lock state publishes no quota refresh.
+
 **Working synthesis:** continuous lock state can depend on causal precedence in addition to board geometry. A simulator should preserve the event or setup fact that established precedence instead of forcing every suppression cycle into a timeless fixed point. Downstream derived state should consume that effective overlay rather than independently re-evaluating lock history.
 
 ## 6. Attack semantics require identity, execution body, and timing
