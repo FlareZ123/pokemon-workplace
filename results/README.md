@@ -1051,6 +1051,7 @@ The top-level [../tools/](../tools/) directory contains deterministic analyzers,
 Particularly foundational components include:
 
 - `build_expanded_legality_baseline.py`
+- `release_legality.py`
 - `card_identity.py`
 - `typed_access_network.py`
 - `typed_energy_access.py`
@@ -1100,7 +1101,7 @@ Several larger questions remain promising:
 1. **General conservation across unified state layers.** The repository now has conserved materialization paths for Energy, evolution stacks, Tools, movement, simultaneous Knock Outs, zone-routing recovery, cross-player promotion ordering, post-KO terminal resolution, and physical Prize taking with the taker's belief update. The next shared-kernel problems are competing replacement effects, opponent-specific Prize knowledge, and migrating the now-explicit turn budget into canonical composite ownership.
 2. **Compiler from card text to transitions.** A validated semantic island now compiles multi-output Trainer deck-search text through typed physical-target feasibility. The larger open problem is extending the same auditable approach to more wording families and then materializing successful compiled actions into canonical zone / instance state without guessing ambiguous semantics.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
-4. **Errata-aware reprint equivalence.** Name-wide Trainer errata now provides an authoritative layer above exact fingerprints while Copycat and Rainbow Energy remain positive and negative semantic boundary cases. The next layer should cover print-specific errata and a small auditable semantic grammar without turning same-name cards into automatic matches.
+4. **Evidence-bearing legality composition.** Print-specific errata, historical reprint evidence, region-aware semantic sources, and the audited 30th Celebration product anchor now exist as separate layers. The next legality problem is composing exact print identity, functional-reprint evidence, regional availability, product/promo release dates, bans, and card-specific restrictions into one queryable provenance object without collapsing those evidence types.
 5. **Empirical archetype validation.** ALS modeling has one strong concrete case. More published Expanded lists could test which archetypes are well described by narrow lines and which are better modeled as flexible resource policies.
 
 ## Methodological caution
