@@ -538,6 +538,16 @@ There are 50 exact Evolution lock rows in the audited pool, of which 22 are comp
 
 **Working synthesis:** lock reachability is not lock establishment. An AMR-aware connector model should preserve target position and activation prerequisites after the search edge is found.
 
+## 45. Dream Ball into Alolan Muk creates a large symmetric Basic-Ability deadline
+
+[alolan_muk_basic_ability_surface/](alolan_muk_basic_ability_surface/) audits the effectively legal Basic-Pokémon Ability surface removed by Power of Alchemy.
+
+The current pool contains 1,103 exact legal Basic-Pokémon Ability rows across 420 unique card names. Of those, 123 exact rows across 48 names use hand-to-Bench trigger wording. Named examples include Tapu Lele-GX Wonder Tag, Dedenne-GX Dedechange, and Crobat V Dark Asset.
+
+Because Power of Alchemy removes Abilities from Basic Pokémon in play, hand, and discard on both sides, Dream Ball into Alolan Muk creates a sequencing boundary for the opponent and for the Dream Ball player. Support that has not been consumed before Muk can lose its Ability line immediately.
+
+**Working synthesis:** direct lock establishment can carry large self-denial costs. Lock value should be evaluated against the controller's remaining Ability-dependent support, not only the opponent's engine.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
