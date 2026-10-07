@@ -34,3 +34,18 @@ A higher-value adjacent question may be a general **action-channel compiler**: d
 - `results/canonical_turn_budget_owner/`, `results/board_action_quota_derivation/`, and `results/garbotoxin_quota_suppression/` are the current canonical quota path.
 - `results/energy_action_budget/` already embodies the analogous distinction between manual Energy attachment and effect-based attachment.
 
+
+
+## Supporter-effect copy channels
+
+Created `tools/supporter_effect_copy_channels.py` and `results/supporter_effect_copy_channels/`, with dedicated CI.
+
+Final validation run `37576136979` passed at commit `57dfa2f8f61e48a63c05e5f138011fb0fe178b9b`.
+
+A conservative scan finds 11 legal direct Supporter-effect-copy print rows across 8 card names. Seven names execute the copied body through attacks: Liepard, Mimikyu, Mr. Mime, Ninetales, Oranguru, Smeargle, and Sylveon. Sabrina's Suggestion is the Supporter-source family.
+
+Preserve three independent facts: physical Supporter identity, current execution class, and ordinary Supporter-play usage. Mimikyu `sm12-96` discards the selected Supporter and delegates its body to an attack; existing Supporter-play usage is preserved while the attack boundary ends the turn.
+
+Official Japanese Q&A provides two strong witnesses. Mimikyu versus Shiftry shows that a hand-scoped Supporter text replacement stops governing after Impersonation discards the card. Liepard versus Stoutland says Silent Claw can discard and use a Supporter effect while Stoutland's Sentinel is active, even though Sentinel prevents the opponent from playing Supporters from hand.
+
+The first CI run caught an overly narrow regex. The corrected grammar requires Supporter anywhere in the effect and the broader `use the effect of ... as the effect of this attack/card` body.
