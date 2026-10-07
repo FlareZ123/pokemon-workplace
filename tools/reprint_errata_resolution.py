@@ -7,7 +7,6 @@ from typing import Any, Literal
 
 from tools.build_expanded_legality_baseline import (
     classify_effective_legality,
-    gameplay_fingerprint,
     has_tournament_ban_rule,
     load_json,
 )
