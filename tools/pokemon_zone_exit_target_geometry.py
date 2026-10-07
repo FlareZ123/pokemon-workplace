@@ -23,34 +23,35 @@ class ZoneExitTargetProfile:
     text: str
 
 
-def _target_geometry(text: str) -> str:
+def _target_geometry(text: str, routing_text: str) -> str:
     lower = text.lower()
+    routing_lower = routing_text.lower()
 
-    if "each player's active pokémon" in lower:
+    if "each player's active pokémon" in routing_lower:
         return "both_active"
 
     if (
         "choose 1 of your opponent's benched pokémon" in lower
-        and "shuffle this pokémon" in lower
-        and lower.count("shuffle") >= 2
+        and "shuffle this pokémon" in routing_lower
+        and routing_lower.count("shuffle") >= 2
     ):
         return "opponent_bench_one_and_self"
 
     if (
         "all of your opponent's benched pokémon that you didn't choose"
-        in lower
+        in routing_lower
     ):
         return "opponent_bench_all_except_one"
 
-    if "all of their benched pokémon" in lower:
+    if "all of their benched pokémon" in routing_lower:
         return "opponent_bench_all"
 
-    if "any number of your pokémon in play" in lower:
+    if "any number of your pokémon in play" in routing_lower:
         return "own_any_number"
 
     if (
-        "your opponent's active pokémon" in lower
-        or "their active pokémon" in lower
+        "your opponent's active pokémon" in routing_lower
+        or "their active pokémon" in routing_lower
     ):
         return "opponent_active"
 
@@ -58,18 +59,21 @@ def _target_geometry(text: str) -> str:
         "choose 1 of your opponent's benched pokémon" in lower
         or re.search(
             r"(?:shuffle|put)\s+1 of your opponent's benched pokémon",
-            text,
+            routing_text,
             re.IGNORECASE,
         )
     ):
         return "opponent_bench_one"
 
-    if "choose 1 of your opponent's pokémon" in lower:
+    if (
+        "choose 1 of your opponent's pokémon" in lower
+        and "that pokémon" in routing_lower
+    ):
         return "opponent_one"
 
     if re.search(
         r"(?:put|shuffle)\s+this pokémon",
-        text,
+        routing_text,
         re.IGNORECASE,
     ):
         return "self"
@@ -77,28 +81,34 @@ def _target_geometry(text: str) -> str:
     if (
         re.search(
             r"(?:put|shuffle)\s+1 of your benched pokémon",
-            text,
+            routing_text,
             re.IGNORECASE,
         )
-        or "choose 1 of your benched combee" in lower
+        or (
+            "choose 1 of your benched combee" in lower
+            and "that pokémon" in routing_lower
+        )
     ):
         return "own_bench_one"
 
     if re.search(
         r"(?:put|shuffle)\s+1 of your [^.]{0,80}pokémon",
-        text,
+        routing_text,
         re.IGNORECASE,
     ):
         return "own_one"
 
     if re.search(
         r"put 1 pokémon into your hand",
-        text,
+        routing_text,
         re.IGNORECASE,
     ):
         return "unqualified_one_to_your_hand"
 
-    raise ValueError(f"Unclassified direct zone-exit target geometry: {text}")
+    raise ValueError(
+        "Unclassified direct zone-exit target geometry: "
+        f"text={text!r}, routing_text={routing_text!r}"
+    )
 
 
 def compile_zone_exit_target_profiles(
@@ -116,7 +126,10 @@ def compile_zone_exit_target_profiles(
                 name=row["name"],
                 source_kind=row["source_kind"],
                 effect_name=row["effect_name"],
-                target_geometry=_target_geometry(row["text"]),
+                target_geometry=_target_geometry(
+                    row["text"],
+                    row["routing_text"],
+                ),
                 pokemon_destination=row["pokemon_destination"],
                 attachment_destination=row["attachment_destination"],
                 text=row["text"],
