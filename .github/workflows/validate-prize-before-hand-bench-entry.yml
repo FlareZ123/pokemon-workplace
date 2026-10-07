@@ -1,0 +1,25 @@
+name: Validate Prize before-hand Bench entry
+
+on:
+  push:
+    paths:
+      - "tools/prize_before_hand_bench_entry.py"
+      - "tools/prize_pending_take.py"
+      - "tools/promotion_pending_conservation.py"
+      - "results/prize_before_hand_bench_entry/**"
+      - ".github/workflows/validate-prize-before-hand-bench-entry.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check E-31 Bench-entry transitions
+        run: python results/prize_before_hand_bench_entry/reproduce.py
