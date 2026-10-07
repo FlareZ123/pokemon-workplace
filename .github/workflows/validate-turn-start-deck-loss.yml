@@ -1,0 +1,26 @@
+name: Validate turn-start deck loss
+
+on:
+  push:
+    paths:
+      - "tools/turn_start_deck_loss.py"
+      - "tools/physical_deck_projection.py"
+      - "tools/physical_zone_count.py"
+      - "tools/identity_materialization.py"
+      - "results/turn_start_deck_loss/**"
+      - ".github/workflows/validate-turn-start-deck-loss.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check turn-start physical deck loss
+        run: python results/turn_start_deck_loss/reproduce.py
