@@ -95,6 +95,16 @@ class DreamBallBenchTransition:
 
 
 @dataclass(frozen=True)
+class DreamBallNoTargetTransaction:
+    """One complete Dream Ball play whose typed deck search selects no Pokémon."""
+
+    before_prizes: PrizePendingTakeState
+    before_board: PromotionPendingState
+    after_prizes: PrizePendingTakeState
+    after_board: PromotionPendingState
+
+
+@dataclass(frozen=True)
 class DreamBallItemTransaction:
     """One complete Prize-origin Dream Ball play with synchronized board state."""
 
@@ -271,4 +281,46 @@ def execute_dream_ball_item_transaction(
         after_prizes=after_prizes,
         after_board=after_board,
         bench_transition=bench_transition,
+    )
+
+
+def execute_dream_ball_no_target_transaction(
+    prizes: PrizePendingTakeState,
+    board: PromotionPendingState,
+    *,
+    profile: BeforeHandPrizeProfile,
+    during_own_turn: bool,
+    active_item_restrictions: Sequence[ItemPlayRestriction] = (),
+) -> DreamBallNoTargetTransaction:
+    """Play Dream Ball and legally select no Pokémon from its typed deck search."""
+
+    if profile.card_id != DREAM_BALL_CARD_CLASS:
+        raise ValueError("profile is not Dream Ball")
+    if prizes.physical.ledger != board.ledger:
+        raise ValueError("Prize and board states must share one physical ledger")
+    if board.open_bench_slots <= 0:
+        raise ValueError("Dream Ball cannot be played with a full Bench")
+
+    resolving = begin_before_hand_item_play(
+        prizes,
+        profile,
+        during_own_turn=during_own_turn,
+        active_item_restrictions=active_item_restrictions,
+    )
+    effect = resolve_before_hand_item_effect(
+        resolving,
+        secondary_effect_resolved=True,
+    )
+    after_prizes = finish_before_hand_item_play(effect)
+    after_board = board.with_ledger(after_prizes.physical.ledger)
+
+    if after_prizes.physical.ledger != after_board.ledger:
+        raise AssertionError("Dream Ball no-target branch split physical ledgers")
+    assert_conserved(prizes.physical.ledger, after_prizes.physical.ledger)
+
+    return DreamBallNoTargetTransaction(
+        before_prizes=prizes,
+        before_board=board,
+        after_prizes=after_prizes,
+        after_board=after_board,
     )
