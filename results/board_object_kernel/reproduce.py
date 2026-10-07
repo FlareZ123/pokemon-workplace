@@ -28,6 +28,30 @@ def main() -> None:
     fire = EnergyAttachment("energy-fire", "Fire Energy", ("R",))
     hood = ToolAttachment("tool-hood", "Stealthy Hood")
 
+    # Physical instance identity is distinct from database print identity.
+    # Two copies of one print must remain legal simultaneous attachments.
+    same_print_a = EnergyAttachment(
+        "same-print-copy-a",
+        "Double Colorless Energy",
+        ("C", "C"),
+        print_id="same-print",
+    )
+    same_print_b = EnergyAttachment(
+        "same-print-copy-b",
+        "Double Colorless Energy",
+        ("C", "C"),
+        print_id="same-print",
+    )
+    same_print_active = make_pokemon(
+        "same-print-active",
+        "Same Print Active",
+        energy=(same_print_a, same_print_b),
+    )
+    same_print_board = make_board(same_print_active)
+    same_print_board.validate()
+    assert same_print_a.instance_id != same_print_b.instance_id
+    assert same_print_a.print_id == same_print_b.print_id
+
     locked_active = make_pokemon(
         "active-a",
         "Active A",
