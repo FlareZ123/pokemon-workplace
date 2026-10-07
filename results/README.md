@@ -212,6 +212,14 @@ The validator rejects states where board attachments and aggregate attached coun
 
 **Working synthesis:** materialization and dematerialization should be first-class transitions. Aggregate multiplicity is efficient while copies are exchangeable, and physical instance identity becomes necessary when topology or history differentiates them. The boundary must enforce conservation.
 
+## 15. Pokémon evolution stacks bind physical cards to board objects
+
+[pokemon_stack_materialization/](pokemon_stack_materialization/) extends the same materialization boundary to Pokémon cards.
+
+A persistent Pokémon board object can own several physical Pokémon-card instances through an `in_play` relation. The regression materializes a Bulbasaur and Ivysaur from exchangeable hand counts, evolves the same board object, and verifies that the identity ledger and physical evolution stack contain the same exact instance IDs while total card counts remain conserved.
+
+This separates three facts that a simulator otherwise tends to conflate: the physical Pokémon cards in the stack, the persistent in-play Pokémon object, and that object's current Active or Bench position.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -230,13 +238,14 @@ Particularly foundational components include:
 - `multicopy_zone_state.py`
 - `board_object_kernel.py`
 - `energy_board_conservation.py`
+- `identity_materialization.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
 
 Several larger questions remain promising:
 
-1. **General conservation across unified state layers.** `energy_board_conservation/` now proves the aggregate-to-instance bridge for Energy attachment and retreat discard. The next shared-kernel problem is extending the same conservation contract to Tools, Pokémon evolution stacks, Knock Outs, recovery, movement between Pokémon, hidden-state beliefs, and action budgets.
+1. **General conservation across unified state layers.** Energy attachments and ordinary Pokémon evolution stacks now have aggregate-to-instance conservation bridges. The next shared-kernel problem is extending the same contract to Tools, Knock Outs, devolution, recovery, Energy movement between Pokémon, hidden-state beliefs, and action budgets.
 2. **Compiler from card text to transitions.** Several models still use targeted or precompiled transitions. A conservative semantic compiler could reduce manual modeling while retaining auditable fallbacks for ambiguous text.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Official reprint equivalence.** The current conservative gameplay fingerprint is useful for research, but tournament-functional reprint equivalence still needs an explicit official-policy layer.
