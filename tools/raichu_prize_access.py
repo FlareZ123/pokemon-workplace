@@ -269,6 +269,14 @@ def raichu_access_snapshot(
         opening_mass = _multivariate_probability(opening, sizes) / accepted
         after_opening = tuple(size - count for size, count in zip(sizes, opening))
 
+        # Setup moves one Basic out of the opening hand into the Active Spot.
+        # Under this narrow access objective, preserve an overlapping disposable
+        # starter in hand whenever a non-disposable starter can satisfy setup.
+        action_opening = list(opening)
+        if opening[6] == 0:
+            action_opening[5] -= 1
+        action_opening = tuple(action_opening)
+
         for prizes in _bounded_compositions(prize_count, after_opening):
             prize_mass = _multivariate_probability(prizes, after_opening)
             base_mass = opening_mass * prize_mass
@@ -298,7 +306,7 @@ def raichu_access_snapshot(
                         accum[index] += weight * value
                 return tuple(accum)
 
-            values = expose(opening, post_prize, extra_random_draws)
+            values = expose(action_opening, post_prize, extra_random_draws)
             state_mass += base_mass
             target_prized_probability += base_mass * target_prized
             target_in_exposed_hand_probability += base_mass * values[0]
