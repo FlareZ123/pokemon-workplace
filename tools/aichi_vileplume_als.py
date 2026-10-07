@@ -460,8 +460,7 @@ def _basic_possible_with_artazon_state(
     needs["Bunnelby"] += 1
 
     direct = Counter(hand)
-    if active != "Bunnelby":
-        direct[active] += 1
+    direct[active] += 1
 
     direct_fan = hand["Fan Rotom"] > 0 or active == "Fan Rotom"
     actions: list[str | None] = [None]
