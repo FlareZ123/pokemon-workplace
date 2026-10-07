@@ -1,0 +1,25 @@
+name: Validate Prize destination applicability
+
+on:
+  push:
+    paths:
+      - "tools/prize_destination_applicability.py"
+      - "tools/prize_destination_overrides.py"
+      - "tools/board_object_kernel.py"
+      - "results/prize_destination_applicability/**"
+      - ".github/workflows/validate-prize-destination-applicability.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize replacement applicability
+        run: python results/prize_destination_applicability/reproduce.py
