@@ -646,6 +646,14 @@ A one-copy counterfactual exposes the key gate. After Secret Box takes the only 
 
 **Working synthesis:** transient discardability requires both a live replacement route and enough physical payment material. Connector reachability alone can preserve a stale search edge after its final target copy has left the deck; canonical zone execution must gate the continuation.
 
+## 55. Trigger-order authority currently depends on the rules source
+
+[ko_trigger_order_authority/](ko_trigger_order_authority/) records a current rules-source divergence that affects Knock Out trigger scheduling. TPCi Professor guidance published in February 2026 says that during a turn the current player chooses the order of multiple triggered effects when a Pokémon is Knocked Out, while the Pokémon Asia Trainers Website still serves a Lost City + Reuniclus Q&A assigning that exact ordering choice to Reuniclus's owner.
+
+The repository therefore should not treat either controller as source-independent. The new authority layer returns all applicable claims from the selected rules profile and reports the exact Lost City + Reuniclus state as unresolved when both source families are admitted. The existing physical ordered-destination resolver remains useful once a legal order has been supplied.
+
+**Working synthesis:** rules provenance is part of simulator state when currently served authorities disagree. Timing authority, chosen effect order, and physical execution should remain separate layers.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
