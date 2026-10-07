@@ -31,15 +31,15 @@ def one(rows, *, card_id: str, source_name: str | None = None):
 def main() -> None:
     rows = compile_position_effect_profiles(ROOT / "resources")
 
-    assert len(rows) == 133
-    assert len({row.name for row in rows}) == 83
+    assert len(rows) == 149
+    assert len({row.name for row in rows}) == 88
     assert Counter((row.source_kind, row.kind) for row in rows) == Counter(
         {
             ("trainer", PositionEffectKind.SELF_SWITCH): 17,
             ("trainer", PositionEffectKind.OPPONENT_FORCED_SWITCH): 2,
-            ("trainer", PositionEffectKind.TARGETED_GUST): 18,
+            ("trainer", PositionEffectKind.TARGETED_GUST): 29,
             ("attack", PositionEffectKind.OPPONENT_FORCED_SWITCH): 71,
-            ("attack", PositionEffectKind.TARGETED_GUST): 25,
+            ("attack", PositionEffectKind.TARGETED_GUST): 30,
         }
     )
 
@@ -53,6 +53,22 @@ def main() -> None:
     assert repel.kind == PositionEffectKind.OPPONENT_FORCED_SWITCH
     assert repel.chooser == ChoiceAuthority.OPPONENT
     assert repel.effect_target == EffectTargetGeometry.OPPONENT_ACTIVE
+
+    pokemon_catchers = tuple(row for row in rows if row.name == "Pokémon Catcher")
+    assert len(pokemon_catchers) == 11
+    assert all(row.kind == PositionEffectKind.TARGETED_GUST for row in pokemon_catchers)
+    assert all(row.coin_heads_required for row in pokemon_catchers)
+    assert {row.card_id for row in pokemon_catchers if row.card_id.startswith("bw")} == {
+        "bw2-95",
+        "bw5-111",
+        "bw10-83",
+    }
+    old_catcher = one(rows, card_id="bw2-95")
+    assert old_catcher.effect_text.startswith("Flip a coin. If heads, ")
+
+    invite_out = one(rows, card_id="xy10-11", source_name="Invite Out")
+    assert invite_out.coin_heads_required
+    assert invite_out.kind == PositionEffectKind.TARGETED_GUST
 
     counter_catcher = one(rows, card_id="sm4-91")
     assert counter_catcher.kind == PositionEffectKind.TARGETED_GUST
@@ -117,6 +133,29 @@ def main() -> None:
         chosen_object_id="opp-bench-a",
         blocked_effect_target_ids=frozenset({"opp-bench-a"}),
     ) is not None
+
+    assert execute_position_effect(
+        old_catcher,
+        actor,
+        opponent,
+        chosen_object_id="opp-bench-a",
+    ) is None
+    assert execute_position_effect(
+        old_catcher,
+        actor,
+        opponent,
+        chosen_object_id="opp-bench-a",
+        coin_result="tails",
+    ) is None
+    catcher_heads = execute_position_effect(
+        old_catcher,
+        actor,
+        opponent,
+        chosen_object_id="opp-bench-a",
+        coin_result="heads",
+    )
+    assert catcher_heads is not None
+    assert catcher_heads.opponent_board.active_id == "opp-bench-a"
 
     gust = execute_position_effect(
         clefairy,
