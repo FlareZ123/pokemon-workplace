@@ -1,0 +1,20 @@
+name: Validate agent2 Raichu prize access
+
+on:
+  push:
+    paths:
+      - "tools/raichu_prize_access.py"
+      - "results/raichu_prize_access/**"
+      - ".github/workflows/validate-agent2-raichu-prize-access.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Raichu prize-access regressions
+        run: python results/raichu_prize_access/reproduce.py
