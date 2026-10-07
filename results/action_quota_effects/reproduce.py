@@ -47,6 +47,21 @@ def main() -> None:
         for rule in surge.get("rules", [])
     )
 
+    surge_alt_cards = json.loads(
+        (ROOT / "resources" / "cards" / "en" / "sm115.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    surge_alt = next(
+        card for card in surge_alt_cards if card["id"] == "sm115-60"
+    )
+    surge_alt_status, _ = classify_effective_legality(surge_alt)
+    assert surge_alt_status == "Banned"
+    assert any(
+        "play 3 Supporter cards" in rule
+        for rule in surge_alt.get("rules", [])
+    )
+
     base = TurnActionBudget()
     ordinary = derive_action_quotas(base)
     assert ordinary.supporter_play_limit == 1
