@@ -4,7 +4,9 @@ on:
   push:
     paths:
       - "tools/prize_position_belief.py"
+      - "tools/peonia_arc_position.py"
       - "results/prize_position_belief/**"
+      - "results/peonia_arc_position/**"
       - "resources/cards/en/swsh6.json"
       - "resources/cards/en/swsh11.json"
       - "resources/cards/en/sm4.json"
@@ -25,3 +27,5 @@ jobs:
           python-version: "3.13"
       - name: Check Prize position belief
         run: python results/prize_position_belief/reproduce.py
+      - name: Check Peonia Arc positional policy
+        run: python results/peonia_arc_position/reproduce.py
