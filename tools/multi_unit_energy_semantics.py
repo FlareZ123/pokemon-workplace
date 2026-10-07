@@ -48,7 +48,7 @@ def normalize(text: str) -> str:
 def maximum_units_from_text(text: str) -> int:
     maximum = 1
     for match in re.finditer(
-        r"provides only (\d+) Energy at a time",
+        r"provides(?: only)? (\d+) Energy at a time",
         text,
         re.IGNORECASE,
     ):
