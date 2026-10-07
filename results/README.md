@@ -1196,3 +1196,23 @@ This is a policy-information audit rather than a deck-level correction. Later Gu
 
 **Working synthesis:** exact physical hidden state and legal policy information must remain separate. A search simulator can use sampled Prize truth for transitions, while any pre-inspection action choice must be shared across hidden worlds that are observationally equivalent to the player.
 
+## Aichi first-Secret-Box payment is robust to K0 policy restriction in the clean subset
+
+[aichi_secret_box_k0_policy/](aichi_secret_box_k0_policy/) forces the first represented Secret Box payment to be one choice across all hidden Prize worlds sharing the same visible opening and draw. In 50,000 accepted Aichi states, 1,265 qualified as clean first-Box states. Across 333 compressed observations, the exact hidden-Prize integration found zero observation with an oracle advantage. Conditional core success was 96.734882613% under both the hidden-state oracle and the best K0-consistent payment policy.
+
+**Working synthesis:** a transition can contain a real information leak without that privilege affecting a particular state distribution. Payment slack can make one observation-consistent discard witness work in every hidden world that the oracle can rescue.
+
+
+## Cost-before-search discard timing is a reusable Expanded card-pool surface
+
+[cost_before_search_catalog/](cost_before_search_catalog/) conservatively scans legal paper-Expanded Trainer text for an explicit hand discard before the first printed deck search. It finds 54 legal prints across 16 names and 23 gameplay fingerprints. Fourteen names have selective or typed-selective payments, while Peony and Larry's Skill discard the whole hand.
+
+**Working synthesis:** K0/K1 policy constraints belong in shared search infrastructure rather than only in one Aichi simulator. Exact hidden Prize truth may be carried by the state, while selective payment policy must be restricted to information available before the search inspection.
+
+
+## Replacement multiplicity suppresses the value of exact Prize information
+
+[replacement_information_value/](replacement_information_value/) generalizes the discard/reacquisition information model to arbitrary replacement-copy counts. In a 52-card unknown pool with six Prizes and two discard candidates, the K1 advantage for choosing one critical discard falls from 10.407240 percentage points with one replacement copy per class to 1.125681 points with two copies and 0.090493 points with three copies.
+
+**Working synthesis:** reacquirability is quantitative. Copy multiplicity, Prize uncertainty, the number of forced critical discards, and the actor's information state jointly determine discard safety.
+
