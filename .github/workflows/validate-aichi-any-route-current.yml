@@ -1,0 +1,22 @@
+name: Validate current Aichi any-route core
+
+on:
+  push:
+    paths:
+      - "tools/aichi_vileplume_als.py"
+      - "results/aichi_vileplume_als/reproduce_any_route_current.py"
+      - ".github/workflows/validate-aichi-any-route-current.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/aichi_vileplume_als/reproduce_any_route_current.py
