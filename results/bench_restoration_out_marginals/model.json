@@ -1,0 +1,44 @@
+{
+  "example": {
+    "deck_cards": 40,
+    "random_cards_seen": 5,
+    "direct_restorers": 2,
+    "bench_triggered_removers": 2,
+    "required_entrant_outs": 4
+  },
+  "states": {
+    "zero_slack": {
+      "slack": 0,
+      "direct_restorers": 2,
+      "removers_in_deck": 2,
+      "live_remover_outs": 0,
+      "live_unlockers": 2,
+      "unlock_probability_fraction": "37/156",
+      "unlock_probability_percent": 23.71794871794872,
+      "joint_unlock_plus_entrant_fraction": "245/2812",
+      "joint_unlock_plus_entrant_percent": 8.712660028449502
+    },
+    "one_slack": {
+      "slack": 1,
+      "direct_restorers": 2,
+      "removers_in_deck": 2,
+      "live_remover_outs": 2,
+      "live_unlockers": 4,
+      "unlock_probability_fraction": "3903/9139",
+      "unlock_probability_percent": 42.70707954918481,
+      "joint_unlock_plus_entrant_fraction": "13175/82251",
+      "joint_unlock_plus_entrant_percent": 16.018042333831808
+    }
+  },
+  "single_copy_marginals": {
+    "zero_slack_add_direct_pp": 10.037112010796221,
+    "zero_slack_add_remover_pp": 0.0,
+    "one_slack_add_direct_pp": 7.95735006261322,
+    "one_slack_add_remover_pp": 7.95735006261322
+  },
+  "findings": {
+    "state_conditioned_outs": "Bench-triggered Stadium removers contribute zero live unlock outs at zero slack and become ordinary live outs once one Bench slot exists.",
+    "joint_line_access": "The same state dependence carries into joint access to both an unlocker and a required entrant.",
+    "copy_marginal_reversal": "Adding a remover copy has zero immediate unlock marginal at zero slack but matches a direct-restorer copy's simple draw-access marginal at one slack under symmetric access assumptions."
+  }
+}
