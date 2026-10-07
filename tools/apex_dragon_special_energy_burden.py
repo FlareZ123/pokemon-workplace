@@ -14,9 +14,9 @@ from tools.energy_discard_solver import (
 )
 
 BASIC_GGF = [
-    {"name": "Basic Grass A", "units": 1, "types": ["Grass"]},
-    {"name": "Basic Grass B", "units": 1, "types": ["Grass"]},
-    {"name": "Basic Fire", "units": 1, "types": ["Fire"]},
+    {"name": "Basic Grass A", "units": 1, "types": ["Grass"], "basic": True},
+    {"name": "Basic Grass B", "units": 1, "types": ["Grass"], "basic": True},
+    {"name": "Basic Fire", "units": 1, "types": ["Fire"], "basic": True},
 ]
 
 DDE_FIRE = [
@@ -24,8 +24,9 @@ DDE_FIRE = [
         "name": "Double Dragon Energy",
         "units": 2,
         "types": list(ENERGY_TYPES),
+        "basic": False,
     },
-    {"name": "Basic Fire", "units": 1, "types": ["Fire"]},
+    {"name": "Basic Fire", "units": 1, "types": ["Fire"], "basic": True},
 ]
 
 
@@ -62,7 +63,11 @@ def solve_requirement(
     elif kind == "typed_count":
         energy_type = parsed["energy_type"]
         if parsed["count"] == "all":
-            indexes = all_cards_providing_type(cards, energy_type)
+            indexes = all_cards_providing_type(
+                cards,
+                energy_type,
+                basic_only=bool(parsed.get("basic_only", False)),
+            )
             units = sum(cards[index]["units"] for index in indexes)
             return {
                 "full": True,
@@ -74,6 +79,7 @@ def solve_requirement(
         result = minimum_card_subsets_typed(
             cards,
             [energy_type] * parsed["count"],
+            basic_only=bool(parsed.get("basic_only", False)),
         )
     elif kind == "typed_pair":
         result = minimum_card_subsets_typed(
