@@ -838,6 +838,28 @@ Across modeled initial hand sizes 4 through 9, the omission overstates Dark Asse
 
 **Working synthesis:** connector payment and search resolution can push draw bandwidth in opposite directions. Costs shrink the hand while mandatory filler refills it. Continuation value for draw-to-N effects should read the physical post-action hand state rather than infer draw volume from scalar connector cost or strategically useful output alone.
 
+## 68. Prize-destination replacement applicability crosses the Knock Out boundary
+
+[prize_destination_applicability/](prize_destination_applicability/) distinguishes the lifetime of Lost Block from the trigger snapshot used by Billowing Smoke.
+
+An official Japanese Pokémon Card Q&A says that when Barbaracle itself is Knocked Out, Lost Block no longer redirects the opponent's Prize because Barbaracle leaves play before Prize taking. The adapter therefore derives Lost Block from surviving post-KO board objects. Billowing Smoke is derived from the removed Pokémon's Tool snapshot, requires its Tool effect to have been live, and requires the Knock Out to come from opponent attack damage.
+
+The regression covers a surviving Barbaracle plus Smoke conflict, Barbaracle itself being Knocked Out with Smoke, suppressed Lost Block, blanked Smoke, and a non-attack-damage Knock Out. Its CI is green.
+
+**Working synthesis:** replacement applicability can cross an event boundary asymmetrically. Continuous effects need their source to survive to the later destination event, while triggered replacements can depend on a pre-disposal source snapshot.
+
+
+## 69. Before-hand Prize effects require an actual hand-bound destination
+
+[prize_before_hand_destination_gate/](prize_before_hand_destination_gate/) adds a planned destination to the shared Prize-origin E-31 executor before cards such as Chansey, Treasure Energy, or Dream Ball may resolve their "before you put it into your hand" text.
+
+Official Japanese Q&A witnesses show Treasure Energy cannot attach under Lost Block or Billowing Smoke, and Chansey cannot use Lucky Bonus under Billowing Smoke. The executor now rejects those triggers when the planned destination is discard or Lost Zone. If the trigger is declined, the same exact pending card moves directly to that replacement destination.
+
+The regression compiles the repository's real profiles for Chansey, Treasure Energy, and Dream Ball, checks redirected and ordinary hand-bound branches, and preserves exact physical card totals. The focused CI and the existing before-hand execution suite both pass.
+
+**Working synthesis:** Prize identity observation can precede destination resolution, while E-31-style effects require the resolved destination to remain hand. The correct chain is Prize selection, private identity observation, destination replacement resolution, eligible before-hand effects, then final movement.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -868,7 +890,8 @@ Particularly foundational components include:
 - `observer_top_prize_beliefs.py`
 - `top_prize_physical_bridge.py`
 - `prize_joint_position_removal.py`
-- `prize_pending_take.py`\n- `prize_destination_overrides.py`
+- `prize_pending_take.py`
+- `prize_destination_applicability.py`\n- `prize_destination_overrides.py`
 - `post_prize_window_game_resolution.py`
 - `unified_state_kernel.py`
 - `multicopy_zone_state.py`
