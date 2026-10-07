@@ -11,12 +11,17 @@ from tools.build_expanded_legality_baseline import (
     load_json,
 )
 from tools.current_card_semantics import current_semantic_fingerprint
+from tools.historical_reprint_evidence import (
+    HISTORICAL_REPRINT_SOURCE,
+    NO_REFERENCE_REPRINT_IDS,
+)
 
 ResolutionKind = Literal[
     "direct_legal",
     "direct_banned",
     "outside_disallowed",
     "exact_fingerprint_candidate",
+    "historical_official_reprint_candidate",
     "official_errata_candidate",
     "semantic_review",
     "no_expanded_counterpart",
@@ -92,6 +97,15 @@ class ReprintResolver:
             )
 
         name_targets = self.legal_expanded_by_name.get(name, ())
+        if name_targets and card_id in NO_REFERENCE_REPRINT_IDS:
+            return ReprintResolution(
+                card_id,
+                name,
+                "historical_official_reprint_candidate",
+                tuple(sorted(target["id"] for target in name_targets)),
+                HISTORICAL_REPRINT_SOURCE,
+            )
+
         if name_targets and card.get("supertype") == "Trainer" and name in NAME_WIDE_TRAINER_ERRATA:
             return ReprintResolution(
                 card_id,
@@ -157,7 +171,11 @@ def summarize_reprint_resolver(resolver: ReprintResolver) -> dict[str, Any]:
         row
         for row in outside_resolutions
         if resolver.cards_by_id[row.card_id].get("supertype") == "Trainer"
-        and row.kind in {"exact_fingerprint_candidate", "official_errata_candidate", "semantic_review"}
+        and row.kind in {"exact_fingerprint_candidate", "historical_official_reprint_candidate", "official_errata_candidate", "semantic_review"}
+    ]
+    historical_rows = [
+        row for row in outside_resolutions
+        if row.kind == "historical_official_reprint_candidate"
     ]
     errata_rows = [row for row in outside_resolutions if row.kind == "official_errata_candidate"]
     exact_trainer_rows = [
@@ -170,7 +188,7 @@ def summarize_reprint_resolver(resolver: ReprintResolver) -> dict[str, Any]:
     same_name_review_pool = [
         row
         for row in outside_resolutions
-        if row.kind in {"exact_fingerprint_candidate", "official_errata_candidate", "semantic_review"}
+        if row.kind in {"exact_fingerprint_candidate", "historical_official_reprint_candidate", "official_errata_candidate", "semantic_review"}
     ]
     exact_rows = [row for row in outside_resolutions if row.kind == "exact_fingerprint_candidate"]
 
@@ -180,14 +198,35 @@ def summarize_reprint_resolver(resolver: ReprintResolver) -> dict[str, Any]:
             "name_wide_trainer_errata_names": len(NAME_WIDE_TRAINER_ERRATA),
             "same_name_review_pool_prints": len(same_name_review_pool),
             "exact_fingerprint_candidate_prints": len(exact_rows),
+            "historical_official_reprint_candidate_prints": len(historical_rows),
+            "historical_official_reprint_candidate_names": len({row.name for row in historical_rows}),
             "official_errata_candidate_prints": len(errata_rows),
             "official_errata_candidate_names": len({row.name for row in errata_rows}),
             "semantic_review_prints": sum(row.kind == "semantic_review" for row in outside_resolutions),
-            "high_confidence_candidate_prints": len(exact_rows) + len(errata_rows),
+            "high_confidence_candidate_prints": len(exact_rows) + len(historical_rows) + len(errata_rows),
             "exact_fingerprint_trainer_candidate_prints": len(exact_trainer_rows),
             "trainer_same_name_review_pool_prints": len(trainer_review_pool),
-            "high_confidence_trainer_candidate_prints": len(errata_rows) + len(exact_trainer_rows),
+            "historical_official_trainer_candidate_prints": sum(
+                row.kind == "historical_official_reprint_candidate"
+                and resolver.cards_by_id[row.card_id].get("supertype") == "Trainer"
+                for row in outside_resolutions
+            ),
+            "high_confidence_trainer_candidate_prints": (
+                len(errata_rows)
+                + len(exact_trainer_rows)
+                + sum(
+                    row.kind == "historical_official_reprint_candidate"
+                    and resolver.cards_by_id[row.card_id].get("supertype") == "Trainer"
+                    for row in outside_resolutions
+                )
+            ),
         },
+        "historical_official_candidates_by_name": dict(
+            sorted(Counter(row.name for row in historical_rows).items())
+        ),
+        "historical_official_candidate_ids": [
+            row.card_id for row in sorted(historical_rows, key=lambda row: row.card_id)
+        ],
         "official_errata_candidates_by_name": dict(
             sorted(Counter(row.name for row in errata_rows).items())
         ),
