@@ -1,0 +1,28 @@
+name: Validate private search target belief
+
+on:
+  push:
+    paths:
+      - "tools/private_search_target_belief.py"
+      - "tools/deck_search_shuffle_belief.py"
+      - "tools/observer_top_prize_beliefs.py"
+      - "tools/prize_position_belief.py"
+      - "tools/prize_slot_visibility.py"
+      - "tools/prize_top_swap_belief.py"
+      - "results/private_search_target_belief/**"
+      - ".github/workflows/validate-private-search-target-belief.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check private search target belief
+        run: python results/private_search_target_belief/reproduce.py
