@@ -12,6 +12,8 @@ A card or line can be reachable in a search graph while still failing because of
 
 The repository therefore increasingly favors **typed, resource-constrained state transitions** over untyped card-association graphs.
 
+[physical_state_conservation/](physical_state_conservation/) now provides a higher-level synthesis of the identity hierarchy, materialization lifetime, physical-card conservation law, Knock Out phase boundaries, destination routing, and promotion-order results developed across the state-kernel work.
+
 ## 1. Connector realism: access, payment, output capacity, and opportunity cost
 
 The connector results formalize several distinct reasons a search route can be less useful than its graph connectivity suggests.
