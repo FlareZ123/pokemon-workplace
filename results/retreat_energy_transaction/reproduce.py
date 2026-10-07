@@ -128,6 +128,36 @@ def main() -> None:
         for row in one.state.energy.board.get("active").energy
     ] == ["dce-b"]
 
+    raised_cost = retreat_with_cost_modifiers(
+        start,
+        "bench",
+        base_retreat_cost=2,
+        modifiers=(RetreatCostModifier("Galar Mine", delta=2),),
+        discard_energy_ids=("dce-a", "dce-b"),
+    )
+    assert raised_cost is not None and raised_cost.committed
+    assert raised_cost.state.energy.zones.count("dce-class", "hand") == 2
+
+    insufficient_for_raised_cost = retreat_with_cost_modifiers(
+        start,
+        "bench",
+        base_retreat_cost=2,
+        modifiers=(RetreatCostModifier("Galar Mine", delta=2),),
+        discard_energy_ids=("dce-a",),
+    )
+    assert insufficient_for_raised_cost is None
+
+    free_cost = retreat_with_cost_modifiers(
+        start,
+        "bench",
+        base_retreat_cost=4,
+        modifiers=(no_retreat_cost("Levitation Field"),),
+        discard_energy_ids=(),
+    )
+    assert free_cost is not None and free_cost.committed
+    assert free_cost.state.energy.zones.count("dce-class", "attached") == 2
+    assert free_cost.destinations == ()
+
     blocked_start = dce_state(damage_counters=1)
     blocked = retreat_with_energy_destinations(
         blocked_start,
