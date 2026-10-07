@@ -14,12 +14,14 @@ on:
       - "tools/multi_unit_energy_semantics.py"
       - "tools/energy_discard_solver.py"
       - "tools/apex_dragon_special_energy_burden.py"
+      - "tools/energy_identity_semantics.py"
       - "results/attack_copy_semantics/**"
       - "results/copied_attack_partial_resolution/**"
       - "results/attack_discard_dependency_grammar/**"
       - "results/apex_dragon_discard_burden/**"
       - "results/multi_unit_energy_semantics/**"
       - "results/apex_dragon_special_energy_burden/**"
+      - "results/energy_identity_semantics/**"
       - "resources/cards/en/**"
       - "resources/sets/en.json"
 
@@ -47,3 +49,5 @@ jobs:
         run: python results/multi_unit_energy_semantics/reproduce.py
       - name: Reproduce Apex Dragon Special-Energy burden
         run: python results/apex_dragon_special_energy_burden/reproduce.py
+      - name: Reproduce Energy identity semantics
+        run: python results/energy_identity_semantics/reproduce.py
