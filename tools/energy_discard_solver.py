@@ -137,5 +137,49 @@ def all_cards_providing_type(
     ]
 
 
+def all_basic_named_cards(
+    cards: list[dict[str, Any]],
+    energy_type: str,
+) -> list[int]:
+    """Return physical cards named Basic <type> Energy.
+
+    This is intentionally independent of the Energy types the cards currently
+    provide. Effects can change a Basic Energy card's provided type without
+    changing its card name.
+    """
+
+    return [
+        index
+        for index, card in enumerate(cards)
+        if card.get("basic_energy_name") == energy_type
+    ]
+
+
+def minimum_basic_named_card_subsets(
+    cards: list[dict[str, Any]],
+    energy_type: str,
+    required_cards: int,
+) -> dict[str, Any]:
+    """Solve a fixed-count Basic <type> Energy *card* requirement."""
+
+    if required_cards < 0:
+        raise ValueError("required_cards must be non-negative")
+
+    eligible = all_basic_named_cards(cards, energy_type)
+    matched = min(required_cards, len(eligible))
+    subsets = [
+        list(indexes)
+        for indexes in combinations(eligible, matched)
+    ]
+    return {
+        "energy_type": energy_type,
+        "required_cards": required_cards,
+        "matched_cards": matched,
+        "full": matched == required_cards,
+        "minimum_cards": matched,
+        "subsets": subsets,
+    }
+
+
 def all_energy_cards(cards: list[dict[str, Any]]) -> list[int]:
     return list(range(len(cards)))
