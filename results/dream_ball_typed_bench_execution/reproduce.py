@@ -217,6 +217,23 @@ def main() -> None:
     assert final_board.ledger.instance("pidgeot-card").zone == "in_play"
     assert_conserved(initial, final_board.ledger)
 
+    initial_atomic, prizes_atomic, board_atomic = make_pending_state()
+    atomic = execute_dream_ball_item_transaction(
+        prizes_atomic,
+        board_atomic,
+        profile=dream_ball,
+        during_own_turn=True,
+        targets=targets,
+        search_action=pidgeot_action,
+        pokemon_id="atomic-pidgeot-object",
+        instance_id="atomic-pidgeot-card",
+    )
+    assert atomic.after_prizes.physical.ledger == atomic.after_board.ledger
+    assert atomic.after_prizes.physical.ledger.instance("dream-ball").zone == "discard"
+    assert atomic.after_board.ledger.instance("atomic-pidgeot-card").zone == "in_play"
+    assert atomic.after_board.ledger.exchangeable.count("sv3-164", "deck") == 0
+    assert_conserved(initial_atomic, atomic.after_board.ledger)
+
     # The same demand profile has a second exact Pokemon witness. It produces a
     # different materialized board object rather than aliasing the Pidgeot line.
     basic_action = next(
@@ -322,6 +339,7 @@ def main() -> None:
                 "full_bench_rejected": full_bench_rejected,
                 "stale_witness_rejected": stale_rejected,
                 "non_pokemon_witness_rejected": non_pokemon_rejected,
+                "atomic_prize_board_transaction": True,
                 "card_totals_conserved": True,
             },
             indent=2,
