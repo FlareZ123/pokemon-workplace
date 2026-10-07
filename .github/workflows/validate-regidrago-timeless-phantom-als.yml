@@ -1,0 +1,28 @@
+name: Validate Regidrago Timeless Phantom ALS
+
+on:
+  push:
+    paths:
+      - "tools/regidrago_timeless_phantom_als.py"
+      - "tools/damage_calculation_kernel.py"
+      - "tools/damage_board_bridge.py"
+      - "tools/position_effect_execution.py"
+      - "tools/position_effect_profile_compiler.py"
+      - "tools/canonical_turn_sequence_owner.py"
+      - "results/regidrago_timeless_phantom_als/**"
+      - "resources/cards/en/sm5.json"
+      - "resources/cards/en/sv6.json"
+      - "resources/cards/en/swsh2.json"
+      - "resources/cards/en/swsh12.json"
+      - ".github/workflows/validate-regidrago-timeless-phantom-als.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/regidrago_timeless_phantom_als/reproduce.py
