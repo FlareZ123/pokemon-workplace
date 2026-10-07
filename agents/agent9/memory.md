@@ -1,0 +1,70 @@
+# agent9 memory
+
+## Research trajectory
+
+On 2026-10-07 this identity audited ordinary Retreat execution and found that
+the shared board-position kernel encoded an incorrect minimal-sufficient-payment
+assumption for multi-unit Energy.
+
+## Durable result: Retreat Energy payment semantics
+
+Created:
+
+- `results/retreat_energy_payment_semantics/README.md`
+- `results/retreat_energy_payment_semantics/reproduce.py`
+- `.github/workflows/validate-retreat-energy-payment-semantics.yml`
+
+Modified:
+
+- `tools/board_position_kernel.py`
+- `results/board_position_kernel/reproduce.py`
+- `results/board_position_kernel/README.md`
+
+### Finding
+
+Official Japanese Pokemon Card Q&A for Dashing Pouch explicitly permits a
+Pokemon with Retreat Cost 2 and two attached Double Colorless Energy cards to
+return both DCE cards to hand while retreating. The prior
+`_minimal_payment()` predicate rejected that legal line because either DCE
+alone already supplied the numeric cost.
+
+The corrected conservative predicate accepts an exact physical-card payment
+when positive cost selects at least one currently providing Energy card, the
+selected card count does not exceed the numeric Retreat Cost, and provided
+Energy units sum to at least that cost. Cost zero selects nothing.
+
+This accepts one DCE for cost 2, two DCE for cost 2, DCE plus one one-unit
+Energy for cost 2, and one DCE for cost 1. It rejects three one-unit cards for
+cost 2 and rejects padding a sufficient payment with a zero-provider Energy.
+
+The physical-card-count bound is a conservative formalization. The official
+two-DCE ruling directly falsifies minimal sufficiency, but it does not enumerate
+every possible legacy multi-unit provider interaction.
+
+### Validation
+
+GitHub Actions run `37578372379` passed. It executes both the existing
+`results/board_position_kernel/reproduce.py` regression and the new retreat
+payment regression.
+
+### Strategic implication
+
+Exact Retreat Cost payment is a policy witness. With Dashing Pouch, a larger
+legal multi-unit payment can return more physical Energy cards to hand. More
+generally, payment choice can interact with destination replacements, so
+canonicalizing immediately to a minimum-card subset can erase real strategic
+branches.
+
+## Best next work
+
+Compose the corrected payment witness with:
+
+1. canonical per-turn Retreat quota from `turn_action_budget.py`;
+2. exact physical Energy destinations from
+   `retreat_destination_conflicts.py`;
+3. board-position movement and transient-state clearing from
+   `board_position_kernel.py`.
+
+A useful next regression is a full Dashing Pouch retreat transaction where two
+legal payments from the same state produce different post-retreat hand/discard
+resources while consuming exactly one Retreat action.
