@@ -32,6 +32,16 @@ class CopySelector:
 
 
 @dataclass(frozen=True)
+class TurnBoundaryEffect:
+    take_another_turn: bool = False
+    skip_pokemon_checkup: bool = False
+
+    def __post_init__(self) -> None:
+        if self.skip_pokemon_checkup and not self.take_another_turn:
+            raise ValueError("checkup skip requires an extra-turn effect")
+
+
+@dataclass(frozen=True)
 class AttackDef:
     attack_id: str
     name: str
@@ -41,6 +51,7 @@ class AttackDef:
     pre_event: str | None = None
     post_event: str | None = None
     progress_delta: int = 0
+    turn_boundary_effect: TurnBoundaryEffect | None = None
 
 
 @dataclass(frozen=True)
@@ -50,6 +61,7 @@ class State:
     last_declared_attack: tuple[tuple[str, str], ...] = ()
     progress: int = 0
     events: tuple[str, ...] = ()
+    pending_turn_boundary: TurnBoundaryEffect | None = None
 
     def last_attack_for(self, player: str) -> str | None:
         return dict(self.last_declared_attack).get(player)
@@ -91,6 +103,10 @@ class GXAlreadyUsed(CopyResolutionError):
 
 
 class CopyCycleError(CopyResolutionError):
+    pass
+
+
+class ConflictingTurnBoundaryEffect(CopyResolutionError):
     pass
 
 
@@ -169,14 +185,22 @@ def resolve_attack(
 
     trace: list[TraceStep] = []
     body_chain: list[str] = []
-    seen: set[tuple[str, str, int, frozenset[str]]] = set()
+    seen: set[
+        tuple[str, str, int, frozenset[str], TurnBoundaryEffect | None]
+    ] = set()
 
     def execute(body_attack_id: str, current: State, depth: int) -> State:
         if depth > max_depth:
             raise CopyCycleError(f"copy depth exceeded {max_depth}")
 
         body = attacks[body_attack_id]
-        cycle_key = (actor_card_id, body_attack_id, current.progress, current.gx_used_by)
+        cycle_key = (
+            actor_card_id,
+            body_attack_id,
+            current.progress,
+            current.gx_used_by,
+            current.pending_turn_boundary,
+        )
         if cycle_key in seen:
             raise CopyCycleError(
                 f"no-progress copy cycle at {body_attack_id} with progress={current.progress}"
@@ -187,6 +211,19 @@ def resolve_attack(
             if actor_player in current.gx_used_by:
                 raise GXAlreadyUsed(f"{actor_player} has already used a GX attack")
             current = replace(current, gx_used_by=current.gx_used_by | {actor_player})
+
+        if body.turn_boundary_effect is not None:
+            if (
+                current.pending_turn_boundary is not None
+                and current.pending_turn_boundary != body.turn_boundary_effect
+            ):
+                raise ConflictingTurnBoundaryEffect(
+                    "conflicting pending turn-boundary effects"
+                )
+            current = replace(
+                current,
+                pending_turn_boundary=body.turn_boundary_effect,
+            )
 
         if body.progress_delta:
             current = replace(current, progress=current.progress + body.progress_delta)
