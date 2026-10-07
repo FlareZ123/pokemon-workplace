@@ -60,3 +60,25 @@ This closes the execution-layer next step proposed by `bench_release_catalog`. W
 ## Next high-value action
 
 Add explicit release deadlines. Attack-based release is zero-value for a same-turn required Bench entrant but can be valuable when the entrant is only required next turn. Model turn boundaries and compare current-turn vs next-turn deadlines, preserving the opportunity cost that an attack release consumes this turn's attack. This should connect Bench-release timing to the repository's existing deadline/resource work rather than treating attack release as globally unusable.
+
+
+## Completed result: Bench-release deadline geometry
+
+Created:
+- `tools/bench_release_deadline_geometry.py`
+- `results/bench_release_deadline_geometry/README.md`
+- `results/bench_release_deadline_geometry/reproduce.py`
+- `results/bench_release_deadline_geometry/model.json`
+
+Added earliest materialization turn and Bench-entry deadline. Deterministic planner results:
+- Item or Supporter release can free a slot for a current-turn entrant when their own channel is otherwise available.
+- Attack release cannot satisfy a same-turn entry deadline because attacking ends the turn.
+- If the entrant only becomes available on the next own turn, attack release can preload the slot and the next-turn Supporter quota is fresh.
+- Attack release still conflicts with a distinct required current-turn attack; the line returns when the release attack itself satisfies that current attack objective.
+- Item release can free now, preserve the distinct current attack, then carry the slack to next turn.
+
+This is synthesized into `results/README.md`.
+
+## Next high-value action
+
+Model the opponent's intervening turn as an adversarial/state-changing window. Preloaded Bench slack can be erased by a capacity contraction such as a Stadium that lowers maximum Bench size. Compare attack-release preload against immediate release-and-entry, including the affected player's forced-discard choice and stale-occupant buffer. This should connect deadline geometry to `bench_capacity_geometry`.
