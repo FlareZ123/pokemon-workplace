@@ -85,6 +85,10 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [bench_capacity_restoration_bootstrap/](bench_capacity_restoration_bootstrap/) adds recoverability and bootstrap thresholds. A full four-of-four Collapsed Stadium Bench cannot use Pumpkin Pit/Snow Sink to unlock itself because those removers must legally enter the Bench before discarding the Stadium. Direct Stadium replacement can restore capacity from zero slack. Area Zero Underdepths is sequence-sensitive: with no Tera initially in play, replacing Collapsed reopens only the fifth slot; using that slot for the Tera activates capacity eight, while using it for an ordinary entrant first strands the Tera and blocks the expansion.
 
+[bench_restoration_out_marginals/](bench_restoration_out_marginals/) quantifies the same bootstrap discontinuity. In its 40-card/five-seen toy state with two direct restorers and two Bench-triggered removers, zero slack has only two live outs and 23.717949% unlock access; one slack activates all four and reaches 42.707080%. Adding one remover copy is worth 0 pp at zero slack and 7.957350 pp at one slack under symmetric draw access.
+
+[bench_restore_prize_conditioning/](bench_restore_prize_conditioning/) adds six random Prizes from a 46-card unknown pool and cross-validates the grouped states against `PrizeBelief`. K0 expected access is 20.772947% at zero slack and 37.941600% at one slack. Under K1, one direct restorer Prized drops zero-slack access to 12.5%, while one remover Prized leaves it at 23.717949%; at one slack those two Prize identities become symmetric live-out losses.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
