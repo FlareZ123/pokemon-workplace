@@ -1,0 +1,23 @@
+name: Validate partial inspection discard value
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/partial_inspection_discard_value.py"
+      - "results/partial_inspection_discard_value/**"
+      - ".github/workflows/validate-partial-inspection-discard-value.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce partial inspection discard value
+        run: python results/partial_inspection_discard_value/reproduce.py
