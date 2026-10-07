@@ -1,0 +1,20 @@
+name: Validate connector capacity deadlines
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/connector_capacity_deadlines.py"
+      - "tools/connector_capacity_option_value.py"
+      - "results/connector_capacity_deadlines/**"
+      - ".github/workflows/validate-connector-capacity-deadlines.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/connector_capacity_deadlines/reproduce.py
