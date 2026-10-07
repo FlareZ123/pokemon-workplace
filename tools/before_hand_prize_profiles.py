@@ -89,9 +89,10 @@ def compile_before_hand_prize_profile(
         )
 
     full_text = "\n".join(text for _source, text in _effect_rows(card))
-    if "Flip a coin. If heads, take 1 more Prize card." in full_text:
+    full_text_lower = full_text.lower()
+    if "flip a coin. if heads, take 1 more prize card." in full_text_lower:
         extra_prize_mode = "coin_heads"
-    elif "take 1 more Prize card" in full_text:
+    elif "take 1 more prize card" in full_text_lower:
         extra_prize_mode = "guaranteed"
     else:
         extra_prize_mode = "none"
