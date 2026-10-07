@@ -1,0 +1,24 @@
+name: Validate DCI-style discard ranking
+
+on:
+  push:
+    paths:
+      - "tools/discard_cost_witness.py"
+      - "tools/joint_discard_constraints.py"
+      - "tools/discard_policy_ranking.py"
+      - "results/discard_policy_ranking/**"
+      - ".github/workflows/validate-discard-policy-ranking.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/discard_policy_ranking/reproduce.py
