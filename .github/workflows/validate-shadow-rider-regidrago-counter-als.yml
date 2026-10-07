@@ -1,0 +1,20 @@
+name: Validate Shadow Rider Regidrago counter ALS
+
+on:
+  push:
+    paths:
+      - "tools/shadow_rider_regidrago_counter_als.py"
+      - "results/shadow_rider_regidrago_counter_als/**"
+      - ".github/workflows/validate-shadow-rider-regidrago-counter-als.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Shadow Rider counter ALS regression
+        run: PYTHONPATH=tools python results/shadow_rider_regidrago_counter_als/reproduce.py
