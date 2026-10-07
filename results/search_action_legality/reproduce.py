@@ -97,6 +97,16 @@ def main() -> None:
 
     inventory = build_trainer_search_inventory(resources)
     assert inventory["distinct_trainer_search_variants"] == 179
+    assert inventory["destination_counts"] == {
+        "attach_in_play": 13,
+        "bench": 17,
+        "discard": 3,
+        "evolve_in_play": 7,
+        "hand": 132,
+        "mixed_hand_attach": 1,
+        "replacement_switch": 2,
+        "topdeck": 4,
+    }
     assert inventory["direct_to_bench_variants"] == 17
 
     print(json.dumps({

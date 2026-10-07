@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from collections import Counter
 from pathlib import Path
+import re
 from typing import Any, Literal
 
 from tools.build_expanded_legality_baseline import classify_effective_legality, load_json
@@ -139,6 +141,51 @@ def _trainer_action_class(card: dict[str, Any]) -> str:
     return "Trainer"
 
 
+def classify_trainer_search_destination(text: str) -> str:
+    """Classify the destination of cards selected by the first full-deck search.
+
+    Classification starts at the first search phrase so pre-search costs such as
+    Pokemon Communication putting a hand card on top of the deck do not overwrite
+    the destination of the searched card.
+    """
+
+    lower = " ".join(text.split()).lower()
+    starts = [
+        index
+        for phrase in ("search your deck", "look through your deck")
+        if (index := lower.find(phrase)) >= 0
+    ]
+    if not starts:
+        raise ValueError("text does not contain a full-deck search phrase")
+    search_text = lower[min(starts) :]
+
+    if "put 1 of them into your hand. attach the other" in search_text:
+        return "mixed_hand_attach"
+    if "switch it with that" in search_text:
+        return "replacement_switch"
+    if (
+        ("to evolve" in search_text or "counts as evolving" in search_text)
+        and ("put it onto that pokémon" in search_text or "put it onto that pokemon" in search_text)
+    ):
+        return "evolve_in_play"
+    if re.search(r"attach (?:it|them|those|the other)", search_text):
+        return "attach_in_play"
+    if "onto your bench" in search_text:
+        return "bench"
+    if re.search(r"discard (?:it|them|those cards)", search_text):
+        return "discard"
+    if (
+        "put those cards on top of it" in search_text
+        or "put that card on top of it" in search_text
+        or "put those cards on top of your deck" in search_text
+    ):
+        return "topdeck"
+    if "into your hand" in search_text or "in your hand" in search_text:
+        return "hand"
+    return "other"
+
+
+
 def build_trainer_search_inventory(resources_root: Path) -> dict[str, Any]:
     sets = load_json(resources_root / "sets" / "en.json")
     expanded_sets = {
@@ -169,17 +216,29 @@ def build_trainer_search_inventory(resources_root: Path) -> dict[str, Any]:
                 print_instances += 1
                 variants.add((action_class, card["name"], text))
 
-    direct_to_bench = sorted(
-        row
-        for row in variants
-        if "onto your bench" in row[2].lower()
+    destination_counts = Counter(
+        classify_trainer_search_destination(text)
+        for _, _, text in variants
     )
+    destination_rows = sorted(
+        (
+            classify_trainer_search_destination(text),
+            action_class,
+            name,
+            text,
+        )
+        for action_class, name, text in variants
+    )
+    direct_to_bench = [
+        row for row in destination_rows if row[0] == "bench"
+    ]
     return {
         "print_text_instances": print_instances,
         "distinct_trainer_search_variants": len(variants),
+        "destination_counts": dict(sorted(destination_counts.items())),
         "direct_to_bench_variants": len(direct_to_bench),
         "direct_to_bench_rows": [
             {"action_class": action_class, "card_name": name, "text": text}
-            for action_class, name, text in direct_to_bench
+            for _, action_class, name, text in direct_to_bench
         ],
     }
