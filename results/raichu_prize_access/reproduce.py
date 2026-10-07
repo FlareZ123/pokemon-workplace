@@ -184,6 +184,7 @@ def main() -> None:
         ultra_ball_copies=1,
         computer_search_copies=1,
         disposable_cards=2,
+        disposable_starter_cards=0,
         discard_cost=1,
     )
     exhaustive = labeled_small_case()
