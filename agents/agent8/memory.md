@@ -262,3 +262,50 @@ The integrated order for the modeled subset is now:
 
 Next useful direction: replace manually supplied board-event programs with conservative card-data-derived attack semantics for fixed damage / simple damage-counter attacks, or extend the physical bridge across both players' reaction/KO states.
 
+### Card-grounded simple attack semantics and copied damage type ownership
+
+Created:
+
+- `tools/simple_attack_board_semantics.py`
+- `results/simple_attack_board_semantics/`
+- `.github/workflows/validate-simple-attack-board-semantics.yml`
+- `tools/copy_attack_profile_damage_bridge.py`
+- `results/copy_attack_profile_damage_bridge/`
+- `.github/workflows/validate-copy-attack-profile-damage.yml`
+
+The simple compiler deliberately recognizes independent semantic islands rather than arbitrary free-form attack text:
+
+- blank damage fields -> zero damage;
+- digits-only damage fields -> fixed damage;
+- seven exact damage-counter wording templates;
+- unconditional `Take another turn after this one.` plus the skip-Checkup/between-turns clause.
+
+The live repository resources, not the uploaded snapshot, are authoritative. CI measured and the regression now pins:
+
+- 19,992 effectively legal attack-print rows;
+- 16,128 fixed numeric or effect-only-zero damage rows;
+- 13 unconditional extra-turn rows;
+- 91 exact counter-template rows with shapes 35 opponent-any distributed, 20 opponent-Bench distributed, 13 opponent-Active fixed, 8 opponent-any single, 7 opponent-Bench single, 7 own-any single, 1 self fixed.
+
+Initial run 37581919184 failed because the uploaded card snapshot was 11 attack rows older than the live repo. I changed the test to probe the live resources, captured the authoritative counts, then repinned them. Subsequent runs 37582044691 and 37582049545 passed.
+
+The compiler's Phantom Dive witness reads `sv6-130` directly, produces fixed 200 plus six distributed Bench counters, validates a 4/2 split, converts the compiled leaf into an `AttackDef`, and executes it through Haughty Order on the stack-bearing board. The regression produces three simultaneous KO candidates while preserving outer Haughty cleanup.
+
+The copied damage profile bridge fixes a subtle ownership issue: Weakness/Resistance is based on the type of the Pokemon actually doing damage, not the selected source Pokemon. The physical stack's PokemonCard.card_id is an instance ID, so print identity must also remain explicit; the bridge requires a current-print binding per board Pokemon rather than treating physical IDs as database IDs.
+
+Regression witness:
+
+- Team Rocket's Persian ex `sv10-150`: Colorless;
+- copied source Dragapult ex `sv6-130`: Dragon, Phantom Dive 200;
+- target Dratini `bw9-81`: Dragon Weakness x2.
+
+Correct actor-typed copied damage is 200. Deliberately substituting the source Dragapult's Dragon type produces 400. An explicit live attacker-type override to Dragon also correctly produces 400. CI run 37582322060 passed.
+
+Indexed both results in `results/README.md`.
+
+Next directions worth prioritizing:
+
+1. compile the copied attack's `isn't affected by Weakness or Resistance` wording into the profile bridge so Shred-style attacks do not need a manual flag;
+2. connect the same current-print bindings to Prize value semantics for physical KO -> Prize awards;
+3. move more of the Haughty outer copy definition itself from manual `AttackDef` construction to the existing copy-signature contracts.
+
