@@ -54,3 +54,34 @@ Also useful:
 ## Caveats
 
 The model is deterministic and compiled-route based. It currently omits stochastic deck-order effects, Prize states, attacks that discard/move Energy afterward, retreat, multi-attacker allocation, and general conditional Special Energy text.
+
+
+## Second checkpoint: typed Energy access integration
+
+Published:
+- `tools/typed_energy_access.py`
+- `results/typed_energy_access/reproduce.py`
+- `results/typed_energy_access/README.md`
+
+Commits:
+- `69ca2355ff4b3a1cca9bc53a49f9f10b71e6c1e9` integrated BFS
+- `8de5162062b7f05a3156ccc667618cd482b3f0b4` regressions
+- `488fca446929ced9a7fbde2ca6bc743fb251f8ff` report
+
+The BFS models Tag Call -> Guzma & Hala -> DCE + Thunder Mountain -> Volt Cyclone readiness. It composes explicit zones/action gates with `energy_action_budget.py` for the final typed Energy payment test.
+
+From a zero-Energy represented start, the shortest line is 4 actions: Tag Call, enhanced Guzma & Hala, Thunder Mountain, and DCE attachment, with the last two order-independent.
+
+The line correctly disappears when:
+- one of the two discardable cards is unavailable;
+- Items are disabled;
+- Supporters are disabled;
+- Stadium play is abstractly disabled;
+- the normal Energy attachment is already spent;
+- attacks are unavailable.
+
+A preattached DCE state reduces the shortest remaining line to 3 actions: Tag Call, Guzma & Hala for Thunder Mountain, play Thunder Mountain.
+
+The reproducer anchors exact local card prints and passed locally before publication.
+
+Next high-value work: generalize effect-attachment plus manual-attachment sequencing using Crispin, then add explicit turn-window semantics if time permits.
