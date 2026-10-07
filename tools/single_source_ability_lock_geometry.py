@@ -29,6 +29,14 @@ class AbilityLockProfile:
     requires_damage_counters: bool = False
 
 
+POWER_OF_ALCHEMY = AbilityLockProfile(
+    name="Power of Alchemy",
+    print_ids=frozenset({"sm1-58"}),
+    activation="in_play",
+    scope="both",
+    required_target_tags=frozenset({"Basic"}),
+)
+
 BIDE_BARRICADE = AbilityLockProfile(
     name="Bide Barricade",
     print_ids=frozenset({"xy4-36", "g1-RC11"}),
@@ -87,6 +95,7 @@ GARBOTOXIN = AbilityLockProfile(
 )
 
 PROFILES = (
+    POWER_OF_ALCHEMY,
     BIDE_BARRICADE,
     EMPERORS_EYES,
     NEUTRALIZING_GAS,
@@ -118,6 +127,8 @@ def source_profile_active(
 
     if not source.abilities_enabled:
         return False
+    if profile.activation == "in_play":
+        return True
     if profile.activation == "active":
         return source_board.active_id == source.object_id
     if profile.activation == "bench":
