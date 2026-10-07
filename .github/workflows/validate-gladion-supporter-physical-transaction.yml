@@ -1,0 +1,20 @@
+name: Validate Gladion Supporter physical transaction
+
+on:
+  push:
+    paths:
+      - "tools/gladion_supporter_physical_transaction.py"
+      - "results/gladion_supporter_physical_transaction/**"
+      - ".github/workflows/validate-gladion-supporter-physical-transaction.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Gladion Supporter physical transaction regression
+        run: PYTHONPATH=tools python results/gladion_supporter_physical_transaction/reproduce.py
