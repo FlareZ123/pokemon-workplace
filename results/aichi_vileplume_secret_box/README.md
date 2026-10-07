@@ -121,7 +121,9 @@ The first-turn setup state still gives it meaningful mechanical AMR because the 
 
 This does not make the discard strategically cheap.
 
-The current planner treats all mechanically selectable discard cards as acceptable. It does not assign state-dependent DCI or future continuation value. A line that burns three cards for Secret Box and then two more for Guzma & Hala may be legal and immediately successful while being strategically poor in a full game.
+Among the incremental successes, 23.3293% have Jet Energy already in hand, so the line can be completed with Secret Box's three-card payment. The remaining 76.6707% need the paid Guzma & Hala branch for Jet Energy, bringing the minimum modeled discard burden to five cards across the two effects. Weighted across all incremental successes, that minimum is 4.5334 discarded cards.
+
+The current planner treats all mechanically selectable discard cards as acceptable. It does not assign state-dependent DCI or future continuation value. A mechanically legal five-discard setup can still be strategically poor if those cards carry high continuation value.
 
 ## Finding 3: the ACE SPEC comparison remains unresolved at deck level
 
