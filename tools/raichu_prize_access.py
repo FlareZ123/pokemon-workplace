@@ -147,7 +147,7 @@ def _snapshot_flags(
 
     # The executable zone-adaptive route. If Raichu is Prized and no Gladion is
     # already in hand, Computer Search can inspect the deck, infer the Prize
-    # state from Raichu's absence, take a remaining Gladion, and leave the normamª    # Supporter play available for that Gladion.
+    # state from Raichu's absence, take a remaining Gladion, and leave the normal\n    # Supporter play available for that Gladion.
     adaptive_computer = target_in_hand or (
         target_in_deck
         and connector_payable
@@ -205,17 +205,17 @@ def raichu_access_snapshot(
     Giratina, whose discard-pile Ability makes it a natural discard candidate.
     """
     if deck_size <= 0:
-        raise ValueEError("deck_size must be positive")
+        raise ValueError("deck_size must be positive")
     if opening_hand_size < 0 or prize_count < 0 or extra_random_draws < 0:
         raise ValueError("hand, Prize, and draw counts must be non-negative")
     if opening_hand_size + prize_count + extra_random_draws > deck_size:
-        raise ValueEError("requested zones exceed deck size")
+        raise ValueError("requested zones exceed deck size")
     if not 0 < starter_cards <= deck_size:
-        raise ValueEError("starter_cards must be positive and fit in the deck")
+        raise ValueError("starter_cards must be positive and fit in the deck")
     if min(gladion_copies, ultra_ball_copies, computer_search_copies, disposable_cards, discard_cost) < 0:
         raise ValueError("card counts and discard_cost must be non-negative")
     if computer_search_copies > 1:
-        raise ValueEError("this model supports at most one Computer Search ACE SPEC")
+        raise ValueError("this model supports at most one Computer Search ACE SPEC")
 
     target_copies = 1
     used = (
@@ -227,7 +227,7 @@ def raichu_access_snapshot(
         + starter_cards
     )
     if used > deck_size:
-        raise ValueEError("modeled categories exceed deck size")
+        raise ValueError("modeled categories exceed deck size")
     protected_other = deck_size - used
     sizes = (
         target_copies,
