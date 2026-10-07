@@ -252,6 +252,15 @@ The reprint audit's official Copycat example shows why this matters: tournament-
 
 The namespaced key adapter lets the existing zone-count machinery state its chosen equivalence relation without imposing one universal card identity.
 
+
+## 19. Whole-stack Knock Out conservation unifies stack and attachment disposal
+
+[stack_knockout_conservation/](stack_knockout_conservation/) composes the exchangeable zone-count layer, the physical identity ledger, and the stack-bearing board-position kernel for one complete Knock Out disposal transition.
+
+The regression materializes a Bulbasaur/Ivysaur evolution stack, Muscle Band, and Double Colorless Energy on one persistent Active Pokémon object. On Knock Out, both Pokémon-card instances and both attachments move to discard and dematerialize while the Benched Bidoof remains bound to the promoted object. A terminal second Knock Out leaves no board-bound instances. Per-class copy totals remain invariant throughout.
+
+**Working synthesis:** a Knocked Out evolved Pokémon is one board-object disposal boundary with multiple conserved physical-card members. Updating only the top card, attachment flags, or aggregate counts independently is structurally unsafe because it can orphan lower-stage cards or physical attachments.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -278,7 +287,7 @@ Particularly foundational components include:
 
 Several larger questions remain promising:
 
-1. **General conservation across unified state layers.** Energy attachments, Pokémon evolution/devolution stacks, Tools, and mechanical Knock Out removal now have aggregate-to-instance conservation bridges. The next shared-kernel problem is recovery, Energy movement between Pokémon, simultaneous Knock Outs, hidden-state beliefs, and action budgets.
+1. **General conservation across unified state layers.** Energy attachments, Pokémon evolution/devolution stacks, Tools, and single-Pokémon whole-stack Knock Out disposal now have aggregate-to-instance conservation bridges. The next shared-kernel problems are recovery, Energy movement between Pokémon, simultaneous Knock Outs and trigger ordering, hidden-state beliefs, and action budgets.
 2. **Compiler from card text to transitions.** A validated semantic island now compiles multi-output Trainer deck-search text through typed physical-target feasibility. The larger open problem is extending the same auditable approach to more wording families and then materializing successful compiled actions into canonical zone / instance state without guessing ambiguous semantics.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Errata-aware reprint equivalence.** The repository now has an exact-fingerprint candidate scanner and an official Copycat counterexample showing why equality is incomplete. The next layer should normalize authoritative errata and semantic equivalence without turning same-name cards into automatic matches.
