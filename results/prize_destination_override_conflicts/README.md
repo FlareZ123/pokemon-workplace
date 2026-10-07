@@ -2,9 +2,9 @@
 
 ## Question
 
-Can the physical Prize-taking kernel safely compose replacement effects that redirect the same already-taken Prize card to different zones?
+Can the physical Prize-taking kernel compose replacement effects that redirect the same already-taken Prize card to different zones?
 
-Only when the applicable replacement effects agree on the destination. When they disagree, the mechanical layer needs an explicit unresolved conflict instead of silently choosing one zone.
+Yes, provided replacement applicability and chooser authority remain explicit. The bundled card pool gives a direct conflict, and an official Japanese Pokémon Card Q&A supplies the missing ordering rule for that exact pair.
 
 Implementation: `tools/prize_destination_overrides.py`  
 Regression: `results/prize_destination_override_conflicts/reproduce.py`
@@ -16,45 +16,56 @@ The bundled legal card pool contains two effects that can apply to the same Priz
 - Barbaracle `swsh11-107`, **Lost Block**: the opponent puts Prize cards they would take in the Lost Zone instead of into their hand.
 - Billowing Smoke `swsh3-158`: when the attached Pokémon is Knocked Out by damage from an opponent's attack, that player discards Prize cards they would take for that Knock Out instead of putting them into their hand.
 
-If the Billowing Smoke holder is Knocked Out while its controller has Lost Block active, the attacking opponent can have two explicit destination replacements applying to each Prize from that Knock Out: `lost_zone` and `discard`.
+The existing Prize-effect catalog recognizes these separately as `taken_prize_to_lost_zone` and `taken_prize_to_discard`.
 
-The existing Prize-effect catalog already recognizes these separately as `taken_prize_to_lost_zone` and `taken_prize_to_discard`. The new layer composes them against one exact `prize_pending` physical instance.
+## Authoritative ordering result
+
+The Japanese Pokémon Card Trainers Website has an exact Q&A for Lost Block plus Billowing Smoke. It says the opponent taking the Prize chooses the effect order. If Lost Block is processed first, the Prize goes to the Lost Zone. If Billowing Smoke is processed first, the Prize is discarded.
+
+A second official Q&A covers a two-Prize Pokémon V Knock Out and says the Prize-taking opponent looks at the two Prize cards and chooses, for each card individually, whether to put it in the Lost Zone or discard it.
+
+Sources:
+
+- https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%83%AF%E3%82%B6%E3%81%AE%E5%8A%B9%E6%9E%9C&page=52&regulation=all&regulation_header_search_item1=all
+- https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%83%9D%E3%82%B1%E3%83%A2%E3%83%B3%E3%81%AE%E3%81%A9%E3%81%86%E3%81%90+%E3%83%88%E3%83%A9%E3%83%83%E3%82%B7%E3%83%A5+%E3%83%80%E3%83%A1%E3%83%BC%E3%82%B8+&page=3&regulation=all&regulation_faq_main_item1=all
 
 ## State boundary
 
-The Advanced Player's Rulebook places Prize taking inside the Knock Out process after Knock Out effects and physical disposal. The existing `prize_pending_take` kernel represents a selected Prize as already removed from the Prize zone and held in `prize_pending` before its final destination is resolved.
+The Advanced Player's Rulebook places Prize taking inside Knock Out resolution. The existing `prize_pending_take` kernel represents a selected Prize as already removed from the Prize zone and held in `prize_pending` before its final destination resolves.
 
-The new resolver therefore treats `hand` as the ordinary destination only when no replacement applies. It does not model ordinary hand entry as another competing replacement once an explicit override exists.
+The new layer treats `hand` as the ordinary destination when no replacement applies. If every applicable replacement names one zone, that zone is deterministic. If replacements name different zones, the state exposes a choice and waits for an upstream authority-aware caller to identify the chosen effect.
 
-This distinction matters because the Prize has already been taken mechanically even when its final card destination becomes Lost Zone or discard.
+## Per-card decision granularity
 
-## Resolution contract
+The two-Prize official ruling matters architecturally. One global ordering choice for the entire Prize award would be too coarse.
 
-`decide_prize_destination(...)` has three outcomes:
+The regression stages two exact physical Prize instances. It chooses Billowing Smoke for the first pending card and Lost Block for the second. The first moves to discard, the second moves to Lost Zone, and total physical card counts remain conserved.
 
-1. no applicable override: use the ordinary `hand` destination;
-2. one or more applicable overrides that all name the same zone: resolve to that zone;
-3. applicable overrides that name different zones: return an unresolved conflict and do not mutate physical state.
-
-Applicability and ordering authority remain upstream semantic questions. The resolver intentionally does not infer a priority rule from the word `instead`.
+This means the chooser decision belongs at the exact pending-card boundary after Prize identities can be observed.
 
 ## Regression
 
-The regression checks one exact physical Prize instance through the existing conservation kernel:
+The regression checks:
 
-- ordinary Prize taking moves `prize_pending -> hand`;
-- Lost Block alone moves `prize_pending -> lost_zone`;
-- Billowing Smoke alone moves `prize_pending -> discard`;
-- multiple same-destination overrides compose safely;
-- Lost Block plus Billowing Smoke reports the conflicting zones `discard` and `lost_zone` and leaves the exact Prize instance in `prize_pending`;
-- every resolved branch preserves physical card-class totals.
+- ordinary Prize taking: `prize_pending -> hand`;
+- Lost Block alone: `prize_pending -> lost_zone`;
+- Billowing Smoke alone: `prize_pending -> discard`;
+- same-destination replacement effects compose directly;
+- conflicting destinations remain pending until a legal effect choice is supplied;
+- either official single-Prize branch can then execute;
+- a two-Prize award can split destinations per exact card;
+- all resolved branches preserve physical card-class totals.
 
-## Rules-source limitation
+## Correction history
 
-A targeted scan of the bundled Advanced Player's Rulebook found several effect-specific `instead` rules and special conflict rules for particular mechanics, but did not identify a general rule assigning precedence between two card effects that replace the same destination with different zones.
+The first implementation intentionally left the Lost Block plus Billowing Smoke conflict unresolved because a scan of the bundled Advanced Player's Rulebook did not expose a general replacement-precedence rule.
 
-That absence is not evidence that no authoritative ruling exists. The result therefore establishes the state representation and conflict detector while leaving this exact paper-rules outcome unresolved pending stronger authority.
+A later targeted search of the official Japanese Q&A found the exact interaction and falsified that provisional conclusion. The implementation was then changed from an unresolved-conflict terminal state to an explicit choice point.
+
+This is a useful methodological example: absence from a general rulebook does not imply that a card-specific authoritative ruling is unavailable.
 
 ## Architectural implication
 
-Destination replacement should be a first-class transition stage between an event and physical movement. A simulator needs to distinguish the underlying event, the ordinary destination, applicable replacement programs, ordering or precedence authority, and the final conserved move. Collapsing those into one zone assignment can hide real conflicts or bake an unsupported ruling into state execution.
+Destination replacement is a transition stage between an underlying event and physical movement. The event, ordinary destination, applicable replacements, chooser authority, per-card choice, and final conserved move are distinct state variables.
+
+For this exact interaction, the prize-taking player owns the choice. That should remain evidence-backed metadata on the interaction instead of being generalized to every replacement conflict without further rules support.
