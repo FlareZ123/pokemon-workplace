@@ -430,6 +430,18 @@ Green regressions cover Secret Box, Arven, Guzma & Hala, and Larry's Skill. The 
 **Working synthesis:** hidden-zone state needs an exact material world plus observer-relative joint beliefs. Prize taking also needs a timing boundary between learning a previously face-down identity and its final destination.
 
 
+## 35. Prize-taking precedes replacement-Active policy in conserved physical state
+
+[promotion_pending_prize_information/](promotion_pending_prize_information/) fills the missing physical interval after Knock Out disposal and before replacement Active selection.
+
+The new `PromotionPendingState` permits surviving former Bench Pokémon to remain in play with no chosen Active while preserving the same physical `IdentityLedger`. It composes that state with the existing `prize_pending` queue and observer-relative Prize beliefs, then opens promotion only after the Prize window closes and an external game-resolution decision says play continues.
+
+The regression disposes both Knocked Out Active Pokémon first, moves a face-down Prize through `prize_pending`, privately reveals that Prize to the taker, resolves the same physical instance to hand, and only then permits the next-turn player to choose a replacement Active. The second player chooses after observing the first promotion. Per-class card totals remain conserved throughout.
+
+A toy decision witness makes the sequencing consequence explicit: when two equally likely Prize observations favor different replacement choices, a fixed pre-observation choice reaches 50% utility while an observation-conditioned choice reaches 100%. Those values describe the toy policy objective, not match win rate.
+
+**Working synthesis:** replacement-Active selection is an information-sensitive phase boundary. A stable-board representation that requires an Active at every intermediate instant can either retain a Knocked Out Active too long or commit a replacement before rules-visible Prize information exists.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -464,7 +476,7 @@ Particularly foundational components include:
 
 Several larger questions remain promising:
 
-1. **General conservation across unified state layers.** The repository now has conserved materialization paths for Energy, evolution stacks, Tools, movement, simultaneous Knock Outs, zone-routing recovery, cross-player promotion ordering, post-KO terminal resolution, and physical Prize taking with the taker's belief update. The next shared-kernel problems are competing replacement effects, opponent-specific Prize knowledge, promotion-pending physical state, and migrating the now-explicit turn budget into canonical composite ownership.
+1. **General conservation across unified state layers.** The repository now has conserved materialization paths for Energy, evolution stacks, Tools, movement, simultaneous Knock Outs, zone-routing recovery, cross-player promotion ordering, post-KO terminal resolution, and physical Prize taking with the taker's belief update. The next shared-kernel problems are competing replacement effects, opponent-specific Prize knowledge, and migrating the now-explicit turn budget into canonical composite ownership.
 2. **Compiler from card text to transitions.** A validated semantic island now compiles multi-output Trainer deck-search text through typed physical-target feasibility. The larger open problem is extending the same auditable approach to more wording families and then materializing successful compiled actions into canonical zone / instance state without guessing ambiguous semantics.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Errata-aware reprint equivalence.** Name-wide Trainer errata now provides an authoritative layer above exact fingerprints while Copycat and Rainbow Energy remain positive and negative semantic boundary cases. The next layer should cover print-specific errata and a small auditable semantic grammar without turning same-name cards into automatic matches.
