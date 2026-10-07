@@ -153,6 +153,8 @@ Other timing and attack-structure work includes [copied_attack_partial_resolutio
 
 [attack_copy_physical_ko_bridge/](attack_copy_physical_ko_bridge/) then replays copied damage directly on the stack-bearing physical board. Its Haughty Order -> Phantom Dive witness carries a 200-HP Active and 60-HP Bench target into one pending simultaneous-KO batch, keeps their Tool/Energy attachments present for the trigger window, and conserves all physical card classes through atomic disposal and survivor promotion.
 
+[attack_copy_terminal_bridge/](attack_copy_terminal_bridge/) gates pending copy-created turn effects behind the complete post-KO Prize window, terminal check, and replacement-Active phase. A Haughty Order -> Timeless-GX line that removes the opponent's final Pokémon ends the game without starting the extra turn; a continuing line remains blocked until the surviving Bench Pokémon is promoted, after which the canonical scheduler may apply Timeless-GX.
+
 ## 7. Setup is an information process as well as a legality process
 
 The setup research models opening acceptance, optional starters, mulligans, and the public information revealed before the first normal turn.
