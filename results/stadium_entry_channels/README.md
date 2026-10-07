@@ -31,6 +31,15 @@ The bundled legal card pool contains one direct Stadium-placement effect under a
 
 The reproducer scans every bundled Expanded set, applies the repository legality classifier, and finds exactly this one direct `put ... Stadium ... into play` effect.
 
+## Official play-from-hand lock confirmation
+
+The official Japanese Pokémon Card Q&A has an exact Teleport Room ruling involving a Ninetales Ability that prevents Stadiums from being played from hand. The ruling says Teleport Room can still discard the current Stadium and put a differently named Stadium from the discard pile into play, because Ninetales restricts Stadiums **from hand**.
+
+Official Q&A:
+https://www.pokemon-card.com/rules/faq/details.php?id=9756
+
+This directly confirms that Teleport Room is an effect-based Stadium-entry channel rather than an ordinary Stadium play.
+
 ## State transition
 
 `StadiumEntryState` keeps:
@@ -91,7 +100,7 @@ Treating Teleport Room as generic Stadium removal also loses its mandatory repla
 
 ## Limits
 
-This result does not yet model voluntary Stadium-effect usage such as "once during each player's turn, that player may..." after a Stadium is replaced and later returns. That usage history is a separate rule-state question and should not be inferred from Stadium entry alone.
+Voluntary Stadium-effect usage such as "once during each player's turn" is modeled separately in `stadium_effect_instance_usage/`. The Brooklet Hill ruling there proves that a newly played second copy has fresh effect-use availability after the earlier copy was used and removed. This Stadium-entry result still does not infer usage history merely from zone entry.
 
 It also assumes the caller has already established that the chosen Gothitelle's Ability is active. Ability suppression and board legality belong in the lock/board layers.
 
