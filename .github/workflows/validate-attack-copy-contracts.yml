@@ -1,0 +1,25 @@
+name: Validate attack-copy contracts
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_catalog.py"
+      - "tools/attack_copy_execution_phases.py"
+      - "tools/attack_copy_contracts.py"
+      - "results/attack_copy_contracts/**"
+      - ".github/workflows/validate-attack-copy-contracts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run attack-copy contract regression
+        run: python results/attack_copy_contracts/reproduce.py
