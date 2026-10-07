@@ -14,6 +14,7 @@ class StackCard:
     hp: int
     evolves_from: str | None = None
     tags: frozenset[str] = frozenset()
+    print_id: str | None = None
 
     def __post_init__(self) -> None:
         if not self.instance_id or not self.card_name or self.stage_rank < 0 or self.hp <= 0:
@@ -52,8 +53,14 @@ class EvolutionState:
             ranks = [card.stage_rank for card in row.cards]
             if any(left >= right for left, right in zip(ranks, ranks[1:])):
                 raise ValueError("physical stack stage ranks must increase")
-            if self.board.get(row.object_id).card_name != row.top.card_name:
+            board_top = self.board.get(row.object_id)
+            if board_top.card_name != row.top.card_name:
                 raise ValueError("board top-card name disagrees with evolution stack")
+            if (
+                row.top.print_id is not None
+                and board_top.print_id != row.top.print_id
+            ):
+                raise ValueError("board top-card print ID disagrees with evolution stack")
             card_ids.extend(card.instance_id for card in row.cards)
         if len(card_ids) != len(set(card_ids)):
             raise ValueError("physical Pokemon card IDs must be unique")
