@@ -30,29 +30,32 @@ For cards outside the database's Expanded-set universe, it reports an **exact ga
 
 Snapshot result:
 
-- **100** outside-scope printings are exact-fingerprint candidates;
-- they form **16** gameplay fingerprints and **16** card names;
+- **106** outside-scope printings are exact-fingerprint candidates;
+- they form **19** gameplay fingerprints and **19** card names;
 - **91** are Energy cards;
-- **9** are Pokémon;
-- no Trainer card survives the exact fingerprint requirement.
+- **13** are Pokémon;
+- **2** are Trainers.
 
-The 16 names are:
+The 19 names are:
 
 - the eight pre-Fairy Basic Energy types represented in the snapshot;
 - Double Colorless Energy;
+- Charizard;
 - Magikarp;
 - Mewtwo-EX;
+- Misty;
 - Reshiram;
+- Sneasel;
 - Surfing Pikachu;
 - Tapu Lele-GX;
 - Xerneas-EX;
 - Zekrom.
 
-Several of the Pokémon candidates come from special reprint products such as the 25th Anniversary Classic Collection, whose set metadata does not itself define the normal Expanded-set universe even though the printed card can be a functional reprint of an Expanded card.
+Several candidates come from special reprint products whose set metadata does not itself define the normal Expanded-set universe even though the printed card can be a functional reprint of an Expanded card. In the live repository, the 30th Celebration Classic Collection also supplies direct Expanded-scope fingerprints for Charizard, Misty, and Sneasel; those live records account for the six candidates absent from the separately uploaded card archive.
 
 ## Exact equality is too narrow
 
-The scanner also finds **4,248** outside-scope prints across **636** names that merely share a name with at least one legal Expanded card. This is a review pool rather than a legality list.
+The scanner also finds **4,260** outside-scope prints across **643** names that merely share a name with at least one legal Expanded card. This is a review pool rather than a legality list.
 
 The handbook's Copycat example demonstrates why a semantic layer is necessary:
 
@@ -74,18 +77,18 @@ A useful reprint resolver should therefore have at least three states:
 
 The second category is strong evidence for equivalence within the local data model, but it remains a candidate unless the tournament rule and any applicable errata have been checked. The third category cannot be automated safely by card name.
 
-This is why \`tools/deck_validator.py\` currently rejects outside-scope print IDs rather than silently accepting the 100 candidates. Automatic acceptance should wait for a dedicated rule/errata resolver.
+This is why \`tools/deck_validator.py\` currently rejects outside-scope print IDs rather than silently accepting the 106 candidates. Automatic acceptance should wait for a dedicated rule/errata resolver.
 
 ## Reproduction
 
 \`results/reprint_equivalence_candidates/reproduce.py\` asserts the current snapshot counts:
 
-- 100 exact candidates;
-- 16 exact candidate variants;
-- 16 exact candidate names;
-- 4,248 same-name review prints;
-- 636 same-name review names;
-- exact-candidate supertype split of 91 Energy / 9 Pokémon.
+- 106 exact candidates;
+- 19 exact candidate variants;
+- 19 exact candidate names;
+- 4,260 same-name review prints;
+- 643 same-name review names;
+- exact-candidate supertype split of 91 Energy / 13 Pokémon / 2 Trainer.
 
 It also loads the two Copycat print records and asserts that their gameplay fingerprints differ, preserving the handbook example as a regression against over-reliance on exact fingerprint identity.
 
@@ -93,7 +96,7 @@ It also loads the two Copycat print records and asserts that their gameplay fing
 
 - **Rule fact:** functional reprints can bridge otherwise non-current printings when the tournament-handbook criteria are satisfied.
 - **Official 2026 update:** functional reprints receive special immediate-legality treatment, including prerelease acquisition after the Q2 update.
-- **Computational result:** 100 exact candidates and the 4,248-print same-name review pool are deterministic results from the bundled snapshot.
+- **Computational result:** 106 exact candidates and the 4,260-print same-name review pool are deterministic results from the bundled snapshot.
 - **Methodological judgment:** exact gameplay fingerprint is useful as a conservative candidate generator and insufficient as a complete official-equivalence resolver.
 
 ## Limitations
