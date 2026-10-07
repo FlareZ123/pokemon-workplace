@@ -1013,7 +1013,7 @@ Counts and probabilities in this map are summaries of their linked result direct
 
 ## 67. Position-changing effects need chooser and target geometry
 
-[position_effect_profile_compiler/](position_effect_profile_compiler/) compiles a conservative literal family of effectively legal switch, forced-switch, and gust text into executable position-effect profiles. The bundled English snapshot yields **149 print-level profiles across 88 names**: 17 Trainer self-switch profiles, 2 Trainer opponent-chosen forced switches, 29 Trainer targeted gusts, 71 attack forced switches, and 30 attack targeted gusts.
+[position_effect_profile_compiler/](position_effect_profile_compiler/) compiles a conservative literal family of effectively legal switch, forced-switch, and gust text into executable position-effect profiles. The bundled English snapshot yields **318 print-level profiles across 192 names**: 17 Trainer self-switch profiles, 2 Trainer opponent-chosen forced switches, 29 Trainer targeted gusts, 169 attack self-switches, 71 attack forced switches, and 30 attack targeted gusts. The attack self-switch family preserves mandatory versus optional movement and exact heads gates.
 
 The profile preserves action class, attack metadata, simple Trainer play conditions, chooser authority, and the physical object receiving the effect. The executor then delegates the actual Active/Bench swap to the conserved board-object kernel.
 
