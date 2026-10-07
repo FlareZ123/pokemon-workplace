@@ -1,0 +1,27 @@
+name: Validate promotion pending Prize timing
+
+on:
+  push:
+    paths:
+      - "tools/promotion_pending_conservation.py"
+      - "tools/simultaneous_knockout_conservation.py"
+      - "tools/stack_knockout_conservation.py"
+      - "tools/prize_pending_take.py"
+      - "tools/top_prize_physical_bridge.py"
+      - "results/promotion_pending_prize_information/**"
+      - ".github/workflows/validate-promotion-pending-prize-information.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize-before-promotion timing
+        run: python results/promotion_pending_prize_information/reproduce.py
