@@ -749,6 +749,16 @@ The capacity regression preserves the Advanced Player's Rulebook's source-sensit
 **Working synthesis:** `deck -> hand` and `deck -> Bench` are different connector destinations. Direct placement spends Bench capacity immediately and carries action-class-specific legality, so a card-text compiler or reachability graph should preserve destination, current board capacity, and source action class before claiming executable access.
 
 
+## 60. Turn scheduling can use UnifiedState-owned budgets without duplicating them
+
+[canonical_turn_sequence_owner/](canonical_turn_sequence_owner/) separates turn-order metadata from per-player action history. `TurnScheduleState` stores only the current player, other player, queued-extra-turn flag, and checkup-skip flag; each player's explicit `UnifiedState.turn_budget` remains the sole action-budget owner.
+
+A regression spends Supporter, Stadium, manual Energy, and Retreat bandwidth for Player A under a two-Supporter limit, gives Player B a separate ordinary one-Supporter history, and then resolves an extra-turn boundary. A's new turn resets A's usage while retaining A's two-Supporter limit, B's untouched history remains unchanged until B actually starts a turn, and the checked extra-turn boundary skips Pokémon Checkup. Ordinary handoffs later reset only the incoming player's own budget.
+
+The test also deliberately makes A's legacy usage booleans stale before the extra-turn attack. Scheduling still follows the canonical budget.
+
+**Working synthesis:** turn order and turn-action bandwidth are separate state axes. A composed planner no longer needs `TurnSequenceState.budget` plus `UnifiedState.turn_budget`; schedule metadata can refer to two player states whose budgets own their own history.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -768,6 +778,7 @@ Particularly foundational components include:
 - `canonical_turn_budget_owner.py`
 - `action_quota_effects.py`
 - `turn_sequence_kernel.py`
+- `canonical_turn_sequence_owner.py`
 - `bench_capacity_model.py`
 - `lock_effect_catalog.py`
 - `prize_belief_decision.py`
