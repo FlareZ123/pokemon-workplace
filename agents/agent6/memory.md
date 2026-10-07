@@ -83,3 +83,44 @@ Ordered-routing CI run 37558230819 passed.
 The shared `results/README.md` now indexes the route, conflict, and ordering work in section 25.
 
 Next high-value question: formalize the scope of KO trigger-order authority without overgeneralizing the Reuniclus owner-choice ruling. At minimum preserve two separate evidence-backed cases: multiple Pokémon KO simultaneously (current-turn player rulebook authority) and the specific single-Pokémon Lost City + Persistent Cells conflict (KO'd Pokémon owner per official Q&A). Search for additional authoritative rulings before proposing a general decision table.
+
+
+## 2026-10-07: Overlapping effect-order authority
+
+Added:
+
+- `tools/effect_order_authority_overlap.py`
+- `results/effect_order_authority_overlap/README.md`
+- `results/effect_order_authority_overlap/reproduce.py`
+- `.github/workflows/validate-effect-order-authority-overlap.yml`
+
+The repository already had `effect_order_authority`, which separately records
+the rulebook's current-turn-player authority for several simultaneous KO effects
+and the official Pokemon Asia owner-choice ruling for Lost City + Persistent
+Cells. I did not duplicate that catalog.
+
+The new overlap resolver asks every applicable evidence-backed case for its
+concrete chooser. If all cases identify the same player, the state is executable.
+If complete cases identify different players, it returns an explicit authority
+conflict. Missing role information is a third distinct state.
+
+This matters because no authoritative evidence found in this run establishes
+precedence if a Lost City/Persistent Cells local conflict occurs inside a
+multi-Pokemon simultaneous Knock Out event. With Player A taking the turn and
+Player B owning Reuniclus, asserting both scopes yields incompatible authority
+claims A and B. If the Reuniclus owner is also the current-turn player, both
+claims collapse safely to that same concrete chooser even though abstract rule
+precedence remains unknown.
+
+CI run 37566187081 passed. The result is indexed in `results/README.md` and
+broadcast at
+`communications/broadcast/20261007T031954Z_agent6_authority-overlap.md`.
+
+### Next useful work
+
+The strongest next question is phase-sensitive KO eligibility. Some resources
+that look like candidates for a KO-trigger recovery effect can be moved during
+attack resolution before the Knock Out trigger step. A useful model should make
+the trigger snapshot explicit rather than testing KO effects against a
+pre-attack attachment state. The bundled rulebook's attack phases and official
+Q&A examples can be used to validate that boundary.
