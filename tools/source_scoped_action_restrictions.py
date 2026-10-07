@@ -9,7 +9,7 @@ and target scope.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import json
 from pathlib import Path
 import re
@@ -26,6 +26,11 @@ PLAY_LOCK_RE = re.compile(
 CHOSEN_TRAINER_LOCK_RE = re.compile(
     r"Choose Item cards or Supporter cards\.[^.]*can't play any of the chosen "
     r"cards from their hand",
+    flags=re.IGNORECASE,
+)
+ALLERGY_STORM_RE = re.compile(
+    r"Flip a coin\. If heads,.*?can't play any Supporter cards from their hand\. "
+    r"If tails,.*?can't play any Item cards from their hand",
     flags=re.IGNORECASE,
 )
 SPECIAL_ENERGY_ATTACH_RE = re.compile(
@@ -78,6 +83,7 @@ class SourceScopedActionRestriction:
     target_scope: str
     required_target_relation: str | None = None
     excluded_card_tags: frozenset[str] = frozenset()
+    exclusive_dimension_options: tuple[frozenset[str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -155,6 +161,14 @@ def _dimensions(text: str) -> frozenset[str]:
     if EVOLUTION_RE.search(text):
         dimensions.add("evolution")
     return frozenset(dimensions)
+
+
+def _exclusive_dimension_options(text: str) -> tuple[frozenset[str], ...]:
+    if CHOSEN_TRAINER_LOCK_RE.search(text):
+        return (frozenset({"item"}), frozenset({"supporter"}))
+    if ALLERGY_STORM_RE.search(text):
+        return (frozenset({"supporter"}), frozenset({"item"}))
+    return ()
 
 
 def _target_scope(text: str) -> str:
@@ -236,6 +250,7 @@ def build_source_scoped_action_restrictions(
                             dimensions,
                         ),
                         excluded_card_tags=_excluded_card_tags(text),
+                        exclusive_dimension_options=_exclusive_dimension_options(text),
                     )
                 )
 
@@ -280,12 +295,31 @@ def _attempt_dimensions(attempt: CardActionAttempt) -> frozenset[str]:
     return frozenset(dimensions)
 
 
+def resolve_exclusive_restriction(
+    restriction: SourceScopedActionRestriction,
+    selected_dimensions: frozenset[str],
+) -> SourceScopedActionRestriction:
+    """Bind one printed exclusive branch before using the restriction."""
+
+    if not restriction.exclusive_dimension_options:
+        raise ValueError("restriction has no exclusive dimension choice")
+    if selected_dimensions not in restriction.exclusive_dimension_options:
+        raise ValueError("selected dimensions are not a legal printed branch")
+    return replace(
+        restriction,
+        dimensions=selected_dimensions,
+        exclusive_dimension_options=(),
+    )
+
+
 def restriction_blocks_attempt(
     restriction: SourceScopedActionRestriction,
     attempt: CardActionAttempt,
 ) -> bool:
     """Return whether one already-active restriction prohibits this attempt."""
 
+    if restriction.exclusive_dimension_options:
+        raise ValueError("exclusive restriction branch is unresolved")
     if restriction.prohibited_source_zone != attempt.source_zone:
         return False
     if restriction.excluded_card_tags & attempt.card_tags:
