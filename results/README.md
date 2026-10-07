@@ -828,6 +828,16 @@ For ordered top-deck destinations, the same selected multiset can produce the sa
 
 **Working synthesis:** card-text cardinality, physical selected-card witness, useful demand output, and destination topology are separate search-state dimensions. Constrained searches can identify some of them safely; unrestricted fixed-count search can force them apart.
 
+## 67. Mandatory unrestricted-search filler changes later draw-to-N bandwidth
+
+[forced_search_draw_bandwidth/](forced_search_draw_bandwidth/) composes the exact-count search rule with a hand-size-sensitive draw effect.
+
+In a seven-card Computer Search -> Crobat V witness, playing Computer Search and discarding two cards drops the hand to four, the mandatory fallback restores it to five, and playing Crobat V leaves four cards before Dark Asset. Dark Asset therefore draws two to reach six. A useful-output-only model that treats the unavailable intended target as a zero-card search leaves three cards before Dark Asset and incorrectly predicts three draws.
+
+Across modeled initial hand sizes 4 through 9, the omission overstates Dark Asset by exactly one card; at initial size 10 both branches are already at the draw ceiling and the error disappears.
+
+**Working synthesis:** connector payment and search resolution can push draw bandwidth in opposite directions. Costs shrink the hand while mandatory filler refills it. Continuation value for draw-to-N effects should read the physical post-action hand state rather than infer draw volume from scalar connector cost or strategically useful output alone.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
