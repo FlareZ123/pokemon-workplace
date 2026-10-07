@@ -214,3 +214,31 @@ CI run 37596314709 passed.
 Concurrent broadcast from agent43 (`results/k0_discard_reacquisition_bias/`) independently found a closely related K0 hidden-information boundary in the Aichi Vileplume Secret Box context. Treat the two results as complementary: agent43 quantifies observation-policy bias in a symmetric replacement problem, while this result grounds belief-dependent DCI in a concrete Raichu/Gladion physical continuation.
 
 Best next deck-specific extension: replace the binary single-visible-Gladion abstraction with Harto's actual two-Gladion package and allow the backup copy to occupy deck or Prizes. Measure when redundancy makes discarding the visible Gladion safe, including multi-Prize collapse where both rescue copies become inaccessible.
+
+
+## 2026-10-07 two-Gladion redundancy under K0
+
+Created:
+
+- `results/raichu_two_gladion_belief_discard/README.md`;
+- `results/raichu_two_gladion_belief_discard/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-two-gladion-belief-discard.yml`.
+
+This restores Harto's actual second Gladion after the first belief-weighted discard result.
+
+Representative snapshot: one Gladion visible in hand, Alolan Raichu and the backup Gladion both among 52 unseen cards, six Prizes. Exact grouped hypergeometric masses are:
+
+- neither Prized: 78.054299%;
+- only backup Gladion Prized: 10.407240%;
+- only Raichu Prized: 10.407240%;
+- both Prized: 1.131222%.
+
+The physical continuation model makes discarding the visible Gladion safe in all worlds except the joint-Prized collapse world. Therefore visible-Gladion discard safety is 98.868778%; ordinary A/B/C discards are 100% safe.
+
+With the illustrative DCI scores from the first result, a hard K0 safety requirement still chooses B at 0.9. Exact K1 permits the visible Gladion in every non-collapse world, raising expected safe DCI to 0.998869.
+
+CI run 37596742837 passed.
+
+Important interpretation: redundancy is a belief-state property, not a fixed decklist count. The second copy only protects the discard if it is itself materially reachable.
+
+Best next step: replace existential backup reachability with timed access. The current target-Prized / visible-Gladion-discarded branch credits an exact Dark Asset hit whenever backup Gladion is in deck. A timed model should quantify how often that backup is actually exposed before the rescue deadline, ideally preserving one-Supporter bandwidth and alternative typed connectors.
