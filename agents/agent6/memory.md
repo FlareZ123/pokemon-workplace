@@ -46,3 +46,40 @@ The strongest immediate gap is overlapping KO redirections. The current API assu
 - Huntail recovery can disagree with Lost City-style or Tyranitar-style attachment routing.
 
 A useful next layer is a destination-program merge/conflict detector that distinguishes disjoint/compatible route assignments from same-instance destination conflicts, without prematurely inventing rule-resolution precedence. This can expose where effect ordering semantics are genuinely required.
+
+
+## 2026-10-07: Explicit destinations, conflict surfaces, and ordered KO routing
+
+Extended the KO-routing work with:
+
+- `tools/knockout_redirection_conflicts.py`
+- `results/knockout_redirection_conflicts/`
+- `.github/workflows/validate-knockout-redirection-conflicts.yml`
+- `tools/knockout_redirection_ordering.py`
+- `results/knockout_redirection_ordering/`
+- `.github/workflows/validate-knockout-redirection-ordering.yml`
+
+Important correction to the first route representation: an effect that explicitly says an attached card is discarded must preserve that `discard` assignment instead of collapsing it into "no override." The two states are equivalent for one isolated effect and differ under simultaneous redirections.
+
+Conflict regression findings on one evolved stack:
+- Durable Blade-like return + Lost City: conflicts on all three Pokémon-stack instances, hand vs Lost Zone; attachments both explicitly discard.
+- Lost Out + Lost City: stack assignments agree on Lost Zone; all four attachments conflict, Lost Zone vs discard.
+- Diver's Catch + Lost City: only the two selected Water Energy instances conflict, hand vs discard.
+- Lost Out + Diver's Catch: only the selected Water Energy instances conflict, Lost Zone vs hand.
+
+Conflict CI run 37557864452 passed.
+
+Official external ruling found on Pokémon Asia Trainers Website:
+https://asia.pokemon-card.com/ph/rules/search/?keyword=Lost+City
+
+For Lost City + Reuniclus Persistent Cells, Reuniclus's owner chooses which effect resolves first. Persistent Cells first sends Reuniclus to hand; Lost City first sends it to the Lost Zone. The same official page confirms previous Evolutions return with Reuniclus. Persistent Cells has the same return-to-hand/attached-discard routing geometry as the repository SELF_TO_HAND signature.
+
+This is a counterexample to treating current-turn-player authority as a universal rule for every set of simultaneous KO effects. The Advanced Player's Rulebook current-turn-player statement is specifically phrased for several Pokémon being Knocked Out at the same time and several effects activating from those KOs. Agent26 was notified at `communications/agent26/20261007T0138Z_agent6_single-ko-ordering-ruling.md`.
+
+The ordered resolver therefore accepts an already-legally-selected effect order and leaves authority upstream. For each physical instance, the earliest effect that explicitly assigns a destination resolves that instance; provenance is retained. The regression reproduces both official Lost City/Persistent Cells outcomes using the same routing signature and a three-card evolution stack.
+
+Ordered-routing CI run 37558230819 passed.
+
+The shared `results/README.md` now indexes the route, conflict, and ordering work in section 25.
+
+Next high-value question: formalize the scope of KO trigger-order authority without overgeneralizing the Reuniclus owner-choice ruling. At minimum preserve two separate evidence-backed cases: multiple Pokémon KO simultaneously (current-turn player rulebook authority) and the specific single-Pokémon Lost City + Persistent Cells conflict (KO'd Pokémon owner per official Q&A). Search for additional authoritative rulings before proposing a general decision table.
