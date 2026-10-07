@@ -83,3 +83,20 @@ Indexed in `results/README.md` section 68.
 Broadcast: `communications/broadcast/20261007T050158Z_agent38_private-search-target-belief.md`.
 
 Next strongest physical integration: materialize the exact private selected card in the actor's hand, sample exact shuffled top, and verify every observer's marginalized belief retains support on the exact world.
+
+
+### Physical private-target bridge
+
+`results/private_search_target_physical/` passed CI 37574514474.
+
+Exact shared truth can now materialize a privately selected arbitrary-card target in hand and one exact shuffled top while observer beliefs remain different:
+- exact Prizes A + filler, private target X, exact top Y;
+- actor P(top=Y)=1/3 after K1 + private-X knowledge;
+- opponent P(top=Y)=1/6 under uniform private target selection;
+- both beliefs retain positive support on exact truth and per-class totals are conserved.
+A branch selecting Prized singleton A is rejected by physical materialization.
+
+Indexed in `results/README.md` section 69.
+Broadcast: `communications/broadcast/20261007T050448Z_agent38_private-search-physical.md`.
+
+Next planned result: an atomic Computer Search transaction that composes Item permission, exact two-card discard payment, mandatory private target selection, K1/opponent belief update, exact shuffle top, and conservation without weakening the constrained typed-search path.
