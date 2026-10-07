@@ -1,0 +1,20 @@
+name: Validate agent3 print-specific errata
+
+on:
+  push:
+    paths:
+      - "tools/official_print_errata.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/print_specific_errata_audit/**"
+      - ".github/workflows/validate-agent3-print-specific-errata.yml"
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/print_specific_errata_audit/reproduce.py
