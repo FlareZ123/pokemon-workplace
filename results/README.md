@@ -148,6 +148,12 @@ Related typed state work appears in [typed_lock_state_kernel/](typed_lock_state_
 **Working synthesis:** play permission needs a source-zone predicate. Broad hand-action booleans remain useful compatibility projections, while transaction-level legality should retain source zone and target semantics.
 
 
+[source_scoped_channel_projection/](source_scoped_channel_projection/) measures when that compatibility projection is exact. Of the 106 audited restrictions, **94 (88.679245%)** can be encoded exactly by the existing hand-action channels. Twelve retain typed residual predicates because they depend on ACE SPEC identity, Pokémon-with-Ability identity, evolution mode, Defending-Pokémon targeting, Energy target scope, or a printed exception. The bridge applies coarse channels only to hand-sourced attempts, so Vileplume can project to `item_play=False` without deleting Prize-pending Dream Ball.
+
+**Working synthesis:** compact permission channels are safest as verified projections from richer state. A hybrid channel-plus-residual representation preserves a fast common case while exposing the semantic cases that need transaction-level predicates.
+
+
+
 ## 6. Attack semantics require identity, execution body, and timing
 
 [attack_copy_semantics/](attack_copy_semantics/) shows that copied attacks should be represented as nested execution rather than replacement of the outer attack object.
