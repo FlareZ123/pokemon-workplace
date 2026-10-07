@@ -13,6 +13,7 @@ from knockout_redirection_taxonomy import (
 )
 from simultaneous_knockout_conservation import PendingKnockOutBatch
 
+DISCARD = "discard"
 HAND = "hand"
 LOST_ZONE = "lost_zone"
 
@@ -33,11 +34,14 @@ def destinations_for_redirection(
     routing_signature: str,
     selected_energy_ids: Iterable[str] = (),
 ) -> dict[str, str] | None:
-    """Resolve one classified KO redirection into destination overrides.
+    """Resolve one classified KO redirection into explicit destinations.
 
     The returned mapping is consumed by
-    knockout_zone_routing.discard_pending_with_zone_routes. Any removed
-    instance omitted from the mapping follows the normal discard destination.
+    knockout_zone_routing.discard_pending_with_zone_routes. It preserves
+    destinations that card text states explicitly even when they equal the
+    ordinary discard sink. Removed instances omitted from the mapping remain
+    semantically untouched by this effect and follow normal KO disposal unless
+    another effect redirects them.
 
     selected_energy_ids is intentionally semantic input from the caller.
     The signature layer can verify that selected instances are Energy attached
@@ -74,9 +78,12 @@ def destinations_for_redirection(
         return None
 
     if routing_signature == SELF_TO_HAND:
-        # When an evolved Pokemon in play is put into hand, its previous
-        # Evolutions go with it. Attachments still follow the normal discard.
-        return {instance_id: HAND for instance_id in stack_ids}
+        # Durable Blade-like text explicitly returns the Pokemon while
+        # discarding attached cards.
+        return {
+            **{instance_id: HAND for instance_id in stack_ids},
+            **{instance_id: DISCARD for instance_id in attachment_ids},
+        }
 
     if routing_signature == ALL_TO_LOST:
         return {
@@ -85,7 +92,12 @@ def destinations_for_redirection(
         }
 
     if routing_signature == POKEMON_TO_LOST:
-        return {instance_id: LOST_ZONE for instance_id in stack_ids}
+        # Lost City-like text explicitly sends the Pokemon to the Lost Zone and
+        # explicitly discards attached cards.
+        return {
+            **{instance_id: LOST_ZONE for instance_id in stack_ids},
+            **{instance_id: DISCARD for instance_id in attachment_ids},
+        }
 
     if not set(selected) <= energy_ids:
         return None
