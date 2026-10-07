@@ -623,6 +623,18 @@ In the exact world, Quick Ball and one fodder card enter discard, searched X bec
 **Working synthesis:** connector execution should join action legality, payment, exact target identity, information acquisition, information leakage, and shuffle consequences. A reachability edge such as "Quick Ball reaches X" omits several mechanically and strategically relevant state transitions.
 
 
+
+## 53. Common one-target revealed searches now compile from card text
+
+[single_output_search_profile_compiler/](single_output_search_profile_compiler/) adds a separate conservative compiler for deterministic one-card reveal-to-hand Trainer searches whose selectors are already supported by the typed target lattice. It leaves the established multi-output compiler unchanged.
+
+The current snapshot yields **28 legal print profiles across 8 names**: Ultra Ball (13), Energy Search (4), Quick Ball (3), Team Rocket's Petrel (3), Poké Kid (2), Evolution Incense (1), Master Ball (1), and Skyla (1). Quick Ball compiles to one Basic-Pokémon output plus an exact one-card discard cost; Ultra Ball compiles across older and newer wording to one Pokémon output plus an exact two-card discard cost.
+
+The compiler deliberately excludes coin-gated Poké Ball, disjunctive Fighting Gong, multi-output Arven, and multi-unit searches such as Earthen Vessel and Boxed Order. The Quick Ball hidden-state transaction now obtains `swsh1-179` directly from this compiler, and the integrated CI remains green.
+
+**Working synthesis:** card-text compilation should expand through small validated semantic islands. This family now provides a traceable path from bundled text to typed target execution, exact discard payment, K1, public signaling, and shuffle state without hand-authored Quick Ball metadata.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
