@@ -1,0 +1,27 @@
+name: Validate attack-copy research
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/attack_copy_catalog.py"
+      - "tools/attack_copy_kernel.py"
+      - "tools/attack_copy_composition.py"
+      - "results/attack_copy_semantics/**"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+
+jobs:
+  regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce attack-copy catalog
+        run: python results/attack_copy_semantics/reproduce.py
+      - name: Reproduce copy-resolution kernel
+        run: python results/attack_copy_semantics/reproduce_kernel.py
+      - name: Reproduce copy-composition graph
+        run: python results/attack_copy_semantics/reproduce_composition.py
