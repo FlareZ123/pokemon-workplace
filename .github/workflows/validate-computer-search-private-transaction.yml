@@ -1,0 +1,29 @@
+name: Validate Computer Search private transaction
+
+on:
+  push:
+    paths:
+      - "tools/computer_search_private_transaction.py"
+      - "tools/private_search_target_belief.py"
+      - "tools/private_search_target_physical.py"
+      - "tools/discard_cost_witness.py"
+      - "tools/trainer_search_transaction.py"
+      - "tools/lock_state_kernel.py"
+      - "tools/identity_materialization.py"
+      - "results/computer_search_private_transaction/**"
+      - ".github/workflows/validate-computer-search-private-transaction.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check atomic Computer Search transaction
+        run: python results/computer_search_private_transaction/reproduce.py
