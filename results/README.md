@@ -128,6 +128,8 @@ Related typed state work appears in [typed_lock_state_kernel/](typed_lock_state_
 
 [ability_lock_setup_precedence/](ability_lock_setup_precedence/) adds official setup-order evidence for one such cycle. Empoleon V's Emperor's Eyes and Wobbuffet's Bide Barricade form reciprocal suppression edges, yet the official Japanese Q&A gives the first player's Ability precedence. The same physical board therefore has different effective lock states depending on first-player ownership.
 
+[ability_lock_established_precedence/](ability_lock_established_precedence/) adds a dynamic official ruling. Tool-attached Garbodor initially suppresses Ting-Lu ex through Garbotoxin. When Garbodor later receives damage and Cursed Land would create the reverse edge, the official ruling preserves Garbotoxin because Ting-Lu's Ability is already absent at that event boundary. The implementation carries the previous resolved source into this verified transition while leaving other newly cyclic pairs unresolved.
+
 **Working synthesis:** continuous lock state can depend on causal precedence in addition to board geometry. A simulator should preserve the event or setup fact that established precedence instead of forcing every suppression cycle into a timeless fixed point.
 
 ## 6. Attack semantics require identity, execution body, and timing
