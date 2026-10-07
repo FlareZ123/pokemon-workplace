@@ -218,3 +218,23 @@ Still open:
 3. derive applicable damage reactions from live board state and prior-turn effects instead of manually supplied `DamageReaction` objects;
 4. preserve game-resolution priority if the KO phase itself ends the game before a pending extra turn could begin.
 
+### Physical KO batch continuation
+
+Created:
+
+- `tools/attack_copy_physical_ko_bridge.py`
+- `results/attack_copy_physical_ko_bridge/`
+- `.github/workflows/validate-attack-copy-physical-ko-bridge.yml`
+
+This removes one board-representation jump. The bridge replays the copy kernel's ordered body events directly on the richer `board_position_state` inside `StackBoardMaterialState`, preserving the identity ledger while damage counters change.
+
+The regression uses Haughty Order -> Phantom Dive against a physical board containing a 200 HP Active with a Tool, a 60 HP Bench target with Basic Energy, and a surviving third Pokémon. Phantom Dive creates the two KO candidates, outer Haughty cleanup finishes, and `prepare_physical_knockouts()` enters the existing `PendingKnockOutBatch` state without converting boards.
+
+The pending batch still contains both zero-HP Pokémon and both attachments for the trigger window. Existing atomic batch disposal then sends both Pokémon cards, Tool, and Energy to discard and promotes only the survivor. Card-class totals remain invariant from initial hand state through materialization, damage, pending KO, disposal, and promotion.
+
+CI run 37581127319 passed.
+
+Updated both `results/README.md` and `results/physical_state_conservation/README.md`. The physical-state synthesis now notes that copied attack damage can run directly on the stack-bearing board, although other specialized kernels still use the lightweight `board_object_kernel`.
+
+Next highest-value gap: cross-player reaction/KO composition on the stack-bearing physical state, including game-resolution priority before a pending extra turn.
+
