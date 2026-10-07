@@ -117,8 +117,8 @@ def _snapshot_flags(
 ) -> tuple[bool, bool, bool, bool, bool, bool]:
     """Return success flags for one fully exposed category state.
 
-    Category order is target, Gladion, Ultra Ball, Computer Search, disposable,
-    setup starter, protected other.
+    Category order is target, Gladion, Ultra Ball, Computer Search, disposable
+    non-starter, disposable starter, non-disposable starter, protected other.
     """
     target_in_hand = hand[0] > 0
     target_prized = prizes[0] > 0
@@ -195,6 +195,7 @@ def raichu_access_snapshot(
     ultra_ball_copies: int = 3,
     computer_search_copies: int = 1,
     disposable_cards: int = 12,
+    disposable_starter_cards: int = 1,
     discard_cost: int = 2,
 ) -> RaichuAccessResult:
     """Return exact direct access probabilities for the singleton target.
@@ -203,6 +204,8 @@ def raichu_access_snapshot(
     Alolan Raichu count. ``disposable_cards`` is a policy input, not an immutable
     card property. In the preserved baseline it is 12: the 11 Special Energy plus
     Giratina, whose discard-pile Ability makes it a natural discard candidate.
+    ``disposable_starter_cards`` preserves overlap between setup eligibility and
+    discardability; Giratina is both in the preserved Harto baseline.
     """
     if deck_size <= 0:
         raise ValueError("deck_size must be positive")
@@ -212,8 +215,10 @@ def raichu_access_snapshot(
         raise ValueError("requested zones exceed deck size")
     if not 0 < starter_cards <= deck_size:
         raise ValueError("starter_cards must be positive and fit in the deck")
-    if min(gladion_copies, ultra_ball_copies, computer_search_copies, disposable_cards, discard_cost) < 0:
+    if min(gladion_copies, ultra_ball_copies, computer_search_copies, disposable_cards, disposable_starter_cards, discard_cost) < 0:
         raise ValueError("card counts and discard_cost must be non-negative")
+    if disposable_starter_cards > min(disposable_cards, starter_cards):
+        raise ValueError("disposable_starter_cards must fit both overlapping groups")
     if computer_search_copies > 1:
         raise ValueError("this model supports at most one Computer Search ACE SPEC")
 
