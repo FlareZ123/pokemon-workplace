@@ -1,0 +1,175 @@
+# Pokémon TCG Expanded research map
+
+This directory contains accumulated research on paper Pokémon TCG Expanded, Black & White onward. This page is a human-readable map of the strongest recurring findings and the detailed results that support them. It is intentionally selective rather than exhaustive.
+
+## Current high-level picture
+
+Across several independent investigations, the same methodological conclusion keeps recurring:
+
+> **Theoretical access is weaker than executable access.**
+
+A card or line can be reachable in a search graph while still failing because of connector output capacity, discardability, Supporter timing, Bench space, Energy-attachment bandwidth, target restrictions, Prize dependencies, lock geometry, or information arriving after the relevant decision deadline.
+
+The repository therefore increasingly favors **typed, resource-constrained state transitions** over untyped card-association graphs.
+
+## 1. Connector realism: access, payment, output capacity, and opportunity cost
+
+The connector results formalize several distinct reasons a search route can be less useful than its graph connectivity suggests.
+
+- [connector_domination/](connector_domination/) shows that one universal one-card search cannot satisfy two independently missing channels at once. In its Computer Search-like baseline, correcting only discard cost still leaves a material overstatement if the shared connector is allowed to repair multiple missing targets simultaneously.
+- [connector_output_capacity/](connector_output_capacity/) compares a cost-2, capacity-1 connector with a cost-3, capacity-2 connector. The ranking changes as the disposable-card pool changes, so connector strength depends jointly on output capacity and state-dependent discardability.
+- [discard_gated_supporter_access/](discard_gated_supporter_access/) and [discard_cost_amr/](discard_cost_amr/) quantify discard costs as real access gates rather than flavor text.
+- [resource_constrained_connectors/](resource_constrained_connectors/), [compound_connector_constraints/](compound_connector_constraints/), [shared_connector_contention/](shared_connector_contention/), and [multi_channel_connector/](multi_channel_connector/) extend the same principle to multiple resources and competing channels.
+- [connector_option_value/](connector_option_value/), [connector_marginal_regime/](connector_marginal_regime/), and [connector_slot_marginals/](connector_slot_marginals/) study how the value of an additional connector changes with the surrounding resource regime.
+
+**Working synthesis:** connector evaluation should preserve at least search eligibility, output multiplicity, payment costs, action-window costs, and competing uses of the same connector.
+
+## 2. Prize cards: beliefs, cut sets, rescue timing, and information value
+
+The Prize work has moved beyond a binary K0/K1 flag toward explicit belief states and decision timing.
+
+- [prize_belief_states/](prize_belief_states/), [prize_belief_kernel/](prize_belief_kernel/), and [prize_belief_decision/](prize_belief_decision/) represent uncertainty over Prize compositions directly. Exact information can lose value, regain value after a hidden Prize mutation, and lose value again after re-inspection.
+- [prize_dependency_cutsets/](prize_dependency_cutsets/) treats minimal correlated Prize failures as cut sets. Alternative lines can be structurally resilient while a shared singleton connector can create a size-1 failure cut.
+- [prize_information_value/](prize_information_value/), [prize_information_actions/](prize_information_actions/), [partial_prize_information/](partial_prize_information/), and [prize_conditioning_layers/](prize_conditioning_layers/) separate information quantity from the action cost and timing required to obtain it.
+- [information_material_separation/](information_material_separation/) shows that exact Prize information and material card access are distinct outputs. A deck search can reveal the full remaining deck even if the intended downstream connector fails, while a later search can be materially important but informationally redundant.
+- [prize_rescue_deadline/](prize_rescue_deadline/), [timed_prize_rescue/](timed_prize_rescue/), [prize_rescue_connector_turns/](prize_rescue_connector_turns/), and related rescue results model whether information and recovery arrive before the strategic deadline.
+
+**Working synthesis:** Prize reasoning is a belief-state control problem. The relevant quantity is the value of information or rescue under the current posterior and remaining action windows, not a permanent bonus for having searched the deck earlier.
+
+## 3. Bench space is a hard state resource
+
+[bench_capacity_geometry/](bench_capacity_geometry/) establishes a reusable representation of Bench feasibility.
+
+Important distinctions include:
+
+- current Bench occupancy;
+- effective Bench capacity from active effects;
+- temporary peak occupancy during a line;
+- persistent **Bench debt** from one-shot support Pokémon;
+- forced contraction when capacity falls;
+- continuation value of the Pokémon the affected player chooses to discard.
+
+A route can begin and end within the legal Bench limit while still being impossible because an intermediate step needs one extra slot. A capacity restriction can also clean up stale support Pokémon for the affected player, so smaller Bench capacity is not a fixed-value disruption independent of board composition.
+
+Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench_capacity_lock_interactions/](bench_capacity_lock_interactions/), [bench_capacity_transition/](bench_capacity_transition/), [bench_release_catalog/](bench_release_catalog/), [bench_trigger_access/](bench_trigger_access/), and [typed_bench_state_kernel/](typed_bench_state_kernel/).
+
+## 4. Energy readiness requires typed supply and action bandwidth
+
+Energy access is another area where raw card counts collapse important distinctions.
+
+- [energy_action_budget/](energy_action_budget/) separates typed Energy demand, Energy units supplied, cost reduction, target restrictions, and finite action resources such as the normal Energy attachment.
+- [crispin_attachment_channels/](crispin_attachment_channels/) verifies that attachment by a Supporter effect and the ordinary once-per-turn attachment are independent channels. Crispin can attach one Energy by effect, put another into hand, and still leave the normal attachment available.
+- [typed_energy_access/](typed_energy_access/) moves these distinctions into explicit state transitions.
+- [multi_unit_energy_semantics/](multi_unit_energy_semantics/) and [apex_dragon_special_energy_burden/](apex_dragon_special_energy_burden/) address multi-unit and Special Energy behavior.
+
+Concrete implications include:
+
+- two Energy cards in hand can still require two turns if both need the same manual-attachment channel;
+- one Double Colorless Energy card can provide two Colorless units with one manual attachment;
+- Double Colorless Energy cannot satisfy two typed requirements such as two Fire symbols;
+- Double Dragon Energy can satisfy typed demand only on a legal Dragon target;
+- attack-cost reduction is a demand transformation, not another attached Energy card.
+
+## 5. Lock effects need activation geometry and interaction state
+
+[lock_interaction_matrix/](lock_interaction_matrix/) catalogs resource-denial effects and models more than the denied card class.
+
+A useful lock state includes:
+
+- denied or suppressed dimensions;
+- activation geometry, especially Active-dependent versus persistent effects;
+- target scope;
+- conditions;
+- persistence.
+
+Multiple locks can compete for the single Active Spot, so a model that stores only desired denial dimensions can propose mechanically impossible combinations. Attack-applied locks can behave differently because they may persist after the attacker leaves the Active Spot. The catalog also finds a lock-handoff pattern such as Beheeyem's Mysterious Noise, where the attack applies Item denial while the attacker vacates play and frees the Active Spot for another source.
+
+Related typed state work appears in [typed_lock_state_kernel/](typed_lock_state_kernel/) and [bench_capacity_lock_interactions/](bench_capacity_lock_interactions/).
+
+## 6. Attack semantics require identity, execution body, and timing
+
+[attack_copy_semantics/](attack_copy_semantics/) shows that copied attacks should be represented as nested execution rather than replacement of the outer attack object.
+
+The minimum useful representation keeps separate:
+
+- declared attack identity;
+- currently executing copied attack body;
+- ordered copy stack;
+- eligibility predicate on each copy-selection edge;
+- global use constraints;
+- actor and zone state used to interpret phrases such as “your discard pile”.
+
+This supports edge-local restrictions in nested copy lines such as Mimikyu Copycat -> Regidrago VSTAR Apex Dragon -> Dialga-GX Timeless-GX.
+
+Other timing and attack-structure work includes [copied_attack_partial_resolution/](copied_attack_partial_resolution/), [attack_discard_dependency_grammar/](attack_discard_dependency_grammar/), [before_damage_timing_geometry/](before_damage_timing_geometry/), and [attack_retreat_lock_geometry/](attack_retreat_lock_geometry/).
+
+## 7. Setup is an information process as well as a legality process
+
+The setup research models opening acceptance, optional starters, mulligans, and the public information revealed before the first normal turn.
+
+- [setup_mulligan_policy/](setup_mulligan_policy/) studies how optional setup choices change opening and Prize priors.
+- [setup_transcript_bayes/](setup_transcript_bayes/) shows that revealed mulligans are policy-censored samples. An opponent observing a mulligan sees information about both deck composition and the player's keep policy.
+- [setup_information_value/](setup_information_value/), [mulligan_information_leakage/](mulligan_information_leakage/), and [setup_entry_payload_capacity/](setup_entry_payload_capacity/) extend the setup-state representation.
+- [setup_trigger_role_contention/](setup_trigger_role_contention/) and [setup_bench_policy/](setup_bench_policy/) connect setup choices to later board constraints.
+
+**Working synthesis:** archetype inference from mulligans should condition on the policy that generated the revealed transcript rather than treating revealed cards as an unbiased sample of non-Basic cards.
+
+## 8. Archetype-Line-Specifics can be measured directly
+
+[aichi_vileplume_als/](aichi_vileplume_als/) models the 2026 Aichi Open League runner-up Vileplume Control line built around:
+
+`Tag Call -> Guzma & Hala -> Artazon + TM: Evolution + Jet Energy -> Bunnelby with Ω Barrage`
+
+In the reported 500,000 accepted-opening simulation, the modeled Guzma & Hala route reached:
+
+- Guzma & Hala access: 71.7356%;
+- the Bunnelby double-Evolution core: 69.5594%;
+- Pidgeot ex Stage 2: 59.5132%;
+- Stoutland Stage 2: 48.5640%;
+- Vileplume Item lock: 36.3388%.
+
+A broader modeled planner found only a small increment outside the named route for the same core objective, supporting the usefulness of the ALS abstraction for this deck while preserving the stated simulation scope and exclusions.
+
+## 9. Legality and card identity must remain explicit
+
+[expanded_legality_baseline/](expanded_legality_baseline/) demonstrates that the bundled database is a search resource rather than a complete legality oracle. The maintained baseline applies confirmed official ban updates missing from the snapshot.
+
+[card_identity_resolution/](card_identity_resolution/) separates three identities:
+
+1. exact print ID;
+2. conservative gameplay variant;
+3. deck-building card name.
+
+This separation matters because legality is print-sensitive and card names can map to many distinct gameplay variants. In the bundled snapshot, 1,289 of 3,392 names map to more than one conservative gameplay fingerprint.
+
+Any simulator, validator, optimizer, or card index should therefore avoid using card name as its only gameplay or legality key.
+
+## Reusable infrastructure
+
+The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
+
+Particularly foundational components include:
+
+- `build_expanded_legality_baseline.py`
+- `card_identity.py`
+- `typed_access_network.py`
+- `typed_energy_access.py`
+- `energy_action_budget.py`
+- `bench_capacity_model.py`
+- `lock_effect_catalog.py`
+- `prize_belief_decision.py`
+- connector-capacity and contention models under `tools/connector_*.py`
+
+## Open synthesis questions
+
+Several larger questions remain promising:
+
+1. **Unified state representation.** The repo now has typed treatments of Bench space, locks, Energy, connectors, Prize beliefs, and timing, but no single state kernel yet composes all of them.
+2. **Compiler from card text to transitions.** Several models still use targeted or precompiled transitions. A conservative semantic compiler could reduce manual modeling while retaining auditable fallbacks for ambiguous text.
+3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
+4. **Official reprint equivalence.** The current conservative gameplay fingerprint is useful for research, but tournament-functional reprint equivalence still needs an explicit official-policy layer.
+5. **Empirical archetype validation.** ALS modeling has one strong concrete case. More published Expanded lists could test which archetypes are well described by narrow lines and which are better modeled as flexible resource policies.
+
+## Methodological caution
+
+Counts and probabilities in this map are summaries of their linked result directories. Consult the detailed result before reusing a number or assumption. Simulations and abstractions are evidence about the modeled state space, not automatic claims about full-match win rate or universal deck strength.
