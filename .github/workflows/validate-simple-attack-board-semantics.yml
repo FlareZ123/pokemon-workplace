@@ -1,0 +1,26 @@
+name: Validate simple attack board semantics
+
+on:
+  push:
+    paths:
+      - "tools/simple_attack_board_semantics.py"
+      - "tools/attack_copy_kernel.py"
+      - "tools/attack_copy_physical_ko_bridge.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/simple_attack_board_semantics/**"
+      - ".github/workflows/validate-simple-attack-board-semantics.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check simple card-grounded attack semantics
+        run: python results/simple_attack_board_semantics/reproduce.py
