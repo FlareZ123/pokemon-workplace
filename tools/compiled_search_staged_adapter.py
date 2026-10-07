@@ -1,9 +1,8 @@
 """Adapt conservative compiled typed Trainer searches into staged actions.
 
-This bridge intentionally supports only fixed base branches with a known integer
-discard cost. Conditional additional-search branches and whole-hand discard
-effects remain in their exact transaction layer until their branch metadata can
-be carried without ambiguity.
+This bridge supports fixed-cost base and optional paid branches by delegating
+branch validation to the exact Trainer search transaction layer. Whole-hand
+discard effects remain outside this scalar staged-action representation.
 """
 
 from __future__ import annotations
@@ -15,11 +14,7 @@ from search_zone_transition import SearchZoneTarget
 from staged_trainer_objectives import TrainerAcquisitionAction
 from trainer_search_profile_compiler import CompiledTrainerSearchProfile
 from trainer_search_transaction import validate_trainer_search_branch
-from typed_search_target_allocator import (
-    DemandChannel,
-    TypedTargetAction,
-    enumerate_typed_target_profiles,
-)
+from typed_search_target_allocator import DemandChannel, TypedTargetAction
 
 
 def adapt_compiled_search_to_staged_action(
