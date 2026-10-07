@@ -45,6 +45,7 @@ class CopySelector:
     required_name_prefix: str | None = None
     chooser: str = "actor"
     optional_selection: bool = False
+    precommit_source_to: str | None = None
 
     def __post_init__(self) -> None:
         if self.chooser not in {"actor", "opponent"}:
@@ -162,6 +163,7 @@ def _candidate_attacks(
     attack: AttackDef,
     attacks: dict[str, AttackDef],
     state: State,
+    source_override: tuple[PokemonRef, ...] | None = None,
 ) -> tuple[tuple[str, ...], dict[str, tuple[str, ...]]]:
     selector = attack.copy_selector
     if selector is None:
@@ -174,7 +176,9 @@ def _candidate_attacks(
         if attack_id is not None:
             candidates.append(attack_id)
     else:
-        if selector.source == "self_previous_evolution":
+        if source_override is not None:
+            cards = list(source_override)
+        elif selector.source == "self_previous_evolution":
             actor = next(
                 (card for card in state.pokemon if card.card_id == actor_card_id),
                 None,
@@ -348,12 +352,39 @@ def resolve_attack(
             current = replace(current, events=current.events + (body.pre_event,))
 
         body_chain.append(body_attack_id)
+
+        selector = body.copy_selector
+        source_override: tuple[PokemonRef, ...] | None = None
+        if selector is not None and selector.precommit_source_to is not None:
+            if selector.source != "own_deck_top":
+                raise ValueError(
+                    "precommit source movement is currently supported only for own_deck_top"
+                )
+            source_override = tuple(
+                card
+                for card in current.pokemon
+                if card.owner == actor_player and card.zone == "deck_top"
+            )
+            if len(source_override) > 1:
+                raise ValueError("modeled deck_top must identify at most one card")
+            source_ids = {card.card_id for card in source_override}
+            current = replace(
+                current,
+                pokemon=tuple(
+                    replace(card, zone=selector.precommit_source_to)
+                    if card.card_id in source_ids
+                    else card
+                    for card in current.pokemon
+                ),
+            )
+
         candidates, candidate_sources = _candidate_attacks(
             actor_player=actor_player,
             actor_card_id=actor_card_id,
             attack=body,
             attacks=attacks,
             state=current,
+            source_override=source_override,
         )
 
         if body.copy_selector is None:
@@ -378,10 +409,6 @@ def resolve_attack(
         assert selector is not None
 
         if not candidates:
-            if not selector.optional_selection:
-                raise IllegalCopyTarget(
-                    f"no legal copy targets for {body_attack_id}"
-                )
             trace.append(
                 TraceStep(
                     depth=depth,
