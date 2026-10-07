@@ -12,15 +12,15 @@ This result adds `tools/card_identity.py`, which builds explicit indexes by prin
 
 ## Computational result
 
-Using the bundled 2026-09-16 card snapshot and the existing seven-print official-ban overlay:
+Using the bundled 2026-09-16 card snapshot, the seven-print official-ban overlay, and the corrected exclusion of seven prints whose card text prohibits official-tournament use:
 
 - Expanded-scope prints: **14,884**
 - Card names: **3,392**
 - Conservative gameplay variants: **10,449**
-- Legal gameplay variants: **10,423**
-- Banned gameplay variants: **26**
+- Legal gameplay variants: **10,416**
+- Banned gameplay variants: **33**
 - Gameplay variants containing both legal and banned prints: **0**
-- Names containing both legal and banned prints: **10**
+- Names containing both legal and banned prints: **11**
 - Names containing more than one gameplay variant: **1,289** (**38.0%** of names)
 - Gameplay variants represented by more than one print: **2,828**
 - Largest exact-fingerprint reprint class: **15 prints**
@@ -32,6 +32,7 @@ The zero mixed-legality variant count is the central finding. In this snapshot, 
 | Name | Banned prints | Legal same-name prints | Distinct gameplay variants |
 | --- | ---: | ---: | ---: |
 | Archeops | 2 | 6 | 5 |
+| Dragapult | 1 | 4 | 4 |
 | Flabébé | 1 | 10 | 10 |
 | Flapple | 4 | 4 | 4 |
 | Marshadow | 2 | 7 | 7 |
@@ -42,7 +43,7 @@ The zero mixed-legality variant count is the central finding. In this snapshot, 
 | Shaymin-EX | 3 | 4 | 3 |
 | Unown | 2 | 3 | 5 |
 
-For all ten names, the banned prints are separated from the legal prints by gameplay fingerprint. Name-only legality therefore collapses distinctions that the data currently preserves cleanly at variant level.
+For all eleven names, the banned prints are separated from the legal prints by gameplay fingerprint. Name-only legality therefore collapses distinctions that the data currently preserves cleanly at variant level.
 
 ## Gameplay ambiguity at name level
 
@@ -74,7 +75,7 @@ The computational check was run against the bundled card archive and reproduced 
 
 The gameplay fingerprint is a repository research convenience, not an official definition of functional reprint equivalence. Minor wording differences, errata, tournament reprint policy, or future database changes may require two cards to be treated as equivalent even when their fingerprints differ, or may reveal a case that should split an existing class. The result therefore supports a conservative identity layer rather than claiming to solve official reprint equivalence.
 
-The analysis inherits the legality baseline's 198 set-level fallback records and seven-print official overlay. A future official-ban change can alter these counts until the baseline overlay is refreshed.
+The analysis inherits the legality baseline's 191 remaining set-level fallback records, seven-print official overlay, and explicit tournament-prohibition handling. A future official-ban change can alter these counts until the baseline overlay is refreshed.
 
 ## Confidence and next work
 
