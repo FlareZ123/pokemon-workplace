@@ -21,9 +21,9 @@ assert counts["historical_official_reprint_candidate_prints"] == 42
 assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
-assert counts["known_non_equivalent_prints"] == 32
-assert counts["known_non_equivalent_names"] == 3
-assert counts["semantic_review_prints"] == 4036
+assert counts["known_non_equivalent_prints"] == 34
+assert counts["known_non_equivalent_names"] == 4
+assert counts["semantic_review_prints"] == 4034
 assert counts["high_confidence_candidate_prints"] == 192
 assert counts["exact_fingerprint_trainer_candidate_prints"] == 2
 assert counts["trainer_same_name_review_pool_prints"] == 168
@@ -33,6 +33,7 @@ assert counts["name_wide_trainer_errata_names"] == 15
 
 assert summary["known_non_equivalent_by_name"] == {
     "Darkness Energy": 15,
+    "Life Herb": 2,
     "Metal Energy": 15,
     "Rainbow Energy": 2,
 }
@@ -67,13 +68,14 @@ assert all(name in resolver.legal_expanded_by_name for name in NAME_WIDE_TRAINER
 assert resolver.resolve("base5-17").kind == "known_non_equivalent"
 assert resolver.resolve("base5-80").kind == "known_non_equivalent"
 assert resolver.resolve("dp2-119").kind == "known_non_equivalent"
+assert resolver.resolve("ex5-90").kind == "known_non_equivalent"
+assert resolver.resolve("ex6-93").kind == "known_non_equivalent"
 assert resolver.resolve("base1-95").kind == "historical_official_reprint_candidate"
 assert resolver.resolve("base1-96").kind == "historical_official_reprint_candidate"
 assert resolver.resolve("dp4-99").kind == "official_errata_candidate"
 assert resolver.resolve("ex2-88").kind == "official_errata_candidate"
 assert resolver.resolve("gym1-18").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("ex7-83").kind == "semantic_review"
-assert resolver.resolve("base5-17").kind == "semantic_review"
 assert resolver.resolve("bw5-100").kind == "direct_legal"
 
 print("errata-aware reprint resolution: PASS")
