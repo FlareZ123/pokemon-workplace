@@ -39,6 +39,10 @@ def main() -> None:
     assert "is damaged by an attack" in spiky["rules"][0]
     assert "put 2 damage counters on the Attacking Pokémon" in spiky["rules"][0]
 
+    orthworm = card("sv7", "sv7-110")
+    payback = next(ability for ability in orthworm["abilities"] if ability["name"] == "Pummeling Payback")
+    assert "put 2 damage counters on the Attacking Pokémon for each Metal Energy" in payback["text"]
+
     attacker = make_board(make_pokemon("attacker", "Attacker"))
     defender = make_board(make_pokemon("defender", "Zamazenta"))
 
@@ -112,6 +116,24 @@ def main() -> None:
     assert two_spiky.counters_placed_on_attacker == 4
     assert two_spiky.attacker_knocked_out_ids == ("attacker",)
     assert two_spiky.defender_knocked_out_ids == ("defender",)
+
+    scaled = resolve_damage_reactions(
+        attacker,
+        after_damage,
+        result,
+        reactions=(
+            DamageReaction(
+                DamageReactionKind.SCALED_COUNTERS,
+                fixed_counters=2,
+                scale_count=3,
+            ),
+        ),
+        attacker_hp_by_object_id={"attacker": 70},
+        defender_hp_by_object_id={"defender": 130},
+    )
+    assert scaled.counters_placed_on_attacker == 6
+    assert scaled.attacker_knocked_out_ids == ()
+    assert scaled.defender_knocked_out_ids == ("defender",)
 
     print(
         {
