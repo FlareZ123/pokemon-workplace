@@ -4,7 +4,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from tools.build_expanded_legality_baseline import load_json
+from tools.build_expanded_legality_baseline import gameplay_fingerprint, load_json
 from tools.tool_category_normalization import (
     LEGACY_ITEM_RULES,
     normalize_legacy_tool_category,
@@ -20,9 +20,9 @@ assert counts["legal_expanded_prints"] == 14829
 assert counts["changed_tool_prints"] == 211
 assert counts["changed_tool_names"] == 167
 assert counts["dual_item_tool_prints"] == 30
-assert counts["obsolete_item_rule_prints"] == 213
+assert counts["obsolete_item_rule_prints"] == 211
 assert counts["raw_legal_gameplay_fingerprints"] == 10416
-assert counts["normalized_legal_gameplay_fingerprints"] == 10416
+assert counts["normalized_legal_gameplay_fingerprints"] == 10415
 assert summary["changed_by_series"] == {
     "Black & White": 22,
     "Sun & Moon": 60,
@@ -49,6 +49,10 @@ assert not any(rule in LEGACY_ITEM_RULES for rule in rapid_scroll["rules"])
 
 non_tool = normalize_legacy_tool_category(cards["sv3-191"])
 assert non_tool == cards["sv3-191"]
+
+choice_belt_old = normalize_legacy_tool_category(cards["swsh9-135"])
+choice_belt_current = normalize_legacy_tool_category(cards["sv2-176"])
+assert gameplay_fingerprint(choice_belt_old) == gameplay_fingerprint(choice_belt_current)
 
 print("legacy Pokemon Tool category normalization: PASS")
 print("changed Tool prints:", counts["changed_tool_prints"])
