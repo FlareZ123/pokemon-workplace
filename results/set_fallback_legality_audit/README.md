@@ -13,7 +13,7 @@ The remaining fallback is sharply localized. As of the bundled 2026-09-16 snapsh
 | 30th Celebration (\`me55\`) | 2026-09-16 | 161 |
 | 30th Celebration: Classic Collection (\`me55c\`) | 2026-09-16 | 30 |
 
-Both set records explicitly mark Expanded as Legal, and all 191 fallback card records mark Unlimited as Legal. The separate legality classifier has already removed records whose own card text says they cannot be used at official tournaments.
+Both set records explicitly mark Expanded as Legal. In the live repository snapshot, all 191 card records omit card-level legality metadata entirely, including Unlimited. The separate legality classifier has already removed records whose own card text says they cannot be used at official tournaments.
 
 This is materially stronger provenance than the previous picture of 198 unexplained fallback records spread across an unknown part of the card pool. It still remains fallback evidence rather than explicit per-print Expanded metadata.
 
