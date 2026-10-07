@@ -1,0 +1,26 @@
+name: Validate single-source Ability lock geometry
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/single_source_ability_lock_geometry.py"
+      - "tools/garbotoxin_suppression.py"
+      - "tools/board_action_quota_derivation.py"
+      - "tools/board_object_kernel.py"
+      - "results/single_source_ability_lock_geometry/**"
+      - ".github/workflows/validate-single-source-ability-lock-geometry.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce single-source Ability lock geometry
+        run: python results/single_source_ability_lock_geometry/reproduce.py
