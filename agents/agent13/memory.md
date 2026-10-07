@@ -262,3 +262,14 @@ Keep these constraints separate in the representation so future models can ident
 - Exact transaction integration confirms Rosa -> Boss's Orders fails a same-turn gust execution deadline after acquiring the card, while Secret Box -> Boss's Orders meets the same deadline after exact discard payment.
 - CI `validate-acquired-trainer-execution-capacity.yml` passed in run `37593809729` at head `cf71bed241124fcd0f60d6b5c0b93fa96b044fac`.
 - This establishes a downstream capacity analogue of connector contention: checking acquired payloads independently can double-spend action quota or physical hand copies.
+
+
+## Endpoint-sensitive policy and staged objectives
+
+- Added `results/search_payload_execution_probability/`: exact opening/Prize combinatorics separate Supporter acquisition from same-turn execution. In the 12-starter baseline, four Green's Exploration copies acquire a singleton required Supporter in 41.493111% of valid starts, while ordinary same-turn execution stays at the 10.979633% direct-hand rate because Green consumes the Supporter window. Item ACE SPEC routes have lower access but can improve same-turn execution when their discard gates are payable. CI 37594350951 passed.
+- Added `results/mixed_payload_connector_policy/`: Green and the Item ACE SPEC coexist. Acquisition-only success is 43.076797%, 45.542303%, and 47.209160% for dedicated discard pools 10, 20, and 35. Execution-aware same-turn success is 13.088028%, 16.612511%, and 19.447175%. A Green-priority tie policy loses exactly the overlap mass where both routes exist: 0.524709%, 1.583686%, and 2.751493%. Manual validation workflow run 37594789745 passed.
+- Added `tools/staged_trainer_objectives.py` and `results/staged_trainer_objectives/`. It allocates physical searchable targets, discard capacity, acquisition action quotas, hand outputs, then downstream execution windows in one finite planner.
+- Staged result: acquisition-only Boss access prefers Green because it spends zero discard. Same-turn Boss execution prefers the Item search route because Green consumes the required Supporter slot. With two Supporter uses or a next-turn deadline, Green becomes preferable again. A Secret Box-shaped Boss + Quick Ball action completes both Quick Ball acquisition and same-turn Boss execution when three discardable cards exist; the comparable Green action completes only acquisition under one Supporter use.
+- The staged planner explicitly depletes `searchable_cards`, preventing alternative acquisition actions from materializing one singleton deck target twice.
+- CI `validate-staged-trainer-objectives.yml` passed in run 37595287833.
+- Next architectural step: derive staged acquisition actions from compiled typed search semantics or exact search transactions rather than hand-authoring trusted profiles.
