@@ -870,6 +870,17 @@ A second policy that privately prefers A whenever searchable leaves the opponent
 
 **Working synthesis:** a shared exact post-search deck composition is valid only when removed target identity is public or jointly known. Private unrestricted search needs actor-specific exact target removal and policy-marginalized target removal for other observers. Public target signaling and private target removal are separate Bayesian transitions.
 
+## 70. Public redirected Prize cards can restore hidden correlations
+
+[pending_prize_public_reveal_belief/](pending_prize_public_reveal_belief/) preserves a removed Prize identity as a latent variable until its destination visibility is known.
+
+The official Pokémon glossary says discard-pile cards are face up and inspectable, and Lost Zone cards are face up; Japanese Q&A confirms an opponent's Lost Zone cards can be checked. The existing observer-removal primitive is therefore too lossy for a Prize that begins privately observed by the taker and later enters one of those public zones.
+
+In the Arc Phone correlation witness, privately taking B leaves the opponent at P(top=A)=1/2. If that same pending B enters hidden hand, the opponent correctly stays at 1/2. If Billowing Smoke or Lost Block routes B to a public destination, conditioning on the newly public B raises the opponent to P(top=A)=1. Immediate marginalization cannot recover that update.
+
+**Working synthesis:** a card leaving a hidden physical zone does not automatically end its information-state relevance. Latent identity should survive until the destination determines who can observe the card, especially when that identity remains correlated with top-deck or remaining-Prize state.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -901,6 +912,7 @@ Particularly foundational components include:
 - `top_prize_physical_bridge.py`
 - `prize_joint_position_removal.py`
 - `prize_pending_take.py`
+- `pending_prize_identity_belief.py`
 - `prize_destination_applicability.py`\n- `prize_destination_overrides.py`
 - `post_prize_window_game_resolution.py`
 - `unified_state_kernel.py`
