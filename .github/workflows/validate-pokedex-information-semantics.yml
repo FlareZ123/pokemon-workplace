@@ -1,0 +1,23 @@
+name: validate Pokédex information semantics
+
+on:
+  push:
+    paths:
+      - "tools/pokedex_information_semantics.py"
+      - "results/pokedex_information_semantics/**"
+      - ".github/workflows/validate-pokedex-information-semantics.yml"
+  pull_request:
+    paths:
+      - "tools/pokedex_information_semantics.py"
+      - "results/pokedex_information_semantics/**"
+      - ".github/workflows/validate-pokedex-information-semantics.yml"
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.pokedex_information_semantics.reproduce
