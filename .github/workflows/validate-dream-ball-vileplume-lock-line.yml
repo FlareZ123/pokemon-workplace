@@ -1,0 +1,26 @@
+name: Validate Dream Ball Vileplume lock line
+
+on:
+  push:
+    paths:
+      - "tools/dream_ball_typed_bench_execution.py"
+      - "tools/item_play_source_scope.py"
+      - "tools/pokemon_board_metadata.py"
+      - "tools/before_hand_prize_executor.py"
+      - "results/dream_ball_vileplume_lock_line/**"
+      - ".github/workflows/validate-dream-ball-vileplume-lock-line.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Dream Ball Vileplume lock line
+        run: python results/dream_ball_vileplume_lock_line/reproduce.py
