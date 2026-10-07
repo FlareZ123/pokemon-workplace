@@ -222,10 +222,10 @@ def legal_retreat_energy_choices(
     pokemon: BoardPokemon,
     retreat_cost: int,
 ) -> tuple[tuple[str, ...], ...]:
-    """Enumerate minimal physical Energy-card subsets that can pay retreat.
+    """Enumerate exact physical Energy-card selections that can pay retreat.
 
-    A multi-unit Energy card can pay a smaller cost by itself. Extra cards are
-    not included once a proper subset already covers the cost.
+    Multi-unit Energy can overfill the numeric requirement. The selected
+    physical-card count cannot exceed the Retreat Cost itself.
     """
 
     if retreat_cost < 0:
@@ -235,23 +235,10 @@ def legal_retreat_energy_choices(
 
     cards = pokemon.energy
     choices: list[tuple[str, ...]] = []
-    for size in range(1, len(cards) + 1):
+    for size in range(1, min(len(cards), retreat_cost) + 1):
         for indices in combinations(range(len(cards)), size):
             units = sum(len(cards[index].units) for index in indices)
-            if units < retreat_cost:
-                continue
-
-            minimal = True
-            for removed in indices:
-                reduced_units = sum(
-                    len(cards[index].units)
-                    for index in indices
-                    if index != removed
-                )
-                if reduced_units >= retreat_cost:
-                    minimal = False
-                    break
-            if minimal:
+            if units >= retreat_cost:
                 choices.append(tuple(cards[index].instance_id for index in indices))
 
     return tuple(choices)
