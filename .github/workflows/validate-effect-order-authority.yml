@@ -1,0 +1,23 @@
+name: Validate effect-order authority
+
+on:
+  push:
+    paths:
+      - "tools/effect_order_authority.py"
+      - "results/effect_order_authority/**"
+      - ".github/workflows/validate-effect-order-authority.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run effect-order authority regression
+        run: python results/effect_order_authority/reproduce.py
