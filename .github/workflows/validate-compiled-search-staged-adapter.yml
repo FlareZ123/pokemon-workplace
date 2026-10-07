@@ -1,0 +1,26 @@
+name: Validate compiled search staged adapter
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/compiled_search_staged_adapter.py"
+      - "tools/staged_trainer_objectives.py"
+      - "tools/single_output_search_profile_compiler.py"
+      - "tools/trainer_search_profile_compiler.py"
+      - "results/compiled_search_staged_adapter/**"
+      - ".github/workflows/validate-compiled-search-staged-adapter.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce compiled search staged adapter
+        run: python results/compiled_search_staged_adapter/reproduce.py
