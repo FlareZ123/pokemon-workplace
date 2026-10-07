@@ -200,13 +200,13 @@ def validate_board_attachment_bindings(
     expected: dict[str, tuple[str, str]] = {}
     for pokemon in board.objects:
         for energy in pokemon.energy:
-            if energy.card_id in expected:
-                raise ValueError(f"duplicate board attachment ID: {energy.card_id}")
-            expected[energy.card_id] = (pokemon.object_id, energy.card_name)
+            if energy.instance_id in expected:
+                raise ValueError(f"duplicate board attachment ID: {energy.instance_id}")
+            expected[energy.instance_id] = (pokemon.object_id, energy.card_name)
         if pokemon.tool is not None:
-            if pokemon.tool.card_id in expected:
-                raise ValueError(f"duplicate board attachment ID: {pokemon.tool.card_id}")
-            expected[pokemon.tool.card_id] = (
+            if pokemon.tool.instance_id in expected:
+                raise ValueError(f"duplicate board attachment ID: {pokemon.tool.instance_id}")
+            expected[pokemon.tool.instance_id] = (
                 pokemon.object_id,
                 pokemon.tool.card_name,
             )
