@@ -18,7 +18,8 @@ def main() -> None:
     if not isclose(core, 0.70709, rel_tol=0.0, abs_tol=1e-12):
         raise AssertionError(f"current core={core!r}, expected 0.70709")
 
-    print(f"core={core:.9%}")
+    for endpoint in ANY_ROUTE_ENDPOINTS:
+        print(f"{endpoint}={result.probability(endpoint):.9%}")
     print(f"mean_mulligans={result.mean_mulligans:.9f}")
 
 
