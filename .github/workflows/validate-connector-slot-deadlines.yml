@@ -1,0 +1,20 @@
+name: Validate connector slot deadlines
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/connector_slot_deadlines.py"
+      - "tools/connector_slot_collision_option.py"
+      - "results/connector_slot_deadlines/**"
+      - ".github/workflows/validate-connector-slot-deadlines.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/connector_slot_deadlines/reproduce.py
