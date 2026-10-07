@@ -39,7 +39,11 @@ def set_board_pokemon_abilities_enabled(
     return next_board
 
 
-def quota_grants_from_board(board: BoardState) -> tuple[ActionQuotaGrant, ...]:
+def quota_grants_from_board(
+    board: BoardState,
+    *,
+    suppressed_ability_object_ids: frozenset[str] = frozenset(),
+) -> tuple[ActionQuotaGrant, ...]:
     """Compile currently active quota grants from exact in-play objects."""
 
     grants: list[ActionQuotaGrant] = []
@@ -47,6 +51,7 @@ def quota_grants_from_board(board: BoardState) -> tuple[ActionQuotaGrant, ...]:
         if (
             pokemon.print_id == DUAL_BRAINS_PRINT_ID
             and pokemon.abilities_enabled
+            and pokemon.object_id not in suppressed_ability_object_ids
         ):
             grants.append(
                 ActionQuotaGrant(
@@ -61,16 +66,30 @@ def quota_grants_from_board(board: BoardState) -> tuple[ActionQuotaGrant, ...]:
 def derive_board_action_quotas(
     board: BoardState,
     budget: TurnActionBudget,
+    *,
+    suppressed_ability_object_ids: frozenset[str] = frozenset(),
 ) -> TurnActionBudget:
     """Recompute current action limits from the current physical board."""
 
-    return derive_action_quotas(budget, quota_grants_from_board(board))
+    return derive_action_quotas(
+        budget,
+        quota_grants_from_board(
+            board,
+            suppressed_ability_object_ids=suppressed_ability_object_ids,
+        ),
+    )
 
 
 def refresh_canonical_action_quotas(
     state: CanonicalCompositeTurnState,
+    *,
+    suppressed_ability_object_ids: frozenset[str] = frozenset(),
 ) -> CanonicalCompositeTurnState:
     """Recompute canonical quota limits from the state's current board."""
 
-    budget = derive_board_action_quotas(state.board, state.budget)
+    budget = derive_board_action_quotas(
+        state.board,
+        state.budget,
+        suppressed_ability_object_ids=suppressed_ability_object_ids,
+    )
     return with_canonical_budget(state, budget)
