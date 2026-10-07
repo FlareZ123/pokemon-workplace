@@ -58,3 +58,53 @@ The next high-value step is to value the information itself. Combine candidate m
 ## Current next direction
 
 Audit the corrected Aichi ALS for remaining policy assumptions, especially starting-Active selection. Quantify whether choosing Bunnelby Active when the alternative starter is a non-evolution utility Basic improves endpoint reachability, while preserving Jirachi and evolution-target starts when they are strategically stronger.
+
+
+## 2026-10-07: Aichi starting-Active audit
+
+Added:
+
+- `tools/aichi_active_choice.py`
+- `tools/aichi_active_invariance.py`
+- `results/aichi_active_choice/README.md`
+- `results/aichi_active_choice/reproduce.py`
+- `.github/workflows/validate-aichi-active-choice.yml`
+
+The current Aichi planner's setup heuristic is Jirachi first, then the first non-Bunnelby Basic, with Bunnelby only when no other Basic is available. I compared that policy on identical sampled states against Jirachi-first/Bunnelby-first and against an information-privileged endpoint-specific oracle that may choose any opening Basic after seeing downstream state.
+
+A 200,000-state paired run (seed 20261007) found identical immediate endpoint rates for all three policies: core 70.6515%, Pidgeot 60.1970%, Stoutland 49.2450%, dual 42.4150%, Item lock 36.7480%, Item+Pidgeot 23.8485%, Item+Stoutland 19.6740%. CI run 37583358295 passed.
+
+A separate 100,000-state statewise audit found 48,240 multi-Basic openings without Jirachi and zero endpoint disagreements between any legal starting Basics. In 10,662 openings where Jirachi competed with another Basic, Jirachi produced gains and zero losses on every endpoint. CI run 37583757122 passed.
+
+Exact combinatorics show the existing policy and Jirachi-first/Bunnelby-first differ on 17.0310317737% of accepted seven-card openings, so the zero endpoint delta is not caused by the policies almost never differing.
+
+Durable interpretation: within the current immediate ALS feasibility representation, non-Jirachi Active identity is collapsed by the line geometry, while Jirachi is weakly dominant because Stellar Wish adds access. This does not establish full-game strategic equivalence.
+
+## 2026-10-07: Active choice changes discard-option surfaces
+
+Added:
+
+- `tools/aichi_active_discard_flexibility.py`
+- `results/aichi_active_discard_flexibility/README.md`
+- `results/aichi_active_discard_flexibility/reproduce.py`
+- `.github/workflows/validate-aichi-active-discard-flexibility.yml`
+
+The follow-up conditions on openings where Jirachi is absent, Bunnelby and another Basic are present, and the two legal Active heuristics therefore differ. It enumerates every card-name pair that can pay Guzma & Hala's two-card discard while still completing each endpoint.
+
+In the 100,000-state run, 16,905 openings were policy-difference states. Among states where both policies used a successful G&H route, mean feasible discard pairs changed as follows:
+
+- core: 13.3028 -> 14.0384;
+- Pidgeot: 12.9152 -> 13.8368;
+- Stoutland: 12.8143 -> 13.7573;
+- dual: 12.6929 -> 12.8883;
+- Item lock: 10.7385 -> 13.8101 (+28.60%);
+- Item+Pidgeot: 10.6235 -> 9.9277 (-6.55%);
+- Item+Stoutland: 10.5629 -> 9.9005 (-6.27%).
+
+CI run 37584064717 passed.
+
+The minimum singleton-card count among feasible pairs can move opposite to raw pair count. Bunnelby-first lowers that floor in 246 Item-lock states and raises it in 93, but for Item+Pidgeot it lowers the floor in 44 and raises it in 198. Therefore raw discard-pair count is an incomplete DCI proxy.
+
+Durable interpretation: identical endpoint access can hide materially different connector opportunity costs. Starting Active is strategically relevant once the post-line hand and discard quality matter, and the preferred non-Jirachi Active is endpoint-dependent.
+
+Next useful extension: classify which named singleton or endpoint-critical cards become forced/avoidable discard candidates under each Active policy, or replace the singleton proxy with continuation value. Top-level `results/README.md` indexing is still pending because a large concurrent rewrite was blocked.
