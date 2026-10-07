@@ -55,6 +55,17 @@ def main() -> None:
         energy.instance_id for energy in second.board.get("active").energy
     } == {"dce-a", "dce-b"}
 
+    retreated_both = retreat_with_energy_conservation(
+        second,
+        "bench",
+        retreat_cost=2,
+        discard_energy_ids=("dce-a", "dce-b"),
+    )
+    assert retreated_both is not None
+    assert retreated_both.zones.count("dce-class", "attached") == 0
+    assert retreated_both.zones.count("dce-class", "discard") == 2
+    assert retreated_both.instance_classes == ()
+
     retreated = retreat_with_energy_conservation(
         second,
         "bench",
