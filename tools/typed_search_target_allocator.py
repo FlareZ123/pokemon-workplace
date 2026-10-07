@@ -125,9 +125,19 @@ class DemandChannel:
 
 
 @dataclass(frozen=True)
+class TypedTargetAction:
+    """One useful output with exact physical target and axis consumption."""
+
+    output: tuple[int, ...]
+    target_cost: tuple[int, ...]
+    axis_usage: tuple[int, ...]
+
+
+@dataclass(frozen=True)
 class TypedTargetAllocation:
     """Useful output vectors obtainable from the represented physical targets."""
 
+    actions: tuple[TypedTargetAction, ...]
     profiles: tuple[tuple[int, ...], ...]
     full_demand_feasible: bool
     minimum_unmet_units: int
@@ -279,8 +289,9 @@ def enumerate_typed_target_profiles(
     to at most one currently unmet strategic demand whose selector it also
     matches.
 
-    Selecting cards that satisfy no modeled demand is omitted because it cannot
-    improve demand feasibility. The zero-output profile is also omitted.
+    Actions retain target-consumption and search-axis usage vectors so callers
+    can preserve physical target depletion across several connector copies and
+    distinguish optional output branches from base branches.
     """
 
     output_axes = tuple(outputs)
@@ -300,31 +311,48 @@ def enumerate_typed_target_profiles(
         for target in target_groups
     )
     zero_output = (0,) * len(demand_channels)
+    zero_usage = (0,) * len(output_axes)
 
     states: set[
-        tuple[tuple[int, ...], tuple[int, ...]]
-    ] = {(initial_remaining, zero_output)}
+        tuple[
+            tuple[int, ...],
+            tuple[int, ...],
+            tuple[int, ...],
+        ]
+    ] = {(initial_remaining, zero_output, zero_usage)}
 
-    for output in output_axes:
+    for axis_index, output in enumerate(output_axes):
         output_selector = selector_from_label(output.label)
         next_axis_states: set[
-            tuple[tuple[int, ...], tuple[int, ...]]
+            tuple[
+                tuple[int, ...],
+                tuple[int, ...],
+                tuple[int, ...],
+            ]
         ] = set()
 
-        for remaining, supplied in states:
+        for remaining, supplied, usage in states:
             axis_limit = _axis_limit(
                 output,
                 target_groups,
                 remaining,
             )
-            layer = {(remaining, supplied)}
+            layer = {(remaining, supplied, usage)}
             next_axis_states.update(layer)
 
             for _ in range(axis_limit):
                 following: set[
-                    tuple[tuple[int, ...], tuple[int, ...]]
+                    tuple[
+                        tuple[int, ...],
+                        tuple[int, ...],
+                        tuple[int, ...],
+                    ]
                 ] = set()
-                for current_remaining, current_supplied in layer:
+                for (
+                    current_remaining,
+                    current_supplied,
+                    current_usage,
+                ) in layer:
                     for target_index, target in enumerate(target_groups):
                         if current_remaining[target_index] <= 0:
                             continue
@@ -341,10 +369,13 @@ def enumerate_typed_target_profiles(
                             reduced[target_index] -= 1
                             increased = list(current_supplied)
                             increased[demand_index] += 1
+                            next_usage = list(current_usage)
+                            next_usage[axis_index] += 1
                             following.add(
                                 (
                                     tuple(reduced),
                                     tuple(increased),
+                                    tuple(next_usage),
                                 )
                             )
 
@@ -355,35 +386,57 @@ def enumerate_typed_target_profiles(
 
         states = next_axis_states
 
-    profiles = tuple(
+    actions = tuple(
         sorted(
             {
-                supplied
-                for _, supplied in states
+                TypedTargetAction(
+                    output=supplied,
+                    target_cost=tuple(
+                        start - left
+                        for start, left in zip(
+                            initial_remaining,
+                            remaining,
+                        )
+                    ),
+                    axis_usage=usage,
+                )
+                for remaining, supplied, usage in states
                 if any(supplied)
-            }
+            },
+            key=lambda action: (
+                action.output,
+                action.target_cost,
+                action.axis_usage,
+            ),
         )
+    )
+    profiles = tuple(
+        sorted({action.output for action in actions})
     )
     full = tuple(
         demand.copies
         for demand in demand_channels
     )
-    full_feasible = full in profiles
+    full_feasible = any(
+        action.output == full
+        for action in actions
+    )
     minimum_unmet = min(
         (
             sum(
                 max(0, needed - supplied)
                 for needed, supplied in zip(
                     full,
-                    profile,
+                    action.output,
                 )
             )
-            for profile in profiles
+            for action in actions
         ),
         default=sum(full),
     )
 
     return TypedTargetAllocation(
+        actions=actions,
         profiles=profiles,
         full_demand_feasible=full_feasible,
         minimum_unmet_units=minimum_unmet,
