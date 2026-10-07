@@ -264,3 +264,27 @@ The reproducer independently enumerates all 50 labeled unresolved locations and 
 Interpretation: redundancy has at least three layers: another copy exists, that copy survives Prizes, and that copy is accessible before the deadline. The 98.868778% prior hidden-world existential safety, this result's 90% post-search topology ceiling, and 2% same-turn Dark Asset access measure different conditionings and must remain separate.
 
 Best next continuation: add real deterministic connector gates in this post-search K1 state. Computer Search should recover the backup whenever it is in deck and two residual disposable cards exist. Forest Seal Stone should do so when Crobat V is in play, Forest Seal Stone is available/attachable, and the VSTAR Power is unused.
+
+
+## 2026-10-07 Forest Seal physical backup rescue
+
+Created:
+
+- `tools/forest_seal_star_alchemy.py`;
+- `results/raichu_backup_gladion_forest_seal_execution/README.md`;
+- `results/raichu_backup_gladion_forest_seal_execution/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-backup-gladion-forest-seal.yml`.
+
+This closes the physical Forest Seal branch implied by the timed backup result. Bundled card data confirms Forest Seal Stone `swsh12-156` gives an attached Pokémon V Star Alchemy and limits the player to one VSTAR Power per game.
+
+The new bridge uses the existing board-object and lock-channel layers. Successful line:
+
+`Forest Seal Stone -> Crobat V -> Star Alchemy: backup Gladion -> Gladion: Prized Alolan Raichu`
+
+It preserves the ordinary Supporter window through Star Alchemy, then consumes that window only when Gladion resolves literally.
+
+Regression rejects the line under Tool play lock, occupied Tool slot, spent VSTAR Power, holder Ability suppression, Tool-effect suppression, non-V holder, and backup Gladion in Prize. CI run 37598121144 passed.
+
+Interpretation: a deterministic connector can attain the post-search 90% backup-in-deck topology ceiling only after its own physical host, attachment, suppression, and global-resource gates are satisfied. This is complementary to the existing Computer Search branch, which replaces those gates with a two-card residual discard payment.
+
+Next quantitative target: conditional connector race / union after K1, preserving overlap among Dark Asset direct exposure, Computer Search exposure + payment, and Forest Seal exposure + physical gates rather than summing marginal access.
