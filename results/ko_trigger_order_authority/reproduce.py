@@ -9,6 +9,8 @@ sys.path.insert(0, str(ROOT / "tools"))
 from ko_trigger_order_authority import (
     ADVANCED_RULEBOOK_3_4,
     ASIA_LOST_CITY_REUNICLUS_QA,
+    JAPAN_LOST_CITY_QA,
+    LOST_CITY_LOST_OUT,
     LOST_CITY_REUNICLUS,
     TPCI_FEB_2026,
     OrderingAuthority,
