@@ -63,7 +63,7 @@ class AuthorityAssessment:
 
 
 TPCI_FEB_2026 = "tpci_professor_feb_2026"
-ASIA_LOST_CITY_REUNICLUS_QA = "pokemon_asia_lost_city_reuniclus_qa"
+ASIA_LOST_CITY_REUNICLUS_QA = "pokemon_asia_lost_city_reuniclus_qa"\nJAPAN_LOST_CITY_REUNICLUS_QA = "pokemon_japan_lost_city_reuniclus_qa"
 ADVANCED_RULEBOOK_3_4 = "advanced_rulebook_3_4"
 LOST_CITY_REUNICLUS = "lost_city_reuniclus"
 
@@ -98,7 +98,7 @@ def _claims_for_source(
             )
         return ()
 
-    if source_id == ASIA_LOST_CITY_REUNICLUS_QA:
+    if source_id in {ASIA_LOST_CITY_REUNICLUS_QA, JAPAN_LOST_CITY_REUNICLUS_QA}:
         if context.interaction_id == LOST_CITY_REUNICLUS:
             return (
                 AuthorityClaim(
