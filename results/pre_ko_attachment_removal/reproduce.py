@@ -13,6 +13,9 @@ def main() -> None:
     result = build(ROOT / "resources")
     counts = result["counts"]
     print("Observed pre-KO catalog counts", counts)
+    for row in result["signatures"]:
+        if row["timing"] == "mixed":
+            print("Mixed timing row:", row)
 
     assert counts == {
         "print_instances": 334,
