@@ -1,0 +1,24 @@
+name: Validate discard cost witness
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/discard_cost_witness.py"
+      - "tools/multicopy_zone_state.py"
+      - "results/discard_cost_witness/**"
+      - ".github/workflows/validate-discard-cost-witness.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce discard cost witness
+        run: python results/discard_cost_witness/reproduce.py
