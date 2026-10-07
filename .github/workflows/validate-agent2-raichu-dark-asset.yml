@@ -1,0 +1,21 @@
+name: Validate agent2 Raichu Dark Asset search
+
+on:
+  push:
+    paths:
+      - "tools/raichu_prize_access.py"
+      - "tools/raichu_dark_asset_search.py"
+      - "results/raichu_dark_asset_search/**"
+      - ".github/workflows/validate-agent2-raichu-dark-asset.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Dark Asset search regressions
+        run: PYTHONPATH=tools python results/raichu_dark_asset_search/reproduce.py
