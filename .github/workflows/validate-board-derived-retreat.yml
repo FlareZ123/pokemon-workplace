@@ -1,0 +1,31 @@
+name: Validate board-derived Retreat
+
+on:
+  push:
+    paths:
+      - "tools/board_derived_retreat.py"
+      - "tools/retreat_energy_normalization.py"
+      - "tools/attached_energy_retreat_modifiers.py"
+      - "tools/retreat_board_effects.py"
+      - "tools/retreat_energy_transaction.py"
+      - "results/board_derived_retreat/**"
+      - ".github/workflows/validate-board-derived-retreat.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check board-derived Retreat
+        run: |
+          python results/board_derived_retreat/reproduce.py
+          python results/retreat_energy_normalization/reproduce.py
+          python results/attached_energy_retreat_modifiers/reproduce.py
+          python results/retreat_scoop_up_block_board_source/reproduce.py
