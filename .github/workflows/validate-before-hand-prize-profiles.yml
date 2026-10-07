@@ -1,0 +1,24 @@
+name: Validate before-hand Prize profiles
+
+on:
+  push:
+    paths:
+      - "tools/before_hand_prize_profiles.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/before_hand_prize_profiles/**"
+      - ".github/workflows/validate-before-hand-prize-profiles.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check before-hand Prize profiles
+        run: python results/before_hand_prize_profiles/reproduce.py
