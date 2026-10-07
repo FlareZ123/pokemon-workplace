@@ -13,7 +13,18 @@ def main() -> None:
     assert result.trials == 500_000
     assert result.incremental_successes == 20_785
     assert result.missing_cost_witnesses == 0
-    assert sum(count for _, count in result.histogram) == 20_785
+    assert result.histogram == (
+        (0, 570),
+        (1, 4_598),
+        (2, 9_592),
+        (3, 6_025),
+    )
+    assert [result.successes_with_budget(budget) for budget in range(4)] == [
+        570,
+        5_168,
+        14_760,
+        20_785,
+    ]
 
     print(f"trials={result.trials}")
     print(f"incremental_successes={result.incremental_successes}")
