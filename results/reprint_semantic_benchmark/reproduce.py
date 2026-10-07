@@ -21,7 +21,8 @@ counts = summary["counts"]
 assert counts["legacy_no_reference_trainer_prints"] == 76
 assert counts["legacy_no_reference_trainer_names"] == 15
 assert counts["legacy_current_resolver_kinds"] == {
-    "historical_official_reprint_candidate": 41,
+    "exact_fingerprint_candidate": 5,
+    "historical_official_reprint_candidate": 36,
     "known_non_equivalent": 2,
     "official_errata_candidate": 26,
     "official_semantic_candidate": 3,
@@ -61,6 +62,7 @@ assert negative[0].name == "Rainbow Energy"
 
 print("official reprint semantic benchmark: PASS")
 print("legacy no-reference Trainer positives:", counts["legacy_no_reference_trainer_prints"])
+print("exact after current normalization:", counts["legacy_current_resolver_kinds"]["exact_fingerprint_candidate"])
 print("historically bridged:", counts["legacy_current_resolver_kinds"]["historical_official_reprint_candidate"])
 print("resolved by current errata:", counts["legacy_current_resolver_kinds"]["official_errata_candidate"])
 print("resolved by current handbook semantics:", counts["legacy_current_resolver_kinds"]["official_semantic_candidate"])
