@@ -123,6 +123,12 @@ def _candidate_attacks(
             cards = [p for p in state.pokemon if p.owner == actor_player and p.zone == "discard"]
         elif selector.source == "own_bench":
             cards = [p for p in state.pokemon if p.owner == actor_player and p.zone == "bench"]
+        elif selector.source == "opponent_active":
+            opponent = opponent_of(actor_player)
+            cards = [p for p in state.pokemon if p.owner == opponent and p.zone == "active"]
+        elif selector.source == "opponent_in_play":
+            opponent = opponent_of(actor_player)
+            cards = [p for p in state.pokemon if p.owner == opponent and p.zone in {"active", "bench"}]
         else:
             raise ValueError(f"Unsupported copy source: {selector.source}")
 
