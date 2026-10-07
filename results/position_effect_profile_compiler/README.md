@@ -25,25 +25,25 @@ The distinction between (2) and (3) is mechanically important for attack effects
 
 ## Method
 
-The compiler scans the effectively legal English paper-Expanded snapshot using the repository legality baseline. It deliberately accepts only complete Trainer effect bodies and complete attack-text bodies from a small literal wording family. Historical English wordings are mapped to the same semantic kinds.
+The compiler scans the effectively legal English paper-Expanded snapshot using the repository legality baseline. It deliberately accepts only complete Trainer effect bodies and complete attack-text bodies from a small literal wording family. Historical English wordings are mapped to the same semantic kinds. Movement-relevant current text is applied before compilation: the three Black & White Pokémon Catcher records whose bundled text predates the name-wide erratum are normalized to the current coin-flip wording.
 
 For Trainers, generic Item / Supporter reminder rules are ignored and one simple `You can play/use this card only ...` condition may be preserved. Any additional semantic rule causes exclusion. This is why Counter Catcher compiles with its Prize-count condition while Mallow & Lana is excluded: the latter has a second conditional discard/heal body.
 
-The profile preserves source print and name, Trainer versus attack source, action class, attack name / Energy cost / printed damage, movement kind, chooser authority, rulebook target geometry, and a simple Trainer play condition.
+The profile preserves source print and name, Trainer versus attack source, action class, attack name / Energy cost / printed damage, movement kind, chooser authority, rulebook target geometry, a simple Trainer play condition, and whether movement requires a heads result.
 
 Execution uses `board_object_kernel.switch_active`, so damage, attachments, physical Pokémon identity, and outgoing-Active cleanup remain owned by the existing conserved board transition.
 
 ## Results
 
-The current bundled English snapshot yields **133 print-level profiles across 83 card names**:
+The current bundled English snapshot yields **149 print-level profiles across 88 card names**:
 
 | Source | Movement kind | Profiles |
 | --- | --- | ---: |
 | Trainer | self switch | 17 |
 | Trainer | opponent-chosen forced switch | 2 |
-| Trainer | actor-chosen targeted gust | 18 |
+| Trainer | actor-chosen targeted gust | 29 |
 | Attack | opponent-chosen forced switch | 71 |
-| Attack | actor-chosen targeted gust | 25 |
+| Attack | actor-chosen targeted gust | 30 |
 
 Representative compiled witnesses include:
 
@@ -51,9 +51,10 @@ Representative compiled witnesses include:
 - `me1-126` Repel: opponent chooses its replacement;
 - `sm4-91` Counter Catcher: actor chooses the opposing Benched target and the Prize-count play condition is retained;
 - `me1-9` Bayleef / Push Down: printed 50 damage plus forced switch-out;
-- `me3-30` Clefairy / Follow Me: targeted gust with no printed damage.
+- `me3-30` Clefairy / Follow Me: targeted gust with no printed damage;
+- all 11 Pokémon Catcher prints: actor-chosen targeted gust gated by a heads coin result, including `bw2-95`, `bw5-111`, and `bw10-83`, whose raw bundled text still shows the pre-errata guaranteed switch.
 
-The executor regression demonstrates the immunity geometry directly. For Bayleef's forced switch-out, blocking effects on the old opposing Active prevents the movement while blocking effects on the chosen Benched replacement does not. For Clefairy's targeted gust, the inverse holds: immunity on the selected Benched target blocks movement while immunity on the old Active does not.
+The executor refuses coin-gated movement unless an explicit heads result is supplied. This prevents stale raw Pokémon Catcher text from becoming an unconditional reachability edge. The regression also demonstrates the immunity geometry directly. For Bayleef's forced switch-out, blocking effects on the old opposing Active prevents the movement while blocking effects on the chosen Benched replacement does not. For Clefairy's targeted gust, the inverse holds: immunity on the selected Benched target blocks movement while immunity on the old Active does not.
 
 ## Strategic interpretation
 
@@ -72,9 +73,9 @@ This is a concrete case of access not implying equivalent control: two cards can
 
 This is intentionally a conservative semantic island.
 
-It does not yet compile optional wording, coin-gated movement, movement followed by text-body damage or Special Conditions, Abilities with activation / trigger scaffolding, "switch this Pokémon" variants, multi-step effects that switch both players, or arbitrary card-text sequencing.
+It does not yet compile optional wording, movement followed by text-body damage or Special Conditions, Abilities with activation / trigger scaffolding, "switch this Pokémon" variants, multi-step effects that switch both players, or arbitrary card-text sequencing. Coin-gated movement is covered only for the exact literal heads-gate family.
 
-Attack damage is preserved in the profile but is not executed by `position_effect_execution.py`; damage remains a separate attack-resolution concern. Likewise, source-action legality, attack cost payment, Trainer turn budgets, play locks, coin flips, and simple Trainer conditions remain upstream.
+Attack damage is preserved in the profile but is not executed by `position_effect_execution.py`; damage remains a separate attack-resolution concern. Likewise, source-action legality, attack cost payment, Trainer turn budgets, play locks, performing the coin flip itself, and simple Trainer conditions remain upstream.
 
 The compiler currently scans the bundled English snapshot. The repository's newer regional semantic-source layer shows that region-only cards can exist outside that snapshot, so this profile count should not be treated as proof that no additional regional movement effect exists.
 
@@ -82,4 +83,4 @@ The compiler currently scans the bundled English snapshot. The repository's newe
 
 Run `python results/position_effect_profile_compiler/reproduce.py`.
 
-The regression checks the profile counts, historical/current wording normalization, Counter Catcher's retained condition, exclusion of Mallow & Lana, board movement, chooser authority, and the C-04/C-05 immunity-target distinction.
+The regression checks the profile counts, historical/current wording normalization, current Pokémon Catcher errata, exact coin gating, Counter Catcher's retained condition, exclusion of Mallow & Lana, board movement, chooser authority, and the C-04/C-05 immunity-target distinction.
