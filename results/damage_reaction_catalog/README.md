@@ -40,12 +40,13 @@ Every row is classified by this current catalog.
 
 ## Execution coverage
 
-The first `damage_reaction_kernel` implements the two largest counter-placement body families:
+The `damage_reaction_kernel` implements three counter-placement body families:
 
 - fixed counters;
+- counters scaled by an upstream live count;
 - counters equal to final damage done.
 
-Those families account for **62 of 89 print rows** and **25 of 40 distinct signatures** in this conservative catalog.
+Those families account for **67 of 89 print rows** and **28 of 40 distinct signatures** in this conservative catalog.
 
 That percentage is body coverage rather than full card legality coverage. Individual cards can add conditions involving Active position, attached Tools or Energy, opponent Pokemon categories, or temporary effects from a prior attack. Those prerequisites still belong to an upstream semantic layer.
 
