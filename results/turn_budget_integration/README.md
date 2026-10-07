@@ -34,6 +34,9 @@ The reverse helpers synchronize a chosen budget back into legacy state:
 
 These reverse helpers are migration support. The intended long-term direction is for one composite state to own the budget directly.
 
+Modified action limits can be supplied to the projection functions for policy evaluation. Reverse synchronization rejects modified quotas rather than collapsing them into booleans. This is intentional because Magnezone `bw8-46` creates a legal two-Supporter state that the old `supporter_used` field cannot encode exactly.
+
+
 ## Regression
 
 The reproducer verifies:
@@ -43,11 +46,13 @@ The reproducer verifies:
 3. those four channels are exhausted independently while attacking remains available;
 4. a legacy ended-turn flag makes the projected budget reject every ordinary action;
 5. applying a target budget to both legacy kernels and projecting it back is an exact round trip;
-6. a fresh next-turn budget clears every legacy usage flag through the same synchronization path.
+6. a fresh next-turn budget clears every legacy usage flag through the same synchronization path;
+7. a projected two-Supporter quota allows two plays at budget level;
+8. reverse synchronization rejects that state because the legacy boolean would lose information.
 
 ## Architectural implication
 
-The bridge makes the duplication measurable. Five booleans spread across three state layers can be represented by one value with one transition contract.
+The bridge makes the duplication measurable. Legacy booleans spread across three state layers can be projected into one value with one transition contract. The quota-aware budget also exposes a limit the legacy fields cannot represent: a two-Supporter turn cannot be losslessly synchronized back into `BenchState.supporter_used`.
 
 A safe migration sequence is:
 
