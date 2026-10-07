@@ -1,0 +1,45 @@
+"""Sensitivity of bounded Dark Asset continuation to disposable-pool density."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools"))
+
+from raichu_dark_asset_followup import dark_asset_followup_snapshot
+
+
+def main() -> None:
+    rows = []
+    for total_disposable in (4, 8, 12, 16, 20, 24):
+        result = dark_asset_followup_snapshot(
+            disposable_nonstarter_copies=total_disposable - 1,
+            disposable_starter_copies=1,
+            other_starter_copies=13,
+        )
+        rows.append(
+            {
+                "disposable_pool": total_disposable,
+                "first_order": result.first_order_dark_asset_access,
+                "bounded": result.bounded_followup_access,
+                "increment": result.incremental_followup_access,
+                "quick_gain": result.quick_followup_gain,
+                "ultra_gain_after_quick": result.ultra_followup_gain_after_quick,
+                "target_prized_bounded": (
+                    result.conditional_target_prized_bounded_followup_access
+                ),
+            }
+        )
+
+    assert all(
+        later["increment"] >= earlier["increment"] - 1e-12
+        for earlier, later in zip(rows, rows[1:])
+    )
+    print(json.dumps(rows, indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
