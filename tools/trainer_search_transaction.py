@@ -3,10 +3,9 @@
 This composes exact typed target selection, exact discard-cost selection,
 exchangeable zone counts, play-lock channels, and the shared turn budget.
 
-The implementation intentionally supports only compiled Item and Supporter
-search profiles whose discard costs are fixed counts of "other cards".
-Whole-hand discard and Trainer subtypes with different played-card destinations
-remain separate semantic cases.
+The played Trainer is moved to a temporary resolving zone before its
+instructions are applied. This distinguishes the physical card being played
+from other same-class copies that remain in hand.
 """
 
 from __future__ import annotations
@@ -32,6 +31,9 @@ from typed_search_target_allocator import (
     TypedTargetAction,
     enumerate_typed_target_profiles,
 )
+
+
+RESOLVING_TRAINER_ZONE = "resolving_trainer"
 
 
 @dataclass(frozen=True)
@@ -90,6 +92,27 @@ def _validated_branch(
     raise ValueError("search action is not valid for this compiled profile")
 
 
+def _discard_entire_hand(
+    state: ZoneCountState,
+) -> tuple[ZoneCountState, int]:
+    hand_counts = tuple(
+        (card_class, count)
+        for card_class, zone, count in state.counts
+        if zone == "hand"
+    )
+    after = state
+    discarded = 0
+    for card_class, count in hand_counts:
+        after = after.move(
+            card_class,
+            "hand",
+            "discard",
+            amount=count,
+        )
+        discarded += count
+    return after, discarded
+
+
 def execute_trainer_search_transaction(
     state: TrainerSearchExecutionState,
     *,
@@ -106,8 +129,6 @@ def execute_trainer_search_transaction(
 
     if not action_card_class:
         raise ValueError("action_card_class must be non-empty")
-    if profile.discards_entire_hand:
-        raise ValueError("whole-hand discard profiles are not supported")
     if profile.action_class not in {"Item", "Supporter"}:
         raise ValueError(
             f"unsupported Trainer action class: {profile.action_class!r}"
@@ -116,6 +137,11 @@ def execute_trainer_search_transaction(
         raise ValueError("compiled play condition is not satisfied")
     if state.zones.count(action_card_class, "hand") < 1:
         raise ValueError("played Trainer card is not in hand")
+    if any(
+        zone == RESOLVING_TRAINER_ZONE
+        for _card_class, zone, _count in state.zones.counts
+    ):
+        raise ValueError("state already contains a resolving Trainer")
 
     if profile.action_class == "Item":
         if not state.channels.item_play:
@@ -128,37 +154,46 @@ def execute_trainer_search_transaction(
         if next_budget is None:
             raise ValueError("Supporter action budget is exhausted")
 
-    discard_cost, used_conditional = _validated_branch(
+    fixed_discard_cost, used_conditional = _validated_branch(
         profile,
         demands,
         targets,
         search_action,
     )
 
+    working_zones = state.zones.move(
+        action_card_class,
+        "hand",
+        RESOLVING_TRAINER_ZONE,
+    )
     candidates = tuple(discard_candidates)
-    if any(
-        candidate.card_class == action_card_class
-        for candidate in candidates
-    ):
-        raise ValueError("played Trainer cannot be an 'other card' discard candidate")
 
-    if discard_cost == 0:
-        if discard_selection is not None and discard_selection.cost != 0:
-            raise ValueError("discard selection supplied for a zero-cost action")
-        working_zones = state.zones
-    else:
-        if discard_selection is None:
-            raise ValueError("exact discard selection is required")
-        if discard_selection.cost != discard_cost:
+    if profile.discards_entire_hand:
+        if candidates or discard_selection is not None:
             raise ValueError(
-                f"discard selection costs {discard_selection.cost}, "
-                f"expected {discard_cost}"
+                "whole-hand discard is derived from the resolving hand snapshot"
             )
-        working_zones = apply_discard_selection(
-            state.zones,
-            candidates,
-            discard_selection,
-        ).after
+        working_zones, discard_cost = _discard_entire_hand(working_zones)
+    else:
+        discard_cost = fixed_discard_cost
+        if discard_cost == 0:
+            if discard_selection is not None and discard_selection.cost != 0:
+                raise ValueError(
+                    "discard selection supplied for a zero-cost action"
+                )
+        else:
+            if discard_selection is None:
+                raise ValueError("exact discard selection is required")
+            if discard_selection.cost != discard_cost:
+                raise ValueError(
+                    f"discard selection costs {discard_selection.cost}, "
+                    f"expected {discard_cost}"
+                )
+            working_zones = apply_discard_selection(
+                working_zones,
+                candidates,
+                discard_selection,
+            ).after
 
     searched = apply_typed_search_action(
         working_zones,
@@ -168,7 +203,7 @@ def execute_trainer_search_transaction(
 
     after_zones = searched.move(
         action_card_class,
-        "hand",
+        RESOLVING_TRAINER_ZONE,
         "discard",
     )
 
