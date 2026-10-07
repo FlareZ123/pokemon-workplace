@@ -1,0 +1,25 @@
+name: Validate multi-target search signal
+
+on:
+  push:
+    paths:
+      - "tools/deck_search_target_signal.py"
+      - "tools/deck_search_shuffle_belief.py"
+      - "tools/observer_top_prize_beliefs.py"
+      - "results/multi_target_search_signal/**"
+      - ".github/workflows/validate-multi-target-search-signal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check multi-target search signaling
+        run: python results/multi_target_search_signal/reproduce.py
