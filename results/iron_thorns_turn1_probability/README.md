@@ -81,9 +81,28 @@ The first opponent mulligan therefore adds **3.875671983 percentage points** to 
 
 This connects the public setup process to ALS consistency in two ways: mulligans expose information and the bonus cards can materially improve the executing player's resource access.
 
+### Integrating the opponent's actual mulligan rate
+
+A fixed bonus-card count is not the match-level probability. If an opponent has (B) forced setup Basics in a 60-card deck, its per-attempt mulligan probability is
+
+`q(B) = C(60-B, 7) / C(60, 7)`.
+
+Repeated failed openings form a geometric distribution before the opponent finally keeps. The model now integrates the represented Volt Cyclone probability over that full distribution.
+
+For extremely long mulligan sequences, the player takes at most 46 bonus cards so one card remains for the mandatory first-turn draw. The probability mass of all longer sequences is collapsed onto that rational cap.
+
+| Opponent | Forced Basics | Mulligan probability per attempt | Expected mulligans before keep | Matchup-adjusted Volt Cyclone | Gain over zero bonus |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Aichi Iron Thorns mirror | 4 | 60.050037426% | 1.503131256 | **39.378236642%** | +5.369330498 pp |
+| Aichi runner-up Vileplume | 14 | 13.859068087% | 0.160888300 | **34.627066104%** | +0.618159961 pp |
+
+The same deck therefore has materially different first-turn consistency before considering any opponent card effects. Opponent setup composition alone changes the distribution of extra cards available to the ALS.
+
+This is a matchup-dependent setup effect: a low-Basic opponent can make the Iron Thorns line more consistent by mulliganing frequently, while a high-Basic opponent supplies much less bonus-card equity.
+
 ## What the result does not include
 
-The model intentionally omits Trainers' Mail top-four lookups, other indirect access routes, opponent mulligan bonus draws, and tactical reasons to prefer a different action even when Volt Cyclone is reachable.
+The model intentionally omits Trainers' Mail top-four lookups, other indirect access routes, opponent disruption after setup, and tactical reasons to prefer a different action even when Volt Cyclone is reachable.
 
 It also treats the goal as binary first-turn attack reachability. It does not value the post-attack Energy move, board position, disruption, or matchup context.
 
