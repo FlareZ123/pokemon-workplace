@@ -654,6 +654,18 @@ The repository therefore should not treat either controller as source-independen
 
 **Working synthesis:** rules provenance is part of simulator state when currently served authorities disagree. Timing authority, chosen effect order, and physical execution should remain separate layers.
 
+
+## 56. The full transient-reacquisition matrix survives conserved Trainer execution
+
+[reacquisition_transaction_matrix/](reacquisition_transaction_matrix/) cross-validates the provenance-aware temporal ledger against canonical Trainer transactions across all eight combinations of two endpoint profiles and four Guzma & Hala reacquisition modes.
+
+For the TM + Artazon + Jet endpoint, the exact minimum initial filler counts are 4 with no reacquisition and 3 when TM, Artazon, or both can be restored. When Tag Call is also independently required, the minima become 5, 4, 4, and 3 respectively. Every cell exactly matches the abstract temporal ledger while enforcing physical deck counts, exact discard selections, resolving-Trainer movement, one Supporter use, and card-class conservation.
+
+This extends the single-witness physical bridge into a complete small-family falsification test. It confirms the positive replacement cases and the negative boundaries where one live replacement channel is still insufficient because another payload must remain in hand.
+
+**Working synthesis:** transient discardability should be derived from live replacement channels plus endpoint obligations. A current copy may be discardable even while its class remains required, but only when a conserved continuation restores that class before the deadline.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
