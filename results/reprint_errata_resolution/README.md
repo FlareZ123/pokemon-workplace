@@ -15,12 +15,13 @@ They currently resolve as:
 - 106 exact current-semantic fingerprint candidates;
 - 42 historical-official reprint candidates;
 - 44 name-wide official-errata candidates;
+- 3 current-handbook semantic candidates;
 - 34 known non-equivalent prints;
-- 4,034 unresolved semantic-review prints.
+- 4,031 unresolved semantic-review prints.
 
-The positive high-confidence candidate set contains 192 prints.
+The positive high-confidence candidate set contains 195 prints.
 
-For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 2, the historical official bridge resolves 41, name-wide errata resolves 44, and the contextual Life Herb witness rules out 2. That gives 87 positive Trainer candidates and 2 known-negative Trainer prints before free-form semantic comparison.
+For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 2, the historical official bridge resolves 41, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. That gives 90 positive Trainer candidates and 2 known-negative Trainer prints before free-form semantic comparison.
 
 ## Evidence ladder
 
@@ -56,6 +57,14 @@ The affected historical counts are:
 | Sitrus Berry | 1 |
 | Super Rod | 1 |
 
+### Current-handbook semantic equivalence
+
+The Tournament Handbook explicitly identifies Copycat `ex7-83` and `sm7-127` as functionally identical despite their wording difference.
+
+The repository propagates that evidence only to historical Copycat prints with exactly the same current-semantic fingerprint as `ex7-83`. This admits `ecard1-138`, `ex15-73`, and `ex7-83`, each pointing to the certified legal target `sm7-127`.
+
+Other historical Copycat wording forms remain in semantic review.
+
 ### Known non-equivalence
 
 The resolver also records explicit negative evidence.
@@ -84,11 +93,12 @@ ReprintResolver.resolve() can return:
 2. direct_banned
 3. outside_disallowed
 4. known_non_equivalent
-5. exact_fingerprint_candidate
-6. historical_official_reprint_candidate
-7. official_errata_candidate
-8. semantic_review
-9. no_expanded_counterpart
+5. official_semantic_candidate
+6. exact_fingerprint_candidate
+7. historical_official_reprint_candidate
+8. official_errata_candidate
+9. semantic_review
+10. no_expanded_counterpart
 
 Positive candidate states remain separate so downstream code can choose its evidence threshold.
 
@@ -102,7 +112,7 @@ Positive candidate states remain separate so downstream code can choose its evid
 - base5-17 and base5-80 Rainbow Energy resolve as known non-equivalent.
 - ex5-90 and ex6-93 Life Herb resolve as known non-equivalent because the current format realizes their Pokémon-ex target exclusion.
 - old Special Darkness Energy and Metal Energy resolve as known non-equivalent to current Basic cards.
-- Copycat wording variants that lack exact or historical bridge evidence remain semantic-review cases.
+- ecard1-138, ex15-73, and ex7-83 Copycat resolve through the current-handbook semantic example; hgss1-90 and col1-77 remain semantic-review cases.
 
 ## Evidence
 
@@ -126,10 +136,12 @@ Related regressions:
 - results/tool_category_normalization/reproduce.py
 - results/historical_reprint_bridge/reproduce.py
 - results/reprint_negative_evidence/reproduce.py
+- results/reprint_positive_evidence/reproduce.py
+- results/reprint_divergence_predicates/reproduce.py
 
 ## Limitations
 
-The remaining 4,036 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
+The remaining 4,031 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
 
 Historical reprint evidence is intentionally restricted to no-reference entries with a Black & White-onward bridge already present by the source date. Reference-required entries need separate current-semantics analysis.
 
