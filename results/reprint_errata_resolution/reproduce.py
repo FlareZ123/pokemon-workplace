@@ -23,11 +23,11 @@ assert counts["historical_official_reprint_candidate_prints"] == 39
 assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
-assert counts["known_non_equivalent_prints"] == 50
-assert counts["known_non_equivalent_names"] == 12
+assert counts["known_non_equivalent_prints"] == 56
+assert counts["known_non_equivalent_names"] == 15
 assert counts["official_semantic_candidate_prints"] == 3
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 4008
+assert counts["semantic_review_prints"] == 4002
 assert counts["high_confidence_candidate_prints"] == 202
 assert counts["exact_fingerprint_trainer_candidate_prints"] == 12
 assert counts["trainer_same_name_review_pool_prints"] == 168
@@ -48,9 +48,12 @@ assert summary["known_non_equivalent_by_name"] == {
     "Metal Energy": 15,
     "Pokémon Breeder": 3,
     "Pokémon Center": 3,
+    "PokéNav": 3,
+    "Pokégear 3.0": 1,
     "Power Plant": 1,
     "Rainbow Energy": 2,
     "Revive": 1,
+    "Dusk Ball": 2,
 }
 
 assert summary["historical_official_candidates_by_name"] == {
@@ -93,6 +96,9 @@ assert resolver.resolve("base1-89").kind == "known_non_equivalent"
 assert resolver.resolve("base1-72").kind == "known_non_equivalent"
 assert resolver.resolve("ecard2-139").kind == "known_non_equivalent"
 assert resolver.resolve("ex5-91").kind == "known_non_equivalent"
+assert resolver.resolve("ex1-88").kind == "known_non_equivalent"
+assert resolver.resolve("hgss1-96").kind == "known_non_equivalent"
+assert resolver.resolve("dp2-110").kind == "known_non_equivalent"
 assert resolver.resolve("base1-95").kind == "historical_official_reprint_candidate"
 assert resolver.resolve("base1-96").kind == "historical_official_reprint_candidate"
 assert resolver.resolve("dp4-99").kind == "official_errata_candidate"
