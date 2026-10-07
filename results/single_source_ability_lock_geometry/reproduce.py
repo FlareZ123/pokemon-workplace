@@ -38,8 +38,10 @@ def _card(card_id: str) -> dict:
 def _verify_profiles() -> None:
     expected_names = {
         "Bide Barricade": "Bide Barricade",
+        "Emperor's Eyes": "Emperor's Eyes",
         "Neutralizing Gas": "Neutralizing Gas",
         "Lazy": "Lazy",
+        "Cursed Land": "Cursed Land",
         "Sticky Bind": "Sticky Bind",
         "Garbotoxin": "Garbotoxin",
     }
