@@ -16,6 +16,7 @@ from board_derived_action_permissions import evaluate_board_derived_action_permi
 from board_object_kernel import make_board, make_pokemon
 from source_scoped_action_restrictions import CardActionAttempt
 from source_scoped_restriction_activation import build_restriction_activation_profiles
+from target_bound_attack_restrictions import bind_defending_pokemon_window
 
 
 def _profile(profiles, card_id: str, needle: str):
@@ -44,6 +45,24 @@ def _window(profile, *, source_player="B", other_player="A"):
     return begin_turn(window, other_player)
 
 
+def _bound_window(profile, target_board):
+    restriction = materialize_attack_restriction(profile)
+    assert restriction is not None
+    window = create_attack_restriction_window(
+        profile,
+        restriction,
+        source_player="B",
+        other_player="A",
+    )
+    bound = bind_defending_pokemon_window(window, target_board)
+    return type(bound)(
+        window=begin_turn(bound.window, "A"),
+        target_object_id=bound.target_object_id,
+        target_card_name=bound.target_card_name,
+        target_effect_live=bound.target_effect_live,
+    )
+
+
 def main() -> None:
     profiles = build_restriction_activation_profiles(ROOT / "resources")
 
@@ -54,9 +73,8 @@ def main() -> None:
     base_lock = initialize_snapshot_lock_state(base_a, base_b)
     assert base_lock.resolved
 
-    ordinary_item = CardActionAttempt("item", "hand")
     baseline = evaluate_board_derived_action_permission(
-        ordinary_item,
+        CardActionAttempt("item", "hand"),
         player="A",
         player_board=base_a,
         opponent_board=base_b,
@@ -160,24 +178,44 @@ def main() -> None:
     )
     assert no_ability_pokemon.allowed
 
-    time_freeze = _profile(profiles, "xyp-XY77", "Time Freeze")
-    time_freeze_window = _window(time_freeze)
+    target = make_pokemon("target", "Target Basic", tags=("Basic",))
+    pivot = make_pokemon("pivot", "Pivot Basic", tags=("Basic",))
+    target_board = make_board(target, (pivot,))
+    target_lock = initialize_snapshot_lock_state(target_board, base_b)
+    assert target_lock.resolved
 
+    time_freeze = _profile(profiles, "xyp-XY77", "Time Freeze")
+    raw_time_freeze_window = _window(time_freeze)
+    try:
+        evaluate_board_derived_action_permission(
+            CardActionAttempt("pokemon", "hand", mode="evolve"),
+            player="A",
+            player_board=target_board,
+            opponent_board=base_b,
+            profiles=profiles,
+            lock_state=target_lock,
+            player_id="A",
+            opponent_id="B",
+            attack_windows=(raw_time_freeze_window,),
+            target_object_id="target",
+        )
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("unbound target-scoped attack window was accepted")
+
+    time_bound = _bound_window(time_freeze, target_board)
     defending_evolution = evaluate_board_derived_action_permission(
-        CardActionAttempt(
-            "pokemon",
-            "hand",
-            mode="evolve",
-            target_relation="defending_pokemon",
-        ),
+        CardActionAttempt("pokemon", "hand", mode="evolve"),
         player="A",
-        player_board=base_a,
+        player_board=target_board,
         opponent_board=base_b,
         profiles=profiles,
-        lock_state=base_lock,
+        lock_state=target_lock,
         player_id="A",
         opponent_id="B",
-        attack_windows=(time_freeze_window,),
+        target_bound_attack_windows=(time_bound,),
+        target_object_id="target",
     )
     assert not defending_evolution.allowed
     assert {row.card_id for row in defending_evolution.blocking_restrictions} == {
@@ -185,59 +223,47 @@ def main() -> None:
     }
 
     other_evolution = evaluate_board_derived_action_permission(
-        CardActionAttempt(
-            "pokemon",
-            "hand",
-            mode="evolve",
-            target_relation="other_pokemon",
-        ),
+        CardActionAttempt("pokemon", "hand", mode="evolve"),
         player="A",
-        player_board=base_a,
+        player_board=target_board,
         opponent_board=base_b,
         profiles=profiles,
-        lock_state=base_lock,
+        lock_state=target_lock,
         player_id="A",
         opponent_id="B",
-        attack_windows=(time_freeze_window,),
+        target_bound_attack_windows=(time_bound,),
+        target_object_id="pivot",
     )
     assert other_evolution.allowed
 
     basic_play = evaluate_board_derived_action_permission(
-        CardActionAttempt(
-            "pokemon",
-            "hand",
-            mode="play",
-            target_relation="defending_pokemon",
-        ),
+        CardActionAttempt("pokemon", "hand", mode="play"),
         player="A",
-        player_board=base_a,
+        player_board=target_board,
         opponent_board=base_b,
         profiles=profiles,
-        lock_state=base_lock,
+        lock_state=target_lock,
         player_id="A",
         opponent_id="B",
-        attack_windows=(time_freeze_window,),
+        target_bound_attack_windows=(time_bound,),
+        target_object_id="target",
     )
     assert basic_play.allowed
 
     cross_slicer = _profile(profiles, "xyp-XY75", "Cross Slicer")
-    cross_slicer_window = _window(cross_slicer)
+    cross_bound = _bound_window(cross_slicer, target_board)
 
     defending_energy = evaluate_board_derived_action_permission(
-        CardActionAttempt(
-            "basic_energy",
-            "hand",
-            mode="attach",
-            target_relation="defending_pokemon",
-        ),
+        CardActionAttempt("basic_energy", "hand", mode="attach"),
         player="A",
-        player_board=base_a,
+        player_board=target_board,
         opponent_board=base_b,
         profiles=profiles,
-        lock_state=base_lock,
+        lock_state=target_lock,
         player_id="A",
         opponent_id="B",
-        attack_windows=(cross_slicer_window,),
+        target_bound_attack_windows=(cross_bound,),
+        target_object_id="target",
     )
     assert not defending_energy.allowed
     assert {row.card_id for row in defending_energy.blocking_restrictions} == {
@@ -245,38 +271,30 @@ def main() -> None:
     }
 
     other_energy = evaluate_board_derived_action_permission(
-        CardActionAttempt(
-            "basic_energy",
-            "hand",
-            mode="attach",
-            target_relation="other_pokemon",
-        ),
+        CardActionAttempt("basic_energy", "hand", mode="attach"),
         player="A",
-        player_board=base_a,
+        player_board=target_board,
         opponent_board=base_b,
         profiles=profiles,
-        lock_state=base_lock,
+        lock_state=target_lock,
         player_id="A",
         opponent_id="B",
-        attack_windows=(cross_slicer_window,),
+        target_bound_attack_windows=(cross_bound,),
+        target_object_id="pivot",
     )
     assert other_energy.allowed
 
     discard_energy = evaluate_board_derived_action_permission(
-        CardActionAttempt(
-            "basic_energy",
-            "discard",
-            mode="attach",
-            target_relation="defending_pokemon",
-        ),
+        CardActionAttempt("basic_energy", "discard", mode="attach"),
         player="A",
-        player_board=base_a,
+        player_board=target_board,
         opponent_board=base_b,
         profiles=profiles,
-        lock_state=base_lock,
+        lock_state=target_lock,
         player_id="A",
         opponent_id="B",
-        attack_windows=(cross_slicer_window,),
+        target_bound_attack_windows=(cross_bound,),
+        target_object_id="target",
     )
     assert discard_energy.allowed
 
@@ -289,8 +307,9 @@ def main() -> None:
                 "potent_glare_blocks_ability_pokemon": True,
                 "team_rocket_exception_preserved": True,
                 "no_ability_pokemon_preserved": True,
-                "time_freeze_blocks_only_defending_evolution": True,
-                "cross_slicer_blocks_only_hand_energy_to_defending": True,
+                "unbound_target_scoped_window_rejected": True,
+                "time_freeze_uses_bound_target_identity": True,
+                "cross_slicer_uses_bound_target_identity": True,
                 "direct_predicate_matches_hybrid_projection": True,
             },
             indent=2,
