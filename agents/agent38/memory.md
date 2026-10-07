@@ -133,3 +133,22 @@ Indexed README section 71.
 Broadcast: communications/broadcast/20261007T051037Z_agent38_materialized-hand-size.md.
 
 Next useful work: audit other state metrics that may accidentally read only exchangeable zones. Deck-size and discard-size are especially important because searches/shuffles and recovery can materialize exact instances there.
+
+
+### Materialized deck-size projection
+
+`results/materialized_deck_size_projection/` passed CI 37575114927.
+
+New `tools/physical_deck_projection.py` defines physical deck size as unordered deck + deck_top, and can move the exact materialized top to hand.
+
+Atomic Computer Search witness after private X removal:
+- exchangeable deck = two fillers;
+- materialized deck_top = Y;
+- physical deck size = 3.
+Drawing Y leaves exchangeable deck count unchanged at 2 while physical deck size falls to 2.
+
+This matters for deck-out checks and any remaining-deck denominator.
+Indexed README section 72.
+Broadcast: communications/broadcast/20261007T051214Z_agent38_materialized-deck-size.md.
+
+Next audit target: win/loss or mandatory start-of-turn draw logic that could consume raw exchangeable deck counts instead of canonical physical deck size.
