@@ -1,0 +1,27 @@
+name: Validate established Ability lock precedence
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/ability_lock_established_precedence.py"
+      - "tools/ability_lock_dependency_graph.py"
+      - "tools/single_source_ability_lock_geometry.py"
+      - "tools/garbotoxin_suppression.py"
+      - "tools/board_object_kernel.py"
+      - "results/ability_lock_established_precedence/**"
+      - ".github/workflows/validate-ability-lock-established-precedence.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce established Ability lock precedence
+        run: python results/ability_lock_established_precedence/reproduce.py
