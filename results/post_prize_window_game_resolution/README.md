@@ -56,6 +56,14 @@ After the pending queue is empty, it calls the existing rulebook-table resolver 
 
 This removes the need for a caller to guess whether E-31 board mutations should be included in the terminal snapshot.
 
+## In-flight Prize-origin Items keep the window open
+
+A Prize-origin Item such as Dream Ball temporarily leaves `prize_pending` while its Item body is resolving. The shared before-hand executor represents that interval with the material zone `resolving_trainer`.
+
+That interval still belongs to E-31 timing. Dream Ball can put a Pokémon directly onto the Bench before it is discarded, so terminal resolution cannot open merely because the `prize_pending` queue has become empty.
+
+`unresolved_prize_window_count()` therefore counts both pending Prize cards and Prize-origin Trainers still in `resolving_trainer`. The regression creates a resolving Dream Ball with no remaining `prize_pending` cards and verifies that the terminal gate remains closed.
+
 ## Regression
 
 The regression constructs the official geometry with exact physical card instances.
