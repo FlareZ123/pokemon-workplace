@@ -1,0 +1,25 @@
+name: Validate typed search zone transition
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/search_zone_transition.py"
+      - "tools/multicopy_zone_state.py"
+      - "tools/typed_search_target_allocator.py"
+      - "results/typed_search_zone_transition/**"
+      - ".github/workflows/validate-typed-search-zone-transition.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce typed search zone transition
+        run: python results/typed_search_zone_transition/reproduce.py
