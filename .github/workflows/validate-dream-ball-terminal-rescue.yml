@@ -1,0 +1,25 @@
+name: Validate Dream Ball terminal rescue
+
+on:
+  push:
+    paths:
+      - "tools/dream_ball_typed_bench_execution.py"
+      - "tools/post_prize_window_game_resolution.py"
+      - "tools/promotion_pending_conservation.py"
+      - "results/dream_ball_terminal_rescue/**"
+      - ".github/workflows/validate-dream-ball-terminal-rescue.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Dream Ball terminal rescue
+        run: python results/dream_ball_terminal_rescue/reproduce.py
