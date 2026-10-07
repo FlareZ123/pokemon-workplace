@@ -1,0 +1,25 @@
+name: Validate E-31 Bench-slot ordering
+
+on:
+  push:
+    paths:
+      - "tools/prize_pending_batch_order.py"
+      - "tools/prize_before_hand_bench_entry.py"
+      - "tools/dream_ball_typed_bench_execution.py"
+      - "results/e31_bench_slot_ordering/**"
+      - ".github/workflows/validate-e31-bench-slot-ordering.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check E-31 Bench-slot ordering
+        run: python results/e31_bench_slot_ordering/reproduce.py
