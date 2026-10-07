@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from board_position_state import BoardPokemon, PokemonCard, make_state
+from build_expanded_legality_baseline import classify_effective_legality
 from cross_player_knockout_resolution import (
     choose_promotion,
     resolve_cross_player_knock_out,
@@ -114,8 +115,8 @@ def make_side(
 def main() -> None:
     gastly = load_card("sm10", "sm10-67")
     gengar = load_card("me55", "me55-90")
-    assert gastly["legalities"]["expanded"] == "Legal"
-    assert gengar["legalities"]["expanded"] == "Legal"
+    assert classify_effective_legality(gastly)[0] == "Legal"
+    assert classify_effective_legality(gengar)[0] == "Legal"
 
     swelling = next(
         ability for ability in gastly["abilities"]
