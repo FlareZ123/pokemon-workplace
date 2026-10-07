@@ -550,6 +550,14 @@ Because Power of Alchemy removes Abilities from Basic Pokémon in play, hand, an
 
 **Working synthesis:** direct lock establishment can carry large self-denial costs. Lock value should be evaluated against the controller's remaining Ability-dependent support, not only the opponent's engine.
 
+## 46. Owner-selected E-31 ordering can allocate the final Bench slot
+
+[e31_bench_slot_ordering/](e31_bench_slot_ordering/) composes the official Chansey + Dream Ball sibling-order choice with one remaining Bench slot.
+
+Choosing Chansey first puts Chansey into play, fills the Bench, and leaves Dream Ball to enter hand with its Vileplume target still in deck. Choosing Dream Ball first puts Vileplume directly into the final slot, discards Dream Ball after resolution, and forces Chansey to enter hand because Lucky Bonus is no longer usable. Both branches conserve the same physical cards.
+
+**Working synthesis:** simultaneous Prize-effect order is an information-aware resource-allocation decision. Arbitrary queue order can produce the wrong legal board when sibling effects compete for Bench capacity or another constrained channel.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
