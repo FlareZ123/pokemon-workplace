@@ -1,0 +1,44 @@
+{
+  "gladion_core_800k": {
+    "trials": 800000,
+    "seeds": [20261007, 20261008, 20261009, 20261010, 20261011, 20261012, 20261013, 20261014],
+    "baseline_successes": 565020,
+    "gladion_successes": 567414,
+    "added_successes": 2394,
+    "baseline_probability": 0.706275,
+    "gladion_probability": 0.7092675,
+    "gain_probability": 0.0029925,
+    "gain_95_normal_half_width": 0.0001196953750981528,
+    "recovered_card_counts": {
+      "Technical Machine: Evolution": 903,
+      "Jet Energy": 954,
+      "Artazon": 225,
+      "Bunnelby": 218,
+      "Fan Rotom": 94
+    },
+    "stellar_gladion_added_successes": 105
+  },
+  "prize_supporters_core_500k": {
+    "trials": 500000,
+    "seeds": [20261007, 20261008, 20261009, 20261010, 20261011],
+    "baseline_successes": 353167,
+    "gladion_successes": 354649,
+    "peonia_successes": 354172,
+    "both_successes": 355559,
+    "gladion_added": 1482,
+    "peonia_added": 1005,
+    "both_added": 2392,
+    "overlap_added": 95
+  },
+  "gladion_information_400k": {
+    "trials": 400000,
+    "seeds": [20261007, 20261008, 20261009, 20261010],
+    "baseline_successes": 282446,
+    "tag_call_k1_successes": 282495,
+    "tag_or_fan_k1_successes": 282737,
+    "state_aware_successes": 283640,
+    "tag_call_added": 49,
+    "tag_or_fan_added": 291,
+    "state_aware_added": 1194
+  }
+}
