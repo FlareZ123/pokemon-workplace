@@ -113,6 +113,8 @@ def main() -> None:
     }
     assert cost2 == {
         frozenset({"energy-dce"}),
+        frozenset({"energy-dce", "energy-lightning"}),
+        frozenset({"energy-dce", "energy-fire"}),
         frozenset({"energy-lightning", "energy-fire"}),
     }
 
