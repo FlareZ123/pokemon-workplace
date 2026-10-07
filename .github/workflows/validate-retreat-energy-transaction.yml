@@ -1,0 +1,31 @@
+name: Validate Retreat Energy transaction
+
+on:
+  push:
+    paths:
+      - "tools/retreat_energy_transaction.py"
+      - "tools/board_object_kernel.py"
+      - "tools/canonical_turn_budget_owner.py"
+      - "tools/energy_board_conservation.py"
+      - "tools/retreat_destination_conflicts.py"
+      - "results/retreat_energy_transaction/**"
+      - ".github/workflows/validate-retreat-energy-transaction.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Retreat Energy transaction
+        run: |
+          python results/retreat_energy_transaction/reproduce.py
+          python results/canonical_turn_budget_owner/reproduce.py
+          python results/energy_board_conservation/reproduce.py
+          python results/retreat_destination_conflicts/reproduce.py
