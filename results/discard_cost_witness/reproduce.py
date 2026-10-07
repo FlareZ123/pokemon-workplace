@@ -96,7 +96,7 @@ def main() -> None:
     stale_selection = next(
         selection
         for selection in selections
-        if selection.counts == (1, 1, 1, 0)
+        if selection.counts == (1, 1, 0, 1)
     )
     stale_rejected = False
     try:
