@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from observer_top_prize_beliefs import ObserverTopPrizeBeliefs
 from pending_prize_batch_identity_belief import (
     ObserverPendingPrizeBatchBeliefs,
+    prepend_additional_pending_for_observers,
     project_completed_batch,
     resolve_pending_instance_visibility,
     stage_pending_prize_batch_for_observers,
@@ -18,6 +19,7 @@ from prize_pending_take import (
     PendingPrizeResolution,
     PrizePendingTakeState,
     resolve_next_pending_prize,
+    stage_additional_prize_front,
     stage_prize_takes,
 )
 from prize_position_belief import PrizeGroup
@@ -36,11 +38,20 @@ class PrizeBatchObserverState:
     group_by_card_class: Mapping[str, PrizeGroup]
 
     def __post_init__(self) -> None:
-        if tuple(self.order.unresolved_batch_ids) != tuple(
-            self.beliefs.pending_instance_ids
+        physical_pending_ids = tuple(
+            row.instance_id
+            for row in self.order.state.pending
+        )
+        if physical_pending_ids != self.beliefs.pending_instance_ids:
+            raise ValueError(
+                "physical pending queue must align with latent belief queue"
+            )
+        if any(
+            instance_id not in physical_pending_ids
+            for instance_id in self.order.unresolved_batch_ids
         ):
             raise ValueError(
-                "physical unresolved batch must align with latent belief batch"
+                "unresolved sibling batch must remain inside pending queue"
             )
         self.beliefs.belief_for(self.actor_id)
 
@@ -192,3 +203,95 @@ def resolve_batch_instance_destination(
         next_state,
         next_beliefs,
     )
+
+def prepend_additional_prize_with_latent_observers(
+    state: PrizeBatchObserverState,
+    *,
+    position: int,
+) -> PrizeBatchObserverState:
+    """Prepend a nested additional Prize while preserving sibling barriers."""
+
+    physical = state.order.state
+    if not 0 <= position < len(physical.physical.prize_instance_ids):
+        raise IndexError("Prize position out of range")
+    if not state.order.unresolved_batch_ids:
+        raise ValueError("no unresolved sibling batch remains")
+
+    instance_id = physical.physical.prize_instance_ids[position]
+    card_class = physical.physical.ledger.instance(instance_id).card_class
+    observed_group = state.group_by_card_class.get(card_class)
+    observer_ids = tuple(
+        observer_id
+        for observer_id, _belief in state.beliefs.beliefs
+    )
+    if physical.physical.face_up[position]:
+        visible = {
+            observer_id: observed_group
+            for observer_id in observer_ids
+        }
+    else:
+        visible = {state.actor_id: observed_group}
+
+    next_physical = stage_additional_prize_front(
+        physical,
+        position=position,
+    )
+    next_beliefs = prepend_additional_pending_for_observers(
+        state.beliefs,
+        position=position,
+        instance_id=instance_id,
+        visible_groups=visible,
+    )
+    next_order = state.order.rebind(next_physical)
+    return PrizeBatchObserverState(
+        next_order,
+        next_beliefs,
+        state.actor_id,
+        state.group_by_card_class,
+    )
+
+
+def resolve_nested_queue_head_destination(
+    state: PrizeBatchObserverState,
+    *,
+    destination_zone: str,
+) -> PrizeBatchObserverState:
+    """Resolve a nested queue-head Prize before returning to sibling choice."""
+
+    if not state.order.state.pending:
+        raise ValueError("no pending Prize card remains")
+    instance_id = state.order.state.pending[0].instance_id
+    if instance_id in state.order.unresolved_batch_ids:
+        raise ValueError(
+            "queue head is an original sibling; use sibling resolution"
+        )
+
+    instance = state.order.state.physical.ledger.instance(instance_id)
+    observed_group = state.group_by_card_class.get(instance.card_class)
+    observer_ids = tuple(
+        observer_id
+        for observer_id, _belief in state.beliefs.beliefs
+    )
+    visible = destination_visibility(
+        observer_ids,
+        actor_id=state.actor_id,
+        destination_zone=destination_zone,
+        observed_group=observed_group,
+    )
+    physical_resolution = resolve_next_pending_prize(
+        state.order.state,
+        destination_zone=destination_zone,
+    )
+    next_beliefs = resolve_pending_instance_visibility(
+        state.beliefs,
+        instance_id=instance_id,
+        visible_groups=visible,
+    )
+    next_order = state.order.rebind(physical_resolution.after)
+    return PrizeBatchObserverState(
+        next_order,
+        next_beliefs,
+        state.actor_id,
+        state.group_by_card_class,
+    )
+
