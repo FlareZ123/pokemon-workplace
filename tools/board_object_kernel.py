@@ -51,6 +51,8 @@ class ToolAttachment:
 class BoardPokemon:
     object_id: str
     card_name: str
+    print_id: str | None = None
+    abilities_enabled: bool = True
     tags: frozenset[str] = frozenset()
     energy: tuple[EnergyAttachment, ...] = ()
     tool: ToolAttachment | None = None
@@ -115,6 +117,8 @@ def make_pokemon(
     object_id: str,
     card_name: str,
     *,
+    print_id: str | None = None,
+    abilities_enabled: bool = True,
     tags: Iterable[str] = (),
     energy: tuple[EnergyAttachment, ...] = (),
     tool: ToolAttachment | None = None,
@@ -128,6 +132,8 @@ def make_pokemon(
     return BoardPokemon(
         object_id=object_id,
         card_name=card_name,
+        print_id=print_id,
+        abilities_enabled=abilities_enabled,
         tags=frozenset(tags),
         energy=energy,
         tool=tool,
