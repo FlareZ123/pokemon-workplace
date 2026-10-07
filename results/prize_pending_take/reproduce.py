@@ -14,6 +14,8 @@ from observer_top_prize_beliefs import (
     resolve_optional_top_prize_swap,
 )
 from prize_pending_take import (
+    PendingPrize,
+    PrizePendingTakeState,
     resolve_next_pending_prize,
     stage_additional_prize_front,
     stage_prize_takes,
