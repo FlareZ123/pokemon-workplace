@@ -39,8 +39,8 @@ def main() -> None:
     projection = project_source_scoped_permissions(rows)
 
     assert len(rows) == 106
-    assert len(projection.exact_restrictions) == 94
-    assert len(projection.residual_restrictions) == 12
+    assert len(projection.exact_restrictions) == 92
+    assert len(projection.residual_restrictions) == 14
 
     reason_counts = Counter(
         reason
@@ -53,6 +53,7 @@ def main() -> None:
         "ace_spec": 2,
         "ability_pokemon_play": 2,
         "energy_attach_to_target": 2,
+        "exclusive_choice": 2,
         "card_exception": 1,
     }
 
