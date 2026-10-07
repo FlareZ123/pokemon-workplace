@@ -61,9 +61,9 @@ def make_physical():
     ledger = IdentityLedger(
         ZoneCountState(),
         (
-            CardInstance("top-a", "A-class", "A", "deck_top"),
-            CardInstance("prize-x", "X-class", "X", "prize"),
             CardInstance("prize-b", "B-class", "B", "prize"),
+            CardInstance("prize-x", "X-class", "X", "prize"),
+            CardInstance("top-a", "A-class", "A", "deck_top"),
         ),
     )
     return ledger, TopPrizePhysicalState(
