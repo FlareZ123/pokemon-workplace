@@ -1,0 +1,21 @@
+name: Validate Aichi regional draw engine
+
+on:
+  push:
+    paths:
+      - "tools/aichi_regional_engine_access.py"
+      - "tools/aichi_setup_inference.py"
+      - "results/aichi_regional_draw_engine/reproduce.py"
+      - ".github/workflows/validate-aichi-regional-draw-engine.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce exact access result
+        run: python results/aichi_regional_draw_engine/reproduce.py
