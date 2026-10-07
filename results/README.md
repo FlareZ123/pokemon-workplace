@@ -943,3 +943,14 @@ Several larger questions remain promising:
 ## Methodological caution
 
 Counts and probabilities in this map are summaries of their linked result directories. Consult the detailed result before reusing a number or assumption. Simulations and abstractions are evidence about the modeled state space, not automatic claims about full-match win rate or universal deck strength.
+
+
+## 67. Position-changing effects need chooser and target geometry
+
+[position_effect_profile_compiler/](position_effect_profile_compiler/) compiles a conservative literal family of effectively legal switch, forced-switch, and gust text into executable position-effect profiles. The bundled English snapshot yields **133 print-level profiles across 83 names**: 17 Trainer self-switch profiles, 2 Trainer opponent-chosen forced switches, 18 Trainer targeted gusts, 71 attack forced switches, and 25 attack targeted gusts.
+
+The profile preserves action class, attack metadata, simple Trainer play conditions, chooser authority, and the physical object receiving the effect. The executor then delegates the actual Active/Bench swap to the conserved board-object kernel.
+
+The rulebook-backed distinction is strategically material. An attack that switches out the opponent's Active applies its switching effect to that old Active, while an attack that gusts a selected Benched Pokémon applies its effect to the selected Bench target. The regression demonstrates that an effect-immunity overlay can therefore block Bayleef's Push Down and Clefairy's Follow Me in opposite geometries even though both successful transitions are board swaps.
+
+**Working synthesis:** position access is not just a reachability edge. Opponent-chosen force-out and actor-chosen gust expose different reachable state sets and different immunity targets; planners should preserve chooser authority and effect target before treating two movement effects as substitutable.
