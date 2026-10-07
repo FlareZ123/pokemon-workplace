@@ -309,6 +309,8 @@ The regression materializes a Bulbasaur/Ivysaur evolution stack, Muscle Band, an
 
 [stack_zone_exit_conservation/](stack_zone_exit_conservation/) extends the same conservation boundary to ordinary hand/deck exits. The full evolution stack follows the Pokémon, while attached cards use a separately resolved destination. This distinguishes Scoop Up Cyclone style hand routing, Cassius style deck routing, and AZ style split routing without creating another board authority. The adapter can defer dematerialization when an enclosing effect still needs exact moved-card identity.
 
+[pokemon_zone_exit_catalog/](pokemon_zone_exit_catalog/) supplies a conservative legality-aware card-text island for those destination fields. On the current bundled snapshot it finds 146 effectively legal print effects across 73 names: 85 deck/deck routes, 49 hand/hand routes, and 12 hand/discard routes. It uses the repository's effective paper Expanded legality layer, so the stale database metadata on officially banned Apple Drop Flapple printings does not leak into the catalog.
+
 
 ## 20. Energy movement preserves physical identity until an attachment relation fails
 
