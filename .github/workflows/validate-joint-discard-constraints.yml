@@ -1,0 +1,23 @@
+name: Validate joint discard constraints
+
+on:
+  push:
+    paths:
+      - "tools/discard_cost_witness.py"
+      - "tools/joint_discard_constraints.py"
+      - "results/joint_discard_constraints/**"
+      - ".github/workflows/validate-joint-discard-constraints.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/joint_discard_constraints/reproduce.py
