@@ -136,6 +136,8 @@ def dark_asset_search_snapshot(
     prize_pool_size = draw_pool_size - 1
     prize_denominator = _choose(prize_pool_size, prize_count)
     post_search_deck_size = deck_size - opening_hand_size - 1 - prize_count - 1
+    quick_dark_draws = min(post_search_deck_size, max(0, 8 - opening_hand_size))
+    ultra_dark_draws = min(post_search_deck_size, max(0, 9 - opening_hand_size))
 
     for opening in _bounded_compositions(opening_hand_size, sizes):
         if opening[5] + opening[8] + opening[9] == 0:
@@ -233,13 +235,13 @@ def dark_asset_search_snapshot(
                                     quick_success = _hit_probability(
                                         post_search_deck_size,
                                         int(target_in_deck) + fss_in_deck,
-                                        1,
+                                        quick_dark_draws,
                                     )
                                 elif target_prized and gladion_in_deck > 0:
                                     quick_success = _hit_probability(
                                         post_search_deck_size,
                                         gladion_in_deck + fss_in_deck,
-                                        1,
+                                        quick_dark_draws,
                                     )
 
                             ultra_success = 0.0
@@ -247,7 +249,7 @@ def dark_asset_search_snapshot(
                                 ultra_success = _hit_probability(
                                     post_search_deck_size,
                                     gladion_in_deck + fss_in_deck,
-                                    2,
+                                    ultra_dark_draws,
                                 )
 
                             if sequenced:
