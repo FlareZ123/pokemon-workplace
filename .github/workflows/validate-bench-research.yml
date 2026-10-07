@@ -24,3 +24,5 @@ jobs:
         run: python results/quick_ball_lele_bench_access/reproduce.py
       - name: Validate capacity lock interactions
         run: python results/bench_capacity_lock_interactions/reproduce.py
+      - name: Validate Bench refresh lines
+        run: python results/bench_refresh_lines/reproduce.py
