@@ -25,11 +25,11 @@ The current bundled snapshot contains:
 
 | Quantity | Count |
 | --- | ---: |
-| Legal multi-unit Energy print instances | 30 |
-| Distinct Energy names | 13 |
-| Distinct name / text / maximum-unit signatures | 14 |
+| Legal multi-unit Energy print instances | 31 |
+| Distinct Energy names | 14 |
+| Distinct name / text / maximum-unit signatures | 15 |
 
-The 13 names are:
+The 14 names are:
 
 - Counter Energy;
 - Double Aqua Energy;
@@ -41,7 +41,7 @@ The 13 names are:
 - Neo Upper Energy;
 - Rapid Strike Energy;
 - Reversal Energy;
-- Super Boost Energy Prism Star;
+- Super Boost Energy ◇;
 - Team Rocket's Energy;
 - Triple Acceleration Energy;
 - Twin Energy.
@@ -105,7 +105,7 @@ A future Apex Dragon burden model therefore needs Energy-card objects rather tha
 
 The Energy inventory recognizes three text families:
 
-- `provides only N Energy at a time`;
+- `provides N Energy at a time`, including the `provides only N Energy at a time` form;
 - `provides N in any combination`;
 - repeated type symbols represented in the database as strings such as `ColorlessColorless Energy`.
 
