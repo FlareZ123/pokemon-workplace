@@ -310,3 +310,76 @@ def project_completed_batch(
             )
         )
     return ObserverTopPrizeBeliefs(tuple(rows))
+
+def prepend_additional_pending_for_observers(
+    state: ObserverPendingPrizeBatchBeliefs,
+    *,
+    position: int,
+    instance_id: str,
+    visible_groups: Mapping[str, PrizeGroup],
+) -> ObserverPendingPrizeBatchBeliefs:
+    """Take one additional Prize and prepend its latent identity to the queue."""
+
+    if instance_id in state.pending_instance_ids:
+        raise ValueError("additional pending instance ID must be new")
+
+    observer_ids = {observer_id for observer_id, _belief in state.beliefs}
+    if not set(visible_groups) <= observer_ids:
+        raise ValueError("visible_groups contains an unknown observer")
+
+    rows = []
+    for observer_id, belief in state.beliefs:
+        if not 0 <= position < len(belief.face_up):
+            raise IndexError("Prize position out of range")
+
+        observed = visible_groups.get(observer_id, _UNOBSERVED)
+        output: dict[
+            tuple[
+                PrizeGroup,
+                tuple[PrizeGroup, ...],
+                tuple[PrizeGroup, ...],
+            ],
+            float,
+        ] = defaultdict(float)
+        evidence = 0.0
+
+        for (top_group, prizes, pending), probability in belief.masses:
+            additional_group = prizes[position]
+            if observed is not _UNOBSERVED and additional_group != observed:
+                continue
+            remaining = prizes[:position] + prizes[position + 1 :]
+            next_pending = (additional_group,) + pending
+            output[(top_group, remaining, next_pending)] += probability
+            evidence += probability
+
+        if evidence == 0.0:
+            raise ValueError("additional Prize observation has zero probability")
+
+        masses = tuple(
+            (hidden_state, probability / evidence)
+            for hidden_state, probability in sorted(
+                output.items(),
+                key=lambda row: repr(row[0]),
+            )
+        )
+        next_face_up = (
+            belief.face_up[:position]
+            + belief.face_up[position + 1 :]
+        )
+        rows.append(
+            (
+                observer_id,
+                PendingPrizeBatchJointBelief(
+                    belief.groups,
+                    next_face_up,
+                    belief.pending_count + 1,
+                    masses,
+                ),
+            )
+        )
+
+    return ObserverPendingPrizeBatchBeliefs(
+        (instance_id,) + state.pending_instance_ids,
+        tuple(rows),
+    )
+
