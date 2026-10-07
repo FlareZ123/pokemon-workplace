@@ -1,0 +1,26 @@
+name: Validate observer-aware additional Prize staging
+
+on:
+  push:
+    paths:
+      - "tools/prize_pending_observer_extra.py"
+      - "tools/prize_pending_take.py"
+      - "tools/prize_joint_position_removal.py"
+      - "tools/top_prize_physical_bridge.py"
+      - "results/prize_pending_observer_extra/**"
+      - ".github/workflows/validate-prize-pending-observer-extra.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check observer-aware additional Prize staging
+        run: python results/prize_pending_observer_extra/reproduce.py
