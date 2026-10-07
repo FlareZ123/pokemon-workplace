@@ -12,40 +12,41 @@ def pct(value: float) -> str:
     return f"{100 * value:.6f}%"
 
 
-def _quick_dark_success(deck: set[str], target_prized: bool) -> float:
+def _quick_dark_success(deck: set[str], target_prized: bool, draws: int) -> float:
     crobats = sorted(card for card in deck if card.startswith("crobat-"))
     if not crobats:
         return 0.0
     next_deck = set(deck)
     next_deck.remove(crobats[0])
     gladion_in_deck = sum(card.startswith("gladion-") for card in next_deck)
+    samples = list(combinations(next_deck, min(draws, len(next_deck))))
     wins = 0
-    for drawn in next_deck:
+    for sample in samples:
         if target_prized:
-            success = drawn.startswith("gladion-") or (
-                drawn == "forest-seal" and gladion_in_deck > 0
+            success = any(card.startswith("gladion-") for card in sample) or (
+                "forest-seal" in sample and gladion_in_deck > 0
             )
         else:
-            success = drawn in {"target", "forest-seal"}
+            success = "target" in sample or "forest-seal" in sample
         wins += success
-    return wins / len(next_deck)
+    return wins / len(samples)
 
 
-def _ultra_dark_success(deck: set[str]) -> float:
+def _ultra_dark_success(deck: set[str], draws: int) -> float:
     crobats = sorted(card for card in deck if card.startswith("crobat-"))
     if not crobats:
         return 0.0
     next_deck = set(deck)
     next_deck.remove(crobats[0])
     gladion_in_deck = sum(card.startswith("gladion-") for card in next_deck)
-    draws = list(combinations(next_deck, 2))
+    samples = list(combinations(next_deck, min(draws, len(next_deck))))
     wins = 0
-    for pair in draws:
-        success = any(card.startswith("gladion-") for card in pair) or (
-            "forest-seal" in pair and gladion_in_deck > 0
+    for sample in samples:
+        success = any(card.startswith("gladion-") for card in sample) or (
+            "forest-seal" in sample and gladion_in_deck > 0
         )
         wins += success
-    return wins / len(draws)
+    return wins / len(samples)
 
 
 def labeled_small_case() -> tuple[float, dict[str, float]]:
@@ -137,8 +138,8 @@ def labeled_small_case() -> tuple[float, dict[str, float]]:
 
                 quick_candidate = quick_in_hand and quick_payable and crobat_in_deck
                 ultra_candidate = target_prized and ultra_in_hand and two_payable and crobat_in_deck
-                qp = _quick_dark_success(deck, target_prized) if quick_candidate else 0.0
-                up = _ultra_dark_success(deck) if ultra_candidate and gladion_in_deck > 0 else 0.0
+                qp = _quick_dark_success(deck, target_prized, 5) if quick_candidate else 0.0
+                up = _ultra_dark_success(deck, 6) if ultra_candidate and gladion_in_deck > 0 else 0.0
 
                 if sequenced:
                     dark = 1.0
