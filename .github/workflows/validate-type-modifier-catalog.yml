@@ -1,0 +1,22 @@
+name: Validate type modifier catalog
+
+on:
+  push:
+    paths:
+      - "tools/type_modifier_catalog.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/type_modifier_catalog/**"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - ".github/workflows/validate-type-modifier-catalog.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/type_modifier_catalog/reproduce.py
