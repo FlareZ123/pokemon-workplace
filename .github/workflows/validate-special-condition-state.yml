@@ -10,6 +10,8 @@ on:
       - "tools/timed_special_conditions.py"
       - "tools/condition_turn_sequence.py"
       - "tools/condition_coin_models.py"
+      - "tools/checkup_text_audit.py"
+      - "tools/typed_checkup_execution.py"
       - "tools/turn_sequence_kernel.py"
       - "tools/board_object_kernel.py"
       - "tools/effect_order_authority.py"
@@ -20,6 +22,8 @@ on:
       - "results/timed_special_conditions/**"
       - "results/condition_turn_sequence/**"
       - "results/condition_recovery_probability/**"
+      - "results/checkup_text_vocabulary/**"
+      - "results/typed_checkup_execution/**"
       - ".github/workflows/validate-special-condition-state.yml"
   workflow_dispatch:
 
@@ -48,3 +52,7 @@ jobs:
         run: python results/condition_turn_sequence/reproduce.py
       - name: Reproduce exact condition recovery probabilities
         run: python results/condition_recovery_probability/reproduce.py
+      - name: Reproduce Checkup vocabulary audit
+        run: python results/checkup_text_vocabulary/reproduce.py
+      - name: Reproduce typed Checkup execution
+        run: python results/typed_checkup_execution/reproduce.py
