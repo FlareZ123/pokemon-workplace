@@ -1,0 +1,26 @@
+name: Validate dynamic Special Energy unit counts
+
+on:
+  push:
+    paths:
+      - "tools/special_energy_unit_count_catalog.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - "results/special_energy_dynamic_unit_counts/**"
+      - ".github/workflows/validate-special-energy-dynamic-unit-counts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check dynamic Special Energy unit-count catalog
+        run: python results/special_energy_dynamic_unit_counts/reproduce.py
