@@ -18,7 +18,7 @@ import re
 from typing import Any
 
 from build_expanded_legality_baseline import classify_effective_legality
-from trainer_search_profile_compiler import SearchOutput
+from trainer_search_profile_compiler import CompiledTrainerSearchProfile, SearchOutput
 
 
 @dataclass(frozen=True)
@@ -54,6 +54,26 @@ _DIRECT_BENCH_RE = re.compile(
     r"(?:Then, shuffle your deck\.|Shuffle your deck afterward\.)$",
     re.IGNORECASE,
 )
+
+
+def project_direct_bench_trainer_profile(
+    profile: DirectBenchSearchProfile,
+) -> CompiledTrainerSearchProfile:
+    """Project a direct-Bench Trainer onto the shared search transaction schema.
+
+    The shared profile deliberately does not encode destination. Callers must
+    pass the direct-Bench staging destination explicitly to the transaction.
+    """
+
+    if profile.source_kind != "trainer":
+        raise ValueError("only Trainer direct-Bench profiles can be projected")
+    return CompiledTrainerSearchProfile(
+        card_id=profile.card_id,
+        name=profile.name,
+        action_class=profile.action_class,
+        base_outputs=(profile.output,),
+        play_condition=profile.play_condition,
+    )
 
 
 def _load_json(path: Path) -> Any:
