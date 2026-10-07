@@ -1,0 +1,26 @@
+name: Validate zone-exit identity release
+
+on:
+  push:
+    paths:
+      - "tools/zone_exit_identity_release.py"
+      - "tools/identity_liveness.py"
+      - "tools/stack_zone_exit_conservation.py"
+      - "tools/stack_knockout_conservation.py"
+      - "results/zone_exit_identity_release/**"
+      - ".github/workflows/validate-zone-exit-identity-release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check preserved zone-exit identity release
+        run: python results/zone_exit_identity_release/reproduce.py
