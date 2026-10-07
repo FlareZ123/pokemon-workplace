@@ -1,0 +1,22 @@
+name: Validate Iron Thorns regional recovery
+
+on:
+  push:
+    paths:
+      - "tools/iron_thorns_regional_recovery_package.py"
+      - "tools/iron_thorns_named_line_probability.py"
+      - "tools/aichi_setup_inference.py"
+      - "results/iron_thorns_regional_recovery_package/reproduce.py"
+      - ".github/workflows/validate-iron-thorns-regional-recovery.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce regional recovery package
+        run: python results/iron_thorns_regional_recovery_package/reproduce.py
