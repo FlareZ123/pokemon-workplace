@@ -275,3 +275,180 @@ def two_channel_connector_access(
         both_missing_connector_route=both_missing_route,
         both_missing_payable_route=both_missing_payable,
     )
+
+
+def two_channel_connector_access_collapsed(
+    deck_size: int,
+    prize_count: int,
+    *,
+    starter_cards: int,
+    target_a_copies: int,
+    target_b_copies: int,
+    disposable_nonstarters: int,
+    discard_cost: int,
+    opening_hand_size: int = 7,
+) -> ConnectorDominationResult:
+    """Return the same exact result while integrating Prize states analytically.
+
+    This function is mathematically equivalent to
+    `two_channel_connector_access` for the same-window model. It enumerates
+    accepted opening-hand category compositions only.
+
+    Conditional on one hand composition, a missing target class is searchable
+    after Prize placement unless every remaining copy of that class is Prized.
+    Those probabilities have closed forms, so explicit Prize-composition
+    enumeration is unnecessary.
+    """
+
+    if deck_size <= 0:
+        raise ValueError("deck_size must be positive")
+    if not 0 <= prize_count <= deck_size:
+        raise ValueError("prize_count must be between 0 and deck_size")
+    if opening_hand_size < 0 or opening_hand_size + prize_count > deck_size:
+        raise ValueError("opening hand and Prize cards must fit in the deck")
+    if not 0 < starter_cards <= deck_size:
+        raise ValueError("starter_cards must be positive and fit in the deck")
+    if min(
+        target_a_copies,
+        target_b_copies,
+        disposable_nonstarters,
+        discard_cost,
+    ) < 0:
+        raise ValueError("card counts and discard_cost must be non-negative")
+    if target_a_copies == 0 or target_b_copies == 0:
+        raise ValueError("both target channels need at least one deck copy")
+
+    connector_copies = 1
+    nonstarter_capacity = deck_size - starter_cards
+    used_nonstarters = (
+        target_a_copies
+        + target_b_copies
+        + connector_copies
+        + disposable_nonstarters
+    )
+    if used_nonstarters > nonstarter_capacity:
+        raise ValueError("non-starter categories exceed non-starter capacity")
+
+    protected_nonstarters = nonstarter_capacity - used_nonstarters
+    sizes = (
+        target_a_copies,
+        target_b_copies,
+        connector_copies,
+        disposable_nonstarters,
+        starter_cards,
+        protected_nonstarters,
+    )
+
+    accepted = accepted_opening_probability(
+        deck_size, starter_cards, opening_hand_size
+    )
+    if accepted == 0.0:
+        raise ValueError("conditioning event has zero probability")
+
+    cards_after_hand = deck_size - opening_hand_size
+    prize_denominator = _choose(cards_after_hand, prize_count)
+
+    def all_copies_prized_probability(copies: int) -> float:
+        if copies == 0:
+            return 1.0
+        if copies > prize_count:
+            return 0.0
+        return (
+            _choose(cards_after_hand - copies, prize_count - copies)
+            / prize_denominator
+        )
+
+    total_mass = 0.0
+    direct_joint = 0.0
+    one_missing_route = 0.0
+    one_missing_payable = 0.0
+    both_missing_route = 0.0
+    both_missing_payable = 0.0
+
+    for hand in _bounded_compositions(opening_hand_size, sizes):
+        if hand[4] == 0:
+            continue
+
+        hand_mass = (
+            _multivariate_probability(hand, sizes, opening_hand_size) / accepted
+        )
+        total_mass += hand_mass
+
+        target_a_in_hand = hand[0] > 0
+        target_b_in_hand = hand[1] > 0
+        connector_in_hand = hand[2] > 0
+        connector_payable = (
+            connector_in_hand and hand[3] >= discard_cost
+        )
+
+        if target_a_in_hand and target_b_in_hand:
+            direct_joint += hand_mass
+            continue
+
+        if not connector_in_hand:
+            continue
+
+        missing_count = (
+            int(not target_a_in_hand) + int(not target_b_in_hand)
+        )
+        remaining_a = target_a_copies - hand[0]
+        remaining_b = target_b_copies - hand[1]
+
+        if missing_count == 1:
+            missing_copies = (
+                remaining_a if not target_a_in_hand else remaining_b
+            )
+            searchable_probability = (
+                1.0 - all_copies_prized_probability(missing_copies)
+            )
+            route_mass = hand_mass * searchable_probability
+            one_missing_route += route_mass
+            if connector_payable:
+                one_missing_payable += route_mass
+            continue
+
+        all_a_prized = all_copies_prized_probability(remaining_a)
+        all_b_prized = all_copies_prized_probability(remaining_b)
+        all_both_prized = all_copies_prized_probability(
+            remaining_a + remaining_b
+        )
+        both_searchable_probability = (
+            1.0 - all_a_prized - all_b_prized + all_both_prized
+        )
+        route_mass = hand_mass * both_searchable_probability
+        both_missing_route += route_mass
+        if connector_payable:
+            both_missing_payable += route_mass
+
+    capacity_no_cost = direct_joint + one_missing_route
+    capacity_gated = direct_joint + one_missing_payable
+    naive_gated = (
+        direct_joint + one_missing_payable + both_missing_payable
+    )
+    naive_no_cost = (
+        direct_joint + one_missing_route + both_missing_route
+    )
+    conditional_payability = (
+        one_missing_payable / one_missing_route
+        if one_missing_route
+        else 1.0
+    )
+
+    return ConnectorDominationResult(
+        state_mass=total_mass,
+        direct_joint_access=direct_joint,
+        capacity_aware_no_cost_access=capacity_no_cost,
+        capacity_aware_gated_access=capacity_gated,
+        naive_shared_connector_gated_access=naive_gated,
+        naive_shared_connector_no_cost_access=naive_no_cost,
+        connector_capacity_overstatement=(
+            naive_gated - capacity_gated
+        ),
+        discard_gate_loss=capacity_no_cost - capacity_gated,
+        combined_naive_overstatement=naive_no_cost - capacity_gated,
+        one_missing_connector_route=one_missing_route,
+        one_missing_payable_route=one_missing_payable,
+        one_missing_payability=conditional_payability,
+        both_missing_connector_route=both_missing_route,
+        both_missing_payable_route=both_missing_payable,
+    )
