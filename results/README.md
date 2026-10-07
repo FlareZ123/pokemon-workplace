@@ -282,6 +282,15 @@ The regression shows a concrete sequential-processing failure: when the Active a
 
 **Working synthesis:** simultaneous state changes need phase boundaries. A transition engine should distinguish "known to be Knocked Out but still present for triggers" from "physically discarded and ready for promotion."
 
+
+## 22. Knock Out disposal needs per-card destination routing
+
+[knockout_zone_routing/](knockout_zone_routing/) extends the pending Knock Out batch with resolved per-instance destination zones.
+
+Expanded-legal Huntail `sv10-55` provides the concrete counterexample to unconditional KO-to-discard semantics: Diver's Catch can return all Basic Water Energy attached to a qualifying Knocked Out Water Pokémon to hand instead. The regression keeps two Basic Water Energy and a Double Colorless Energy visible during the trigger window, routes only the Basic Water copies to hand, and lets the DCE and Pokémon follow normal discard disposal.
+
+**Working synthesis:** conservation and destination choice are separate concerns. The identity ledger should preserve copy totals while card/effect semantics select the zone each removed physical instance enters.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -308,7 +317,7 @@ Particularly foundational components include:
 
 Several larger questions remain promising:
 
-1. **General conservation across unified state layers.** Energy attachment/movement, Pokémon evolution/devolution stacks, Tools, single-Pokémon Knock Out, and same-board simultaneous Knock Out disposal now have aggregate-to-instance conservation bridges. The next shared-kernel problems are Knock Out zone-routing/recovery effects, cross-player simultaneous resolution, hidden-state beliefs, and action budgets.
+1. **General conservation across unified state layers.** Energy attachment/movement, Pokémon evolution/devolution stacks, Tools, simultaneous Knock Out disposal, and KO-trigger destination routing now have aggregate-to-instance conservation bridges. The next shared-kernel problems are cross-player simultaneous resolution and promotion ordering, competing replacement effects, hidden-state beliefs, and action budgets.
 2. **Compiler from card text to transitions.** A validated semantic island now compiles multi-output Trainer deck-search text through typed physical-target feasibility. The larger open problem is extending the same auditable approach to more wording families and then materializing successful compiled actions into canonical zone / instance state without guessing ambiguous semantics.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Errata-aware reprint equivalence.** The repository now has an exact-fingerprint candidate scanner and an official Copycat counterexample showing why equality is incomplete. The next layer should normalize authoritative errata and semantic equivalence without turning same-name cards into automatic matches.
