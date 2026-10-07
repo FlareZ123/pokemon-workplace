@@ -317,6 +317,8 @@ The regression materializes a Bulbasaur/Ivysaur evolution stack, Muscle Band, an
 
 [batch_zone_exit_conservation/](batch_zone_exit_conservation/) adds an atomic same-player multi-object transition for geometry such as Virizion-GX's any-number board return, wide opposing-Bench shuffles, and survivor-complement effects. It validates the complete target set first, routes every selected evolution stack and attachment, and returns promotion-pending state if the Active belonged to the batch. This prevents a sequential implementation from promoting an intermediate Pokémon that was already selected to leave later in the same effect.
 
+[zone_exit_branching/](zone_exit_branching/) quantifies the action-space consequence. On full six-Pokémon boards, coarse singleton geometry reaches at most six target sets, Shiftry's three-survivor complement has 10, and Virizion-GX's any-number return has 64 subsets. When later replacement-Active choices are included, Virizion-GX expands to 113 mechanical continuations. Spidops has one deterministic target set yet up to 25 ordered replacement pairs with full Benches.
+
 
 ## 20. Energy movement preserves physical identity until an attachment relation fails
 
