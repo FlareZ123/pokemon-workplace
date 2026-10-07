@@ -169,6 +169,12 @@ Echoing Madness and Allergy Storm are explicit branch-sensitive counterexamples 
 **Working synthesis:** transaction executors can consume lock legality as an external derived gate. This preserves one owner for action mechanics and one owner for active restriction state, reducing stale duplicated lock flags.
 
 
+[source_scoped_restriction_activation/](source_scoped_restriction_activation/) adds activation and duration state for the same 106 restrictions: 77 are attack-applied and 29 are continuous Abilities with distinct board requirements. It also preserves attack coin, choice, and prerequisite gates plus the unique longer Frigid Breath window.
+
+**Working synthesis:** continuous Ability restrictions should be derived from live source geometry and effective Abilities. Attack-applied restrictions should become temporal state after their application gate succeeds.
+
+
+
 
 
 ## 6. Attack semantics require identity, execution body, and timing
