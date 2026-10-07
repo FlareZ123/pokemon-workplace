@@ -34,10 +34,27 @@ def main() -> None:
             }
         )
 
+    expected_increments = {
+        4: 0.000036533357378520925,
+        8: 0.00042066956413167045,
+        12: 0.001325214445078271,
+        16: 0.0026551226834795605,
+        20: 0.004179337336268296,
+        24: 0.005639125220682106,
+    }
     assert all(
         later["increment"] >= earlier["increment"] - 1e-12
         for earlier, later in zip(rows, rows[1:])
     )
+    for row in rows:
+        assert abs(
+            row["increment"] - expected_increments[row["disposable_pool"]]
+        ) < 3e-12
+        row["quick_share_of_increment"] = (
+            row["quick_gain"] / row["increment"]
+            if row["increment"] > 0.0
+            else 0.0
+        )
     print(json.dumps(rows, indent=2, sort_keys=True))
 
 
