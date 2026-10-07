@@ -95,4 +95,4 @@ The executor covers the one-card successful-search branch. Search failure or vol
 
 The lower-level Bench transition remains available for composition tests, while the higher-level transaction owns synchronization for the successful one-card Dream Ball branch.
 
-This result does not decide the separate unresolved win/loss-precedence question for a player whose final Pokémon was Knocked Out before a Prize-origin Bench-entry effect resolves.
+The formerly open terminal-precedence question is now resolved by `results/post_prize_window_game_resolution/`, using an official Jirachi Prism Star ruling. Applicable E-31 work finishes before the final Prize/no-Pokémon snapshot. `results/dream_ball_terminal_rescue/` composes that phase rule with Dream Ball directly.
