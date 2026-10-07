@@ -14,53 +14,12 @@ from attack_copy_physical_ko_bridge import PhysicalBoardEventProgram
 from board_position_state import BoardState
 from damage_calculation_kernel import AttackDamage, DamageContext
 from pokemon_card_profile import PokemonCardProfile
+from stack_board_profile_binding import current_profile
 from profile_damage_context import resolve_printed_type_stages
 from simple_attack_board_semantics import (
     CompiledAttackBoardSemantics,
     materialize_opponent_board_program,
 )
-
-
-def current_profile(
-    pokemon_id: str,
-    profiles: Mapping[str, PokemonCardProfile],
-    current_print_id_by_pokemon_id: Mapping[str, str],
-) -> PokemonCardProfile:
-    """Resolve a board object through an explicit current-print binding.
-
-    The stack's PokemonCard.card_id is a physical instance ID, not a database
-    print ID. Keeping the binding separate preserves those two identities.
-    """
-
-    try:
-        print_id = current_print_id_by_pokemon_id[pokemon_id]
-    except KeyError as exc:
-        raise ValueError(
-            f"no current print binding for Pokemon {pokemon_id!r}"
-        ) from exc
-    profile = profiles.get(print_id)
-    if profile is None:
-        raise ValueError(f"no legal Pokemon profile for {print_id!r}")
-    return profile
-
-
-def hp_by_stack_board(
-    board: BoardState,
-    profiles: Mapping[str, PokemonCardProfile],
-    current_print_id_by_pokemon_id: Mapping[str, str],
-) -> dict[str, int]:
-    if set(current_print_id_by_pokemon_id) != {
-        pokemon.pokemon_id for pokemon in board.pokemon
-    }:
-        raise ValueError("current print bindings must match the board exactly")
-    return {
-        pokemon.pokemon_id: current_profile(
-            pokemon.pokemon_id,
-            profiles,
-            current_print_id_by_pokemon_id,
-        ).hp
-        for pokemon in board.pokemon
-    }
 
 
 def materialize_profiled_copy_program(
