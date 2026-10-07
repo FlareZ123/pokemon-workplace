@@ -1,0 +1,26 @@
+name: Validate search information bridge
+
+on:
+  push:
+    paths:
+      - "tools/search_information_bridge.py"
+      - "tools/search_action_legality.py"
+      - "tools/prize_belief_kernel.py"
+      - "tools/prize_information_value.py"
+      - "results/search_information_bridge/**"
+      - ".github/workflows/validate-search-information-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check search observation bridge
+        run: python results/search_information_bridge/reproduce.py
