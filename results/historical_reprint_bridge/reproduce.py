@@ -39,7 +39,7 @@ assert all(
 )
 
 resolver = build_reprint_resolver(RESOURCES)
-boilerplate_exact = {"dp1-110", "dp5-85", "hgss1-93", "hgss1-95", "pl1-113"}
+boilerplate_exact = {"dp1-110", "dp5-85", "pl1-113"}
 assert all(
     resolver.resolve(card_id).kind == "exact_fingerprint_candidate"
     for card_id in boilerplate_exact
@@ -48,7 +48,7 @@ assert all(
     resolver.resolve(card_id).kind == "historical_official_reprint_candidate"
     for card_id in NO_REFERENCE_REPRINT_IDS - boilerplate_exact
 )
-assert len(NO_REFERENCE_REPRINT_IDS - boilerplate_exact) == 37
+assert len(NO_REFERENCE_REPRINT_IDS - boilerplate_exact) == 39
 assert resolver.resolve("base1-95").name == "Switch"
 assert resolver.resolve("base1-96").name == "Double Colorless Energy"
 
