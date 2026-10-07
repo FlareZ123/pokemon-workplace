@@ -1,0 +1,25 @@
+name: Validate Battle VIP Pass hidden state bridge
+
+on:
+  push:
+    paths:
+      - "tools/direct_bench_hidden_state_bridge.py"
+      - "tools/direct_bench_trainer_transaction.py"
+      - "tools/deck_search_target_signal.py"
+      - "results/battle_vip_hidden_state_bridge/**"
+      - ".github/workflows/validate-battle-vip-hidden-state-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Battle VIP Pass hidden-state bridge
+        run: python results/battle_vip_hidden_state_bridge/reproduce.py
