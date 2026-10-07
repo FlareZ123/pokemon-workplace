@@ -1,0 +1,26 @@
+name: Validate observer Prize beliefs
+
+on:
+  push:
+    paths:
+      - "tools/observer_prize_beliefs.py"
+      - "tools/prize_take_information_asymmetry.py"
+      - "tools/prize_take_conservation.py"
+      - "tools/prize_belief_kernel.py"
+      - "results/observer_prize_beliefs/**"
+      - ".github/workflows/validate-observer-prize-beliefs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check observer-indexed Prize beliefs
+        run: python results/observer_prize_beliefs/reproduce.py
