@@ -184,7 +184,7 @@ def summarize_reprint_resolver(resolver: ReprintResolver) -> dict[str, Any]:
         row
         for row in outside_resolutions
         if resolver.cards_by_id[row.card_id].get("supertype") == "Trainer"
-        and row.kind in {"exact_fingerprint_candidate", "historical_official_reprint_candidate", "official_errata_candidate", "semantic_review"}
+        and row.kind in {"exact_fingerprint_candidate", "historical_official_reprint_candidate", "official_errata_candidate", "known_non_equivalent", "semantic_review"}
     ]
     historical_rows = [
         row for row in outside_resolutions
