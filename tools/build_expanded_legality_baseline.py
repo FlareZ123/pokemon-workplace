@@ -57,6 +57,8 @@ OFFICIAL_BAN_OVERLAY = {
     },
 }
 
+TOURNAMENT_BAN_RULE_FRAGMENT = "cannot be used at official tournaments"
+
 GAMEPLAY_KEYS = (
     "name",
     "supertype",
@@ -85,6 +87,27 @@ def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def has_tournament_ban_rule(card: dict[str, Any]) -> bool:
+    return any(
+        TOURNAMENT_BAN_RULE_FRAGMENT in rule.lower()
+        for rule in (card.get("rules") or [])
+    )
+
+
+def classify_effective_legality(card: dict[str, Any]) -> tuple[str, str]:
+    card_id = card["id"]
+    database_status = (card.get("legalities") or {}).get("expanded")
+    if card_id in OFFICIAL_BAN_OVERLAY:
+        return "Banned", "official_overlay"
+    if database_status == "Banned":
+        return "Banned", "database"
+    if has_tournament_ban_rule(card):
+        return "Banned", "card_text_tournament_ban"
+    if database_status == "Legal":
+        return "Legal", "database"
+    return "Legal", "set_fallback"
+
+
 def build(resources_root: Path) -> dict[str, Any]:
     sets = load_json(resources_root / "sets" / "en.json")
     set_by_id = {entry["id"]: entry for entry in sets}
@@ -111,17 +134,7 @@ def build(resources_root: Path) -> dict[str, Any]:
                 if raw.get("name") != overlay["name"]:
                     raise ValueError(f"Overlay name mismatch for {card_id}: {raw.get('name')!r}")
 
-            if overlay is not None or database_status == "Banned":
-                effective_status = "Banned"
-                legality_source = "official_overlay" if overlay is not None else "database"
-            elif database_status == "Legal":
-                effective_status = "Legal"
-                legality_source = "database"
-            else:
-                # Set-level Expanded legality is used only as a fallback for prints whose
-                # card-level record omits an Expanded field.
-                effective_status = "Legal"
-                legality_source = "set_fallback"
+            effective_status, legality_source = classify_effective_legality(raw)
 
             cards.append(
                 {
@@ -133,10 +146,12 @@ def build(resources_root: Path) -> dict[str, Any]:
                     "release_date": set_meta.get("releaseDate"),
                     "supertype": raw.get("supertype"),
                     "database_status": database_status,
+                    "unlimited_status": (raw.get("legalities") or {}).get("unlimited"),
                     "effective_status": effective_status,
                     "legality_source": legality_source,
                     "fingerprint": gameplay_fingerprint(raw),
                     "overlay": overlay,
+                    "tournament_ban_rule": has_tournament_ban_rule(raw),
                 }
             )
 
@@ -184,10 +199,22 @@ def build(resources_root: Path) -> dict[str, Any]:
         if card["legality_source"] == "official_overlay" and card["database_status"] != "Banned"
     ]
 
+    card_text_tournament_bans = [
+        {
+            "id": card["id"],
+            "name": card["name"],
+            "set_id": card["set_id"],
+            "database_status": card["database_status"],
+            "unlimited_status": card["unlimited_status"],
+        }
+        for card in cards
+        if card["legality_source"] == "card_text_tournament_ban"
+    ]
+
     return {
         "scope": {
             "format": "paper Expanded",
-            "policy": "Black & White Series onward, with current Expanded bans overlaid at print level",
+            "policy": "Black & White Series onward, current Expanded bans, and explicit official-tournament exclusions",
             "expanded_set_count": len(expanded_sets),
             "earliest_expanded_set_release": min(set_by_id[sid]["releaseDate"] for sid in expanded_sets),
             "latest_expanded_set_release": max(set_by_id[sid]["releaseDate"] for sid in expanded_sets),
@@ -203,6 +230,7 @@ def build(resources_root: Path) -> dict[str, Any]:
             "legal_prints_by_series": dict(sorted(series_counts.items())),
         },
         "database_mismatches": database_mismatches,
+        "card_text_tournament_bans": card_text_tournament_bans,
         "mixed_legality_names": mixed_legality_names,
         "banned_cards": {
             name: [
