@@ -365,6 +365,18 @@ The quota model therefore separates usage count from current limit. Active quota
 **Working synthesis:** action limits belong to live board state. Play permission, quota, and usage history are separate variables, and Ability suppression can change quota without changing history.
 
 
+
+## 29. Typed search execution must preserve the exact target witness
+
+[typed_search_zone_transition/](typed_search_zone_transition/) closes one part of the compiler-to-state boundary by moving the exact targets chosen by a `TypedTargetAction` from exchangeable deck counts into exchangeable hand counts.
+
+A generic one-Energy demand provides a concrete aliasing counterexample: one Basic Fire Energy and one Double Colorless Energy both produce the same demand profile `(1,)`, while the allocator retains two distinct exact actions, `target_cost=(1,0)` and `target_cost=(0,1)`. Executing those actions produces different hand states even though the strategic output vector is identical.
+
+The bridge validates current source-zone availability and per-card-class conservation, and rejects stale exact actions after their selected target leaves the source zone. It deliberately keeps searched deck/hand copies exchangeable rather than inventing stable instance IDs.
+
+**Working synthesis:** demand satisfaction is an evaluation projection, not a sufficient execution record. Policy search should carry the exact target-allocation witness until the chosen action has mutated canonical zone state.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
