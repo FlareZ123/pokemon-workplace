@@ -33,3 +33,24 @@ Synthesis was indexed in `results/README.md` as section 59 and the open canonica
 2. Integrate `TurnSequenceState` with a canonical `UnifiedState.turn_budget` so extra-turn scheduling does not maintain a second authoritative budget object.
 3. Consider moving dynamic quota derivation (`action_quota_effects.py`) closer to live canonical board state so quota grants are derived from physical/suppression state rather than supplied externally.
 4. Keep legacy booleans only as compatibility projections until callers are migrated; do not use them to decide legality in a state that already owns `turn_budget`.
+
+
+## Completed: canonical turn scheduling without duplicate budget ownership
+
+Primary result: `results/canonical_turn_sequence_owner/`.
+
+Implementation:
+- `tools/canonical_turn_sequence_owner.py` introduces schedule-only `TurnScheduleState`; it deliberately has no current/other budget fields.
+- Current and other players are carried as canonical `UnifiedState` values, each with its own `turn_budget`.
+- Attack / voluntary end consumes the current player's canonical budget.
+- Extra-turn advance resets only the same player's canonical usage; ordinary handoff resets only the incoming player's canonical usage.
+- Player-specific limits (Dual-Brains-like Supporter limit 2 versus opponent limit 1) stay attached to the correct player across handoffs.
+- Legacy usage booleans can be stale without controlling sequencing.
+
+Validation:
+- Canonical turn sequence workflow run 37571248006: success.
+- Existing legacy turn-sequence workflow run 37571278662: success on a newer shared head.
+
+Synthesis indexed as section 60 in `results/README.md`.
+
+Next architectural boundary: derive action quota grants from live canonical board / Ability-suppression state, so the canonical budget's limits can be recomputed directly from physical state instead of supplied externally.
