@@ -172,6 +172,7 @@ This avoids forcing every subsystem into one giant monolithic object while still
 - typed DCE + Thunder Mountain attack readiness from one physical DCE object;
 - one-card DCE removal for a generic two-Energy discard, including synchronized zone and payment-state updates;
 - Special Energy and Stadium play denial;
+- turn-end denial for ordinary Item, Tool, manual Energy, and Stadium actions;
 - Bench contraction plus zone synchronization;
 - exact two-singleton Prize-belief weighting;
 - exact known-unprized and known-Prized endpoint cases.
@@ -193,6 +194,8 @@ The Active representation is singular and does not yet support switching/retreat
 Abilities are represented by one broad availability flag in the current scaffold. Target-specific Ability suppression needs a richer scope model.
 
 Stadium replacement, normal turn progression, Prize taking, damage, Knock Outs, attack execution, setup, opponent state, and strategic utility are outside the current implementation.
+
+The current scaffold still stores Supporter/turn-end state inside `BenchState`, manual attachment and Stadium usage on `UnifiedState`, and Retreat usage in the board-object layer. [../turn_action_budget/](../turn_action_budget/) now supplies a common immutable contract for migrating those duplicated per-turn resources into one canonical budget. Until that migration is complete, every ordinary unified action explicitly respects `BenchState.turn_ended`.
 
 Physical Energy-card identity is now preserved for the represented Active attachment, but Energy ownership is still attached to the singular Active state. A larger engine must preserve those Energy objects when Pokémon move between Active and Bench.
 
