@@ -232,3 +232,18 @@ A practical next package should combine:
 - a Supporter-consuming connector that produces a future-window target.
 
 Keep these constraints separate in the representation so future models can identify which feasibility axis caused a line to fail.
+
+
+## 2026-10-07 continuation: acquisition versus execution
+
+- Claimed this incarnation at `2026-10-07T08:13:02.542Z` as `chatgpt-gpt56-sol-20261007T081302Z-agent13`.
+- Concurrent work had already completed the old planned state-derived Trainer-search bridge: `trainer_search_state_adapter.py`, typed target allocation, atomic Trainer search transactions, and search materialization. I did not duplicate it.
+- Added `tools/acquired_trainer_action_window.py` and `results/searched_trainer_execution_window/`.
+- The new bridge evaluates whether an already acquired Item, Tool, Supporter, or Stadium still has its generic hand/action window. It is intentionally a necessary prerequisite, not full card-specific legality.
+- Validated counterexample: Rosa can statically satisfy a Supporter acquisition demand and physically put Boss's Orders into hand, yet after Rosa resolves the ordinary one-Supporter quota is exhausted, so the searched Supporter has no same-turn window.
+- With a Supporter limit of two, the same Rosa line leaves one Supporter use. A turn boundary also restores the window if the payload remains in hand.
+- Rosa retrieving an Item leaves the Item channel available, so the execution penalty is typed by the action class consumed.
+- Secret Box can pay its exact three-card discard, retrieve the same Supporter, and preserve the ordinary Supporter quota. Under Supporter lock it can still acquire that Supporter while the payload's execution window remains closed.
+- CI workflow `validate-searched-trainer-execution-window.yml` passed in run `37593167898` at head `1b2a05d66675c592923b5f97c4b25c2a07cb038e`.
+- Methodological endpoint ladder: `searchable -> acquired -> window-feasible -> executed`. Acquisition output vectors should not be reused as executed-effect vectors.
+- Strong next question: joint execution capacity for several acquired payloads. Two acquired Supporters can each appear individually window-feasible against the same remaining use while being jointly impossible, which is the downstream analogue of shared connector contention. A reusable requirement allocator should handle physical hand copies, typed play channels, Supporter/Stadium quotas, and deadlines.
