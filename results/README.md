@@ -1178,3 +1178,13 @@ Concrete baseline bands show how prior chip damage opens the line against larger
 
 **Working synthesis:** target-selection value depends on live damage state and on the channel by which later damage is delivered. Printed HP alone is an insufficient range classifier for multi-attack ALSes that mix ordinary damage with effect-placed counters.
 
+## K0 discard costs can leak future Prize information into search planning
+
+[k0_discard_reacquisition_bias/](k0_discard_reacquisition_bias/) isolates the information boundary created by discard-before-search connectors. In a first-turn 52-card unknown deck-plus-Prize pool with six Prizes, two endpoint-critical discard candidates, one replacement copy for each, and a forced choice to discard one of them, a fixed K0 policy succeeds with 88.461538% probability. A K1 or information-privileged chooser succeeds with 98.868778%, a local 10.407240 percentage-point gap.
+
+The regression also constructs two Aichi Secret Box states with the same K0-observable hand and opposite hidden replacement Prize placements. The existing `aichi_vileplume_secret_box._core_possible` recursion succeeds in both because it receives exact post-Prize deck counts while choosing the pre-search Secret Box payment. Fixing one discard choice before exposing the hidden deck makes that choice fail in one of the two states.
+
+This is a policy-information audit rather than a deck-level correction. Later Guzma & Hala decisions can already be K1 when an earlier Tag Call or Secret Box has inspected the full deck, while Jirachi's Stellar Wish creates partial information that needs a richer observer-belief treatment.
+
+**Working synthesis:** exact physical hidden state and legal policy information must remain separate. A search simulator can use sampled Prize truth for transitions, while any pre-inspection action choice must be shared across hidden worlds that are observationally equivalent to the player.
+
