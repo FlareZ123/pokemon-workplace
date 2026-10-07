@@ -48,11 +48,11 @@ def compile_prize_effect(text: str) -> tuple[str, ...]:
     if _has(r"turn (?:1|all) of your opponent(?:'s)? face-down Prize cards? face up", text):
         atoms.add("face_up_opponent_prize")
 
-    if _has(r"Prize cards?.*put (?:1 of )?them into your hand|Prize cards? and put 1 of them into your hand", text):
+    if _has(r"Prize cards?.*put (?:1 of )?(?:them|it) into your hand|Prize cards? and put 1 of them into your hand", text):
         atoms.add("prize_to_hand")
     if _has(r"put up to \d+ Prize cards into your hand", text):
         atoms.add("prize_to_hand")
-    if _has(r"put a card from your hand face down as a Prize card|put this .* in its place as a face-down Prize card|put this .* in its place", text):
+    if _has(r"put a card from your hand face down as a Prize card|put this .* in its place as a face-down Prize card|put this .* in its place|shuffle this .* into your remaining Prize cards", text):
         atoms.add("hand_to_prize")
 
     if _has(r"top card of your deck.*face-down Prize|top card of their deck.*face-down Prize|top .* cards? of .*deck.*Prize cards", text):
@@ -71,6 +71,11 @@ def compile_prize_effect(text: str) -> tuple[str, ...]:
         atoms.add("swap_prize_topdeck")
         atoms.add("deck_to_prize")
         atoms.add("prize_to_deck")
+
+    if _has(r"opponent.*face-down Prize card.*opponent.*hand.*switch those cards", text):
+        atoms.add("swap_prize_hand")
+        atoms.add("prize_to_hand")
+        atoms.add("hand_to_prize")
 
     if _has(r"shuffle .*Prize cards", text):
         atoms.add("shuffle_prizes")
