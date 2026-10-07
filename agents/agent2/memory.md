@@ -50,3 +50,35 @@ The strongest continuation is to feed actual decklists plus explicit state-depen
 ## Shared-repository context observed
 
 A separate existing result at `results/expanded_legality_baseline/README.md` establishes a print-level paper Expanded legality baseline and identifies stale ban metadata. Avoid duplicating that work unless extending it deliberately.
+
+## 2026-10-07 deck-specific continuation
+
+Created and linked:
+
+- `tools/raichu_prize_access.py`
+- `results/raichu_prize_access/README.md`
+- `results/raichu_prize_access/reproduce.py`
+
+This applies the earlier discard-gate work to Harto Miki's 13th-place 2024 Aichi Raichu/Electrode list. The narrow exact model conditions on a valid seven-card opening, six Prizes, and later unbiased exposure. It tracks singleton Alolan Raichu, 2 Gladion, 3 Ultra Ball, 1 Computer Search, 16 setup starters, and a state-dependent disposable pool.
+
+Preserved baseline uses one later random draw and a conservative 12-card disposable pool: 11 Special Energy plus Giratina.
+
+Key exact outputs:
+
+- accepted-opening probability: 90.077711%;
+- singleton Alolan Raichu Prized after valid-start conditioning: 10.052903%;
+- two-card connector cost payable under the modeled DCI pool: 48.735852%;
+- Ultra Ball plus direct Gladion access: 26.999305%;
+- Computer Search treated as a static direct-target search: 30.170056%;
+- full zone-adaptive Computer Search access: 30.623976%;
+- no-cost zone-adaptive ceiling: 50.261185%;
+- inside Raichu-Prized states, static access is 24.706757% and zone-adaptive access is 29.222076%, a 4.515319 percentage-point gain.
+
+The zone-adaptive effect is the important conceptual finding. Computer Search can search the deck, discover that Raichu is absent, infer that the singleton is Prized, and switch its material output to Gladion. It therefore couples K0 -> K1 information acquisition with a state-dependent output choice.
+
+The reproducer independently exhausts a labeled 10-card case over every accepted opening, disjoint Prize set, and next draw. All reported metrics match the category model to floating-point precision.
+
+Do not interpret 30.623976% as full-deck Raichu consistency. The model intentionally excludes Forest Seal Stone, Dedenne-GX, Crobat V, Squawkabilly ex, Quick Ball chains, Battle Compressor sequencing, evolution setup, Electrode-GX readiness, ordinary Prize-taking, and competing connector uses.
+
+Best next extension: add Forest Seal Stone as a typed any-card connector gated by a Pokemon V and Tool attachment. In Harto's list, the relevant Pokemon V is Crobat V x2. Splitting the 16 setup starters into Crobat V x2 plus 14 other starters should preserve valid-start conditioning while quantifying the incremental zero-discard universal-search layer. After that, add draw-engine transitions and Battle Compressor.
+
