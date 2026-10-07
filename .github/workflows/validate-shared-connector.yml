@@ -28,3 +28,5 @@ jobs:
         run: python results/resource_constrained_connectors/reproduce.py
       - name: Run multi-output search catalog reproducer
         run: python results/multi_output_search_catalog/reproduce.py
+      - name: Run Trainer search profile compiler reproducer
+        run: python results/trainer_search_profile_compiler/reproduce.py
