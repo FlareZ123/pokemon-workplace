@@ -402,6 +402,297 @@ def paired_greedy_optimal(
     )
 
 
+
+RELEVANT_STELLAR = {
+    "Guzma & Hala",
+    "Tag Call",
+    "Technical Machine: Evolution",
+    "Artazon",
+}
+
+
+def _raw_accepted_state(
+    rng: random.Random,
+) -> tuple[Counter[str], Counter[str], str, tuple[str, ...], int]:
+    """Return an accepted first-turn state before using Stellar Wish."""
+    mulligans = 0
+    while True:
+        order = rng.sample(range(60), 60)
+        opening = [DECK[index] for index in order[:7]]
+        if any(card in BASICS for card in opening):
+            break
+        mulligans += 1
+
+    prizes = [DECK[index] for index in order[7:13]]
+    draw = DECK[order[13]]
+    top_five = tuple(DECK[index] for index in order[14:19])
+
+    opening_basics = [card for card in opening if card in BASICS]
+    if "Jirachi" in opening_basics:
+        active = "Jirachi"
+    else:
+        non_bunnelby = [card for card in opening_basics if card != "Bunnelby"]
+        active = non_bunnelby[0] if non_bunnelby else "Bunnelby"
+
+    hand = Counter(opening + [draw])
+    hand[active] -= 1
+    if hand[active] == 0:
+        del hand[active]
+
+    remaining = Counter(DECK)
+    for card in opening + prizes + [draw]:
+        remaining[card] -= 1
+
+    return hand, remaining, active, top_five, mulligans
+
+
+def _basic_possible_with_artazon_state(
+    hand: Counter[str],
+    remaining: Counter[str],
+    active: str,
+    required_evolution_basics: tuple[str, ...],
+    *,
+    artazon_available: bool,
+) -> bool:
+    """Evaluate endpoint Basics with a caller-supplied Artazon availability."""
+    needs = Counter(required_evolution_basics)
+    needs["Bunnelby"] += 1
+
+    direct = Counter(hand)
+    if active != "Bunnelby":
+        direct[active] += 1
+
+    direct_fan = hand["Fan Rotom"] > 0 or active == "Fan Rotom"
+    actions: list[str | None] = [None]
+    if artazon_available:
+        relevant = set(needs)
+        relevant.add("Fan Rotom")
+        actions.extend(
+            card
+            for card in relevant
+            if remaining[card] > 0
+        )
+
+    for artazon_fetch in actions:
+        have = direct.copy()
+        fan_available = direct_fan
+
+        if artazon_fetch == "Fan Rotom":
+            fan_available = True
+        elif artazon_fetch is not None:
+            have[artazon_fetch] += 1
+
+        if fan_available:
+            fan_fetches: list[str] = []
+            for card in ("Bunnelby", "Pidgey", "Lillipup"):
+                missing = max(0, needs[card] - have[card])
+                if (
+                    missing
+                    and remaining[card] >= missing
+                    and artazon_fetch != card
+                ):
+                    fan_fetches.extend([card] * missing)
+            if len(fan_fetches) <= 3:
+                for card in fan_fetches:
+                    have[card] += 1
+
+        if all(have[card] >= copies for card, copies in needs.items()):
+            return True
+
+    return False
+
+
+def _resource_route_possible(
+    hand: Counter[str],
+    remaining: Counter[str],
+    active: str,
+    required_evolution_basics: tuple[str, ...],
+) -> tuple[bool, str | None]:
+    """Check natural resources first, then an exact-discard G&H route."""
+    if (
+        hand["Technical Machine: Evolution"] > 0
+        and hand["Jet Energy"] > 0
+        and _basic_possible_with_artazon_state(
+            hand,
+            remaining,
+            active,
+            required_evolution_basics,
+            artazon_available=hand["Artazon"] > 0,
+        )
+    ):
+        return True, "natural"
+
+    work_hand = hand.copy()
+    work_deck = remaining.copy()
+    if work_hand["Guzma & Hala"] > 0:
+        pass
+    elif (
+        work_hand["Tag Call"] > 0
+        and work_deck["Guzma & Hala"] > 0
+    ):
+        work_hand["Tag Call"] -= 1
+        if work_hand["Tag Call"] == 0:
+            del work_hand["Tag Call"]
+        work_deck["Guzma & Hala"] -= 1
+        work_hand["Guzma & Hala"] += 1
+    else:
+        return False, None
+
+    work_hand["Guzma & Hala"] -= 1
+    if work_hand["Guzma & Hala"] == 0:
+        del work_hand["Guzma & Hala"]
+
+    physical_cards: list[str] = []
+    for card, copies in work_hand.items():
+        physical_cards.extend([card] * copies)
+
+    discard_pairs = {
+        tuple(sorted((physical_cards[left], physical_cards[right])))
+        for left in range(len(physical_cards))
+        for right in range(left + 1, len(physical_cards))
+    }
+
+    for first, second in discard_pairs:
+        candidate_hand = work_hand.copy()
+        candidate_hand[first] -= 1
+        if candidate_hand[first] == 0:
+            del candidate_hand[first]
+        candidate_hand[second] -= 1
+        if candidate_hand[second] == 0:
+            del candidate_hand[second]
+
+        candidate_deck = work_deck.copy()
+        searchable = True
+        for card in ("Technical Machine: Evolution", "Jet Energy"):
+            if candidate_hand[card] == 0:
+                if candidate_deck[card] == 0:
+                    searchable = False
+                    break
+                candidate_deck[card] -= 1
+                candidate_hand[card] += 1
+
+        if not searchable:
+            continue
+
+        artazon_available = (
+            candidate_hand["Artazon"] > 0
+            or candidate_deck["Artazon"] > 0
+        )
+        if _basic_possible_with_artazon_state(
+            candidate_hand,
+            candidate_deck,
+            active,
+            required_evolution_basics,
+            artazon_available=artazon_available,
+        ):
+            return True, "gnh"
+
+    return False, None
+
+
+ANY_ROUTE_ENDPOINTS: dict[str, tuple[str, ...]] = {
+    "core": (),
+    "pidgeot": ("Pidgey",),
+    "stoutland": ("Lillipup",),
+    "dual": ("Pidgey", "Lillipup"),
+    "item": ("Oddish",),
+    "item_pidgeot": ("Oddish", "Pidgey"),
+    "item_stoutland": ("Oddish", "Lillipup"),
+}
+
+
+def _stage_targets_remain(
+    remaining: Counter[str],
+    endpoint: str,
+) -> bool:
+    requirements = {
+        "core": (),
+        "pidgeot": ("Pidgeotto", "Pidgeot ex"),
+        "stoutland": ("Herdier", "Stoutland"),
+        "dual": ("Pidgeotto", "Pidgeot ex", "Herdier", "Stoutland"),
+        "item": ("Gloom", "Vileplume"),
+        "item_pidgeot": (
+            "Gloom",
+            "Vileplume",
+            "Pidgeotto",
+            "Pidgeot ex",
+        ),
+        "item_stoutland": (
+            "Gloom",
+            "Vileplume",
+            "Herdier",
+            "Stoutland",
+        ),
+    }
+    return all(remaining[card] > 0 for card in requirements[endpoint])
+
+
+def evaluate_any_route_state(
+    hand: Counter[str],
+    remaining: Counter[str],
+    active: str,
+    top_five: tuple[str, ...],
+) -> dict[str, bool]:
+    """Optimize the relevant Stellar Wish choice for each endpoint."""
+    choices: list[str | None] = [None]
+    if active == "Jirachi":
+        choices.extend(sorted(set(top_five) & RELEVANT_STELLAR))
+
+    success = {endpoint: False for endpoint in ANY_ROUTE_ENDPOINTS}
+
+    for pick in choices:
+        candidate_hand = hand.copy()
+        candidate_deck = remaining.copy()
+        if pick is not None:
+            candidate_hand[pick] += 1
+            candidate_deck[pick] -= 1
+
+        for endpoint, required in ANY_ROUTE_ENDPOINTS.items():
+            if success[endpoint]:
+                continue
+            if not _stage_targets_remain(candidate_deck, endpoint):
+                continue
+            possible, _ = _resource_route_possible(
+                candidate_hand,
+                candidate_deck,
+                active,
+                required,
+            )
+            if possible:
+                success[endpoint] = True
+
+    return success
+
+
+def simulate_any_route(
+    trials: int,
+    *,
+    seed: int = 20261007,
+) -> SimulationResult:
+    """Measure the same endpoints allowing natural and G&H-mediated routes."""
+    rng = random.Random(seed)
+    successes: Counter[str] = Counter()
+    mulligans = 0
+
+    for _ in range(trials):
+        hand, remaining, active, top_five, failed = _raw_accepted_state(rng)
+        mulligans += failed
+        state = evaluate_any_route_state(
+            hand,
+            remaining,
+            active,
+            top_five,
+        )
+        for key, value in state.items():
+            if value:
+                successes[key] += 1
+
+    return SimulationResult(
+        trials=trials,
+        successes=dict(successes),
+        mean_mulligans=mulligans / trials,
+    )
+
 def pct(value: float) -> str:
     return f"{100.0 * value:.3f}%"
 
