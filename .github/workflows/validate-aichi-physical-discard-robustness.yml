@@ -1,0 +1,15 @@
+name: Validate Aichi physical discard robustness
+on:
+  push:
+    paths:
+      - tools/aichi_physical_discard_robustness.py
+      - .github/workflows/validate-aichi-physical-discard-robustness.yml
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python tools/aichi_physical_discard_robustness.py
