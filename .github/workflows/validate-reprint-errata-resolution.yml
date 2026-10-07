@@ -1,0 +1,26 @@
+name: Validate errata-aware reprint resolution
+
+on:
+  push:
+    paths:
+      - "tools/reprint_errata_resolution.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "resources/sets/en.json"
+      - "resources/cards/en/**"
+      - "results/reprint_errata_resolution/**"
+      - ".github/workflows/validate-reprint-errata-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check errata-aware reprint resolution
+        run: python results/reprint_errata_resolution/reproduce.py
