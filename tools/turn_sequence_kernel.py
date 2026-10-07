@@ -12,6 +12,7 @@ class TurnSequenceState:
     current_player: str
     other_player: str
     budget: TurnActionBudget = TurnActionBudget()
+    other_budget: TurnActionBudget = TurnActionBudget()
     extra_turn_queued: bool = False
     skip_checkup_before_next_turn: bool = False
 
@@ -82,6 +83,7 @@ def advance_turn(state: TurnSequenceState) -> TurnAdvance | None:
             current_player=state.current_player,
             other_player=state.other_player,
             budget=next_budget,
+            other_budget=state.other_budget,
         )
         return TurnAdvance(
             state=next_state,
@@ -92,7 +94,8 @@ def advance_turn(state: TurnSequenceState) -> TurnAdvance | None:
     next_state = TurnSequenceState(
         current_player=state.other_player,
         other_player=state.current_player,
-        budget=next_budget,
+        budget=state.other_budget.next_turn(),
+        other_budget=state.budget,
     )
     return TurnAdvance(
         state=next_state,
