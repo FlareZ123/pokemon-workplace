@@ -392,6 +392,22 @@ The sequence state retains separate budgets for both players. This prevents a pl
 **Working synthesis:** action history is turn-scoped and player-owned. Extra-turn effects multiply Supporter, Stadium, manual-attachment, Retreat, and attack windows because they create a new turn for the same player rather than extending the already-spent current turn.
 
 
+
+## 32. Discard feasibility needs an exact execution witness
+
+[discard_cost_witness/](discard_cost_witness/) shows that scalar discard capacity can prove a cost payable while several exact card-class selections still produce different hand states. A four-class hand can satisfy one three-card cost in four distinct ways. Per-class discard maxima can preserve a strategically protected card. Exact selections move hand counts to discard, reject stale choices, and conserve card totals.
+
+**Working synthesis:** discard capacity is a useful feasibility projection; canonical execution should retain the exact card-class selection.
+
+## 33. Compiled Item and Supporter search can execute as one conserved transaction
+
+[trainer_search_transaction/](trainer_search_transaction/) composes exact search targets, exact discard selection, lock channels, exchangeable zone counts, and the quota-based turn budget.
+
+Green regressions cover Secret Box, Arven, Guzma & Hala, and Larry's Skill. The played Trainer temporarily occupies a resolving zone, so another same-name copy remains a legal "other card" discard. Whole-hand discard uses the remaining hand snapshot before searched targets enter hand. Ordinary Supporter limit 1 rejects a second Arven, while limit 2 permits two uses.
+
+**Working synthesis:** a committed connector action needs explicit resolution state and exact target/cost witnesses rather than only its low-dimensional optimization projection.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
