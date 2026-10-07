@@ -1,0 +1,29 @@
+name: Validate attached Energy Retreat modifiers
+
+on:
+  push:
+    paths:
+      - "tools/attached_energy_retreat_modifiers.py"
+      - "tools/retreat_cost_semantics.py"
+      - "tools/retreat_energy_normalization.py"
+      - "tools/restricted_special_energy_attachment.py"
+      - "results/attached_energy_retreat_modifiers/**"
+      - ".github/workflows/validate-attached-energy-retreat-modifiers.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check attached Energy Retreat modifiers
+        run: |
+          python results/attached_energy_retreat_modifiers/reproduce.py
+          python results/retreat_energy_normalization/reproduce.py
+          python results/retreat_cost_semantics/reproduce.py
