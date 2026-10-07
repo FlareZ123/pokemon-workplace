@@ -45,7 +45,20 @@ def normal_retreat(
     if state.retreat_used or promote_id not in state.bench_ids:
         return None
     active = state.get(state.active_id)
-    if active.combat.temporary_retreat_lock or active.special_conditions & {"Asleep", "Paralyzed"}:
+    if active.combat.temporary_retreat_lock:
+        return None
+
+    escape_board_active = (
+        active.combat.tool_effect_enabled
+        and any(
+            card.kind == AttachmentKind.TOOL and card.name == "Escape Board"
+            for card in active.attachments
+        )
+    )
+    if (
+        active.special_conditions & {"Asleep", "Paralyzed"}
+        and not escape_board_active
+    ):
         return None
     selected_ids = tuple(discard_energy_ids)
     if len(selected_ids) != len(set(selected_ids)):
