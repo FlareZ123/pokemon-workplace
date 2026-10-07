@@ -1,0 +1,27 @@
+name: Validate Knock Out redirection routes
+
+on:
+  push:
+    paths:
+      - "tools/knockout_redirection_routes.py"
+      - "tools/knockout_redirection_taxonomy.py"
+      - "tools/knockout_zone_routing.py"
+      - "tools/simultaneous_knockout_conservation.py"
+      - "tools/stack_knockout_conservation.py"
+      - "results/knockout_redirection_routes/**"
+      - ".github/workflows/validate-knockout-redirection-routes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run redirection routing regression
+        run: python results/knockout_redirection_routes/reproduce.py
