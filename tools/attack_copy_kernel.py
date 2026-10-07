@@ -103,6 +103,7 @@ class TraceStep:
     selected_attack_id: str | None
     progress: int
     selected_body_executed: bool | None = None
+    body_execution_gate_passed: bool | None = None
 
 
 @dataclass(frozen=True)
@@ -146,6 +147,7 @@ SourceChoicePolicy = Callable[
     [AttackDef, str, tuple[str, ...], State],
     str,
 ]
+CopiedBodyGatePolicy = Callable[[AttackDef, State], bool]
 
 
 def opponent_of(player: str) -> str:
@@ -287,6 +289,7 @@ def resolve_attack(
     choose: ChoicePolicy,
     choose_opponent: ChoicePolicy | None = None,
     choose_source: SourceChoicePolicy | None = None,
+    copied_body_gate: CopiedBodyGatePolicy | None = None,
     max_depth: int = 32,
 ) -> Resolution:
     if declared_attack_id not in attacks:
@@ -311,6 +314,26 @@ def resolve_attack(
             raise CopyCycleError(f"copy depth exceeded {max_depth}")
 
         body = attacks[body_attack_id]
+        if (
+            depth > 0
+            and copied_body_gate is not None
+            and not copied_body_gate(body, current)
+        ):
+            body_chain.append(body_attack_id)
+            trace.append(
+                TraceStep(
+                    depth=depth,
+                    declared_attack_id=declared_attack_id,
+                    body_attack_id=body_attack_id,
+                    body_attack_name=body.name,
+                    selected_attack_id=None,
+                    progress=current.progress,
+                    selected_body_executed=False,
+                    body_execution_gate_passed=False,
+                )
+            )
+            return current
+
         cycle_key = (
             actor_card_id,
             body_attack_id,
