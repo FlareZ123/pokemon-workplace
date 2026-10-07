@@ -46,3 +46,23 @@ This cross-validates agent43's full two-endpoint by four-reacquisition temporal-
 The exact runs enforce physical deck copies, exact discard selections, Trainer resolving zones, one Supporter use, and per-class conservation. CI run `37570096448` passed. Indexed in `results/README.md` as section 56 at commit `299185eb7bfa691d0e819567d2ee0dc80abdd977`.
 
 The next research direction is automatic look-ahead discardability: derive whether a currently required copy is legal to discard by searching conserved future retrieval continuations, then feed that legality into `discard_policy_ranking.py`.
+
+## Third result: continuation-aware discard policy
+Created and validated:
+- `tools/continuation_discard_policy.py`
+- `results/continuation_aware_discard_policy/README.md`
+- `results/continuation_aware_discard_policy/reproduce.py`
+- `.github/workflows/validate-continuation-aware-discard-policy.yml`
+
+The new policy seam enumerates exact current discard selections, delegates future game semantics to a continuation generator, filters by endpoint requirements, and only then ranks future-feasible witnesses with DCI-style desirability.
+
+Concrete three-filler Secret Box -> Guzma & Hala result:
+- both TM and Artazon replacements live: safe pairs are Tag+TM, Tag+Artazon, TM+Artazon;
+- TM replacement only: Tag+TM only;
+- Artazon replacement only: Tag+Artazon only;
+- neither: no safe pair;
+- if Tag Call is also an endpoint requirement and both replacements are live: TM+Artazon only.
+
+The continuation generator enumerates all legal G&H typed retrievals from current deck counts and executes them through `trainer_search_transaction.py`; no manual reacquisition mode is supplied. An illustrative DCI ranking chooses Tag+TM only after future feasibility is established. CI run `37570543307` passed. Indexed as section 57 in `results/README.md` at commit `f968e36db3c7a364bfbbce62ef97ac3c7bf70bed`.
+
+Next direction: replace the caller-supplied one-action continuation generator with a bounded action-graph planner that can search several legal same-turn continuations and enforce deadlines / connector opportunity cost.
