@@ -161,7 +161,7 @@ This separation matters because legality is print-sensitive and card names can m
 
 Any simulator, validator, optimizer, or card index should therefore avoid using card name as its only gameplay or legality key.
 
-## 10. Cross-kernel composition needs one canonical physical state
+## 11. Cross-kernel composition needs one canonical physical state
 
 [unified_state_kernel/](unified_state_kernel/) composes the repository's Bench, lock, typed-Energy, and Prize-belief kernels behind one immutable mechanical state with a single authoritative card-zone map.
 
@@ -174,6 +174,19 @@ For a represented state where Quick Ball and its discard are already in hand whi
 This matches the independent closed form exactly.
 
 **Working synthesis:** probabilistic beliefs should weight mechanically valid physical states. Specialized subsystems should avoid owning competing copies of physical card location. The current kernel is still a scaffold, with per-Pokémon board identity and multi-copy belief instantiation remaining open.
+
+## 12. Multi-copy zone state needs multiplicity before object identity
+
+[multicopy_zone_state/](multicopy_zone_state/) shows that a single `card -> zone` value is not a canonical deck-state representation when repeated copies exist.
+
+For exchangeable copies, the minimal stronger state is a zone-count vector. Four copies distributed across deck, hand, Prize, and discard already have `C(7,3) = 35` distinct count states, while one name-to-zone value has only four possible values. Ten exchangeable copies across five abstract zones have `C(14,4) = 1001` count states.
+
+The result therefore separates two stages of identity:
+
+- keep gameplay-equivalent copies aggregated by per-zone multiplicity while they remain exchangeable;
+- materialize explicit board-object identity only when attachment topology, damage/evolution state, temporary effects, hidden-information distinctions, or other history makes copies non-exchangeable.
+
+This provides a state-compression path for the unified kernel: replace the current unique-string zone scaffold with count-preserving card classes, then assign object identity only where mechanics require it.
 
 ## Reusable infrastructure
 
@@ -190,6 +203,7 @@ Particularly foundational components include:
 - `lock_effect_catalog.py`
 - `prize_belief_decision.py`
 - `unified_state_kernel.py`
+- `multicopy_zone_state.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
