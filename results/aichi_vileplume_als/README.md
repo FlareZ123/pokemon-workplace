@@ -196,6 +196,8 @@ That does not make the discard strategically free. The model allows the player t
 
 `tools/aichi_vileplume_als.py` contains the exact published deck counts, setup conditioning, first-turn state generation, card-access planner, greedy routing policy, endpoint-aware routing policy, and deterministic random seed.
 
+`results/aichi_vileplume_als/reproduce_active_bunnelby.py` is a focused regression for the Active-Bunnelby case. It asserts that Jet Energy can power an already-Active Bunnelby without requiring a second copy and that Artazon remains free to fetch Oddish for the Item-lock endpoint.
+
 The planner asserts state by state that the greedy connector policy never exceeds the endpoint-aware policy.
 
 The mulligan portion has an exact combinatorial benchmark. Its simulated mean agrees with the exact expectation within ordinary Monte Carlo variation.
