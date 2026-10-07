@@ -860,6 +860,16 @@ The regression compiles the repository's real profiles for Chansey, Treasure Ene
 **Working synthesis:** Prize identity observation can precede destination resolution, while E-31-style effects require the resolved destination to remain hand. The correct chain is Prize selection, private identity observation, destination replacement resolution, eligible before-hand effects, then final movement.
 
 
+## 68. Private unrestricted-search targets require observer-specific deck composition
+
+[private_search_target_belief/](private_search_target_belief/) models the information geometry of arbitrary-card search that puts a selected card into hand without revealing its identity.
+
+A five-card exact enumeration with one Prize, one uniformly private searched card, and one shuffled top produces 60 labeled branches. The analytic belief kernel matches every collapsed top/Prize probability. Under uniform private selection, the opponent retains top marginals A=1/5, B=1/5, filler=3/5 and unchanged Prize marginals. In the exact world where the Prize is filler and the actor privately selected A, the actor instead has next-top A=0, B=1/3, filler=2/3.
+
+A second policy that privately prefers A whenever searchable leaves the opponent's Prize marginal unchanged while shifting the next-top marginal to A=0, B=1/5, filler=4/5.
+
+**Working synthesis:** a shared exact post-search deck composition is valid only when removed target identity is public or jointly known. Private unrestricted search needs actor-specific exact target removal and policy-marginalized target removal for other observers. Public target signaling and private target removal are separate Bayesian transitions.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
