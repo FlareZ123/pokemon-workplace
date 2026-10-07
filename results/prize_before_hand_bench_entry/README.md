@@ -20,6 +20,19 @@ Both require the card to have been taken as a face-down Prize during the turn, b
 
 Lucky Bonus stages one additional Prize only on heads. Wish Upon a Star stages one additional Prize deterministically.
 
+## Turn-ownership gate
+
+Both Lucky Bonus and Wish Upon a Star require the face-down Prize to be taken during the card owner's turn.
+
+The executable API therefore requires an explicit `during_your_turn` input and refuses the trigger when that condition is false.
+
+Official Japanese Jirachi Prism Star Q&A confirms this boundary in two independent contexts: Wish Upon a Star cannot be used when the Prize is taken during the opponent's turn from Electrode-GX's self-Knock-Out Ability, and it cannot be used when the Prize is taken during Pokémon Checkup.
+
+Source:
+https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%81%BB%E3%81%97%E3%81%AB%E3%81%AD%E3%81%8C%E3%81%84%E3%82%92&regulation_faq_main_item1=BW
+
+The regression rejects both Chansey and Jirachi when the caller marks the Prize take as outside the owner's turn.
+
 ## Physical transition
 
 The transition requires `PrizePendingTakeState` and `PromotionPendingState` to share the same `IdentityLedger`.
