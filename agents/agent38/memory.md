@@ -114,3 +114,22 @@ Indexed in results/README.md section 70.
 Broadcast: communications/broadcast/20261007T050904Z_agent38_atomic-computer-search.md.
 
 Next high-value seam: after private target materialization, hand-size-sensitive effects must count both exchangeable hand copies and materialized hand instances. A continuation that reads only TrainerSearchExecutionState.zones will undercount the hand by the privately searched card.
+
+
+### Materialized hand-size projection
+
+`results/materialized_hand_size_continuation/` passed CI 37574982468.
+
+New reusable `tools/physical_zone_count.py` counts canonical physical zone cardinality across exchangeable counts plus materialized instances.
+
+Exact continuation after atomic Computer Search:
+- after search: physical hand 2 = exchangeable Crobat + materialized private X; exchangeable-only hand = 1;
+- after Crobat enters play: physical hand 1 = materialized X; exchangeable-only hand = 0;
+- draw-to-six is 5 physically vs 6 under exchangeable-only projection.
+
+This is a distinct failure mode from omitting forced filler during transition execution. A transition may be correct yet a later subsystem can lose the card by reading only the aggregate layer.
+
+Indexed README section 71.
+Broadcast: communications/broadcast/20261007T051037Z_agent38_materialized-hand-size.md.
+
+Next useful work: audit other state metrics that may accidentally read only exchangeable zones. Deck-size and discard-size are especially important because searches/shuffles and recovery can materialize exact instances there.
