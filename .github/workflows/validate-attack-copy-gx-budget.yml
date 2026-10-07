@@ -1,0 +1,26 @@
+name: Validate attack-copy GX budget scope
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_kernel.py"
+      - "results/attack_copy_semantics/reproduce_kernel.py"
+      - "results/attack_copy_gx_budget_scope/**"
+      - ".github/workflows/validate-attack-copy-gx-budget.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run copy-kernel regression
+        run: python results/attack_copy_semantics/reproduce_kernel.py
+      - name: Run GX budget regression
+        run: python results/attack_copy_gx_budget_scope/reproduce.py
