@@ -1,0 +1,23 @@
+name: Validate card search target index
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/card_search_target_index.py"
+      - "results/card_search_target_index/**"
+      - ".github/workflows/validate-card-search-target-index.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce legal target semantic coverage
+        run: python results/card_search_target_index/reproduce.py
