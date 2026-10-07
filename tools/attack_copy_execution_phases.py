@@ -92,7 +92,7 @@ def source_lifetime_pattern(text: str) -> str | None:
         "discard the top card of your deck" in lowered
         and "choose 1 of its attacks and use it as this attack" in lowered
     ):
-        return "selected_source_discarded_from_own_deck_before_body"
+        return "top_card_discarded_before_eligibility_and_body"
     return None
 
 
