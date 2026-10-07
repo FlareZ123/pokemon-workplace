@@ -152,9 +152,12 @@ Related typed state work appears in [typed_lock_state_kernel/](typed_lock_state_
 **Working synthesis:** play permission needs a source-zone predicate. Broad hand-action booleans remain useful compatibility projections, while transaction-level legality should retain source zone and target semantics.
 
 
-[source_scoped_channel_projection/](source_scoped_channel_projection/) measures when that compatibility projection is exact. Of the 106 audited restrictions, **94 (88.679245%)** can be encoded exactly by the existing hand-action channels. Twelve retain typed residual predicates because they depend on ACE SPEC identity, Pokémon-with-Ability identity, evolution mode, Defending-Pokémon targeting, Energy target scope, or a printed exception. The bridge applies coarse channels only to hand-sourced attempts, so Vileplume can project to `item_play=False` without deleting Prize-pending Dream Ball.
+[source_scoped_channel_projection/](source_scoped_channel_projection/) measures when that compatibility projection is exact. Of the 106 audited restrictions, **92 (86.792453%)** can be encoded exactly by the existing hand-action channels. Fourteen retain typed residual predicates because they depend on ACE SPEC identity, Pokémon-with-Ability identity, evolution mode, Defending-Pokémon targeting, Energy target scope, a printed exception, or an unresolved exclusive lock branch. The bridge applies coarse channels only to hand-sourced attempts, so Vileplume can project to `item_play=False` without deleting Prize-pending Dream Ball.
 
 **Working synthesis:** compact permission channels are safest as verified projections from richer state. A hybrid channel-plus-residual representation preserves a fast common case while exposing the semantic cases that need transaction-level predicates.
+
+
+Echoing Madness and Allergy Storm are explicit branch-sensitive counterexamples to unioning all printed lock dimensions. Their compiled profiles remain unresolved until player choice or coin outcome selects one branch.
 
 
 [source_scoped_trainer_transaction/](source_scoped_trainer_transaction/) applies that hybrid permission state to the established Item/Supporter search transaction engine. Exact print metadata supplies ACE SPEC and other selector tags, temporary channel projection gates ordinary hand actions, and residual predicates handle narrow selectors. The adapter restores base channels after execution so active restrictions remain the upstream state owner. A live CI regression verifies Vileplume blocking Secret Box, Sealing Scream identifying Secret Box as ACE SPEC, Arven remaining legal under Item-only lock, and Dark Moon-GX blocking Arven.
