@@ -2,7 +2,7 @@
 
 Current paper rules treat older Pokémon Tools as Pokémon Tools even when their printed template described them as Items.
 
-The bundled snapshot contains 213 legal Expanded Tool prints across 168 names with obsolete generic Item-play text. Thirty of those prints also carry both Item and Pokémon Tool subtypes. The affected records span Black & White (22), XY (60), Sun & Moon (62), and Sword & Shield (69).
+The bundled snapshot contains 211 legal Expanded Tool prints across 167 names with obsolete generic Item-play text. Thirty of those prints also carry both Item and Pokémon Tool subtypes. The affected records span Black & White (22), XY (60), Sun & Moon (60), and Sword & Shield (69).
 
 The normalizer in tools/tool_category_normalization.py removes Item only when Pokémon Tool is also present, and removes only the two exact historical generic Item-play sentences. Other subtype markers and card-specific rules are preserved.
 
