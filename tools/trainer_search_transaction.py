@@ -55,6 +55,7 @@ class TrainerSearchTransaction:
     discard_cost: int
     used_conditional_outputs: bool
     optional_discard_paid: bool = False
+    search_destination_zone: str = "hand"
 
 
 def _split_axis_usage(
@@ -252,6 +253,7 @@ def _execute_transaction(
     discard_candidates: Sequence[DiscardCandidate],
     discard_selection: DiscardSelection | None,
     play_condition_met: bool | None,
+    search_destination_zone: str,
 ) -> TrainerSearchTransaction:
     if not action_card_class:
         raise ValueError("action_card_class must be non-empty")
@@ -324,6 +326,7 @@ def _execute_transaction(
             working_zones,
             targets,
             search_action,
+            destination_zone=search_destination_zone,
         ).after
     else:
         if not isinstance(search_action, TypedTargetAction):
@@ -332,6 +335,7 @@ def _execute_transaction(
             working_zones,
             targets,
             search_action,
+            destination_zone=search_destination_zone,
         ).after
 
     after_zones = searched.move(
@@ -365,6 +369,7 @@ def _execute_transaction(
         discard_cost=discard_cost,
         used_conditional_outputs=used_conditional,
         optional_discard_paid=optional_discard_paid,
+        search_destination_zone=search_destination_zone,
     )
 
 
@@ -380,6 +385,7 @@ def execute_trainer_search_transaction(
     discard_selection: DiscardSelection | None = None,
     play_condition_met: bool | None = None,
     pay_optional_discard: bool | None = None,
+    search_destination_zone: str = "hand",
 ) -> TrainerSearchTransaction:
     """Execute one demand-first compiled Item/Supporter search action."""
 
@@ -407,6 +413,7 @@ def execute_trainer_search_transaction(
         discard_candidates=discard_candidates,
         discard_selection=discard_selection,
         play_condition_met=play_condition_met,
+        search_destination_zone=search_destination_zone,
     )
 
 
@@ -421,6 +428,7 @@ def execute_trainer_retrieval_transaction(
     discard_selection: DiscardSelection | None = None,
     play_condition_met: bool | None = None,
     pay_optional_discard: bool | None = None,
+    search_destination_zone: str = "hand",
 ) -> TrainerSearchTransaction:
     """Execute one retrieval-first action while preserving optional side outputs."""
 
@@ -447,4 +455,5 @@ def execute_trainer_retrieval_transaction(
         discard_candidates=discard_candidates,
         discard_selection=discard_selection,
         play_condition_met=play_condition_met,
+        search_destination_zone=search_destination_zone,
     )
