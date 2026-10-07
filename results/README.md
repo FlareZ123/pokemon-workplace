@@ -166,6 +166,12 @@ This separation matters because legality is print-sensitive and card names can m
 
 Any simulator, validator, optimizer, or card index should therefore avoid using card name as its only gameplay or legality key.
 
+[deck_validator/](deck_validator/) turns that identity separation into a conservative 60-card validator. It aggregates the ordinary four-copy limit by card name while retaining exact-print legality and card-specific deck rules such as ACE SPEC, Radiant Pokémon, Prism Star, Pokémon Star, and print-conditional singleton text.
+
+[set_fallback_legality_audit/](set_fallback_legality_audit/) localizes all 191 remaining set-level legality fallbacks to the two 30th Celebration set files. [reprint_equivalence_candidates/](reprint_equivalence_candidates/) then shows the opposite edge of the problem: 100 prints outside the direct Expanded-set universe exactly match legal gameplay fingerprints, while 4,248 outside-scope prints share a name with a legal card and require stronger semantic review.
+
+The handbook's Copycat example is a concrete counterexample to exact-text identity as a complete reprint rule: the two database fingerprints differ even though official tournament guidance treats the effects as functionally identical. Reprint equivalence therefore needs an errata-aware semantic layer rather than a name lookup or raw-text equality test.
+
 ## 11. Cross-kernel composition needs one canonical physical state
 
 [unified_state_kernel/](unified_state_kernel/) composes the repository's Bench, lock, typed-Energy, and Prize-belief kernels behind one immutable mechanical state with a single authoritative card-zone map.
@@ -249,7 +255,7 @@ Several larger questions remain promising:
 1. **General conservation across unified state layers.** Energy attachments and ordinary Pokémon evolution stacks now have aggregate-to-instance conservation bridges. The next shared-kernel problem is extending the same contract to Tools, Knock Outs, devolution, recovery, Energy movement between Pokémon, hidden-state beliefs, and action budgets.
 2. **Compiler from card text to transitions.** Several models still use targeted or precompiled transitions. A conservative semantic compiler could reduce manual modeling while retaining auditable fallbacks for ambiguous text.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
-4. **Official reprint equivalence.** The current conservative gameplay fingerprint is useful for research, but tournament-functional reprint equivalence still needs an explicit official-policy layer.
+4. **Errata-aware reprint equivalence.** The repository now has an exact-fingerprint candidate scanner and an official Copycat counterexample showing why equality is incomplete. The next layer should normalize authoritative errata and semantic equivalence without turning same-name cards into automatic matches.
 5. **Empirical archetype validation.** ALS modeling has one strong concrete case. More published Expanded lists could test which archetypes are well described by narrow lines and which are better modeled as flexible resource policies.
 
 ## Methodological caution
