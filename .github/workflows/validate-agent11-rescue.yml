@@ -13,6 +13,8 @@ on:
       - "results/gladion_vs_seeker_destination/**"
       - "tools/compressor_vs_seeker_gladion.py"
       - "results/compressor_vs_seeker_gladion/**"
+      - "tools/quick_ball_lele_draw_access.py"
+      - "results/quick_ball_lele_draw_access/**"
       - ".github/workflows/validate-agent11-rescue.yml"
   workflow_dispatch:
 
@@ -29,3 +31,4 @@ jobs:
       - run: python results/literal_gladion_projection/reproduce.py
       - run: python results/gladion_vs_seeker_destination/reproduce.py
       - run: python results/compressor_vs_seeker_gladion/reproduce.py
+      - run: python results/quick_ball_lele_draw_access/reproduce.py
