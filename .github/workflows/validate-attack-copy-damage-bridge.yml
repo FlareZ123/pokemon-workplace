@@ -1,0 +1,29 @@
+name: Validate attack-copy damage bridge
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_damage_bridge.py"
+      - "tools/attack_copy_kernel.py"
+      - "tools/attack_copy_turn_boundary_bridge.py"
+      - "tools/damage_board_bridge.py"
+      - "tools/damage_calculation_kernel.py"
+      - "tools/board_object_kernel.py"
+      - "tools/canonical_turn_sequence_owner.py"
+      - "results/attack_copy_damage_bridge/**"
+      - ".github/workflows/validate-attack-copy-damage-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check copied attack damage phase bridge
+        run: python results/attack_copy_damage_bridge/reproduce.py
