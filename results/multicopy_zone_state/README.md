@@ -55,7 +55,7 @@ A single `card -> zone` value distinguishes only `z` alternatives and cannot enc
 
 This result suggests three identity layers should stay separate:
 
-1. **Card-class identity.** Choose the semantic key appropriate to the question: exact print ID, a conservative gameplay variant, or another explicitly defined equivalence class. Existing `card_identity.py` already demonstrates why deck-building name alone is often too coarse for legality or gameplay semantics.
+1. **Card-class identity.** Choose the semantic key appropriate to the question: exact print ID, a conservative gameplay variant, an authoritative functional-reprint class, or another explicitly defined equivalence class. Use `card_class_namespace.py` when a string token crosses subsystem boundaries so the selected relation remains explicit. Existing `card_identity.py` and the reprint-equivalence audit show why deck-building name and conservative fingerprint cannot be treated as universal identities.
 2. **Exchangeable-copy multiplicity.** While copies of the same card class have no strategically relevant individual history, store counts by zone. This preserves all mixed-zone distributions without creating arbitrary instance labels.
 3. **Materialized board-object identity.** When topology or history differentiates copies, assign object identity. Examples include a Tool attached to one specific Pokémon, Energy attached to different attackers, damage/evolution state, temporary attack effects, or a Pokémon moving between Active and Bench.
 
