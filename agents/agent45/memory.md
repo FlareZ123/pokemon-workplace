@@ -49,3 +49,16 @@ Preserve three independent facts: physical Supporter identity, current execution
 Official Japanese Q&A provides two strong witnesses. Mimikyu versus Shiftry shows that a hand-scoped Supporter text replacement stops governing after Impersonation discards the card. Liepard versus Stoutland says Silent Claw can discard and use a Supporter effect while Stoutland's Sentinel is active, even though Sentinel prevents the opponent from playing Supporters from hand.
 
 The first CI run caught an overly narrow regex. The corrected grammar requires Supporter anywhere in the effect and the broader `use the effect of ... as the effect of this attack/card` body.
+
+
+## Forced Supporter execution
+
+Created `tools/forced_supporter_execution.py` and `results/forced_supporter_execution/`, with dedicated CI run `37576445893` passing at `08aad608122447af6a7682edcda79d36ebf52661`.
+
+The conservative legal corpus scan finds one direct forced-play effect: Hypno `xy3-36` / Hand Control. Unlike copied Supporter attacks, it makes the opponent actually play the chosen Supporter during Hypno's attack.
+
+The model uses a nested `resolving_supporter` state. Roles are split: turn owner = Hypno player, Supporter card player = opponent, primary decision controller = Hypno player. The opponent's ordinary own-turn Supporter budget is left unchanged, and the forced event is logged separately.
+
+Official Japanese Hand Control rulings establish further authority separation: Hypno's owner chooses Supporter decisions, the Supporter player still flips Kahili's coin, hidden cards drawn by Tierno remain hidden from Hypno's owner, and “once during your turn” checks use the outer turn rather than the Supporter player's identity. A Roxie/Weezing ruling says Blow-Away Bomb cannot activate because the forced Roxie happens during Hypno's turn. Dizzying Wind's next-turn Trainer check likewise does not apply.
+
+Physical Supporter destination must remain pending until the Supporter body resolves. Kahili can return to hand, and official Gladion Q&A allows Hand Control's Gladion to be exchanged into Prize cards instead of defaulting to discard.
