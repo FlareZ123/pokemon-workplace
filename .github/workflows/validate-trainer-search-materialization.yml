@@ -1,0 +1,27 @@
+name: Validate Trainer search materialization
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/trainer_search_materialization.py"
+      - "tools/trainer_search_state_adapter.py"
+      - "tools/typed_search_target_allocator.py"
+      - "tools/identity_materialization.py"
+      - "tools/multicopy_zone_state.py"
+      - "results/trainer_search_materialization/**"
+      - ".github/workflows/validate-trainer-search-materialization.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Trainer search materialization
+        run: python results/trainer_search_materialization/reproduce.py
