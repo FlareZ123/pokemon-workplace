@@ -21,10 +21,13 @@ counts = summary["counts"]
 assert counts["legacy_no_reference_trainer_prints"] == 76
 assert counts["legacy_no_reference_trainer_names"] == 15
 assert counts["legacy_current_resolver_kinds"] == {
+    "historical_official_reprint_candidate": 41,
+    "known_non_equivalent": 2,
     "official_errata_candidate": 26,
-    "semantic_review": 50,
+    "official_semantic_candidate": 3,
+    "semantic_review": 4,
 }
-assert counts["legacy_semantic_review_gap"] == 50
+assert counts["legacy_semantic_review_gap"] == 4
 assert counts["current_handbook_positive_pairs"] == 1
 assert counts["current_handbook_negative_pairs"] == 1
 
@@ -48,8 +51,8 @@ assert summary["legacy_positive_by_name"] == {
 
 assert ("ex7-83", "sm7-127") in CURRENT_HANDBOOK_POSITIVE_PAIRS
 assert ("base5-17", "sm7-151") in CURRENT_HANDBOOK_NEGATIVE_PAIRS
-assert resolver.resolve("ex7-83").kind == "semantic_review"
-assert resolver.resolve("base5-17").kind == "semantic_review"
+assert resolver.resolve("ex7-83").kind == "official_semantic_candidate"
+assert resolver.resolve("base5-17").kind == "known_non_equivalent"
 
 positive = [case for case in cases if case.evidence_class == "current_handbook_positive"]
 negative = [case for case in cases if case.evidence_class == "current_handbook_negative"]
@@ -58,7 +61,10 @@ assert negative[0].name == "Rainbow Energy"
 
 print("official reprint semantic benchmark: PASS")
 print("legacy no-reference Trainer positives:", counts["legacy_no_reference_trainer_prints"])
-print("already resolved by errata:", counts["legacy_current_resolver_kinds"]["official_errata_candidate"])
-print("remaining semantic-review positives:", counts["legacy_semantic_review_gap"])
+print("historically bridged:", counts["legacy_current_resolver_kinds"]["historical_official_reprint_candidate"])
+print("resolved by current errata:", counts["legacy_current_resolver_kinds"]["official_errata_candidate"])
+print("resolved by current handbook semantics:", counts["legacy_current_resolver_kinds"]["official_semantic_candidate"])
+print("current known negatives:", counts["legacy_current_resolver_kinds"]["known_non_equivalent"])
+print("remaining semantic review:", counts["legacy_semantic_review_gap"])
 print("current handbook positive pair:", next(iter(CURRENT_HANDBOOK_POSITIVE_PAIRS)))
 print("current handbook negative pair:", next(iter(CURRENT_HANDBOOK_NEGATIVE_PAIRS)))
