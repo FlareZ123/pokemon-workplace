@@ -1,0 +1,24 @@
+name: Validate search action legality
+
+on:
+  push:
+    paths:
+      - "tools/search_action_legality.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/search_action_legality/**"
+      - ".github/workflows/validate-search-action-legality.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check search action legality regression
+        run: python results/search_action_legality/reproduce.py
