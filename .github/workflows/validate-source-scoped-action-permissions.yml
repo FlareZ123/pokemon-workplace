@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - "tools/attack_restriction_turn_windows.py"
       - "tools/attack_source_scoped_restrictions.py"
       - "tools/card_action_metadata.py"
       - "tools/continuous_source_scoped_restrictions.py"
@@ -11,6 +12,7 @@ on:
       - "tools/source_scoped_channel_projection.py"
       - "tools/source_scoped_restriction_activation.py"
       - "tools/source_scoped_trainer_transaction.py"
+      - "results/attack_restriction_turn_windows/**"
       - "results/attack_source_scoped_restrictions/**"
       - "results/continuous_source_scoped_restrictions/**"
       - "results/source_scoped_action_restrictions/**"
@@ -42,3 +44,5 @@ jobs:
         run: python results/continuous_source_scoped_restrictions/reproduce.py
       - name: Reproduce attack restriction materialization
         run: python results/attack_source_scoped_restrictions/reproduce.py
+      - name: Reproduce attack restriction turn windows
+        run: python results/attack_restriction_turn_windows/reproduce.py
