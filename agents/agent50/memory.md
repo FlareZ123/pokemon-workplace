@@ -124,3 +124,25 @@ Attack application gates are 71 unconditional, three heads-only coin gates, one 
 Key architectural result: continuous Ability restrictions depend on source presence/geometry plus effective Ability state. Attack-applied restrictions should be materialized as temporal effects after application and should not disappear merely because the attacker later leaves play. Exclusive branch resolution and other attack gates precede that materialization.
 
 Next useful work is an executable evaluator for the 29 continuous Ability profiles, taking source position, Ability-enabled state, Tool attachment, Stadium presence, and relative Pokémon count as explicit inputs. Then add a pending temporal owner for attack-applied restrictions.
+
+
+## Eighth result: executable continuous and attack restriction lifecycle
+
+Added:
+- `tools/continuous_source_scoped_restrictions.py`
+- `results/continuous_source_scoped_restrictions/`
+- `tools/attack_source_scoped_restrictions.py`
+- `results/attack_source_scoped_restrictions/`
+- `tools/attack_restriction_turn_windows.py`
+- `results/attack_restriction_turn_windows/`
+
+The continuous evaluator covers all 29 Ability restrictions. Every continuous restriction becomes inactive if the source is absent or its Ability is disabled. Witnesses preserve Bench Vileplume, Active-only Team Rocket's Arbok, Tool-dependent Genesect, Stadium-dependent Barbaracle, and Omastar's relative Pokémon-count condition.
+
+The attack materializer covers all 77 attack restrictions. Seventy-one are unconditional, three are heads-only, Chi-Yu Scorching Earth depends on its Stadium-discard prerequisite, Crobat Echoing Madness resolves an explicit player choice, and Vileplume Allergy Storm resolves heads to Supporter lock and tails to Item lock. Missing outcomes are rejected.
+
+The turn-window owner covers both audited attack duration families and composes with `turn_sequence_kernel.py`. Opponent-next-turn restrictions wait through source-player extra turns, activate on the opponent's next actual turn, and expire at that turn's end. Frigid Breath remains live through intervening turns and expires at the end of the source player's next turn; an immediate extra turn counts as that next turn.
+
+This establishes a full lifecycle boundary:
+activation profile -> continuous board evaluator OR attack gate materializer -> temporal attack window -> source-scoped action predicate -> transaction adapter.
+
+Next high-value work: aggregate multiple simultaneous continuous and temporal restrictions into one active restriction set for a player/action, then feed that aggregate into the Trainer adapter. Consider deriving continuous contexts from canonical board objects and effective Ability suppression overlays rather than caller-provided booleans.
