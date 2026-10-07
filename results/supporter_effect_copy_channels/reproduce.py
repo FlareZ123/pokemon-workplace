@@ -87,6 +87,24 @@ def main() -> None:
         "(This happens instead of the card's usual effect.)"
     )
 
+    bw7 = json.loads(
+        (ROOT / "resources" / "cards" / "en" / "bw7.json").read_text(encoding="utf-8")
+    )
+    stoutland = next(card for card in bw7 if card["id"] == "bw7-122")
+    status, _ = classify_effective_legality(stoutland)
+    assert status == "Legal"
+    sentinel = next(a for a in stoutland["abilities"] if a["name"] == "Sentinel")
+    assert "Supporter cards from his or her hand" in sentinel["text"]
+
+    bw8 = json.loads(
+        (ROOT / "resources" / "cards" / "en" / "bw8.json").read_text(encoding="utf-8")
+    )
+    liepard = next(card for card in bw8 if card["id"] == "bw8-84")
+    status, _ = classify_effective_legality(liepard)
+    assert status == "Legal"
+    silent_claw = next(a for a in liepard["attacks"] if a["name"] == "Silent Claw")
+    assert "Use the effect of that card as the effect of this attack." in silent_claw["text"]
+
     copied = SupporterCopyCard(
         copy_id="supporter-1",
         name="Example Supporter",
