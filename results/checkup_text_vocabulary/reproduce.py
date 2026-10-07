@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+from collections import Counter
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from checkup_text_audit import audit_checkup_wording  # noqa: E402
+from checkup_text_audit import audit_checkup_wording, semantic_classes  # noqa: E402
 
 
 def main() -> None:
@@ -17,28 +18,47 @@ def main() -> None:
     checkup = tuple(row for row in rows if row.wording == "pokemon_checkup")
     both = tuple(row for row in rows if row.wording == "both")
 
-    assert len(rows) == 106
+    assert len(rows) == 114
     assert len(between) == 62
-    assert len(checkup) == 44
+    assert len(checkup) == 52
     assert not both
-    assert len({row.text for row in rows}) == 59
-    assert len({row.card_id for row in rows}) == 102
+    assert len({row.text for row in rows}) == 61
+    assert len({row.card_id for row in rows}) == 110
 
-    latest_between = max(between, key=lambda row: row.release_date)
-    earliest_checkup = min(checkup, key=lambda row: row.release_date)
+    legacy_series = {row.series for row in between}
+    checkup_series = {row.series for row in checkup}
+    assert legacy_series == {"Black & White", "XY", "Sun & Moon"}
+    assert checkup_series == {
+        "Sword & Shield",
+        "Scarlet & Violet",
+        "Mega Evolution",
+    }
+    assert legacy_series.isdisjoint(checkup_series)
 
-    assert latest_between.release_date == "2019/11/01"
-    assert latest_between.set_id == "sm12"
-    assert earliest_checkup.release_date == "2020/02/07"
-    assert earliest_checkup.set_id == "swsh1"
-    assert latest_between.release_date < earliest_checkup.release_date
+    classes = Counter()
+    for row in rows:
+        row_classes = semantic_classes(row.text)
+        assert row_classes, (row.card_id, row.text)
+        classes.update(row_classes)
+
+    assert classes == Counter(
+        {
+            "counter_base_replace": 60,
+            "direct_counter_put": 15,
+            "coin_count": 12,
+            "counter_add": 11,
+            "heal": 9,
+            "skip_checkup": 8,
+            "recovery_suppress": 2,
+        }
+    )
 
     print("timing-text rows:", len(rows))
     print("between-turns rows:", len(between))
     print("Pokémon Checkup rows:", len(checkup))
-    print("unique texts:", len({row.text for row in rows}))
-    print("latest legacy wording:", latest_between.release_date, latest_between.set_id)
-    print("earliest Checkup wording:", earliest_checkup.release_date, earliest_checkup.set_id)
+    print("legacy series:", sorted(legacy_series))
+    print("Checkup series:", sorted(checkup_series))
+    print("semantic classes:", dict(sorted(classes.items())))
     print("Checkup vocabulary audit passed")
 
 
