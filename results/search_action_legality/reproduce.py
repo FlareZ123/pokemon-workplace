@@ -110,7 +110,7 @@ def main() -> None:
             "inspected_full_deck": empty_deck.inspected_full_deck,
         },
         "full_bench_direct_search": {
-            "trainer_legal": ful_bench.legal,
+            "trainer_legal": full_bench.legal,
             "attack_legal": attack_full_bench.legal,
             "attack_inspected_full_deck": attack_full_bench.inspected_full_deck,
         },
