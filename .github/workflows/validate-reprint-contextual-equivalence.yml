@@ -1,0 +1,26 @@
+name: Validate format-relative reprint equivalence
+
+on:
+  push:
+    paths:
+      - "tools/reprint_contextual_equivalence.py"
+      - "tools/reprint_errata_resolution.py"
+      - "resources/sets/en.json"
+      - "resources/cards/en/**"
+      - "results/reprint_contextual_equivalence/**"
+      - ".github/workflows/validate-reprint-contextual-equivalence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check format-relative reprint equivalence witness
+        run: python results/reprint_contextual_equivalence/reproduce.py
