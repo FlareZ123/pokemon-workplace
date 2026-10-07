@@ -48,3 +48,13 @@ The reproducer exhaustively validates a small multiclass deck against the closed
 The transcript kernel currently uses tracked-group counts and a stationary keep function. Real setup policies can depend on complete hand identity, turn order, opponent information, and matchup context.
 
 The next high-value step is to value the information itself. Combine candidate matchup posteriors with matchup-dependent actions or lines and measure how much the public setup transcript improves the Bayes-optimal decision. That would connect setup information directly to DCI, AMR, and ALS choice.
+
+## Further completed work
+
+- Added setup-information decision-value tooling in `tools/setup_information_value.py` with reproducible checks under `results/setup_information_value/`. The finite Bayesian action model separates evidence strength from practical value: information is valuable when it changes the best action.
+- Reviewed the concurrent Aichi Vileplume ALS simulator and found an Active-Bunnelby bug. Jet Energy can be attached to an already-Active Bunnelby and still provide Colorless Energy, so a second Bunnelby is unnecessary. Fixed `tools/aichi_vileplume_als.py`, corrected the reported probabilities in `results/aichi_vileplume_als/README.md`, and added `reproduce_active_bunnelby.py` as a regression.
+- In the corrected 500,000-state matched run, the endpoint-aware Item-lock estimate rises from the prior 32.9538% to 36.3388%. The double-Evolution core rises from 69.0818% to 69.5594%.
+
+## Current next direction
+
+Audit the corrected Aichi ALS for remaining policy assumptions, especially starting-Active selection. Quantify whether choosing Bunnelby Active when the alternative starter is a non-evolution utility Basic improves endpoint reachability, while preserving Jirachi and evolution-target starts when they are strategically stronger.
