@@ -1,0 +1,26 @@
+name: Validate optional discard branch witness
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/trainer_search_transaction.py"
+      - "tools/typed_search_retrieval.py"
+      - "tools/search_zone_transition.py"
+      - "tools/discard_cost_witness.py"
+      - "results/optional_discard_branch_witness/**"
+      - ".github/workflows/validate-optional-discard-branch-witness.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce optional discard branch witness
+        run: python results/optional_discard_branch_witness/reproduce.py
