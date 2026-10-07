@@ -11,6 +11,7 @@ from typing import Iterable
 @dataclass(frozen=True)
 class TimingTextRow:
     release_date: str
+    series: str
     set_id: str
     card_id: str
     card_name: str
@@ -61,6 +62,7 @@ def audit_checkup_wording(resources: Path) -> tuple[TimingTextRow, ...]:
                 rows.append(
                     TimingTextRow(
                         release_date=meta["releaseDate"],
+                        series=meta["series"],
                         set_id=set_id,
                         card_id=card["id"],
                         card_name=card["name"],
@@ -71,3 +73,34 @@ def audit_checkup_wording(resources: Path) -> tuple[TimingTextRow, ...]:
                     )
                 )
     return tuple(rows)
+
+
+def semantic_classes(text: str) -> tuple[str, ...]:
+    """Coarse mechanics classes for audited timing text."""
+
+    import re
+
+    lowered = text.lower()
+    classes: list[str] = []
+    if (
+        re.search(r"(put|place)\s+\d+\s+(?:more\s+)?damage counter", lowered)
+        and "instead of" in lowered
+    ):
+        classes.append("counter_base_replace")
+    if re.search(r"put\s+\d+\s+more damage counter", lowered):
+        classes.append("counter_add")
+    if re.search(r"flips?\s+2\s+coins?\s+instead of\s+1", lowered):
+        classes.append("coin_count")
+    if "doesn't recover" in lowered or "isn't removed even if" in lowered:
+        classes.append("recovery_suppress")
+    if "skip pokémon checkup" in lowered:
+        classes.append("skip_checkup")
+    if (
+        re.search(r"(put|place)\s+\d+\s+damage counter", lowered)
+        and "instead of" not in lowered
+        and "more damage counter" not in lowered
+    ):
+        classes.append("direct_counter_put")
+    if "heal " in lowered:
+        classes.append("heal")
+    return tuple(classes)
