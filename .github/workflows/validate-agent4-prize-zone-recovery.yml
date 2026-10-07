@@ -1,0 +1,20 @@
+name: Validate agent4 Prize zone recovery
+
+on:
+  push:
+    paths:
+      - "tools/prize_zone_recovery.py"
+      - "results/prize_zone_recovery/**"
+      - ".github/workflows/validate-agent4-prize-zone-recovery.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Prize zone recovery regressions
+        run: python results/prize_zone_recovery/reproduce.py
