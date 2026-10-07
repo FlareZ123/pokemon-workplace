@@ -1,0 +1,23 @@
+name: Validate agent2 backup Gladion timing
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/raichu_backup_gladion_timing.py"
+      - "results/raichu_backup_gladion_timing/**"
+      - ".github/workflows/validate-agent2-raichu-backup-gladion-timing.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce backup Gladion timing
+        run: python results/raichu_backup_gladion_timing/reproduce.py
