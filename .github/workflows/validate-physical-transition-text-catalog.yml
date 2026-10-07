@@ -1,0 +1,23 @@
+name: Validate physical transition text catalog
+
+on:
+  push:
+    paths:
+      - "tools/physical_transition_text_catalog.py"
+      - "results/physical_transition_text_catalog/**"
+      - ".github/workflows/validate-physical-transition-text-catalog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Build and validate catalog
+        run: python results/physical_transition_text_catalog/reproduce.py
