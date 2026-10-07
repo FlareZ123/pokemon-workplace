@@ -707,6 +707,16 @@ Raising the Supporter limit to two makes the TM discard safe. Keeping the ordina
 **Working synthesis:** replacement reachability must be joint, deadline-aware, and resource-constrained. Independent access edges can falsely certify a discard when the restoration routes compete for the same Supporter window; multi-axis connectors can be valuable specifically because they compress several obligations into one scarce action.
 
 
+## 59. UnifiedState can own the per-turn action budget canonically
+
+[canonical_turn_budget_owner/](canonical_turn_budget_owner/) advances the staged turn-budget migration by giving `UnifiedState` an optional authoritative `TurnActionBudget`. Legacy-only states still project their Supporter, Stadium, manual-Energy, and turn-ended booleans as before. Once an explicit budget is present, migrated UnifiedState actions query and consume the integer budget instead of trusting those booleans.
+
+Magnezone `bw8-46` / Dual Brains supplies the decisive counterexample. After one Supporter in a two-Supporter turn, `BenchState.supporter_used` is already true while the canonical state has `supporter_plays_used = 1`, `supporter_play_limit = 2`, and one legal Supporter use remaining. The regression deliberately keeps the stale boolean true and confirms Gladion can still consume the second use. It also verifies live suppression and restoration of Dual Brains changes the limit without erasing usage history.
+
+The same ownership rule now gates modeled manual Energy attachment, Stadium play, Item/Tool/Bench-entry turn boundaries, and a physical Retreat adapter. A synthetic two-Retreat quota proves the composite adapter can execute two exact Retreat transitions even after the legacy `BoardState.retreat_used` bit becomes true; the ordinary base limit still permits only one.
+
+**Working synthesis:** integer turn bandwidth now has a canonical owner for the migrated composite path. Legacy booleans are compatibility projections, not sufficient execution state once quotas can exceed one or live effects can change their limits.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -721,6 +731,7 @@ Particularly foundational components include:
 - `energy_action_budget.py`
 - `turn_action_budget.py`
 - `legacy_turn_budget_bridge.py`
+- `canonical_turn_budget_owner.py`
 - `action_quota_effects.py`
 - `turn_sequence_kernel.py`
 - `bench_capacity_model.py`
