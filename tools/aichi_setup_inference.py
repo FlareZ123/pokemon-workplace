@@ -118,6 +118,51 @@ def unique_content_classification_accuracy(
         k += 1
 
 
+
+def family_unique_content_classification_accuracy(
+    left: ExactListCandidate,
+    right_variants: tuple[ExactListCandidate, ...],
+    *,
+    left_prior: float = 0.5,
+    right_prior: float = 0.5,
+    tolerance: float = 1e-18,
+) -> float:
+    if not right_variants:
+        raise ValueError("at least one right-side variant is required")
+    if not math.isclose(left_prior + right_prior, 1.0):
+        raise ValueError("priors must sum to 1")
+
+    right_weight = 1.0 / len(right_variants)
+    left_unique = unique_name_exposed_before_acceptance(left)
+    right_unique = sum(
+        right_weight * unique_name_exposed_before_acceptance(variant)
+        for variant in right_variants
+    )
+    accuracy = left_prior * left_unique + right_prior * right_unique
+
+    left_common = common_only_mulligan_probability(left)
+    left_accept = acceptance_probability(left)
+    right_common = tuple(
+        common_only_mulligan_probability(variant)
+        for variant in right_variants
+    )
+    right_accept = tuple(
+        acceptance_probability(variant)
+        for variant in right_variants
+    )
+
+    k = 0
+    while True:
+        left_joint = left_prior * left_common**k * left_accept
+        right_joint = right_prior * sum(
+            right_weight * common**k * accepted
+            for common, accepted in zip(right_common, right_accept)
+        )
+        accuracy += max(left_joint, right_joint)
+        if max(left_joint, right_joint) < tolerance and k > 0:
+            return accuracy
+        k += 1
+
 def posterior_left_after_exact_mulligans(
     left: ExactListCandidate,
     right: ExactListCandidate,
@@ -158,6 +203,21 @@ def build_aichi_examples() -> dict[str, Any]:
         vileplume, iron_thorns
     )
 
+    vileplume_vs_iron_family = ExactListCandidate(
+        "Takahiro Ando Vileplume Control vs Iron family",
+        forced_basics=14,
+        common_nonbasic_cards=18,
+    )
+    iron_family = (
+        ExactListCandidate("Kazuma Kashi Iron Thorns", 4, 17),
+        ExactListCandidate("Ryoya Fujii Iron Thorns", 4, 16),
+        ExactListCandidate("Kohei Hamamichi Iron Thorns", 4, 17),
+    )
+    family_content_accuracy = family_unique_content_classification_accuracy(
+        vileplume_vs_iron_family,
+        iron_family,
+    )
+
     return {
         "scope": (
             "Exact published 2026 CL Aichi Open League lists: "
@@ -184,6 +244,24 @@ def build_aichi_examples() -> dict[str, Any]:
                     unique_name_exposed_before_acceptance(iron_thorns)
                 ),
             },
+        },
+        "iron_thorns_family_robustness": {
+            "iron_variants": [
+                {
+                    "name": variant.name,
+                    "forced_basics": variant.forced_basics,
+                    "common_name_nonbasic_copies_with_vileplume": (
+                        variant.common_nonbasic_cards
+                    ),
+                }
+                for variant in iron_family
+            ],
+            "vileplume_common_name_nonbasic_copies_with_family": (
+                vileplume_vs_iron_family.common_nonbasic_cards
+            ),
+            "equal_prior_unique_content_classification_accuracy": (
+                family_content_accuracy
+            ),
         },
         "equal_prior": {
             "posterior_iron_thorns_by_exact_mulligans": {
