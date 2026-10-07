@@ -15,6 +15,7 @@ from observer_top_prize_beliefs import (
 )
 from prize_pending_take import (
     resolve_next_pending_prize,
+    stage_additional_prize_front,
     stage_prize_takes,
     stage_prize_takes_with_observers,
 )
@@ -144,6 +145,36 @@ def main() -> None:
         == "bench-a"
     )
     assert_conserved(multi_physical.ledger, second.after.physical.ledger)
+
+    # An extra Prize taken while another before-hand card is waiting must
+    # become the next pending card, ahead of the older sibling queue.
+    nested_ledger = IdentityLedger(
+        ZoneCountState(),
+        (
+            CardInstance("old", "OLD", "Old", "prize_pending"),
+            CardInstance("extra", "EXTRA", "Extra", "prize"),
+            CardInstance("top", "TOP", "Top", "deck_top"),
+        ),
+    )
+    nested_physical = TopPrizePhysicalState(
+        nested_ledger,
+        "top",
+        ("extra",),
+        (False,),
+    )
+    nested_state = PrizePendingTakeState(
+        nested_physical,
+        (PendingPrize("old", True),),
+    )
+    nested = stage_additional_prize_front(
+        nested_state,
+        position=0,
+    )
+    assert tuple(row.instance_id for row in nested.pending) == (
+        "extra",
+        "old",
+    )
+    assert nested.physical.prize_instance_ids == ()
 
     print("Prize pending-take regressions passed")
 
