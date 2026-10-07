@@ -72,7 +72,7 @@ Next useful integration is to connect the predicate to a canonical action-permis
 
 Added `tools/source_scoped_channel_projection.py` and `results/source_scoped_channel_projection/`.
 
-Of the 106 direct source-scoped restrictions, 94 (88.679245%) project exactly into the existing `PlayerChannels` hand-action booleans. Twelve require residual typed predicates. The overlapping residual reasons are six evolution selectors, four target-relation cases, two ACE SPEC selectors, two Pokémon-with-Ability selectors, two target-specific Energy restrictions, and one printed card exception.
+Of the 106 direct source-scoped restrictions, 92 (86.792453%) project exactly into the existing `PlayerChannels` hand-action booleans. Fourteen require residual typed predicates. The overlapping residual reasons are six evolution selectors, four target-relation cases, two ACE SPEC selectors, two Pokémon-with-Ability selectors, two target-specific Energy restrictions, two unresolved exclusive choices, and one printed card exception.
 
 The bridge applies coarse channels only to hand actions. It keeps all restrictions available for exact checks on other source zones. The regression proves equivalence between direct typed predicates and channel projection across all 94 projectable rows and preserves the Vileplume / Prize-pending Dream Ball boundary.
 
@@ -100,3 +100,12 @@ The live regression proves:
 Workflow run `37583452032` passed all three source-scoped regressions.
 
 Next work: compile activation geometry and duration for the 106 restrictions. Preliminary audit found 77 attack-applied, 22 Active-position Ability, 5 passive/in-play Ability, 1 Tool-attached Ability, and 1 Stadium-required Ability. Among attack-applied restrictions, 76 govern the opponent's next turn and Vanilluxe `xy8-45` Frigid Breath uses a different until-end-of-your-next-turn window.
+
+
+## Exclusive-choice correction
+
+A multi-dimension audit found two profiles that cannot be treated as simultaneous unions. Crobat `sv4-112` Echoing Madness chooses Item or Supporter lock. Vileplume `swsh11-3` Allergy Storm selects Supporter lock on heads or Item lock on tails.
+
+`SourceScopedActionRestriction` now stores `exclusive_dimension_options`. Direct legality evaluation raises while that choice is unresolved. `resolve_exclusive_restriction` binds one printed branch before downstream projection or transaction checks. This correction changed the safe scalar projection count from 94/12 to 92 exact / 14 residual.
+
+Any future compiler extension should distinguish conjunction from exclusive branch text before unioning semantic dimensions.
