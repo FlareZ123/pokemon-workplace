@@ -157,6 +157,12 @@ Related typed state work appears in [typed_lock_state_kernel/](typed_lock_state_
 **Working synthesis:** compact permission channels are safest as verified projections from richer state. A hybrid channel-plus-residual representation preserves a fast common case while exposing the semantic cases that need transaction-level predicates.
 
 
+[source_scoped_trainer_transaction/](source_scoped_trainer_transaction/) applies that hybrid permission state to the established Item/Supporter search transaction engine. Exact print metadata supplies ACE SPEC and other selector tags, temporary channel projection gates ordinary hand actions, and residual predicates handle narrow selectors. The adapter restores base channels after execution so active restrictions remain the upstream state owner. A live CI regression verifies Vileplume blocking Secret Box, Sealing Scream identifying Secret Box as ACE SPEC, Arven remaining legal under Item-only lock, and Dark Moon-GX blocking Arven.
+
+**Working synthesis:** transaction executors can consume lock legality as an external derived gate. This preserves one owner for action mechanics and one owner for active restriction state, reducing stale duplicated lock flags.
+
+
+
 
 ## 6. Attack semantics require identity, execution body, and timing
 
