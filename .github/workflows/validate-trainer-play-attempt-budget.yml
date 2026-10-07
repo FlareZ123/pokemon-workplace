@@ -1,0 +1,23 @@
+name: Validate Trainer play attempt budget
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/trainer_play_attempt_budget.py"
+      - "results/trainer_play_attempt_budget/**"
+      - ".github/workflows/validate-trainer-play-attempt-budget.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Trainer play attempt budget
+        run: python results/trainer_play_attempt_budget/reproduce.py
