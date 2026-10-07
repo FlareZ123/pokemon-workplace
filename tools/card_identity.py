@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Literal
 
 from tools.build_expanded_legality_baseline import (
-    OFFICIAL_BAN_OVERLAY,
+    classify_effective_legality,
     gameplay_fingerprint,
     load_json,
 )
@@ -21,7 +21,7 @@ class PrintIdentity:
     set_id: str
     supertype: str | None
     effective_status: Literal["Legal", "Banned"]
-    legality_source: Literal["database", "official_overlay", "set_fallback"]
+    legality_source: Literal["database", "official_overlay", "card_text_tournament_ban", "set_fallback"]
     variant_id: str
 
 
@@ -68,19 +68,7 @@ def build_identity_index(resources_root: Path) -> IdentityIndex:
 
         for raw in load_json(path):
             card_id = raw["id"]
-            database_status = (raw.get("legalities") or {}).get("expanded")
-            if card_id in OFFICIAL_BAN_OVERLAY:
-                effective_status = "Banned"
-                legality_source = "official_overlay"
-            elif database_status == "Banned":
-                effective_status = "Banned"
-                legality_source = "database"
-            elif database_status == "Legal":
-                effective_status = "Legal"
-                legality_source = "database"
-            else:
-                effective_status = "Legal"
-                legality_source = "set_fallback"
+            effective_status, legality_source = classify_effective_legality(raw)
 
             record = PrintIdentity(
                 card_id=card_id,
