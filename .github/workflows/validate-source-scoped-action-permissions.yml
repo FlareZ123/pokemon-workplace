@@ -13,6 +13,7 @@ on:
       - "tools/board_derived_trainer_transaction.py"
       - "tools/card_action_metadata.py"
       - "tools/continuous_source_scoped_restrictions.py"
+      - "tools/lock_gated_evolution_transaction.py"
       - "tools/source_scoped_action_restrictions.py"
       - "tools/source_scoped_channel_projection.py"
       - "tools/source_scoped_restriction_activation.py"
@@ -26,6 +27,7 @@ on:
       - "results/board_derived_continuous_restrictions/**"
       - "results/board_derived_trainer_transaction/**"
       - "results/continuous_source_scoped_restrictions/**"
+      - "results/lock_gated_evolution_transaction/**"
       - "results/source_scoped_action_restrictions/**"
       - "results/source_scoped_channel_projection/**"
       - "results/source_scoped_restriction_activation/**"
@@ -70,3 +72,5 @@ jobs:
         run: python results/active_source_scoped_restrictions/reproduce.py
       - name: Reproduce live-source Trainer transaction gating
         run: python results/active_source_trainer_transaction/reproduce.py
+      - name: Reproduce lock-gated evolution transaction
+        run: python results/lock_gated_evolution_transaction/reproduce.py
