@@ -2,7 +2,7 @@
 
 The reprint resolver preserves explicit negative evidence alongside positive candidates.
 
-The current known-negative set contains **50 historical prints across 12 names**.
+The current known-negative set contains **56 historical prints across 15 names**.
 
 ## Official and structural energy evidence
 
@@ -31,12 +31,17 @@ Two historical Life Herb printings, `ex5-90` and `ex6-93`, exclude Pokémon-ex a
 
 These cases use explicit state witnesses rather than text-distance heuristics.
 
+## Mandatory versus optional selection
+
+[../trainer_optionality_divergence/](../trainer_optionality_divergence/) adds six historical prints across PokéNav, Pokégear 3.0, and Dusk Ball. Their historical text requires choosing an eligible card from the inspected window, while current text uses `You may`. Under current rules, an eligible historical choice is mandatory and the current action is optional, creating a direct material-transition difference.
+
 ## Current counts
 
-The 50 known-negative prints are:
+The 56 known-negative prints are:
 
 - Darkness Energy: 15
 - Devolution Spray: 1
+- Dusk Ball: 2
 - Life Herb: 2
 - Magnetic Storm: 1
 - Master Ball: 5
@@ -44,11 +49,13 @@ The 50 known-negative prints are:
 - Metal Energy: 15
 - Pokémon Breeder: 3
 - Pokémon Center: 3
+- PokéNav: 3
+- Pokégear 3.0: 1
 - Power Plant: 1
 - Rainbow Energy: 2
 - Revive: 1
 
-In the current resolver partition, this leaves **4,008** same-name historical prints in `semantic_review`. The positive high-confidence candidate set remains **202** prints.
+In the current resolver partition, this leaves **4,002** same-name historical prints in `semantic_review`. The positive high-confidence candidate set remains **202** prints.
 
 ## Evidence policy
 
@@ -65,3 +72,7 @@ Run:
 The new name-reuse witnesses can be reproduced separately with:
 
 `python -m results.trainer_name_reuse_divergence.reproduce`
+
+The optionality witnesses can be reproduced with:
+
+`python -m results.trainer_optionality_divergence.reproduce`
