@@ -22,9 +22,14 @@ from lock_state_kernel import PlayerChannels
 from multicopy_zone_state import ZoneCountState
 from search_zone_transition import (
     SearchZoneTarget,
+    apply_typed_retrieval_action,
     apply_typed_search_action,
 )
 from trainer_search_profile_compiler import CompiledTrainerSearchProfile
+from typed_search_retrieval import (
+    TypedRetrievalAction,
+    enumerate_typed_retrieval_actions,
+)
 from turn_action_budget import TurnAction, TurnActionBudget
 from typed_search_target_allocator import (
     DemandChannel,
@@ -92,6 +97,45 @@ def _validated_branch(
     raise ValueError("search action is not valid for this compiled profile")
 
 
+def _validated_retrieval_branch(
+    profile: CompiledTrainerSearchProfile,
+    targets: Sequence[SearchZoneTarget],
+    action: TypedRetrievalAction,
+) -> tuple[int, bool]:
+    if not any(action.target_cost):
+        raise ValueError("transaction requires a nonzero retrieval")
+
+    target_groups = tuple(target.group for target in targets)
+    base = enumerate_typed_retrieval_actions(
+        profile.base_outputs,
+        target_groups,
+    )
+    if action in base:
+        return profile.required_discard_other_cards, False
+
+    if (
+        profile.conditional_outputs
+        and profile.optional_discard_other_cards > 0
+    ):
+        all_outputs = profile.base_outputs + profile.conditional_outputs
+        retrievals = enumerate_typed_retrieval_actions(
+            all_outputs,
+            target_groups,
+        )
+        base_axis_count = len(profile.base_outputs)
+        if (
+            action in retrievals
+            and any(action.axis_usage[base_axis_count:])
+        ):
+            return (
+                profile.required_discard_other_cards
+                + profile.optional_discard_other_cards,
+                True,
+            )
+
+    raise ValueError("retrieval action is not valid for this compiled profile")
+
+
 def _discard_entire_hand(
     state: ZoneCountState,
 ) -> tuple[ZoneCountState, int]:
@@ -113,20 +157,20 @@ def _discard_entire_hand(
     return after, discarded
 
 
-def execute_trainer_search_transaction(
+def _execute_transaction(
     state: TrainerSearchExecutionState,
     *,
     profile: CompiledTrainerSearchProfile,
     action_card_class: str,
-    demands: Sequence[DemandChannel],
     targets: Sequence[SearchZoneTarget],
-    search_action: TypedTargetAction,
-    discard_candidates: Sequence[DiscardCandidate] = (),
-    discard_selection: DiscardSelection | None = None,
-    play_condition_met: bool | None = None,
+    search_action: TypedTargetAction | TypedRetrievalAction,
+    fixed_discard_cost: int,
+    used_conditional: bool,
+    retrieval_first: bool,
+    discard_candidates: Sequence[DiscardCandidate],
+    discard_selection: DiscardSelection | None,
+    play_condition_met: bool | None,
 ) -> TrainerSearchTransaction:
-    """Execute one validated compiled Item/Supporter search action atomically."""
-
     if not action_card_class:
         raise ValueError("action_card_class must be non-empty")
     if profile.action_class not in {"Item", "Supporter"}:
@@ -153,13 +197,6 @@ def execute_trainer_search_transaction(
         next_budget = state.budget.consume(TurnAction.SUPPORTER)
         if next_budget is None:
             raise ValueError("Supporter action budget is exhausted")
-
-    fixed_discard_cost, used_conditional = _validated_branch(
-        profile,
-        demands,
-        targets,
-        search_action,
-    )
 
     working_zones = state.zones.move(
         action_card_class,
@@ -195,11 +232,22 @@ def execute_trainer_search_transaction(
                 discard_selection,
             ).after
 
-    searched = apply_typed_search_action(
-        working_zones,
-        targets,
-        search_action,
-    ).after
+    if retrieval_first:
+        if not isinstance(search_action, TypedRetrievalAction):
+            raise TypeError("retrieval-first transaction requires TypedRetrievalAction")
+        searched = apply_typed_retrieval_action(
+            working_zones,
+            targets,
+            search_action,
+        ).after
+    else:
+        if not isinstance(search_action, TypedTargetAction):
+            raise TypeError("demand-first transaction requires TypedTargetAction")
+        searched = apply_typed_search_action(
+            working_zones,
+            targets,
+            search_action,
+        ).after
 
     after_zones = searched.move(
         action_card_class,
@@ -231,4 +279,72 @@ def execute_trainer_search_transaction(
         after=after,
         discard_cost=discard_cost,
         used_conditional_outputs=used_conditional,
+    )
+
+
+def execute_trainer_search_transaction(
+    state: TrainerSearchExecutionState,
+    *,
+    profile: CompiledTrainerSearchProfile,
+    action_card_class: str,
+    demands: Sequence[DemandChannel],
+    targets: Sequence[SearchZoneTarget],
+    search_action: TypedTargetAction,
+    discard_candidates: Sequence[DiscardCandidate] = (),
+    discard_selection: DiscardSelection | None = None,
+    play_condition_met: bool | None = None,
+) -> TrainerSearchTransaction:
+    """Execute one demand-first compiled Item/Supporter search action."""
+
+    fixed_discard_cost, used_conditional = _validated_branch(
+        profile,
+        demands,
+        targets,
+        search_action,
+    )
+    return _execute_transaction(
+        state,
+        profile=profile,
+        action_card_class=action_card_class,
+        targets=targets,
+        search_action=search_action,
+        fixed_discard_cost=fixed_discard_cost,
+        used_conditional=used_conditional,
+        retrieval_first=False,
+        discard_candidates=discard_candidates,
+        discard_selection=discard_selection,
+        play_condition_met=play_condition_met,
+    )
+
+
+def execute_trainer_retrieval_transaction(
+    state: TrainerSearchExecutionState,
+    *,
+    profile: CompiledTrainerSearchProfile,
+    action_card_class: str,
+    targets: Sequence[SearchZoneTarget],
+    retrieval_action: TypedRetrievalAction,
+    discard_candidates: Sequence[DiscardCandidate] = (),
+    discard_selection: DiscardSelection | None = None,
+    play_condition_met: bool | None = None,
+) -> TrainerSearchTransaction:
+    """Execute one retrieval-first action while preserving optional side outputs."""
+
+    fixed_discard_cost, used_conditional = _validated_retrieval_branch(
+        profile,
+        targets,
+        retrieval_action,
+    )
+    return _execute_transaction(
+        state,
+        profile=profile,
+        action_card_class=action_card_class,
+        targets=targets,
+        search_action=retrieval_action,
+        fixed_discard_cost=fixed_discard_cost,
+        used_conditional=used_conditional,
+        retrieval_first=True,
+        discard_candidates=discard_candidates,
+        discard_selection=discard_selection,
+        play_condition_met=play_condition_met,
     )
