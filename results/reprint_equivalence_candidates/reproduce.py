@@ -10,6 +10,7 @@ from tools.reprint_equivalence_candidates import build_candidates
 RESOURCES = ROOT / "resources"
 result = build_candidates(RESOURCES)
 counts = result["counts"]
+print("live reprint counts:", counts)
 
 assert counts["exact_candidate_prints"] == 100
 assert counts["exact_candidate_variants"] == 16
