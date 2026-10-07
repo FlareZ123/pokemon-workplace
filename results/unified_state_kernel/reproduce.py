@@ -21,6 +21,7 @@ from unified_state_kernel import (  # noqa: E402
     attach_dce_to_active,
     attach_tool_to_active,
     change_bench_capacity,
+    discard_active_energy_units_minimum,
     gladion_access_probability,
     make_state,
     play_tapu_lele_from_hand,
@@ -163,11 +164,28 @@ def main() -> None:
 
     dce_attached = attach_dce_to_active(energy)
     assert dce_attached is not None
+    assert dce_attached.attached_units == ()
+    assert len(dce_attached.attached_energy_cards) == 1
+    assert (
+        dce_attached.attached_energy_cards[0].card_name
+        == "Double Colorless Energy"
+    )
+    assert dce_attached.attached_energy_cards[0].units == 2
     assert not attack_ready(dce_attached, ("L", "C", "C"))
 
     attack_state = play_thunder_mountain(dce_attached)
     assert attack_state is not None
     assert attack_ready(attack_state, ("L", "C", "C"))
+
+    discarded_energy = discard_active_energy_units_minimum(
+        attack_state,
+        2,
+    )
+    assert len(discarded_energy) == 1
+    post_discard = discarded_energy[0][1]
+    assert post_discard.zone("Double Colorless Energy") == Zone.DISCARD.value
+    assert post_discard.attached_energy_cards == ()
+    assert not attack_ready(post_discard, ("L", "C", "C"))
 
     special_energy_locked = apply_lock(energy, "special_energy_play")
     assert attach_dce_to_active(special_energy_locked) is None
@@ -288,6 +306,8 @@ def main() -> None:
                 "non_hood_tool_grants_stealthy_hood_protection": False,
                 "tool_effect_after_suppression": False,
                 "volt_cyclone_ready_after_dce_and_thunder_mountain": True,
+                "dce_physical_cards_discarded_for_two_energy": 1,
+                "volt_cyclone_ready_after_dce_discard": False,
                 "contraction_discards": [
                     resident.name for resident in discarded
                 ],
