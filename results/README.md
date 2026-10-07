@@ -1164,3 +1164,9 @@ The conserved evolution-stack regression confirms both authorized physical branc
 
 **Working synthesis:** hidden-zone information value is deadline-sensitive. Physical-position beliefs and strategic target deadlines must be carried together; a raw count of remaining probes can overvalue an information-gathering action whose prerequisite expires before that information can be converted into access.
 
+## Prized Supporter access can miss the execution window
+
+[prize_supporter_execution/](prize_supporter_execution/) bridges physical Prize access to the canonical turn-action budget. For a known Prized Supporter among six unknown positions, Arc Phone -> Trekking Shoes has 1/6 hand-access and same-turn execution probability. Peonia -> Arc Phone -> Trekking Shoes raises hand access to 2/3, yet ordinary same-turn Supporter execution is 0 because Peonia has consumed the one-Supporter channel. With Magnezone bw8-46's Dual Brains raising the Supporter limit to two, the Peonia line converts the full 2/3 access probability into execution probability.
+
+**Working synthesis:** card access and executable access are distinct state variables. A connector can improve hidden-zone recovery while consuming the exact action quota required by its payload; quota-changing board effects can reverse that line evaluation without changing the Prize posterior.
+
