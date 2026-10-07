@@ -414,6 +414,20 @@ Green regressions cover Secret Box, Arven, Guzma & Hala, and Larry's Skill. The 
 **Working synthesis:** a committed connector action needs explicit resolution state and exact target/cost witnesses rather than only its low-dimensional optimization projection.
 
 
+
+## 34. Hidden-zone correlation now spans observer belief, material truth, and Prize-taking timing
+
+[observer_top_prize_beliefs/](observer_top_prize_beliefs/) extends the Arc Phone-style top/Prize joint belief to multiple observers. In its toy policy, the actor privately sees X and swaps; an opponent who knows that X swaps with probability 1 and Y with probability 1/4 updates to 80% X and 20% Y for the inserted face-down Prize. Both observers preserve the exact anti-correlation between the outgoing top card and the untouched Prize.
+
+[top_prize_physical_bridge/](top_prize_physical_bridge/) binds those observer posteriors to one exact material state. The top card and ordered Prize slots are materialized `CardInstance` objects, the swap conserves those same instances, and every observer posterior must keep positive support on the exact physical world. The actor's private top observation is derived from that physical world.
+
+[prize_joint_position_removal/](prize_joint_position_removal/) shows that taking one correlated Prize can reveal information about another hidden zone. In the A/B toy branch, privately observing B leave the untouched Prize slot makes the actor certain that the hidden deck top is A, while an opponent who sees only the Prize count change remains at 50/50.
+
+[prize_pending_take/](prize_pending_take/) adds an explicit `prize_pending` timing state before hand entry. Selected physical Prize instances leave the Prize topology, the taking player receives the appropriate private identity observation, and pending cards resolve one at a time to hand or another legal destination. This preserves before-hand effects that can route a taken Prize directly into play without an artificial hand intermediate.
+
+**Working synthesis:** hidden-zone state needs an exact material world plus observer-relative joint beliefs. Prize taking also needs a timing boundary between learning a previously face-down identity and its final destination.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -432,6 +446,10 @@ Particularly foundational components include:
 - `bench_capacity_model.py`
 - `lock_effect_catalog.py`
 - `prize_belief_decision.py`
+- `observer_top_prize_beliefs.py`
+- `top_prize_physical_bridge.py`
+- `prize_joint_position_removal.py`
+- `prize_pending_take.py`
 - `unified_state_kernel.py`
 - `multicopy_zone_state.py`
 - `board_object_kernel.py`
