@@ -1,0 +1,23 @@
+name: Validate search payload execution probability
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/singleton_payload_execution_probability.py"
+      - "results/search_payload_execution_probability/**"
+      - ".github/workflows/validate-search-payload-execution-probability.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce search payload execution probability
+        run: python results/search_payload_execution_probability/reproduce.py
