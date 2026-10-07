@@ -1,0 +1,72 @@
+{
+  "card_text_anchors": {
+    "spent_support_example": "Crobat V swsh3-104: Dark Asset triggers when played from hand to Bench and the Pokémon remains in play afterward.",
+    "cleanup_example": "AZ xy4-91: put 1 Pokémon into your hand; AZ is a Supporter.",
+    "item_cleanup_counterexample": "Scoop Up Net swsh2-165 cannot target Pokémon V or Pokémon-GX, so it cannot clear Crobat V or Dedenne-GX.",
+    "two_supporter_quota_example": "Magnezone bw8-46: Dual Brains allows 2 Supporter cards during your turn."
+  },
+  "mechanical_continuation": {
+    "no_spent_support_limit_1": [
+      "play required Supporter",
+      "Bench required Pokémon"
+    ],
+    "spent_support_entry_only_limit_1": [
+      "AZ removes spent support",
+      "Bench required Pokémon"
+    ],
+    "spent_support_plus_required_supporter_limit_1": null,
+    "spent_support_plus_required_supporter_limit_2": [
+      "AZ removes spent support",
+      "play required Supporter",
+      "Bench required Pokémon"
+    ]
+  },
+  "probability_model": {
+    "interpretation": "Immediate setup succeeds if at least one of O outs appears in D random draws from an N-card deck. A future collision branch requires both AZ cleanup and another Supporter before a required Bench entry. All other future branches are assumed solvable.",
+    "ordinary_quota_support_joint_success": "support_success * (1 - collision_probability)",
+    "no_support_joint_success": "base_success",
+    "two_supporter_quota_support_joint_success": "support_success",
+    "break_even_formula": "collision_probability = 1 - base_success / support_success",
+    "threshold_examples": [
+      {
+        "deck_cards": 40,
+        "outs": 4,
+        "base_draws": 2,
+        "support_draws": 5,
+        "base_success_fraction": "5/26",
+        "base_success_percent": 19.23076923076923,
+        "support_success_fraction": "3903/9139",
+        "support_success_percent": 42.70707954918481,
+        "immediate_gain_pp": 23.47631031841558,
+        "break_even_collision_fraction": "4291/7806",
+        "break_even_collision_percent": 54.97053548552395
+      },
+      {
+        "deck_cards": 40,
+        "outs": 4,
+        "base_draws": 4,
+        "support_draws": 5,
+        "base_success_fraction": "6497/18278",
+        "base_success_percent": 35.54546449283291,
+        "support_success_fraction": "3903/9139",
+        "support_success_percent": 42.70707954918481,
+        "immediate_gain_pp": 7.1616150563518985,
+        "break_even_collision_fraction": "1309/7806",
+        "break_even_collision_percent": 16.76915193440943
+      },
+      {
+        "deck_cards": 40,
+        "outs": 4,
+        "base_draws": 5,
+        "support_draws": 6,
+        "base_success_fraction": "3903/9139",
+        "base_success_percent": 42.70707954918481,
+        "support_success_fraction": "22507/45695",
+        "support_success_percent": 49.254841886420834,
+        "immediate_gain_pp": 6.547762337236022,
+        "break_even_collision_fraction": "2992/22507",
+        "break_even_collision_percent": 13.293641978051273
+      }
+    ]
+  }
+}
