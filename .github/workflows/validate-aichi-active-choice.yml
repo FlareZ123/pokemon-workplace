@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - tools/aichi_active_choice.py
+      - tools/aichi_active_invariance.py
       - results/aichi_active_choice/reproduce.py
       - .github/workflows/validate-aichi-active-choice.yml
   workflow_dispatch:
@@ -15,3 +16,4 @@ jobs:
         with:
           python-version: "3.11"
       - run: python tools/aichi_active_choice.py
+      - run: python tools/aichi_active_invariance.py
