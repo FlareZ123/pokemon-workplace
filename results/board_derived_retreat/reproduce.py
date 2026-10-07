@@ -100,7 +100,7 @@ def main() -> None:
         external_modifiers=(RetreatCostModifier("Galar Mine", delta=2),),
     )
     assert attempt.effective_retreat_cost == 2
-    assert attempt.transaction is not None and attempt.transaction.committed
+    assert attempt.transaction is None
 
     dce = EnergyAttachment("dce", "Double Colorless Energy", ("C", "C"))
     pouch = ToolAttachment("pouch", "Dashing Pouch")
