@@ -1,0 +1,23 @@
+name: Validate Stadium effect instance usage
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/stadium_effect_instance_usage.py"
+      - "results/stadium_effect_instance_usage/**"
+      - ".github/workflows/validate-stadium-effect-instance-usage.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Stadium effect instance usage
+        run: python results/stadium_effect_instance_usage/reproduce.py
