@@ -336,6 +336,24 @@ The integration review found a concrete split-state failure in the unified kerne
 
 
 
+## 27. Prize information is observer-relative and visibility-sensitive
+
+[prize_take_information_asymmetry/](prize_take_information_asymmetry/) distinguishes the taking player's observed Prize identity from an opponent who sees only the Prize count decrease. In the five-card, two-Prize toy state, after the taker observes A, the taker assigns zero probability that A remains Prized and 1/4 that B remains; the uninformed observer still assigns 1/5 to either singleton remaining. Hidden random removal also preserves the hypergeometric family: a uniform P-card Prize subset followed by unseen random removals is distributed as a smaller uniform subset of the same pool.
+
+[observer_prize_beliefs/](observer_prize_beliefs/) makes that asymmetry explicit by storing a separate `PrizeBelief` per observer for the same physical Prize zone and updating each posterior according to what that observer actually saw.
+
+[prize_visibility_partition/](prize_visibility_partition/) adds a second necessary axis after face-up Prize effects. Two states can have identical exact total composition while one has singleton A face up and the other has A face down; a face-down-only effect therefore has A-target probability 0 in one state and 1 in the other. The partition keeps exact face-up counts and a belief over the remaining face-down cards.
+
+**Working synthesis:** hidden-state knowledge belongs to observers, and Prize targetability depends on visibility as well as composition. One global composition belief can alias strategically different states.
+
+## 28. Prize card text already supports a reusable transition vocabulary
+
+[prize_effect_catalog/](prize_effect_catalog/) conservatively compiles 139 legal Expanded effect rows into 19 Prize transition atoms, including inspection, face-up revelation, Prize/hand/deck/discard movement, top-deck and hand swaps, direct and extra Prize taking, Prize destination overrides, shuffling, and before-hand Prize triggers.
+
+Named regressions cover Gladion, Hisuian Heavy Ball, Peonia, Rotom Dex, Redeemable Ticket, Burst-GX, Arc Phone, Team Rocket's Bother-Bot, Lost Block, Billowing Smoke, Town Map, and several before-hand trigger cards. Arc Phone produced a useful parser correction because its wording names the top-deck referent before the switch operation.
+
+**Working synthesis:** Prize mechanics are better represented as ordered multi-axis transition programs than card-level labels. The atom catalog is a conservative semantic island and still leaves typed selection, optionality, counts, ordering, stochastic gates, and full referent resolution for later compiler layers.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
