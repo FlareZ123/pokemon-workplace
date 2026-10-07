@@ -53,3 +53,16 @@ Added tools/lock_state_kernel.py and results/typed_lock_state_kernel/. The kerne
 Regression cases preserve three rules-derived distinctions: Item lock leaves Tool play available; temporary attack/retreat effects clear on the relevant position/evolution state change; Tool-effect suppression can leave attachment true. The Jamming Tower regression therefore keeps Garbotoxin's attached-Tool condition true while turning Stealthy Hood protection off.
 
 This is intended as a semantic bridge to the repository's typed_access_network.py. A future integration should attach lock permissions to typed transition edges rather than expanding the existing broad booleans without target or card-class scope.
+
+
+## Fourth result: source-scoped card-action restrictions
+
+Added `tools/source_scoped_action_restrictions.py` and `results/source_scoped_action_restrictions/`.
+
+The audited legal paper Expanded snapshot contains 106 print-level direct play/attach restrictions across 63 card names in the conservative wording family. Every compiled restriction names hand as the prohibited source zone. The predicate also preserves card class, action mode, exact Defending-Pokémon target relation where required, and printed card-tag exclusions.
+
+Key regression: Vileplume `xy7-3` Irritating Pollen blocks an Item action sourced from hand while leaving a Prize-origin Dream Ball in `prize_pending` legal. The same abstraction covers Trainer-wide and all-card hand locks, ACE SPEC selection, Potent Glare's Team Rocket exception, and Defending-Pokémon-only evolution/Energy restrictions.
+
+This strengthens the earlier typed lock-state work: broad `PlayerChannels` booleans are compatibility projections for ordinary hand actions. Transaction-level legality needs source-zone and target semantics.
+
+Next useful integration is to connect the predicate to a canonical action-permission adapter so Trainer transactions, manual attachments, evolution actions, and special Prize-origin plays can share one legality check. Preserve the current causal Ability-lock state as the upstream source-activation layer rather than recomputing Ability precedence inside the action predicate.
