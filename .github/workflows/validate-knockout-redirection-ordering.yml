@@ -1,0 +1,25 @@
+name: Validate ordered Knock Out redirection
+
+on:
+  push:
+    paths:
+      - "tools/knockout_redirection_ordering.py"
+      - "tools/knockout_redirection_routes.py"
+      - "tools/knockout_zone_routing.py"
+      - "results/knockout_redirection_ordering/**"
+      - ".github/workflows/validate-knockout-redirection-ordering.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run ordered redirection regression
+        run: python results/knockout_redirection_ordering/reproduce.py
