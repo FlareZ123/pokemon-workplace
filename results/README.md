@@ -146,7 +146,9 @@ In the reported 500,000 accepted-opening simulation, the modeled Guzma & Hala ro
 - Stoutland Stage 2: 48.5640%;
 - Vileplume Item lock: 36.3388%.
 
-A broader modeled planner found only a small increment outside the named route for the same core objective, supporting the usefulness of the ALS abstraction for this deck while preserving the stated simulation scope and exclusions.
+The current broader modeled planner reaches the same core in 70.7090% of a deterministic 100,000-state regression after the Active-Bunnelby correction. That remains a modest increment over the named route and preserves the usefulness of the ALS abstraction within its stated scope.
+
+[aichi_vileplume_secret_box/](aichi_vileplume_secret_box/) audits a concrete multi-output connector change in the same deck. Replacing Grand Tree with Secret Box raises the narrow first-turn core from 70.6524% to 74.8094% in a 500,000-state paired run (+4.1570 pp), while 76.67% of the incremental successes still route through `Secret Box -> Guzma & Hala -> Jet Energy`. This shows why physical output count and independent demand capacity must be represented separately.
 
 ## 9. Iron Thorns ex: composing access with attack readiness
 
