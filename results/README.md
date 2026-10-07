@@ -939,6 +939,14 @@ The exact regression stages physical X and B together, lets B resolve to public 
 **Working synthesis:** physical queue order and information-state queue order should use the same stable pending-instance key. This prevents a simulator from reordering one layer without the other, and it gives nested Prize effects one shared barrier for both mechanics and information.
 
 
+## 72. Materialized deck top must contribute to physical deck size
+
+[materialized_deck_size_projection/](materialized_deck_size_projection/) establishes the deck-side counterpart to canonical physical hand counting.
+
+After the atomic Computer Search line, exact Y is represented as deck_top while two fillers remain exchangeable in deck. The aggregate deck zone reports 2 cards; physical deck size is 3 because the materialized top remains part of the deck. Drawing exact Y moves that instance to hand and reduces physical deck size to 2 while the aggregate deck count remains unchanged at 2.
+
+**Working synthesis:** deck_top is a relation on a deck card rather than a separate card population. Deck-out checks, remaining-deck denominators, draw counts, and deck-size-sensitive effects need a canonical projection that includes active top relations until they are consumed or collapsed.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
