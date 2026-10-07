@@ -37,6 +37,15 @@ Several repository components already carry overlapping pieces of this state:
 
 Those representations are individually workable, but composition can create impossible states if two subsystems disagree about whether a once-per-turn action has already been spent.
 
+### Expanded quota counterexample
+
+Magnezone `bw8-46` has the Dual Brains Ability, which permits two Supporter cards during its controller's turn. The bundled legality classifier returns `Legal` for this print.
+
+After one Supporter has been played with this Ability active, the old boolean view says a Supporter has been used while the second play is still available. The canonical model therefore stores both `supporter_plays_used` and `supporter_play_limit`.
+
+The reproducer verifies the bundled card text and effective legality, permits two Supporter plays under a limit of two, and rejects a third.
+
+
 The generic budget supplies one common contract for future composition. A larger canonical state can own one `TurnActionBudget`, while specialized subsystems query or consume the shared channel rather than maintaining competing copies.
 
 ### Concrete integration failure found
