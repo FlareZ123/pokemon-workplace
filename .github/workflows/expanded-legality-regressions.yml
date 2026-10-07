@@ -9,6 +9,8 @@ on:
       - "tools/audit_set_fallback_legality.py"
       - "results/deck_validator/reproduce.py"
       - "results/set_fallback_legality_audit/reproduce.py"
+      - "tools/reprint_equivalence_candidates.py"
+      - "results/reprint_equivalence_candidates/reproduce.py"
       - ".github/workflows/expanded-legality-regressions.yml"
   workflow_dispatch:
 
@@ -24,3 +26,5 @@ jobs:
         run: python results/deck_validator/reproduce.py
       - name: Run set-fallback audit regressions
         run: python results/set_fallback_legality_audit/reproduce.py
+      - name: Run reprint candidate regressions
+        run: python results/reprint_equivalence_candidates/reproduce.py
