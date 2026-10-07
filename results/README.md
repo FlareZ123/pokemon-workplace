@@ -141,6 +141,8 @@ This supports edge-local restrictions in nested copy lines such as Mimikyu Copyc
 
 Other timing and attack-structure work includes [copied_attack_partial_resolution/](copied_attack_partial_resolution/), [attack_discard_dependency_grammar/](attack_discard_dependency_grammar/), [before_damage_timing_geometry/](before_damage_timing_geometry/), and [attack_retreat_lock_geometry/](attack_retreat_lock_geometry/).
 
+[attack_copy_damage_bridge/](attack_copy_damage_bridge/) and [attack_copy_reaction_bridge/](attack_copy_reaction_bridge/) extend that execution stack through ordered board damage and the rulebook's damaged-by-attack reaction phase. A copied Timeless-GX can create a pending extra-turn directive while damage or a Strong Bash-like reflection still creates Knock Outs. The turn scheduler is therefore gated behind the full attack-ending phase order: outer copy continuation, board damage/effects, damaged-by-attack reactions, Knock Out processing, then turn handoff.
+
 ## 7. Setup is an information process as well as a legality process
 
 The setup research models opening acceptance, optional starters, mulligans, and the public information revealed before the first normal turn.
