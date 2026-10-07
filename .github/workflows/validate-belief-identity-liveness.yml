@@ -1,0 +1,25 @@
+name: Validate belief identity liveness
+
+on:
+  push:
+    paths:
+      - "tools/identity_reference_sources.py"
+      - "tools/identity_liveness.py"
+      - "tools/pending_prize_batch_identity_belief.py"
+      - "results/belief_identity_liveness/**"
+      - ".github/workflows/validate-belief-identity-liveness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check belief-held exact identity liveness
+        run: python results/belief_identity_liveness/reproduce.py
