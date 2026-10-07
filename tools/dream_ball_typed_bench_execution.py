@@ -12,7 +12,13 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
 
-from before_hand_prize_executor import BeforeHandItemResolutionState
+from before_hand_prize_executor import (
+    BeforeHandItemResolutionState,
+    begin_before_hand_item_play,
+    finish_before_hand_item_play,
+    resolve_before_hand_item_effect,
+)
+from before_hand_prize_profiles import BeforeHandPrizeProfile
 from board_position_state import BoardPokemon, PokemonCard
 from identity_materialization import (
     IdentityLedger,
@@ -20,7 +26,9 @@ from identity_materialization import (
     materialize,
     put_in_play_instance,
 )
+from item_play_source_scope import ItemPlayRestriction
 from pokemon_board_metadata import PokemonBoardMetadata
+from prize_pending_take import PrizePendingTakeState
 from promotion_pending_conservation import PromotionPendingState
 from search_zone_transition import SearchZoneTarget, apply_typed_search_action
 from top_prize_physical_bridge import TopPrizePhysicalState
@@ -84,6 +92,17 @@ class DreamBallBenchTransition:
     selected_card_class: str
     materialized_instance_id: str
     pokemon_id: str
+
+
+@dataclass(frozen=True)
+class DreamBallItemTransaction:
+    """One complete Prize-origin Dream Ball play with synchronized board state."""
+
+    before_prizes: PrizePendingTakeState
+    before_board: PromotionPendingState
+    after_prizes: PrizePendingTakeState
+    after_board: PromotionPendingState
+    bench_transition: DreamBallBenchTransition
 
 
 def execute_dream_ball_bench_search(
@@ -197,4 +216,59 @@ def execute_dream_ball_bench_search(
         selected_card_class=selected.search_target.card_class,
         materialized_instance_id=instance_id,
         pokemon_id=pokemon_id,
+    )
+
+
+def execute_dream_ball_item_transaction(
+    prizes: PrizePendingTakeState,
+    board: PromotionPendingState,
+    *,
+    profile: BeforeHandPrizeProfile,
+    during_own_turn: bool,
+    targets: Sequence[DreamBallBenchTarget],
+    search_action: TypedTargetAction,
+    pokemon_id: str,
+    instance_id: str,
+    active_item_restrictions: Sequence[ItemPlayRestriction] = (),
+) -> DreamBallItemTransaction:
+    """Execute Dream Ball from Prize pending through Item discard atomically."""
+
+    if prizes.physical.ledger != board.ledger:
+        raise ValueError("Prize and board states must share one physical ledger")
+
+    resolving = begin_before_hand_item_play(
+        prizes,
+        profile,
+        during_own_turn=during_own_turn,
+        active_item_restrictions=active_item_restrictions,
+    )
+    resolving_board = board.with_ledger(resolving.physical.ledger)
+
+    bench_transition = execute_dream_ball_bench_search(
+        resolving,
+        resolving_board,
+        targets=targets,
+        search_action=search_action,
+        pokemon_id=pokemon_id,
+        instance_id=instance_id,
+    )
+    effect = resolve_before_hand_item_effect(
+        bench_transition.after_resolving,
+        secondary_effect_resolved=True,
+    )
+    after_prizes = finish_before_hand_item_play(effect)
+    after_board = bench_transition.after_board.with_ledger(
+        after_prizes.physical.ledger
+    )
+
+    if after_prizes.physical.ledger != after_board.ledger:
+        raise AssertionError("Dream Ball transaction ended with split physical ledgers")
+    assert_conserved(prizes.physical.ledger, after_prizes.physical.ledger)
+
+    return DreamBallItemTransaction(
+        before_prizes=prizes,
+        before_board=board,
+        after_prizes=after_prizes,
+        after_board=after_board,
+        bench_transition=bench_transition,
     )
