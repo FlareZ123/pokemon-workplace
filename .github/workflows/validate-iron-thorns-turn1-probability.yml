@@ -1,0 +1,24 @@
+name: Validate Iron Thorns turn one probability
+
+on:
+  push:
+    paths:
+      - "tools/iron_thorns_turn1_probability.py"
+      - "tools/iron_thorns_mulligan_bonus.py"
+      - "results/iron_thorns_turn1_probability/**"
+      - ".github/workflows/validate-iron-thorns-turn1-probability.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check turn-one and mulligan probabilities
+        run: python results/iron_thorns_turn1_probability/reproduce.py
