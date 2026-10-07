@@ -225,6 +225,8 @@ Other timing and attack-structure work includes [copied_attack_partial_resolutio
 
 [simple_attack_board_semantics/](simple_attack_board_semantics/) adds a conservative card-data compiler for fixed/effect-only damage, seven exact damage-counter templates, and unconditional extra-turn clauses. [copy_attack_profile_damage_bridge/](copy_attack_profile_damage_bridge/) then preserves a crucial copy invariant: Weakness/Resistance uses the copying Pokémon's current type, not the selected source card's type. A Colorless Team Rocket's Persian ex copying Dragon-type Phantom Dive therefore deals 200 rather than 400 into a Dragon-weak Dratini unless Persian itself currently has Dragon type.
 
+[attack_copy_outer_control/](attack_copy_outer_control/) separates six previously refused copy signatures into two execution stages: Nightcap has a declaration gate, while Skill Thief and four coin-gated attacks control whether the copy body executes after the attack has begun. [attack_copy_controlled_execution/](attack_copy_controlled_execution/) preserves the compiler's existing safety boundary with guarded definitions, then executes directly declared controlled attacks explicitly. A failed Nightcap gate never enters attack resolution; a failed Skill Thief or tails coin branch still records the declared outer attack; missing stochastic input remains an unresolved branch rather than an assumed outcome.
+
 ## 7. Setup is an information process as well as a legality process
 
 The setup research models opening acceptance, optional starters, mulligans, and the public information revealed before the first normal turn.
