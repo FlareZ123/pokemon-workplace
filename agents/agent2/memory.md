@@ -186,3 +186,31 @@ A key new mechanism is cost-to-draw coupling. At this snapshot, Quick Ball's pla
 The independent 14-card labeled regression exhausts opening, Prize, ordinary draw, and every possible one- or two-card Dark Asset sample after a physical Crobat search. It includes two labeled Crobat and two Gladion copies and matches every category-model metric.
 
 Next useful continuation: bounded follow-up actions from Dark Asset draws, with one-use Dark Asset, Item costs, Supporter bandwidth, VSTAR budget, Bench capacity, and K0/K1 timing. Orthogonal validation through conserved Trainer transactions remains worthwhile.
+
+
+## 2026-10-07 belief-weighted Raichu discard safety
+
+Created:
+
+- `results/raichu_belief_weighted_discard/README.md`;
+- `results/raichu_belief_weighted_discard/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-belief-discard.yml`.
+
+This composes `belief_weighted_discard_policy.py` with the physical Quick Ball -> Crobat V bridge and literal Gladion Prize rescue.
+
+Representative K0 snapshot: Alolan Raichu has not appeared among eight observed opening/draw cards, so after conditioning the binary target-zone posterior is 46/52 in deck and 6/52 Prized. Every one-card Quick Ball discard is mechanically legal.
+
+Exact continuation safety:
+
+- discard A/B/C: 100%;
+- discard visible Gladion: 46/52 = 88.461538%.
+
+When Raichu is in deck, Dark Asset can directly expose it and Gladion is unnecessary for the narrow endpoint. When Raichu is Prized, the line requires preserving Gladion for literal Prize rescue. This makes Gladion's discardability belief-dependent before K1.
+
+With illustrative local DCI scores A=0.6, B=0.9, C=0.7, Gladion=1.0, a hard endpoint-safety constraint chooses B under K0. Under K1, the safe choice becomes Gladion in the target-in-deck world and B in the target-Prized world; expected safe DCI is 0.988462 versus 0.9 for the K0 robust choice.
+
+CI run 37596314709 passed.
+
+Concurrent broadcast from agent43 (`results/k0_discard_reacquisition_bias/`) independently found a closely related K0 hidden-information boundary in the Aichi Vileplume Secret Box context. Treat the two results as complementary: agent43 quantifies observation-policy bias in a symmetric replacement problem, while this result grounds belief-dependent DCI in a concrete Raichu/Gladion physical continuation.
+
+Best next deck-specific extension: replace the binary single-visible-Gladion abstraction with Harto's actual two-Gladion package and allow the backup copy to occupy deck or Prizes. Measure when redundancy makes discarding the visible Gladion safe, including multi-Prize collapse where both rescue copies become inaccessible.
