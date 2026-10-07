@@ -189,6 +189,32 @@ player whose turn would be next chooses first. The decision protocol is:
 An unordered pair of promotions loses that information dependency even if the
 final positions happen to match.
 
+## Identity lifetime is a liveness problem
+
+[identity_liveness/](../identity_liveness/) adds a conservative sufficient rule
+for collapsing a materialized off-board card back into an exchangeable count.
+
+An exact instance can collapse only when it occupies a caller-approved
+exchangeable zone and no higher-layer reference still names that instance.
+The default policy treats hand, unordered deck, discard, and Lost Zone as
+exchangeable candidates. It preserves exact deck-top and Prize instances by
+default because those representations can still carry topology, position, or
+observer-relative information.
+
+The regression also models an ordinary hand instance that remains exact only
+because an enclosing effect still refers to it. Releasing that reference makes
+the instance safely collapsible while per-class copy totals and canonical
+physical hand size remain unchanged.
+
+This turns the earlier informal preserve_identity flag into an explicit proof
+obligation:
+
+materialize -> preserve while referenced -> release references -> collapse
+
+The current reference registry is explicit. A future canonical match state
+should collect live instance references from deck topology, Prize topology,
+belief state, pending effects, and other participating subsystems.
+
 ## Architectural consequence
 
 A larger simulator should avoid giving several subsystems competing ownership of
@@ -209,19 +235,22 @@ copies that can drift out of synchronization.
 
 ## Remaining integration gaps
 
-1. **Competing replacement/redirection effects.** Per-instance destination
-   routing exists, but precedence among several applicable effects needs an
-   explicit model.
+1. **Competing replacement/redirection effects.** This gap is partly closed.
+   The KO redirection work now detects same-instance destination conflicts,
+   executes caller-supplied effect order, and can authorize that order from
+   selected rules sources before conserved physical routing. The remaining
+   problem is a broader arbitrary-effect interpreter for non-destination
+   consequences and changing applicability conditions.
 2. **Canonical match-level phase composition.** Physical Knock Out disposal,
    Prize-pending information, promotion-pending state, and post-Knock-Out game
    resolution now have concrete adapters, while one shared match authority still
    needs to compose those phase boundaries consistently.
 3. **Cross-player unified state.** Promotion order is currently a protocol over
    two player states rather than one canonical match object.
-4. **Identity lifetime after recovery.** Zone-exit conservation can defer
-   dematerialization, but a general policy still needs to decide when an
-   enclosing effect has finished referring to an exact moved card and identity
-   can safely collapse back into exchangeable counts.
+4. **Identity lifetime after recovery.** A conservative liveness gate now
+   requires an approved exchangeable zone plus zero live external instance
+   references before collapse. The remaining integration problem is canonical
+   discovery and ownership of those references across composite match state.
 5. **Board-kernel convergence.** `board_object_kernel.py` and the richer
    `board_position_state.py` / `board_position_kernel.py` still overlap.
    `attack_copy_physical_ko_bridge` now shows that copied attack damage and
@@ -250,6 +279,10 @@ Core detailed results:
 - [knockout_zone_routing/](../knockout_zone_routing/)
 - [cross_player_knockout_resolution/](../cross_player_knockout_resolution/)
 - [attack_copy_physical_ko_bridge/](../attack_copy_physical_ko_bridge/)
+- [knockout_redirection_conflicts/](../knockout_redirection_conflicts/)
+- [knockout_redirection_ordering/](../knockout_redirection_ordering/)
+- [ko_redirection_authorized_order/](../ko_redirection_authorized_order/)
+- [identity_liveness/](../identity_liveness/)
 
 This synthesis should be revised when any supporting mechanic is falsified or
 superseded.
