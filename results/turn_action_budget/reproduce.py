@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from build_expanded_legality_baseline import classify_effective_legality
 from turn_action_budget import TurnAction, TurnActionBudget, budget_from_flags
 
 
@@ -75,6 +77,49 @@ def main() -> None:
 
     reset = state.next_turn()
     require(reset == fresh, "next_turn must reset every generic action channel")
+
+    # Expanded-legal Magnezone bw8-46 has Dual Brains:
+    # "During your turn, you may play 2 Supporter cards."
+    cards = json.loads(
+        (ROOT / "resources" / "cards" / "en" / "bw8.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    magnezone = next(card for card in cards if card["id"] == "bw8-46")
+    status, source = classify_effective_legality(magnezone)
+    require(status == "Legal", f"bw8-46 legality should be Legal, got {status}")
+    require(source == "database", f"unexpected bw8-46 legality source: {source}")
+    require(
+        magnezone["abilities"][0]["name"] == "Dual Brains"
+        and magnezone["abilities"][0]["text"]
+        == "During your turn, you may play 2 Supporter cards.",
+        "bw8-46 must preserve the Dual Brains counterexample text",
+    )
+
+    dual_brains = fresh.with_limit(TurnAction.SUPPORTER, 2)
+    first_supporter = dual_brains.consume(TurnAction.SUPPORTER)
+    require(first_supporter is not None, "Dual Brains must allow first Supporter")
+    require(first_supporter.supporter_used, "legacy used alias should be true")
+    require(
+        first_supporter.can(TurnAction.SUPPORTER),
+        "Dual Brains must still allow a second Supporter after the first",
+    )
+    second_supporter = first_supporter.consume(TurnAction.SUPPORTER)
+    require(second_supporter is not None, "Dual Brains must allow second Supporter")
+    require(
+        second_supporter.supporter_plays_used == 2,
+        "Dual Brains budget must record two Supporter plays",
+    )
+    require(
+        not second_supporter.can(TurnAction.SUPPORTER),
+        "Dual Brains must not allow a third Supporter",
+    )
+    next_dual_turn = second_supporter.next_turn()
+    require(
+        next_dual_turn.supporter_play_limit == 2
+        and next_dual_turn.supporter_plays_used == 0,
+        "next_turn must reset usage while preserving a derived Supporter limit",
+    )
 
     adapted = budget_from_flags(
         supporter_used=True,
