@@ -1,0 +1,23 @@
+name: Validate setup hand-value policy
+
+on:
+  push:
+    paths:
+      - "tools/setup_hand_value_policy.py"
+      - "results/setup_hand_value_policy/**"
+      - ".github/workflows/validate-setup-hand-value-policy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check exact setup hand-value policy
+        run: python results/setup_hand_value_policy/reproduce.py
