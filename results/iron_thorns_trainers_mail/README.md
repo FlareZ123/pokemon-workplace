@@ -17,7 +17,7 @@ Regression: `results/iron_thorns_trainers_mail/reproduce.py`
 
 For every accepted seven-card opening, six-card Prize allocation, and first draw going second, the model tracks Guzma & Hala, Tag Call, Thunder Mountain, Double Colorless Energy, Trainers' Mail, other Trainers, and other non-Trainers.
 
-Each Trainers' Mail use enumerates every possible top-four category composition with exact hypergeometric weights. The solver then chooses the legal target that maximizes the represented continuation value. It may take Guzma & Hala, Tag Call, Thunder Mountain, another Trainer whose own effect is ignored, or no card.
+Each Trainers' Mail use enumerates every possible top-four category composition with exact hypergeometric weights. The policy uses only observable information: if DCE is already in hand, a revealed missing Thunder Mountain is taken for a direct completion; otherwise it prioritizes Guzma & Hala, then Tag Call, then Thunder Mountain, then another Trainer whose own effect is ignored. If none is present, it takes no card.
 
 The selected card leaves the deck. Unselected revealed cards return to the deck after the shuffle. Another Trainers' Mail therefore samples the updated deck rather than a permanently depleted top-four group.
 
@@ -67,7 +67,7 @@ A combined policy must evaluate both mechanisms in the same state.
 
 ## Validation
 
-The opening, Prize, turn-draw, and Trainers' Mail layers are exact combinatorial enumerations. The recursive Mail continuation value is memoized by represented hand and deck state.
+The opening, Prize, turn-draw, and Trainers' Mail layers are exact combinatorial enumerations. The recursive Mail continuation value is memoized by represented hand and deck state. An earlier clairvoyant maximization check produced the same three aggregate probabilities, and the committed model uses the observation-only policy so hidden Prize composition cannot affect the choice.
 
 The reproducer derives each list's modeled counts from the existing Aichi list transcription and asserts the exact values above.
 
