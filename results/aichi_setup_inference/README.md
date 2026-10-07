@@ -73,6 +73,18 @@ That is a **30.024012806 percentage-point** gain over the uninformed 50/50 decis
 
 The extra count information inside the rare all-common sequences changes only the final decimal places because such hands are extraordinarily rare.
 
+## Finding 4: the result is stable across all three published Iron Thorns lists
+
+The same event also published Iron Thorns lists from Ryoya Fujii in 24th and Kohei Hamamichi in 29th, and both also contain exactly four Iron Thorns ex as their only Pokémon.
+
+Treat the three Iron Thorns lists as an equal-weight family. Relative to the union of those three lists, the Vileplume list has 18 non-Basic copies whose names occur in at least one Iron Thorns variant. The three Iron lists have 17, 16, and 17 non-Basic copies respectively whose names occur in the Vileplume list.
+
+The equal-prior coarse content accuracy becomes **80.024150865%**.
+
+That is only **0.000138059 percentage points** above the fixed Kazuma-list comparison. The event-level conclusion is therefore insensitive to which of these three published Iron Thorns lists is used.
+
+This does not make the model archetype-complete. It does show that the fixed-list result survives the observed list variation inside this event.
+
 ## Strategic interpretation
 
 The setup transcript can constrain the opponent before Active and Benched Pokémon are turned face up.
