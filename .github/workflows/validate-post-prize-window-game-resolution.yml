@@ -1,0 +1,29 @@
+name: Validate Prize window resolution
+
+on:
+  push:
+    paths:
+      - "tools/post_prize_window_game_resolution.py"
+      - "tools/post_knockout_game_resolution.py"
+      - "tools/promotion_pending_conservation.py"
+      - "tools/prize_before_hand_bench_entry.py"
+      - "tools/prize_pending_take.py"
+      - "results/post_prize_window_game_resolution/**"
+      - ".github/workflows/validate-post-prize-window-game-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run Prize window regression
+        run: python results/prize_pending_observer_extra/reproduce.py
+      - name: Run terminal timing regression
+        run: python results/post_prize_window_game_resolution/reproduce.py
