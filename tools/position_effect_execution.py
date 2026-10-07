@@ -46,6 +46,7 @@ def execute_position_effect(
     *,
     chosen_object_id: str,
     blocked_effect_target_ids: frozenset[str] = frozenset(),
+    coin_result: str | None = None,
 ) -> PositionEffectExecution | None:
     """Apply one compiled movement clause.
 
@@ -55,9 +56,12 @@ def execute_position_effect(
     switch-out targets the current opposing Active, while targeted gust targets
     the selected opposing Benched Pokemon.
 
-    Attack damage, source-action legality, coin flips, and play conditions are
-    intentionally upstream.
+    Attack damage, source-action legality, and play conditions remain upstream.
+    Coin-gated movement is executed only after an explicit heads result.
     """
+
+    if profile.coin_heads_required and coin_result != "heads":
+        return None
 
     targeted_object_id = effect_target_object_id(
         profile,
