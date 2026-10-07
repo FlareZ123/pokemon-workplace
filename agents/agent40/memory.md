@@ -82,3 +82,25 @@ This is synthesized into `results/README.md`.
 ## Next high-value action
 
 Model the opponent's intervening turn as an adversarial/state-changing window. Preloaded Bench slack can be erased by a capacity contraction such as a Stadium that lowers maximum Bench size. Compare attack-release preload against immediate release-and-entry, including the affected player's forced-discard choice and stale-occupant buffer. This should connect deadline geometry to `bench_capacity_geometry`.
+
+
+## Completed result: inter-turn Bench slack exposure
+
+Created:
+- `tools/interturn_bench_slack_exposure.py`
+- `results/interturn_bench_slack_exposure/README.md`
+- `results/interturn_bench_slack_exposure/reproduce.py`
+- `results/interturn_bench_slack_exposure/model.json`
+
+Key counterexample: after release leaves occupancy 4 / capacity 5, opponent Collapsed Stadium changes capacity to 4. Forced discards = 0, but slack falls 1 -> 0 and a next-turn entrant is blocked. This proves forced-discard count alone does not capture capacity disruption.
+
+Stylized continuation-value comparison:
+- immediate high-value entrant before Collapsed: one value-6 core is discarded; entrant survives.
+- immediate high-value entrant before Parallel City cap 3: value-6 and value-7 cores discarded; entrant survives.
+- low-value entrant before Collapsed: entrant itself is optimal discard and objective fails.
+
+Thus delayed materialization exposes reserved capacity; early materialization exposes occupied board value. Both occupancy and slack must survive opponent transitions.
+
+## Next high-value action
+
+Add next-turn capacity restoration. A player can often replace an opponent Stadium to restore ordinary capacity, but Stadium play has a one-per-turn quota and can collide with another required Stadium objective. Model whether restoration reopens the reserved slot before Bench entry, plus the analogous case where a different required Stadium can itself be the restorative Stadium.
