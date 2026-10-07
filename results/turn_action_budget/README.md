@@ -49,6 +49,14 @@ Those representations are individually workable, but composition can create impo
 
 The generic budget supplies one common contract for future composition. A larger canonical state can own one `TurnActionBudget`, while specialized subsystems query or consume the shared channel rather than maintaining competing copies.
 
+### Concrete integration failure found
+
+Reviewing the existing split representation exposed a real turn-boundary gap in `unified_state_kernel.py`: `BenchState.turn_ended` already blocked Bench additions and Supporter play, but direct Quick Ball, Tool attachment, manual Double Colorless Energy attachment, and Stadium play did not all consult that same turn-end state.
+
+The unified kernel has now been patched so those ordinary current-turn actions are rejected after the turn ends. Its existing regression suite was extended with explicit ended-turn cases and passed the repository's `validate-unified-state-kernel.yml` workflow.
+
+This is direct evidence for the architectural claim here: duplicating one logical action window across several state owners makes omission bugs easy. A canonical `TurnActionBudget` reduces the number of gates each transition must remember independently.
+
 ## Regression
 
 The reproducer checks:
