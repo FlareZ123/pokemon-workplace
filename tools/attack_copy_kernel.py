@@ -30,6 +30,7 @@ class PokemonRef:
     attacks: tuple[str, ...] = ()
     has_rule_box: bool = False
     attached_energy_units: tuple[frozenset[str], ...] = ()
+    previous_evolution_attacks: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -41,6 +42,12 @@ class CopySelector:
     require_no_rule_box: bool = False
     move_selected_source_to: str | None = None
     require_selected_energy: bool = False
+    required_name_prefix: str | None = None
+    chooser: str = "actor"
+
+    def __post_init__(self) -> None:
+        if self.chooser not in {"actor", "opponent"}:
+            raise ValueError("copy chooser must be 'actor' or 'opponent'")
 
 
 @dataclass(frozen=True)
@@ -128,6 +135,10 @@ class AmbiguousCopySource(CopyResolutionError):
     pass
 
 
+class MissingCopyChooser(CopyResolutionError):
+    pass
+
+
 ChoicePolicy = Callable[[AttackDef, tuple[str, ...], State], str]
 SourceChoicePolicy = Callable[
     [AttackDef, str, tuple[str, ...], State],
@@ -146,6 +157,7 @@ def opponent_of(player: str) -> str:
 def _candidate_attacks(
     *,
     actor_player: str,
+    actor_card_id: str,
     attack: AttackDef,
     attacks: dict[str, AttackDef],
     state: State,
@@ -161,7 +173,15 @@ def _candidate_attacks(
         if attack_id is not None:
             candidates.append(attack_id)
     else:
-        if selector.source == "own_discard":
+        if selector.source == "self_previous_evolution":
+            actor = next(
+                (card for card in state.pokemon if card.card_id == actor_card_id),
+                None,
+            )
+            cards = []
+            if actor is not None:
+                candidates.extend(actor.previous_evolution_attacks)
+        elif selector.source == "own_discard":
             cards = [p for p in state.pokemon if p.owner == actor_player and p.zone == "discard"]
         elif selector.source == "own_bench":
             cards = [p for p in state.pokemon if p.owner == actor_player and p.zone == "bench"]
@@ -188,6 +208,11 @@ def _candidate_attacks(
             if selector.required_subtype is not None and selector.required_subtype not in card.subtypes:
                 continue
             if selector.require_no_rule_box and card.has_rule_box:
+                continue
+            if (
+                selector.required_name_prefix is not None
+                and not card.name.startswith(selector.required_name_prefix)
+            ):
                 continue
             for attack_id in card.attacks:
                 candidate = attacks[attack_id]
@@ -255,6 +280,7 @@ def resolve_attack(
     attacks: dict[str, AttackDef],
     state: State,
     choose: ChoicePolicy,
+    choose_opponent: ChoicePolicy | None = None,
     choose_source: SourceChoicePolicy | None = None,
     max_depth: int = 32,
 ) -> Resolution:
@@ -323,6 +349,7 @@ def resolve_attack(
         body_chain.append(body_attack_id)
         candidates, candidate_sources = _candidate_attacks(
             actor_player=actor_player,
+            actor_card_id=actor_card_id,
             attack=body,
             attacks=attacks,
             state=current,
@@ -349,13 +376,23 @@ def resolve_attack(
         if not candidates:
             raise IllegalCopyTarget(f"no legal copy targets for {body_attack_id}")
 
-        selected = choose(body, candidates, current)
+        selector = body.copy_selector
+        assert selector is not None
+        if selector.chooser == "actor":
+            choose_attack = choose
+        else:
+            if choose_opponent is None:
+                raise MissingCopyChooser(
+                    f"{body_attack_id} requires an opponent choice policy"
+                )
+            choose_attack = choose_opponent
+
+        selected = choose_attack(body, candidates, current)
         if selected not in candidates:
             raise IllegalCopyTarget(
                 f"choice {selected!r} is not legal for {body_attack_id}; candidates={candidates!r}"
             )
 
-        selector = body.copy_selector
         if (
             selector is not None
             and selector.require_selected_energy
