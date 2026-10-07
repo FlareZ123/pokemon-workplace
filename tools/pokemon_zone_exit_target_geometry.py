@@ -41,7 +41,7 @@ def _target_geometry(text: str, routing_text: str) -> str:
         "all of your opponent's benched pokémon that you didn't choose"
         in routing_lower
     ):
-        return "opponent_bench_all_except_one"
+        return "opponent_bench_all_except_selected_three"
 
     if "all of their benched pokémon" in routing_lower:
         return "opponent_bench_all"
