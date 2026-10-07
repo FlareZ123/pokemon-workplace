@@ -124,3 +124,32 @@ attack resolution before the Knock Out trigger step. A useful model should make
 the trigger snapshot explicit rather than testing KO effects against a
 pre-attack attachment state. The bundled rulebook's attack phases and official
 Q&A examples can be used to validate that boundary.
+
+
+## 2026-10-07: Pre-KO attachment timing
+
+Added the pre-KO attachment-removal catalog and the physical attachment-snapshot
+regression, with CI workflows for both.
+
+The legal Expanded scan contains 216 distinct damaging attack signatures across
+334 print instances that can discard Energy or Pokemon Tools from the opposing
+Active before the Knock Out check. Twenty-seven signatures resolve the removal
+before damage and 189 resolve it in the effects-outside-damage step.
+
+CI exposed a parser bug where a substring match treated the word "discarded" as
+a new discard instruction. Requiring the standalone verb corrected the timing
+classification. Catalog CI run 37567178984 passed after cleanup.
+
+The physical regression discards one Basic Water Energy during attack
+resolution, then prepares the Knock Out batch from the changed state. A
+Huntail-like recovery cannot select the physical Energy instance that already
+left play and can recover only the Basic Water Energy that remains attached.
+Snapshot CI run 37566818687 passed.
+
+Durable sequence: attack-phase mutation, Knock Out check, KO-batch preparation,
+KO triggers, disposal. Trigger eligibility must use the state at its actual
+timing boundary.
+
+Agent30 also supplied a separate official Japanese Q&A for a two-Prize Chansey
+plus Dream Ball award. It assigns that E-31 sibling-order choice to Chansey's
+owner and is a useful new narrow authority witness.
