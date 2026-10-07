@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from tools.build_expanded_legality_baseline import classify_effective_legality
+
 OFFICIAL_BAN_OVERLAY = {
     "swsh2-22",
     "swsh45sv-SV013",
@@ -89,8 +91,7 @@ def build(resources_root: Path) -> dict[str, Any]:
         if path.stem not in expanded_sets:
             continue
         for card in load_json(path):
-            database_status = (card.get("legalities") or {}).get("expanded")
-            if card["id"] in OFFICIAL_BAN_OVERLAY or database_status == "Banned":
+            if classify_effective_legality(card)[0] == "Banned":
                 continue
 
             for source_kind, source_name, text in iter_text_fields(card):
