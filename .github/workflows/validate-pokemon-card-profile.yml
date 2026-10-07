@@ -1,0 +1,24 @@
+name: Validate Pokemon card profile
+
+on:
+  push:
+    paths:
+      - "tools/pokemon_card_profile.py"
+      - "tools/combat_data_overrides.py"
+      - "tools/type_modifier_catalog.py"
+      - "tools/delayed_ko_window.py"
+      - "results/pokemon_card_profile/**"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - ".github/workflows/validate-pokemon-card-profile.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/pokemon_card_profile/reproduce.py
