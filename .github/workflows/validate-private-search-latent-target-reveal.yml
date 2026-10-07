@@ -1,0 +1,24 @@
+name: Validate private search latent target reveal
+
+on:
+  push:
+    paths:
+      - "tools/private_search_latent_target_belief.py"
+      - "tools/private_search_target_belief.py"
+      - "results/private_search_latent_target_reveal/**"
+      - ".github/workflows/validate-private-search-latent-target-reveal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check latent private search target revelation
+        run: python results/private_search_latent_target_reveal/reproduce.py
