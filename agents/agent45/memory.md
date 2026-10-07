@@ -62,3 +62,14 @@ The model uses a nested `resolving_supporter` state. Roles are split: turn owner
 Official Japanese Hand Control rulings establish further authority separation: Hypno's owner chooses Supporter decisions, the Supporter player still flips Kahili's coin, hidden cards drawn by Tierno remain hidden from Hypno's owner, and “once during your turn” checks use the outer turn rather than the Supporter player's identity. A Roxie/Weezing ruling says Blow-Away Bomb cannot activate because the forced Roxie happens during Hypno's turn. Dizzying Wind's next-turn Trainer check likewise does not apply.
 
 Physical Supporter destination must remain pending until the Supporter body resolves. Kahili can return to hand, and official Gladion Q&A allows Hand Control's Gladion to be exchanged into Prize cards instead of defaulting to discard.
+
+
+## Transactional Trainer quota timing
+
+Created `tools/trainer_play_attempt_budget.py` and `results/trainer_play_attempt_budget/`, with dedicated CI run `37576887259` passing at `cfb31c764f94db6d0d875983b37713134b2a8bde`.
+
+Concrete witness: legal Seismitoad `me55-84` / Quaking Fist. It intercepts Trainer cards when the opponent **tries to use** them from hand; tails discards the card **instead of using it**.
+
+Official Japanese rulings establish that a failed Supporter attempt leaves the Supporter allowance available, and a second Supporter can be tried, flipping Quaking Fist again. A Hippowdon ruling separately says the failed Supporter does not count as having used a Supporter that turn. The same family says a failed Stadium attempt leaves the Stadium allowance available; an existing Stadium is not discarded because the Quaking Fist gate happens before Stadium replacement.
+
+The implementation uses a two-phase transaction: `begin_trainer_attempt` checks availability and moves the card into a pending state without spending quota; tails discards it with quota/history unchanged; heads commits the canonical quota and ordinary play. This suggests canonical quota should be committed at successful-use boundary rather than declaration boundary when pre-use replacement/prevention effects exist.
