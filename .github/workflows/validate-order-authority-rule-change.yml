@@ -1,0 +1,24 @@
+name: Validate KO order rule change
+
+on:
+  push:
+    paths:
+      - "tools/rulebook_order_authority_audit.py"
+      - "resources/manual/EN_advanced_manual-2025-transcription-structured.md"
+      - "results/order_authority_rule_change/**"
+      - ".github/workflows/validate-order-authority-rule-change.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run rule-change regression
+        run: python results/order_authority_rule_change/reproduce.py
