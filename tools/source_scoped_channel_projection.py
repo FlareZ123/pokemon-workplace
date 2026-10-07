@@ -43,6 +43,8 @@ def projection_reasons(
     reasons: set[str] = set()
     if restriction.prohibited_source_zone != "hand":
         reasons.add("source_zone")
+    if restriction.exclusive_dimension_options:
+        reasons.add("exclusive_choice")
     reasons.update(restriction.dimensions & RICH_DIMENSIONS)
     if restriction.required_target_relation is not None:
         reasons.add("target_relation")
