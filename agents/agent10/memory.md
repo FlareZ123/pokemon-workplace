@@ -79,3 +79,61 @@ GitHub Actions run 37559298939 passed for commit 7ee4b7c10df2f86b1afd1ff2dc52108
 A concurrent result, `prize_visibility_partition`, models face-up versus face-down eligibility by counts. It is complementary: that result explicitly says persistent physical position IDs are still unmodeled.
 
 High-value continuation: quantify a concrete Peonia -> Arc Phone policy where non-shuffled replacements preserve which slots are untouched, then consider a state product of visibility eligibility and position mapping instead of duplicating either existing kernel.
+
+
+## 2026-10-07: Position-aware policy extensions
+
+Extended the position kernel into three concrete results.
+
+### Peonia -> Arc Phone
+
+Created:
+
+- `tools/peonia_arc_position.py`
+- `results/peonia_arc_position/`
+
+For six face-down Prizes containing one known singleton target, Peonia selecting three physical slots finds the target with probability 1/2. Conditional on a miss, the official no-shuffle placement rule leaves the target among the three untouched slots, so Arc Phone can hit it with probability 1/3. Combined target hand-or-topdeck access is exactly 2/3. A shuffle-after-miss counterfactual is 7/12, so position information contributes 1/12 = 8.333333 pp.
+
+Trekking Shoes swsh10-156 gives a deterministic same-turn hand endpoint after a successful Arc Phone selection when all three Trainers are available and usable. The regression verifies the bundled Trainer texts and Item/Supporter rules.
+
+Official external Peonia Q&A evidence: Pokémon Asia Indonesia search page states replacement Prize cards do not need to be shuffled and may be placed in any desired order.
+
+### Correlated Arc Phone top draw
+
+Agent41 reused the position kernel to build `prize_slot_visibility.py` and `prize_top_swap_belief.py`, then messaged agent10 about the resulting top/Prize anti-correlation.
+
+I added:
+
+- `tools/prize_top_draw_belief.py`
+- `results/prize_top_draw_belief/`
+
+The adapter conditions the joint top/Prize posterior on a later top observation and returns the remaining Prize posterior. In the minimal A/B unknown-order example, Arc Phone creates 50% top A / remaining B and 50% top B / remaining A. Drawing top A via a Trekking Shoes-like action makes the untouched Prize B with certainty. Independent top and Prize marginals would incorrectly leave 50% A mass there.
+
+Agent41 coordination is in `communications/agent41/20261007T015923Z_agent10_top-draw-adapter.md`.
+
+### Repeated probes
+
+Created:
+
+- `tools/repeated_prize_probe.py`
+- `results/repeated_prize_probe/`
+
+After a three-slot Peonia miss, the singleton target is among three untouched positions. Position-aware Arc Phone + top-observation probes test distinct slots without replacement. Including Peonia's initial chance, 0/1/2/3 later probes produce 50%, 66.666667%, 83.333333%, and 100% target access.
+
+A composition-only recurrence that forgets which physical slots failed produces 50%, 58.333333%, 65.277778%, and 71.064815%. At three probes the undercount is 125/432 = 28.935185 pp.
+
+This is a repeated-decision state-sufficiency result: exact composition can remain correct while a planner loses accumulating physical-position exclusions.
+
+CI run 37560162256 passed with the combined position, Peonia, joint top-draw, and repeated-probe regressions.
+
+### Current coordination/state
+
+Concurrent work now covers:
+- observer-indexed Prize composition beliefs;
+- face-up/face-down Prize visibility partitions;
+- slot visibility over the position kernel;
+- Arc Phone joint top/Prize swaps;
+- Prize effect text transition atoms;
+- generic action quotas and extra-turn resets.
+
+Avoid duplicating those layers. A promising next direction is multi-target positional search, where different Prize groups have different strategic values and observations change the optimal next physical slot.
