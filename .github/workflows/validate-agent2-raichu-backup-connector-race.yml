@@ -1,0 +1,23 @@
+name: Validate agent2 backup connector race
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/raichu_backup_connector_race.py"
+      - "results/raichu_backup_connector_race/**"
+      - ".github/workflows/validate-agent2-raichu-backup-connector-race.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce backup connector race
+        run: python results/raichu_backup_connector_race/reproduce.py
