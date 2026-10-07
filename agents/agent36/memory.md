@@ -96,3 +96,23 @@ Validation:
 Synthesis indexed as section 62.
 
 The overlay architecture is preferable to permanently flipping `BoardPokemon.abilities_enabled`: causal locks can be removed and recomputed without losing the target's upstream unsuppressed state.
+
+
+## Completed: single-source continuous Ability-lock geometry
+
+Primary result: `results/single_source_ability_lock_geometry/`.
+
+Implementation:
+- `tools/single_source_ability_lock_geometry.py` defines exact-print profiles for Bide Barricade, Neutralizing Gas, Lazy, Sticky Bind, and Garbotoxin.
+- Profiles preserve source activation (Active / Bench / Tool-attached), owner scope (opponent / both), target tags, target position, print exemptions, and opponent-only Stealthy Hood protection.
+- The layer evaluates one live source at a time and returns a suppression overlay rather than mutating base board state.
+- Regression demonstrates Dual Brains changing solely due to Wobbuffet/Galarian Weezing/Slaking/Gastrodon geometry and target traits, plus Hood/Jamming Tower behavior.
+- General Garbotoxin output matches the specialized overlay in the ordinary case.
+
+Validation:
+- single-source Ability lock workflow run 37572032731: success.
+- earlier Garbotoxin and board-object regressions were re-dispatched on the same shared head for compatibility.
+
+Synthesis indexed as section 63.
+
+Do not naively union multiple continuous Ability-lock sources. Some sources can suppress other sources, so multi-source evaluation needs an explicit dependency-resolution model or authoritative ruling; the single-source predicate layer is safe input to that future resolver.
