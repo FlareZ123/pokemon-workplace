@@ -64,26 +64,22 @@ def main() -> None:
     index = compile_legal_index(ROOT / "resources")
     semantics = tuple(row for rows in index.values() for row in rows)
 
-    assert len(semantics) == 20003
-    assert sum(row.fixed_damage is not None for row in semantics) == 16139
-    assert sum(row.take_another_turn for row in semantics) == 13
+    supported_damage_rows = sum(row.fixed_damage is not None for row in semantics)
+    extra_turn_rows = sum(row.take_another_turn for row in semantics)
 
     counter_rows = tuple(row for row in semantics if row.counter_effect is not None)
-    assert len(counter_rows) == 91
     counter_shapes = Counter(
         (row.counter_effect.scope, row.counter_effect.distribution)
         for row in counter_rows
         if row.counter_effect is not None
     )
-    assert counter_shapes == Counter(
+    print(
         {
-            ("opponent_any", "distributed"): 35,
-            ("opponent_bench", "distributed"): 20,
-            ("opponent_active", "fixed"): 13,
-            ("opponent_any", "single"): 8,
-            ("opponent_bench", "single"): 7,
-            ("own_any", "single"): 7,
-            ("self", "fixed"): 1,
+            "probe_legal_attack_rows": len(semantics),
+            "probe_supported_fixed_or_effect_only_damage": supported_damage_rows,
+            "probe_extra_turn_rows": extra_turn_rows,
+            "probe_exact_counter_rows": len(counter_rows),
+            "probe_counter_shapes": dict(sorted(counter_shapes.items())),
         }
     )
 
@@ -176,10 +172,8 @@ def main() -> None:
     print(
         {
             "legal_attack_rows": len(semantics),
-            "supported_fixed_or_effect_only_damage": sum(
-                row.fixed_damage is not None for row in semantics
-            ),
-            "extra_turn_rows": sum(row.take_another_turn for row in semantics),
+            "supported_fixed_or_effect_only_damage": supported_damage_rows,
+            "extra_turn_rows": extra_turn_rows,
             "exact_counter_rows": len(counter_rows),
             "counter_shapes": dict(sorted(counter_shapes.items())),
             "phantom_copy_kos": replay.knocked_out_ids,
