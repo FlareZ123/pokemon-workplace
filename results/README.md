@@ -528,6 +528,14 @@ With both players at zero remaining Prizes and zero Pokémon after the KO batch,
 
 **Working synthesis:** E-31 cards can have discrete terminal value. Terminal evaluation must consume the board produced by the finished Prize window rather than an earlier zero-Pokémon snapshot.
 
+## 44. Dream Ball lock access splits into direct, prerequisite-gated, and position-gated cases
+
+[dream_ball_lock_bypass_catalog/](dream_ball_lock_bypass_catalog/) cross-references exact Evolution-Pokémon lock Abilities with Dream Ball entry geometry.
+
+There are 50 exact Evolution lock rows in the audited pool, of which 22 are compatible with direct Dream Ball Bench placement. Eleven have no extra activation prerequisite recognized by the lock taxonomy, ten still require a Pokémon Tool, and one requires a Stadium. Vileplume Irritating Pollen and Alolan Muk Power of Alchemy are direct passive witnesses; Garbodor Garbotoxin still needs a Tool; Galarian Weezing Neutralizing Gas remains Active-gated and is excluded from the Dream Ball-compatible set.
+
+**Working synthesis:** lock reachability is not lock establishment. An AMR-aware connector model should preserve target position and activation prerequisites after the search edge is found.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
