@@ -34,6 +34,8 @@ def main() -> None:
     print(f"secret_box={result.secret_box_probability:.6%}")
     print(f"increment={result.incremental_probability:.6%}")
     print(f"secret_box_access={result.secret_box_access_probability:.6%}")
+    print(f"accessible_baseline_failures={result.accessible_baseline_failures}")
+    print(f"unrescued_accessible_baseline_failures={result.unrescued_accessible_baseline_failures}")
     print(
         "incremental_jet_needs_gnh="
         f"{result.incremental_jet_needs_gnh / result.incremental_successes:.6%}"
