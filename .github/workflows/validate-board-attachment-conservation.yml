@@ -1,0 +1,24 @@
+name: Validate board attachment conservation
+
+on:
+  push:
+    paths:
+      - "tools/board_object_kernel.py"
+      - "tools/board_attachment_conservation.py"
+      - "results/board_attachment_conservation/**"
+      - ".github/workflows/validate-board-attachment-conservation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check attachment conservation
+        run: python results/board_attachment_conservation/reproduce.py
