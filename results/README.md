@@ -805,24 +805,16 @@ Active Neutralizing Gas opposite Active Slaking/Lazy yields a two-source cycle b
 
 **Working synthesis:** continuous lock composition requires source-dependency resolution between the predicate layer and the final target overlay. Acyclic components can be solved; cyclic components should remain explicit until timing/history semantics are supported by stronger authority rather than being assigned an arbitrary fixed point.
 
-## 65. Taken-Prize destination replacements can conflict on one physical card
+## 65. Taken-Prize destination replacements expose a per-card chooser decision
 
-[prize_destination_override_conflicts/](prize_destination_override_conflicts/) inserts an explicit replacement-resolution stage between the existing `prize_pending` event and final physical movement. The bundled legal card pool supplies a concrete conflict: Barbaracle `swsh11-107` / Lost Block redirects the opponent's taken Prizes to the Lost Zone, while Billowing Smoke `swsh3-158` redirects Prizes from its holder's attack Knock Out to discard.
+[prize_destination_override_conflicts/](prize_destination_override_conflicts/) inserts an explicit replacement-resolution stage between the existing `prize_pending` event and final physical movement. The bundled legal card pool supplies a concrete overlap: Barbaracle `swsh11-107` / Lost Block redirects the opponent's taken Prizes to the Lost Zone, while Billowing Smoke `swsh3-158` redirects Prizes from its holder's attack Knock Out to discard.
 
-The regression resolves ordinary Prize taking to hand, each replacement independently to its stated zone, and multiple same-zone replacements without ambiguity. When Lost Block and Billowing Smoke both apply to the same exact pending Prize instance, the layer reports `discard` versus `lost_zone` as an unresolved conflict and leaves the physical card in `prize_pending` until an upstream rules-authority layer supplies a legal resolution. All resolved branches preserve physical card-class totals.
+An official Japanese Pokémon Card Q&A resolves this exact pair. The Prize-taking opponent chooses which effect to process first; Lost Block first sends the Prize to the Lost Zone, while Billowing Smoke first sends it to discard. A second official ruling for a two-Prize Pokémon V Knock Out allows that player to inspect the two Prize cards and choose Lost Zone or discard separately for each card.
 
-**Working synthesis:** replacement effects should be represented between the underlying event and the final conserved move. The event, ordinary destination, applicable replacements, ordering or precedence authority, and physical destination are separate state variables; mechanically conflicting replacements should remain explicit when the available rules evidence does not establish a general precedence rule.
+The regression therefore keeps a conflicting pending Prize physically unmoved until the rules-backed choice is supplied, then executes the selected destination while preserving card-class totals. It also resolves a two-Prize award to one discard and one Lost Zone card, proving that the decision granularity is the exact pending Prize rather than one global ordering choice for the award.
 
+**Working synthesis:** replacement effects belong between the underlying event and the final conserved move. The ordinary destination, applicable replacements, chooser authority, per-card choice, and physical destination are separate state variables. Card-specific authority should resolve a documented interaction without being generalized automatically to every replacement conflict.
 
-## 65. Unrestricted fixed-count search requires mandatory physical selections
-
-[unrestricted_search_selection/](unrestricted_search_selection/) isolates the Advanced Player's Rulebook exception for unrestricted deck search. Restricted searches may take fewer eligible cards, including zero, while a search for any card or cards without a type limitation must take the stated number, reduced only when the deck physically contains fewer cards.
-
-A conservative scan finds 69 effectively legal Expanded print-level effects across 43 names in this exact-count family: 63 search for one card and six search for two. The execution consequence is deeper than a parser flag. If Computer Search's strategic target is absent, a nonempty deck still forces one fallback card into hand. For Mallow-style exact-two searches, one useful target still requires a second physical filler card.
-
-The current typed zone transition equates physical target consumption with useful demand supplied. That invariant is correct for its constrained-search semantic island but cannot represent unrestricted forced filler. The next integration therefore needs separate useful-output and physical-selection witnesses rather than broadening a constrained selector into "any card."
-
-**Working synthesis:** search reachability needs a minimum-cardinality semantic dimension. Mandatory filler can change hand size, deck size, later discardability, top-deck order, hidden-state beliefs, and continuation value even when it supplies no current strategic demand.
 
 ## Reusable infrastructure
 
@@ -854,7 +846,7 @@ Particularly foundational components include:
 - `observer_top_prize_beliefs.py`
 - `top_prize_physical_bridge.py`
 - `prize_joint_position_removal.py`
-- `prize_pending_take.py`
+- `prize_pending_take.py`\n- `prize_destination_overrides.py`
 - `post_prize_window_game_resolution.py`
 - `unified_state_kernel.py`
 - `multicopy_zone_state.py`
