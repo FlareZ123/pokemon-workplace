@@ -5,6 +5,7 @@ on:
     paths:
       - "tools/attack_copy_kernel.py"
       - "results/attack_copy_source_geometries/**"
+      - "results/attack_copy_optional_selection/**"
       - ".github/workflows/validate-attack-copy-source-geometries.yml"
   workflow_dispatch:
 
@@ -21,3 +22,5 @@ jobs:
           python-version: "3.13"
       - name: Run source-geometry regression
         run: python results/attack_copy_source_geometries/reproduce.py
+      - name: Run optional-copy regression
+        run: python results/attack_copy_optional_selection/reproduce.py
