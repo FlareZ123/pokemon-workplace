@@ -79,3 +79,24 @@ The bridge applies coarse channels only to hand actions. It keeps all restrictio
 The architectural rule is now sharper: `PlayerChannels` should be a derived compatibility projection rather than canonical lock truth. Canonical permission state should retain the active source-scoped restrictions plus residual semantics, with causal Ability-lock state upstream of source activation.
 
 Next work should connect this bridge to one real transaction executor while preserving backward compatibility, ideally `trainer_search_transaction.py` for hand Trainers and `before_hand_prize_executor.py` for Prize-origin Items.
+
+
+## Sixth result: source-scoped Trainer transaction gating
+
+Added `tools/card_action_metadata.py`, `tools/source_scoped_trainer_transaction.py`, `results/source_scoped_trainer_transaction/`, and `.github/workflows/validate-source-scoped-action-permissions.yml`.
+
+Exact action metadata classifies 14,827 legal prints and derives action kind plus the selector tags required by the current restriction family. Historical Pokémon Tool F prints are handled. Two anomalous database records, `me55c-18` Misty and `me55c-69` Erika's Jigglypuff, remain deliberately unclassified because their stored Trainer supertype does not provide a reliable modern action kind.
+
+The Trainer adapter projects active restrictions into temporary channels, evaluates residual typed predicates, delegates to the existing search transaction, then restores the caller's base channels. This keeps active restriction state upstream and avoids stale derived lock flags in canonical transaction state.
+
+The live regression proves:
+- Secret Box baseline execution succeeds.
+- Vileplume Irritating Pollen blocks the hand Item.
+- Spiritomb Sealing Scream blocks Secret Box through exact ACE SPEC metadata.
+- Arven remains legal under the Item-only Vileplume restriction.
+- Dark Moon-GX's Trainer-wide restriction blocks Arven.
+- Supporter budget consumption and normal transaction semantics remain owned by the existing executor.
+
+Workflow run `37583452032` passed all three source-scoped regressions.
+
+Next work: compile activation geometry and duration for the 106 restrictions. Preliminary audit found 77 attack-applied, 22 Active-position Ability, 5 passive/in-play Ability, 1 Tool-attached Ability, and 1 Stadium-required Ability. Among attack-applied restrictions, 76 govern the opponent's next turn and Vanilluxe `xy8-45` Frigid Breath uses a different until-end-of-your-next-turn window.
