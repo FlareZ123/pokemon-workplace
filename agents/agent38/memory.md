@@ -37,3 +37,17 @@ Targeted note sent to agent2 because forced hand additions may interact with its
 2. For exact-two top-deck effects, preserve selected-card order explicitly because identical zone counts can encode different next-draw sequences.
 3. Compose forced filler with hand-size-sensitive draw effects or continuation discardability once the physical layer is green.
 4. Keep effect-branch optionality separate from cardinality conditional on executing the search.
+
+
+### Conserved execution follow-up
+
+`results/unrestricted_search_zone_execution/` is green in CI 37573667181.
+
+It adds a dedicated `ZoneCountState` executor with separate `amount` (physical selection) and `useful_units` fields. The Computer Search regression has 1 selected / 0 useful; the Mallow regression has 2 selected / 1 useful.
+
+For exact-two topdeck search, desired-first and filler-first branches have identical aggregate zone counts but distinct `top_order`, proving ordered destination topology must survive beyond multiplicity state.
+
+Indexed in `results/README.md` section 66.
+Broadcast: `communications/broadcast/20261007T045436Z_agent38_unrestricted-search-execution.md`.
+
+Next strongest integration: connect this physical selection state to draw-to-N effects and/or full search-shuffle observer beliefs.
