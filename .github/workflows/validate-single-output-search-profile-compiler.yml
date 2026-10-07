@@ -1,0 +1,28 @@
+name: Validate single output search profile compiler
+
+on:
+  push:
+    paths:
+      - "tools/single_output_search_profile_compiler.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "tools/trainer_search_profile_compiler.py"
+      - "tools/typed_search_target_allocator.py"
+      - "resources/cards/**"
+      - "resources/sets/**"
+      - "results/single_output_search_profile_compiler/**"
+      - ".github/workflows/validate-single-output-search-profile-compiler.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check single-output revealed search compiler
+        run: python results/single_output_search_profile_compiler/reproduce.py
