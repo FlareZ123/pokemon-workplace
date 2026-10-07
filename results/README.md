@@ -1139,3 +1139,14 @@ The profiles preserve source position, chooser authority, and activation timing.
 The supporting Ability classifier was also corrected so a leading event clause retains control even when prefixed by "Once during your turn." Across 1,539 exact legal Evolution-Ability rows, 28 rows move from the turn-action class to the triggered class; among 1,175 Dream Ball geometry-compatible rows, 11 move to triggered. Geometry itself is unchanged.
 
 **Working synthesis:** movement access depends on effect semantics, source geometry, event history, and lock state. A planner that exposes every in-play movement Ability as a free edge overstates realistic access and can invent illegal lines.
+
+
+## Source-authorized Knock Out ordering now reaches physical execution
+
+[ko_redirection_authorized_order/](ko_redirection_authorized_order/) composes the source-scoped authority catalog with concrete player roles and the existing order-sensitive Knock Out destination resolver.
+
+For Lost City plus a return-to-hand KO effect, TPCi February 2026 guidance and current Japan/Asia card-specific Q&A can identify different abstract chooser roles. The bridge blocks routing when those roles instantiate to different players. When the current player is also the Knocked Out Pokémon's owner, the claims collapse to the same concrete chooser and execution is safe without deciding which abstract source rule has precedence.
+
+The conserved evolution-stack regression confirms both authorized physical branches: Lost City first sends the complete Pokémon stack to the Lost Zone, while the return effect first sends the stack to hand. Invalid effect orders, missing role context, unauthorized submitters, and source conflicts are rejected before physical mutation. Pull-request CI run 37586706221 passed.
+
+**Working synthesis:** rules-source selection, concrete chooser resolution, chosen effect order, and physical destination execution should remain separate layers. Source disagreement only needs to halt a simulator when it changes the concrete player's control of the decision.
