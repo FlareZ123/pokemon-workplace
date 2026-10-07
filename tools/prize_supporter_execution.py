@@ -18,6 +18,8 @@ class PrizedSupporterExecutionMetrics:
     direct_execution_probability: float
     peonia_hand_access_probability: float
     peonia_execution_probability: float
+    gladion_hand_access_probability: float
+    gladion_execution_probability: float
 
 
 def analyze_prized_supporter_execution(
@@ -52,6 +54,16 @@ def analyze_prized_supporter_execution(
         else 0.0
     )
 
+    gladion_budget = initial_budget.consume(TurnAction.SUPPORTER)
+    if gladion_budget is None:
+        gladion_hand_access_probability = 0.0
+        gladion_execution_probability = 0.0
+    else:
+        gladion_hand_access_probability = 1.0
+        gladion_execution_probability = (
+            1.0 if gladion_budget.can(TurnAction.SUPPORTER) else 0.0
+        )
+
     peonia_budget = initial_budget.consume(TurnAction.SUPPORTER)
     if peonia_budget is None:
         peonia_hand_access_probability = 0.0
@@ -78,6 +90,8 @@ def analyze_prized_supporter_execution(
         direct_execution_probability=direct_execution_probability,
         peonia_hand_access_probability=peonia_hand_access_probability,
         peonia_execution_probability=peonia_execution_probability,
+        gladion_hand_access_probability=gladion_hand_access_probability,
+        gladion_execution_probability=gladion_execution_probability,
     )
 
 
