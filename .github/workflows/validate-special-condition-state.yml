@@ -9,6 +9,7 @@ on:
       - "tools/checkup_execution_kernel.py"
       - "tools/timed_special_conditions.py"
       - "tools/condition_turn_sequence.py"
+      - "tools/condition_coin_models.py"
       - "tools/turn_sequence_kernel.py"
       - "tools/board_object_kernel.py"
       - "tools/effect_order_authority.py"
@@ -18,6 +19,7 @@ on:
       - "results/checkup_deferred_ko/**"
       - "results/timed_special_conditions/**"
       - "results/condition_turn_sequence/**"
+      - "results/condition_recovery_probability/**"
       - ".github/workflows/validate-special-condition-state.yml"
   workflow_dispatch:
 
@@ -44,3 +46,5 @@ jobs:
         run: python results/timed_special_conditions/reproduce.py
       - name: Reproduce skipped Checkup condition timing
         run: python results/condition_turn_sequence/reproduce.py
+      - name: Reproduce exact condition recovery probabilities
+        run: python results/condition_recovery_probability/reproduce.py
