@@ -12,6 +12,7 @@ from pre_ko_attachment_removal_catalog import build
 def main() -> None:
     result = build(ROOT / "resources")
     counts = result["counts"]
+    print("Observed pre-KO catalog counts", counts)
 
     assert counts == {
         "print_instances": 334,
