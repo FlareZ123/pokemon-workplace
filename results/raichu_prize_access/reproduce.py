@@ -151,7 +151,7 @@ def main() -> None:
     print("total Computer Search gain:", pct(baseline.total_computer_gain))
     print("modeled discard-gate loss:", pct(baseline.discard_gate_loss))
     print("Prized-target static access:", pct(baseline.conditional_target_prized_static_access))
-    print("Prized-target adaptive access:", pct(baseline.conditional_target_prized_adaptive_access)
+    print("Prized-target adaptive access:", pct(baseline.conditional_target_prized_adaptive_access))
 
     print("\nRandom-exposure sensitivity")
     for draws in range(4):
@@ -161,7 +161,7 @@ def main() -> None:
             pct(result.target_in_exposed_hand_probability),
             pct(result.ultra_plus_gladion_gated_access),
             pct(result.adaptive_computer_gated_access),
-            pct(result.conditional_target_prized_adaptive_access,
+            pct(result.conditional_target_prized_adaptive_access),
         )
 
     print("\nDiscard-pool sensitivity after one random draw")
