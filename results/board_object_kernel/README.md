@@ -96,20 +96,27 @@ For an Active with:
 - one Lightning Energy;
 - one Fire Energy;
 
-a Retreat Cost of one has three minimal physical payments:
+a Retreat Cost of one has three legal physical payments:
 
 - Double Colorless Energy alone;
 - Lightning Energy alone;
 - Fire Energy alone.
 
-A Retreat Cost of two has two minimal payments:
+A Retreat Cost of two has four represented payments:
 
 - Double Colorless Energy alone;
+- Double Colorless Energy plus Lightning Energy;
+- Double Colorless Energy plus Fire Energy;
 - Lightning Energy plus Fire Energy.
 
-This preserves the difference between Energy units and Energy cards. Paying with the multi-unit Special Energy discards that whole physical card.
+The extra multi-unit branches are deliberate. An official Dashing Pouch ruling
+permits two Double Colorless Energy cards to be selected for a Retreat Cost of
+two even though either card alone already provides enough Energy.
 
-The regression also rejects gratuitous additional Energy cards once a proper subset already satisfies the represented cost.
+This preserves the difference between Energy units and Energy cards. Paying
+with a multi-unit Special Energy discards that whole physical card. The
+conservative helper limits selected physical-card count to the numeric Retreat
+Cost, so arbitrary extra one-unit cards remain illegal.
 
 ## Finding 3: the once-per-turn retreat budget follows the turn, not the Active identity
 
@@ -192,7 +199,7 @@ The deterministic reproducer checks:
 - legal switching through that same retreat lock;
 - preservation of Energy, Tool, and damage through switching;
 - clearing of temporary effects and Special Conditions on the outgoing Active;
-- minimal physical Energy-card payments for Retreat Costs one and two;
+- legal physical Energy-card payments for Retreat Costs one and two, including multi-unit overfill;
 - a multi-unit Energy card paying a multi-unit Retreat Cost by itself;
 - discard of the whole selected Energy card;
 - persistence of the once-per-turn retreat budget through switching;
