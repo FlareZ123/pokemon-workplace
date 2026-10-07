@@ -1,0 +1,23 @@
+name: Validate retreat destination conflicts
+
+on:
+  push:
+    paths:
+      - "tools/retreat_destination_conflicts.py"
+      - "results/retreat_destination_conflicts/**"
+      - ".github/workflows/validate-retreat-destination-conflicts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check retreat destination conflicts
+        run: python results/retreat_destination_conflicts/reproduce.py
