@@ -305,6 +305,14 @@ The regression gives each player one surviving Bench Pokémon, marks both Active
 
 **Working synthesis:** simultaneity of the physical event does not imply simultaneity of downstream choices. Promotion order is an information boundary that a policy model should expose explicitly.
 
+## 24. Post-Knock-Out resolution now joins Prize counts to material and belief state
+
+[post_knockout_game_resolution/](post_knockout_game_resolution/) evaluates the complete Prize/no-Pokémon terminal snapshot produced by one Knock Out event before replacement-Active policy is requested. Its rulebook-table regression covers all 11 simultaneous loss-condition rows and represents them compactly by comparing the number of fulfilled loss conditions on each side.
+
+[prize_take_conservation/](prize_take_conservation/) extends that count-level phase with the missing hidden-zone transition. Exact underlying card classes move from `prize` to `hand` under the physical identity ledger while the taking player's grouped `PrizeBelief` conditions on each observed Prize identity and shrinks its Prize set. A labeled five-card exhaustive check reproduces `P(next Prize=A)=1/5` and `P(B remains Prized | A was taken)=1/4`, while physical card totals remain invariant.
+
+**Working synthesis:** Prize taking changes material truth and player information at the same boundary. A simulator that updates only Prize counts loses card identity, while one that moves physical cards without updating the taker's belief preserves uncertainty the player has already resolved.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -331,7 +339,7 @@ Particularly foundational components include:
 
 Several larger questions remain promising:
 
-1. **General conservation across unified state layers.** The repository now has conserved materialization paths for Energy, evolution stacks, Tools, movement, simultaneous Knock Outs, zone-routing recovery, and cross-player promotion ordering. The next shared-kernel problems are competing replacement effects, post-KO Prize/win resolution, hidden-state beliefs, and action budgets.
+1. **General conservation across unified state layers.** The repository now has conserved materialization paths for Energy, evolution stacks, Tools, movement, simultaneous Knock Outs, zone-routing recovery, cross-player promotion ordering, post-KO terminal resolution, and physical Prize taking with the taker's belief update. The next shared-kernel problems are competing replacement effects, opponent-specific Prize knowledge, promotion-pending physical state, and action budgets.
 2. **Compiler from card text to transitions.** A validated semantic island now compiles multi-output Trainer deck-search text through typed physical-target feasibility. The larger open problem is extending the same auditable approach to more wording families and then materializing successful compiled actions into canonical zone / instance state without guessing ambiguous semantics.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Errata-aware reprint equivalence.** Name-wide Trainer errata now provides an authoritative layer above exact fingerprints while Copycat and Rainbow Energy remain positive and negative semantic boundary cases. The next layer should cover print-specific errata and a small auditable semantic grammar without turning same-name cards into automatic matches.
