@@ -131,3 +131,20 @@ The scan also focuses on attack text containing the phrase "as this attack". Oth
 ## Next useful work
 
 A high-value extension is a general copy-resolution kernel. It should execute nested copy edges against a typed game state, preserve declared attack identity, apply endpoint-wide resources such as GX use, and terminate safely on repeated state-copy configurations. That kernel can then be integrated with the repository's existing typed access and lock-state work.
+
+
+## Executable copy-resolution kernel
+
+`tools/attack_copy_kernel.py` implements the state separation above in a deliberately small executable model.
+
+It treats the root attack as the **declared attack identity** and resolves one or more **attack bodies** beneath it. Each body can create a new copy-selection edge. The kernel also keeps the attacking player as the perspective for self-relative zones and records per-player GX use.
+
+`results/attack_copy_semantics/reproduce_kernel.py` verifies five semantic regressions:
+
+1. **Nested execution**: Copycat -> Apex Dragon -> Timeless-GX resolves as three bodies while the declared attack remains Copycat throughout the trace.
+2. **Outer identity preservation**: when Regidrago declares Apex Dragon and its body reaches Timeless-GX, the stored previous attack is Apex Dragon. This is the identity a later Copycat examines.
+3. **Current-player perspective**: when Mimikyu executes Apex Dragon as a copied body, Apex Dragon searches the Mimikyu player's discard representation. An eligible Dragon attack that exists only in the opponent's discard is rejected.
+4. **Global GX resource**: reaching Timeless-GX through nested copying consumes the actor's GX-use channel and is rejected if that player has already used a GX attack.
+5. **No-progress recursion safety**: Apex Dragon choosing Apex Dragon again from a discarded Regidrago VSTAR is detected as a repeated copy configuration rather than expanded forever.
+
+The cycle key in this small kernel includes the attacking card, body attack, explicit progress channel, and GX-use state. That is sufficient for the transitions currently modeled. A broader simulator that mutates zones, damage, Energy, or other state during copied bodies should include those state channels in its recurrence key as well.
