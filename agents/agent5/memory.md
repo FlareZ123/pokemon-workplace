@@ -209,3 +209,42 @@ Validation:
 - all probabilities match within floating-point tolerance.
 
 Highest-value next step: instantiate an actual Expanded line with a real early deadline and integrate legal Trainer-search targets from the repository's compiler/typed allocator.
+
+
+## Multi-output connector option value and deadlines
+
+Added:
+
+- `tools/connector_capacity_option_value.py`
+- `results/connector_capacity_option_value/`
+- `.github/workflows/validate-connector-capacity-option-value.yml`
+- `tools/connector_capacity_deadlines.py`
+- `results/connector_capacity_deadlines/`
+- `.github/workflows/validate-connector-capacity-deadlines.yml`
+
+The first model extends the existing capacity-one connector option-value result to a connector that can satisfy up to `k` distinct missing channels in one use. The exact finite-horizon DP may preserve the connector while natural draws reveal which channels still need its bounded output capacity.
+
+For symmetric states with `m = k + 1` missing channels, two copies per channel, 40 cards remaining, and no payment gate, one future draw gives:
+
+- 2 channels / capacity 1: optimal 10.000000%, eager 5.128205%;
+- 3 / 2: 15.000000% vs 5.263158%;
+- 4 / 3: 20.000000% vs 5.405405%;
+- 5 / 4: 25.000000% vs 5.555556%.
+
+With four future draws, the 5 / 4 state reaches 70.013131% under adaptive preservation versus 21.269841% under eager use, a 48.743289-point gap. A clean one-draw closed form is `m*r/N` for optimal waiting and `r/(N-k)` for eager use.
+
+The same solver separates informational waiting from forced waiting caused by discard scarcity. With four channels, capacity four, cost three, two acceptable discard cards initially in hand, ten acceptable discard cards in a 40-card deck, and two target copies per channel, success rises from 25.000000% after one future draw to 70.030638% after four because the connector is initially unpayable.
+
+The deadline model gives each target a number of natural draws that may occur before it must be secured. In the same symmetric `m = k + 1` family, making only one channel due before the next draw forces the connector to commit immediately and makes the optimal value equal the earlier eager-use value. For the 5 / 4 four-draw state, one urgent channel cuts exact success from 70.013131% to 21.269841%. If the number of immediate unsecured demands exceeds capacity, success is exactly zero regardless of later draws.
+
+Both implementations have independent labeled-card regressions. GitHub Actions runs 37583839121 (option value) and 37584159160 (deadlines) passed.
+
+### Interpretation
+
+Connector value depends on capacity relative to unresolved demand and on how much target-choice information can arrive before the relevant demand expires. Total search breadth or a scalar capacity bonus is insufficient.
+
+The deadline result also provides a temporal analogue of connector contention: future card access cannot repair an objective after its strategic window closes.
+
+### Best next work
+
+A concrete application should use an ALS with multi-output search and unequal downstream timing. The Aichi Vileplume Secret Box line is a strong candidate because its outputs mix direct first-turn payloads with upstream connectors, while Grand Tree's competing ACE SPEC value appears later. Coordinate with the existing Aichi/continuation-aware work before duplicating it.
