@@ -211,9 +211,38 @@ obligation:
 
 materialize -> preserve while referenced -> release references -> collapse
 
-The current reference registry is explicit. A future canonical match state
-should collect live instance references from deck topology, Prize topology,
-belief state, pending effects, and other participating subsystems.
+[identity_reference_sources/](../identity_reference_sources/) now derives
+references mechanically from exact deck-top, Prize-position, and pending-Prize
+topology. [belief_identity_liveness/](../belief_identity_liveness/) adds the
+information-state counterpart: an instance already in hand can remain live
+while observer beliefs still key a latent pending identity by its physical ID.
+[zone_exit_identity_release/](../zone_exit_identity_release/) uses the same gate
+to atomically release a preserved stack-and-attachments batch only after all
+references expire.
+
+Reference collection is therefore partly automatic. Pending effects and other
+history-bearing subsystems still need corresponding ownership adapters.
+
+## Physical zone metrics must project across identity layers
+
+Materialization can change representation without changing the physical zone a
+card occupies. Zone-sensitive rules therefore need canonical physical
+projections rather than raw exchangeable counts.
+
+[materialized_hand_size_continuation/](../materialized_hand_size_continuation/)
+shows that a searched exact hand instance still contributes to draw-to-N hand
+size. [materialized_deck_size_projection/](../materialized_deck_size_projection/)
+shows that an exact deck-top instance still contributes to physical deck size.
+
+The deck projection now reaches the beginning-of-turn game rule through
+[turn_start_deck_loss/](../turn_start_deck_loss/),
+[sampled_turn_start_draw/](../sampled_turn_start_draw/),
+[physical_start_of_turn_resolution/](../physical_start_of_turn_resolution/),
+and [turn_start_phase/](../turn_start_phase/). A one-card deck whose only card
+is represented as deck_top has raw exchangeable deck count zero while remaining
+physically drawable. The phase checks physical emptiness first, terminates only
+when no physical deck card exists, and otherwise performs exactly one exact or
+caller-sampled draw.
 
 ## Architectural consequence
 
@@ -242,15 +271,17 @@ copies that can drift out of synchronization.
    problem is a broader arbitrary-effect interpreter for non-destination
    consequences and changing applicability conditions.
 2. **Canonical match-level phase composition.** Physical Knock Out disposal,
-   Prize-pending information, promotion-pending state, and post-Knock-Out game
-   resolution now have concrete adapters, while one shared match authority still
-   needs to compose those phase boundaries consistently.
+   Prize-pending information, promotion-pending state, post-Knock-Out game
+   resolution, and beginning-of-turn deck-out/draw now have concrete adapters.
+   One shared match authority still needs to compose those event boundaries
+   consistently.
 3. **Cross-player unified state.** Promotion order is currently a protocol over
    two player states rather than one canonical match object.
 4. **Identity lifetime after recovery.** A conservative liveness gate now
    requires an approved exchangeable zone plus zero live external instance
-   references before collapse. The remaining integration problem is canonical
-   discovery and ownership of those references across composite match state.
+   references before collapse. Deck/Prize topology and pending-Prize belief
+   adapters now publish references automatically. Pending effects and other
+   history-bearing subsystems still need canonical reference ownership.
 5. **Board-kernel convergence.** `board_object_kernel.py` and the richer
    `board_position_state.py` / `board_position_kernel.py` still overlap.
    `attack_copy_physical_ko_bridge` now shows that copied attack damage and
@@ -283,6 +314,15 @@ Core detailed results:
 - [knockout_redirection_ordering/](../knockout_redirection_ordering/)
 - [ko_redirection_authorized_order/](../ko_redirection_authorized_order/)
 - [identity_liveness/](../identity_liveness/)
+- [zone_exit_identity_release/](../zone_exit_identity_release/)
+- [identity_reference_sources/](../identity_reference_sources/)
+- [belief_identity_liveness/](../belief_identity_liveness/)
+- [materialized_hand_size_continuation/](../materialized_hand_size_continuation/)
+- [materialized_deck_size_projection/](../materialized_deck_size_projection/)
+- [turn_start_deck_loss/](../turn_start_deck_loss/)
+- [sampled_turn_start_draw/](../sampled_turn_start_draw/)
+- [physical_start_of_turn_resolution/](../physical_start_of_turn_resolution/)
+- [turn_start_phase/](../turn_start_phase/)
 
 This synthesis should be revised when any supporting mechanic is falsified or
 superseded.
