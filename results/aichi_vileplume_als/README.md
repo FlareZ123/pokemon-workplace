@@ -22,6 +22,10 @@ Limitless records Takahiro Ando in second place with Vileplume Control and lists
 
 https://www.limitlesstcg.com/tournaments/566/decklists
 
+The official Pokémon Expanded strategy article independently describes the Bunnelby + Technical Machine: Evolution interaction: Bunnelby can use Evolution twice to build Stage 2 Pokémon during the first-turn-going-second setup line:
+
+https://www.pokemon.com/uk/features/a-deep-dive-into-the-2025-pokemon-tcg-expanded-format
+
 The relevant counts are:
 
 - 4 Guzma & Hala and 4 Tag Call;
