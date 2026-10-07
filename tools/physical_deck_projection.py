@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from deck_search_shuffle_topology import SearchableDeckPhysicalState
-from identity_materialization import assert_conserved, move_instance
+from identity_materialization import assert_conserved, materialize, move_instance
 from physical_zone_count import physical_zone_count
 from top_prize_physical_bridge import TopPrizePhysicalState
 
@@ -53,4 +53,52 @@ def draw_exact_top_to_hand(
         before=state,
         after=after,
         drawn_instance_id=state.top_instance_id,
+    )
+
+
+@dataclass(frozen=True)
+class SampledDeckDrawTransition:
+    before: SearchableDeckPhysicalState
+    after: SearchableDeckPhysicalState
+    drawn_instance_id: str
+
+
+def draw_sampled_deck_card_to_hand(
+    state: SearchableDeckPhysicalState,
+    *,
+    card_class: str,
+    card_name: str,
+    instance_id: str,
+) -> SampledDeckDrawTransition:
+    """Materialize one caller-sampled unordered deck card and draw it."""
+
+    before_size = physical_deck_size(state.ledger)
+    if before_size <= 0:
+        raise ValueError("cannot draw from an empty deck")
+
+    ledger = materialize(
+        state.ledger,
+        card_class=card_class,
+        card_name=card_name,
+        source_zone="deck",
+        instance_id=instance_id,
+    )
+    ledger = move_instance(
+        ledger,
+        instance_id,
+        "hand",
+    )
+    assert_conserved(state.ledger, ledger)
+    after = SearchableDeckPhysicalState(
+        ledger,
+        state.prize_instance_ids,
+        state.face_up,
+    )
+    if physical_deck_size(after.ledger) != before_size - 1:
+        raise AssertionError("drawing sampled card must reduce physical deck size by one")
+
+    return SampledDeckDrawTransition(
+        before=state,
+        after=after,
+        drawn_instance_id=instance_id,
     )
