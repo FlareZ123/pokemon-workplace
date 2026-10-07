@@ -8,7 +8,7 @@ The normalizer in tools/tool_category_normalization.py removes Item only when Po
 
 This matters for typed analysis because the stale Item subtype can incorrectly make a Pokémon Tool satisfy an Item predicate. Forest Seal Stone (swsh12-156), for example, should normalize from Item + Pokémon Tool to Pokémon Tool. Rapid Strike Scroll of the Flying Dragon (swsh7-153) retains Rapid Strike + Pokémon Tool.
 
-The legal gameplay-fingerprint count remains 10,416 before and after normalization. Historical exact reprint candidates also remain 106 when this layer is composed into current-semantics comparison. The correction still matters because individual records now encode the current category correctly.
+The legal gameplay-fingerprint count drops from 10,416 to 10,415 after normalization. The one merge is concrete: the Sword & Shield-era Choice Belt records with stale Item + Pokémon Tool metadata normalize to the same current fingerprint as `sv2-176` Choice Belt. Historical exact reprint candidates remain 106 when this layer is composed into current-semantics comparison.
 
 Evidence: the Advanced Player's Rulebook states that Sword & Shield-and-earlier Pokémon Tools that had Item printed on them are not treated as Items. The current official TCG Errata resource records the same category migration as applying to all previously printed Pokémon Tools.
 
