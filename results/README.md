@@ -81,6 +81,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [bench_release_deadline_geometry/](bench_release_deadline_geometry/) adds earliest-entry time and deadline. Attack release misses a current-turn Bench deadline but can preload an empty slot for a Pokémon that only becomes available next turn, and the next-turn Supporter quota is fresh. That same attack release still fails when the current turn independently needs a different attack, while Item release can preserve the attack window.
 
+[interturn_bench_slack_exposure/](interturn_bench_slack_exposure/) shows that preloaded slack itself is exposed during the opponent window. After a release leaves occupancy 4 under capacity 5, Collapsed Stadium can reduce capacity to 4, force zero discards, and still erase the reserved slot entirely. Immediate materialization avoids that specific future-entry failure when the required entrant is retained through contraction, at the cost of sacrificing other board value.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
