@@ -1,0 +1,28 @@
+name: Validate before-hand Bench contention
+
+on:
+  push:
+    paths:
+      - "results/before_hand_bench_contention/**"
+      - "tools/prize_pending_batch_order.py"
+      - "tools/prize_pending_take.py"
+      - "tools/prize_before_hand_bench_entry.py"
+      - "tools/before_hand_prize_executor.py"
+      - "tools/dream_ball_typed_bench_execution.py"
+      - "tools/promotion_pending_conservation.py"
+      - ".github/workflows/validate-before-hand-bench-contention.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check one-open-Bench E-31 contention
+        run: python results/before_hand_bench_contention/reproduce.py
