@@ -4,6 +4,11 @@ on:
   push:
     paths:
       - "tools/prize_position_belief.py"
+      - "resources/cards/en/bw8.json"
+      - "results/prize_supporter_execution/**"
+      - "tools/action_quota_effects.py"
+      - "tools/turn_action_budget.py"
+      - "tools/prize_supporter_execution.py"
       - "tools/prize_position_policy.py"
       - "tools/peonia_arc_position.py"
       - "tools/repeated_prize_probe.py"
@@ -50,3 +55,5 @@ jobs:
         run: python results/prize_terminal_utility_policy/reproduce.py
       - name: Check Prize position deadlines
         run: python results/prize_position_deadlines/reproduce.py
+      - name: Check Prized Supporter execution
+        run: python results/prize_supporter_execution/reproduce.py
