@@ -36,6 +36,13 @@ BASIC_TYPED = re.compile(
     re.IGNORECASE,
 )
 
+FIXED_BASIC_DISCARD = re.compile(
+    r"\\bdiscard (an|a|\\d+) Basic "
+    r"(Grass|Fire|Water|Lightning|Psychic|Fighting|Darkness|Metal|Fairy) "
+    r"Energy(?: cards?)?\\b",
+    re.IGNORECASE,
+)
+
 TYPE_OVERRIDE = re.compile(
     r"All Energy attached to (?:this Pokémon|your Pokémon) are "
     r"(Grass|Fire|Water|Lightning|Psychic|Fighting|Darkness|Metal|Fairy) "
@@ -86,6 +93,7 @@ def build(resources_root: Path) -> dict[str, Any]:
     references: list[dict[str, Any]] = []
     overrides: list[dict[str, Any]] = []
     multiplicity: list[dict[str, Any]] = []
+    fixed_basic_discards: list[dict[str, Any]] = []
 
     for path in sorted((resources_root / "cards" / "en").glob("*.json")):
         if path.stem not in expanded_sets:
@@ -135,6 +143,25 @@ def build(resources_root: Path) -> dict[str, Any]:
                         }
                     )
 
+                basic_discard = FIXED_BASIC_DISCARD.search(text)
+                if basic_discard:
+                    count_token = basic_discard.group(1).lower()
+                    fixed_basic_discards.append(
+                        {
+                            "card_id": card["id"],
+                            "card_name": card["name"],
+                            "source_kind": source_kind,
+                            "source_name": source_name,
+                            "count": (
+                                1
+                                if count_token in {"a", "an"}
+                                else int(count_token)
+                            ),
+                            "basic_energy_name": basic_discard.group(2).title(),
+                            "text": text,
+                        }
+                    )
+
     distinct_reference_texts = {row["text"] for row in references}
     reference_kind_counts = Counter(row["source_kind"] for row in references)
     reference_type_counts = Counter(
@@ -150,6 +177,15 @@ def build(resources_root: Path) -> dict[str, Any]:
         (row["card_name"], row["source_kind"], row["source_name"], row["text"])
         for row in multiplicity
     }
+    fixed_basic_discard_kind_counts = Counter(
+        row["source_kind"] for row in fixed_basic_discards
+    )
+    fixed_basic_discard_type_counts = Counter(
+        row["basic_energy_name"] for row in fixed_basic_discards
+    )
+    fixed_basic_discard_count_counts = Counter(
+        row["count"] for row in fixed_basic_discards
+    )
 
     energy_burn_grass = AttachedEnergyState(
         card_name="Basic Grass Energy",
@@ -180,6 +216,22 @@ def build(resources_root: Path) -> dict[str, Any]:
             "print_instances": len(multiplicity),
             "distinct_signatures": len(multiplicity_signatures),
             "rows": multiplicity,
+        },
+        "fixed_basic_named_discards": {
+            "print_instances": len(fixed_basic_discards),
+            "distinct_texts": len(
+                {row["text"] for row in fixed_basic_discards}
+            ),
+            "by_source_kind": dict(
+                sorted(fixed_basic_discard_kind_counts.items())
+            ),
+            "by_basic_energy_name": dict(
+                sorted(fixed_basic_discard_type_counts.items())
+            ),
+            "by_required_card_count": dict(
+                sorted(fixed_basic_discard_count_counts.items())
+            ),
+            "rows": fixed_basic_discards,
         },
         "semantic_regressions": {
             "basic_grass_under_energy_burn_and_wild_growth": {
