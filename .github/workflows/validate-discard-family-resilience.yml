@@ -1,0 +1,19 @@
+name: Validate discard family resilience
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/discard_family_resilience.py"
+      - "results/discard_family_resilience/**"
+      - ".github/workflows/validate-discard-family-resilience.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/discard_family_resilience/reproduce.py
