@@ -1,0 +1,83 @@
+{
+  "source": {
+    "tournament": "CL Aichi Open League",
+    "date": "2026-05-10",
+    "tournament_url": "https://limitlesstcg.com/tournaments/566",
+    "cards_url": "https://limitlesstcg.com/tournaments/566/cards",
+    "note": "Nine published Regidrago decklists in the tournament card aggregation. Counts below are manually transcribed from the corresponding published decklists and checked against the aggregate card counts."
+  },
+  "decklists": [
+    {
+      "place": 10,
+      "player": "Haruku Yoshioka",
+      "url": "https://limitlesstcg.com/decks/list/26816",
+      "budew": 2,
+      "koraidon_ex_tef120": 1,
+      "double_dragon_energy": 4
+    },
+    {
+      "place": 12,
+      "player": "Risa Sato",
+      "url": "https://limitlesstcg.com/decks/list/26818",
+      "budew": 1,
+      "koraidon_ex_tef120": 1,
+      "double_dragon_energy": 4
+    },
+    {
+      "place": 13,
+      "player": "Hiromu Sasaki",
+      "url": "https://limitlesstcg.com/decks/list/26819",
+      "budew": 1,
+      "koraidon_ex_tef120": 0,
+      "double_dragon_energy": 3
+    },
+    {
+      "place": 14,
+      "player": "Manaya Asano",
+      "url": "https://limitlesstcg.com/decks/list/26820",
+      "budew": 1,
+      "koraidon_ex_tef120": 0,
+      "double_dragon_energy": 4
+    },
+    {
+      "place": 18,
+      "player": "Hayato Omuro",
+      "url": "https://limitlesstcg.com/decks/list/27424",
+      "budew": 1,
+      "koraidon_ex_tef120": 1,
+      "double_dragon_energy": 4
+    },
+    {
+      "place": 20,
+      "player": "Satoru Imamura",
+      "url": "https://limitlesstcg.com/decks/list/27425",
+      "budew": 2,
+      "koraidon_ex_tef120": 0,
+      "double_dragon_energy": 4
+    },
+    {
+      "place": 21,
+      "player": "Shun Nakajima",
+      "url": "https://limitlesstcg.com/decks/list/27426",
+      "budew": 1,
+      "koraidon_ex_tef120": 1,
+      "double_dragon_energy": 3
+    },
+    {
+      "place": 27,
+      "player": "Yuya Nagatsuma",
+      "url": "https://limitlesstcg.com/decks/list/27427",
+      "budew": 1,
+      "koraidon_ex_tef120": 1,
+      "double_dragon_energy": 4
+    },
+    {
+      "place": 32,
+      "player": "Kaito Higuchi",
+      "url": "https://limitlesstcg.com/decks/list/27428",
+      "budew": 2,
+      "koraidon_ex_tef120": 0,
+      "double_dragon_energy": 4
+    }
+  ]
+}
