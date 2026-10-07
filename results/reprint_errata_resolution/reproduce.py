@@ -23,13 +23,18 @@ assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
 assert counts["known_non_equivalent_prints"] == 34
 assert counts["known_non_equivalent_names"] == 4
-assert counts["semantic_review_prints"] == 4034
-assert counts["high_confidence_candidate_prints"] == 192
+assert counts["official_semantic_candidate_prints"] == 3
+assert counts["official_semantic_candidate_names"] == 1
+assert counts["semantic_review_prints"] == 4031
+assert counts["high_confidence_candidate_prints"] == 195
 assert counts["exact_fingerprint_trainer_candidate_prints"] == 2
 assert counts["trainer_same_name_review_pool_prints"] == 168
 assert counts["historical_official_trainer_candidate_prints"] == 41
-assert counts["high_confidence_trainer_candidate_prints"] == 87
+assert counts["high_confidence_trainer_candidate_prints"] == 90
 assert counts["name_wide_trainer_errata_names"] == 15
+
+assert summary["official_semantic_candidates_by_name"] == {"Copycat": 3}
+assert summary["official_semantic_candidate_ids"] == ["ecard1-138", "ex15-73", "ex7-83"]
 
 assert summary["known_non_equivalent_by_name"] == {
     "Darkness Energy": 15,
@@ -75,7 +80,9 @@ assert resolver.resolve("base1-96").kind == "historical_official_reprint_candida
 assert resolver.resolve("dp4-99").kind == "official_errata_candidate"
 assert resolver.resolve("ex2-88").kind == "official_errata_candidate"
 assert resolver.resolve("gym1-18").kind == "exact_fingerprint_candidate"
-assert resolver.resolve("ex7-83").kind == "semantic_review"
+assert resolver.resolve("ex7-83").kind == "official_semantic_candidate"
+assert resolver.resolve("ex15-73").kind == "official_semantic_candidate"
+assert resolver.resolve("ecard1-138").kind == "official_semantic_candidate"
 assert resolver.resolve("bw5-100").kind == "direct_legal"
 
 print("errata-aware reprint resolution: PASS")
