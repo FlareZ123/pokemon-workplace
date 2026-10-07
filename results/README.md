@@ -307,6 +307,8 @@ The regression materializes a Bulbasaur/Ivysaur evolution stack, Muscle Band, an
 
 **Working synthesis:** a Knocked Out evolved Pokémon is one board-object disposal boundary with multiple conserved physical-card members. Updating only the top card, attachment flags, or aggregate counts independently is structurally unsafe because it can orphan lower-stage cards or physical attachments.
 
+[stack_zone_exit_conservation/](stack_zone_exit_conservation/) extends the same conservation boundary to ordinary hand/deck exits. The full evolution stack follows the Pokémon, while attached cards use a separately resolved destination. This distinguishes Scoop Up Cyclone style hand routing, Cassius style deck routing, and AZ style split routing without creating another board authority. The adapter can defer dematerialization when an enclosing effect still needs exact moved-card identity.
+
 
 ## 20. Energy movement preserves physical identity until an attachment relation fails
 
