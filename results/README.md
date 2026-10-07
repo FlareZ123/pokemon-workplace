@@ -262,6 +262,15 @@ The regression materializes a Bulbasaur/Ivysaur evolution stack, Muscle Band, an
 
 **Working synthesis:** a Knocked Out evolved Pokémon is one board-object disposal boundary with multiple conserved physical-card members. Updating only the top card, attachment flags, or aggregate counts independently is structurally unsafe because it can orphan lower-stage cards or physical attachments.
 
+
+## 20. Energy movement preserves physical identity until an attachment relation fails
+
+[energy_movement_conservation/](energy_movement_conservation/) treats an ordinary Energy move between two in-play Pokémon as a topology change of one existing physical card. The same materialized instance changes holders without changing card-class totals.
+
+[special_energy_move_conservation/](special_energy_move_conservation/) adds the restricted-Special-Energy boundary. Using Expanded-legal Double Dragon Energy as the concrete regression, a legal destination preserves the same physical instance and its two-unit representation. When the chosen destination cannot legally have that Special Energy attached, the source still loses the card, the destination does not gain it, and the same copy enters the exchangeable discard count.
+
+**Working synthesis:** selecting a destination and successfully forming an attachment relation are distinct transition stages. Physical identity should persist through a legal topology move and dematerialize only when the card leaves board topology.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -288,7 +297,7 @@ Particularly foundational components include:
 
 Several larger questions remain promising:
 
-1. **General conservation across unified state layers.** Energy attachments, Pokémon evolution/devolution stacks, Tools, and single-Pokémon whole-stack Knock Out disposal now have aggregate-to-instance conservation bridges. The next shared-kernel problems are recovery, Energy movement between Pokémon, simultaneous Knock Outs and trigger ordering, hidden-state beliefs, and action budgets.
+1. **General conservation across unified state layers.** Energy attachment, Energy movement, Pokémon evolution/devolution stacks, Tools, and single-Pokémon whole-stack Knock Out disposal now have aggregate-to-instance conservation bridges. The next shared-kernel problems are recovery, simultaneous Knock Outs and trigger ordering, hidden-state beliefs, and action budgets.
 2. **Compiler from card text to transitions.** A validated semantic island now compiles multi-output Trainer deck-search text through typed physical-target feasibility. The larger open problem is extending the same auditable approach to more wording families and then materializing successful compiled actions into canonical zone / instance state without guessing ambiguous semantics.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Errata-aware reprint equivalence.** The repository now has an exact-fingerprint candidate scanner and an official Copycat counterexample showing why equality is incomplete. The next layer should normalize authoritative errata and semantic equivalence without turning same-name cards into automatic matches.
