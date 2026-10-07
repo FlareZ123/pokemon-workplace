@@ -356,7 +356,7 @@ Named regressions cover Gladion, Hisuian Heavy Ball, Peonia, Rotom Dex, Redeemab
 **Working synthesis:** Prize mechanics are better represented as ordered multi-axis transition programs than card-level labels. The atom catalog is a conservative semantic island and still leaves typed selection, optionality, counts, ordering, stochastic gates, and full referent resolution for later compiler layers.
 
 
-## 29. Turn-action limits can change with live board effects
+## 30. Turn-action limits can change with live board effects
 
 [action_quota_effects/](action_quota_effects/) uses Expanded-legal Magnezone `bw8-46` as a counterexample to boolean action usage. Dual Brains permits two Supporter cards during its controller's turn, so after one Supporter the state simultaneously has `used > 0` and remaining Supporter quota.
 
@@ -377,6 +377,16 @@ The bridge validates current source-zone availability and per-card-class conserv
 **Working synthesis:** demand satisfaction is an evaluation projection, not a sufficient execution record. Policy search should carry the exact target-allocation witness until the chosen action has mutated canonical zone state.
 
 
+
+## 31. Extra turns reset action bandwidth for the same player
+
+[turn_sequence_kernel/](turn_sequence_kernel/) models the boundary created by Expanded-legal extra-turn attacks such as Timeless-GX and Star Chronos. The current attack still closes the turn budget, the checked card text skips the intervening between-turn / Pokémon Checkup step, and the scheduled turn begins with reset ordinary action usage for the same player.
+
+The sequence state retains separate budgets for both players. This prevents a player-specific quota such as Dual Brains from leaking to the opponent on an ordinary handoff, while preserving that quota when the same player receives the extra turn or later regains turn ownership.
+
+**Working synthesis:** action history is turn-scoped and player-owned. Extra-turn effects multiply Supporter, Stadium, manual-attachment, Retreat, and attack windows because they create a new turn for the same player rather than extending the already-spent current turn.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -391,6 +401,7 @@ Particularly foundational components include:
 - `turn_action_budget.py`
 - `legacy_turn_budget_bridge.py`
 - `action_quota_effects.py`
+- `turn_sequence_kernel.py`
 - `bench_capacity_model.py`
 - `lock_effect_catalog.py`
 - `prize_belief_decision.py`
