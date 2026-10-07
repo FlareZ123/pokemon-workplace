@@ -1,0 +1,25 @@
+name: Validate before-hand Prize ordering
+
+on:
+  push:
+    paths:
+      - "tools/prize_pending_batch_order.py"
+      - "tools/prize_pending_take.py"
+      - "tools/identity_materialization.py"
+      - "results/before_hand_prize_ordering/**"
+      - ".github/workflows/validate-before-hand-prize-ordering.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check E-31 sibling ordering
+        run: python results/before_hand_prize_ordering/reproduce.py
