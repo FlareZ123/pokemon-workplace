@@ -73,13 +73,19 @@ def main() -> None:
         for row in counter_rows
         if row.counter_effect is not None
     )
-    print(
+    assert len(semantics) == 19992
+    assert supported_damage_rows == 16128
+    assert extra_turn_rows == 13
+    assert len(counter_rows) == 91
+    assert counter_shapes == Counter(
         {
-            "probe_legal_attack_rows": len(semantics),
-            "probe_supported_fixed_or_effect_only_damage": supported_damage_rows,
-            "probe_extra_turn_rows": extra_turn_rows,
-            "probe_exact_counter_rows": len(counter_rows),
-            "probe_counter_shapes": dict(sorted(counter_shapes.items())),
+            ("opponent_any", "distributed"): 35,
+            ("opponent_bench", "distributed"): 20,
+            ("opponent_active", "fixed"): 13,
+            ("opponent_any", "single"): 8,
+            ("opponent_bench", "single"): 7,
+            ("own_any", "single"): 7,
+            ("self", "fixed"): 1,
         }
     )
 
