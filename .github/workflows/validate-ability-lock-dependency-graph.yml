@@ -1,0 +1,26 @@
+name: Validate Ability lock dependency graph
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/ability_lock_dependency_graph.py"
+      - "tools/single_source_ability_lock_geometry.py"
+      - "tools/garbotoxin_suppression.py"
+      - "tools/board_object_kernel.py"
+      - "results/ability_lock_dependency_graph/**"
+      - ".github/workflows/validate-ability-lock-dependency-graph.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Ability lock dependency graph
+        run: python results/ability_lock_dependency_graph/reproduce.py
