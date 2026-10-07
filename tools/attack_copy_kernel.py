@@ -185,6 +185,7 @@ def resolve_attack(
 
     trace: list[TraceStep] = []
     body_chain: list[str] = []
+    gx_used_before_resolution = actor_player in state.gx_used_by
     seen: set[
         tuple[str, str, int, frozenset[str], TurnBoundaryEffect | None]
     ] = set()
@@ -208,9 +209,12 @@ def resolve_attack(
         seen.add(cycle_key)
 
         if body.is_gx:
-            if actor_player in current.gx_used_by:
+            if gx_used_before_resolution:
                 raise GXAlreadyUsed(f"{actor_player} has already used a GX attack")
-            current = replace(current, gx_used_by=current.gx_used_by | {actor_player})
+            current = replace(
+                current,
+                gx_used_by=current.gx_used_by | {actor_player},
+            )
 
         if body.turn_boundary_effect is not None:
             if (
