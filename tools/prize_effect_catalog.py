@@ -67,7 +67,7 @@ def compile_prize_effect(text: str) -> tuple[str, ...]:
     if _has(r"discard 1 of your Prize cards.*if it's an Energy card, attach it", text):
         atoms.add("prize_to_attached")
 
-    if _has(r"switch .*face-down Prize cards? with the top card of .*deck", text):
+    if _has(r"switch .*face-down Prize cards? with the top card of .*deck|top card of .*deck.*switch .* with .*face-down Prize cards?", text):
         atoms.add("swap_prize_topdeck")
         atoms.add("deck_to_prize")
         atoms.add("prize_to_deck")
