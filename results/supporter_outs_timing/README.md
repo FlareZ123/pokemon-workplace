@@ -105,6 +105,9 @@ With two Supporter plays available, one consuming connector plus the target Supp
 
 This is why the graph should store **remaining Supporter capacity in the state** rather than permanently labeling every Supporter-to-Supporter edge invalid. Magnezone's Dual Brains is one Expanded example that changes the capacity rule.
 
+The implementation now accepts the repository's canonical `TurnActionBudget` directly. It derives remaining Supporter capacity from current usage, current limit, and the turn-ended boundary. The regression verifies exact equality with the older explicit-capacity interface for ordinary one-play state, a two-play Dual Brains state, one already-spent play under Dual Brains, and a closed turn.
+
+
 ## Strategic interpretation
 
 ### Rules-derived point
