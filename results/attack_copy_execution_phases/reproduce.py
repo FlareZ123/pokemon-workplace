@@ -45,7 +45,7 @@ def main() -> None:
         for row in result["source_lifetime_rows"]
     } == {
         "Hypnotic Reign": "selected_source_discarded_from_opponent_hand_before_body",
-        "Seek Inspiration": "selected_source_discarded_from_own_deck_before_body",
+        "Seek Inspiration": "top_card_discarded_before_eligibility_and_body",
     }
 
     assert row_for(result, "Haughty Order")["trailing_semantics"] == "post_copy_cleanup"
