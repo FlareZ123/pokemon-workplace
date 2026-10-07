@@ -1,0 +1,24 @@
+name: Validate setup observation state coupling
+
+on:
+  push:
+    paths:
+      - "tools/aichi_setup_inference.py"
+      - "tools/iron_thorns_mulligan_bonus.py"
+      - "results/setup_observation_state_coupling/**"
+      - ".github/workflows/validate-setup-observation-state-coupling.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check coupled setup observation and state
+        run: python results/setup_observation_state_coupling/reproduce.py
