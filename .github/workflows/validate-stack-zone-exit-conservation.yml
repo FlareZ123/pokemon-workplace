@@ -1,0 +1,26 @@
+name: Validate stack zone exit conservation
+
+on:
+  push:
+    paths:
+      - "tools/stack_zone_exit_conservation.py"
+      - "tools/stack_knockout_conservation.py"
+      - "tools/board_position_state.py"
+      - "tools/identity_materialization.py"
+      - "results/stack_zone_exit_conservation/**"
+      - ".github/workflows/validate-stack-zone-exit-conservation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check whole-stack zone exit conservation
+        run: python results/stack_zone_exit_conservation/reproduce.py
