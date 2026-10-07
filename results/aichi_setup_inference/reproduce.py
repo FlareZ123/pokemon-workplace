@@ -11,6 +11,7 @@ from aichi_setup_inference import (  # noqa: E402
     ExactListCandidate,
     common_only_given_mulligan,
     exact_count_classification_accuracy,
+    family_unique_content_classification_accuracy,
     mulligan_probability,
     posterior_left_after_exact_mulligans,
     unique_content_classification_accuracy,
@@ -85,6 +86,22 @@ def main() -> None:
         0.06928528137114276,
     )
 
+    family_vileplume = ExactListCandidate(
+        "Vileplume vs Iron family",
+        forced_basics=14,
+        common_nonbasic_cards=18,
+    )
+    iron_family = (
+        ExactListCandidate("Kazuma", 4, 17),
+        ExactListCandidate("Ryoya", 4, 16),
+        ExactListCandidate("Kohei", 4, 17),
+    )
+    family_accuracy = family_unique_content_classification_accuracy(
+        family_vileplume,
+        iron_family,
+    )
+    assert_close(family_accuracy, 0.8002415086490129)
+
     print("All Aichi setup inference checks passed.")
     print("Count-only accuracy:", f"{count_accuracy:.12%}")
     print("Coarse content accuracy:", f"{content_accuracy:.12%}")
@@ -92,6 +109,7 @@ def main() -> None:
         "Increment from content:",
         f"{content_accuracy - count_accuracy:.12%}",
     )
+    print("Three-list Iron family accuracy:", f"{family_accuracy:.12%}")
 
 
 if __name__ == "__main__":
