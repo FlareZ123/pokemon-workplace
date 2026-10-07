@@ -592,6 +592,17 @@ A six-card labeled regression uses singleton A, singleton targets X and Y, and t
 **Working synthesis:** public actions selected after private deck inspection can leak hidden-zone information through policy. K1 should therefore update the searcher's belief state and may also change an opponent's posterior when the search outcome is observable.
 
 
+
+## 50. Same-line reacquisition creates transient payload discardability
+
+[reacquisition_discardability/](reacquisition_discardability/) refines temporal discard replenishment at exact card-class resolution.
+
+In the concrete Secret Box into Guzma & Hala branch, a TM: Evolution or Artazon retrieved by Secret Box can pay Guzma & Hala's later two-card discard when another copy remains searchable. Guzma & Hala then restores that same required payload while also finding Jet Energy. For the core TM + Artazon + Jet endpoint, one reacquisition channel lowers minimum pre-Box filler stock from four cards to three. When Tag Call is also an independent downstream requirement, both TM and Artazon must be replaceable to keep the three-card floor.
+
+A 200,000-state seeded Aichi probe found that 23,665 of 27,552 raw Secret Box-access states, 85.8921%, still had both deck copies of at least one of TM: Evolution or Artazon before Secret Box searched. This is a sufficient structural condition for the exact discard-and-reacquire witness.
+
+**Working synthesis:** discardability can be copy-local and transient. An endpoint-required card class can supply discard material when a later legal search restores the requirement before its deadline. Temporal planners therefore need exact generated identities, retention requirements, and reacquisition availability in addition to scalar resource production.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -621,6 +632,7 @@ Particularly foundational components include:
 - `energy_board_conservation.py`
 - `identity_materialization.py`
 - `card_class_namespace.py`
+- `temporal_resource_ledger.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
