@@ -39,7 +39,7 @@ Representative cases:
 - Hariyama `me1-73` / Heave-Ho Catcher is also hand-evolution-triggered despite beginning with “Once during your turn”;
 - Mabosstiff `sv1-137` / Intimidating Howl gives replacement choice to the opponent;
 - Salamence `sm7-106` / Dragon Wind requires the source to be Active;
-- Swellow `xy1-103` / Drive Off is tied to hand-to-Bench entry.
+- Tornadus `swsh9-126` / Sudden Cyclone is tied to hand-to-Bench entry.
 
 ## Strategic interpretation
 
