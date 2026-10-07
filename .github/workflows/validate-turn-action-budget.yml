@@ -1,0 +1,23 @@
+name: Validate turn action budget
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/turn_action_budget.py"
+      - "results/turn_action_budget/**"
+      - ".github/workflows/validate-turn-action-budget.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce turn action budget
+        run: python results/turn_action_budget/reproduce.py
