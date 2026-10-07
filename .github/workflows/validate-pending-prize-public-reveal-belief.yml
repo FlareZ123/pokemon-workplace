@@ -1,0 +1,25 @@
+name: Validate pending Prize public reveal belief
+
+on:
+  push:
+    paths:
+      - "tools/pending_prize_identity_belief.py"
+      - "tools/observer_top_prize_beliefs.py"
+      - "tools/prize_joint_position_removal.py"
+      - "results/pending_prize_public_reveal_belief/**"
+      - ".github/workflows/validate-pending-prize-public-reveal-belief.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check redirected Prize observer beliefs
+        run: python results/pending_prize_public_reveal_belief/reproduce.py
