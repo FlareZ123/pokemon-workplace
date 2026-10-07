@@ -47,6 +47,6 @@ This complements the existing simultaneous-KO conservation work. The new kernel 
 
 Reaction eligibility is semantic input. This kernel does not yet derive a live Strong Bash effect from a previous attack or discover Spiky Energy attachments automatically.
 
-The implemented reaction bodies cover fixed counter reflection and mirroring final damage. Other damaged-by-attack effects can perform different actions and will need additional semantic handlers.
+The implemented reaction bodies cover fixed counter reflection, counters scaled by an upstream count, and mirroring final damage. Orthworm ex `sv7-110` / Pummeling Payback is the scaled witness: two counters per Metal Energy becomes six counters when the caller supplies a live count of three. Other damaged-by-attack effects can perform different actions and will need additional semantic handlers.
 
 The kernel also assumes supplied reaction order. The rulebook gives the damaged Pokemon's player ordering authority when several such effects activate, so strategic ordering belongs to an outer choice layer when effects do not commute.
