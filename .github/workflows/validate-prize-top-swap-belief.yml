@@ -1,0 +1,25 @@
+name: Validate Prize top swap belief
+
+on:
+  push:
+    paths:
+      - "tools/prize_top_swap_belief.py"
+      - "tools/prize_slot_visibility.py"
+      - "tools/prize_position_belief.py"
+      - "results/prize_top_swap_belief/**"
+      - ".github/workflows/validate-prize-top-swap-belief.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize/topdeck joint belief
+        run: python results/prize_top_swap_belief/reproduce.py
