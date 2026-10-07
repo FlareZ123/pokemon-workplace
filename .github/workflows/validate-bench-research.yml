@@ -30,3 +30,7 @@ jobs:
         run: python results/bench_bulk_refresh/reproduce.py
       - name: Validate Eternal Zone refresh
         run: python results/eternal_zone_refresh/reproduce.py
+      - name: Validate Eternal Zone release channels
+        run: python results/eternal_zone_release_channels/reproduce.py
+      - name: Validate Stadium-removal channels
+        run: python results/stadium_removal_channels/reproduce.py
