@@ -14,6 +14,7 @@ on:
       - "resources/cards/en/sm5.json"
       - "resources/cards/en/sv6.json"
       - "resources/cards/en/swsh2.json"
+      - "resources/cards/en/swsh6.json"
       - "resources/cards/en/swsh12.json"
       - ".github/workflows/validate-regidrago-timeless-phantom-als.yml"
   workflow_dispatch:
