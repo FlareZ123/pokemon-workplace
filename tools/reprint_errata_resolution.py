@@ -11,7 +11,7 @@ from tools.build_expanded_legality_baseline import (
     has_tournament_ban_rule,
     load_json,
 )
-from tools.official_print_errata import normalize_print_specific_errata
+from tools.current_card_semantics import current_semantic_fingerprint
 
 ResolutionKind = Literal[
     "direct_legal",
@@ -83,7 +83,7 @@ class ReprintResolver:
         if has_tournament_ban_rule(card) or (card.get("legalities") or {}).get("unlimited") == "Banned":
             return ReprintResolution(card_id, name, "outside_disallowed")
 
-        fingerprint_targets = self.legal_expanded_by_fingerprint.get(gameplay_fingerprint(normalize_print_specific_errata(card)), ())
+        fingerprint_targets = self.legal_expanded_by_fingerprint.get(current_semantic_fingerprint(card), ())
         if fingerprint_targets:
             return ReprintResolution(
                 card_id,
@@ -136,7 +136,7 @@ def build_reprint_resolver(resources_root: Path) -> ReprintResolver:
             if status != "Legal":
                 continue
             legal_by_name[card["name"]].append(card)
-            legal_by_fingerprint[gameplay_fingerprint(normalize_print_specific_errata(card))].append(card)
+            legal_by_fingerprint[current_semantic_fingerprint(card)].append(card)
 
     return ReprintResolver(
         expanded_sets=expanded_sets,
