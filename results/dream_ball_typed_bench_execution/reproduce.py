@@ -20,6 +20,7 @@ from before_hand_prize_profiles import build_before_hand_prize_profiles
 from board_position_state import BoardPokemon, PokemonCard
 from dream_ball_typed_bench_execution import (
     DreamBallBenchTarget,
+    dream_ball_target_from_metadata,
     execute_dream_ball_bench_search,
 )
 from identity_materialization import (
@@ -30,15 +31,14 @@ from identity_materialization import (
     put_in_play_instance,
 )
 from multicopy_zone_state import ZoneCountState
+from pokemon_board_metadata import pokemon_board_metadata_by_id
 from prize_pending_take import PendingPrize, PrizePendingTakeState
 from promotion_pending_conservation import PromotionPendingState
 from search_zone_transition import SearchZoneTarget
 from top_prize_physical_bridge import TopPrizePhysicalState
 from trainer_search_profile_compiler import SearchOutput
 from typed_search_target_allocator import (
-    BASIC_POKEMON,
     ITEM,
-    STAGE_2_POKEMON,
     TargetGroup,
     enumerate_typed_target_profiles,
     make_demand,
@@ -58,7 +58,7 @@ def make_resolving_state(profile):
         ZoneCountState.from_mapping(
             {
                 ("active-class", "hand"): 1,
-                ("basic-target", "deck"): 1,
+                ("sm2-60", "deck"): 1,
                 ("sv3-164", "deck"): 1,
                 ("item-target", "deck"): 1,
             }
@@ -109,32 +109,15 @@ def make_resolving_state(profile):
     return initial, resolving, board
 
 
-def make_targets():
+def make_targets(metadata):
     return (
-        DreamBallBenchTarget(
-            SearchZoneTarget(
-                "basic-target",
-                TargetGroup(
-                    "Basic Pokemon target",
-                    1,
-                    frozenset({BASIC_POKEMON}),
-                ),
-            ),
-            "Basic Pokemon target",
-            1,
+        dream_ball_target_from_metadata(
+            metadata["sm2-60"],
+            copies=1,
         ),
-        DreamBallBenchTarget(
-            SearchZoneTarget(
-                "sv3-164",
-                TargetGroup(
-                    "Pidgeot ex",
-                    1,
-                    frozenset({STAGE_2_POKEMON}),
-                ),
-            ),
-            "Pidgeot ex",
-            0,
-            evolves_from="Pidgeotto",
+        dream_ball_target_from_metadata(
+            metadata["sv3-164"],
+            copies=1,
         ),
         DreamBallBenchTarget(
             SearchZoneTarget(
@@ -150,7 +133,6 @@ def make_targets():
         ),
     )
 
-
 def main() -> None:
     profiles = {
         row.card_id: row
@@ -158,7 +140,15 @@ def main() -> None:
     }
     dream_ball = profiles["swsh7-146"]
 
-    targets = make_targets()
+    metadata = pokemon_board_metadata_by_id(ROOT / "resources")
+    assert metadata["sm2-60"].name == "Tapu Lele-GX"
+    assert metadata["sm2-60"].retreat_cost == 1
+    assert metadata["sv3-164"].name == "Pidgeot ex"
+    assert metadata["sv3-164"].evolves_from == "Pidgeotto"
+    assert metadata["sv3-164"].retreat_cost == 0
+    assert "swsh7-83" not in metadata
+
+    targets = make_targets(metadata)
     search_targets = tuple(row.search_target for row in targets)
     allocation = enumerate_typed_target_profiles(
         (SearchOutput("Pokemon"),),
@@ -238,7 +228,7 @@ def main() -> None:
         pokemon_id="basic-object",
         instance_id="basic-card",
     )
-    assert basic_transition.selected_card_class == "basic-target"
+    assert basic_transition.selected_card_class == "sm2-60"
     assert basic_transition.after_board.ledger.instance("basic-card").zone == "in_play"
     assert basic_transition.after_board.ledger.exchangeable.count("sv3-164", "deck") == 1
     assert_conserved(initial_basic, basic_transition.after_board.ledger)
