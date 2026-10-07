@@ -1,0 +1,23 @@
+name: Validate Escape Board retreat
+
+on:
+  push:
+    paths:
+      - "tools/board_object_kernel.py"
+      - "tools/board_position_kernel.py"
+      - "results/escape_board_retreat_exception/**"
+      - ".github/workflows/validate-escape-board-retreat-exception.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/escape_board_retreat_exception/reproduce.py
