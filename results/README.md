@@ -313,6 +313,17 @@ The regression gives each player one surviving Bench Pokémon, marks both Active
 
 **Working synthesis:** Prize taking changes material truth and player information at the same boundary. A simulator that updates only Prize counts loses card identity, while one that moves physical cards without updating the taker's belief preserves uncertainty the player has already resolved.
 
+## 25. Knock Out redirection is an ordered per-instance destination program
+
+[knockout_redirection_routes/](knockout_redirection_routes/) translates the four currently catalogued KO-zone-routing signatures into explicit destinations for physical evolution-stack cards and attachments. The regression conserves one three-card evolution stack plus Energy and Tool attachments through Aegislash-like hand return, Tyranitar-GX-like full Lost Zone routing, Lost City routing, and Huntail-like selected-Energy recovery.
+
+[knockout_redirection_conflicts/](knockout_redirection_conflicts/) shows that an explicit discard instruction must remain distinct from an unassigned destination. Lost City and a return-to-hand effect conflict on every physical Pokémon card in the stack, while Lost City and Lost Out agree on the stack but conflict on attachments. Huntail-like recovery conflicts only on selected Energy instances.
+
+[knockout_redirection_ordering/](knockout_redirection_ordering/) then resolves an already-legally-ordered set of destination programs by taking the earliest explicit assignment for each physical instance. An official Pokémon Asia Lost City + Reuniclus ruling validates the order sensitivity: Reuniclus's owner chooses which effect resolves first, and that choice determines hand versus Lost Zone. The model deliberately leaves ordering authority upstream because this card-specific ruling is narrower than the rulebook's separate current-turn-player ordering rule for effects activated when several Pokémon are Knocked Out simultaneously.
+
+**Working synthesis:** KO routing needs three semantic states per physical instance: unassigned, explicitly assigned to the ordinary discard sink, and explicitly assigned elsewhere. Destination conflict detection, order-selection authority, and physical execution should remain separate layers.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
