@@ -200,6 +200,16 @@ A follow-up identity audit separates **physical instance ID** from **database pr
 
 Together with [multicopy_zone_state/](multicopy_zone_state/), this suggests a hybrid state representation: keep exchangeable off-board copies aggregated by class and zone, then materialize instance identity when attachment topology or persistent history makes copies non-exchangeable.
 
+## 14. Energy conservation joins aggregate counts to board topology
+
+[energy_board_conservation/](energy_board_conservation/) implements the first explicit conservation bridge between those layers.
+
+Two exchangeable Double Colorless Energy copies can move from an aggregate hand count into separate physical board instances that share one print identity. When one copy is discarded to pay Retreat Cost, the same transition updates board topology, the instance-to-class index, and aggregate `attached` / `discard` counts.
+
+The validator rejects states where board attachments and aggregate attached counts disagree.
+
+**Working synthesis:** materialization and dematerialization should be first-class transitions. Aggregate multiplicity is efficient while copies are exchangeable, and physical instance identity becomes necessary when topology or history differentiates them. The boundary must enforce conservation.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -217,13 +227,14 @@ Particularly foundational components include:
 - `unified_state_kernel.py`
 - `multicopy_zone_state.py`
 - `board_object_kernel.py`
+- `energy_board_conservation.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
 
 Several larger questions remain promising:
 
-1. **Conservation across unified state layers.** `unified_state_kernel/`, `multicopy_zone_state/`, and `board_object_kernel/` now cover typed global state, exchangeable repeated copies, and materialized per-Pokémon topology separately. The next shared-kernel problem is moving cards between those layers without duplication or loss while preserving hidden-state beliefs and action budgets.
+1. **General conservation across unified state layers.** `energy_board_conservation/` now proves the aggregate-to-instance bridge for Energy attachment and retreat discard. The next shared-kernel problem is extending the same conservation contract to Tools, Pokémon evolution stacks, Knock Outs, recovery, movement between Pokémon, hidden-state beliefs, and action budgets.
 2. **Compiler from card text to transitions.** Several models still use targeted or precompiled transitions. A conservative semantic compiler could reduce manual modeling while retaining auditable fallbacks for ambiguous text.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Official reprint equivalence.** The current conservative gameplay fingerprint is useful for research, but tournament-functional reprint equivalence still needs an explicit official-policy layer.
