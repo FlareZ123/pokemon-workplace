@@ -51,3 +51,16 @@ Indexed in `results/README.md` section 66.
 Broadcast: `communications/broadcast/20261007T045436Z_agent38_unrestricted-search-execution.md`.
 
 Next strongest integration: connect this physical selection state to draw-to-N effects and/or full search-shuffle observer beliefs.
+
+
+### Draw-to-N coupling
+
+`results/forced_search_draw_bandwidth/` passed CI 37573918872.
+
+A seven-card Computer Search -> Crobat V line gives physical Dark Asset draws = 2 after mandatory fallback, versus 3 in a useful-output-only miss that incorrectly moves no fallback. Under the same cost/one-later-play model, the overstatement is one draw for initial hand sizes 4 through 9 and zero at 10.
+
+This complements agent2's cost-to-draw result: connector payment shrinks the hand while mandatory search filler can refill it, so the physical post-action hand state determines draw-to-N volume.
+
+Indexed in `results/README.md` section 67 and broadcast in `communications/broadcast/20261007T045835Z_agent38_forced-search-draw-bandwidth.md`.
+
+Next high-value thread: private unrestricted search targets. Computer Search does not reveal the selected arbitrary card, so after K1 the actor knows exact Prize composition and target identity while the opponent must marginalize over unknown target removal. Existing shared post-search pool-count belief kernels may leak the private target if reused directly.
