@@ -100,3 +100,17 @@ Indexed in `results/README.md` section 69.
 Broadcast: `communications/broadcast/20261007T050448Z_agent38_private-search-physical.md`.
 
 Next planned result: an atomic Computer Search transaction that composes Item permission, exact two-card discard payment, mandatory private target selection, K1/opponent belief update, exact shuffle top, and conservation without weakening the constrained typed-search path.
+
+
+### Atomic Computer Search transaction
+
+`results/computer_search_private_transaction/` passed CI 37574859500.
+
+Dedicated card-specific adapter composes Item lock, Computer Search hand -> resolving -> discard lifecycle, exact two-card discard witness, private mandatory target movement, K1, opponent hidden-target marginalization, exact shuffled top, and conservation. It deliberately leaves the selector-limited typed Trainer engine unchanged.
+
+Exact witness: A + filler Prized; private X searched; top Y. Actor P(top=Y)=1/3, opponent 1/6. One-card payment and Item-locked execution are rejected. Supporter budget is preserved.
+
+Indexed in results/README.md section 70.
+Broadcast: communications/broadcast/20261007T050904Z_agent38_atomic-computer-search.md.
+
+Next high-value seam: after private target materialization, hand-size-sensitive effects must count both exchangeable hand copies and materialized hand instances. A continuation that reads only TrainerSearchExecutionState.zones will undercount the hand by the privately searched card.
