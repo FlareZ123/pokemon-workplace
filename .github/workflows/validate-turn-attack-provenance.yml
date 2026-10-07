@@ -1,0 +1,25 @@
+name: Validate turn attack provenance
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/turn_attack_history.py"
+      - "results/turn_attack_provenance/**"
+      - "tools/attack_copy_kernel.py"
+      - "tools/turn_sequence_kernel.py"
+      - "tools/turn_action_budget.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce turn-scoped attack provenance
+        run: python results/turn_attack_provenance/reproduce.py
