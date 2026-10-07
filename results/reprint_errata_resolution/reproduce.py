@@ -17,14 +17,28 @@ counts = summary["counts"]
 
 assert counts["same_name_review_pool_prints"] == 4260
 assert counts["exact_fingerprint_candidate_prints"] == 106
+assert counts["historical_official_reprint_candidate_prints"] == 42
+assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
-assert counts["semantic_review_prints"] == 4110
-assert counts["high_confidence_candidate_prints"] == 150
+assert counts["semantic_review_prints"] == 4068
+assert counts["high_confidence_candidate_prints"] == 192
 assert counts["exact_fingerprint_trainer_candidate_prints"] == 2
 assert counts["trainer_same_name_review_pool_prints"] == 168
-assert counts["high_confidence_trainer_candidate_prints"] == 46
+assert counts["historical_official_trainer_candidate_prints"] == 41
+assert counts["high_confidence_trainer_candidate_prints"] == 87
 assert counts["name_wide_trainer_errata_names"] == 15
+
+assert summary["historical_official_candidates_by_name"] == {
+    "Double Colorless Energy": 1,
+    "Energy Search": 7,
+    "Energy Switch": 7,
+    "Full Heal": 1,
+    "Poké Ball": 9,
+    "Recycle": 1,
+    "Super Scoop Up": 6,
+    "Switch": 10,
+}
 
 assert summary["official_errata_candidates_by_name"] == {
     "Energy Retrieval": 3,
@@ -42,6 +56,8 @@ assert summary["official_errata_candidates_by_name"] == {
 
 assert all(name in resolver.legal_expanded_by_name for name in NAME_WIDE_TRAINER_ERRATA)
 
+assert resolver.resolve("base1-95").kind == "historical_official_reprint_candidate"
+assert resolver.resolve("base1-96").kind == "historical_official_reprint_candidate"
 assert resolver.resolve("dp4-99").kind == "official_errata_candidate"
 assert resolver.resolve("ex2-88").kind == "official_errata_candidate"
 assert resolver.resolve("gym1-18").kind == "exact_fingerprint_candidate"
@@ -52,6 +68,7 @@ assert resolver.resolve("bw5-100").kind == "direct_legal"
 print("errata-aware reprint resolution: PASS")
 print("same-name review pool:", counts["same_name_review_pool_prints"])
 print("exact fingerprint candidates:", counts["exact_fingerprint_candidate_prints"])
+print("historical official candidates:", counts["historical_official_reprint_candidate_prints"])
 print("official errata candidates:", counts["official_errata_candidate_prints"])
 print("remaining semantic review:", counts["semantic_review_prints"])
 print(
