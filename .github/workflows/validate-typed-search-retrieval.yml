@@ -1,0 +1,25 @@
+name: Validate typed search retrieval
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/typed_search_retrieval.py"
+      - "tools/typed_search_target_allocator.py"
+      - "tools/trainer_search_profile_compiler.py"
+      - "results/typed_search_retrieval/**"
+      - ".github/workflows/validate-typed-search-retrieval.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce typed search retrieval
+        run: python results/typed_search_retrieval/reproduce.py
