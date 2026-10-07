@@ -41,6 +41,9 @@ def execute_timeless_phantom_line(
     second_target_id: str,
     hp_by_object_id: dict[str, int],
     boss_profile: PositionEffectProfile,
+    timeless_damage_context: DamageContext | None = None,
+    phantom_damage_context: DamageContext | None = None,
+    first_target_prevent_phantom_effects: bool = False,
 ) -> TimelessPhantomResult | None:
     """Execute the two-turn gust -> Timeless -> gust -> Phantom Dive sequence.
 
@@ -72,7 +75,8 @@ def execute_timeless_phantom_line(
     after_timeless, _ = apply_attack_damage(
         first_gust.opponent_board,
         first_target_id,
-        DamageContext(attack=AttackDamage(150)),
+        timeless_damage_context
+        or DamageContext(attack=AttackDamage(150)),
     )
     first_kos = knocked_out_ids(after_timeless, hp_by_object_id)
     if first_target_id in first_kos:
@@ -116,8 +120,19 @@ def execute_timeless_phantom_line(
     phantom = resolve_attack_damage_phase(
         second_gust.opponent_board,
         damage_target_id=second_target_id,
-        damage_context=DamageContext(attack=AttackDamage(200)),
-        counter_placements=(EffectCounterPlacement(first_target_id, 6),),
+        damage_context=(
+            phantom_damage_context
+            or DamageContext(attack=AttackDamage(200))
+        ),
+        counter_placements=(
+            EffectCounterPlacement(
+                first_target_id,
+                6,
+                prevent_effects_of_attacks=(
+                    first_target_prevent_phantom_effects
+                ),
+            ),
+        ),
         hp_by_object_id=hp_by_object_id,
     )
 
