@@ -14,6 +14,8 @@ RESOURCES = ROOT / "resources"
 resolver = build_reprint_resolver(RESOURCES)
 summary = summarize_reprint_resolver(resolver)
 counts = summary["counts"]
+print("resolver counts before assertions:", counts)
+print("historical candidates by name before assertions:", summary["historical_official_candidates_by_name"])
 
 assert counts["same_name_review_pool_prints"] == 4260
 assert counts["exact_fingerprint_candidate_prints"] == 112
