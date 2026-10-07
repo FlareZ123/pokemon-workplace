@@ -164,6 +164,8 @@ Other timing and attack-structure work includes [copied_attack_partial_resolutio
 
 [attack_copy_terminal_bridge/](attack_copy_terminal_bridge/) gates pending copy-created turn effects behind the complete post-KO Prize window, terminal check, and replacement-Active phase. A Haughty Order -> Timeless-GX line that removes the opponent's final Pokémon ends the game without starting the extra turn; a continuing line remains blocked until the surviving Bench Pokémon is promoted, after which the canonical scheduler may apply Timeless-GX.
 
+[simple_attack_board_semantics/](simple_attack_board_semantics/) adds a conservative card-data compiler for fixed/effect-only damage, seven exact damage-counter templates, and unconditional extra-turn clauses. [copy_attack_profile_damage_bridge/](copy_attack_profile_damage_bridge/) then preserves a crucial copy invariant: Weakness/Resistance uses the copying Pokémon's current type, not the selected source card's type. A Colorless Team Rocket's Persian ex copying Dragon-type Phantom Dive therefore deals 200 rather than 400 into a Dragon-weak Dratini unless Persian itself currently has Dragon type.
+
 ## 7. Setup is an information process as well as a legality process
 
 The setup research models opening acceptance, optional starters, mulligans, and the public information revealed before the first normal turn.
