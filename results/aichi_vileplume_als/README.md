@@ -88,6 +88,31 @@ The Pidgeot and Stoutland rows mean that the Stage 2 is in play after the second
 
 The exact accepted-opening probability with 14 forced Basics is 86.140932%. The exact expected failed mulligans before acceptance is 0.160888. The 500,000-trial run produced 0.161318.
 
+
+## Named route versus the broader first-turn ALS
+
+The main 500,000-trial table deliberately requires Guzma & Hala access.
+
+A second endpoint-aware planner allows the same TM: Evolution plus Jet Energy plus Bunnelby endpoint to be reached either through Guzma & Hala or through naturally drawn resources. When Jirachi starts Active, it also lets Stellar Wish choose among the relevant Trainer cards in the top five instead of always prioritizing Guzma & Hala or Tag Call.
+
+A matched 100,000-state run with seed `20261007` gives:
+
+| Endpoint | G&H-mediated route | Any modeled route | Increment outside named route |
+| --- | ---: | ---: | ---: |
+| Bunnelby double-Evolution core | 69.0900% | 70.0980% | +1.0080 pp |
+| Pidgeot ex Stage 2 | 58.7290% | 59.4220% | +0.6930 pp |
+| Stoutland Stage 2 | 48.1110% | 48.6780% | +0.5670 pp |
+| Pidgeot ex + Stoutland | 41.7190% | 42.1810% | +0.4620 pp |
+| Vileplume Item lock | 33.1290% | 33.4780% | +0.3490 pp |
+| Item lock + Pidgeot ex | 23.6360% | 23.8600% | +0.2240 pp |
+| Item lock + Stoutland | 19.5230% | 19.7030% | +0.1800 pp |
+
+For the core, the named Guzma & Hala route accounts for about 98.56% of successes found by this broader planner.
+
+This supports the ALS abstraction used in the human prior. The named line captures nearly all modeled first-turn executions of the same board plan, while a small residual comes from natural TM/Jet combinations and alternative Stellar Wish choices.
+
+The broader planner still targets the same Bunnelby, Jet Energy, and TM: Evolution mechanism. It is not a complete enumeration of every possible first-turn play in the deck.
+
 ## Finding 1: the headline ALS is genuinely high-AMR within its stated route
 
 The Guzma & Hala access rate is about 71.7%, and about 69.1% of accepted openings reach the Bunnelby plus TM: Evolution plus Jet Energy core.
