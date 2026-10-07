@@ -13,12 +13,10 @@ from ability_lock_dependency_graph import (
     AbilityLockResolution,
     AbilityLockSourceRef,
     resolve_ability_lock_dependencies,
+    targets_for_source,
 )
 from board_object_kernel import BoardState
-from single_source_ability_lock_geometry import (
-    profile_for_source,
-    single_source_suppressed_object_ids,
-)
+from single_source_ability_lock_geometry import profile_for_source
 
 
 def _source_profile(
@@ -28,46 +26,6 @@ def _source_profile(
 ):
     board = player_board if source.owner == "player" else opponent_board
     return profile_for_source(board.get(source.object_id))
-
-
-def _targets_for_source(
-    source: AbilityLockSourceRef,
-    player_board: BoardState,
-    opponent_board: BoardState,
-    *,
-    stadium_name: str | None,
-) -> tuple[frozenset[str], frozenset[str]]:
-    if source.owner == "player":
-        player_ids = single_source_suppressed_object_ids(
-            player_board,
-            opponent_board,
-            source_owner="player",
-            source_object_id=source.object_id,
-            stadium_name=stadium_name,
-        )
-        opponent_ids = single_source_suppressed_object_ids(
-            opponent_board,
-            player_board,
-            source_owner="opponent",
-            source_object_id=source.object_id,
-            stadium_name=stadium_name,
-        )
-    else:
-        player_ids = single_source_suppressed_object_ids(
-            player_board,
-            opponent_board,
-            source_owner="opponent",
-            source_object_id=source.object_id,
-            stadium_name=stadium_name,
-        )
-        opponent_ids = single_source_suppressed_object_ids(
-            opponent_board,
-            player_board,
-            source_owner="player",
-            source_object_id=source.object_id,
-            stadium_name=stadium_name,
-        )
-    return player_ids, opponent_ids
 
 
 def resolve_setup_ability_lock_precedence(
@@ -116,7 +74,7 @@ def resolve_setup_ability_lock_precedence(
         return base
 
     winner = left if left.owner == first_player_owner else right
-    player_ids, opponent_ids = _targets_for_source(
+    player_ids, opponent_ids = targets_for_source(
         winner,
         player_board,
         opponent_board,
