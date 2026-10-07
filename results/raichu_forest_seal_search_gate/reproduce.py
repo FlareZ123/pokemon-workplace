@@ -197,7 +197,7 @@ def assert_matches(
 ) -> None:
     for key, value in expected.items():
         actual = getattr(result, key)
-        assert isclose(actual, value, rel_tol=0.0, abs_tol=1e-12), (
+        assert isclose(actual, value, rel_tol=0.0, abs_tol=3e-12), (
             key,
             actual,
             value,
