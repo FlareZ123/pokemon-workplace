@@ -31,14 +31,14 @@ def one(rows, *, card_id: str, source_name: str | None = None):
 def main() -> None:
     rows = compile_position_effect_profiles(ROOT / "resources")
 
-    assert len(rows) == 316
-    assert len({row.name for row in rows}) == 190
+    assert len(rows) == 318
+    assert len({row.name for row in rows}) == 192
     assert Counter((row.source_kind, row.kind) for row in rows) == Counter(
         {
             ("trainer", PositionEffectKind.SELF_SWITCH): 17,
             ("trainer", PositionEffectKind.OPPONENT_FORCED_SWITCH): 2,
             ("trainer", PositionEffectKind.TARGETED_GUST): 29,
-            ("attack", PositionEffectKind.SELF_SWITCH): 167,
+            ("attack", PositionEffectKind.SELF_SWITCH): 169,
             ("attack", PositionEffectKind.OPPONENT_FORCED_SWITCH): 71,
             ("attack", PositionEffectKind.TARGETED_GUST): 30,
         }
@@ -50,8 +50,13 @@ def main() -> None:
         if row.source_kind == "attack"
         and row.kind == PositionEffectKind.SELF_SWITCH
     )
-    assert len(attack_self_switches) == 167
-    assert sum(row.optional for row in attack_self_switches) == 58
+    assert len(attack_self_switches) == 169
+    assert sum(row.optional for row in attack_self_switches) == 57
+
+    exeggcute = one(rows, card_id="xy6-1", source_name="Loathe")
+    assert exeggcute.coin_heads_required
+    assert not exeggcute.optional
+    assert not any(row.card_id == "swshp-SWSH132" for row in rows)
 
     buneary = one(rows, card_id="me2-83", source_name="Run Around")
     tapu_fini = one(rows, card_id="sm3-39", source_name="Aqua Ring")
