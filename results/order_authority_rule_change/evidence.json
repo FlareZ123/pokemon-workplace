@@ -1,0 +1,19 @@
+{
+  "scope": "multi_pokemon_ko_trigger_order",
+  "legacy_official_faq": {
+    "source": "https://www.pokemon-card.com/rules/faq/details.php?id=8833",
+    "example": "Manaphy Last Wish plus Team Plasma Weezing Aftermath",
+    "chooser_role": "knocked_out_pokemon_owner",
+    "status": "superseded_by_2025_rule_change"
+  },
+  "rule_change": {
+    "source": "https://www.pokemon-card.com/info/005161.html",
+    "effective_date": "2025-08-01",
+    "statement": "E-04 simultaneous-KO effect ordering changed",
+    "chooser_role": "current_turn_player"
+  },
+  "current_rulebook": {
+    "version": "3.4",
+    "chooser_role": "current_turn_player"
+  }
+}
