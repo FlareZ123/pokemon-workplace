@@ -55,6 +55,18 @@ the conservative catalog contains:
 These are effect rows rather than gameplay fingerprints. Reprints therefore
 contribute multiple rows.
 
+The same 146 rows split by timing into:
+
+| Timing class | Print effects | Unique card names |
+| --- | ---: | ---: |
+| direct effect | 143 | 70 |
+| Knock Out-triggered routing | 3 | 3 |
+
+The three Knock Out-triggered rows are Rescue Scarf `bw6-115`, Splash Energy
+`xy9-113`, and Celebi `xyp-XY93`. Their destination fields are still useful,
+but they belong inside the Knock Out trigger/disposal pipeline rather than the
+ordinary direct-exit transition.
+
 ## Representative legal witnesses
 
 ### Scoop Up Cyclone `bw10-95`
@@ -119,8 +131,12 @@ The matched effects can still differ in:
 - Knock Out replacement timing;
 - follow-up instructions after the move.
 
-The catalog preserves the original source kind, effect name, and normalized
-text for those later semantic layers.
+The catalog preserves the original source kind, effect name, normalized text,
+and a coarse timing class for those later semantic layers.
+
+Timing is deliberately separated from routing. Two effects can have the same
+hand/hand destination shape while one acts immediately and another only
+redirects cards after a Knock Out.
 
 A state adapter should select only rows whose remaining target and timing
 semantics have also been compiled.
@@ -142,7 +158,9 @@ fields. It does not yet choose the target object or timing window.
 
 The regression asserts the exact current catalog totals and representative
 routes for Scoop Up Cyclone, Cassius, AZ, Accelgor, and Swoobat. It also asserts
-that all four officially banned Apple Drop Flapple printings are absent.
+the 143 direct / 3 Knock Out-triggered timing partition, checks the three
+Knock Out-triggered witnesses explicitly, and confirms that all four officially
+banned Apple Drop Flapple printings are absent.
 
 Run:
 
