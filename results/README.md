@@ -572,6 +572,16 @@ A five-card labeled regression exhaustively checks all 60 ordered Prize/Prize/to
 **Working synthesis:** K1 changes future draw distributions as well as line choice. Hidden-zone planners should carry the joint Prize/top distribution through a shuffle rather than resampling a top marginal independently of Prize composition.
 
 
+
+## 47. Physical deck-search/shuffle state now derives K1 and preserves observer truth support
+
+[deck_search_shuffle_physical_belief/](deck_search_shuffle_physical_belief/) composes the search/shuffle belief transition with the exact identity ledger. The bridge derives the searching player's exact grouped Prize composition from materialized Prize instances, derives the current deck-plus-Prize pool from physical zones, materializes one exact sampled post-shuffle top, and requires every observer posterior to retain positive support on that exact world.
+
+In the five-card regression, the material world has A plus filler Prized and both B copies plus filler in deck. The bridge derives A=1 and B=0 as the actor's K1 Prize composition, derives pool counts A=1 and B=2, and materializes B as the exact shuffled top. The actor assigns B top probability 2/3 while the uninformed observer assigns 2/5. Both remain consistent with top=B and Prizes=(A, filler), and per-class card totals are conserved. An attempted A top is rejected independently by the physical ledger because the singleton A is Prized.
+
+**Working synthesis:** exact physical truth can serve as the conditioning source for K1 while observer-relative beliefs remain separate. Hidden-state transitions should validate both material conservation and posterior support for the material world.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
