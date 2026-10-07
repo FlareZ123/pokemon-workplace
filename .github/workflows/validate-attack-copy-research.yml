@@ -4,10 +4,22 @@ on:
   workflow_dispatch:
   push:
     paths:
+      - ".github/workflows/validate-attack-copy-research.yml"
       - "tools/attack_copy_catalog.py"
       - "tools/attack_copy_kernel.py"
       - "tools/attack_copy_composition.py"
+      - "tools/copied_attack_partial_resolution.py"
+      - "tools/attack_discard_dependency_grammar.py"
+      - "tools/apex_dragon_discard_burden.py"
+      - "tools/multi_unit_energy_semantics.py"
+      - "tools/energy_discard_solver.py"
+      - "tools/apex_dragon_special_energy_burden.py"
       - "results/attack_copy_semantics/**"
+      - "results/copied_attack_partial_resolution/**"
+      - "results/attack_discard_dependency_grammar/**"
+      - "results/apex_dragon_discard_burden/**"
+      - "results/multi_unit_energy_semantics/**"
+      - "results/apex_dragon_special_energy_burden/**"
       - "resources/cards/en/**"
       - "resources/sets/en.json"
 
@@ -25,3 +37,13 @@ jobs:
         run: python results/attack_copy_semantics/reproduce_kernel.py
       - name: Reproduce copy-composition graph
         run: python results/attack_copy_semantics/reproduce_composition.py
+      - name: Reproduce copied-attack partial resolution
+        run: python results/copied_attack_partial_resolution/reproduce.py
+      - name: Reproduce discard dependency grammar
+        run: python results/attack_discard_dependency_grammar/reproduce.py
+      - name: Reproduce Apex Dragon Basic-Energy burden
+        run: python results/apex_dragon_discard_burden/reproduce.py
+      - name: Reproduce multi-unit Energy semantics
+        run: python results/multi_unit_energy_semantics/reproduce.py
+      - name: Reproduce Apex Dragon Special-Energy burden
+        run: python results/apex_dragon_special_energy_burden/reproduce.py
