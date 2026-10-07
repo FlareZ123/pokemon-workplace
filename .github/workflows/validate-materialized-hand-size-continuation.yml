@@ -1,0 +1,26 @@
+name: Validate materialized hand size continuation
+
+on:
+  push:
+    paths:
+      - "tools/physical_zone_count.py"
+      - "tools/computer_search_private_transaction.py"
+      - "tools/identity_materialization.py"
+      - "tools/search_draw_bandwidth.py"
+      - "results/materialized_hand_size_continuation/**"
+      - ".github/workflows/validate-materialized-hand-size-continuation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check materialized hand continuation
+        run: python results/materialized_hand_size_continuation/reproduce.py
