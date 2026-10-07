@@ -17,4 +17,4 @@ jobs:
         with:
           python-version: "3.12"
       - name: Run Raichu prize-access regressions
-        run: python results/raichu_prize_access/reproduce.py
+        run: PYTHONPATH=tools python results/raichu_prize_access/reproduce.py
