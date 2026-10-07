@@ -1,0 +1,24 @@
+name: Validate attack-copy outer control
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_outer_control.py"
+      - "tools/attack_copy_catalog.py"
+      - "results/attack_copy_outer_control/**"
+      - ".github/workflows/validate-attack-copy-outer-control.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check attack-copy outer control
+        run: python results/attack_copy_outer_control/reproduce.py
