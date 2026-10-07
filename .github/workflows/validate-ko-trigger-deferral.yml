@@ -1,0 +1,1 @@
+name: Validate trigger deferral\non: workflow_dispatch\njobs:\n  check:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v7\n      - uses: actions/setup-python@v7\n        with:\n          python-version: '3.13'\n      - run: python results/knockout_trigger_deferral/reproduce.py\n
