@@ -183,7 +183,13 @@ Echoing Madness and Allergy Storm are explicit branch-sensitive counterexamples 
 
 [attack_restriction_turn_windows/](attack_restriction_turn_windows/) gives those concrete attack effects player-relative lifetimes and verifies extra-turn behavior with the shared turn scheduler.
 
-**Working synthesis:** source-scoped hand denial now has separate owners for activation, gate resolution, temporal lifetime, and attempted-action legality. This prevents stale board-derived locks and turn-order assumptions from leaking into transaction code.
+[active_source_scoped_restrictions/](active_source_scoped_restrictions/) aggregates every currently live continuous and temporal restriction affecting one player immediately before permission projection. [active_source_trainer_transaction/](active_source_trainer_transaction/) feeds that aggregate into the established Trainer transaction engine.
+
+[board_derived_continuous_restrictions/](board_derived_continuous_restrictions/) removes caller-authored continuous-lock booleans at the physical-state boundary. It derives source presence, Active position, Tool attachment, Stadium presence, relative Pokémon counts, and effective Ability state from canonical boards plus the resolved causal Ability-lock overlay. It validates that the overlay still matches the supplied board/Stadium state and rejects unresolved suppression cycles.
+
+[board_derived_trainer_transaction/](board_derived_trainer_transaction/) carries the same ownership chain through real Trainer execution. The regression shows Secret Box closing under live Vileplume, reopening when Garbotoxin suppresses Vileplume, closing again under Stealthy Hood protection, and reopening under Jamming Tower while a Psyduck Headache temporal window independently blocks Arven.
+
+**Working synthesis:** source-scoped hand denial now has separate owners for printed restriction semantics, activation geometry, causal Ability suppression, attack-gate materialization, temporal lifetime, current-board aggregation, attempted-action legality, and transaction mechanics. Derived permission state should be recomputed at the action boundary from canonical board and temporal state rather than persisted as stale lock flags.
 
 
 
