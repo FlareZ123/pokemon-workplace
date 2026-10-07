@@ -7,6 +7,7 @@ from typing import Any
 from tools.build_expanded_legality_baseline import classify_effective_legality, load_json
 from tools.current_card_semantics import current_semantic_fingerprint
 from tools.trainer_name_reuse_divergence import collect_proven_name_reuse_non_equivalent_ids
+from tools.trainer_optionality_divergence import collect_proven_optionality_non_equivalent_ids
 
 TOURNAMENT_HANDBOOK_NEGATIVE_SOURCE = "Tournament Handbook reprint example: Rainbow Energy"
 CONTEXTUAL_DIVERGENCE_SOURCE = (
@@ -92,10 +93,14 @@ def collect_known_non_equivalent_ids(resources_root: Path) -> dict[str, str]:
             raise ValueError(f"Life Herb exclusion missing from source text: {card_id}")
         result[card_id] = CONTEXTUAL_DIVERGENCE_SOURCE
 
-    for card_id, reason in collect_proven_name_reuse_non_equivalent_ids(resources_root).items():
-        if card_id in result and result[card_id] != reason:
-            raise ValueError(f"Conflicting negative reprint evidence for {card_id}")
-        result[card_id] = reason
+    for collector in (
+        collect_proven_name_reuse_non_equivalent_ids,
+        collect_proven_optionality_non_equivalent_ids,
+    ):
+        for card_id, reason in collector(resources_root).items():
+            if card_id in result and result[card_id] != reason:
+                raise ValueError(f"Conflicting negative reprint evidence for {card_id}")
+            result[card_id] = reason
 
     return dict(sorted(result.items()))
 
