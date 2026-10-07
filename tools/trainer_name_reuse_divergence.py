@@ -30,7 +30,7 @@ CASES = (
         source_ids=("ecard1-143", "ex8-88", "ex11-99", "ex16-78", "gym2-116"),
         target_id="bw10-94",
         axis="material_transition",
-        source_fragments=("top 7 cards",),
+        source_fragments=("7 cards",),
         target_fragments=("Search your deck for a Pokémon", "ACE SPEC"),
         witness=(
             "Put the only desired Pokémon below the top seven cards. "
