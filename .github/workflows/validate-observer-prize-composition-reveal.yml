@@ -1,0 +1,25 @@
+name: Validate observer Prize composition reveal
+
+on:
+  push:
+    paths:
+      - "tools/observer_prize_composition_reveal.py"
+      - "tools/observer_top_prize_beliefs.py"
+      - "tools/prize_top_swap_belief.py"
+      - "results/observer_prize_composition_reveal/**"
+      - ".github/workflows/validate-observer-prize-composition-reveal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check K0 to K1 Prize composition reveal
+        run: python results/observer_prize_composition_reveal/reproduce.py
