@@ -42,8 +42,8 @@ These mechanics imply that Active and Bench position should be a property of a p
 
 - unique object identity;
 - current top-card name and tags;
-- physical Energy attachments;
-- physical Tool attachment;
+- physical Energy attachments, each with a board-level instance ID and optional database print ID;
+- physical Tool attachment with the same identity separation;
 - typed temporary attack and retreat locks from the existing lock kernel;
 - damage counters;
 - Special Conditions;
@@ -57,7 +57,7 @@ These mechanics imply that Active and Bench position should be a property of a p
 - current Bench capacity;
 - whether the normal retreat action has already been used this turn.
 
-The validator requires Pokémon object IDs to be unique, requires every in-play object to occupy exactly one Active or Bench position, and requires every attached physical card ID to be unique across the board.
+The validator requires Pokémon object IDs to be unique, requires every in-play object to occupy exactly one Active or Bench position, and requires every attached physical **instance ID** to be unique across the board. Database print IDs are allowed to repeat because a deck may contain several physical copies of one print.
 
 ## Finding 1: retreat and switching are different transitions
 
@@ -154,6 +154,20 @@ The Active object is not part of the contraction choice.
 
 This is the board-object counterpart to the unified-state result's requirement that capacity transitions synchronize with physical state.
 
+## Finding 7: physical instance identity is distinct from print identity
+
+The repository's card-identity layer uses `card_id` for a database print identity. A board state needs a different key for a physical copy.
+
+The attachment records therefore use:
+
+- `instance_id`: unique for the physical copy represented on this board;
+- `print_id`: optional database print identity, which may be shared by several physical copies;
+- `card_name`: human-readable/card-rule identity used by this scaffold.
+
+The regression places two Double Colorless Energy cards with the same `print_id` on one Pokémon while giving them different `instance_id` values. The board validates successfully.
+
+This distinction prevents an exact-print identifier from being accidentally treated as a unique physical-card identifier.
+
 ## Relationship to the unified state kernel
 
 `results/unified_state_kernel/` established one authoritative mechanical state across card zones, Bench capacity, locks, Energy readiness, and Prize belief.
@@ -162,8 +176,8 @@ The board-object kernel addresses one boundary that the first prototype delibera
 
 A larger engine can compose them by keeping:
 
-1. physical card-instance zones for cards outside or attached to play;
-2. board-object identity for Pokémon in play;
+1. per-zone multiplicities for exchangeable copies outside board topology;
+2. physical instance IDs for materialized attachments and board-object identity for Pokémon in play;
 3. typed transition permissions and action budgets;
 4. specialized resource solvers such as the Energy kernel;
 5. probabilistic beliefs over hidden physical states.
@@ -185,7 +199,8 @@ The deterministic reproducer checks:
 - reset of that budget on the next turn;
 - Asleep blocking normal retreat while switching remains legal;
 - evolution preserving attachments and damage while clearing temporary state;
-- Bench contraction removing a complete low-retention Pokémon object.
+- Bench contraction removing a complete low-retention Pokémon object;
+- two physical Energy instances sharing one database print ID without identity collision.
 
 ## Limits
 
@@ -199,8 +214,13 @@ The board stores one top-card name rather than a full evolution stack. Devolutio
 
 ## Next useful work
 
-The strongest next state problem is physical card-instance identity outside the board.
+The new [../multicopy_zone_state/](../multicopy_zone_state/) result supplies the missing exchangeable-copy layer outside board topology. It keeps repeated copies as per-zone counts and materializes identity only when copies become mechanically distinguishable.
 
-The first unified prototype maps card name to zone, which cannot represent two copies of the same name in different zones. A general engine needs unique physical card IDs plus name-based query helpers so a four-copy card can simultaneously exist in hand, deck, discard, and Prize states.
+The next useful integration is therefore a conservation adapter between the two layers:
 
-That identity layer should then connect grouped hidden-state beliefs to deterministic physical states without needlessly distinguishing exchangeable copies.
+- decrement an exchangeable zone count when a card becomes a specific attachment or board object;
+- allocate a unique physical `instance_id` at that materialization boundary;
+- return the card to the correct zone count when it leaves the materialized board relation;
+- preserve print/gameplay-class metadata separately from physical instance identity.
+
+That adapter would let the unified state compose multiplicity and board topology without maintaining two contradictory authorities for the same card.
