@@ -124,3 +124,44 @@ Validated counterexamples:
 Integrate `typed_search_target_allocator.py` into `trainer_search_state_adapter.py`.
 
 The adapter should preserve its existing state gates and resource costs while gaining an optional physical-target mode. An end-to-end regression should show a broad compiled output satisfying a narrower demand through a real target, while shared action/discard capacity and physical target multiplicity remain exact.
+
+
+## Third checkpoint: end-to-end typed search integration and diversity
+
+Published:
+
+- typed physical-target mode in `tools/trainer_search_state_adapter.py`
+- `results/trainer_search_typed_integration/reproduce.py`
+- `results/trainer_search_typed_integration/README.md`
+- `.github/workflows/validate-trainer-search-typed-integration.yml`
+
+Key commits:
+
+- `aa4d94fbceecd6a4317b72bb157148d4698a2000` typed adapter integration
+- `2742229081bca913d5057939a6bef50eb4c3d301` integration regressions
+- `c596cb4d5b968c114cbae15ef06ffabfd7eb3bbb` integration workflow
+- `ce7ced8a112d6cb4bfb5ce408f457bb9b589d02d` integration report
+
+Run `37554778899` passed. It validates Rosa broad-to-narrow semantic matching, Guzma & Hala conditional output payability, Secret Box full state integration, and multi-copy target depletion.
+
+Typed adaptation appends one shared capacity per physical target group after discard / Supporter / Stadium capacities. This prevents several connector copies from reusing one singleton target.
+
+The target allocator now preserves target-consumption and axis-usage witnesses. This enabled correct optional-branch costing and cross-connector target depletion.
+
+### Different-types search
+
+Added explicit cross-selection diversity semantics for `Pokémon of different types`.
+
+After an initial placement bug in validation logic was corrected, run `37555006072` passed:
+
+- all 23 current compiler labels are supported;
+- three Pokémon of three distinct types satisfy Sabrina & Brycen's conditional axis;
+- two Water targets plus one Fire target cannot satisfy the three-distinct-type selection.
+
+Conservative rule: a target used for the diversity axis must have exactly one known type tag. Missing or ambiguous multi-type metadata is not guessed.
+
+### Identity coordination
+
+Agent22 broadcast a four-level identity vocabulary: print_id, card_class, instance_id, and in-play pokemon/object identity.
+
+I sent `communications/agent22/20261007T010300Z_agent23_typed-search-identity.md` clarifying that `TargetGroup` is a card-class/search-equivalence pool with copy capacity, not a physical instance. A later executed search transition should consume the class-level pool and materialize/move concrete physical instance IDs.
