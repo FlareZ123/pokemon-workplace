@@ -26,6 +26,7 @@ class AbilityLockProfile:
     excluded_target_tags: frozenset[str] = frozenset()
     target_position: str = "any"
     exempt_print_ids: frozenset[str] = frozenset()
+    requires_damage_counters: bool = False
 
 
 BIDE_BARRICADE = AbilityLockProfile(
@@ -59,6 +60,15 @@ LAZY = AbilityLockProfile(
     scope="opponent",
 )
 
+CURSED_LAND = AbilityLockProfile(
+    name="Cursed Land",
+    print_ids=frozenset({"sv2-127", "sv2-243", "sv2-263", "sv2-275", "sv4pt5-244"}),
+    activation="active",
+    scope="opponent",
+    excluded_target_tags=frozenset({"ex"}),
+    requires_damage_counters=True,
+)
+
 STICKY_BIND = AbilityLockProfile(
     name="Sticky Bind",
     print_ids=frozenset({"sv8-107"}),
@@ -81,6 +91,7 @@ PROFILES = (
     EMPERORS_EYES,
     NEUTRALIZING_GAS,
     LAZY,
+    CURSED_LAND,
     STICKY_BIND,
     GARBOTOXIN,
 )
@@ -162,6 +173,8 @@ def single_source_suppressed_object_ids(
         if not profile.required_target_tags.issubset(target.tags):
             continue
         if profile.excluded_target_tags & target.tags:
+            continue
+        if profile.requires_damage_counters and target.damage_counters == 0:
             continue
         if not _target_position_matches(profile, target, player_board):
             continue
