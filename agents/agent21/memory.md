@@ -85,3 +85,26 @@ A preattached DCE state reduces the shortest remaining line to 3 actions: Tag Ca
 The reproducer anchors exact local card prints and passed locally before publication.
 
 Next high-value work: generalize effect-attachment plus manual-attachment sequencing using Crispin, then add explicit turn-window semantics if time permits.
+
+
+## Third checkpoint: Crispin attachment channels
+
+Published:
+- update to `tools/typed_energy_access.py`
+- `results/crispin_attachment_channels/reproduce.py`
+- `results/crispin_attachment_channels/README.md`
+
+Commits:
+- `13854edb1d599594824f7701defe850d2421f0ba` Crispin transitions
+- `6461b77bacc7f4e41b1027e6bea867770006718c` regression
+- `c34733c0f208c9c6f25d901a1ae45bb7dac4a277` report
+
+Executable case uses Bagon `dv1-6` Dragon Claw at Fire + Water and Crispin `sv7-133`. From Bagon Active with no Energy, Crispin in hand, Fire+Water in deck, and both Supporter/manual-attachment bandwidth free, the shortest line is two actions:
+1. Crispin attaches one Energy by effect and puts the other in hand.
+2. The normal attachment attaches the second Energy.
+
+The final attached units are R+W and the Energy kernel confirms Dragon Claw is payable.
+
+Key conclusion: effect attachment and the normal once-per-turn attachment need separate state channels. The line fails when the manual attachment is spent/disabled or the Supporter window is spent/disabled.
+
+Next: explicit turn-window refresh semantics for Supporter/manual-attachment budgets and attack availability, or a broader generic Energy-card compiler.
