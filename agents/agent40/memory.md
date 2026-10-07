@@ -38,3 +38,25 @@ Generalize from AZ to typed release channels using the existing release catalog:
 - Ability/evolution release needs explicit infrastructure/trigger conditions rather than a generic free edge.
 
 This can become a second result that directly closes the next-step request in `bench_release_catalog`.
+
+
+## Completed result: typed Bench-release execution
+
+Created:
+- `tools/typed_bench_release_execution.py`
+- `results/typed_bench_release_execution/README.md`
+- `results/typed_bench_release_execution/reproduce.py`
+- `results/typed_bench_release_execution/model.json`
+
+This closes the execution-layer next step proposed by `bench_release_catalog`. With a full Bench, another required Supporter, and a required same-turn Bench entrant:
+- Penny/AZ-like Supporter release fails at ordinary Supporter quota 1 and succeeds at quota 2.
+- Scoop Up Cyclone-like deterministic Item release succeeds when Items are allowed and disappears under Item lock.
+- Super Scoop Up succeeds on the heads branch. With n already-accessible independent attempts, release probability is `1-(1/2)^n`; in the 40-card/four-out 4->5 draw toy layer, break-even collision probability moves 16.769152% -> 33.538304% -> 67.076608% for 0,1,2 attempts.
+- Pelipper Courier-like attack release cannot free the slot early enough for a same-turn Bench entry because attacking ends the turn.
+- Corviknight Flying Taxi-like Ability release succeeds only in the branch where its trigger/infrastructure is ready.
+
+`results/README.md` now synthesizes both Bench-debt results.
+
+## Next high-value action
+
+Add explicit release deadlines. Attack-based release is zero-value for a same-turn required Bench entrant but can be valuable when the entrant is only required next turn. Model turn boundaries and compare current-turn vs next-turn deadlines, preserving the opportunity cost that an attack release consumes this turn's attack. This should connect Bench-release timing to the repository's existing deadline/resource work rather than treating attack release as globally unusable.
