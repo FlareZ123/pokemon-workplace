@@ -75,3 +75,24 @@ Validation:
 Synthesis indexed as section 61.
 
 Important remaining distinction: `abilities_enabled` is currently effective-state input. A stronger layer should causally derive it from lock sources, scope, position, protections, and suppression dependencies rather than treating it as manually toggled.
+
+
+## Completed: Garbotoxin -> Dual Brains causal suppression overlay
+
+Primary result: `results/garbotoxin_quota_suppression/`.
+
+Implementation:
+- `tools/garbotoxin_suppression.py` recognizes four verified legal Garbotoxin prints: bw6-54, bw9-119, bw11-68, xy9-57.
+- Garbotoxin requires physical Tool attachment; Tool effect operation is not required for its condition.
+- Suppression is returned as a derived set of board-object IDs instead of mutating base board truth.
+- Opposing Garbotoxin suppresses Dual Brains; Stealthy Hood protects from the opponent's Ability effect while its Tool effect works; Jamming Tower blanks Hood without removing the Tool, so Garbotoxin suppresses again.
+- Same-side Garbotoxin suppresses the player's other Pokémon despite Hood because Hood is opponent-specific.
+- `board_action_quota_derivation.py` now accepts a suppression overlay when compiling quota grants.
+
+Validation:
+- Garbotoxin quota suppression push workflow completed successfully (run 37571776027); explicit run 37571789710 was also dispatched.
+- board action quota derivation remained green after overlay support (push run 37571695639).
+
+Synthesis indexed as section 62.
+
+The overlay architecture is preferable to permanently flipping `BoardPokemon.abilities_enabled`: causal locks can be removed and recomputed without losing the target's upstream unsuppressed state.
