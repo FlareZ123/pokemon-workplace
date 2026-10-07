@@ -134,6 +134,49 @@ This is relevant to the opponent bonus-card externality. If the first extra
 card granted to the opponent is substantially more valuable than later extra
 cards, diminishing marginal cost can produce exactly this tightening behavior.
 
+## Finding 3: count-dependent policies induce mixture Prize priors
+
+The final accepted opening can come from different policy regimes. Earlier
+rejected hands are independent fresh shuffles, so the final Prize distribution
+is a mixture of the accepted-opening-conditioned distributions at the count
+where the player finally keeps.
+
+For the **loosen** schedule, the final opening is accepted:
+
+- on the first attempt with mass **49.783383%**;
+- after exactly one failed mulligan with mass **24.999531%**;
+- in the stationary accept-all tail after at least two failures with aggregate
+  mass **25.217086%**.
+
+The resulting specific-card Prize probabilities are:
+
+| Class | Final Prize probability |
+| --- | ---: |
+| Forced starter | 8.827185% |
+| Optional starter | 9.620187% |
+| Key opening card | 9.823864% |
+| Filler | 10.144064% |
+
+For the **tighten** schedule, the first accept-all attempt supplies
+**65.359357%** of final openings and the later selective tail supplies
+**34.640643%**. Its specific-card Prize probabilities are:
+
+| Class | Final Prize probability |
+| --- | ---: |
+| Forced starter | 9.080983% |
+| Optional starter | 9.448314% |
+| Key opening card | 9.976219% |
+| Filler | 10.124540% |
+
+These priors lie between the stationary selective and stationary accept-all
+boundaries, but the interpolation weight is determined by **where the game
+actually exits the mulligan process**, not by averaging the policy parameters.
+
+The tail can be collapsed into one exact mixture component. Once the tail
+policy is stationary, repeated rejected tail hands do not change the
+accepted-hand-conditioned distribution; they only delay which independent
+shuffle supplies the final accepted opening.
+
 ## Validation
 
 The reproduction harness checks the count-dependent solver in three ways.
