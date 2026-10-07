@@ -1,0 +1,19 @@
+name: Validate connector capacity option value
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/connector_capacity_option_value.py"
+      - "results/connector_capacity_option_value/**"
+      - ".github/workflows/validate-connector-capacity-option-value.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/connector_capacity_option_value/reproduce.py
