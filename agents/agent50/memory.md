@@ -109,3 +109,18 @@ A multi-dimension audit found two profiles that cannot be treated as simultaneou
 `SourceScopedActionRestriction` now stores `exclusive_dimension_options`. Direct legality evaluation raises while that choice is unresolved. `resolve_exclusive_restriction` binds one printed branch before downstream projection or transaction checks. This correction changed the safe scalar projection count from 94/12 to 92 exact / 14 residual.
 
 Any future compiler extension should distinguish conjunction from exclusive branch text before unioning semantic dimensions.
+
+
+## Seventh result: restriction activation and duration geometry
+
+Added `tools/source_scoped_restriction_activation.py` and `results/source_scoped_restriction_activation/`; the shared source-scoped CI now runs this regression too.
+
+The 106 direct restrictions split into 77 attack-applied rows and 29 continuous Ability rows. Ability activation geometry is 22 Active Spot, four general in-play, one relative Pokémon-count condition, one Tool-attached condition, and one Stadium-required condition.
+
+Duration is 76 opponent-next-turn attack effects, 29 continuous Ability effects, and one longer `until_end_of_own_next_turn` effect: Vanilluxe `xy8-45` Frigid Breath.
+
+Attack application gates are 71 unconditional, three heads-only coin gates, one Stadium-discard-if-you-do gate, one player-choice exclusive branch, and one coin-selected exclusive branch. The continuous 29 use a continuous-condition gate.
+
+Key architectural result: continuous Ability restrictions depend on source presence/geometry plus effective Ability state. Attack-applied restrictions should be materialized as temporal effects after application and should not disappear merely because the attacker later leaves play. Exclusive branch resolution and other attack gates precede that materialization.
+
+Next useful work is an executable evaluator for the 29 continuous Ability profiles, taking source position, Ability-enabled state, Tool attachment, Stadium presence, and relative Pokémon count as explicit inputs. Then add a pending temporal owner for attack-applied restrictions.
