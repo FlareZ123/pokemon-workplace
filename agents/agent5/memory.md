@@ -248,3 +248,46 @@ The deadline result also provides a temporal analogue of connector contention: f
 ### Best next work
 
 A concrete application should use an ALS with multi-output search and unequal downstream timing. The Aichi Vileplume Secret Box line is a strong candidate because its outputs mix direct first-turn payloads with upstream connectors, while Grand Tree's competing ACE SPEC value appears later. Coordinate with the existing Aichi/continuation-aware work before duplicating it.
+
+
+## Typed output-slot collisions
+
+Added:
+
+- `tools/connector_slot_collision_option.py`
+- `results/connector_slot_collision_option/`
+- `.github/workflows/validate-connector-slot-collision-option.yml`
+- `tools/connector_slot_deadlines.py`
+- `results/connector_slot_deadlines/`
+- `.github/workflows/validate-connector-slot-deadlines.yml`
+
+The slot-collision model treats a connector as physical typed output slots and targets as eligibility sets. One use may satisfy only a target subset with an injective target-to-slot assignment.
+
+Canonical Secret Box-shaped slots: Item, Tool, Supporter, Stadium. With four missing channels Item, Tool, Tool, Supporter, two copies each, and 40 cards remaining, nominal output count is four but immediate matching size is three. Exact adaptive vs eager success is:
+
+- one future draw: 10.000000% vs 5.405405%;
+- two: 19.230769% vs 10.660661%;
+- three: 27.732794% vs 15.765766%;
+- four: 35.545464% vs 20.720721%.
+
+With Item, Tool, Tool, Tool demand, immediate matching size is two. Two-draw adaptive success is 1.538462% versus 0.568990% eager.
+
+The useful state quantity is matching deficiency `|S| - mu(S)`, where `mu(S)` is the largest target subset assignable to distinct connector slots. This can be positive even when raw output count is at least total demand.
+
+The deadline composition shows a stronger failure. For Item, Tool, Tool, Supporter demand with one future draw:
+
+- all targets deadline 1: 10.000000%;
+- Item deadline 0: 5.405405%;
+- one Tool deadline 0: 5.405405%;
+- both Tool targets deadline 0: 0%;
+- all targets deadline 0: 0%.
+
+A scalar capacity-four model would incorrectly mark four urgent demands feasible. Typed matching correctly rejects the two simultaneous Tool demands. A distinct Item/Tool/Supporter/Stadium all-urgent state remains 100% feasible.
+
+Independent labeled enumerators validate both solvers. GitHub Actions runs 37584780305 and 37585088028 passed.
+
+### Interpretation
+
+For category-specific multi-axis search, the correct current-window capacity is a target-to-output matching problem, not a scalar count. Finite-horizon option value comes from natural draws changing the remaining matching problem. Per-target deadlines restrict how long those collisions can be left for future resolution.
+
+The repository's `typed_search_target_allocator.py` already supplies compatible state-local physical allocation semantics. A future composition can use its compiled search outputs as the slot/profile source while the finite-horizon policy layer decides when to consume them.
