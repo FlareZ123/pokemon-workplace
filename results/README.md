@@ -79,6 +79,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [typed_bench_release_execution/](typed_bench_release_execution/) generalizes that Bench-debt release across action classes. A Supporter release still collides with another required Supporter at ordinary quota, a deterministic Item release works unless Item-locked, an attack release cannot free a full Bench early enough for a same-turn new entrant because the attack ends the turn, and a ready Ability release can work before the remaining actions. Super Scoop Up gives a stochastic middle case: in the same 4->5 draw toy layer, one available attempt raises the break-even collision rate from 16.769152% to 33.538304%, while two raise it to 67.076608%.
 
+[bench_release_deadline_geometry/](bench_release_deadline_geometry/) adds earliest-entry time and deadline. Attack release misses a current-turn Bench deadline but can preload an empty slot for a Pokémon that only becomes available next turn, and the next-turn Supporter quota is fresh. That same attack release still fails when the current turn independently needs a different attack, while Item release can preserve the attack window.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
