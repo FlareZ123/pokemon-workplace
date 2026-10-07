@@ -59,6 +59,22 @@ For a same-turn objective that requires playing the recovered Supporter, the Peo
 
 The direct Item line is less likely to find the target, yet every successful recovery remains executable.
 
+## Gladion makes the separation even sharper
+
+Gladion looks at the face-down Prize cards and puts one of them into hand.
+
+Conditioned on the required Supporter being Prized and Gladion being playable, target hand access is therefore 100%.
+
+Gladion is itself a Supporter.
+
+Under the ordinary one-Supporter rule:
+
+| Route | Target reaches hand | Target Supporter can be played this turn |
+| --- | ---: | ---: |
+| Gladion | 1 | 0 |
+
+This is an extreme access-versus-execution counterexample. Perfect recovery does not complete a same-turn line when the recovery action consumes the payload's action channel.
+
 ## Dual Brains changes the line value
 
 The bundled Expanded-legal Magnezone `bw8-46` has Dual Brains:
@@ -73,6 +89,7 @@ With Dual Brains active:
 | --- | ---: | ---: |
 | Arc Phone -> Trekking Shoes | 1/6 | 1/6 |
 | Peonia -> Arc Phone -> Trekking Shoes | 2/3 | 2/3 |
+| Gladion | 1 | 1 |
 
 The same physical Prize policy now converts its entire hand-access probability into same-turn execution probability.
 
@@ -85,7 +102,8 @@ The regression verifies the bundled card texts for:
 - Peonia `swsh6-149`;
 - Arc Phone `swsh11-152`;
 - Trekking Shoes `swsh10-156`;
-- Magnezone `bw8-46` with Dual Brains.
+- Magnezone `bw8-46` with Dual Brains;
+- Gladion `sm4-95`.
 
 It also verifies the Advanced Player's Rulebook text that Items may be used any number of times during a turn and Supporters ordinarily may be used only once.
 
