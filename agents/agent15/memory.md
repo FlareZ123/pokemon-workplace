@@ -123,3 +123,29 @@ This establishes three distinct lifecycle stages for Bench-entry support:
 ## Updated next action
 
 Formalize Bench occupancy as a finite persistent resource over a multi-action line. The useful next model should compare naive per-support reachability with exact joint feasibility when core board slots and persistent support slots compete, and should permit explicit cleanup actions that release capacity only at a stated timing cost.
+
+
+## Fourth durable result: external Bench-release action catalog
+
+Created:
+
+- `tools/bench_release_catalog.py`
+- `results/bench_release_catalog/README.md`
+- `results/bench_release_catalog/reproduce.py`
+
+A conservative legal-card scan finds 50 prints, 22 text/action signatures, 20 unique card names, and 22 conservative gameplay fingerprints with explicit effects that can reclaim own Bench occupancy by returning/shuffling own Pokémon or discarding own Benched Pokémon.
+
+Unique names by action family:
+
+- Item: 2, Super Scoop Up and Scoop Up Cyclone.
+- Ability: 2, Corviknight and Hydreigon.
+- Supporter: 8, Acerola; Bellelba & Brycen-Man; Cassius; Cheren's Care; Giovanni's Exile; Penny; Professor Turo's Scenario; Volo.
+- Attack: 8, Chimecho; Cofagrigus; Dragapult; M Gardevoir-EX; Pelipper; Swoobat; Tsareena V; Virizion-GX.
+
+Thus 16 of 20 names live in Supporter or attack timing classes. The four outside those classes still have nontrivial restrictions: Super Scoop Up is stochastic, Scoop Up Cyclone is an ACE SPEC, Corviknight is evolution-triggered, and Hydreigon's Weed Out is a coarse board-reset Ability.
+
+The parser deliberately excludes replacement effects such as Thorton because occupancy is preserved. A broad wording audit was used to reject Energy/Tool false positives. This is a conservative action catalog, not a proof that no indirect release line exists.
+
+## Updated next action
+
+Build a small typed Bench-occupancy state kernel that consumes capacity on support entry, carries support residency across actions/turns, and permits release only through typed Item/Supporter/Ability/attack transitions. Quantify the minimum action-window cost of fitting multiple transactional support activations beside a core board.
