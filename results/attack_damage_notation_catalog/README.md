@@ -4,15 +4,15 @@
 
 How much of the effectively legal paper-Expanded English snapshot uses a small, mechanically auditable printed damage notation?
 
-All 19,742 attack rows in the current snapshot fall into five surface forms:
+All 19,992 attack rows in the current snapshot fall into five surface forms:
 
 | Printed form | Count |
 | --- | ---: |
-| blank | 3,743 |
-| fixed integer | 12,175 |
-| integer plus sign | 2,490 |
-| integer minus sign | 45 |
-| integer multiplication sign | 1,289 |
+| blank | 3,816 |
+| fixed integer | 12,312 |
+| integer plus sign | 2,513 |
+| integer minus sign | 46 |
+| integer multiplication sign | 1,305 |
 
 Implementation: `tools/attack_damage_notation_catalog.py`  
 Regression: `results/attack_damage_notation_catalog/reproduce.py`
