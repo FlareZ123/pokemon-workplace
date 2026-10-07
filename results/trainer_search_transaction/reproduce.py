@@ -19,8 +19,10 @@ from search_zone_transition import SearchZoneTarget
 from trainer_search_profile_compiler import compile_multi_output_trainer_profiles
 from trainer_search_transaction import (
     TrainerSearchExecutionState,
+    execute_trainer_retrieval_transaction,
     execute_trainer_search_transaction,
 )
+from typed_search_retrieval import enumerate_typed_retrieval_actions
 from turn_action_budget import TurnActionBudget
 from typed_search_target_allocator import (
     BASIC_ENERGY,
@@ -308,6 +310,29 @@ def main() -> None:
     assert gh_tx.after.zones.count("guzma_hala", "discard") == 1
     for card_class in ("gh_stadium", "gh_tool", "gh_special"):
         assert gh_tx.after.zones.count(card_class, "hand") == 1
+
+    gh_retrievals = enumerate_typed_retrieval_actions(
+        guzma_hala.base_outputs + guzma_hala.conditional_outputs,
+        tuple(target.group for target in gh_targets),
+    )
+    gh_full_retrieval = next(
+        action
+        for action in gh_retrievals
+        if action.target_cost == (1, 1, 1)
+    )
+    gh_raw_tx = execute_trainer_retrieval_transaction(
+        gh_state,
+        profile=guzma_hala,
+        action_card_class="guzma_hala",
+        targets=gh_targets,
+        retrieval_action=gh_full_retrieval,
+        discard_candidates=gh_candidates,
+        discard_selection=gh_selection,
+    )
+    assert gh_raw_tx.discard_cost == 2
+    assert gh_raw_tx.used_conditional_outputs
+    for card_class in ("gh_stadium", "gh_tool", "gh_special"):
+        assert gh_raw_tx.after.zones.count(card_class, "hand") == 1
 
     gh_extra_copy_state = TrainerSearchExecutionState(
         zones=ZoneCountState.from_mapping(
