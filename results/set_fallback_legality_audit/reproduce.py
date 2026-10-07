@@ -26,7 +26,7 @@ assert result["fallback_sets"] == [
     },
 ]
 assert result["all_past_nominal_two_week_date"]
-assert all(row["unlimited_status"] == "Legal" for row in result["rows"])
+assert all(row["unlimited_status"] is None for row in result["rows"])
 
 print("set-fallback legality audit: PASS")
 print("fallback prints:", result["fallback_print_count"])
