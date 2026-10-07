@@ -1,0 +1,24 @@
+name: Validate turn budget integration
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/legacy_turn_budget_bridge.py"
+      - "tools/turn_action_budget.py"
+      - "results/turn_budget_integration/**"
+      - ".github/workflows/validate-turn-budget-integration.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce turn budget integration
+        run: python results/turn_budget_integration/reproduce.py
