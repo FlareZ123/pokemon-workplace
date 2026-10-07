@@ -151,11 +151,19 @@ def main() -> None:
     physical_c = sync_physical(physical_c, pending_board_c)
     staged_c = stage_prize_takes(physical_c, positions=(0,))
     pending_board_c = pending_board_c.with_ledger(staged_c.physical.ledger)
+    assert use_lucky_bonus(
+        staged_c,
+        pending_board_c,
+        pokemon_id="c-chansey",
+        coin_heads=False,
+        during_your_turn=False,
+    ) is None
     lucky = use_lucky_bonus(
         staged_c,
         pending_board_c,
         pokemon_id="c-chansey",
         coin_heads=False,
+        during_your_turn=True,
     )
     assert lucky is not None
     assert lucky.after_board.active_id is None
@@ -181,6 +189,7 @@ def main() -> None:
         pending_board_f,
         pokemon_id="f-chansey",
         coin_heads=False,
+        during_your_turn=True,
     ) is None
     assert_conserved(initial_f, pending_board_f.ledger)
 
@@ -197,10 +206,18 @@ def main() -> None:
     staged_j = stage_prize_takes(physical_j, positions=(0,))
     pending_board_j = pending_board_j.with_ledger(staged_j.physical.ledger)
 
+    assert use_wish_upon_a_star(
+        staged_j,
+        pending_board_j,
+        pokemon_id="j-jirachi",
+        during_your_turn=False,
+        extra_prize_position=0,
+    ) is None
     wish = use_wish_upon_a_star(
         staged_j,
         pending_board_j,
         pokemon_id="j-jirachi",
+        during_your_turn=True,
         extra_prize_position=0,
     )
     assert wish is not None
@@ -214,6 +231,7 @@ def main() -> None:
         wish.after_board,
         pokemon_id="j-chansey",
         coin_heads=False,
+        during_your_turn=True,
     )
     assert chained_lucky is not None
     assert chained_lucky.after_prizes.pending == ()
