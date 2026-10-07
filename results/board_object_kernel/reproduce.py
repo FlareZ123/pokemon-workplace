@@ -169,6 +169,41 @@ def main() -> None:
     ) is None
     assert switch_active(asleep_board, "retreat-target") is not None
 
+    escape_board = ToolAttachment("escape-board", "Escape Board")
+    escape_active = make_pokemon(
+        "escape-active",
+        "Escape Active",
+        tool=escape_board,
+        special_conditions=("Asleep",),
+    )
+    escape_state = make_board(escape_active, (retreat_target,))
+    escaped = retreat(
+        escape_state,
+        "retreat-target",
+        retreat_cost=0,
+        discard_energy_ids=(),
+    )
+    assert escaped is not None
+
+    blanked_escape_active = make_pokemon(
+        "blanked-escape",
+        "Blanked Escape Active",
+        energy=(lightning,),
+        tool=escape_board,
+        tool_effect_enabled=False,
+        special_conditions=("Asleep",),
+    )
+    blanked_escape_state = make_board(
+        blanked_escape_active,
+        (retreat_target,),
+    )
+    assert retreat(
+        blanked_escape_state,
+        "retreat-target",
+        retreat_cost=1,
+        discard_energy_ids=("energy-lightning",),
+    ) is None
+
     evolve_source = make_pokemon(
         "evolving",
         "Basic Form",
