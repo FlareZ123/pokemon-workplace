@@ -1,0 +1,26 @@
+name: Validate physical start-turn deck out
+
+on:
+  push:
+    paths:
+      - "tools/physical_zone_count.py"
+      - "tools/physical_deck_projection.py"
+      - "tools/physical_start_turn_deck_out.py"
+      - "tools/post_knockout_game_resolution.py"
+      - "results/physical_start_turn_deck_out/**"
+      - ".github/workflows/validate-physical-start-turn-deck-out.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check physical start-turn deck out
+        run: python results/physical_start_turn_deck_out/reproduce.py
