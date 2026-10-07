@@ -102,6 +102,41 @@ def main() -> None:
     assert attempt.effective_retreat_cost == 2
     assert attempt.transaction is None
 
+    air = ToolAttachment("air", "Air Balloon", print_id="swsh1-156")
+    attempt = attempt_board_derived_retreat(
+        actor((), tool=air),
+        "pivot",
+        base_retreat_cost=2,
+        discard_energy_ids=(),
+        opponent_board=blank_opponent(),
+    )
+    assert attempt.effective_retreat_cost == 0
+    assert attempt.unresolved_tool_conditions == ()
+    assert attempt.transaction is not None and attempt.transaction.committed
+
+    rescue = ToolAttachment("rescue", "Rescue Board", print_id="sv5-159")
+    attempt = attempt_board_derived_retreat(
+        actor((), tool=rescue),
+        "pivot",
+        base_retreat_cost=1,
+        discard_energy_ids=(),
+        opponent_board=blank_opponent(),
+    )
+    assert len(attempt.unresolved_tool_conditions) == 1
+    assert attempt.transaction is None
+
+    attempt = attempt_board_derived_retreat(
+        actor((), tool=rescue),
+        "pivot",
+        base_retreat_cost=1,
+        discard_energy_ids=(),
+        opponent_board=blank_opponent(),
+        active_remaining_hp=30,
+    )
+    assert attempt.effective_retreat_cost == 0
+    assert attempt.unresolved_tool_conditions == ()
+    assert attempt.transaction is not None and attempt.transaction.committed
+
     dce = EnergyAttachment("dce", "Double Colorless Energy", ("C", "C"))
     pouch = ToolAttachment("pouch", "Dashing Pouch")
     mime = make_pokemon("mime", "Mr. Mime", print_id="sm9-66")
