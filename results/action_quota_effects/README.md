@@ -56,6 +56,7 @@ A Supporter lock can deny play even when the budget has unused quota. Ability su
 The reproducer:
 
 - loads Magnezone `bw8-46` from the bundled resources;
+- verifies both bundled Lt. Surge's Strategy three-Supporter prints (`sm10-178`, `sm115-60`) are effectively Banned, preventing raw text scans from treating that capacity as legal Expanded state;
 - verifies its Dual Brains text;
 - checks effective Expanded legality through the shared legality classifier;
 - verifies the ordinary one-Supporter ceiling;
@@ -68,6 +69,6 @@ The reproducer:
 
 This result models direct total-use quota grants. It does not claim to parse every possible card wording that can affect turn actions.
 
-A targeted text scan of the bundled corpus found Dual Brains as the direct numeric Supporter-limit case and found no direct numeric wording for extra Stadium plays, extra normal Retreats, or extra ordinary manual Energy attachments under the searched grammar. That is a coverage observation rather than proof that no indirect mechanic can affect those channels.
+A targeted text scan of the bundled corpus found Dual Brains as the legal direct numeric Supporter-limit case. Two Lt. Surge's Strategy prints contain a three-Supporter instruction, and both are effectively Banned. The same targeted grammar found no direct numeric wording for extra Stadium plays, extra normal Retreats, or extra ordinary manual Energy attachments. That is a coverage observation rather than proof that no indirect mechanic can affect those channels.
 
 Future text-compilation work should distinguish at least total-limit wording, additional-use wording, effect-based actions that do not consume the ordinary channel, and player-level prohibitions.
