@@ -73,6 +73,20 @@ enumerate every possible legacy multi-unit provider interaction.
 The existing board-position regression is also updated so its
 DCE-plus-Lightning witness is accepted.
 
+## Canonical propagation
+
+The same minimal-subset assumption also existed in
+`board_object_kernel.legal_retreat_energy_choices()`, which feeds the newer
+canonical turn-budget Retreat adapter and the Energy conservation bridge. That
+helper now enumerates every represented payment whose physical-card count is
+within the numeric Retreat Cost and whose supplied Energy units cover the cost.
+
+The board-object regression therefore expands its cost-2 DCE + Lightning + Fire
+state from two legal payments to four. The Energy conservation regression also
+checks the direct official geometry with two attached DCE copies: selecting
+both for Retreat Cost 2 moves both physical copies from `attached` to
+`discard` while preserving copy totals.
+
 ## Strategic implication
 
 Retreat payment can remain a resource-allocation decision after the numeric
