@@ -105,12 +105,21 @@ def main() -> None:
     ):
         mixed = apply_condition(mixed, regular_condition(kind))
 
-    # Confused resolves on attack attempt rather than in the Checkup condition block.
+    # Paralyzed replaces Confused in the shared rotated-card condition slot,
+    # while Burned and Poisoned remain alongside it.
+    assert mixed.get(ConditionKind.CONFUSED) is None
+    assert mixed.get(ConditionKind.PARALYZED) is not None
     assert checkup_conditions(mixed) == (
         ConditionKind.POISONED,
         ConditionKind.BURNED,
         ConditionKind.PARALYZED,
     )
+
+    asleep = apply_condition(mixed, regular_condition(ConditionKind.ASLEEP))
+    assert asleep.get(ConditionKind.PARALYZED) is None
+    assert asleep.get(ConditionKind.ASLEEP) is not None
+    assert asleep.get(ConditionKind.POISONED) is not None
+    assert asleep.get(ConditionKind.BURNED) is not None
 
     effects = ("effect:A", "effect:B")
     schedules = enumerate_checkup_schedules(effects)
