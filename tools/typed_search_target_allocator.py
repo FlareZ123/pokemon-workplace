@@ -119,11 +119,6 @@ class TargetGroup:
     def __post_init__(self) -> None:
         if self.copies < 0:
             raise ValueError("copies must be non-negative")
-        if self.selector.distinct_prefix is not None:
-            raise ValueError(
-                "cross-card diversity selectors are search-axis constraints, "
-                "not simple demand selectors"
-            )
         closed = close_tags(self.tags)
         validate_closed_tags(closed)
         object.__setattr__(self, "tags", closed)
@@ -140,6 +135,8 @@ class DemandChannel:
     def __post_init__(self) -> None:
         if self.copies < 0:
             raise ValueError("copies must be non-negative")
+        if self.selector.distinct_prefix is not None:
+            raise ValueError("diversity selectors are not simple demand selectors")
 
 
 @dataclass(frozen=True)
