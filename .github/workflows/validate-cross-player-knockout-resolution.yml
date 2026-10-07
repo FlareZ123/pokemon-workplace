@@ -1,0 +1,24 @@
+name: Validate cross-player Knock Out resolution
+
+on:
+  push:
+    paths:
+      - "tools/cross_player_knockout_resolution.py"
+      - "tools/simultaneous_knockout_conservation.py"
+      - "results/cross_player_knockout_resolution/**"
+      - ".github/workflows/validate-cross-player-knockout-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check cross-player promotion ordering
+        run: python results/cross_player_knockout_resolution/reproduce.py
