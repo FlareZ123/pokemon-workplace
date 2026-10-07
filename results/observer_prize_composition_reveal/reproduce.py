@@ -21,10 +21,10 @@ def main() -> None:
     # Before the first full deck search, either A or B is the one modeled
     # singleton in two face-down Prize slots. Its physical slot is also unknown.
     masses = (
-        (("X", ("A", None)), 1.0 / 4.0),
-        (("X", (None, "A")), 1.0 / 4.0),
-        (("X", ("B", None)), 1.0 / 4.0),
-        (("X", (None, "B")), 1.0 / 4.0),
+        ((None, ("A", None)), 1.0 / 4.0),
+        ((None, (None, "A")), 1.0 / 4.0),
+        ((None, ("B", None)), 1.0 / 4.0),
+        ((None, (None, "B")), 1.0 / 4.0),
     )
     prior = TopPrizeJointBelief(
         ("A", "B"),
