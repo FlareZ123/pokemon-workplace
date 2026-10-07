@@ -25,6 +25,15 @@ class PrizeTerminalPolicy:
     action_values: tuple[float, ...]
     stop_value: float
 
+@dataclass(frozen=True)
+class PrizeDeadlinePolicy:
+    """Optimal probability of satisfying target acquisition deadlines."""
+
+    success_probability: float
+    best_position: int | None
+    action_values: tuple[float, ...]
+
+
 
 def _replace_observed_position_with_filler(
     state: PrizePositionBelief,
@@ -207,3 +216,102 @@ def optimal_prize_terminal_policy(
         )
 
     return solve(state, probes, acquired)
+
+def optimal_prize_acquisition_deadline_policy(
+    state: PrizePositionBelief,
+    deadlines: Mapping[str, int],
+    *,
+    initial_acquired: Iterable[str] = (),
+) -> PrizeDeadlinePolicy:
+    """Optimize position probes under per-target acquisition deadlines.
+
+    A deadline is the number of additional probes allowed after the current
+    action point before that target must be acquired. Deadline zero therefore
+    makes the current probe the target's final acquisition opportunity.
+    """
+
+    required = tuple(sorted(deadlines))
+    if not required:
+        return PrizeDeadlinePolicy(1.0, None, ())
+    if any(deadlines[group] < 0 for group in required):
+        raise ValueError("deadlines must be non-negative")
+
+    modeled = set(state.groups)
+    acquired = frozenset(initial_acquired)
+    missing_unmodeled = set(required) - modeled - acquired
+    if missing_unmodeled:
+        return PrizeDeadlinePolicy(
+            success_probability=0.0,
+            best_position=None,
+            action_values=(),
+        )
+
+    initial_deadlines = tuple(deadlines[group] for group in required)
+
+    @lru_cache(maxsize=None)
+    def solve(
+        current: PrizePositionBelief,
+        current_deadlines: tuple[int, ...],
+        current_acquired: frozenset[str],
+    ) -> PrizeDeadlinePolicy:
+        if all(group in current_acquired for group in required):
+            return PrizeDeadlinePolicy(1.0, None, ())
+
+        if any(
+            deadline < 0
+            for group, deadline in zip(required, current_deadlines)
+            if group not in current_acquired
+        ):
+            return PrizeDeadlinePolicy(0.0, None, ())
+
+        if current.prize_count == 0:
+            return PrizeDeadlinePolicy(0.0, None, ())
+
+        values: list[float] = []
+
+        for position in range(current.prize_count):
+            expected = 0.0
+
+            for observed_group in (None,) + current.groups:
+                probability = current.group_probability_at(
+                    position,
+                    observed_group,
+                )
+                if probability <= 0.0:
+                    continue
+
+                next_acquired = current_acquired
+                if observed_group in required:
+                    next_acquired = current_acquired | {observed_group}
+
+                next_state = _replace_observed_position_with_filler(
+                    current,
+                    position=position,
+                    observed_group=observed_group,
+                )
+                next_deadlines = tuple(
+                    deadline
+                    if group in next_acquired
+                    else deadline - 1
+                    for group, deadline in zip(required, current_deadlines)
+                )
+                expected += probability * solve(
+                    next_state,
+                    next_deadlines,
+                    frozenset(next_acquired),
+                ).success_probability
+
+            values.append(expected)
+
+        best_position = max(
+            range(current.prize_count),
+            key=values.__getitem__,
+        )
+        return PrizeDeadlinePolicy(
+            success_probability=values[best_position],
+            best_position=best_position,
+            action_values=tuple(values),
+        )
+
+    return solve(state, initial_deadlines, acquired)
+
