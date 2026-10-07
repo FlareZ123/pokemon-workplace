@@ -36,6 +36,15 @@ BIDE_BARRICADE = AbilityLockProfile(
     excluded_target_tags=frozenset({"Psychic"}),
 )
 
+EMPERORS_EYES = AbilityLockProfile(
+    name="Emperor's Eyes",
+    print_ids=frozenset({"swsh5-40", "swsh5-145", "swsh5-146", "swshp-SWSH108"}),
+    activation="active",
+    scope="opponent",
+    required_target_tags=frozenset({"Basic"}),
+    excluded_target_tags=frozenset({"RuleBox"}),
+)
+
 NEUTRALIZING_GAS = AbilityLockProfile(
     name="Neutralizing Gas",
     print_ids=frozenset({"swsh2-113", "swsh45-42", "swsh45sv-SV077"}),
@@ -69,6 +78,7 @@ GARBOTOXIN = AbilityLockProfile(
 
 PROFILES = (
     BIDE_BARRICADE,
+    EMPERORS_EYES,
     NEUTRALIZING_GAS,
     LAZY,
     STICKY_BIND,
