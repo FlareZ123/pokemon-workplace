@@ -55,7 +55,7 @@ def compile_prize_effect(text: str) -> tuple[str, ...]:
     if _has(r"put a card from your hand face down as a Prize card|put this .* in its place as a face-down Prize card|put this .* in its place|shuffle this .* into your remaining Prize cards", text):
         atoms.add("hand_to_prize")
 
-    if _has(r"top card of your deck.*face-down Prize|top card of their deck.*face-down Prize|top .* cards? of .*deck.*Prize cards", text):
+    if _has(r"top (?:card|\\d+ cards?) of (?:your|their) deck.*Prize|cards from the top of (?:your|their) deck.*Prize|top of (?:your|their) deck.*Prize", text):
         atoms.add("deck_to_prize")
     if _has(r"Prize cards?.*shuffle them into .*deck|shuffle .*Prize cards into .*deck|Prize cards.*, shuffle them, and put them on the bottom of .*deck", text):
         atoms.add("prize_to_deck")
