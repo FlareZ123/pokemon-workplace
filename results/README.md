@@ -814,6 +814,16 @@ The regression resolves ordinary Prize taking to hand, each replacement independ
 **Working synthesis:** replacement effects should be represented between the underlying event and the final conserved move. The event, ordinary destination, applicable replacements, ordering or precedence authority, and physical destination are separate state variables; mechanically conflicting replacements should remain explicit when the available rules evidence does not establish a general precedence rule.
 
 
+## 65. Unrestricted fixed-count search requires mandatory physical selections
+
+[unrestricted_search_selection/](unrestricted_search_selection/) isolates the Advanced Player's Rulebook exception for unrestricted deck search. Restricted searches may take fewer eligible cards, including zero, while a search for any card or cards without a type limitation must take the stated number, reduced only when the deck physically contains fewer cards.
+
+A conservative scan finds 69 effectively legal Expanded print-level effects across 43 names in this exact-count family: 63 search for one card and six search for two. The execution consequence is deeper than a parser flag. If Computer Search's strategic target is absent, a nonempty deck still forces one fallback card into hand. For Mallow-style exact-two searches, one useful target still requires a second physical filler card.
+
+The current typed zone transition equates physical target consumption with useful demand supplied. That invariant is correct for its constrained-search semantic island but cannot represent unrestricted forced filler. The next integration therefore needs separate useful-output and physical-selection witnesses rather than broadening a constrained selector into "any card."
+
+**Working synthesis:** search reachability needs a minimum-cardinality semantic dimension. Mandatory filler can change hand size, deck size, later discardability, top-deck order, hidden-state beliefs, and continuation value even when it supplies no current strategic demand.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
