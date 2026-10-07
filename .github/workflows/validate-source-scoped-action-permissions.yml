@@ -7,9 +7,11 @@ on:
       - "tools/card_action_metadata.py"
       - "tools/source_scoped_action_restrictions.py"
       - "tools/source_scoped_channel_projection.py"
+      - "tools/source_scoped_restriction_activation.py"
       - "tools/source_scoped_trainer_transaction.py"
       - "results/source_scoped_action_restrictions/**"
       - "results/source_scoped_channel_projection/**"
+      - "results/source_scoped_restriction_activation/**"
       - "results/source_scoped_trainer_transaction/**"
       - ".github/workflows/validate-source-scoped-action-permissions.yml"
 
@@ -30,3 +32,5 @@ jobs:
         run: python results/source_scoped_channel_projection/reproduce.py
       - name: Reproduce source-scoped Trainer transaction gating
         run: python results/source_scoped_trainer_transaction/reproduce.py
+      - name: Reproduce source-scoped activation geometry
+        run: python results/source_scoped_restriction_activation/reproduce.py
