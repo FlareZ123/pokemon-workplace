@@ -100,7 +100,7 @@ The same physical ledger can span board disposal and Prize observation. This let
 
 This result does not decide which Prize cards are awarded, which Prize positions a player selects, or how before-hand card text is compiled. Those semantics remain upstream.
 
-It does not claim a universal answer for the edge case where a loss condition might arise during the Knock Out process and a before-hand Prize effect could later put a Pokémon into play. The regression keeps surviving Pokémon on both sides, so the game is continuing throughout the tested interval.
+The terminal-precedence edge is resolved by the later `post_prize_window_game_resolution` result. An official Jirachi Prism Star Q&A confirms that a before-hand Prize effect can put a Pokémon into play before the final Prize/no-Pokémon snapshot is resolved.
 
 It also leaves turn-budget reset timing to the existing turn-sequence work.
 
