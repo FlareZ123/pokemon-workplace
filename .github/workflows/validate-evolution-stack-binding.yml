@@ -1,0 +1,18 @@
+name: Validate evolution stack binding
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check evolution stack binding
+        run: python results/evolution_stack_binding/reproduce.py
