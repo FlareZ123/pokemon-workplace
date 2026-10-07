@@ -20,7 +20,20 @@ def main() -> None:
     assert result.incremental_successes == 20_785
     assert result.baseline_only_successes == 0
     assert result.validation_mismatches == 0
-    assert sum(count for _, count in result.opaque_histogram) == 20_785
+    assert result.opaque_histogram == (
+        (0, 359),
+        (1, 3_868),
+        (2, 9_607),
+        (3, 6_714),
+        (4, 237),
+    )
+    assert [result.successes_with_budget(budget) for budget in range(5)] == [
+        359,
+        4_227,
+        13_834,
+        20_548,
+        20_785,
+    ]
 
     print(f"trials={result.trials}")
     print(f"baseline_successes={result.baseline_successes}")
