@@ -83,4 +83,4 @@ The regression assumes the two Dream Balls have already been awarded and staged 
 
 It proves mechanical executability under the modeled card text and source-scope rules. It does not estimate how often the line occurs in real decks or whether allocating slots to Dream Ball and Vileplume is strategically worthwhile.
 
-It does not resolve the separate terminal-precedence edge where a player has zero Pokémon after Knock Out disposal before a Prize-origin Bench-entry effect can create a new Pokémon.
+The terminal-precedence edge is now resolved by `results/post_prize_window_game_resolution/` from an official Jirachi Prism Star ruling. `results/dream_ball_terminal_rescue/` applies that phase rule to Dream Ball.
