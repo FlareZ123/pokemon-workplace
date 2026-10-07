@@ -14,6 +14,7 @@ from typing import Sequence
 from search_zone_transition import SearchZoneTarget
 from staged_trainer_objectives import TrainerAcquisitionAction
 from trainer_search_profile_compiler import CompiledTrainerSearchProfile
+from trainer_search_transaction import validate_trainer_search_branch
 from typed_search_target_allocator import (
     DemandChannel,
     TypedTargetAction,
@@ -29,29 +30,27 @@ def adapt_compiled_search_to_staged_action(
     *,
     copies: int = 1,
     play_condition_met: bool | None = None,
+    pay_optional_discard: bool | None = None,
     name: str | None = None,
 ) -> TrainerAcquisitionAction:
-    """Return one trusted staged action from an exact typed base search action."""
+    """Return one trusted staged action from an exact typed search branch."""
 
     if copies < 0:
         raise ValueError("copies must be non-negative")
-    if profile.conditional_outputs or profile.optional_discard_other_cards:
-        raise ValueError("conditional search branches are not supported")
     if profile.discards_entire_hand:
         raise ValueError("whole-hand discard cannot be represented by a fixed cost")
     if profile.play_condition is not None and play_condition_met is not True:
         raise ValueError("compiled play condition is not satisfied")
 
     bound_targets = tuple(targets)
-    target_groups = tuple(target.group for target in bound_targets)
     demand_channels = tuple(demands)
-    allocation = enumerate_typed_target_profiles(
-        profile.base_outputs,
-        target_groups,
+    branch = validate_trainer_search_branch(
+        profile,
         demand_channels,
+        bound_targets,
+        action,
+        pay_optional_discard=pay_optional_discard,
     )
-    if action not in allocation.actions:
-        raise ValueError("typed action is not valid for the compiled base profile")
     if len(action.target_cost) != len(bound_targets):
         raise ValueError("target cost length does not match targets")
 
@@ -70,5 +69,5 @@ def adapt_compiled_search_to_staged_action(
         action_class=profile.action_class,
         copies=copies,
         hand_outputs=tuple(sorted(selected.items())),
-        discard_cost=profile.required_discard_other_cards,
+        discard_cost=branch.discard_cost,
     )
