@@ -38,7 +38,7 @@ gengar = normalize_print_specific_errata(cards["dp7-18"])
 assert "Attacking Pokémon is Knocked Out" in gengar["abilities"][0]["text"]
 
 blastoise = normalize_print_specific_errata(cards["dp3-2"])
-assert "Basic Energy cards from your hand" in blastoise["abilities"][0]["text"]
+assert "basic Energy cards from your hand" in blastoise["abilities"][0]["text"]
 assert "Basic Water Energy" not in blastoise["abilities"][0]["text"]
 
 shield = normalize_print_specific_errata(cards["xy5-143"])
