@@ -60,7 +60,7 @@ def main() -> None:
             selector_from_label(label)
         except UnsupportedSearchSelector:
             unsupported.append(label)
-    assert unsupported == ["Pokémon of different types"]
+    assert unsupported == []
 
     quick_ball = TargetGroup(
         "Quick Ball",
@@ -249,12 +249,74 @@ def main() -> None:
     )
     assert not no_water.full_demand_feasible
 
+    sabrina_brycen = representative(compiled, "Sabrina & Brycen")
+    different_types = sabrina_brycen.conditional_outputs[0]
+    three_pokemon_demand = (
+        make_demand("three pokemon", "Pokémon", copies=3),
+    )
+    three_distinct_types = enumerate_typed_target_profiles(
+        (different_types,),
+        (
+            TargetGroup(
+                "Water target",
+                1,
+                frozenset({BASIC_POKEMON, "type:water"}),
+            ),
+            TargetGroup(
+                "Fire target",
+                1,
+                frozenset({BASIC_POKEMON, "type:fire"}),
+            ),
+            TargetGroup(
+                "Lightning target",
+                1,
+                frozenset({BASIC_POKEMON, "type:lightning"}),
+            ),
+        ),
+        three_pokemon_demand,
+    )
+    assert three_distinct_types.full_demand_feasible
+
+    duplicate_type_pool = enumerate_typed_target_profiles(
+        (different_types,),
+        (
+            TargetGroup(
+                "Water copies",
+                2,
+                frozenset({BASIC_POKEMON, "type:water"}),
+            ),
+            TargetGroup(
+                "Fire target",
+                1,
+                frozenset({BASIC_POKEMON, "type:fire"}),
+            ),
+        ),
+        three_pokemon_demand,
+    )
+    assert not duplicate_type_pool.full_demand_feasible
+    assert duplicate_type_pool.minimum_unmet_units == 1
+
+    untyped_pool = enumerate_typed_target_profiles(
+        (different_types,),
+        (
+            TargetGroup(
+                "Unknown-type target",
+                3,
+                frozenset({BASIC_POKEMON}),
+            ),
+        ),
+        three_pokemon_demand,
+    )
+    assert not untyped_pool.full_demand_feasible
+
     print(
         json.dumps(
             {
                 "compiled_labels": len(labels),
                 "supported_structural_labels": len(labels) - len(unsupported),
                 "unsupported_labels": unsupported,
+                "sabrina_three_distinct_types_feasible": three_distinct_types.full_demand_feasible,
+                "sabrina_duplicate_type_pool_feasible": duplicate_type_pool.full_demand_feasible,
                 "broad_trainer_two_demands_feasible": broad_trainer.full_demand_feasible,
                 "overlapping_axes_one_copy_feasible": overlapping_axes_one_copy.full_demand_feasible,
                 "overlapping_axes_two_copies_feasible": overlapping_axes_two_copies.full_demand_feasible,
