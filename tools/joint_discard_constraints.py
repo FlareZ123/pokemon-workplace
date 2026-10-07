@@ -72,3 +72,32 @@ def enumerate_group_constrained_discard_selections(
         return True
 
     return tuple(selection for selection in selections if allowed(selection))
+
+
+def maximum_group_constrained_discard_cost(
+    state: ZoneCountState,
+    candidates: Sequence[DiscardCandidate],
+    constraints: Sequence[DiscardGroupConstraint],
+    *,
+    source_zone: str = "hand",
+) -> int:
+    """Return the largest exact discard cost allowed by all constraints."""
+
+    pool = tuple(candidates)
+    maximum = 0
+    for candidate in pool:
+        available = state.count(candidate.card_class, source_zone)
+        if candidate.max_copies is not None:
+            available = min(available, candidate.max_copies)
+        maximum += available
+
+    for cost in range(maximum, -1, -1):
+        if enumerate_group_constrained_discard_selections(
+            state,
+            pool,
+            cost,
+            constraints,
+            source_zone=source_zone,
+        ):
+            return cost
+    raise AssertionError("zero-card discard should always be feasible")
