@@ -32,8 +32,8 @@ def _target_geometry(text: str, routing_text: str) -> str:
 
     if (
         "choose 1 of your opponent's benched pokémon" in lower
-        and "shuffle this pokémon" in routing_lower
-        and routing_lower.count("shuffle") >= 2
+        and "shuffle this pokémon" in lower
+        and lower.count("shuffle") >= 2
     ):
         return "opponent_bench_one_and_self"
 
