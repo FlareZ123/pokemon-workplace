@@ -15,7 +15,7 @@ from attack_damage_notation_catalog import (  # noqa: E402
 
 def main() -> None:
     result = build_damage_notation_catalog(ROOT / "resources")
-    assert result["total_attacks"] == 19992
+    print({"total_attacks": result["total_attacks"], "counts": result["counts"]})\n    assert result["total_attacks"] == 19992
     assert result["counts"] == {
         "blank": 3743,
         "fixed": 12175,
