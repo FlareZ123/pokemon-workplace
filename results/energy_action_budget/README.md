@@ -164,6 +164,11 @@ A useful Energy representation should keep at least the following distinct:
 
 This also clarifies how the repository's generic connector results should interact with Energy. Search connectivity can establish access to an Energy card while leaving attack readiness false. Resource-constrained connector allocation can track shared action budgets, while the Energy layer must additionally solve typed demand satisfaction and multi-unit provision.
 
+The Energy evaluator now has a strict adapter from `TurnActionBudget` into its `supporter_play`, `stadium_play`, `manual_attachment`, and `retreat` resource keys. Supporter and Stadium play permission from `PlayerChannels` are applied separately. Existing explicit action-capacity keys are rejected when the adapter is used, preventing two state owners from silently supplying contradictory values.
+
+The regression replays the compiled Iron Thorns/Guzma & Hala route from a fresh canonical budget and then rejects it when the relevant Supporter or Stadium channel is locked or the turn has ended. It also rejects a DCE attachment after the manual-attachment quota has already been spent.
+
+
 ## Validation
 
 `results/energy_action_budget/reproduce.py` validates both the model and the local card records used as anchors.
