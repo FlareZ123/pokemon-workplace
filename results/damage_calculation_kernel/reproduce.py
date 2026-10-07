@@ -105,6 +105,15 @@ def main() -> None:
     )
     assert weakness_still_exists.final_damage == 200
 
+    additive_weakness = calculate_damage(
+        DamageContext(
+            attack=AttackDamage(100),
+            weakness_addition=20,
+        )
+    )
+    assert additive_weakness.step3_weakness == 120
+    assert additive_weakness.final_damage == 120
+
     weakness_removed_upstream = calculate_damage(
         DamageContext(
             attack=AttackDamage(100),
