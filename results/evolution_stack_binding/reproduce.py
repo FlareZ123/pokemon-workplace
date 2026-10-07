@@ -131,7 +131,8 @@ def main() -> None:
     ) is None
 
     candy_active = make_pokemon(
-        "candy", "Mega Venusaur ex", tags=("Grass", "Stage 2", "MEGA", "ex"),
+        "candy", "Mega Venusaur ex", print_id="venus-print",
+        tags=("Grass", "Stage 2", "MEGA", "ex"),
         damage_counters=9,
     )
     candy_pivot = make_pokemon("candy-pivot", "Pivot", tags=("Basic",))
