@@ -56,6 +56,14 @@ def main() -> None:
         evaluate_outer_control(nightcap, opponent_prizes_remaining=3)
         == "declaration_illegal"
     )
+    assert (
+        evaluate_outer_control(
+            nightcap,
+            opponent_prizes_remaining=3,
+            invocation_mode="copied_body",
+        )
+        == "resolve_without_copy"
+    )
 
     skill_thief = by_name["Skill Thief"]
     assert skill_thief.stage == "body"
