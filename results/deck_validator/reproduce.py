@@ -1,15 +1,15 @@
 from pathlib import Path
 import sys
 
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+
 from tools.deck_validator import (
     DeckEntry,
     _recognized_copy_constraint,
     load_expanded_card_records,
     validate_deck,
 )
-
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT))
 RESOURCES = ROOT / "resources"
 GRASS = "bw1-105"
 SNIVY = "bw1-1"
