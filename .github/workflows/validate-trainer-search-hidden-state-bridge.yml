@@ -1,0 +1,33 @@
+name: Validate Trainer search hidden state bridge
+
+on:
+  push:
+    paths:
+      - "tools/trainer_search_hidden_state_bridge.py"
+      - "tools/trainer_search_transaction.py"
+      - "tools/deck_search_target_signal.py"
+      - "tools/deck_search_shuffle_physical_belief.py"
+      - "tools/deck_search_shuffle_topology.py"
+      - "tools/top_prize_physical_bridge.py"
+      - "tools/identity_materialization.py"
+      - "tools/search_zone_transition.py"
+      - "tools/discard_cost_witness.py"
+      - "tools/typed_search_target_allocator.py"
+      - "tools/trainer_search_profile_compiler.py"
+      - "results/trainer_search_hidden_state_bridge/**"
+      - ".github/workflows/validate-trainer-search-hidden-state-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check atomic hidden-state Trainer search
+        run: python results/trainer_search_hidden_state_bridge/reproduce.py
