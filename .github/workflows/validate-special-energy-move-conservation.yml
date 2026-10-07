@@ -1,0 +1,26 @@
+name: Validate Special Energy move conservation
+
+on:
+  push:
+    paths:
+      - "tools/special_energy_move_conservation.py"
+      - "tools/energy_movement_conservation.py"
+      - "tools/board_object_kernel.py"
+      - "tools/board_attachment_conservation.py"
+      - "results/special_energy_move_conservation/**"
+      - ".github/workflows/validate-special-energy-move-conservation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check restricted Special Energy movement
+        run: python results/special_energy_move_conservation/reproduce.py
