@@ -82,7 +82,12 @@ def _validate_trigger_window(
     profile: BeforeHandPrizeProfile,
     *,
     during_own_turn: bool,
+    pre_hand_destination: str = "hand",
 ) -> None:
+    if pre_hand_destination != "hand":
+        raise ValueError(
+            "before-hand trigger requires the Prize card to be headed to hand"
+        )
     if not head.was_face_down:
         raise ValueError("Prize-origin before-hand trigger requires face-down take")
     if profile.during_own_turn_explicit and not during_own_turn:
@@ -121,6 +126,7 @@ def resolve_direct_before_hand_trigger(
     board_object_id: str | None = None,
     attached_to: str | None = None,
     coin_heads: bool | None = None,
+    pre_hand_destination: str = "hand",
 ) -> BeforeHandResolution:
     """Resolve self-to-Bench or self-attach profiles, or decline to hand."""
 
@@ -129,7 +135,10 @@ def resolve_direct_before_hand_trigger(
     if not use_trigger:
         if coin_heads is not None:
             raise ValueError("coin result supplied when trigger was declined")
-        resolved = resolve_next_pending_prize(state)
+        resolved = resolve_next_pending_prize(
+            state,
+            destination_zone=pre_hand_destination,
+        )
         return BeforeHandResolution(
             state,
             resolved.after,
@@ -142,6 +151,7 @@ def resolve_direct_before_hand_trigger(
         head,
         profile,
         during_own_turn=during_own_turn,
+        pre_hand_destination=pre_hand_destination,
     )
 
     if profile.activation_family == "self_to_bench":
@@ -182,6 +192,7 @@ def begin_before_hand_item_play(
     *,
     during_own_turn: bool,
     active_item_restrictions: Sequence[ItemPlayRestriction] = (),
+    pre_hand_destination: str = "hand",
 ) -> BeforeHandItemResolutionState:
     """Move a Prize-origin Item from pending into temporary resolution."""
 
@@ -193,6 +204,7 @@ def begin_before_hand_item_play(
         head,
         profile,
         during_own_turn=during_own_turn,
+        pre_hand_destination=pre_hand_destination,
     )
 
     if any(
