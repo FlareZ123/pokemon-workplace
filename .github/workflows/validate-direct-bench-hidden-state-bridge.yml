@@ -1,0 +1,30 @@
+name: Validate direct Bench hidden state bridge
+
+on:
+  push:
+    paths:
+      - "tools/direct_bench_hidden_state_bridge.py"
+      - "tools/direct_bench_trainer_transaction.py"
+      - "tools/direct_bench_search_execution.py"
+      - "tools/direct_bench_search_profile_compiler.py"
+      - "tools/deck_search_shuffle_physical_belief.py"
+      - "tools/deck_search_target_signal.py"
+      - "tools/deck_search_shuffle_topology.py"
+      - "tools/top_prize_physical_bridge.py"
+      - "results/direct_bench_hidden_state_bridge/**"
+      - ".github/workflows/validate-direct-bench-hidden-state-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check direct-Bench hidden-state bridge
+        run: python results/direct_bench_hidden_state_bridge/reproduce.py
