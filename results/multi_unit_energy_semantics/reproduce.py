@@ -14,14 +14,15 @@ def main() -> None:
     energy = result["multi_unit_energy"]
     discard = result["generic_self_discard_attacks"]
 
-    assert energy["print_instances"] == 30
-    assert energy["distinct_names"] == 13
-    assert energy["text_signatures"] == 14
+    assert energy["print_instances"] == 31
+    assert energy["distinct_names"] == 14
+    assert energy["text_signatures"] == 15
 
     names = {row["card_name"] for row in energy["rows"]}
     assert "Ignition Energy" in names
     assert "Double Dragon Energy" in names
     assert "Triple Acceleration Energy" in names
+    assert "Super Boost Energy ◇" in names
 
     ignition = [
         row
@@ -30,6 +31,14 @@ def main() -> None:
     ]
     assert len(ignition) == 1
     assert ignition[0]["maximum_units"] == 3
+
+    super_boost = [
+        row
+        for row in energy["rows"]
+        if row["card_name"] == "Super Boost Energy ◇"
+    ]
+    assert len(super_boost) == 1
+    assert super_boost[0]["maximum_units"] == 4
 
     double_dragon = [
         row
