@@ -919,6 +919,26 @@ The new physical_zone_count helper derives zone cardinality from exchangeable co
 
 **Working synthesis:** materialization changes representation while the card can remain in the same game zone. Hand size, deck size, discard size, Lost Zone size, and other physical zone metrics must project across both identity layers whenever materialized instances can occupy those zones.
 
+## 72. Multi-Prize pending identities remain observer-relative until each card resolves
+
+[pending_prize_batch_identity_belief/](pending_prize_batch_identity_belief/) extends latent pending-Prize identity to simultaneous multi-card awards. Exact pending instance IDs key observer-relative latent groups, and each card can be revealed or kept private independently as its destination resolves.
+
+The Arc Phone witness shows reveal order can change intermediate posteriors: revealing B first immediately makes the opponent certain top=A; revealing X first leaves P(top=A)=1/2 until B is later exposed. If B enters hidden hand and only X becomes public, the opponent finishes at 1/2.
+
+**Working synthesis:** a simultaneous Prize award creates a vector of latent identities rather than one anonymous removed-card event. Per-card destination visibility must condition the matching latent variable while preserving correlations among unresolved siblings and hidden state.
+
+
+## 73. Physical pending Prize order and observer beliefs can share exact instance IDs
+
+[prize_pending_batch_observer/](prize_pending_batch_observer/) couples conserved physical Prize instances, sibling-order choice, latent observer identities, and destination visibility.
+
+The exact regression stages physical X and B together, lets B resolve to public discard before X reaches public Lost Zone, and keeps the opponent posterior synchronized with those movements. A hidden-hand counterfactual preserves the opponent's uncertainty. A nested extension then prepends an additional Prize C, rejects attempts to move an older sibling across that barrier, and conditions the opponent only when C becomes public.
+
+[nested_prize_observer_barrier/](nested_prize_observer_barrier/) contains the nested regression. All corresponding CI workflows are green.
+
+**Working synthesis:** physical queue order and information-state queue order should use the same stable pending-instance key. This prevents a simulator from reordering one layer without the other, and it gives nested Prize effects one shared barrier for both mechanics and information.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -951,6 +971,8 @@ Particularly foundational components include:
 - `prize_joint_position_removal.py`
 - `prize_pending_take.py`
 - `pending_prize_identity_belief.py`
+- `prize_pending_batch_observer.py`
+- `pending_prize_batch_identity_belief.py`
 - `prize_destination_applicability.py`\n- `prize_destination_overrides.py`
 - `post_prize_window_game_resolution.py`
 - `unified_state_kernel.py`
