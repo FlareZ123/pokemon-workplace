@@ -901,6 +901,14 @@ The bridge also rejects a branch that tries to privately select singleton A whil
 
 **Working synthesis:** exact physical identity and observer-relative knowledge can diverge safely. A simulator may materialize one shared private hand instance as truth while exposing that identity only through observer-specific belief transitions. Public revealed search, private arbitrary search, and K1 are therefore distinct composition layers.
 
+## 70. Computer Search now executes as one private-information transaction
+
+[computer_search_private_transaction/](computer_search_private_transaction/) composes the bundled Computer Search effect across Item permission, resolving-card state, exact two-card discard payment, private unrestricted target selection, K1, observer-specific beliefs, shuffled-top materialization, and card conservation.
+
+In the exact regression, Computer Search plus two specified fodder cards begin in hand while A + filler are Prized and X, Y + two fillers remain searchable. The transaction pays both discards, privately selects X, samples Y as the shuffled top, then moves Computer Search to discard. The actor assigns P(top=Y)=1/3 while the observer assigns 1/6 under uniform hidden target selection. Item lock rejects the action, one-card payment is rejected, and an already-spent Supporter use is unchanged.
+
+**Working synthesis:** unrestricted private search needs an action-level transaction distinct from selector-limited typed search. One play can jointly change action state, hand/discard material, private deck knowledge, observer beliefs, exact target identity, and shuffled-top topology while preserving one shared physical world.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
