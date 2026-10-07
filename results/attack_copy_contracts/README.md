@@ -24,12 +24,12 @@ The six are:
 | --- | --- |
 | Copy Anything | selected-attack Energy gate |
 | Imittack | selected-attack Energy gate |
-| Hypnotic Reign | selected source moves zones before body |
-| Seek Inspiration | selected source moves zones before body |
+| Hypnotic Reign | selected hand source is discarded before body |
+| Seek Inspiration | top card is discarded before eligibility and body |
 | Haughty Order | outer post-copy continuation |
 | Trickster-GX | outer GX-use resource rule |
 
-Across those signatures the compiler records two selected-Energy gates, two source-zone commits, one post-copy continuation, and one outer GX-use rule.
+Across those signatures the compiler records two selected-Energy gates, one selected-source commit, one preselection source commit, one post-copy continuation, and one outer GX-use rule.
 
 ## Why this matters
 
