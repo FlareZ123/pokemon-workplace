@@ -242,3 +242,25 @@ CI run 37596742837 passed.
 Important interpretation: redundancy is a belief-state property, not a fixed decklist count. The second copy only protects the discard if it is itself materially reachable.
 
 Best next step: replace existential backup reachability with timed access. The current target-Prized / visible-Gladion-discarded branch credits an exact Dark Asset hit whenever backup Gladion is in deck. A timed model should quantify how often that backup is actually exposed before the rescue deadline, ideally preserving one-Supporter bandwidth and alternative typed connectors.
+
+
+## 2026-10-07 timed backup Gladion access
+
+Created:
+
+- `tools/raichu_backup_gladion_timing.py`;
+- `results/raichu_backup_gladion_timing/README.md`;
+- `results/raichu_backup_gladion_timing/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-backup-gladion-timing.yml`.
+
+This tightens the two-Gladion redundancy result after a specific information boundary: visible Gladion was discarded for Quick Ball, Quick Ball successfully found Crobat V, and deck inspection establishes Alolan Raichu is Prized.
+
+With Raichu fixed in one Prize slot and Crobat fixed as the searched deck card, 50 unresolved locations remain: five remaining Prize slots and 45 post-search deck positions. The backup Gladion is therefore in deck with probability 45/50 = 90%.
+
+Timed random access is much smaller. One Dark Asset exposure reaches the singleton in 1/50 = 2% of these conditioned worlds. Two random deck exposures reach it in 4%; h distinct exposures reach it with exact probability h/50 for h <= 45. A ready deterministic preserving connector can reach the 90% topology ceiling if its own gates are already satisfied.
+
+The reproducer independently enumerates all 50 labeled unresolved locations and matches the analytic values. CI run 37597414097 passed.
+
+Interpretation: redundancy has at least three layers: another copy exists, that copy survives Prizes, and that copy is accessible before the deadline. The 98.868778% prior hidden-world existential safety, this result's 90% post-search topology ceiling, and 2% same-turn Dark Asset access measure different conditionings and must remain separate.
+
+Best next continuation: add real deterministic connector gates in this post-search K1 state. Computer Search should recover the backup whenever it is in deck and two residual disposable cards exist. Forest Seal Stone should do so when Crobat V is in play, Forest Seal Stone is available/attachable, and the VSTAR Power is unused.
