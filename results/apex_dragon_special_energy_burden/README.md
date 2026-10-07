@@ -17,7 +17,7 @@ An earlier revision incorrectly treated Double Dragon Energy as eligible for Ult
 
 That was a parser error. The earlier grammar recognized the word `basic` but discarded the qualifier before the Special Energy solver ran. Double Dragon Energy is a Special Energy card, so it is not eligible for a Basic Energy-only discard even though it can provide Psychic Energy while attached to a Dragon Pokémon.
 
-The corrected solver preserves Energy card category separately from the Energy types and units a card currently provides.
+The corrected solver preserves Energy card name and category separately from the Energy types and units a card currently provides.
 
 ## Rules basis
 
@@ -30,6 +30,8 @@ Second, one Energy card can provide several Energy units. The Ignition Energy ru
 Third, an Energy that provides every type cannot be treated as lacking a relevant type. The rulebook's Crimson Blaster example says an every-type Energy must be discarded by an all-Fire-Energy instruction.
 
 Fourth, Basic Energy and Special Energy are separate card categories. A Special Energy can provide a type such as Psychic without thereby becoming a Basic Psychic Energy card.
+
+Fifth, rulebook section E-39 defines wording such as `Basic Psychic Energy` by the physical card's name. A count such as `2 Basic Grass Energy cards` is therefore a card-count/name requirement, while a generic `discard 2 Energy` requirement is an Energy-unit requirement.
 
 Double Dragon Energy's card text says that, while attached to a Dragon Pokémon, it provides every type of Energy and two Energy at a time.
 
@@ -91,9 +93,9 @@ This interaction also changes DCI-style evaluation. Losing one DDE card can remo
 - a physical card identity supplied by the caller;
 - an integer number of Energy units currently provided;
 - the set of Energy types each provided unit can satisfy;
-- whether the physical card is Basic Energy when an instruction requires that category.
+- the Basic Energy name of the physical card, when applicable.
 
-For typed requirements, each provided unit is treated as one capacity slot. A two-unit every-type provider can therefore satisfy two required typed units. A `basic_only` gate filters out Special Energy cards before typed matching.
+For ordinary typed Energy requirements, each provided unit is treated as one capacity slot. A two-unit every-type provider can therefore satisfy two required typed units. Named Basic Energy requirements use a separate card selector: a card currently providing Fire can still count as Basic Grass Energy if that is its physical Basic Energy name, and a Special Energy providing Psychic never counts as Basic Psychic Energy.
 
 The solver returns the minimum number of physical cards that can achieve the maximum applicable part of a discard instruction, plus all subsets tied at that minimum card count.
 
