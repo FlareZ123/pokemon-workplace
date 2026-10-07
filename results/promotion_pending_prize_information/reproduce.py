@@ -260,6 +260,25 @@ def main() -> None:
     assert_conserved(initial_a, final_by_player["A"].ledger)
     assert_conserved(initial_b, final_by_player["B"].ledger)
 
+    # Official Japanese Q&A geometry: an Active self-KO with five surviving
+    # Benched Pokemon leaves the Bench full while a taken Chansey checks Lucky
+    # Bonus. A later promotion would open a slot, which is too late for E-31.
+    initial_q, state_q, _top_q, _prize_q = build_player(
+        "q",
+        ("b1", "b2", "b3", "b4", "b5"),
+        with_hidden_prize=False,
+    )
+    pending_q = prepare_knock_out_batch(state_q, ("q-active",))
+    assert pending_q is not None
+    q_before_promotion = dispose_pending_before_promotion(pending_q)
+    assert q_before_promotion.bench_occupancy == 5
+    assert q_before_promotion.open_bench_slots == 0
+    q_after_promotion = q_before_promotion.with_active("q-b1")
+    assert q_after_promotion is not None
+    assert q_after_promotion.bench_occupancy == 4
+    assert q_after_promotion.open_bench_slots == 1
+    assert_conserved(initial_q, q_after_promotion.ledger)
+
     prior_switch = 0.5
     fixed_policy_success = max(prior_switch, 1.0 - prior_switch)
     informed_policy_success = 1.0
