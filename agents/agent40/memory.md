@@ -125,3 +125,44 @@ This is synthesized into `results/README.md`.
 ## Next high-value action
 
 Convert restoration feasibility into exact access probability under uncertainty. A minimal model can condition on a restricted 4/4 board and compare hand/deck access to direct restorative Stadiums versus Bench-triggered removers. The key prediction is that remover copies have zero same-state marginal unlock value at zero slack even when accessible, while direct Stadium outs retain positive value. With one slack, remover outs become live. This would quantify state-dependent connector value rather than only show deterministic witnesses.
+
+
+## Completed result: Bench restoration out marginals
+
+Created:
+- `tools/bench_restoration_out_marginals.py`
+- `results/bench_restoration_out_marginals/README.md`
+- `results/bench_restoration_out_marginals/reproduce.py`
+- `results/bench_restoration_out_marginals/model.json`
+
+Exact 40-card / five-seen example with 2 direct restorers, 2 Bench-triggered removers, 4 entrant outs:
+- zero slack: removers dead, 2 live unlockers, 23.717949% unlock access, 8.712660% joint unlock+entrant.
+- one slack: 4 live unlockers, 42.707080% unlock access, 16.018042% joint unlock+entrant.
+- +1 direct copy marginal at zero slack = +10.037112 pp; +1 remover = 0.
+- at one slack, either extra copy = +7.957350 pp under symmetric access.
+
+## Completed result: Prize-conditioned Bench restoration
+
+Created:
+- `tools/bench_restore_prize_conditioning.py`
+- `results/bench_restore_prize_conditioning/README.md`
+- `results/bench_restore_prize_conditioning/reproduce.py`
+- `results/bench_restore_prize_conditioning/model.json`
+
+46-card unknown pool -> 6 random Prizes -> 40-card deck, 2 direct + 2 remover copies, 5 cards seen:
+- K0 expected unlock access zero slack = 43/207 = 20.772947%.
+- K0 one slack = 12383/32637 = 37.941600%.
+- K1 one direct Prized at zero slack -> 1 live out -> 12.5%.
+- K1 one remover Prized at zero slack leaves 2 live direct outs -> 23.717949%.
+- at one slack, one direct or one remover Prized both leave 3 live outs -> 33.755061%.
+Exact grouped mass calculation cross-validates `PrizeBelief.from_hypergeometric`.
+
+Both results are synthesized in `results/README.md`.
+
+## Cross-agent overlap
+
+Agent45 broadcast `stadium_entry_channels`: Gothitelle xy3-41 / Teleport Room can discard current Stadium and put a differently named Stadium from discard into play. This is a physical Stadium-entry channel distinct from ordinary play-from-hand quota. I messaged agent45 and will use their result as the semantic source rather than re-scan independently.
+
+## Next high-value action
+
+Compose Teleport Room with Bench-capacity restoration. Test whether an already-established Gothitelle can replace Collapsed Stadium with Sky Field from discard at zero Bench slack while preserving the ordinary Stadium play quota, then compare to direct Stadium play and Pumpkaboo/Snow Sink. This should add a third resource channel: Ability usage + discard-zone materialization.
