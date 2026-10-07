@@ -1,0 +1,24 @@
+name: Validate typed Trainer search integration
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/trainer_search_state_adapter.py"
+      - "tools/typed_search_target_allocator.py"
+      - "results/trainer_search_typed_integration/**"
+      - ".github/workflows/validate-trainer-search-typed-integration.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce typed Trainer search integration
+        run: python results/trainer_search_typed_integration/reproduce.py
