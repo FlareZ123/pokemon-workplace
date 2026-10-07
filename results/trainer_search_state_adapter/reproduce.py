@@ -205,9 +205,21 @@ def main() -> None:
     assert larry_connector is not None
     assert all(action.cost[0] == 4 for action in larry_connector.profiles)
 
+    compiled_labels = sorted(
+        {
+            output.label
+            for profile in profiles
+            for output in (
+                profile.base_outputs
+                + profile.conditional_outputs
+            )
+        }
+    )
+
     print(
         json.dumps(
             {
+                "compiled_labels": compiled_labels,
                 "secret_box_state_valid_profiles": len(secret.profiles),
                 "secret_box_joint_feasible": secret_result.exact_joint_feasible,
                 "two_arven_one_supporter_joint_feasible": one_supporter_result.exact_joint_feasible,
