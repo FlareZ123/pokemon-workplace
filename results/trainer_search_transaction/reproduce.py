@@ -342,6 +342,65 @@ def main() -> None:
     assert gh_extra_tx.after.zones.count("guzma_hala", "hand") == 0
     assert gh_extra_tx.after.zones.count("guzma_hala", "discard") == 2
 
+    larry = representative(profiles, "Larry's Skill")
+    larry_targets = (
+        SearchZoneTarget(
+            "larry_pokemon",
+            TargetGroup("Larry Pokemon", 1, frozenset({BASIC_POKEMON})),
+        ),
+        SearchZoneTarget(
+            "larry_supporter",
+            TargetGroup("Larry Supporter", 1, frozenset({SUPPORTER})),
+        ),
+        SearchZoneTarget(
+            "larry_energy",
+            TargetGroup("Larry Basic Energy", 1, frozenset({BASIC_ENERGY})),
+        ),
+    )
+    larry_demands = (
+        make_demand("pokemon", "Pokemon"),
+        make_demand("supporter", "Supporter card"),
+        make_demand("energy", "Basic Energy card"),
+    )
+    larry_allocation = enumerate_typed_target_profiles(
+        larry.base_outputs,
+        tuple(target.group for target in larry_targets),
+        larry_demands,
+    )
+    larry_action = next(
+        action
+        for action in larry_allocation.actions
+        if action.output == (1, 1, 1)
+    )
+    larry_state = TrainerSearchExecutionState(
+        zones=ZoneCountState.from_mapping(
+            {
+                ("larry", "hand"): 1,
+                ("old_hand_a", "hand"): 1,
+                ("old_hand_b", "hand"): 1,
+                ("larry_pokemon", "deck"): 1,
+                ("larry_supporter", "deck"): 1,
+                ("larry_energy", "deck"): 1,
+            }
+        )
+    )
+    larry_tx = execute_trainer_search_transaction(
+        larry_state,
+        profile=larry,
+        action_card_class="larry",
+        demands=larry_demands,
+        targets=larry_targets,
+        search_action=larry_action,
+    )
+    assert larry_tx.discard_cost == 2
+    assert larry_tx.after.zones.count("larry", "discard") == 1
+    assert larry_tx.after.zones.count("old_hand_a", "discard") == 1
+    assert larry_tx.after.zones.count("old_hand_b", "discard") == 1
+    assert larry_tx.after.zones.count("larry_pokemon", "hand") == 1
+    assert larry_tx.after.zones.count("larry_supporter", "hand") == 1
+    assert larry_tx.after.zones.count("larry_energy", "hand") == 1
+    assert larry_tx.after.budget.supporter_used
+
     print(
         json.dumps(
             {
