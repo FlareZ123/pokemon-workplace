@@ -101,6 +101,26 @@ def resolve_optional_top_prize_swap(
     if not observed_swap and position is not None:
         raise ValueError("a declined swap must not specify a Prize position")
 
+    if actor_observed_top not in swap_probability_by_top:
+        raise ValueError("policy must cover the actor-observed top group")
+    for probability in swap_probability_by_top.values():
+        if not 0.0 <= probability <= 1.0:
+            raise ValueError("swap probabilities must lie in [0, 1]")
+
+    actor_swap_probability = swap_probability_by_top[actor_observed_top]
+    actor_decision_probability = (
+        actor_swap_probability
+        if observed_swap
+        else 1.0 - actor_swap_probability
+    )
+    if isclose(
+        actor_decision_probability,
+        0.0,
+        rel_tol=0.0,
+        abs_tol=1e-15,
+    ):
+        raise ValueError("actor decision has zero probability under policy")
+
     updated = []
     for observer_id, belief in state.beliefs:
         if observer_id == actor_id:
