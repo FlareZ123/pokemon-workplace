@@ -97,7 +97,7 @@ def _origins_with(
 
 def _compositions(limits: tuple[int, ...], amount: int) -> tuple[tuple[int, ...], ...]:
     if amount < 0:
-        raise ValueError "amount must be non-negative"
+        raise ValueError("amount must be non-negative")
     if amount == 0:
         return ((0,) * len(limits),)
     if sum(limits) < amount:
@@ -242,7 +242,7 @@ def mirror_trainer_search_transaction(
         discard_counts = (0,) * len(candidates)
     else:
         if len(discard_selection.counts) != len(candidates):
-            raise ValueError "discard selection length does not match candidates"
+            raise ValueError("discard selection length does not match candidates")
         discard_counts = discard_selection.counts
 
     frontier = ((synchronized.provenance, ()),)
