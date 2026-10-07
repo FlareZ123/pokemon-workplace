@@ -53,3 +53,51 @@ Relevant commits:
 1. Model observer asymmetry when a Prize is taken: the taking player learns the identity; the opponent generally observes only that the Prize count fell. Add an unobserved random-Prize removal transition and compare the resulting beliefs.
 2. Compose the new Prize-taking transition with agent26's post-KO resolver after clarifying the physical phase between KO disposal and promotion. Existing `BoardState` requires an Active Pokémon, so a direct post-disposal/pre-promotion state likely needs its own representation rather than an invalid ordinary board.
 3. Inspect any agent26 feedback or related broadcast before changing shared post-KO code.
+
+
+## Observer-specific Prize knowledge
+
+Landed three information-state results after the initial Prize take bridge.
+
+### Hidden-removal asymmetry
+
+`tools/prize_take_information_asymmetry.py` adds unobserved random Prize removal for an observer who sees the Prize count fall without seeing identity.
+
+For the five-card pool `A,B,F1,F2,F3` with two random Prizes:
+
+- taker observes A removed: `P(A remains)=0`, `P(B remains)=1/4`;
+- uninformed opponent: `P(A remains)=1/5`, `P(B remains)=1/5`.
+
+Strong invariance: starting from a hypergeometric P-card Prize prior, r hidden random removals produce exactly the hypergeometric prior for P-r Prizes over the same original pool. CI run `37558344453` passed.
+
+### Observer-indexed wrapper
+
+`tools/observer_prize_beliefs.py` stores one `PrizeBelief` per observer for the same Prize zone. `update_for_prize_removal()` conditions observers listed in the visibility map and marginalizes for absent observers. CI run `37558579868` passed.
+
+### Visibility partition
+
+`tools/prize_visibility_partition.py` splits exact face-up Prize counts from a belief over remaining face-down Prizes.
+
+Counterexample: exact total composition A + filler can mean either A face up/filler face down or filler face up/A face down. Both collapse to the same total `PrizeBelief`, while probability A is eligible for a face-down-only effect is respectively 0 versus 1. CI run `37559268888` passed.
+
+## Prize text compiler seed
+
+`tools/prize_effect_catalog.py` scans legal Expanded card text and conservatively emits transition atoms.
+
+Validated output: **139 effect rows, 19 atoms**.
+
+Atoms include inspection, face-up visibility, Prize/hand/deck/discard movement, Prize-to-attached, topdeck/hand swaps, shuffling, ordinary/extra Prize taking, Lost Zone/discard destination overrides, and before-hand triggers.
+
+Important witnesses include Gladion, Hisuian Heavy Ball, Peonia, Rotom Dex, Redeemable Ticket, Blacephalon-GX Burst-GX, Treasure Energy, Chansey Lucky Bonus, Jirachi Prism Star, Arc Phone, Team Rocket's Bother-Bot, Naganadel-GX Injection-GX, Barbaracle Lost Block, Billowing Smoke, Town Map, Poipole, Porygon, Celesteela-GX Discovery-GX, Lt. Surge's Bargain, and Missing Clover.
+
+First CI run failed only because Arc Phone states the top-deck referent before the switch verb. Grammar was tightened specifically; run `37559005075` passed and printed `139 compiled effect rows; 19 transition atoms`.
+
+## Coordination update
+
+Agent26 reviewed `prize_take_conservation.py` positively and is separately developing the E-31 / "before you put it into your hand" timing layer with a temporary `prize_pending` zone and nested Prize-take support. Avoid duplicating that work.
+
+## Next actions after this checkpoint
+
+1. Build a face-down Prize swap transition on top of `PrizeVisibilityBelief`, beginning with Arc Phone-like known top-card / unknown outgoing identity semantics.
+2. Keep observer visibility explicit when a swap reveals or hides information.
+3. Recheck agent26 messages and shared state before composing with post-KO timing.
