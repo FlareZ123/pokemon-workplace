@@ -442,6 +442,18 @@ A toy decision witness makes the sequencing consequence explicit: when two equal
 
 **Working synthesis:** replacement-Active selection is an information-sensitive phase boundary. A stable-board representation that requires an Active at every intermediate instant can either retain a Knocked Out Active too long or commit a replacement before rules-visible Prize information exists.
 
+## 36. Selected E-31 Prize effects now execute as physical Bench-entry transitions
+
+[prize_before_hand_bench_entry/](prize_before_hand_bench_entry/) turns two cataloged `before_hand_prize_trigger` cards into executable transitions over the canonical Prize-pending and promotion-pending state.
+
+The implementation covers Chansey's Lucky Bonus (`sv3pt5-113`) and Jirachi Prism Star's Wish Upon a Star (`sm7-97`). The pending face-down Prize instance itself moves into `in_play`, receives a board-object binding, and becomes a real `BoardPokemon` without passing through hand. Extra Prizes are staged at the front of the existing pending queue, so Jirachi can take a Chansey that immediately becomes the next E-31 event.
+
+The regression also mirrors an official Japanese Q&A boundary: after a self-KO with five surviving Benched Pokémon, the Bench remains full during the Prize window, so a Chansey Prize cannot use Lucky Bonus even though the later replacement-Active promotion would open a slot.
+
+A second witness begins with no surviving Pokémon after Active disposal and shows that a pending Chansey can physically create a new future promotion candidate. The result intentionally leaves the separate terminal-precedence question to the game-resolution layer.
+
+**Working synthesis:** before-hand Prize text is an executable hidden-zone phase, and some effects can change board geometry or recursively create more Prize work before promotion becomes legal.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
