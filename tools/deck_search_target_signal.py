@@ -202,3 +202,100 @@ def resolve_revealed_search_target_shuffle(
         )
 
     return ObserverTopPrizeBeliefs(tuple(updated))
+
+
+
+def resolve_revealed_search_targets_shuffle(
+    prizes_by_observer: Sequence[tuple[str, PrizeSlotVisibilityBelief]],
+    *,
+    actor_id: str,
+    actor_exact_prize_counts: Mapping[str, int],
+    target_probability_by_composition: TargetSelectionPolicy,
+    observed_target: str,
+    removed_target_groups: Sequence[PrizeGroup],
+    pre_search_group_pool_counts: Mapping[str, int],
+    pre_search_pool_size: int,
+) -> ObserverTopPrizeBeliefs:
+    """Resolve one public multi-target selection event and following shuffle.
+
+    observed_target remains an arbitrary public policy label. Callers may encode
+    an ordered tuple, an unordered set, or another canonical selection label
+    according to the card effect. removed_target_groups separately describes the
+    physical modeled groups removed from the deck-plus-Prize pool.
+    """
+
+    if not prizes_by_observer:
+        raise ValueError("at least one observer is required")
+
+    observer_ids = tuple(observer_id for observer_id, _ in prizes_by_observer)
+    if len(observer_ids) != len(set(observer_ids)):
+        raise ValueError("observer IDs must be unique")
+    if actor_id not in observer_ids:
+        raise ValueError("actor_id must identify an observer")
+    if not observed_target:
+        raise ValueError("observed_target must be non-empty")
+
+    reference = prizes_by_observer[0][1]
+    groups = reference.positions.groups
+    for _observer_id, prizes in prizes_by_observer:
+        if prizes.positions.groups != groups:
+            raise ValueError("all observers must use the same modeled groups")
+        if prizes.face_up != reference.face_up:
+            raise ValueError("all observers must agree on public Prize visibility")
+
+    if set(pre_search_group_pool_counts) != set(groups):
+        raise ValueError(
+            "pre_search_group_pool_counts must cover every modeled group"
+        )
+    removed = tuple(removed_target_groups)
+    after_pool_size = pre_search_pool_size - len(removed)
+    if after_pool_size <= reference.positions.prize_count:
+        raise ValueError("search must leave at least one card in deck")
+    if sum(pre_search_group_pool_counts.values()) > pre_search_pool_size:
+        raise ValueError("modeled pool counts exceed pre_search_pool_size")
+
+    actor_key = tuple(actor_exact_prize_counts[group] for group in groups)
+    if actor_key not in target_probability_by_composition:
+        raise ValueError("target-selection policy does not cover actor state")
+    actor_likelihood = target_probability_by_composition[actor_key].get(
+        observed_target,
+        0.0,
+    )
+    if isclose(actor_likelihood, 0.0, rel_tol=0.0, abs_tol=1e-15):
+        raise ValueError("actor's observed target has zero policy probability")
+
+    after_pool_counts = dict(pre_search_group_pool_counts)
+    for target_group in removed:
+        if target_group is None:
+            continue
+        if target_group not in after_pool_counts:
+            raise ValueError("removed target group must be modeled or None")
+        if after_pool_counts[target_group] < 1:
+            raise ValueError("removed target group is absent from the pool")
+        after_pool_counts[target_group] -= 1
+
+    updated = []
+    for observer_id, prizes in prizes_by_observer:
+        if observer_id == actor_id:
+            conditioned = condition_prize_composition(
+                prizes,
+                actor_exact_prize_counts,
+            )
+        else:
+            conditioned = condition_on_revealed_search_target(
+                prizes,
+                target_probability_by_composition=target_probability_by_composition,
+                observed_target=observed_target,
+            )
+        updated.append(
+            (
+                observer_id,
+                post_shuffle_top_prize_belief(
+                    conditioned,
+                    group_pool_counts=after_pool_counts,
+                    pool_size=after_pool_size,
+                ),
+            )
+        )
+
+    return ObserverTopPrizeBeliefs(tuple(updated))
