@@ -21,9 +21,15 @@ def generic_units(cards: list[dict[str, Any]]) -> int:
     return sum(int(card["units"]) for card in cards)
 
 
-def _typed_slots(cards: list[dict[str, Any]]) -> list[frozenset[str]]:
+def _typed_slots(
+    cards: list[dict[str, Any]],
+    *,
+    basic_only: bool = False,
+) -> list[frozenset[str]]:
     slots: list[frozenset[str]] = []
     for card in cards:
+        if basic_only and not bool(card.get("basic", False)):
+            continue
         types = frozenset(card["types"])
         slots.extend([types] * int(card["units"]))
     return slots
@@ -32,8 +38,10 @@ def _typed_slots(cards: list[dict[str, Any]]) -> list[frozenset[str]]:
 def max_typed_match(
     cards: list[dict[str, Any]],
     demand_types: list[str],
+    *,
+    basic_only: bool = False,
 ) -> int:
-    slots = _typed_slots(cards)
+    slots = _typed_slots(cards, basic_only=basic_only)
     states = {0}
 
     for slot_types in slots:
@@ -78,14 +86,27 @@ def minimum_card_subsets_generic(
 def minimum_card_subsets_typed(
     cards: list[dict[str, Any]],
     demand_types: list[str],
+    *,
+    basic_only: bool = False,
 ) -> dict[str, Any]:
-    max_possible = max_typed_match(cards, demand_types)
+    max_possible = max_typed_match(
+        cards,
+        demand_types,
+        basic_only=basic_only,
+    )
 
     for card_count in range(len(cards) + 1):
         subsets = []
         for indexes in combinations(range(len(cards)), card_count):
             subset = [cards[index] for index in indexes]
-            if max_typed_match(subset, demand_types) == max_possible:
+            if (
+                max_typed_match(
+                    subset,
+                    demand_types,
+                    basic_only=basic_only,
+                )
+                == max_possible
+            ):
                 subsets.append(list(indexes))
 
         if subsets:
@@ -103,11 +124,16 @@ def minimum_card_subsets_typed(
 def all_cards_providing_type(
     cards: list[dict[str, Any]],
     energy_type: str,
+    *,
+    basic_only: bool = False,
 ) -> list[int]:
     return [
         index
         for index, card in enumerate(cards)
-        if energy_type in card["types"]
+        if (
+            (not basic_only or bool(card.get("basic", False)))
+            and energy_type in card["types"]
+        )
     ]
 
 
