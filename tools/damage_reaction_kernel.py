@@ -17,16 +17,20 @@ from damage_calculation_kernel import DamageResult
 class DamageReactionKind(str, Enum):
     FIXED_COUNTERS = "fixed_counters"
     MIRROR_FINAL_DAMAGE = "mirror_final_damage"
+    SCALED_COUNTERS = "scaled_counters"
 
 
 @dataclass(frozen=True)
 class DamageReaction:
     kind: DamageReactionKind
     fixed_counters: int = 0
+    scale_count: int = 0
 
     def __post_init__(self) -> None:
         if self.fixed_counters < 0:
             raise ValueError("fixed_counters must be non-negative")
+        if self.scale_count < 0:
+            raise ValueError("scale_count must be non-negative")
 
 
 @dataclass(frozen=True)
@@ -62,6 +66,8 @@ def resolve_damage_reactions(
                 if damage_result.final_damage % 10 != 0:
                     raise ValueError("mirrored damage must convert to damage counters")
                 count = damage_result.final_damage // 10
+            elif reaction.kind is DamageReactionKind.SCALED_COUNTERS:
+                count = reaction.fixed_counters * reaction.scale_count
             else:
                 raise AssertionError(reaction.kind)
 
