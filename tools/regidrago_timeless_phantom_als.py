@@ -16,11 +16,21 @@ from damage_board_bridge import (
     knocked_out_ids,
     resolve_attack_damage_phase,
 )
-from damage_calculation_kernel import AttackDamage, DamageContext
+from damage_calculation_kernel import AttackDamage, DamageContext, calculate_damage
 from position_effect_execution import execute_position_effect
 from position_effect_profile_compiler import PositionEffectProfile
 from turn_action_budget import TurnAction, TurnActionBudget
 from unified_state_kernel import consume_turn_action, make_state
+
+
+@dataclass(frozen=True)
+class TimelessPhantomHpWindow:
+    first_damage_before_phantom: int
+    first_hp_survival_threshold: int
+    first_hp_ko_ceiling: int
+    second_damage_total: int
+    second_hp_ko_ceiling: int
+    phantom_counter_damage: int
 
 
 @dataclass(frozen=True)
@@ -31,6 +41,46 @@ class TimelessPhantomResult:
     first_attack_knocked_out_ids: tuple[str, ...]
     final_attack_knocked_out_ids: tuple[str, ...]
     extra_turn_supporter_available: bool
+
+
+def derive_timeless_phantom_hp_window(
+    *,
+    first_prior_damage: int = 0,
+    second_prior_damage: int = 0,
+    timeless_damage_context: DamageContext | None = None,
+    phantom_damage_context: DamageContext | None = None,
+    phantom_counter_count: int = 6,
+) -> TimelessPhantomHpWindow:
+    """Return exact damage thresholds for the delayed double-KO line."""
+
+    if first_prior_damage < 0 or second_prior_damage < 0:
+        raise ValueError("prior damage must be non-negative")
+    if phantom_counter_count < 0:
+        raise ValueError("phantom_counter_count must be non-negative")
+    if first_prior_damage % 10 or second_prior_damage % 10:
+        raise ValueError("prior damage must be representable in damage counters")
+
+    timeless = calculate_damage(
+        timeless_damage_context
+        or DamageContext(attack=AttackDamage(150))
+    ).final_damage
+    phantom = calculate_damage(
+        phantom_damage_context
+        or DamageContext(attack=AttackDamage(200))
+    ).final_damage
+    if timeless % 10 or phantom % 10:
+        raise ValueError("resolved damage must be representable in damage counters")
+
+    first_before_phantom = first_prior_damage + timeless
+    counter_damage = phantom_counter_count * 10
+    return TimelessPhantomHpWindow(
+        first_damage_before_phantom=first_before_phantom,
+        first_hp_survival_threshold=first_before_phantom,
+        first_hp_ko_ceiling=first_before_phantom + counter_damage,
+        second_damage_total=second_prior_damage + phantom,
+        second_hp_ko_ceiling=second_prior_damage + phantom,
+        phantom_counter_damage=counter_damage,
+    )
 
 
 def execute_timeless_phantom_line(
