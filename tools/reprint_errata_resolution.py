@@ -15,11 +15,13 @@ from tools.historical_reprint_evidence import (
     HISTORICAL_REPRINT_SOURCE,
     NO_REFERENCE_REPRINT_IDS,
 )
+from tools.reprint_negative_evidence import collect_known_non_equivalent_ids
 
 ResolutionKind = Literal[
     "direct_legal",
     "direct_banned",
     "outside_disallowed",
+    "known_non_equivalent",
     "exact_fingerprint_candidate",
     "historical_official_reprint_candidate",
     "official_errata_candidate",
@@ -68,6 +70,7 @@ class ReprintResolver:
     cards_by_id: dict[str, dict[str, Any]]
     legal_expanded_by_name: dict[str, tuple[dict[str, Any], ...]]
     legal_expanded_by_fingerprint: dict[str, tuple[dict[str, Any], ...]]
+    known_non_equivalent_evidence: dict[str, str]
 
     def resolve(self, card_id: str) -> ReprintResolution:
         card = self.cards_by_id[card_id]
@@ -86,6 +89,15 @@ class ReprintResolver:
 
         if has_tournament_ban_rule(card) or (card.get("legalities") or {}).get("unlimited") == "Banned":
             return ReprintResolution(card_id, name, "outside_disallowed")
+
+        if card_id in self.known_non_equivalent_evidence:
+            return ReprintResolution(
+                card_id,
+                name,
+                "known_non_equivalent",
+                (),
+                self.known_non_equivalent_evidence[card_id],
+            )
 
         fingerprint_targets = self.legal_expanded_by_fingerprint.get(current_semantic_fingerprint(card), ())
         if fingerprint_targets:
@@ -156,6 +168,7 @@ def build_reprint_resolver(resources_root: Path) -> ReprintResolver:
         cards_by_id=cards_by_id,
         legal_expanded_by_name={name: tuple(rows) for name, rows in legal_by_name.items()},
         legal_expanded_by_fingerprint={key: tuple(rows) for key, rows in legal_by_fingerprint.items()},
+        known_non_equivalent_evidence=collect_known_non_equivalent_ids(resources_root),
     )
 
 
@@ -188,9 +201,16 @@ def summarize_reprint_resolver(resolver: ReprintResolver) -> dict[str, Any]:
     same_name_review_pool = [
         row
         for row in outside_resolutions
-        if row.kind in {"exact_fingerprint_candidate", "historical_official_reprint_candidate", "official_errata_candidate", "semantic_review"}
+        if row.kind in {
+            "exact_fingerprint_candidate",
+            "historical_official_reprint_candidate",
+            "official_errata_candidate",
+            "known_non_equivalent",
+            "semantic_review",
+        }
     ]
     exact_rows = [row for row in outside_resolutions if row.kind == "exact_fingerprint_candidate"]
+    negative_rows = [row for row in outside_resolutions if row.kind == "known_non_equivalent"]
 
     return {
         "counts": {
@@ -202,6 +222,8 @@ def summarize_reprint_resolver(resolver: ReprintResolver) -> dict[str, Any]:
             "historical_official_reprint_candidate_names": len({row.name for row in historical_rows}),
             "official_errata_candidate_prints": len(errata_rows),
             "official_errata_candidate_names": len({row.name for row in errata_rows}),
+            "known_non_equivalent_prints": len(negative_rows),
+            "known_non_equivalent_names": len({row.name for row in negative_rows}),
             "semantic_review_prints": sum(row.kind == "semantic_review" for row in outside_resolutions),
             "high_confidence_candidate_prints": len(exact_rows) + len(historical_rows) + len(errata_rows),
             "exact_fingerprint_trainer_candidate_prints": len(exact_trainer_rows),
@@ -221,6 +243,12 @@ def summarize_reprint_resolver(resolver: ReprintResolver) -> dict[str, Any]:
                 )
             ),
         },
+        "known_non_equivalent_by_name": dict(
+            sorted(Counter(row.name for row in negative_rows).items())
+        ),
+        "known_non_equivalent_ids": [
+            row.card_id for row in sorted(negative_rows, key=lambda row: row.card_id)
+        ],
         "historical_official_candidates_by_name": dict(
             sorted(Counter(row.name for row in historical_rows).items())
         ),
