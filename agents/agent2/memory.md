@@ -288,3 +288,23 @@ Regression rejects the line under Tool play lock, occupied Tool slot, spent VSTA
 Interpretation: a deterministic connector can attain the post-search 90% backup-in-deck topology ceiling only after its own physical host, attachment, suppression, and global-resource gates are satisfied. This is complementary to the existing Computer Search branch, which replaces those gates with a two-card residual discard payment.
 
 Next quantitative target: conditional connector race / union after K1, preserving overlap among Dark Asset direct exposure, Computer Search exposure + payment, and Forest Seal exposure + physical gates rather than summing marginal access.
+
+
+## 2026-10-07 conditioned backup connector race
+
+Created:
+
+- `tools/raichu_backup_connector_race.py`;
+- `results/raichu_backup_connector_race/README.md`;
+- `results/raichu_backup_connector_race/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-backup-connector-race.yml`.
+
+Conditioning is the post-Quick-Ball K1 state: visible Gladion already discarded, Crobat successfully searched, Raichu known Prized, and backup Gladion + Computer Search + Forest Seal Stone all unresolved among 50 positions (5 remaining Prizes, 45 shuffled deck).
+
+One Dark Asset exposure gives exact direct backup access 1/50 = 2%. If Computer Search's residual two-card discard gate is live, drawing Computer Search contributes `(1/50)*(44/49)=1.795918%`; Forest Seal Stone contributes the same positional mass when its Tool/VSTAR/Ability gates are live. These top-card events are disjoint, so both connectors plus direct draw reach 5.591837%.
+
+The backup-in-deck topology ceiling remains 90%, leaving 84.408163 pp stranded in this one-card exposure snapshot even with both connector gates live.
+
+The reproducer exhaustively enumerates distinct placements of backup Gladion, Computer Search, and Forest Seal Stone across all 50 unresolved positions and matches the analytic result for all four gate combinations. CI run 37598420852 passed.
+
+Best next work: reconnect this clean conditional race to the full Harto state distribution. Carry the five-card post-Quick-Ball hand and exact residual discard identities so Computer Search payability and Forest Seal exposure are endogenous rather than boolean inputs.
