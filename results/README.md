@@ -779,6 +779,14 @@ After one Supporter has been played, an active Dual Brains source yields limit 2
 
 **Working synthesis:** quota limits should be derived from physical source identity and current effect activity, while the canonical turn budget preserves usage history. Ability suppression, source removal, quota exhaustion, and Supporter lock are distinct state transitions.
 
+## 62. Garbotoxin can suppress board-derived quota through a recomputable overlay
+
+[garbotoxin_quota_suppression/](garbotoxin_quota_suppression/) connects one verified Ability-lock family to the physical quota derivation. The overlay recognizes the four legal Garbotoxin prints, requires the source Garbodor to have a Tool attached, and returns suppressed board-object IDs without overwriting the base board.
+
+With one Supporter already used, opposing Garbotoxin reduces Dual Brains from limit 2 to 1. Stealthy Hood on Magnezone prevents the opposing Ability effect and restores limit 2. Jamming Tower then blanks Hood's effect while leaving the Tool physically attached, so Garbotoxin suppresses Dual Brains again. A same-side Garbotoxin suppresses the player's other Pokémon despite Hood because Hood is opponent-specific.
+
+**Working synthesis:** suppression dependencies are best represented as derived overlays over physical attachment/effect state. This lets locks disappear and be recomputed without destroying the target's unsuppressed Ability state, while preserving the Tool-attachment versus Tool-effect distinction required by Garbotoxin and Jamming Tower.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -798,6 +806,7 @@ Particularly foundational components include:
 - `canonical_turn_budget_owner.py`
 - `action_quota_effects.py`
 - `board_action_quota_derivation.py`
+- `garbotoxin_suppression.py`
 - `turn_sequence_kernel.py`
 - `canonical_turn_sequence_owner.py`
 - `bench_capacity_model.py`
