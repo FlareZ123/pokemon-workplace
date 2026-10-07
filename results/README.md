@@ -476,6 +476,18 @@ The regression rejects a full Bench, a stale target witness whose selected Poké
 
 **Working synthesis:** search-demand output is a planning projection. When a searched card immediately acquires board topology, the exact target witness is the correct bridge from exchangeable deck multiplicity to materialized physical identity.
 
+## 38. Terminal game resolution occurs after board-changing E-31 Prize effects
+
+[post_prize_window_game_resolution/](post_prize_window_game_resolution/) resolves a timing ambiguity with an official Jirachi Prism Star ruling.
+
+The cited Q&A starts with both players on one Prize, no Benched Pokémon, and both Active Pokémon being Knocked Out simultaneously. The attacking player takes Jirachi Prism Star as the final face-down Prize. The official ruling allows Wish Upon a Star to put Jirachi onto the Bench and declares Jirachi's owner the winner.
+
+A terminal check taken immediately after KO disposal and final-Prize counts would see both players at zero Pokémon and zero Prizes, producing a tie under the existing loss-condition table. The correct sequence resolves the E-31 pending Prize first. Jirachi then exists in play, and the same table gives Jirachi's owner a win.
+
+The new `resolve_after_prize_window()` adapter refuses terminal evaluation while any `prize_pending` card remains. Once the queue closes, it evaluates Prize/no-Pokémon conditions from the current physical board and advances to `TERMINAL` or `PROMOTION`.
+
+**Working synthesis:** before-hand Prize effects belong inside the game-resolution phase. They can change the final no-Pokémon condition, so Prize counts alone are insufficient until the E-31 window has closed.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -498,6 +510,7 @@ Particularly foundational components include:
 - `top_prize_physical_bridge.py`
 - `prize_joint_position_removal.py`
 - `prize_pending_take.py`
+- `post_prize_window_game_resolution.py`
 - `unified_state_kernel.py`
 - `multicopy_zone_state.py`
 - `board_object_kernel.py`
