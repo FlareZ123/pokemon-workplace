@@ -9,13 +9,19 @@ sys.path.insert(0, str(ROOT / "tools"))
 from before_hand_prize_executor import (
     begin_before_hand_item_play,
     finish_before_hand_item_play,
+    resolve_before_hand_item_effect,
     resolve_direct_before_hand_trigger,
 )
 from before_hand_prize_profiles import build_before_hand_prize_profiles
 from identity_materialization import CardInstance, IdentityLedger, assert_conserved
 from item_play_source_scope import build_item_play_restrictions
 from multicopy_zone_state import ZoneCountState
-from prize_pending_take import PendingPrize, PrizePendingTakeState
+from prize_pending_take import (
+    PendingPrize,
+    PrizePendingTakeState,
+    resolve_next_pending_prize,
+    stage_additional_prize_front,
+)
 from top_prize_physical_bridge import TopPrizePhysicalState
 
 RESOURCES = ROOT / "resources"
@@ -29,15 +35,35 @@ def make_state(card_id: str, *, was_face_down: bool = True):
             CardInstance("top", "TOP", "Top", "deck_top"),
         ),
     )
-    physical = TopPrizePhysicalState(
-        ledger,
-        "top",
-        (),
-        (),
-    )
+    physical = TopPrizePhysicalState(ledger, "top", (), ())
     return PrizePendingTakeState(
         physical,
         (PendingPrize("pending", was_face_down),),
+    )
+
+
+def make_nested_greedy_state():
+    ledger = IdentityLedger(
+        ZoneCountState(),
+        (
+            CardInstance("extra", "EXTRA", "Extra Prize", "prize"),
+            CardInstance("greedy", "xy11-102", "Greedy Dice", "prize_pending"),
+            CardInstance("old", "OLD", "Old pending", "prize_pending"),
+            CardInstance("top", "TOP", "Top", "deck_top"),
+        ),
+    )
+    physical = TopPrizePhysicalState(
+        ledger,
+        "top",
+        ("extra",),
+        (False,),
+    )
+    return PrizePendingTakeState(
+        physical,
+        (
+            PendingPrize("greedy", True),
+            PendingPrize("old", True),
+        ),
     )
 
 
@@ -58,10 +84,7 @@ def main() -> None:
     )
     assert jirachi.additional_prize_awards == 1
     assert jirachi.after.pending == ()
-    assert (
-        jirachi.after.physical.ledger.instance("pending").zone
-        == "in_play"
-    )
+    assert jirachi.after.physical.ledger.instance("pending").zone == "in_play"
     assert_conserved(
         jirachi_state.physical.ledger,
         jirachi.after.physical.ledger,
@@ -148,43 +171,77 @@ def main() -> None:
         during_own_turn=True,
         active_item_restrictions=restrictions,
     )
-    assert (
-        dream_resolving.physical.ledger.instance("pending").zone
-        == "resolving_trainer"
-    )
-    assert dream_resolving.remaining_pending == ()
+    assert dream_resolving.physical.ledger.instance("pending").zone == "resolving_trainer"
 
     try:
-        finish_before_hand_item_play(dream_resolving)
+        resolve_before_hand_item_effect(dream_resolving)
     except ValueError:
         pass
     else:
-        raise AssertionError("Dream Ball finished before its search resolved")
+        raise AssertionError("Dream Ball effect finished before its search")
 
-    dream_done = finish_before_hand_item_play(
+    dream_effect = resolve_before_hand_item_effect(
         dream_resolving,
         secondary_effect_resolved=True,
     )
-    assert dream_done.additional_prize_awards == 0
-    assert dream_done.after.physical.ledger.instance("pending").zone == "discard"
+    assert dream_effect.additional_prize_awards == 0
+    dream_done = finish_before_hand_item_play(dream_effect)
+    assert dream_done.physical.ledger.instance("pending").zone == "discard"
     assert_conserved(
         dream_state.physical.ledger,
-        dream_done.after.physical.ledger,
+        dream_done.physical.ledger,
     )
 
-    greedy_state = make_state("xy11-102")
+    greedy_state = make_nested_greedy_state()
     greedy_resolving = begin_before_hand_item_play(
         greedy_state,
         profiles["xy11-102"],
         during_own_turn=True,
         active_item_restrictions=restrictions,
     )
-    greedy_done = finish_before_hand_item_play(
+    greedy_effect = resolve_before_hand_item_effect(
         greedy_resolving,
         coin_heads=True,
     )
-    assert greedy_done.additional_prize_awards == 1
-    assert greedy_done.after.physical.ledger.instance("pending").zone == "discard"
+    assert greedy_effect.additional_prize_awards == 1
+    assert (
+        greedy_effect.resolving.physical.ledger.instance("greedy").zone
+        == "resolving_trainer"
+    )
+
+    try:
+        finish_before_hand_item_play(greedy_effect)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Greedy Dice discarded before nested Prize resolution")
+
+    nested = stage_additional_prize_front(
+        greedy_effect.resolving.pending_state(),
+        position=0,
+    )
+    assert tuple(row.instance_id for row in nested.pending) == (
+        "extra",
+        "old",
+    )
+    assert nested.physical.ledger.instance("greedy").zone == "resolving_trainer"
+
+    extra_done = resolve_next_pending_prize(nested).after
+    assert extra_done.physical.ledger.instance("extra").zone == "hand"
+    assert tuple(row.instance_id for row in extra_done.pending) == ("old",)
+    assert extra_done.physical.ledger.instance("greedy").zone == "resolving_trainer"
+
+    greedy_done = finish_before_hand_item_play(
+        greedy_effect,
+        continuation_state=extra_done,
+        additional_prizes_resolved=True,
+    )
+    assert greedy_done.physical.ledger.instance("greedy").zone == "discard"
+    assert tuple(row.instance_id for row in greedy_done.pending) == ("old",)
+    assert_conserved(
+        greedy_state.physical.ledger,
+        greedy_done.physical.ledger,
+    )
 
     print("Prize-origin E-31 execution regressions passed")
 
