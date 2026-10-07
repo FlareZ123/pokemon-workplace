@@ -695,6 +695,18 @@ In the concrete Secret Box into Guzma & Hala line, the TM retrieved by Secret Bo
 
 **Working synthesis:** provenance is valuable for causal resource-flow auditing, while exchangeable same-class provenance histories can usually be quotiented for mechanical continuation. Keeping a compact canonical state plus an optional synchronized provenance layer avoids forcing historical identity into ordinary game-state execution.
 
+
+## 58. A live replacement edge can still fail under Supporter contention
+
+[replacement_connector_contention/](replacement_connector_contention/) adds a bounded breadth-first planner over validated immutable transitions and uses it to test replacement-aware discard safety under shared Supporter bandwidth.
+
+After discarding a current TM: Evolution, Arven can individually restore TM and Colress's Tenacity can individually find Jet Energy. Under the ordinary one-Supporter limit, the joint TM + Jet endpoint is unreachable because either Supporter consumes the only action window. The continuation-aware policy therefore rejects the TM discard even though both missing resources have true individual access paths.
+
+Raising the Supporter limit to two makes the TM discard safe. Keeping the ordinary limit while adding Guzma & Hala also makes it safe because one paid multi-axis Supporter retrieves both TM and Jet in the same action.
+
+**Working synthesis:** replacement reachability must be joint, deadline-aware, and resource-constrained. Independent access edges can falsely certify a discard when the restoration routes compete for the same Supporter window; multi-axis connectors can be valuable specifically because they compress several obligations into one scarce action.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -727,6 +739,7 @@ Particularly foundational components include:
 - `card_class_namespace.py`
 - `temporal_resource_ledger.py`
 - `continuation_discard_policy.py`
+- `bounded_state_planner.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
