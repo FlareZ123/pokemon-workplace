@@ -558,6 +558,16 @@ Choosing Chansey first puts Chansey into play, fills the Bench, and leaves Dream
 
 **Working synthesis:** simultaneous Prize-effect order is an information-aware resource-allocation decision. Arbitrary queue order can produce the wrong legal board when sibling effects compete for Bench capacity or another constrained channel.
 
+
+## 46. Full deck search preserves Prize/top correlation after shuffle
+
+[deck_search_shuffle_belief/](deck_search_shuffle_belief/) closes the belief-layer gap left by the physical deck-search/shuffle topology. For each possible Prize state, the new top card is sampled from the remaining deck counts conditional on that state. The searching player first conditions on the exact Prize composition learned from full deck inspection; other observers retain their prior unless a separate public observation gives them information.
+
+A five-card labeled regression exhaustively checks all 60 ordered Prize/Prize/top branches. With one A, two B, and two filler cards, a searcher who learns that A is Prized updates the post-shuffle top to A=0, B=2/3, filler=1/3, while an uninformed observer remains at A=1/5, B=2/5, filler=2/5. The uninformed joint state also keeps the singleton exclusion exactly: A cannot simultaneously occupy a Prize slot and the new deck top.
+
+**Working synthesis:** K1 changes future draw distributions as well as line choice. Hidden-zone planners should carry the joint Prize/top distribution through a shuffle rather than resampling a top marginal independently of Prize composition.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
