@@ -33,7 +33,7 @@ The unified layer owns one canonical card-zone map. Subsystems carry only the st
 - Ability availability;
 - normal Energy-attachment usage;
 - Stadium usage;
-- attached Energy units;
+- physical attached-Energy cards, with a legacy unit-only fallback for older callers;
 - attack-cost reductions;
 - attack availability;
 - whether Gladion has been played in the represented line.
@@ -97,9 +97,11 @@ The unified state applies two independent transitions:
 1. attach Double Colorless Energy through the normal attachment, contributing two Colorless Energy units;
 2. play Thunder Mountain, contributing one Lightning cost reduction because the Active target has the Lightning tag.
 
-The existing exact Energy solver then confirms the attack cost is satisfiable.
+The attached DCE is now one physical Energy-card object that provides two Colorless units. The existing exact Energy solver receives a derived unit view and confirms the attack cost is satisfiable.
 
 Either resource alone is insufficient.
+
+The same physical state can then apply a generic two-Energy discard. The minimum-card transition discards the single DCE card, moves that physical card to the discard zone, removes both supplied units, and makes the `LCC` attack unpayable again despite Thunder Mountain remaining in play.
 
 The same state also respects:
 
@@ -167,7 +169,8 @@ This avoids forcing every subsystem into one giant monolithic object while still
 - Tool identity preservation, including a non-Hood counterexample;
 - Tool-effect suppression without detachment;
 - Trainer-lock denial of Tool play;
-- typed DCE + Thunder Mountain attack readiness;
+- typed DCE + Thunder Mountain attack readiness from one physical DCE object;
+- one-card DCE removal for a generic two-Energy discard, including synchronized zone and payment-state updates;
 - Special Energy and Stadium play denial;
 - Bench contraction plus zone synchronization;
 - exact two-singleton Prize-belief weighting;
@@ -191,7 +194,7 @@ Abilities are represented by one broad availability flag in the current scaffold
 
 Stadium replacement, normal turn progression, Prize taking, damage, Knock Outs, attack execution, setup, opponent state, and strategic utility are outside the current implementation.
 
-The Energy summary is attached to the current Active identity only. A larger engine must preserve Energy ownership when Pokémon move between Active and Bench.
+Physical Energy-card identity is now preserved for the represented Active attachment, but Energy ownership is still attached to the singular Active state. A larger engine must preserve those Energy objects when Pokémon move between Active and Bench.
 
 ## Next useful work
 
