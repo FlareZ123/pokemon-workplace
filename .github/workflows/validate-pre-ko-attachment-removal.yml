@@ -1,0 +1,26 @@
+name: Validate pre-KO attachment removal
+
+on:
+  push:
+    paths:
+      - "tools/build_expanded_legality_baseline.py"
+      - "tools/pre_ko_attachment_removal_catalog.py"
+      - "resources/cards/**"
+      - "resources/sets/**"
+      - "results/pre_ko_attachment_removal/**"
+      - ".github/workflows/validate-pre-ko-attachment-removal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run pre-KO attachment-removal regression
+        run: python results/pre_ko_attachment_removal/reproduce.py
