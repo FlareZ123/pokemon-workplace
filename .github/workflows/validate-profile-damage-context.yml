@@ -1,0 +1,25 @@
+name: Validate profile damage context
+
+on:
+  push:
+    paths:
+      - "tools/profile_damage_context.py"
+      - "tools/pokemon_card_profile.py"
+      - "tools/damage_calculation_kernel.py"
+      - "tools/type_modifier_catalog.py"
+      - "tools/combat_data_overrides.py"
+      - "results/profile_damage_context/**"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - ".github/workflows/validate-profile-damage-context.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/profile_damage_context/reproduce.py
