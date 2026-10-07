@@ -10,7 +10,7 @@ This result isolates one concrete Expanded pattern:
 
 - Crobat V `swsh3-104` is a Basic Pokémon V whose Dark Asset Ability can provide immediate draw when it is played from hand to the Bench, after which Crobat remains in play and occupies a Bench slot.
 - AZ `xy4-91` can return one of your Pokémon to hand, so it can remove a spent Crobat V, but AZ is a Supporter.
-- Scoop Up Net `swsh2-165` does not solve this particular debt because it explicitly cannot target Pokémon V or Pokémon-GX.
+- Scoop Up Net `swsh2-165` is banned by the repository's paper-Expanded legality overlay; even as a text-level counterexample, it explicitly cannot target Pokémon V or Pokémon-GX, so its wording would not clear Crobat V or Dedenne-GX.
 - Magnezone `bw8-46` / Dual Brains supplies a verified two-Supporter-per-turn exception, allowing the model to test whether extra Supporter bandwidth restores the line.
 
 Implementation: `tools/interturn_bench_debt_policy.py`  
