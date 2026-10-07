@@ -24,7 +24,14 @@ def project_unified_turn_budget(
     manual_energy_attachment_limit: int = 1,
     retreat_limit: int = 1,
 ) -> TurnActionBudget:
-    """Project legacy flags plus currently derived action limits."""
+    """Project legacy flags plus currently derived action limits.
+
+    Once UnifiedState owns an explicit budget, that value is authoritative and
+    the legacy limit arguments are ignored.
+    """
+
+    if state.turn_budget is not None:
+        return state.turn_budget
 
     return TurnActionBudget(
         supporter_used=state.bench.supporter_used,
@@ -64,7 +71,24 @@ def apply_budget_to_unified(
     state: UnifiedState,
     budget: TurnActionBudget,
 ) -> UnifiedState:
-    """Synchronize exactly representable budget state into legacy booleans."""
+    """Synchronize a budget into UnifiedState.
+
+    Canonical states retain the full integer quota and mirror only boolean
+    compatibility fields. Legacy-only states still reject lossy quota shapes.
+    """
+
+    if state.turn_budget is not None:
+        return replace(
+            state,
+            turn_budget=budget,
+            bench=replace(
+                state.bench,
+                supporter_used=budget.supporter_used,
+                turn_ended=budget.turn_ended,
+            ),
+            stadium_used=budget.stadium_play_used,
+            manual_attachment_used=budget.manual_energy_attachment_used,
+        )
 
     if (
         budget.supporter_play_limit != 1
