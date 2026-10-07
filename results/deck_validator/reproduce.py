@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 
 from tools.deck_validator import (
     DeckEntry,
@@ -8,6 +9,7 @@ from tools.deck_validator import (
 )
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 RESOURCES = ROOT / "resources"
 GRASS = "bw1-105"
 SNIVY = "bw1-1"
