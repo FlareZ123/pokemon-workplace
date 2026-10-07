@@ -134,6 +134,27 @@ class TurnActionBudget:
             return True
         raise ValueError(f"Unsupported turn action: {action!r}")
 
+    def remaining(self, action: TurnAction) -> int:
+        """Return remaining uses for one action in the current turn."""
+
+        if self.turn_ended:
+            return 0
+        if action is TurnAction.SUPPORTER:
+            return max(0, self.supporter_play_limit - self.supporter_plays_used)
+        if action is TurnAction.STADIUM_PLAY:
+            return max(0, self.stadium_play_limit - self.stadium_plays_used)
+        if action is TurnAction.MANUAL_ENERGY_ATTACHMENT:
+            return max(
+                0,
+                self.manual_energy_attachment_limit
+                - self.manual_energy_attachments_used,
+            )
+        if action is TurnAction.RETREAT:
+            return max(0, self.retreat_limit - self.retreats_used)
+        if action in {TurnAction.ATTACK, TurnAction.END_TURN}:
+            return 1
+        raise ValueError(f"Unsupported turn action: {action!r}")
+
     def consume(self, action: TurnAction) -> "TurnActionBudget | None":
         """Consume one unit of an action quota, or return None if unavailable."""
 
