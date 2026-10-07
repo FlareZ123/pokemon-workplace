@@ -1,0 +1,25 @@
+name: Validate Talonflame setup policy case
+
+on:
+  push:
+    paths:
+      - "tools/setup_hand_value_policy.py"
+      - "tools/setup_eligibility.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/talonflame_setup_policy_case/**"
+      - ".github/workflows/validate-talonflame-setup-policy-case.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Talonflame setup policy case
+        run: python results/talonflame_setup_policy_case/reproduce.py
