@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from source_scoped_action_restrictions import (
     CardActionAttempt,
     build_source_scoped_action_restrictions,
+    resolve_exclusive_restriction,
     restriction_blocks_attempt,
 )
 
@@ -66,6 +67,66 @@ def main() -> None:
         "tool_attach": 1,
     }
     assert {row.prohibited_source_zone for row in rows} == {"hand"}
+
+
+    exclusive = [row for row in rows if row.exclusive_dimension_options]
+    assert len(exclusive) == 2
+    assert {row.card_id for row in exclusive} == {"sv4-112", "swsh11-3"}
+
+    for unresolved in exclusive:
+        try:
+            restriction_blocks_attempt(
+                unresolved,
+                CardActionAttempt("item", "hand"),
+            )
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("unresolved exclusive lock was evaluated")
+
+    crobat = _one(rows, "sv4-112", "Echoing Madness")
+    crobat_item = resolve_exclusive_restriction(
+        crobat,
+        frozenset({"item"}),
+    )
+    crobat_supporter = resolve_exclusive_restriction(
+        crobat,
+        frozenset({"supporter"}),
+    )
+    assert restriction_blocks_attempt(
+        crobat_item,
+        CardActionAttempt("item", "hand"),
+    )
+    assert not restriction_blocks_attempt(
+        crobat_item,
+        CardActionAttempt("supporter", "hand"),
+    )
+    assert restriction_blocks_attempt(
+        crobat_supporter,
+        CardActionAttempt("supporter", "hand"),
+    )
+
+    allergy = _one(rows, "swsh11-3", "Allergy Storm")
+    allergy_heads = resolve_exclusive_restriction(
+        allergy,
+        frozenset({"supporter"}),
+    )
+    allergy_tails = resolve_exclusive_restriction(
+        allergy,
+        frozenset({"item"}),
+    )
+    assert restriction_blocks_attempt(
+        allergy_heads,
+        CardActionAttempt("supporter", "hand"),
+    )
+    assert not restriction_blocks_attempt(
+        allergy_heads,
+        CardActionAttempt("item", "hand"),
+    )
+    assert restriction_blocks_attempt(
+        allergy_tails,
+        CardActionAttempt("item", "hand"),
+    )
 
     vileplume = _one(rows, "xy7-3", "Irritating Pollen")
     assert restriction_blocks_attempt(
@@ -211,6 +272,8 @@ def main() -> None:
                 "all_card_lock_blocks_hand_energy": True,
                 "team_rocket_exception_preserved": True,
                 "target_specific_restrictions_preserved": True,
+                "exclusive_lock_profiles": 2,
+                "exclusive_branches_require_resolution": True,
             },
             indent=2,
             sort_keys=True,
