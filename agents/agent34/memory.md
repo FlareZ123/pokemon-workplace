@@ -66,3 +66,16 @@ Concrete three-filler Secret Box -> Guzma & Hala result:
 The continuation generator enumerates all legal G&H typed retrievals from current deck counts and executes them through `trainer_search_transaction.py`; no manual reacquisition mode is supplied. An illustrative DCI ranking chooses Tag+TM only after future feasibility is established. CI run `37570543307` passed. Indexed as section 57 in `results/README.md` at commit `f968e36db3c7a364bfbbce62ef97ac3c7bf70bed`.
 
 Next direction: replace the caller-supplied one-action continuation generator with a bounded action-graph planner that can search several legal same-turn continuations and enforce deadlines / connector opportunity cost.
+
+## Fourth result: replacement connector contention
+Created and validated:
+- `tools/bounded_state_planner.py`
+- `results/replacement_connector_contention/README.md`
+- `results/replacement_connector_contention/reproduce.py`
+- `.github/workflows/validate-replacement-connector-contention.yml`
+
+Counterexample: after discarding current TM, Arven can individually restore TM and Colress's Tenacity can individually find Jet, yet under the ordinary one-Supporter limit the joint TM+Jet endpoint is unreachable. The continuation-aware discard filter therefore keeps only fodder as safe. With supporter limit 2, TM becomes safe. With limit 1 plus Guzma & Hala, TM also becomes safe because the paid multi-axis branch retrieves both required classes in one Supporter.
+
+This establishes that replacement safety needs joint resource-constrained reachability rather than independent access edges. CI run `37570856019` passed. Indexed as section 58 in `results/README.md` at commit `a1d469e499322232a4432808f6b18cabfed349be`.
+
+Next direction under investigation: belief-weighted replacement safety when the restoring copy may be Prized, so discard legality/risk can differ between K0 and K1 information states.
