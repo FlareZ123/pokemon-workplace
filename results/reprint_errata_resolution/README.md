@@ -4,7 +4,7 @@
 
 This result builds an auditable evidence ladder for historical prints that share a name with a legal paper Expanded card.
 
-The resolver applies current card semantics before comparing prints. Current semantics currently includes official print-specific errata and the current Pokémon Tool category rule.
+The resolver applies current card semantics before comparing prints. Current semantics now includes official print-specific errata, the current Pokémon Tool category rule, and exact generic Item/Supporter category-boilerplate normalization.
 
 ## Current partition
 
@@ -12,16 +12,16 @@ The bundled snapshot contains 4,260 historical outside-scope prints whose name a
 
 They currently resolve as:
 
-- 106 exact current-semantic fingerprint candidates;
-- 42 historical-official reprint candidates;
+- 112 exact current-semantic fingerprint candidates;
+- 39 historical-official reprint candidates;
 - 44 name-wide official-errata candidates;
 - 3 current-handbook semantic candidates;
 - 34 known non-equivalent prints;
-- 4,031 unresolved semantic-review prints.
+- 4,028 unresolved semantic-review prints.
 
-The positive high-confidence candidate set contains 195 prints.
+The positive high-confidence candidate set contains 198 prints.
 
-For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 2, the historical official bridge resolves 41, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. That gives 90 positive Trainer candidates and 2 known-negative Trainer prints before free-form semantic comparison.
+For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 8, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. That gives 93 positive Trainer candidates and 2 known-negative Trainer prints before broader semantic comparison.
 
 ## Evidence ladder
 
@@ -29,13 +29,13 @@ For Trainers, 168 historical prints share a name with a legal Expanded Trainer. 
 
 The strongest repository-local structural path requires the historical card and a legal Expanded card to have the same fingerprint after authoritative current-semantics normalization.
 
-There are 106 such historical candidates.
+There are 112 such historical candidates.
 
 ### Historical official reprint evidence
 
 The official 2012 Modified-Legal Reprint List identifies old prints that were legal reprints at that date and marks whether updated reference text was required.
 
-This resolver uses a narrow 42-print bridge. Every included print was marked "Reference Required: No", and a same-name Black & White-onward print had already been released by 2012-03-13. The bridge covers Switch, Poké Ball, Energy Search, Energy Switch, Super Scoop Up, Full Heal, Recycle, and Double Colorless Energy.
+This resolver preserves a narrow 42-print historical evidence set. Every included print was marked "Reference Required: No", and a same-name Black & White-onward print had already been released by 2012-03-13. After current-semantics normalization, three of those prints now resolve earlier as exact fingerprints, so 39 still use the historical-official resolver state. The evidence set covers Switch, Poké Ball, Energy Search, Energy Switch, Super Scoop Up, Full Heal, Recycle, and Double Colorless Energy.
 
 ### Name-wide official errata
 
@@ -83,7 +83,7 @@ Print-specific official errata is applied before fingerprinting. The official re
 
 Legacy Pokémon Tool semantics are normalized as well. Older Tool records can retain Item-era subtype or boilerplate fields even though current rules treat those cards as Pokémon Tools. This prevents stale Item metadata from contaminating search, lock, or reprint analysis.
 
-The composition lives in tools/current_card_semantics.py.
+Generic Item and Supporter category reminders are also removed by exact-string normalization. The audit found six newly exact historical candidates and zero known-negative collisions. Three were already covered by the historical bridge, while `hgss1-93` Full Heal, `hgss1-95` Poké Ball, and `hgss2-78` Judge move out of semantic review. The composition lives in tools/current_card_semantics.py.
 
 ## Resolver states
 
@@ -107,6 +107,8 @@ Positive candidate states remain separate so downstream code can choose its evid
 - dp4-99 Leftovers resolves through official name-wide errata.
 - ex2-88 Rare Candy resolves through official name-wide errata.
 - base1-95 Switch resolves through historical official no-reference evidence.
+- dp1-110, dp5-85, and pl1-113 Poké Ball belong to the historical evidence set but now resolve earlier by exact current-semantic fingerprint.
+- hgss1-93 Full Heal, hgss1-95 Poké Ball, and hgss2-78 Judge become exact candidates after generic Trainer boilerplate normalization.
 - base1-96 Double Colorless Energy resolves through the same historical bridge.
 - gym1-18 Misty resolves by exact current-semantic fingerprint.
 - base5-17 and base5-80 Rainbow Energy resolve as known non-equivalent.
@@ -138,10 +140,12 @@ Related regressions:
 - results/reprint_negative_evidence/reproduce.py
 - results/reprint_positive_evidence/reproduce.py
 - results/reprint_divergence_predicates/reproduce.py
+- results/trainer_boilerplate_normalization/reproduce.py
+- results/trainer_boilerplate_candidate_audit/reproduce.py
 
 ## Limitations
 
-The remaining 4,031 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
+The remaining 4,028 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
 
 Historical reprint evidence is intentionally restricted to no-reference entries with a Black & White-onward bridge already present by the source date. Reference-required entries need separate current-semantics analysis.
 
