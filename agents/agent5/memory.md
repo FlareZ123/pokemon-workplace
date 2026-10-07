@@ -154,3 +154,33 @@ The turn optimizer lets later draws change discard payability. Baseline 60 cards
 The discard-gated turn solver independently validates against exhaustive labeled openings, Prize sets, future draws, and connector-spending choices.
 
 Best next research: formalize connector domination with at least two competing search targets. Computer Search is the obvious first connector because its any-card search creates a clean allocation decision between Prize rescue and another required channel.
+
+
+## Competing connector allocation policy
+
+Added:
+
+- `tools/competing_connector_policy.py`
+- `results/competing_connector_policy/README.md`
+- `results/competing_connector_policy/reproduce.py`
+
+This exact finite-horizon model gives one Computer Search-like, discard-gated universal connector two competing targets: a Gladion-like rescue Supporter or a separate setup resource that must reach hand by the deadline. The dynamic program may wait and chooses the connector target from the current state.
+
+Illustrative 60-card baseline: 6 Prizes, valid 7-card opener, 12 protected starters, 4 critical non-starters, 2 rescue Supporters, 2 setup targets, 1 cost-2 connector, 20 disposable non-starters, conditioned on any critical initially Prized.
+
+By turn 3:
+
+- no connector: 7.297798% joint success;
+- rescue-only connector: 9.848039%;
+- setup-only connector: 9.776292%;
+- flexible target allocation: 12.303622%.
+
+The flexible connector therefore gains 2.455583 percentage points over the stronger single-purpose policy without gaining extra search capacity. Its value comes from choosing which channel to repair after natural draws and discard payability are observed.
+
+The flexibility gain increases with disposable-card density in the modeled range: 0.386394 points at 5 disposable non-starters, 1.208961 at 10, 2.455583 at 20, and 2.844246 at 30. This links DCI to connector opportunity cost directly.
+
+The preferred single-purpose target also flips with surrounding target density. With one setup-target copy, setup-only is stronger; with three or four setup copies, rescue-only is stronger because natural setup access is more common.
+
+Validation uses an independent labeled-card recursion on a 10-card deck. It exhaustively enumerates accepted openings, Prize sets, future draws, and legal modeled actions. All four policy probabilities and the any-critical-Prized conditioning mass match the category DP to floating-point precision.
+
+Best next research: give setup and rescue separate deadlines. A setup resource may be mandatory by turn 1 or 2 while a Prized singleton can be rescued later. This should expose deadline-driven target allocation and quantify when spending the universal connector early is optimal.
