@@ -333,6 +333,8 @@ The regression gives each player one surviving Bench Pokémon, marks both Active
 
 [knockout_redirection_ordering/](knockout_redirection_ordering/) then resolves an already-legally-ordered set of destination programs by taking the earliest explicit assignment for each physical instance. An official Pokémon Asia Lost City + Reuniclus ruling validates the order sensitivity: Reuniclus's owner chooses which effect resolves first, and that choice determines hand versus Lost Zone. The model deliberately leaves ordering authority upstream because this card-specific ruling is narrower than the rulebook's separate current-turn-player ordering rule for effects activated when several Pokémon are Knocked Out simultaneously.
 
+[effect_order_authority_overlap/](effect_order_authority_overlap/) makes the unresolved overlap explicit instead of guessing a precedence. It evaluates every evidence-backed authority scope that an upstream semantic layer says applies. If all claims identify the same concrete player, execution is safe; if complete claims identify different players, the result is an authority conflict and neither player is silently granted control. In the current Lost City/Reuniclus versus multi-Pokémon-KO overlap example, the outcome depends on whether the Reuniclus owner is also the current-turn player.
+
 **Working synthesis:** KO routing needs three semantic states per physical instance: unassigned, explicitly assigned to the ordinary discard sink, and explicitly assigned elsewhere. Destination conflict detection, order-selection authority, and physical execution should remain separate layers.
 
 
