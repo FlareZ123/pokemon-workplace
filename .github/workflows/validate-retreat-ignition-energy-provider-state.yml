@@ -1,0 +1,28 @@
+name: Validate Retreat Ignition Energy provider state
+
+on:
+  push:
+    paths:
+      - "tools/retreat_dynamic_energy_units.py"
+      - "tools/retreat_energy_transaction.py"
+      - "tools/board_object_kernel.py"
+      - "results/retreat_ignition_energy_provider_state/**"
+      - ".github/workflows/validate-retreat-ignition-energy-provider-state.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check dynamic Ignition Energy Retreat units
+        run: |
+          python results/retreat_ignition_energy_provider_state/reproduce.py
+          python results/retreat_energy_transaction/reproduce.py
+          python results/board_object_kernel/reproduce.py
