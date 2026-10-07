@@ -1,0 +1,23 @@
+name: Validate typed search target allocator
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/typed_search_target_allocator.py"
+      - "results/typed_search_target_allocator/**"
+      - ".github/workflows/validate-typed-search-target-allocator.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce typed search target allocator
+        run: python results/typed_search_target_allocator/reproduce.py
