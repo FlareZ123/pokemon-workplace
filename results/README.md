@@ -244,6 +244,14 @@ The shared `board_object_kernel.knock_out()` transition returns the complete rem
 
 **Working synthesis:** materialization boundaries should be explicit per physical relation. Evolution preserves attachment identity; Knock Out destroys that board relation and is therefore a natural dematerialization boundary for ordinary discard-pile state.
 
+## 18. Exchangeable card classes need an explicit equivalence namespace
+
+[card_class_namespace/](card_class_namespace/) separates exact-print identity, conservative local gameplay variants, prospective official functional-reprint classes, deck-building names, and custom research classes.
+
+The reprint audit's official Copycat example shows why this matters: tournament-functional equivalence can cross two different local gameplay fingerprints. A bare `card_class` string can therefore change meaning silently across legality, simulation, and copy-limit code.
+
+The namespaced key adapter lets the existing zone-count machinery state its chosen equivalence relation without imposing one universal card identity.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -263,6 +271,7 @@ Particularly foundational components include:
 - `board_object_kernel.py`
 - `energy_board_conservation.py`
 - `identity_materialization.py`
+- `card_class_namespace.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
