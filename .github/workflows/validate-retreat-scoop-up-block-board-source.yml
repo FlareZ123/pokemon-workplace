@@ -1,0 +1,29 @@
+name: Validate Retreat Scoop-Up Block board source
+
+on:
+  push:
+    paths:
+      - "tools/retreat_board_effects.py"
+      - "tools/retreat_energy_transaction.py"
+      - "tools/retreat_destination_conflicts.py"
+      - "tools/board_object_kernel.py"
+      - "results/retreat_scoop_up_block_board_source/**"
+      - ".github/workflows/validate-retreat-scoop-up-block-board-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check board-derived Scoop-Up Block Retreat routing
+        run: |
+          python results/retreat_scoop_up_block_board_source/reproduce.py
+          python results/retreat_energy_transaction/reproduce.py
+          python results/retreat_destination_conflicts/reproduce.py
