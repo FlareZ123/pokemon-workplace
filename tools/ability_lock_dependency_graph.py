@@ -73,7 +73,7 @@ def potential_sources(
     return tuple(sorted(rows))
 
 
-def _targets_for_source(
+def targets_for_source(
     source: AbilityLockSourceRef,
     player_board: BoardState,
     opponent_board: BoardState,
@@ -129,7 +129,7 @@ def suppression_edges(
     edges: set[tuple[AbilityLockSourceRef, AbilityLockSourceRef]] = set()
 
     for source in source_tuple:
-        player_ids, opponent_ids = _targets_for_source(
+        player_ids, opponent_ids = targets_for_source(
             source,
             player_board,
             opponent_board,
@@ -257,7 +257,7 @@ def resolve_ability_lock_dependencies(
     player_suppressed: set[str] = set()
     opponent_suppressed: set[str] = set()
     for source in active_sources:
-        player_ids, opponent_ids = _targets_for_source(
+        player_ids, opponent_ids = targets_for_source(
             source,
             player_board,
             opponent_board,
