@@ -1,0 +1,25 @@
+name: Validate Prize information asymmetry
+
+on:
+  push:
+    paths:
+      - "tools/prize_take_information_asymmetry.py"
+      - "tools/prize_take_conservation.py"
+      - "tools/prize_belief_kernel.py"
+      - "results/prize_take_information_asymmetry/**"
+      - ".github/workflows/validate-prize-take-information-asymmetry.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check asymmetric Prize beliefs
+        run: python results/prize_take_information_asymmetry/reproduce.py
