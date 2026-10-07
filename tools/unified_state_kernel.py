@@ -62,6 +62,7 @@ class UnifiedState:
     channels: PlayerChannels = field(default_factory=PlayerChannels)
     active_name: str | None = None
     active_pokemon: PokemonState = field(default_factory=PokemonState)
+    active_tool_name: str | None = None
     active_tags: frozenset[str] = frozenset()
     abilities_allowed: bool = True
     manual_attachment_used: bool = False
@@ -118,6 +119,12 @@ def validate_state(state: UnifiedState) -> None:
     if state.active_name is not None:
         if state.zone(state.active_name) != Zone.ACTIVE.value:
             raise ValueError("active_name is not in the Active zone")
+
+    if state.active_tool_name is not None:
+        if not state.active_pokemon.tool_attached:
+            raise ValueError("active_tool_name set while no Tool is attached")
+        if state.zone(state.active_tool_name) != Zone.ATTACHED.value:
+            raise ValueError("active_tool_name is not in the attached zone")
 
 
 def _move(state: UnifiedState, card: str, zone: Zone) -> UnifiedState:
@@ -303,7 +310,9 @@ def attach_tool_to_active(
             tool_attached=True,
             tool_effect_enabled=True,
         ),
+        active_tool_name=card,
     )
+    validate_state(next_state)
     return next_state
 
 
@@ -315,7 +324,10 @@ def suppress_active_tool_effect(state: UnifiedState) -> UnifiedState:
 
 
 def active_tool_protects(state: UnifiedState) -> bool:
-    return stealthy_hood_protects(state.active_pokemon)
+    return (
+        state.active_tool_name == "Stealthy Hood"
+        and stealthy_hood_protects(state.active_pokemon)
+    )
 
 
 def attach_dce_to_active(state: UnifiedState) -> UnifiedState | None:
