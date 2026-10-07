@@ -1,0 +1,27 @@
+name: Validate healing profile compiler
+
+on:
+  push:
+    paths:
+      - "tools/healing_profile_compiler.py"
+      - "tools/board_position_state.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - "results/healing_profile_compiler/**"
+      - ".github/workflows/validate-healing-profile-compiler.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check healing compiler and executor
+        run: python results/healing_profile_compiler/reproduce.py
