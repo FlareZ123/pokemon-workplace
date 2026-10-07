@@ -5,11 +5,13 @@ on:
     paths:
       - "tools/prize_position_belief.py"
       - "tools/peonia_arc_position.py"
+      - "tools/repeated_prize_probe.py"
       - "tools/prize_top_draw_belief.py"
       - "tools/prize_top_swap_belief.py"
       - "tools/prize_slot_visibility.py"
       - "results/prize_position_belief/**"
       - "results/peonia_arc_position/**"
+      - "results/repeated_prize_probe/**"
       - "results/prize_top_draw_belief/**"
       - "resources/cards/en/swsh6.json"
       - "resources/cards/en/swsh11.json"
@@ -36,3 +38,5 @@ jobs:
         run: python results/peonia_arc_position/reproduce.py
       - name: Check correlated top-draw belief
         run: python results/prize_top_draw_belief/reproduce.py
+      - name: Check repeated Prize probes
+        run: python results/repeated_prize_probe/reproduce.py
