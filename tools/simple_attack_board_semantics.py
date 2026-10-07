@@ -3,7 +3,7 @@
 The compiler exposes independent, audited semantic dimensions rather than
 claiming to understand arbitrary attack text:
 
-- plain numeric printed damage;
+- plain numeric printed damage plus effect-only blank damage fields;
 - seven exact damage-counter wording templates;
 - unconditional "Take another turn after this one" directives.
 
@@ -162,7 +162,13 @@ def compile_attack(
     raw_damage = (attack.get("damage") or "").strip()
     raw_text = re.sub(r"\s+", " ", attack.get("text") or "").strip()
 
-    fixed_damage = int(raw_damage) if re.fullmatch(r"\d+", raw_damage) else None
+    fixed_damage = (
+        0
+        if raw_damage == ""
+        else int(raw_damage)
+        if re.fullmatch(r"\d+", raw_damage)
+        else None
+    )
     extra_turn = "Take another turn after this one." in raw_text
     skip_checkup = (
         extra_turn
@@ -267,8 +273,9 @@ def materialize_opponent_board_program(
 ) -> PhysicalBoardEventProgram:
     """Materialize the supported opponent-facing board semantics.
 
-    This helper intentionally requires plain numeric damage. Attacks with a
-    variable printed damage expression remain outside this execution island.
+    This helper supports plain numeric damage and effect-only attacks whose
+    damage field is blank. Variable printed damage expressions remain outside
+    this execution island.
     """
 
     if semantics.fixed_damage is None:
