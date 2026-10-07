@@ -1,0 +1,27 @@
+name: Validate pre-KO attachment snapshot
+
+on:
+  push:
+    paths:
+      - "tools/pre_ko_attachment_snapshot.py"
+      - "tools/knockout_redirection_routes.py"
+      - "tools/knockout_zone_routing.py"
+      - "tools/simultaneous_knockout_conservation.py"
+      - "results/pre_ko_attachment_snapshot/**"
+      - "results/knockout_redirection_routes/**"
+      - ".github/workflows/validate-pre-ko-attachment-snapshot.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run pre-KO attachment snapshot regression
+        run: python results/pre_ko_attachment_snapshot/reproduce.py
