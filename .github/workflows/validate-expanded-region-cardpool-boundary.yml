@@ -1,0 +1,25 @@
+name: Validate Expanded regional cardpool boundary
+
+on:
+  push:
+    paths:
+      - "tools/aichi_card_name_resolution.py"
+      - "tools/aichi_setup_inference.py"
+      - "resources/cards/en/**"
+      - "results/expanded_region_cardpool_boundary/**"
+      - ".github/workflows/validate-expanded-region-cardpool-boundary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Aichi card name coverage
+        run: python results/expanded_region_cardpool_boundary/reproduce.py
