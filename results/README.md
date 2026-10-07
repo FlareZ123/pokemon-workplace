@@ -335,7 +335,11 @@ The regression gives each player one surviving Bench Pokémon, marks both Active
 
 [effect_order_authority_overlap/](effect_order_authority_overlap/) makes the unresolved overlap explicit instead of guessing a precedence. It evaluates every evidence-backed authority scope that an upstream semantic layer says applies. If all claims identify the same concrete player, execution is safe; if complete claims identify different players, the result is an authority conflict and neither player is silently granted control. In the current Lost City/Reuniclus versus multi-Pokémon-KO overlap example, the outcome depends on whether the Reuniclus owner is also the current-turn player.
 
-**Working synthesis:** KO routing needs three semantic states per physical instance: unassigned, explicitly assigned to the ordinary discard sink, and explicitly assigned elsewhere. Destination conflict detection, order-selection authority, and physical execution should remain separate layers.
+[pre_ko_attachment_removal/](pre_ko_attachment_removal/) maps damaging attacks that can remove Energy or Pokémon Tools from the opposing Active before the Knock Out check. The current legal Expanded snapshot contains 216 distinct signatures across 334 print instances: 27 resolve removal before damage and 189 resolve it in the later effects-outside-damage step. Both timing classes occur before Knock Out evaluation.
+
+[pre_ko_attachment_snapshot/](pre_ko_attachment_snapshot/) proves the corresponding physical boundary. When an attack effect discards one Basic Water Energy before a lethal Knock Out, the later Huntail-like recovery can select only the Basic Water Energy still attached at the KO-trigger boundary. The earlier discarded copy remains in discard and cannot re-enter the recovery route.
+
+**Working synthesis:** KO routing needs three semantic states per physical instance: unassigned, explicitly assigned to the ordinary discard sink, and explicitly assigned elsewhere. Trigger eligibility must use the board snapshot after earlier attack phases resolve. Destination conflict detection, order-selection authority, and physical execution remain separate layers.
 
 
 ## 26. Per-turn action budgets are shared mechanical state
