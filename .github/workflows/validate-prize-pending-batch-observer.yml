@@ -1,0 +1,26 @@
+name: Validate physical Prize batch observer coupling
+
+on:
+  push:
+    paths:
+      - "tools/prize_pending_batch_observer.py"
+      - "tools/pending_prize_batch_identity_belief.py"
+      - "tools/prize_pending_batch_order.py"
+      - "tools/prize_pending_take.py"
+      - "results/prize_pending_batch_observer/**"
+      - ".github/workflows/validate-prize-pending-batch-observer.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check physical Prize batch observer coupling
+        run: python results/prize_pending_batch_observer/reproduce.py
