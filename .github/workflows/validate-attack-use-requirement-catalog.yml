@@ -1,0 +1,24 @@
+name: Validate attack-use requirement catalog
+
+on:
+  push:
+    paths:
+      - "tools/attack_use_requirement_catalog.py"
+      - "tools/simple_attack_board_semantics.py"
+      - "results/attack_use_requirement_catalog/**"
+      - ".github/workflows/validate-attack-use-requirement-catalog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check explicit attack-use requirements
+        run: python results/attack_use_requirement_catalog/reproduce.py
