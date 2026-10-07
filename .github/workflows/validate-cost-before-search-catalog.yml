@@ -20,4 +20,4 @@ jobs:
         with:
           python-version: "3.13"
       - name: Build cost-before-search catalog
-        run: python tools/cost_before_search_catalog.py
+        run: python results/cost_before_search_catalog/reproduce.py
