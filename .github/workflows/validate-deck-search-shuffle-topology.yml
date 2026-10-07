@@ -1,0 +1,25 @@
+name: Validate deck search shuffle topology
+
+on:
+  push:
+    paths:
+      - "tools/deck_search_shuffle_topology.py"
+      - "tools/identity_materialization.py"
+      - "tools/top_prize_physical_bridge.py"
+      - "results/deck_search_shuffle_topology/**"
+      - ".github/workflows/validate-deck-search-shuffle-topology.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check deck-search/shuffle topology
+        run: python results/deck_search_shuffle_topology/reproduce.py
