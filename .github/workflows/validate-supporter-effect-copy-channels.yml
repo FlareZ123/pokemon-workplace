@@ -1,0 +1,23 @@
+name: Validate Supporter effect copy channels
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/supporter_effect_copy_channels.py"
+      - "results/supporter_effect_copy_channels/**"
+      - ".github/workflows/validate-supporter-effect-copy-channels.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Supporter effect copy channels
+        run: python results/supporter_effect_copy_channels/reproduce.py
