@@ -635,6 +635,17 @@ The compiler deliberately excludes coin-gated Poké Ball, disjunctive Fighting G
 **Working synthesis:** card-text compilation should expand through small validated semantic islands. This family now provides a traceable path from bundled text to typed target execution, exact discard payment, K1, public signaling, and shuffle state without hand-authored Quick Ball metadata.
 
 
+
+## 54. Physical deck depletion gates transient payload reacquisition
+
+[reacquisition_physical_bridge/](reacquisition_physical_bridge/) executes the concrete Secret Box into Guzma & Hala reacquisition witness as two canonical typed Trainer transactions over one conserved zone state.
+
+Secret Box moves the first TM: Evolution from deck to hand. Guzma & Hala then discards that TM plus Tag Call and physically retrieves the second TM together with Jet Energy, leaving TM + Artazon + Jet in hand. Supporter quota is consumed and per-card-class totals remain conserved.
+
+A one-copy counterfactual exposes the key gate. After Secret Box takes the only TM, the same abstract Guzma & Hala retrieval vector still asks for one Tool, but execution rejects the line because no TM remains in deck. A separate regression confirms that replacement availability also does not supply the second physical card required for Guzma & Hala's two-card discard.
+
+**Working synthesis:** transient discardability requires both a live replacement route and enough physical payment material. Connector reachability alone can preserve a stale search edge after its final target copy has left the deck; canonical zone execution must gate the continuation.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
