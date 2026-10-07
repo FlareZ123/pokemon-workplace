@@ -175,6 +175,8 @@ Any simulator, validator, optimizer, or card index should therefore avoid using 
 
 The handbook's Copycat example is a concrete counterexample to exact-text identity as a complete reprint rule: the two database fingerprints differ even though official tournament guidance treats the effects as functionally identical. Reprint equivalence therefore needs an errata-aware semantic layer rather than a name lookup or raw-text equality test.
 
+[reprint_errata_resolution/](reprint_errata_resolution/) adds the first authoritative normalization layer before free-form semantic review. Fifteen name-wide Trainer errata entries yield 44 additional historical candidates across 11 names, all beyond the 106 exact-fingerprint candidates. The 4,260-print same-name pool now partitions into 106 exact candidates, 44 official-errata candidates, and 4,110 semantic-review cases. Among historical Trainer prints, exact fingerprinting plus errata resolves 46 of 168 candidates.
+
 ## 11. Cross-kernel composition needs one canonical physical state
 
 [unified_state_kernel/](unified_state_kernel/) composes the repository's Bench, lock, typed-Energy, and Prize-belief kernels behind one immutable mechanical state with a single authoritative card-zone map.
@@ -329,7 +331,7 @@ Several larger questions remain promising:
 1. **General conservation across unified state layers.** The repository now has conserved materialization paths for Energy, evolution stacks, Tools, movement, simultaneous Knock Outs, zone-routing recovery, and cross-player promotion ordering. The next shared-kernel problems are competing replacement effects, post-KO Prize/win resolution, hidden-state beliefs, and action budgets.
 2. **Compiler from card text to transitions.** A validated semantic island now compiles multi-output Trainer deck-search text through typed physical-target feasibility. The larger open problem is extending the same auditable approach to more wording families and then materializing successful compiled actions into canonical zone / instance state without guessing ambiguous semantics.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
-4. **Errata-aware reprint equivalence.** The repository now has an exact-fingerprint candidate scanner and an official Copycat counterexample showing why equality is incomplete. The next layer should normalize authoritative errata and semantic equivalence without turning same-name cards into automatic matches.
+4. **Errata-aware reprint equivalence.** Name-wide Trainer errata now provides an authoritative layer above exact fingerprints while Copycat and Rainbow Energy remain positive and negative semantic boundary cases. The next layer should cover print-specific errata and a small auditable semantic grammar without turning same-name cards into automatic matches.
 5. **Empirical archetype validation.** ALS modeling has one strong concrete case. More published Expanded lists could test which archetypes are well described by narrow lines and which are better modeled as flexible resource policies.
 
 ## Methodological caution
