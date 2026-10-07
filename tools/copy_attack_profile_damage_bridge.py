@@ -14,7 +14,7 @@ from attack_copy_physical_ko_bridge import PhysicalBoardEventProgram
 from board_position_state import BoardState
 from damage_calculation_kernel import AttackDamage, DamageContext
 from pokemon_card_profile import PokemonCardProfile
-from stack_board_profile_binding import current_profile
+from stack_board_profile_binding import current_profile, hp_by_stack_board
 from profile_damage_context import resolve_printed_type_stages
 from simple_attack_board_semantics import (
     CompiledAttackBoardSemantics,
