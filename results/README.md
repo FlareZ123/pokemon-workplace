@@ -759,6 +759,18 @@ The test also deliberately makes A's legacy usage booleans stale before the extr
 
 **Working synthesis:** turn order and turn-action bandwidth are separate state axes. A composed planner no longer needs `TurnSequenceState.budget` plus `UnifiedState.turn_budget`; schedule metadata can refer to two player states whose budgets own their own history.
 
+
+## 60. K1 has measurable decision value at a continuation-aware discard deadline
+
+[discard_information_value/](discard_information_value/) compares one fixed discard under a Prize belief with choosing the exact discard after perfect Prize composition is known.
+
+In a stylized one-replacement TM example, the guaranteed fodder discard has utility 0.9 while a TM discard has utility 1 only when Arven can restore an unprized replacement. Under K0 the TM line is worth 47/53 = 0.886792453, so the best fixed choice is fodder at 0.9. If K1 is acquired first, the player chooses TM in the 47/53 unprized worlds and fodder in the 6/53 Prized worlds, giving value 0.988679245. Gross value of exact information at this deadline is therefore 0.088679245 in the model's utility units.
+
+With two replacement copies, K0 already prefers the TM discard because recovery succeeds in 98.911465893% of worlds. Exact information still catches the rare double-Prized state, but its marginal value falls to about 0.009796807.
+
+**Working synthesis:** information value is decision-specific. K1 is valuable when different Prize worlds prefer different exact continuation-aware discard witnesses; redundant recovery can both increase line reliability and reduce the marginal value of inspection.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -797,6 +809,7 @@ Particularly foundational components include:
 - `continuation_discard_policy.py`
 - `bounded_state_planner.py`
 - `belief_weighted_discard_policy.py`
+- `belief_discard_decision.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
