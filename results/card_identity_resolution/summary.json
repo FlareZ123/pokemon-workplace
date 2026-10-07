@@ -4,46 +4,309 @@
     "names": 3392,
     "variants": 10449,
     "names_with_multiple_variants": 1289,
-    "mixed_legality_names": 10,
-    "all_banned_names": 15,
+    "mixed_legality_names": 11,
+    "all_banned_names": 21,
     "mixed_legality_variants": 0,
-    "legal_variants": 10423,
-    "banned_variants": 26,
+    "legal_variants": 10416,
+    "banned_variants": 33,
     "variants_with_multiple_prints": 2828,
     "max_prints_in_one_variant": 15
   },
   "mixed_legality_names": [
-    {"name":"Archeops","legal_print_ids":["bw10-54","rsv10pt5-51","rsv10pt5-132","sm11-121","swsh12-147","swshp-SWSH272"],"banned_print_ids":["bw3-67","bw5-110"],"distinct_variants":5},
-    {"name":"Flabébé","legal_print_ids":["g1-RC17","sm12-149","sm12-150","sm6-84","sv1-91","sv6-86","swsh7-71","xy2-62","xy2-63","xy8-101"],"banned_print_ids":["sm6-83"],"distinct_variants":10},
-    {"name":"Flapple","legal_print_ids":["sv8-139","sv8-210","swsh7-120","swshp-SWSH189"],"banned_print_ids":["swsh10tg-TG02","swsh2-22","swsh45sv-SV013","swshp-SWSH022"],"distinct_variants":4},
-    {"name":"Marshadow","legal_print_ids":["me1-80","me1-146","me5-40","sm10-81","sm12-103","smp-SM93","swsh7-80"],"banned_print_ids":["sm35-45","smp-SM85"],"distinct_variants":7},
-    {"name":"Milotic","legal_print_ids":["bw6-28","sm4-27","sm75-29","sv4-36","sv6-50","swsh12-40","swsh12tg-TG02","swsh3-39","swsh7-38","xy5-44"],"banned_print_ids":["xy2-23"],"distinct_variants":10},
-    {"name":"Mismagius","legal_print_ids":["bw11-58","me2pt5-86","sm4-40","smp-SM222","smp-SM245","sv2-88","sv2-212","swsh10-59","swsh12-64","xy8-66"],"banned_print_ids":["sm10-78"],"distinct_variants":10},
-    {"name":"Oranguru","legal_print_ids":["sm1-113","sm11-182","sm4-48","sma-SV44","smp-SM13","sv2-94","sv8-156","swsh1-148","swsh12pt5-119","swsh4-199","swsh45sv-SV098","swsh9tg-TG12"],"banned_print_ids":["sm5-114"],"distinct_variants":8},
-    {"name":"Sableye","legal_print_ids":["bw11-61","bw9-49","me2-59","sm11-133","sm2-80","sm7-88","sm8-96","sv2-136","sv4pt5-184","sv5-107","swsh11-70","swsh4-105","swsh7-67","xy1-68","xy7-44","xyp-XY92"],"banned_print_ids":["bw5-62"],"distinct_variants":16},
-    {"name":"Shaymin-EX","legal_print_ids":["bw11-RC21","bw4-5","bw4-94","xyp-XY148"],"banned_print_ids":["xy6-77","xy6-77a","xy6-106"],"distinct_variants":3},
-    {"name":"Unown","legal_print_ids":["me55-72","sm8-92","xy7-30"],"banned_print_ids":["sm8-90","sm8-91"],"distinct_variants":5}
+    {
+      "name": "Archeops",
+      "legal_print_ids": [
+        "bw10-54",
+        "rsv10pt5-51",
+        "rsv10pt5-132",
+        "sm11-121",
+        "swsh12-147",
+        "swshp-SWSH272"
+      ],
+      "banned_print_ids": [
+        "bw3-67",
+        "bw5-110"
+      ],
+      "distinct_variants": 5
+    },
+    {
+      "name": "Dragapult",
+      "legal_print_ids": [
+        "swsh12-89",
+        "swsh45sv-SV062",
+        "swsh2-91",
+        "swsh8-130"
+      ],
+      "banned_print_ids": [
+        "swshp-SWSH132"
+      ],
+      "distinct_variants": 4
+    },
+    {
+      "name": "Flabébé",
+      "legal_print_ids": [
+        "g1-RC17",
+        "sm12-149",
+        "sm12-150",
+        "sm6-84",
+        "sv1-91",
+        "sv6-86",
+        "swsh7-71",
+        "xy2-62",
+        "xy2-63",
+        "xy8-101"
+      ],
+      "banned_print_ids": [
+        "sm6-83"
+      ],
+      "distinct_variants": 10
+    },
+    {
+      "name": "Flapple",
+      "legal_print_ids": [
+        "sv8-139",
+        "sv8-210",
+        "swsh7-120",
+        "swshp-SWSH189"
+      ],
+      "banned_print_ids": [
+        "swsh10tg-TG02",
+        "swsh2-22",
+        "swsh45sv-SV013",
+        "swshp-SWSH022"
+      ],
+      "distinct_variants": 4
+    },
+    {
+      "name": "Marshadow",
+      "legal_print_ids": [
+        "me1-80",
+        "me1-146",
+        "me5-40",
+        "sm10-81",
+        "sm12-103",
+        "smp-SM93",
+        "swsh7-80"
+      ],
+      "banned_print_ids": [
+        "sm35-45",
+        "smp-SM85"
+      ],
+      "distinct_variants": 7
+    },
+    {
+      "name": "Milotic",
+      "legal_print_ids": [
+        "bw6-28",
+        "sm4-27",
+        "sm75-29",
+        "sv4-36",
+        "sv6-50",
+        "swsh12-40",
+        "swsh12tg-TG02",
+        "swsh3-39",
+        "swsh7-38",
+        "xy5-44"
+      ],
+      "banned_print_ids": [
+        "xy2-23"
+      ],
+      "distinct_variants": 10
+    },
+    {
+      "name": "Mismagius",
+      "legal_print_ids": [
+        "bw11-58",
+        "me2pt5-86",
+        "sm4-40",
+        "smp-SM222",
+        "smp-SM245",
+        "sv2-88",
+        "sv2-212",
+        "swsh10-59",
+        "swsh12-64",
+        "xy8-66"
+      ],
+      "banned_print_ids": [
+        "sm10-78"
+      ],
+      "distinct_variants": 10
+    },
+    {
+      "name": "Oranguru",
+      "legal_print_ids": [
+        "sm1-113",
+        "sm11-182",
+        "sm4-48",
+        "sma-SV44",
+        "smp-SM13",
+        "sv2-94",
+        "sv8-156",
+        "swsh1-148",
+        "swsh12pt5-119",
+        "swsh4-199",
+        "swsh45sv-SV098",
+        "swsh9tg-TG12"
+      ],
+      "banned_print_ids": [
+        "sm5-114"
+      ],
+      "distinct_variants": 8
+    },
+    {
+      "name": "Sableye",
+      "legal_print_ids": [
+        "bw11-61",
+        "bw9-49",
+        "me2-59",
+        "sm11-133",
+        "sm2-80",
+        "sm7-88",
+        "sm8-96",
+        "sv2-136",
+        "sv4pt5-184",
+        "sv5-107",
+        "swsh11-70",
+        "swsh4-105",
+        "swsh7-67",
+        "xy1-68",
+        "xy7-44",
+        "xyp-XY92"
+      ],
+      "banned_print_ids": [
+        "bw5-62"
+      ],
+      "distinct_variants": 16
+    },
+    {
+      "name": "Shaymin-EX",
+      "legal_print_ids": [
+        "bw11-RC21",
+        "bw4-5",
+        "bw4-94",
+        "xyp-XY148"
+      ],
+      "banned_print_ids": [
+        "xy6-77",
+        "xy6-77a",
+        "xy6-106"
+      ],
+      "distinct_variants": 3
+    },
+    {
+      "name": "Unown",
+      "legal_print_ids": [
+        "me55-72",
+        "sm8-92",
+        "xy7-30"
+      ],
+      "banned_print_ids": [
+        "sm8-90",
+        "sm8-91"
+      ],
+      "distinct_variants": 5
+    }
   ],
   "top_names_by_variant_count": [
-    {"name":"Pikachu","distinct_variants":78,"print_count":99},
-    {"name":"Eevee","distinct_variants":31,"print_count":50},
-    {"name":"Snorlax","distinct_variants":22,"print_count":30},
-    {"name":"Lapras","distinct_variants":20,"print_count":25},
-    {"name":"Bisharp","distinct_variants":20,"print_count":22},
-    {"name":"Victini","distinct_variants":19,"print_count":26},
-    {"name":"Riolu","distinct_variants":18,"print_count":25},
-    {"name":"Pawniard","distinct_variants":18,"print_count":22},
-    {"name":"Raichu","distinct_variants":18,"print_count":22},
-    {"name":"Clefairy","distinct_variants":18,"print_count":21},
-    {"name":"Exeggcute","distinct_variants":18,"print_count":20},
-    {"name":"Vulpix","distinct_variants":18,"print_count":20},
-    {"name":"Dedenne","distinct_variants":17,"print_count":22},
-    {"name":"Magnemite","distinct_variants":17,"print_count":20},
-    {"name":"Litwick","distinct_variants":17,"print_count":19},
-    {"name":"Charmander","distinct_variants":16,"print_count":26},
-    {"name":"Zorua","distinct_variants":16,"print_count":21},
-    {"name":"Bronzong","distinct_variants":16,"print_count":20},
-    {"name":"Meowth","distinct_variants":16,"print_count":20},
-    {"name":"Joltik","distinct_variants":16,"print_count":19}
+    {
+      "name": "Pikachu",
+      "distinct_variants": 78,
+      "print_count": 99
+    },
+    {
+      "name": "Eevee",
+      "distinct_variants": 31,
+      "print_count": 50
+    },
+    {
+      "name": "Snorlax",
+      "distinct_variants": 22,
+      "print_count": 30
+    },
+    {
+      "name": "Lapras",
+      "distinct_variants": 20,
+      "print_count": 25
+    },
+    {
+      "name": "Bisharp",
+      "distinct_variants": 20,
+      "print_count": 22
+    },
+    {
+      "name": "Victini",
+      "distinct_variants": 19,
+      "print_count": 26
+    },
+    {
+      "name": "Riolu",
+      "distinct_variants": 18,
+      "print_count": 25
+    },
+    {
+      "name": "Pawniard",
+      "distinct_variants": 18,
+      "print_count": 22
+    },
+    {
+      "name": "Raichu",
+      "distinct_variants": 18,
+      "print_count": 22
+    },
+    {
+      "name": "Clefairy",
+      "distinct_variants": 18,
+      "print_count": 21
+    },
+    {
+      "name": "Exeggcute",
+      "distinct_variants": 18,
+      "print_count": 20
+    },
+    {
+      "name": "Vulpix",
+      "distinct_variants": 18,
+      "print_count": 20
+    },
+    {
+      "name": "Dedenne",
+      "distinct_variants": 17,
+      "print_count": 22
+    },
+    {
+      "name": "Magnemite",
+      "distinct_variants": 17,
+      "print_count": 20
+    },
+    {
+      "name": "Litwick",
+      "distinct_variants": 17,
+      "print_count": 19
+    },
+    {
+      "name": "Charmander",
+      "distinct_variants": 16,
+      "print_count": 26
+    },
+    {
+      "name": "Zorua",
+      "distinct_variants": 16,
+      "print_count": 21
+    },
+    {
+      "name": "Bronzong",
+      "distinct_variants": 16,
+      "print_count": 20
+    },
+    {
+      "name": "Meowth",
+      "distinct_variants": 16,
+      "print_count": 20
+    },
+    {
+      "name": "Joltik",
+      "distinct_variants": 16,
+      "print_count": 19
+    }
   ]
 }
