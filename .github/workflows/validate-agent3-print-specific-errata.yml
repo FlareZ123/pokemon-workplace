@@ -9,10 +9,12 @@ on:
       - "tools/current_card_semantics.py"
       - "tools/tool_category_normalization.py"
       - "tools/historical_reprint_evidence.py"
+      - "tools/reprint_negative_evidence.py"
       - "results/print_specific_errata_audit/**"
       - "results/reprint_errata_resolution/**"
       - "results/tool_category_normalization/**"
       - "results/historical_reprint_bridge/**"
+      - "results/reprint_negative_evidence/**"
       - ".github/workflows/validate-agent3-print-specific-errata.yml"
   workflow_dispatch:
 
@@ -28,3 +30,4 @@ jobs:
       - run: python results/reprint_errata_resolution/reproduce.py
       - run: python results/tool_category_normalization/reproduce.py
       - run: python results/historical_reprint_bridge/reproduce.py
+      - run: python results/reprint_negative_evidence/reproduce.py
