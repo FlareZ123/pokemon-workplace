@@ -184,3 +184,28 @@ The preferred single-purpose target also flips with surrounding target density. 
 Validation uses an independent labeled-card recursion on a 10-card deck. It exhaustively enumerates accepted openings, Prize sets, future draws, and legal modeled actions. All four policy probabilities and the any-critical-Prized conditioning mass match the category DP to floating-point precision.
 
 Best next research: give setup and rescue separate deadlines. A setup resource may be mandatory by turn 1 or 2 while a Prized singleton can be rescued later. This should expose deadline-driven target allocation and quantify when spending the universal connector early is optimal.
+
+
+## Distinct connector deadlines
+
+Added:
+
+- `tools/competing_connector_deadlines.py`
+- `results/competing_connector_deadlines/README.md`
+- `results/competing_connector_deadlines/reproduce.py`
+- `.github/workflows/validate-competing-connector-deadlines.yml`
+
+The model separates an early setup deadline from the later rescue horizon while retaining the same single discard-gated universal connector.
+
+Illustrative baseline keeps rescue due by turn 4. With 2 setup targets, flexible success is 10.758838% when setup is due on turn 1 and 15.114299% when setup is due on turn 4. The option-value gain over the stronger single-purpose connector grows from 1.939474 to 3.055764 percentage points as the setup window expands.
+
+This demonstrates temporal connector contention: card-text reach and search capacity can remain identical while option value falls because one use expires before the other.
+
+With only 1 setup-target copy, setup-only is stronger than rescue-only at every tested deadline, while flexible allocation remains strongest. Target density and deadline therefore need to be represented together.
+
+Validation:
+- independent labeled 10-card recursion for setup deadlines 1 and 2;
+- equal-deadline case regressed against `competing_connector_policy.py`;
+- all probabilities match within floating-point tolerance.
+
+Highest-value next step: instantiate an actual Expanded line with a real early deadline and integrate legal Trainer-search targets from the repository's compiler/typed allocator.
