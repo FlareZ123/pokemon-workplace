@@ -1,0 +1,34 @@
+name: Validate dynamic Retreat Special Energy providers
+
+on:
+  push:
+    paths:
+      - "tools/retreat_dynamic_energy_units.py"
+      - "tools/special_energy_unit_count_catalog.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "tools/retreat_energy_transaction.py"
+      - "tools/board_object_kernel.py"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - "results/retreat_dynamic_special_energy_providers/**"
+      - "results/retreat_ignition_energy_provider_state/**"
+      - ".github/workflows/validate-retreat-dynamic-special-energy-providers.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check dynamic Special Energy Retreat providers
+        run: |
+          python results/retreat_dynamic_special_energy_providers/reproduce.py
+          python results/retreat_ignition_energy_provider_state/reproduce.py
+          python results/special_energy_dynamic_unit_counts/reproduce.py
+          python results/retreat_energy_transaction/reproduce.py
