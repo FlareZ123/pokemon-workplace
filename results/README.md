@@ -145,6 +145,20 @@ This separation matters because legality is print-sensitive and card names can m
 
 Any simulator, validator, optimizer, or card index should therefore avoid using card name as its only gameplay or legality key.
 
+## 10. Cross-kernel composition needs one canonical physical state
+
+[unified_state_kernel/](unified_state_kernel/) composes the repository's Bench, lock, typed-Energy, and Prize-belief kernels behind one immutable mechanical state with a single authoritative card-zone map.
+
+The regression suite shows that the same Quick Ball -> Tapu Lele-GX -> Wonder Tag -> Gladion association path can fail independently because of Item lock, Supporter lock, Ability suppression, or a full Bench. It also preserves the distinction between Item and Tool play, synchronizes Bench contraction with card zones, and sends the current attached-Energy/reduction summary to the exact Energy solver.
+
+For a represented state where Quick Ball and its discard are already in hand while singleton Tapu Lele-GX and Gladion are both in a 53-card unknown pool with six Prizes, belief-weighted mechanical reachability equals:
+
+`C(51,6) / C(53,6) = 78.4470246734%`.
+
+This matches the independent closed form exactly.
+
+**Working synthesis:** probabilistic beliefs should weight mechanically valid physical states. Specialized subsystems should avoid owning competing copies of physical card location. The current kernel is still a scaffold, with per-Pokémon board identity and multi-copy belief instantiation remaining open.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -165,7 +179,7 @@ Particularly foundational components include:
 
 Several larger questions remain promising:
 
-1. **Unified state representation.** The repo now has typed treatments of Bench space, locks, Energy, connectors, Prize beliefs, and timing, but no single state kernel yet composes all of them.
+1. **Unified state representation beyond the prototype.** `unified_state_kernel/` now composes Bench, lock, Energy, and Prize-belief state around one canonical zone map, but per-Pokémon board identity, switching/retreat, damage, evolution, and multi-copy belief instantiation still need a stronger shared kernel.
 2. **Compiler from card text to transitions.** Several models still use targeted or precompiled transitions. A conservative semantic compiler could reduce manual modeling while retaining auditable fallbacks for ambiguous text.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Official reprint equivalence.** The current conservative gameplay fingerprint is useful for research, but tournament-functional reprint equivalence still needs an explicit official-policy layer.
