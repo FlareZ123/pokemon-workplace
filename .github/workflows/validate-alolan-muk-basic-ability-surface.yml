@@ -1,0 +1,25 @@
+name: Validate Alolan Muk Basic Ability surface
+
+on:
+  push:
+    paths:
+      - "tools/alolan_muk_basic_ability_surface.py"
+      - "tools/card_search_target_index.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/alolan_muk_basic_ability_surface/**"
+      - ".github/workflows/validate-alolan-muk-basic-ability-surface.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Alolan Muk Basic Ability surface
+        run: python results/alolan_muk_basic_ability_surface/reproduce.py
