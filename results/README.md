@@ -1151,3 +1151,10 @@ For Lost City plus a return-to-hand KO effect, TPCi February 2026 guidance and c
 The conserved evolution-stack regression confirms both authorized physical branches: Lost City first sends the complete Pokémon stack to the Lost Zone, while the return effect first sends the stack to hand. Invalid effect orders, missing role context, unauthorized submitters, and source conflicts are rejected before physical mutation. Pull-request CI run 37586706221 passed.
 
 **Working synthesis:** rules-source selection, concrete chooser resolution, chosen effect order, and physical destination execution should remain separate layers. Source disagreement only needs to halt a simulator when it changes the concrete player's control of the decision.
+
+## State-dependent Prize utility requires acquired-set state
+
+[prize_terminal_utility_policy/](prize_terminal_utility_policy/) extends the finite-horizon physical Prize planner with utility evaluated from the set of targets acquired by a deadline. In an exact three-state posterior over A, B, C, and filler, a fixed additive proxy with A=5, B=5, C=6 chooses slot 2, while the acquired-set objective of 10 for completing A+B plus 6 for C chooses slot 3. The terminal values by first slot are (6, 22/3, 6, 26/3), so the additive first choice loses 8/3 utility units under the actual objective.
+
+**Working synthesis:** positional value-of-information depends on resource history as well as the hidden-zone posterior. ALS prerequisites, fallback lines, and finite deadlines can require a non-additive terminal objective; fixed per-card values can select the wrong first information-gathering action.
+
