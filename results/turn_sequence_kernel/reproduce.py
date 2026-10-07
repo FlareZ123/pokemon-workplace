@@ -62,6 +62,33 @@ def main() -> None:
     assert not normal_next.same_player_continues
     assert normal_next.state.budget == TurnActionBudget()
 
+    # Quota limits belong to players. A's Dual-Brains-like two-Supporter limit
+    # must not leak into B's ordinary turn, and it must be restored when A next
+    # becomes the current player.
+    a_budget = TurnActionBudget().with_limit(TurnAction.SUPPORTER, 2)
+    b_budget = TurnActionBudget()
+    personalized = TurnSequenceState(
+        "A",
+        "B",
+        budget=a_budget,
+        other_budget=b_budget,
+    )
+    a_end = close_turn_with_attack(personalized)
+    assert a_end is not None
+    to_b = advance_turn(a_end)
+    assert to_b is not None
+    assert to_b.state.current_player == "B"
+    assert to_b.state.budget.supporter_play_limit == 1
+    assert to_b.state.other_budget.supporter_play_limit == 2
+
+    b_end = close_turn_with_attack(to_b.state)
+    assert b_end is not None
+    back_to_a = advance_turn(b_end)
+    assert back_to_a is not None
+    assert back_to_a.state.current_player == "A"
+    assert back_to_a.state.budget.supporter_play_limit == 2
+    assert back_to_a.state.budget.supporter_plays_used == 0
+
     # Spend several current-turn resources before the extra-turn attack.
     budget = base.budget
     for action in (
@@ -86,6 +113,7 @@ def main() -> None:
     assert extra is not None
     assert extra.state.current_player == "A"
     assert extra.state.other_player == "B"
+    assert extra.state.other_budget.supporter_play_limit == 1
     assert extra.same_player_continues
     assert not extra.pokemon_checkup_occurs
 
