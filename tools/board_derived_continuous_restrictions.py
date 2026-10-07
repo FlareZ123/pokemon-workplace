@@ -209,6 +209,8 @@ def active_restrictions_from_boards(
 ) -> tuple[SourceScopedActionRestriction, ...]:
     """Return active restrictions after deriving continuous sources from boards."""
 
+    if player not in {player_id, opponent_id}:
+        raise ValueError("unknown player")
     continuous_sources = derive_continuous_restriction_sources(
         player_board,
         opponent_board,
