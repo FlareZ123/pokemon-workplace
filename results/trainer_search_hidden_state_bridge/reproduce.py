@@ -25,9 +25,8 @@ from top_prize_physical_bridge import (
 from trainer_search_hidden_state_bridge import (
     execute_hidden_trainer_search_transaction,
 )
-from trainer_search_profile_compiler import (
-    CompiledTrainerSearchProfile,
-    SearchOutput,
+from single_output_search_profile_compiler import (
+    compile_single_output_revealed_search_profiles,
 )
 from trainer_search_transaction import TrainerSearchExecutionState
 from typed_search_target_allocator import (
@@ -138,15 +137,12 @@ physical = SearchableDeckPhysicalState(
     (False, False),
 )
 
-quick_ball = CompiledTrainerSearchProfile(
-    card_id="swsh1-179",
-    name="Quick Ball",
-    action_class="Item",
-    base_outputs=(SearchOutput("Basic Pokémon", 1),),
-    required_discard_other_cards=1,
-    play_condition=(
-        "You can play this card only if you discard another card from your hand."
-    ),
+quick_ball = next(
+    profile
+    for profile in compile_single_output_revealed_search_profiles(
+        ROOT / "resources"
+    )
+    if profile.card_id == "swsh1-179"
 )
 targets = (
     SearchZoneTarget(
