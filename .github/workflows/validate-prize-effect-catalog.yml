@@ -1,0 +1,25 @@
+name: Validate Prize effect catalog
+
+on:
+  push:
+    paths:
+      - "tools/prize_effect_catalog.py"
+      - "results/prize_effect_catalog/**"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - ".github/workflows/validate-prize-effect-catalog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize effect transition atoms
+        run: python results/prize_effect_catalog/reproduce.py
