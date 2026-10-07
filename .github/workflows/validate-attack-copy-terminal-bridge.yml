@@ -1,0 +1,27 @@
+name: Validate attack-copy terminal bridge
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_terminal_bridge.py"
+      - "tools/attack_copy_turn_boundary_bridge.py"
+      - "tools/post_knockout_game_resolution.py"
+      - "tools/post_prize_window_game_resolution.py"
+      - "tools/promotion_pending_conservation.py"
+      - "results/attack_copy_terminal_bridge/**"
+      - ".github/workflows/validate-attack-copy-terminal-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check copied attack terminal boundary
+        run: python results/attack_copy_terminal_bridge/reproduce.py
