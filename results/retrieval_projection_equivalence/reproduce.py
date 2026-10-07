@@ -9,14 +9,17 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from trainer_search_profile_compiler import compile_multi_output_trainer_profiles
+from trainer_search_profile_compiler import SearchOutput, compile_multi_output_trainer_profiles
 from typed_search_retrieval import enumerate_typed_retrieval_actions, project_retrieval_to_demands
 from typed_search_target_allocator import (
+    BASIC_ENERGY,
+    BASIC_POKEMON,
     ITEM,
     POKEMON_TOOL,
     SPECIAL_ENERGY,
     STADIUM,
     SUPPORTER,
+    TYPE_PREFIX,
     TargetGroup,
     enumerate_typed_target_profiles,
     make_demand,
@@ -77,7 +80,46 @@ def main() -> None:
         ),
     )
 
-    print(json.dumps([gh_row, secret_row], indent=2, sort_keys=True))
+    sabrina = profile(rows, "Sabrina & Brycen")
+    sabrina_row = compare(
+        "sabrina_brycen",
+        sabrina.base_outputs + sabrina.conditional_outputs,
+        (
+            TargetGroup("Fire Pokemon", 1, frozenset({BASIC_POKEMON, f"{TYPE_PREFIX}fire"})),
+            TargetGroup("Water Pokemon", 1, frozenset({BASIC_POKEMON, f"{TYPE_PREFIX}water"})),
+            TargetGroup("Lightning Pokemon", 1, frozenset({BASIC_POKEMON, f"{TYPE_PREFIX}lightning"})),
+            TargetGroup("Fire Energy", 1, frozenset({BASIC_ENERGY, f"{TYPE_PREFIX}fire"})),
+            TargetGroup("Water Energy", 1, frozenset({BASIC_ENERGY, f"{TYPE_PREFIX}water"})),
+        ),
+        (
+            make_demand("Pokemon", "Pokemon", copies=3),
+            make_demand("Basic Energy", "Basic Energy card", copies=2),
+        ),
+    )
+
+    overlap_row = compare(
+        "overlapping_trainer_item_axes",
+        (
+            SearchOutput("Trainer card", 1),
+            SearchOutput("Item card", 1),
+        ),
+        (
+            TargetGroup("Item target", 1, frozenset({ITEM})),
+            TargetGroup("Supporter target", 1, frozenset({SUPPORTER})),
+        ),
+        (
+            make_demand("Item", "Item card"),
+            make_demand("Supporter", "Supporter card"),
+        ),
+    )
+
+    print(
+        json.dumps(
+            [gh_row, secret_row, sabrina_row, overlap_row],
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":
