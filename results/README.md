@@ -170,7 +170,7 @@ Any simulator, validator, optimizer, or card index should therefore avoid using 
 
 [deck_validator/](deck_validator/) turns that identity separation into a conservative 60-card validator. It aggregates the ordinary four-copy limit by card name while retaining exact-print legality and card-specific deck rules such as ACE SPEC, Radiant Pokémon, Prism Star, Pokémon Star, and print-conditional singleton text.
 
-[set_fallback_legality_audit/](set_fallback_legality_audit/) localizes all 191 remaining set-level legality fallbacks to the two 30th Celebration set files. [reprint_equivalence_candidates/](reprint_equivalence_candidates/) then shows the opposite edge of the problem: 100 prints outside the direct Expanded-set universe exactly match legal gameplay fingerprints, while 4,248 outside-scope prints share a name with a legal card and require stronger semantic review.
+[set_fallback_legality_audit/](set_fallback_legality_audit/) localizes all 191 remaining set-level legality fallbacks to the two 30th Celebration set files. [reprint_equivalence_candidates/](reprint_equivalence_candidates/) then shows the opposite edge of the problem: 106 prints outside the direct Expanded-set universe exactly match legal gameplay fingerprints, while 4,260 outside-scope prints share a name with a legal card and require stronger semantic review.
 
 The handbook's Copycat example is a concrete counterexample to exact-text identity as a complete reprint rule: the two database fingerprints differ even though official tournament guidance treats the effects as functionally identical. Reprint equivalence therefore needs an errata-aware semantic layer rather than a name lookup or raw-text equality test.
 
