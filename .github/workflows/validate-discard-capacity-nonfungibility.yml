@@ -1,0 +1,23 @@
+name: Validate TCG discard state nonfungibility
+
+on:
+  push:
+    paths:
+      - "tools/discard_cost_witness.py"
+      - "tools/joint_discard_constraints.py"
+      - "results/discard_capacity_nonfungibility/**"
+      - ".github/workflows/validate-discard-capacity-nonfungibility.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/discard_capacity_nonfungibility/reproduce.py
