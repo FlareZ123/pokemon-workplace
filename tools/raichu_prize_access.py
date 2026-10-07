@@ -127,7 +127,7 @@ def _snapshot_flags(
     gladion_in_deck = deck[1] > 0
     ultra_in_hand = hand[2] > 0
     computer_in_hand = hand[3] > 0
-    connector_payable = hand[4] >= discard_cost
+    connector_payable = hand[4] + hand[5] >= discard_cost
 
     # Computer Search is deliberately disabled here. This is the Harto direct
     # package after removing the ACE SPEC: Ultra Ball can take Raichu from the
@@ -218,13 +218,16 @@ def raichu_access_snapshot(
         raise ValueError("this model supports at most one Computer Search ACE SPEC")
 
     target_copies = 1
+    disposable_nonstarter = disposable_cards - disposable_starter_cards
+    starter_nondisposable = starter_cards - disposable_starter_cards
     used = (
         target_copies
         + gladion_copies
         + ultra_ball_copies
         + computer_search_copies
-        + disposable_cards
-        + starter_cards
+        + disposable_nonstarter
+        + disposable_starter_cards
+        + starter_nondisposable
     )
     if used > deck_size:
         raise ValueError("modeled categories exceed deck size")
@@ -234,8 +237,9 @@ def raichu_access_snapshot(
         gladion_copies,
         ultra_ball_copies,
         computer_search_copies,
-        disposable_cards,
-        starter_cards,
+        disposable_nonstarter,
+        disposable_starter_cards,
+        starter_nondisposable,
         protected_other,
     )
 
@@ -255,7 +259,7 @@ def raichu_access_snapshot(
     target_prized_adaptive_access = 0.0
 
     for opening in _bounded_compositions(opening_hand_size, sizes):
-        if opening[5] == 0:
+        if opening[5] + opening[6] == 0:
             continue
         opening_mass = _multivariate_probability(opening, sizes) / accepted
         after_opening = tuple(size - count for size, count in zip(sizes, opening))
