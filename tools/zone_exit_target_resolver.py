@@ -103,16 +103,8 @@ def resolve_zone_exit_target_sets(
     geometry = profile.target_geometry
     target_filter = profile.target_filter
 
-    own_all = _eligible(
-        own_board.pokemon,
-        target_filter,
-        types=own_types,
-    )
-    opponent_all = _eligible(
-        opponent_board.pokemon,
-        target_filter,
-        types=opponent_types,
-    )
+    own_all = own_board.pokemon
+    opponent_all = opponent_board.pokemon
     own_bench = tuple(
         row for row in own_all
         if row.pokemon_id != own_board.active_id
@@ -138,15 +130,25 @@ def resolve_zone_exit_target_sets(
         return ((TargetRef(OWN, source_id),),)
 
     if geometry == "own_one":
+        eligible = _eligible(
+            own_all,
+            target_filter,
+            types=own_types,
+        )
         return tuple(
             (target,)
-            for target in _refs(OWN, own_all)
+            for target in _refs(OWN, eligible)
         )
 
     if geometry == "own_bench_one":
+        eligible = _eligible(
+            own_bench,
+            target_filter,
+            types=own_types,
+        )
         return tuple(
             (target,)
-            for target in _refs(OWN, own_bench)
+            for target in _refs(OWN, eligible)
         )
 
     if geometry == "opponent_active":
@@ -169,25 +171,40 @@ def resolve_zone_exit_target_sets(
         )
 
     if geometry == "opponent_bench_one":
+        eligible = _eligible(
+            opponent_bench,
+            target_filter,
+            types=opponent_types,
+        )
         return tuple(
             (target,)
             for target in _refs(
                 OPPONENT,
-                opponent_bench,
+                eligible,
             )
         )
 
     if geometry == "opponent_one":
+        eligible = _eligible(
+            opponent_all,
+            target_filter,
+            types=opponent_types,
+        )
         return tuple(
             (target,)
             for target in _refs(
                 OPPONENT,
-                opponent_all,
+                eligible,
             )
         )
 
     if geometry == "own_any_number":
-        own_refs = _refs(OWN, own_all)
+        eligible = _eligible(
+            own_all,
+            target_filter,
+            types=own_types,
+        )
+        own_refs = _refs(OWN, eligible)
         return tuple(
             tuple(selected)
             for size in range(len(own_refs) + 1)
@@ -203,15 +220,14 @@ def resolve_zone_exit_target_sets(
                 "mixed self geometry requires source_id"
             )
         try:
-            source = own_board.get(source_id)
+            own_board.get(source_id)
         except StopIteration:
             return ()
-        if not _matches_filter(
-            source,
+        eligible = _eligible(
+            opponent_bench,
             target_filter,
-            types=own_types,
-        ):
-            return ()
+            types=opponent_types,
+        )
         source_ref = TargetRef(OWN, source_id)
         return tuple(
             (
@@ -220,25 +236,34 @@ def resolve_zone_exit_target_sets(
             )
             for target in _refs(
                 OPPONENT,
-                opponent_bench,
+                eligible,
             )
         )
 
     if geometry == "opponent_bench_all":
+        eligible = _eligible(
+            opponent_bench,
+            target_filter,
+            types=opponent_types,
+        )
         return (
             _refs(
                 OPPONENT,
-                opponent_bench,
+                eligible,
             ),
         )
 
     if geometry == "opponent_bench_all_except_selected_three":
+        eligible = _eligible(
+            opponent_bench,
+            target_filter,
+            types=opponent_types,
+        )
         opponent_refs = _refs(
             OPPONENT,
-            opponent_bench,
+            eligible,
         )
         survivor_count = min(3, len(opponent_refs))
-        all_refs = set(opponent_refs)
         return tuple(
             tuple(
                 ref
