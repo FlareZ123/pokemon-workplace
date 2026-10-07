@@ -28,6 +28,7 @@ The unified layer owns one canonical card-zone map. Subsystems carry only the st
 - `BenchState`;
 - `PlayerChannels`;
 - Active Pokémon identity and `PokemonState`;
+- Active Tool identity, when modeled;
 - Active target tags;
 - Ability availability;
 - normal Energy-attachment usage;
@@ -80,6 +81,8 @@ After Tool-effect suppression, the state therefore simultaneously records:
 
 - `tool_attached = True`;
 - `tool_effect_enabled = False`.
+
+The composition layer also preserves the Tool's identity. This matters because the lower-level lock kernel intentionally uses a generic `tool_attached` bit for mechanics such as Garbotoxin. Without an identity field, a Choice Band attachment satisfies the same generic boolean as Stealthy Hood and can be misread as granting Stealthy Hood protection. The regression now attaches Choice Band and asserts that it does **not** protect the holder.
 
 A broad Trainer lock removes the Tool-play transition entirely.
 
@@ -161,6 +164,7 @@ This avoids forcing every subsystem into one giant monolithic object while still
 - Item, Supporter, Ability, and full-Bench failure gates;
 - direct-to-Bench failure of Wonder Tag;
 - Tool attachment under Item lock;
+- Tool identity preservation, including a non-Hood counterexample;
 - Tool-effect suppression without detachment;
 - Trainer-lock denial of Tool play;
 - typed DCE + Thunder Mountain attack readiness;
