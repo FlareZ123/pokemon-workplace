@@ -51,6 +51,7 @@ class PositionEffectProfile:
     attack_cost: tuple[str, ...] = ()
     attack_damage: str | None = None
     coin_heads_required: bool = False
+    optional: bool = False
 
     def __post_init__(self) -> None:
         if self.source_kind not in {"trainer", "attack"}:
@@ -70,6 +71,11 @@ class _Meaning:
 
 _MEANINGS: dict[str, _Meaning] = {
     "Switch your Active Pokémon with 1 of your Benched Pokémon.": _Meaning(
+        PositionEffectKind.SELF_SWITCH,
+        ChoiceAuthority.ACTOR,
+        EffectTargetGeometry.ACTOR_ACTIVE,
+    ),
+    "Switch this Pokémon with 1 of your Benched Pokémon.": _Meaning(
         PositionEffectKind.SELF_SWITCH,
         ChoiceAuthority.ACTOR,
         EffectTargetGeometry.ACTOR_ACTIVE,
@@ -107,6 +113,11 @@ _MEANINGS: dict[str, _Meaning] = {
 }
 
 _COIN_HEADS_PREFIX = "Flip a coin. If heads, "
+_OPTIONAL_SELF_SWITCH = "You may switch this Pokémon with 1 of your Benched Pokémon."
+_GX_SELF_SWITCH = (
+    "Switch this Pokémon with 1 of your Benched Pokémon. "
+    "(You can't use more than 1 GX attack in a game.)"
+)
 _POKEMON_CATCHER_STALE = (
     "Switch your opponent's Active Pokémon with 1 of his or her Benched Pokémon."
 )
@@ -136,11 +147,25 @@ def _current_rules(card: dict[str, Any]) -> tuple[str, ...]:
     )
 
 
-def _parse_movement(text: str) -> tuple[_Meaning, bool] | None:
+def _parse_movement(text: str) -> tuple[_Meaning, bool, bool] | None:
     normalized = _normalized(text)
+
+    if normalized == _OPTIONAL_SELF_SWITCH:
+        return (
+            _MEANINGS["Switch this Pokémon with 1 of your Benched Pokémon."],
+            False,
+            True,
+        )
+    if normalized == _GX_SELF_SWITCH:
+        return (
+            _MEANINGS["Switch this Pokémon with 1 of your Benched Pokémon."],
+            False,
+            False,
+        )
+
     direct = _MEANINGS.get(normalized)
     if direct is not None:
-        return direct, False
+        return direct, False, False
 
     if not normalized.startswith(_COIN_HEADS_PREFIX):
         return None
@@ -149,7 +174,7 @@ def _parse_movement(text: str) -> tuple[_Meaning, bool] | None:
         return None
     canonical_body = body[0].upper() + body[1:]
     gated = _MEANINGS.get(canonical_body)
-    return None if gated is None else (gated, True)
+    return None if gated is None else (gated, True, False)
 
 
 def _legal_expanded_cards(resources_root: Path) -> tuple[dict[str, Any], ...]:
@@ -208,7 +233,7 @@ def _trainer_profile(card: dict[str, Any]) -> PositionEffectProfile | None:
     if len(matched) != 1:
         return None
 
-    effect_text, (meaning, coin_heads_required) = matched[0]
+    effect_text, (meaning, coin_heads_required, optional) = matched[0]
     other = tuple(
         rule
         for rule in rules
@@ -229,6 +254,7 @@ def _trainer_profile(card: dict[str, Any]) -> PositionEffectProfile | None:
         effect_text=effect_text,
         play_condition=other[0] if other else None,
         coin_heads_required=coin_heads_required,
+        optional=optional,
     )
 
 
@@ -242,7 +268,7 @@ def _attack_profiles(card: dict[str, Any]) -> tuple[PositionEffectProfile, ...]:
         parsed = _parse_movement(effect_text)
         if parsed is None:
             continue
-        meaning, coin_heads_required = parsed
+        meaning, coin_heads_required, optional = parsed
         profiles.append(
             PositionEffectProfile(
                 card_id=card["id"],
@@ -257,6 +283,7 @@ def _attack_profiles(card: dict[str, Any]) -> tuple[PositionEffectProfile, ...]:
                 attack_cost=tuple(attack.get("cost") or ()),
                 attack_damage=attack.get("damage"),
                 coin_heads_required=coin_heads_required,
+                optional=optional,
             )
         )
     return tuple(profiles)
