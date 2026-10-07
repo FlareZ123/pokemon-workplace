@@ -10,6 +10,7 @@ from canonical_turn_budget_owner import (
     retreat_with_canonical_budget,
 )
 from energy_board_conservation import ATTACHED, EnergyBoardState
+from retreat_cost_semantics import RetreatCostModifier, effective_retreat_cost
 from retreat_destination_conflicts import (
     RetreatDestinationAnalysis,
     analyze_successful_retreat_energy_destination,
@@ -148,4 +149,27 @@ def retreat_with_energy_destinations(
         state=next_state,
         committed=True,
         destinations=tuple(destinations),
+    )
+
+
+def retreat_with_cost_modifiers(
+    state: RetreatEnergyTransactionState,
+    bench_object_id: str,
+    *,
+    base_retreat_cost: int,
+    modifiers: tuple[RetreatCostModifier, ...] = (),
+    discard_energy_ids: Iterable[str],
+    opposing_scoop_up_block_active: bool = False,
+    prism_star_energy_ids: Iterable[str] = (),
+) -> RetreatEnergyTransactionResult | None:
+    """Derive effective Retreat Cost, then execute the conserved transaction."""
+
+    retreat_cost = effective_retreat_cost(base_retreat_cost, modifiers)
+    return retreat_with_energy_destinations(
+        state,
+        bench_object_id,
+        retreat_cost=retreat_cost,
+        discard_energy_ids=discard_energy_ids,
+        opposing_scoop_up_block_active=opposing_scoop_up_block_active,
+        prism_star_energy_ids=prism_star_energy_ids,
     )
