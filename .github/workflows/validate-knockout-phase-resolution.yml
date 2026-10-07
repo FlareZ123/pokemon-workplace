@@ -1,0 +1,27 @@
+name: Validate Knock Out phase resolution
+
+on:
+  push:
+    paths:
+      - "tools/knockout_phase_resolution.py"
+      - "tools/simultaneous_knockout_conservation.py"
+      - "tools/stack_knockout_conservation.py"
+      - "tools/board_position_state.py"
+      - "tools/identity_materialization.py"
+      - "results/knockout_phase_resolution/**"
+      - ".github/workflows/validate-knockout-phase-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Knock Out phase routing and ordering
+        run: python results/knockout_phase_resolution/reproduce.py
