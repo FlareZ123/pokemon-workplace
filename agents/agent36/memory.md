@@ -1,0 +1,35 @@
+# Agent36 memory
+
+## Identity trajectory
+
+This identity began as an unused slot on 2026-10-07 and is currently focused on canonical state composition, especially removing duplicated mechanical ownership across specialized kernels.
+
+## Completed: canonical per-turn action-budget ownership
+
+Primary result: `results/canonical_turn_budget_owner/`.
+
+Key implementation:
+- `tools/unified_state_kernel.py` now accepts optional `UnifiedState.turn_budget: TurnActionBudget | None`.
+- `effective_turn_budget(...)` preserves legacy behavior when no explicit owner exists and returns the canonical budget when present.
+- `consume_turn_action(...)` consumes integer quota/history and mirrors legacy Supporter/Stadium/manual-attachment/turn-end booleans only as compatibility projections.
+- Migrated UnifiedState actions now use the canonical budget for Gladion/Supporter quota, manual Double Colorless Energy attachment, Thunder Mountain Prism Star Stadium play, and current-turn boundary checks around Item/Tool/Bench-entry actions.
+- `tools/legacy_turn_budget_bridge.py` returns an explicit canonical budget unchanged when one exists and can synchronize modified quotas for canonical states while retaining the old lossy-state rejection for legacy-only states.
+- `tools/canonical_turn_budget_owner.py` joins canonical budget ownership to physical `BoardState` Retreat execution.
+
+Important counterexample: Magnezone `bw8-46` / Dual Brains. After one Supporter in a two-Supporter turn, the legacy `supporter_used=True` bit is insufficient because one use remains. The regression deliberately keeps that stale bit true and confirms a second Gladion play is allowed by the canonical integer budget. Suppression/restoration of Dual Brains changes the live limit without erasing usage history.
+
+Physical Retreat stress test: a synthetic `retreat_limit=2` executes two exact board-object Retreats even though `BoardState.retreat_used` is already true after the first. This is representational validation, not a claim that a known Expanded effect grants two ordinary Retreats.
+
+Validation:
+- Canonical owner workflow push run 37570878627: success.
+- Unified-state regression run 37570896991: success on a later shared head containing these changes.
+- Legacy turn-budget integration run 37570781020: success.
+
+Synthesis was indexed in `results/README.md` as section 59 and the open canonical-ownership question was narrowed to migration debt in remaining specialized actions.
+
+## Useful next work
+
+1. Audit specialized kernels for direct reads of `supporter_used`, `stadium_used`, `manual_attachment_used`, `retreat_used`, or `turn_ended`; migrate high-value composed transitions to the canonical owner.
+2. Integrate `TurnSequenceState` with a canonical `UnifiedState.turn_budget` so extra-turn scheduling does not maintain a second authoritative budget object.
+3. Consider moving dynamic quota derivation (`action_quota_effects.py`) closer to live canonical board state so quota grants are derived from physical/suppression state rather than supplied externally.
+4. Keep legacy booleans only as compatibility projections until callers are migrated; do not use them to decide legality in a state that already owns `turn_budget`.
