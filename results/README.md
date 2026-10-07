@@ -149,6 +149,8 @@ Other timing and attack-structure work includes [copied_attack_partial_resolutio
 
 [attack_copy_damage_bridge/](attack_copy_damage_bridge/) and [attack_copy_reaction_bridge/](attack_copy_reaction_bridge/) extend that execution stack through ordered board damage and the rulebook's damaged-by-attack reaction phase. A copied Timeless-GX can create a pending extra-turn directive while damage or a Strong Bash-like reflection still creates Knock Outs. The turn scheduler is therefore gated behind the full attack-ending phase order: outer copy continuation, board damage/effects, damaged-by-attack reactions, Knock Out processing, then turn handoff.
 
+[attack_copy_physical_ko_bridge/](attack_copy_physical_ko_bridge/) then replays copied damage directly on the stack-bearing physical board. Its Haughty Order -> Phantom Dive witness carries a 200-HP Active and 60-HP Bench target into one pending simultaneous-KO batch, keeps their Tool/Energy attachments present for the trigger window, and conserves all physical card classes through atomic disposal and survivor promotion.
+
 ## 7. Setup is an information process as well as a legality process
 
 The setup research models opening acceptance, optional starters, mulligans, and the public information revealed before the first normal turn.
