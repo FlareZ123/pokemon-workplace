@@ -77,8 +77,8 @@ def advance_turn(state: TurnSequenceState) -> TurnAdvance | None:
     if not state.budget.turn_ended:
         return None
 
-    next_budget = state.budget.next_turn()
     if state.extra_turn_queued:
+        next_budget = state.budget.next_turn()
         next_state = TurnSequenceState(
             current_player=state.current_player,
             other_player=state.other_player,
