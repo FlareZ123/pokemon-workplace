@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from identity_liveness import IdentityReference
+from pending_prize_batch_identity_belief import ObserverPendingPrizeBatchBeliefs
 from prize_pending_take import PrizePendingTakeState
 from top_prize_physical_bridge import TopPrizePhysicalState
 
@@ -45,3 +46,18 @@ def pending_prize_identity_references(
         for position, pending in enumerate(state.pending)
     )
     return tuple(rows)
+
+
+def pending_prize_belief_identity_references(
+    state: ObserverPendingPrizeBatchBeliefs,
+) -> tuple[IdentityReference, ...]:
+    """Name physical instances retained as latent pending identities in beliefs."""
+
+    return tuple(
+        IdentityReference(
+            f"belief:prize_pending:{position}",
+            instance_id,
+            "observer belief still keys a latent pending Prize identity by this instance",
+        )
+        for position, instance_id in enumerate(state.pending_instance_ids)
+    )
