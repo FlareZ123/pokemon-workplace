@@ -1,0 +1,23 @@
+name: Validate agent2 Forest Seal backup rescue
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/forest_seal_star_alchemy.py"
+      - "results/raichu_backup_gladion_forest_seal_execution/**"
+      - ".github/workflows/validate-agent2-raichu-backup-gladion-forest-seal.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Forest Seal backup rescue
+        run: python results/raichu_backup_gladion_forest_seal_execution/reproduce.py
