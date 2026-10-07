@@ -1,0 +1,23 @@
+name: Validate temporal discard replenishment
+
+on:
+  push:
+    paths:
+      - "tools/aichi_vileplume_als.py"
+      - "tools/aichi_vileplume_secret_box.py"
+      - "results/temporal_discard_replenishment/**"
+      - ".github/workflows/validate-temporal-discard-replenishment.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/temporal_discard_replenishment/reproduce.py
