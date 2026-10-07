@@ -19,7 +19,7 @@ from turn_action_budget import TurnAction, TurnActionBudget
 
 
 COPY_PATTERN = re.compile(
-    r"use the effect of (?:a|that) Supporter card .* as the effect of (?:this attack|this card)",
+    r"use the effect of .* as the effect of (?:this attack|this card)",
     re.IGNORECASE,
 )
 
@@ -53,7 +53,7 @@ def supporter_effect_copy_rows(resources_root: Path) -> list[dict[str, Any]]:
     for card in iter_legal_expanded_cards(resources_root):
         for attack in card.get("attacks") or []:
             text = _normalize(attack.get("text", ""))
-            if COPY_PATTERN.search(text):
+            if "supporter" in text.lower() and COPY_PATTERN.search(text):
                 rows.append(
                     {
                         "id": card["id"],
@@ -66,7 +66,7 @@ def supporter_effect_copy_rows(resources_root: Path) -> list[dict[str, Any]]:
         if "Supporter" in (card.get("subtypes") or []):
             for rule in card.get("rules") or []:
                 text = _normalize(rule)
-                if COPY_PATTERN.search(text):
+                if "supporter" in text.lower() and COPY_PATTERN.search(text):
                     rows.append(
                         {
                             "id": card["id"],
