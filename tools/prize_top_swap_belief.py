@@ -145,3 +145,30 @@ def swap_known_top_with_face_down_prize(
         state.face_up,
         tuple(sorted(output.items(), key=lambda row: repr(row[0]))),
     )
+
+
+def swap_joint_top_with_face_down_prize(
+    belief: TopPrizeJointBelief,
+    *,
+    position: int,
+) -> TopPrizeJointBelief:
+    """Swap the current top card with one face-down Prize in every support state."""
+
+    if not 0 <= position < belief.prize_count:
+        raise IndexError("position out of range")
+    if belief.face_up[position]:
+        raise ValueError("selected Prize position must be face down")
+
+    output: dict[tuple[PrizeGroup, tuple[PrizeGroup, ...]], float] = {}
+    for (top_group, prize_state), probability in belief.masses:
+        outgoing_group = prize_state[position]
+        next_state = list(prize_state)
+        next_state[position] = top_group
+        key = (outgoing_group, tuple(next_state))
+        output[key] = output.get(key, 0.0) + probability
+
+    return TopPrizeJointBelief(
+        belief.groups,
+        belief.face_up,
+        tuple(sorted(output.items(), key=lambda row: repr(row[0]))),
+    )
