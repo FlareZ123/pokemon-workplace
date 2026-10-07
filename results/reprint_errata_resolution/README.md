@@ -16,12 +16,12 @@ They currently resolve as:
 - 39 historical-official reprint candidates;
 - 44 name-wide official-errata candidates;
 - 3 current-handbook semantic candidates;
-- 34 known non-equivalent prints;
-- 4,024 unresolved semantic-review prints.
+- 50 known non-equivalent prints;
+- 4,008 unresolved semantic-review prints.
 
 The positive high-confidence candidate set contains 202 prints.
 
-For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 12, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. That gives 97 positive Trainer candidates and 2 known-negative Trainer prints before broader semantic comparison.
+For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 12, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. The explicit historical Trainer name-reuse audit adds 16 more known-negative Trainer prints. That gives 97 positive Trainer candidates and 18 known-negative Trainer prints before broader semantic comparison.
 
 ## Evidence ladder
 
@@ -75,7 +75,7 @@ The Tournament Handbook explicitly says Team Rocket Rainbow Energy number 17 is 
 
 Two historical Life Herb printings add a fourth negative name. Their printed text excludes Pokémon-ex targets, while current Life Herb does not, and current Expanded contains a directly legal Pokémon-ex witness. The predicate derivation lives in [../reprint_divergence_predicates/](../reprint_divergence_predicates/).
 
-This yields 34 known non-equivalent historical prints across four names.
+The dedicated Trainer name-reuse audit adds 16 more source prints across Master Ball, Pokémon Breeder, Pokémon Center, Max Revive, Revive, Devolution Spray, Power Plant, and Magnetic Storm. Each family has a direct distinguishing game-state witness. This yields 50 known non-equivalent historical prints across 12 names.
 
 ## Current-semantics normalization
 
@@ -142,12 +142,13 @@ Related regressions:
 - results/reprint_negative_evidence/reproduce.py
 - results/reprint_positive_evidence/reproduce.py
 - results/reprint_divergence_predicates/reproduce.py
+- results/trainer_name_reuse_divergence/reproduce.py
 - results/trainer_boilerplate_normalization/reproduce.py
 - results/trainer_boilerplate_candidate_audit/reproduce.py
 
 ## Limitations
 
-The remaining 4,024 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
+The remaining 4,008 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
 
 Historical reprint evidence is intentionally restricted to no-reference entries with a Black & White-onward bridge already present by the source date. Reference-required entries need separate current-semantics analysis.
 
