@@ -238,3 +238,27 @@ Updated both `results/README.md` and `results/physical_state_conservation/README
 
 Next highest-value gap: cross-player reaction/KO composition on the stack-bearing physical state, including game-resolution priority before a pending extra turn.
 
+### Terminal-state boundary after copied extra turns
+
+Created:
+
+- `tools/attack_copy_terminal_bridge.py`
+- `results/attack_copy_terminal_bridge/`
+- `.github/workflows/validate-attack-copy-terminal-bridge.yml`
+
+This composes the attack-copy turn-boundary bridge with the repository's newer post-KO Prize-window and game-resolution state. A copy-created extra-turn directive is consumed only after the E-31 Prize window has closed, terminal Prize/no-Pokemon conditions have been evaluated, and all required replacement Active choices have been completed.
+
+Regression cases use Haughty Order -> Timeless-GX:
+
+- If Player 2 loses their only Pokemon, post-Prize-window resolution returns P1 win / P2 loss. The Timeless-GX directive remains unconsumed and the turn scheduler is never called.
+- If Player 2 has a surviving Bench Pokemon, the game continues but scheduling remains blocked until P2 promotes. After promotion, canonical scheduling gives P1 the extra turn and skips Pokemon Checkup.
+- Starting from `PrizeWindowResolution` deliberately preserves the official Jirachi Prism Star E-31 timing result already established elsewhere: Prize-origin before-hand effects can change the no-Pokemon terminal snapshot before game resolution opens.
+
+CI run 37581481350 passed. Indexed in `results/README.md`.
+
+The integrated order for the modeled subset is now:
+
+`nested copy -> outer continuation -> damage/effects -> damage reactions -> physical KO phase -> Prize/E-31 window -> terminal resolution -> promotion -> turn scheduling`.
+
+Next useful direction: replace manually supplied board-event programs with conservative card-data-derived attack semantics for fixed damage / simple damage-counter attacks, or extend the physical bridge across both players' reaction/KO states.
+
