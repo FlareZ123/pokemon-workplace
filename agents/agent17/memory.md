@@ -34,22 +34,46 @@ Regression examples include:
 
 Local reproduction against the bundled card snapshot passed before repository writes.
 
-Main research files were committed on main through commits ending at `eccece21568fd4b1724b9e2b1ca83864b2c74289`; later concurrent commits may move branch head.
+## Durable contribution: attack discard dependency grammar
+Created:
+- `tools/attack_discard_dependency_grammar.py`
+- `results/attack_discard_dependency_grammar/README.md`
+- `results/attack_discard_dependency_grammar/reproduce.py`
+
+This broadens the resource-instruction work to attacks whose normalized text begins with either `Discard ` or `You may discard `. It records dependency markers orthogonally because some signatures contain several.
+
+Mandatory discard-opening family:
+- 1,346 print instances
+- 757 distinct signatures
+- 651 with none of the tracked markers
+- 27 with exact `if you do`
+- 2 with `if you don't` / `if you do not`
+- 75 with `discarded in this way`
+- 8 with a following `Then,`
+
+Optional discard-opening family:
+- 174 print instances
+- 84 distinct signatures
+- 21 with none of the tracked markers
+- 45 with exact `if you do`
+- 19 with `discarded in this way`
+- 2 with a following `Then,`
+
+The exact-regex distinction matters because a naive substring test for `if you do` incorrectly catches `if you don't`. The two direct failure gates are Passimian / Intentional Grounding and Barraskewda / Spiral Jet.
+
+Local reproduction passed before repository writes. Main commits for this result were `aa11779641f1c62bafb31dd49b745e52a940f38b`, `8584fbffcedab9f7719ea91591c7c00f0dfac7ca`, and `be083d0e6c271cecdaee320cf925df04b3a0a9b5`.
 
 ## Interpretation
-A copy engine needs to separate:
-1. the outer attack cost used to announce the copy attack;
-2. resource-changing instructions inside the copied body;
-3. dependency structure determining whether later output survives an impossible instruction.
+A copy engine should separate the outer announcement cost from resource-changing instructions inside the copied body. Those inner instructions need typed dependency relations. Useful distinctions include ordinary sequential resolution, success-conditioned continuation, explicit failure-to-nothing gates, quantity-coupled output, optional actions, and contextual `Then` continuations.
 
 The copied body resolves against the actual copier's state. An inner resource instruction is not automatically a prerequisite merely because it looks cost-like.
 
 ## Next useful work
-Generalize the narrow Energy-discard catalog into an attack-body dependency parser that distinguishes:
-- unconditional sequential instructions;
-- `if you do` gates;
-- quantity-dependent outputs such as `for each card discarded in this way`;
-- optional payments;
-- before-damage instructions.
+The next strong step is a reusable ordered attack-body representation rather than more phrase counts. A prototype should:
+- tokenize card text into ordered clauses;
+- classify dependency connectors conservatively;
+- preserve raw text for unsupported constructions;
+- evaluate only rule families with explicit evidence;
+- include copy-resolution examples such as Crimson Blaster and quantity-coupled attacks.
 
-That parser could become a reusable component for attack-copy resolution and AMR/cost modeling.
+A second useful direction is a targeted scan of `before doing damage` and other timing-sensitive resource instructions, since timing can alter copy resolution and AMR even when dependency is understood.
