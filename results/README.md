@@ -805,6 +805,15 @@ Active Neutralizing Gas opposite Active Slaking/Lazy yields a two-source cycle b
 
 **Working synthesis:** continuous lock composition requires source-dependency resolution between the predicate layer and the final target overlay. Acyclic components can be solved; cyclic components should remain explicit until timing/history semantics are supported by stronger authority rather than being assigned an arbitrary fixed point.
 
+## 65. Taken-Prize destination replacements can conflict on one physical card
+
+[prize_destination_override_conflicts/](prize_destination_override_conflicts/) inserts an explicit replacement-resolution stage between the existing `prize_pending` event and final physical movement. The bundled legal card pool supplies a concrete conflict: Barbaracle `swsh11-107` / Lost Block redirects the opponent's taken Prizes to the Lost Zone, while Billowing Smoke `swsh3-158` redirects Prizes from its holder's attack Knock Out to discard.
+
+The regression resolves ordinary Prize taking to hand, each replacement independently to its stated zone, and multiple same-zone replacements without ambiguity. When Lost Block and Billowing Smoke both apply to the same exact pending Prize instance, the layer reports `discard` versus `lost_zone` as an unresolved conflict and leaves the physical card in `prize_pending` until an upstream rules-authority layer supplies a legal resolution. All resolved branches preserve physical card-class totals.
+
+**Working synthesis:** replacement effects should be represented between the underlying event and the final conserved move. The event, ordinary destination, applicable replacements, ordering or precedence authority, and physical destination are separate state variables; mechanically conflicting replacements should remain explicit when the available rules evidence does not establish a general precedence rule.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
