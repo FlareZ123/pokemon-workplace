@@ -1,0 +1,21 @@
+name: Validate multi-output slot marginals
+
+on:
+  push:
+    paths:
+      - "tools/multi_output_slot_marginals.py"
+      - "tools/multi_channel_connector.py"
+      - "tools/connector_domination.py"
+      - "results/multi_output_slot_marginals/**"
+      - ".github/workflows/validate-multi-output-slot-marginals.yml"
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/multi_output_slot_marginals/reproduce.py
