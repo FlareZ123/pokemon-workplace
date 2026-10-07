@@ -717,6 +717,18 @@ The same ownership rule now gates modeled manual Energy attachment, Stadium play
 
 **Working synthesis:** integer turn bandwidth now has a canonical owner for the migrated composite path. Legacy booleans are compatibility projections, not sufficient execution state once quotas can exceed one or live effects can change their limits.
 
+
+## 59. Prize uncertainty turns replacement-aware discard safety into a belief-weighted quantity
+
+[belief_weighted_replacement_safety/](belief_weighted_replacement_safety/) evaluates each exact discard witness across every grouped Prize-composition world and weights the mass of worlds where a conserved continuation restores the endpoint.
+
+With one replacement TM: Evolution in a 53-card unknown pool and six Prize cards, discarding the current TM is safe in exactly 47/53 worlds, 88.679245283%, because Arven can restore it precisely when the replacement is unprized. Discarding ordinary fodder remains 100% safe. After K1, the TM discard collapses to safety 1 when the replacement is known unprized and 0 when it is known Prized.
+
+With two replacement copies, the TM discard fails only when both are Prized, raising K0 safety to 98.911465893%.
+
+**Working synthesis:** continuation-aware discardability has a world-conditional legality layer and a belief-level risk layer. K1 can change the safe-discard witness family even when the visible hand is unchanged. Redundant replacement copies reduce catastrophic Prize risk but do not eliminate it.
+
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -751,6 +763,7 @@ Particularly foundational components include:
 - `temporal_resource_ledger.py`
 - `continuation_discard_policy.py`
 - `bounded_state_planner.py`
+- `belief_weighted_discard_policy.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
