@@ -1,0 +1,26 @@
+name: Validate turn-start phase
+
+on:
+  push:
+    paths:
+      - "tools/turn_start_phase.py"
+      - "tools/physical_start_of_turn_resolution.py"
+      - "tools/turn_start_deck_loss.py"
+      - "tools/physical_deck_projection.py"
+      - "results/turn_start_phase/**"
+      - ".github/workflows/validate-turn-start-phase.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check physical turn-start phase
+        run: python results/turn_start_phase/reproduce.py
