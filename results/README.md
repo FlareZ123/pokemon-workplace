@@ -816,6 +816,16 @@ The regression therefore keeps a conflicting pending Prize physically unmoved un
 **Working synthesis:** replacement effects belong between the underlying event and the final conserved move. The ordinary destination, applicable replacements, chooser authority, per-card choice, and physical destination are separate state variables. Card-specific authority should resolve a documented interaction without being generalized automatically to every replacement conflict.
 
 
+## 66. Unrestricted search execution separates physical selection from useful output
+
+[unrestricted_search_zone_execution/](unrestricted_search_zone_execution/) carries the rulebook-backed exact-count search law into conserved `ZoneCountState` transitions without weakening the repository's constrained-search invariant.
+
+A Computer Search-style witness selects one fallback card from a nonempty deck while supplying zero useful strategic units. A Mallow-style exact-two witness selects two physical cards while only one satisfies the represented demand. Per-class totals remain conserved in both cases.
+
+For ordered top-deck destinations, the same selected multiset can produce the same aggregate zone counts with two different `top_order` values. Desired-first and filler-first Mallow branches are therefore distinct continuation states even though ordinary card conservation cannot distinguish them.
+
+**Working synthesis:** card-text cardinality, physical selected-card witness, useful demand output, and destination topology are separate search-state dimensions. Constrained searches can identify some of them safely; unrestricted fixed-count search can force them apart.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
