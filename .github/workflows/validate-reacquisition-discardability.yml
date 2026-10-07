@@ -1,0 +1,23 @@
+name: Validate reacquisition discardability
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/temporal_resource_ledger.py"
+      - "results/reacquisition_discardability/**"
+      - ".github/workflows/validate-reacquisition-discardability.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce reacquisition discardability
+        run: python results/reacquisition_discardability/reproduce.py
