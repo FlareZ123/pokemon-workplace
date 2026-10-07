@@ -1,0 +1,30 @@
+name: Validate direct Bench Trainer transaction
+
+on:
+  push:
+    paths:
+      - "tools/direct_bench_trainer_transaction.py"
+      - "tools/direct_bench_search_execution.py"
+      - "tools/direct_bench_search_profile_compiler.py"
+      - "tools/trainer_search_transaction.py"
+      - "tools/search_zone_transition.py"
+      - "tools/typed_search_target_allocator.py"
+      - "tools/identity_materialization.py"
+      - "tools/stack_knockout_conservation.py"
+      - "results/direct_bench_trainer_transaction/**"
+      - ".github/workflows/validate-direct-bench-trainer-transaction.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check atomic direct-Bench Trainer transaction
+        run: python results/direct_bench_trainer_transaction/reproduce.py
