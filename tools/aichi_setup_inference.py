@@ -10,6 +10,181 @@ from pathlib import Path
 from typing import Any
 
 
+
+VILEPLUME_NONBASIC_COUNTS: dict[str, int] = {
+    "Pidgeotto": 2,
+    "Pidgeot ex": 2,
+    "Gloom": 2,
+    "Vileplume": 2,
+    "Vileplume-GX": 1,
+    "Herdier": 2,
+    "Stoutland": 1,
+    "Guzma & Hala": 4,
+    "Guzma": 2,
+    "Cassius": 1,
+    "Karen": 1,
+    "Plumeria": 1,
+    "Gladion": 1,
+    "Faba": 1,
+    "Lusamine": 1,
+    "Bellelba & Brycen-Man": 1,
+    "Peonia": 1,
+    "Team Yell's Cheer": 1,
+    "Tag Call": 4,
+    "Stealthy Hood": 3,
+    "Technical Machine: Evolution": 2,
+    "Counter Gain": 1,
+    "Artazon": 2,
+    "Grand Tree": 1,
+    "Capture Energy": 2,
+    "Jet Energy": 2,
+    "Memory Energy": 1,
+    "Grass Energy": 1,
+}
+
+KAZUMA_IRON_NONBASIC_COUNTS: dict[str, int] = {
+    "Plumeria": 4,
+    "Guzma": 3,
+    "Guzma & Hala": 2,
+    "Team Flare Grunt": 2,
+    "Lusamine": 2,
+    "Cynthia & Caitlin": 1,
+    "Team Skull Grunt": 1,
+    "Faba": 1,
+    "Eri": 1,
+    "Sidney": 1,
+    "Gladion": 1,
+    "Lillie's Determination": 1,
+    "Team Rocket's Handiwork": 1,
+    "Crushing Hammer": 4,
+    "Trainers' Mail": 3,
+    "VS Seeker": 3,
+    "Tag Call": 2,
+    "Enhanced Hammer": 2,
+    "Camping Gear": 2,
+    "Palace Book": 1,
+    "Captivating Poké Puff": 1,
+    "Echoing Horn": 1,
+    "Megaton Blower": 1,
+    "Handheld Fan": 1,
+    "Tool Jammer": 1,
+    "Palace Belt": 1,
+    "Tropical Beach": 1,
+    "Player's Ceremony": 1,
+    "Thunder Mountain ♢": 1,
+    "Wondrous Labyrinth ♢": 1,
+    "Speed Lightning Energy": 4,
+    "Capture Energy": 2,
+    "Spiky Energy": 1,
+    "Double Colorless Energy": 1,
+}
+
+RYOYA_IRON_NONBASIC_COUNTS: dict[str, int] = {
+    "Plumeria": 4,
+    "Lusamine": 2,
+    "Guzma & Hala": 2,
+    "Guzma": 2,
+    "Sidney": 2,
+    "Eri": 2,
+    "Team Flare Grunt": 2,
+    "Cynthia & Caitlin": 1,
+    "Bellelba & Brycen-Man": 1,
+    "Team Skull Grunt": 1,
+    "Faba": 1,
+    "N": 1,
+    "Lillie's Determination": 1,
+    "Gladion": 1,
+    "Xerosic's Machinations": 1,
+    "Trainers' Mail": 4,
+    "VS Seeker": 3,
+    "Nest Ball": 2,
+    "Tag Call": 2,
+    "Enhanced Hammer": 2,
+    "Palace Book": 2,
+    "Heavy Ball": 1,
+    "Megaton Blower": 1,
+    "Handheld Fan": 2,
+    "Tool Jammer": 1,
+    "Player's Ceremony": 2,
+    "Thunder Mountain ♢": 1,
+    "Wondrous Labyrinth ♢": 1,
+    "Speed Lightning Energy": 4,
+    "Double Colorless Energy": 3,
+    "Capture Energy": 1,
+}
+
+KOHEI_IRON_NONBASIC_COUNTS: dict[str, int] = {
+    "Plumeria": 4,
+    "Guzma": 3,
+    "Team Flare Grunt": 2,
+    "Guzma & Hala": 2,
+    "Lusamine": 2,
+    "Faba": 1,
+    "Cynthia & Caitlin": 1,
+    "Eri": 1,
+    "Sidney": 1,
+    "Team Skull Grunt": 1,
+    "Team Rocket's Handiwork": 1,
+    "Peonia": 1,
+    "Lillie's Determination": 1,
+    "Crushing Hammer": 4,
+    "VS Seeker": 3,
+    "Trainers' Mail": 2,
+    "Camping Gear": 2,
+    "Tag Call": 2,
+    "Enhanced Hammer": 1,
+    "Captivating Poké Puff": 1,
+    "Target Whistle": 1,
+    "Field Blower": 1,
+    "Megaton Blower": 1,
+    "Palace Belt": 2,
+    "Handheld Fan": 1,
+    "Tool Jammer": 1,
+    "Tropical Beach": 2,
+    "Player's Ceremony": 1,
+    "Thunder Mountain ♢": 1,
+    "Wondrous Labyrinth ♢": 1,
+    "Speed Lightning Energy": 4,
+    "Capture Energy": 2,
+    "Spiky Energy": 1,
+    "Double Colorless Energy": 1,
+}
+
+
+def shared_name_copy_counts(
+    left_counts: dict[str, int],
+    right_counts: dict[str, int],
+) -> tuple[int, int]:
+    shared_names = set(left_counts) & set(right_counts)
+    return (
+        sum(left_counts[name] for name in shared_names),
+        sum(right_counts[name] for name in shared_names),
+    )
+
+
+def left_copies_shared_with_family(
+    left_counts: dict[str, int],
+    right_family: tuple[dict[str, int], ...],
+) -> int:
+    right_names: set[str] = set()
+    for counts in right_family:
+        right_names.update(counts)
+    return sum(
+        copies for name, copies in left_counts.items() if name in right_names
+    )
+
+
+if sum(VILEPLUME_NONBASIC_COUNTS.values()) != 46:
+    raise AssertionError("Vileplume non-Basic transcription must total 46 cards")
+for _iron_counts in (
+    KAZUMA_IRON_NONBASIC_COUNTS,
+    RYOYA_IRON_NONBASIC_COUNTS,
+    KOHEI_IRON_NONBASIC_COUNTS,
+):
+    if sum(_iron_counts.values()) != 56:
+        raise AssertionError("Iron Thorns non-Basic transcription must total 56 cards")
+
+
 @dataclass(frozen=True)
 class ExactListCandidate:
     name: str
@@ -185,15 +360,19 @@ def posterior_left_after_exact_mulligans(
 
 
 def build_aichi_examples() -> dict[str, Any]:
+    vile_kazuma_common, kazuma_vile_common = shared_name_copy_counts(
+        VILEPLUME_NONBASIC_COUNTS,
+        KAZUMA_IRON_NONBASIC_COUNTS,
+    )
     vileplume = ExactListCandidate(
         "Takahiro Ando Vileplume Control",
         forced_basics=14,
-        common_nonbasic_cards=16,
+        common_nonbasic_cards=vile_kazuma_common,
     )
     iron_thorns = ExactListCandidate(
         "Kazuma Kashi Iron Thorns",
         forced_basics=4,
-        common_nonbasic_cards=17,
+        common_nonbasic_cards=kazuma_vile_common,
     )
 
     equal_count_accuracy = exact_count_classification_accuracy(
@@ -203,15 +382,36 @@ def build_aichi_examples() -> dict[str, Any]:
         vileplume, iron_thorns
     )
 
+    iron_count_maps = (
+        KAZUMA_IRON_NONBASIC_COUNTS,
+        RYOYA_IRON_NONBASIC_COUNTS,
+        KOHEI_IRON_NONBASIC_COUNTS,
+    )
     vileplume_vs_iron_family = ExactListCandidate(
         "Takahiro Ando Vileplume Control vs Iron family",
         forced_basics=14,
-        common_nonbasic_cards=18,
+        common_nonbasic_cards=left_copies_shared_with_family(
+            VILEPLUME_NONBASIC_COUNTS,
+            iron_count_maps,
+        ),
     )
-    iron_family = (
-        ExactListCandidate("Kazuma Kashi Iron Thorns", 4, 17),
-        ExactListCandidate("Ryoya Fujii Iron Thorns", 4, 16),
-        ExactListCandidate("Kohei Hamamichi Iron Thorns", 4, 17),
+    iron_family = tuple(
+        ExactListCandidate(
+            name,
+            4,
+            shared_name_copy_counts(
+                VILEPLUME_NONBASIC_COUNTS,
+                counts,
+            )[1],
+        )
+        for name, counts in zip(
+            (
+                "Kazuma Kashi Iron Thorns",
+                "Ryoya Fujii Iron Thorns",
+                "Kohei Hamamichi Iron Thorns",
+            ),
+            iron_count_maps,
+        )
     )
     family_content_accuracy = family_unique_content_classification_accuracy(
         vileplume_vs_iron_family,
