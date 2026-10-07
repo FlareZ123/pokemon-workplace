@@ -117,7 +117,7 @@ def board_position_regression() -> None:
             combat=PokemonState(tool_attached=True),
             special_conditions=frozenset({condition}),
         )
-        state = make_state((active, pivot), active_id=active.object_id)
+        state = make_state((active, pivot), active_id=active.pokemon_id)
         assert normal_retreat(state, "pivot") is not None
 
     energy = Attachment(
