@@ -58,6 +58,13 @@ class TrainerSearchTransaction:
     search_destination_zone: str = "hand"
 
 
+@dataclass(frozen=True)
+class TrainerSearchBranchMetadata:
+    discard_cost: int
+    used_conditional_outputs: bool
+    optional_discard_paid: bool
+
+
 def _split_axis_usage(
     profile: CompiledTrainerSearchProfile,
     axis_usage: tuple[int, ...],
@@ -156,6 +163,30 @@ def _validated_branch(
         + profile.optional_discard_other_cards,
         any(conditional_usage),
         True,
+    )
+
+
+def validate_trainer_search_branch(
+    profile: CompiledTrainerSearchProfile,
+    demands: Sequence[DemandChannel],
+    targets: Sequence[SearchZoneTarget],
+    action: TypedTargetAction,
+    *,
+    pay_optional_discard: bool | None = None,
+) -> TrainerSearchBranchMetadata:
+    """Validate one demand-first branch and expose its resolved payment metadata."""
+
+    discard_cost, used_conditional, optional_paid = _validated_branch(
+        profile,
+        demands,
+        targets,
+        action,
+        pay_optional_discard=pay_optional_discard,
+    )
+    return TrainerSearchBranchMetadata(
+        discard_cost=discard_cost,
+        used_conditional_outputs=used_conditional,
+        optional_discard_paid=optional_paid,
     )
 
 
