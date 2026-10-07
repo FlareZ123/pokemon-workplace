@@ -20,7 +20,9 @@ LEGACY_ITEM_RULES = frozenset(
 
 
 def is_pokemon_tool(card: dict[str, Any]) -> bool:
-    return card.get("supertype") == "Trainer" and any(\n        subtype.startswith("Pokémon Tool") for subtype in (card.get("subtypes") or [])\n    )
+    return card.get("supertype") == "Trainer" and any(
+        subtype.startswith("Pokémon Tool") for subtype in (card.get("subtypes") or [])
+    )
 
 
 def normalize_legacy_tool_category(card: dict[str, Any]) -> dict[str, Any]:
