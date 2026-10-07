@@ -1,0 +1,25 @@
+name: Validate Garbotoxin quota suppression
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/garbotoxin_suppression.py"
+      - "tools/board_action_quota_derivation.py"
+      - "tools/board_object_kernel.py"
+      - "results/garbotoxin_quota_suppression/**"
+      - ".github/workflows/validate-garbotoxin-quota-suppression.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Garbotoxin quota suppression
+        run: python results/garbotoxin_quota_suppression/reproduce.py
