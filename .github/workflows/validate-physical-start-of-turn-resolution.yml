@@ -1,0 +1,26 @@
+name: Validate physical start-of-turn resolution
+
+on:
+  push:
+    paths:
+      - "tools/physical_start_of_turn_resolution.py"
+      - "tools/turn_start_deck_loss.py"
+      - "tools/physical_deck_projection.py"
+      - "tools/post_knockout_game_resolution.py"
+      - "results/physical_start_of_turn_resolution/**"
+      - ".github/workflows/validate-physical-start-of-turn-resolution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check physical start-of-turn resolution
+        run: python results/physical_start_of_turn_resolution/reproduce.py
