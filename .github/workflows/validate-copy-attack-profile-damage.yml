@@ -1,0 +1,27 @@
+name: Validate copy attack profile damage
+
+on:
+  push:
+    paths:
+      - "tools/copy_attack_profile_damage_bridge.py"
+      - "tools/simple_attack_board_semantics.py"
+      - "tools/pokemon_card_profile.py"
+      - "tools/profile_damage_context.py"
+      - "tools/attack_copy_physical_ko_bridge.py"
+      - "results/copy_attack_profile_damage_bridge/**"
+      - ".github/workflows/validate-copy-attack-profile-damage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check copied attack type ownership
+        run: python results/copy_attack_profile_damage_bridge/reproduce.py
