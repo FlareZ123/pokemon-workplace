@@ -40,7 +40,45 @@ def main() -> None:
     assert summary["cards_by_category"]["knock_out_trigger"] > 0
     assert summary["cards_by_category"]["energy_move"] > 0
 
-    print(json.dumps(summary, indent=2, sort_keys=True))
+    examples = {}
+    for category in (
+        "knock_out_zone_redirection",
+        "knock_out_attached_recovery",
+        "restricted_special_energy_attachment",
+        "energy_move",
+    ):
+        seen = set()
+        rows = []
+        for row in catalog["rows"]:
+            if category not in row["categories"]:
+                continue
+            signature = (row["card_id"], row["source_name"], row["text"])
+            if signature in seen:
+                continue
+            seen.add(signature)
+            rows.append(
+                {
+                    "card_id": row["card_id"],
+                    "card_name": row["card_name"],
+                    "source_kind": row["source_kind"],
+                    "source_name": row["source_name"],
+                    "text": row["text"],
+                }
+            )
+            if len(rows) == 8:
+                break
+        examples[category] = rows
+
+    print(
+        json.dumps(
+            {
+                "summary": summary,
+                "examples": examples,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":
