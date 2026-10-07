@@ -54,6 +54,7 @@ class DamageContext:
     attack: AttackDamage
     attacker_effect_modifiers: tuple[int, ...] = ()
     weakness_multiplier: int | None = None
+    weakness_addition: int = 0
     resistance_reduction: int = 0
     defender_effect_modifiers: tuple[int, ...] = ()
     prevent_all_damage: bool = False
@@ -63,6 +64,8 @@ class DamageContext:
     def __post_init__(self) -> None:
         if self.weakness_multiplier is not None and self.weakness_multiplier < 1:
             raise ValueError("Weakness multiplier must be at least 1")
+        if self.weakness_addition < 0:
+            raise ValueError("Weakness addition must be non-negative")
         if self.resistance_reduction < 0:
             raise ValueError("Resistance reduction must be non-negative")
 
@@ -111,7 +114,7 @@ def calculate_damage(context: DamageContext) -> DamageResult:
             step2 * context.weakness_multiplier
             if context.weakness_multiplier is not None
             else step2
-        )
+        ) + context.weakness_addition
         step4 = step3 - context.resistance_reduction
         if step4 <= 0:
             return DamageResult(
