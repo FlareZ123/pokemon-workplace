@@ -1,0 +1,29 @@
+name: validate legality provenance
+
+on:
+  push:
+    paths:
+      - "tools/legality_provenance.py"
+      - "tools/release_legality.py"
+      - "tools/reprint_errata_resolution.py"
+      - "tools/current_card_semantics.py"
+      - "results/legality_provenance/**"
+      - ".github/workflows/validate-legality-provenance.yml"
+  pull_request:
+    paths:
+      - "tools/legality_provenance.py"
+      - "tools/release_legality.py"
+      - "tools/reprint_errata_resolution.py"
+      - "tools/current_card_semantics.py"
+      - "results/legality_provenance/**"
+      - ".github/workflows/validate-legality-provenance.yml"
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.legality_provenance.reproduce
