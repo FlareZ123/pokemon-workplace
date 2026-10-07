@@ -49,9 +49,10 @@ FORCED_BASICS = 9
 OPTIONAL_TALONFLAME = 4
 BRIGETTE = 2
 ULTRA_BALL = 4
+SKYLA = 1
 ENERGY = 11
-OTHER = 30
-FEATURE_GROUPS = (BRIGETTE, ULTRA_BALL, ENERGY)
+OTHER = 29
+FEATURE_GROUPS = (BRIGETTE, ULTRA_BALL, SKYLA, ENERGY)
 
 
 def has_brigette(state: SetupHandState) -> bool:
@@ -62,24 +63,36 @@ def has_ultra_ball(state: SetupHandState) -> bool:
     return state.feature_counts[1] > 0
 
 
+def has_skyla(state: SetupHandState) -> bool:
+    return state.feature_counts[2] > 0
+
+
 def direct_search(state: SetupHandState) -> bool:
     return has_brigette(state) or has_ultra_ball(state)
 
 
+def connector_search(state: SetupHandState) -> bool:
+    return direct_search(state) or has_skyla(state)
+
+
 def aero_ready(state: SetupHandState) -> bool:
-    return state.feature_counts[2] > 0
+    return state.feature_counts[3] > 0
 
 
 def policy_decline(state: SetupHandState) -> float:
     return 0.0
 
 
-def policy_search(state: SetupHandState) -> float:
+def policy_direct_search(state: SetupHandState) -> float:
     return float(direct_search(state))
 
 
-def policy_search_or_aero(state: SetupHandState) -> float:
-    return float(direct_search(state) or aero_ready(state))
+def policy_connector_search(state: SetupHandState) -> float:
+    return float(connector_search(state))
+
+
+def policy_connector_or_aero(state: SetupHandState) -> float:
+    return float(connector_search(state) or aero_ready(state))
 
 
 def policy_accept_all(state: SetupHandState) -> float:
@@ -93,6 +106,7 @@ def validate_deck_and_card_pool() -> None:
         + OPTIONAL_TALONFLAME
         + BRIGETTE
         + ULTRA_BALL
+        + SKYLA
         + ENERGY
         + OTHER
         == 60
@@ -148,6 +162,11 @@ def validate_deck_and_card_pool() -> None:
     assert "Discard 2 cards" in ultra_ball["rules"][0]
     assert "search your deck for a Pokémon" in ultra_ball["rules"][0]
 
+    skyla = card_by_id["xy8-148"]
+    assert _effective_status(skyla) == "Legal"
+    assert "Supporter" in skyla["subtypes"]
+    assert "Trainer card" in skyla["rules"][0]
+
 
 def policy_metrics(policy) -> tuple[float, float]:
     acceptance = opening_acceptance_hand_policy(
@@ -171,7 +190,7 @@ def prize_rates(policy) -> tuple[float, ...]:
             optional_policy=policy,
             class_index=index,
         )
-        for index in range(6)
+        for index in range(7)
     )
 
 
@@ -200,30 +219,35 @@ def main() -> None:
     print("optional-only mass", optional_mass)
     print("conditional Brigette", conditional(has_brigette))
     print("conditional Ultra Ball", conditional(has_ultra_ball))
+    print("conditional Skyla", conditional(has_skyla))
     print("conditional Brigette-only", conditional(
         lambda state: has_brigette(state) and not has_ultra_ball(state)
     ))
     print("conditional Ultra-Ball-only", conditional(
         lambda state: has_ultra_ball(state) and not has_brigette(state)
     ))
-    print("conditional both search channels", conditional(
+    print("conditional both direct channels", conditional(
         lambda state: has_brigette(state) and has_ultra_ball(state)
     ))
     print("conditional direct-search", conditional(direct_search))
+    print("conditional connector-search", conditional(connector_search))
     print("conditional aero-ready", conditional(aero_ready))
     print(
-        "conditional search-or-aero",
-        conditional(lambda state: direct_search(state) or aero_ready(state)),
+        "conditional connector-or-aero",
+        conditional(lambda state: connector_search(state) or aero_ready(state)),
     )
     print(
         "conditional neither",
-        conditional(lambda state: not direct_search(state) and not aero_ready(state)),
+        conditional(
+            lambda state: not connector_search(state) and not aero_ready(state)
+        ),
     )
 
     policies = (
         ("decline", policy_decline),
-        ("search", policy_search),
-        ("search-or-aero", policy_search_or_aero),
+        ("direct-search", policy_direct_search),
+        ("connector-search", policy_connector_search),
+        ("connector-or-aero", policy_connector_or_aero),
         ("accept-all", policy_accept_all),
     )
     for name, policy in policies:
@@ -231,10 +255,13 @@ def main() -> None:
         print(name, "acceptance", acceptance, "mulligans", mulligans)
         print(name, "Prize rates", prize_rates(policy))
 
-    # Optional-only hands contain no Ralts, so all four remain in the 53-card
-    # deck before the six Prize cards are set.
-    all_ralts_prized = comb(49, 2) / comb(53, 6)
-    print("all 4 Ralts prized after optional-only hand", all_ralts_prized)
+    # Optional-only hands contain no Ralts. If Skyla is the only search route,
+    # it can fail to find Ultra Ball only when all four Ultra Ball copies are
+    # among the six Prize cards. The same count applies to all-four-Ralts
+    # Prized after an optional-only hand.
+    four_of_four_prized = comb(49, 2) / comb(53, 6)
+    print("all 4 Ralts prized after optional-only hand", four_of_four_prized)
+    print("all 4 Ultra Ball prized after Skyla-only hand", four_of_four_prized)
 
 
 if __name__ == "__main__":
