@@ -104,3 +104,24 @@ Thus delayed materialization exposes reserved capacity; early materialization ex
 ## Next high-value action
 
 Add next-turn capacity restoration. A player can often replace an opponent Stadium to restore ordinary capacity, but Stadium play has a one-per-turn quota and can collide with another required Stadium objective. Model whether restoration reopens the reserved slot before Bench entry, plus the analogous case where a different required Stadium can itself be the restorative Stadium.
+
+
+## Completed result: Bench capacity restoration bootstrap
+
+Created:
+- `tools/bench_capacity_restoration_bootstrap.py`
+- `results/bench_capacity_restoration_bootstrap/README.md`
+- `results/bench_capacity_restoration_bootstrap/reproduce.py`
+- `results/bench_capacity_restoration_bootstrap/model.json`
+
+Findings:
+- Full four-of-four Collapsed Stadium Bench cannot use Pumpkaboo Pumpkin Pit / Chien-Pao Snow Sink to restore capacity because the remover must enter the Bench before its Stadium-discard Ability triggers.
+- With occupancy 3 / cap 4, the remover can enter, discard the Stadium, restore cap 5, then a second required entrant can be Benched.
+- Direct Sky Field replacement restores capacity from zero Bench slack by spending Stadium bandwidth instead.
+- Area Zero Underdepths with no Tera initially in play creates an order-sensitive bridge: replacing Collapsed gives default cap 5; Tera-first uses that only slot, activates cap 8, then ordinary entrant succeeds. Ordinary-first fills cap 5 and prevents the Tera from entering, so expansion never activates.
+
+This is synthesized into `results/README.md`.
+
+## Next high-value action
+
+Convert restoration feasibility into exact access probability under uncertainty. A minimal model can condition on a restricted 4/4 board and compare hand/deck access to direct restorative Stadiums versus Bench-triggered removers. The key prediction is that remover copies have zero same-state marginal unlock value at zero slack even when accessible, while direct Stadium outs retain positive value. With one slack, remover outs become live. This would quantify state-dependent connector value rather than only show deterministic witnesses.
