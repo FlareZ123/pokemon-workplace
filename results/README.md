@@ -173,6 +173,7 @@ Particularly foundational components include:
 - `bench_capacity_model.py`
 - `lock_effect_catalog.py`
 - `prize_belief_decision.py`
+- `unified_state_kernel.py`
 - connector-capacity and contention models under `tools/connector_*.py`
 
 ## Open synthesis questions
