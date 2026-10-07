@@ -31,6 +31,22 @@ def main() -> None:
     assert not trainer_locked.tool_play
     assert not trainer_locked.supporter_play
     assert not trainer_locked.stadium_play
+    assert trainer_locked.pokemon_play
+    assert trainer_locked.basic_energy_play
+    assert trainer_locked.special_energy_play
+
+    special_energy_locked = apply_play_lock(base, "special_energy_play")
+    assert not special_energy_locked.special_energy_play
+    assert special_energy_locked.basic_energy_play
+
+    all_hand_locked = apply_play_lock(base, "all_cards_from_hand")
+    assert not all_hand_locked.item_play
+    assert not all_hand_locked.tool_play
+    assert not all_hand_locked.supporter_play
+    assert not all_hand_locked.stadium_play
+    assert not all_hand_locked.pokemon_play
+    assert not all_hand_locked.basic_energy_play
+    assert not all_hand_locked.special_energy_play
 
     target = apply_temporary_retreat_lock(PokemonState())
     target = apply_temporary_attack_lock(target)
