@@ -1,0 +1,22 @@
+name: Validate agent11 rescue models
+
+on:
+  push:
+    paths:
+      - "tools/prize_rescue_connector_turns.py"
+      - "tools/prize_rescue_xtransceiver.py"
+      - "results/prize_rescue_connector_turns/**"
+      - "results/prize_rescue_xtransceiver/**"
+      - ".github/workflows/validate-agent11-rescue.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/prize_rescue_connector_turns/reproduce.py
+      - run: python results/prize_rescue_xtransceiver/reproduce.py
