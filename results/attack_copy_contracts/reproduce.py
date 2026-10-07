@@ -32,8 +32,9 @@ def main() -> None:
     assert result["non_tail_semantics_counts"] == {
         "outer_gx_usage_rule": 1,
         "post_copy_continuation": 1,
+        "preselection_source_zone_commit": 1,
         "selected_energy_gate": 2,
-        "source_zone_commit": 2,
+        "selected_source_zone_commit": 1,
     }
 
     assert contract_for(result, "Copy Anything")["non_tail_semantics"] == [
@@ -43,13 +44,13 @@ def main() -> None:
         "post_copy_continuation"
     ]
     assert contract_for(result, "Hypnotic Reign")["non_tail_semantics"] == [
-        "source_zone_commit"
+        "selected_source_zone_commit"
     ]
     assert contract_for(result, "Imittack")["non_tail_semantics"] == [
         "selected_energy_gate"
     ]
     assert contract_for(result, "Seek Inspiration")["non_tail_semantics"] == [
-        "source_zone_commit"
+        "preselection_source_zone_commit"
     ]
     assert contract_for(result, "Trickster-GX")["non_tail_semantics"] == [
         "outer_gx_usage_rule"
