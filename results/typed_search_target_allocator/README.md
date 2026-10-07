@@ -30,7 +30,9 @@ Pokémon type, Energy type, and Team Aqua / Team Magma identity are represented 
 
 The current conservative Trainer-search compiler emits 23 distinct output labels.
 
-The typed layer supports 22. The sole deliberate exception is `Pokémon of different types`, because that wording creates a diversity constraint across several selected cards rather than a simple class-membership test.
+The typed layer now supports all 23 current compiler labels.
+
+`Pokémon of different types` is represented as a constrained search axis rather than ordinary class inheritance. A target selected through that axis must have exactly one known type tag, and no two selected targets on the same axis may reuse that type.
 
 ## Findings
 
@@ -44,13 +46,15 @@ A one-card `Energy card` search can choose a Basic Energy or Special Energy targ
 
 Dawn's Basic, Stage 1, and Stage 2 axes can satisfy all three stage demands when one target of each stage remains.
 
+Sabrina & Brycen's three-Pokémon conditional search succeeds with three physical targets of three distinct types. A pool containing two Water targets and one Fire target cannot satisfy the three-card output, even when all three physical Pokémon are present.
+
 ## Validation
 
-GitHub Actions run `37554315033` passed on Python 3.13.
+The original structural run `37554315033` passed on Python 3.13. The diversity extension passed in run `37555006072`.
 
 Its regression output confirmed:
 
-- 23 compiler labels, 22 structurally supported;
+- all 23 current compiler labels supported;
 - broad Trainer search cannot satisfy two distinct subtype demands with one unit;
 - one physical target cannot be reused by overlapping search axes;
 - two copies make the overlapping two-demand case feasible;
@@ -58,14 +62,18 @@ Its regression output confirmed:
 - Secret Box can satisfy four distinct Trainer-subtype demands;
 - one broad Energy search cannot satisfy Basic and Special Energy demands together;
 - two Energy search units can;
-- Dawn's three-stage profile is feasible.
+- Dawn's three-stage profile is feasible;
+- Sabrina & Brycen can select three distinct-type Pokémon;
+- a duplicate-type pool cannot satisfy that three-card distinct-type selection.
 
 ## Integration boundary
 
-`trainer_search_state_adapter.py` currently uses exact literal-label matching. The next step is to keep its lock, discard, play-condition, Supporter, Stadium, and target-zone checks while using this allocator for semantic target matching.
+`trainer_search_state_adapter.py` now has a typed adaptation path that consumes these physical target actions together with lock, discard, play-condition, Supporter, Stadium, and target-zone constraints.
 
-That integration can allow broad searches such as Rosa's Trainer search to satisfy narrower demands when real matching targets remain, without creating fictitious extra copies or output capacity.
+Target-copy consumption is appended to the shared resource vector so several connector copies cannot reuse one singleton search target. The end-to-end regressions are in `results/trainer_search_typed_integration/`.
 
 ## Limits
 
-The allocator is deterministic and state-local. It does not yet handle the different-types diversity constraint, arbitrary card-text predicates, destination zones outside the current deck-search family, target strategic value, or dynamic semantic changes. Typed Energy matching relies on caller-supplied type tags.
+The allocator is deterministic and state-local. It does not yet handle arbitrary card-text predicates, destination zones outside the current deck-search family, target strategic value, or dynamic semantic changes. Typed Energy matching relies on caller-supplied type tags.
+
+For the different-types constraint, targets with missing or ambiguous multi-type metadata are excluded conservatively rather than guessed.
