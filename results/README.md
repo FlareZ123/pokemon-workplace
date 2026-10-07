@@ -502,6 +502,32 @@ Nested additional Prize work remains a barrier. If the chosen sibling takes anot
 
 **Working synthesis:** simultaneous hidden-zone selection and effect ordering can have different information sets. E-31 policy should reveal the awarded cards first, expose owner-controlled ordering among same-award effects, and preserve stack-like priority for nested Prize work.
 
+## 41. Dream Ball exposes a large Evolution-Ability topology-bypass surface
+
+[dream_ball_evolution_ability_catalog/](dream_ball_evolution_ability_catalog/) audits effectively legal Evolution-Pokémon Ability text for explicit source and board-position constraints.
+
+Across 1,539 exact Evolution-Pokémon Ability rows, 1,175 have geometry compatible with direct Dream Ball Bench entry: 1,152 general in-play rows and 23 Bench-required rows. The compatible set contains 570 turn-action Abilities, 563 passive/continuous rows, and 42 triggered rows. These are candidate counts rather than claims that every remaining Ability condition is satisfied.
+
+Pidgeot ex Quick Search is a compatible turn-action witness; Vileplume Irritating Pollen is a compatible passive witness. Team Rocket's Crobat ex Biting Spree is the counterexample because it explicitly requires play from hand to evolve.
+
+**Working synthesis:** Dream Ball is more than a one-Pokémon search edge. For Evolution Pokémon it can bypass prerequisite stages and ordinary evolution timing, so downstream evaluation needs the selected target's Ability geometry rather than only search reachability.
+
+## 42. A Prize-origin Dream Ball can establish Vileplume lock without locking the next Prize-origin Dream Ball
+
+[dream_ball_vileplume_lock_line/](dream_ball_vileplume_lock_line/) composes two pending Dream Balls with Vileplume `xy7-3` and Pidgeot ex `sv3-164`.
+
+The first Dream Ball puts Stage 2 Vileplume directly into play. Irritating Pollen then blocks Item play from hand. The second Dream Ball remains legal because its source is `prize_pending`, which is outside that explicit hand scope, so it can still put Pidgeot ex directly onto the Bench. Both searched Pokémon skip hand and card-class totals remain conserved.
+
+**Working synthesis:** lock channels need source-zone predicates. A scalar `item_play=False` would erase a legal E-31 line and misrepresent a lock that is explicitly scoped to Items played from hand.
+
+## 43. Final-Prize Dream Ball can change the terminal result before promotion
+
+[dream_ball_terminal_rescue/](dream_ball_terminal_rescue/) applies the official Jirachi-established E-31 phase boundary to Dream Ball.
+
+With both players at zero remaining Prizes and zero Pokémon after the KO batch, declining the pending Dream Ball and letting it enter hand closes the Prize window as a tie. Using Dream Ball to put Pidgeot ex onto the empty board changes the post-E-31 terminal snapshot to one Pokémon versus zero, producing a win for the Dream Ball player. Promotion is never reached because terminal resolution happens first.
+
+**Working synthesis:** E-31 cards can have discrete terminal value. Terminal evaluation must consume the board produced by the finished Prize window rather than an earlier zero-Pokémon snapshot.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
