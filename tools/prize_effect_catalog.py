@@ -77,7 +77,7 @@ def compile_prize_effect(text: str) -> tuple[str, ...]:
         atoms.add("prize_to_hand")
         atoms.add("hand_to_prize")
 
-    if _has(r"shuffle .*Prize cards", text):
+    if _has(r"shuffle .*Prize cards|Prize cards, shuffle", text):
         atoms.add("shuffle_prizes")
 
     if _has(r"take (?:a|\d+) Prize cards?", text):
