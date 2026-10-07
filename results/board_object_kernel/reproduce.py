@@ -207,6 +207,7 @@ def main() -> None:
     evolve_source = make_pokemon(
         "evolving",
         "Basic Form",
+        print_id="basic-print",
         tags=("Basic",),
         energy=(dce,),
         tool=hood,
@@ -220,11 +221,13 @@ def main() -> None:
         evolve_board,
         "evolving",
         new_card_name="Stage 1 Form",
+        new_print_id="stage1-print",
         new_tags=("Stage1",),
     )
     assert evolved is not None
     evolved_object = evolved.get("evolving")
     assert evolved_object.card_name == "Stage 1 Form"
+    assert evolved_object.print_id == "stage1-print"
     assert evolved_object.tags == frozenset({"Stage1"})
     assert evolved_object.energy == (dce,)
     assert evolved_object.tool == hood
