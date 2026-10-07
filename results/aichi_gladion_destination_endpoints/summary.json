@@ -1,0 +1,40 @@
+{
+  "trials": 80000,
+  "seeds": [20261007, 20261008, 20261009, 20261010],
+  "baseline": {
+    "core": 56534,
+    "pidgeot": 48200,
+    "stoutland": 39410,
+    "dual": 34006,
+    "item": 29498,
+    "item_pidgeot": 19194,
+    "item_stoutland": 15834
+  },
+  "prize_to_hand": {
+    "core": 56775,
+    "pidgeot": 48394,
+    "stoutland": 39574,
+    "dual": 34158,
+    "item": 29620,
+    "item_pidgeot": 19276,
+    "item_stoutland": 15908
+  },
+  "prize_to_deck": {
+    "core": 56534,
+    "pidgeot": 48214,
+    "stoutland": 39425,
+    "dual": 34030,
+    "item": 29499,
+    "item_pidgeot": 19196,
+    "item_stoutland": 15836
+  },
+  "either_destination": {
+    "core": 56775,
+    "pidgeot": 48401,
+    "stoutland": 39586,
+    "dual": 34174,
+    "item": 29621,
+    "item_pidgeot": 19278,
+    "item_stoutland": 15910
+  }
+}
