@@ -154,6 +154,53 @@ def main() -> None:
     )
     assert calculate_damage(live_dragon_type.damage_context).final_damage == 400
 
+    mind_shock = next(
+        row for row in attacks_index["sm8-94"]
+        if row.attack_name == "Mind Shock"
+    )
+    assert mind_shock.ignore_weakness_resistance
+    assert not mind_shock.ignore_defender_effects
+    psychic_bindings = {
+        "target-active": "sm8-94",
+        "target-bench": "bw9-82",
+    }
+    mind_program = materialize_profiled_copy_program(
+        mind_shock,
+        board,
+        actor_profile=profiles["sm8-94"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=psychic_bindings,
+    )
+    assert mind_program.damage_context.ignore_weakness_resistance
+    assert calculate_damage(mind_program.damage_context).final_damage == 70
+
+    mind_with_weakness = materialize_profiled_copy_program(
+        mind_shock,
+        board,
+        actor_profile=profiles["sm8-94"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=psychic_bindings,
+        ignore_weakness_resistance=False,
+    )
+    assert calculate_damage(mind_with_weakness.damage_context).final_damage == 140
+
+    shred = next(
+        row for row in attacks_index["sm5-100"]
+        if row.attack_name == "Shred"
+    )
+    assert not shred.ignore_weakness_resistance
+    assert shred.ignore_defender_effects
+    shred_program = materialize_profiled_copy_program(
+        shred,
+        board,
+        actor_profile=profiles["sm5-100"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=print_bindings,
+    )
+    assert not shred_program.damage_context.ignore_weakness_resistance
+    assert shred_program.damage_context.ignore_defender_effects
+    assert calculate_damage(shred_program.damage_context).final_damage == 160
+
     print(
         {
             "copying_pokemon": persian.name,
