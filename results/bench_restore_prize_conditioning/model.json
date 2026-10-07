@@ -1,0 +1,48 @@
+{
+  "example": {
+    "unknown_pool": 46,
+    "prize_count": 6,
+    "post_prize_deck": 40,
+    "draws": 5,
+    "direct_restorers": 2,
+    "removers": 2
+  },
+  "k0": {
+    "zero_slack_expected_fraction": "43/207",
+    "zero_slack_expected_percent": 20.77294685990338,
+    "one_slack_expected_fraction": "12383/32637",
+    "one_slack_expected_percent": 37.941600024512056
+  },
+  "k1_examples": {
+    "no_relevant_prizes_zero_slack": {
+      "live_unlockers": 2,
+      "fraction": "37/156",
+      "percent": 23.71794871794872
+    },
+    "one_direct_prized_zero_slack": {
+      "live_unlockers": 1,
+      "fraction": "1/8",
+      "percent": 12.5
+    },
+    "one_remover_prized_zero_slack": {
+      "live_unlockers": 2,
+      "fraction": "37/156",
+      "percent": 23.71794871794872
+    },
+    "one_direct_prized_one_slack": {
+      "live_unlockers": 3,
+      "fraction": "667/1976",
+      "percent": 33.75506072874494
+    },
+    "one_remover_prized_one_slack": {
+      "live_unlockers": 3,
+      "fraction": "667/1976",
+      "percent": 33.75506072874494
+    }
+  },
+  "findings": {
+    "zero_slack_prize_asymmetry": "Prizing a direct restorer reduces current unlock access, while Prizing a remover does not change zero-slack access because remover copies are already mechanically dead.",
+    "one_slack_symmetry": "With one Bench slack and symmetric access, a direct restorer and remover become equivalent live outs, so one copy of either being Prized has the same access effect.",
+    "belief_state": "K0 is a distribution over live-out counts; K1 collapses to the realized state-specific count and can materially change the estimated unlock probability."
+  }
+}
