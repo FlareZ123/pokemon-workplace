@@ -1,0 +1,78 @@
+{
+  "card_text_anchors": {
+    "collapsed_stadium": "Collapsed Stadium swsh9-137/swsh11-215: each player cannot have more than 4 Benched Pokémon and discards down to 4 when necessary.",
+    "parallel_city": "Parallel City xy8-145: the chosen side cannot have more than 3 Benched Pokémon and discards down to 3 when it comes into play."
+  },
+  "scenarios": {
+    "preload_then_collapsed": {
+      "capacity_before": 5,
+      "occupancy_before": 4,
+      "slack_before": 1,
+      "capacity_after": 4,
+      "forced_discards": 0,
+      "discarded": [],
+      "continuation_loss": 0,
+      "slack_after": 0,
+      "required_entrant_present_after": false,
+      "next_turn_entry_possible": false,
+      "objective_survives": false
+    },
+    "immediate_entry_then_collapsed": {
+      "capacity_before": 5,
+      "occupancy_before": 5,
+      "slack_before": 0,
+      "capacity_after": 4,
+      "forced_discards": 1,
+      "discarded": ["core D"],
+      "continuation_loss": 6.0,
+      "slack_after": 0,
+      "required_entrant_present_after": true,
+      "next_turn_entry_possible": true,
+      "objective_survives": true
+    },
+    "preload_then_parallel": {
+      "capacity_before": 5,
+      "occupancy_before": 4,
+      "slack_before": 1,
+      "capacity_after": 3,
+      "forced_discards": 1,
+      "discarded": ["core D"],
+      "continuation_loss": 6.0,
+      "slack_after": 0,
+      "required_entrant_present_after": false,
+      "next_turn_entry_possible": false,
+      "objective_survives": false
+    },
+    "immediate_entry_then_parallel": {
+      "capacity_before": 5,
+      "occupancy_before": 5,
+      "slack_before": 0,
+      "capacity_after": 3,
+      "forced_discards": 2,
+      "discarded": ["core D", "core C"],
+      "continuation_loss": 13.0,
+      "slack_after": 0,
+      "required_entrant_present_after": true,
+      "next_turn_entry_possible": true,
+      "objective_survives": true
+    },
+    "low_value_entry_then_collapsed": {
+      "capacity_before": 5,
+      "occupancy_before": 5,
+      "slack_before": 0,
+      "capacity_after": 4,
+      "forced_discards": 1,
+      "discarded": ["required entrant"],
+      "continuation_loss": 2.0,
+      "slack_after": 0,
+      "required_entrant_present_after": false,
+      "next_turn_entry_possible": false,
+      "objective_survives": false
+    }
+  },
+  "findings": {
+    "silent_slack_destruction": "capacity can fall to current occupancy, erase reserved slack, and force zero discards while still blocking a planned future Bench entry",
+    "early_materialization_tradeoff": "placing the required entrant before the opponent window can preserve the objective under contraction if the affected player's discard policy prefers sacrificing another occupant",
+    "entrant_value_dependency": "early materialization is not absolute protection; a low-value entrant can itself be the optimal forced discard"
+  }
+}
