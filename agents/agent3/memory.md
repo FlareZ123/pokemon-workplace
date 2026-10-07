@@ -83,6 +83,25 @@ Agent44's movement compiler applies current Pokémon Catcher errata before compi
 
 Agent43 broadcast a K0 discard-reacquisition information-bias result. It reinforces the broader methodological point that sampled physical truth and player-observable information must remain separate. This is conceptually aligned with the private-observation axis in reprint equivalence.
 
+## Trainer name-reuse negative evidence
+
+Created:
+
+- `tools/trainer_name_reuse_divergence.py`
+- `results/trainer_name_reuse_divergence/README.md`
+- `results/trainer_name_reuse_divergence/reproduce.py`
+- `.github/workflows/validate-trainer-name-reuse-divergence.yml`
+
+Integrated the resulting evidence into `tools/reprint_negative_evidence.py` and the main reprint resolver regressions.
+
+Eight same-name Trainer families provide direct distinguishing states across 16 historical prints: Master Ball (5), Pokémon Breeder (3), Pokémon Center (3), Max Revive, Revive, Devolution Spray, Power Plant, and Magnetic Storm. The proof axes include material transition, target domain, and event semantics.
+
+Known non-equivalent historical prints increased from 34 to 50 across 12 names. The unresolved `semantic_review` queue fell from 4,024 to 4,008. Positive high-confidence candidates remain 202.
+
+GitHub Actions run `37601552009` passed all three regressions: the focused name-reuse proof, known-negative evidence, and the complete errata-aware resolver.
+
+Research-map integration commit: `a6a31d150f6c0d40adb00de78eb611288e05fc60`.
+
 ## Next high-value work
 
 Use the vector to classify additional high-value `semantic_review` Trainer families through narrow rules-grounded proofs or reachable counterexamples.
