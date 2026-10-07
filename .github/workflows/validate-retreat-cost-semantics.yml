@@ -1,0 +1,27 @@
+name: Validate Retreat Cost semantics
+
+on:
+  push:
+    paths:
+      - "tools/retreat_cost_semantics.py"
+      - "tools/retreat_cost_effect_catalog.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - "results/retreat_cost_semantics/**"
+      - ".github/workflows/validate-retreat-cost-semantics.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Retreat Cost semantics
+        run: python results/retreat_cost_semantics/reproduce.py
