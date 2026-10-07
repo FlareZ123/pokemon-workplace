@@ -563,7 +563,7 @@ Choosing Chansey first puts Chansey into play, fills the Bench, and leaves Dream
 **Working synthesis:** simultaneous Prize-effect order is an information-aware resource-allocation decision. Arbitrary queue order can produce the wrong legal board when sibling effects compete for Bench capacity or another constrained channel.
 
 
-## 46. Full deck search preserves Prize/top correlation after shuffle
+## 47. Full deck search preserves Prize/top correlation after shuffle
 
 [deck_search_shuffle_belief/](deck_search_shuffle_belief/) closes the belief-layer gap left by the physical deck-search/shuffle topology. For each possible Prize state, the new top card is sampled from the remaining deck counts conditional on that state. The searching player first conditions on the exact Prize composition learned from full deck inspection; other observers retain their prior unless a separate public observation gives them information.
 
@@ -573,13 +573,23 @@ A five-card labeled regression exhaustively checks all 60 ordered Prize/Prize/to
 
 
 
-## 47. Physical deck-search/shuffle state now derives K1 and preserves observer truth support
+## 48. Physical deck-search/shuffle state now derives K1 and preserves observer truth support
 
 [deck_search_shuffle_physical_belief/](deck_search_shuffle_physical_belief/) composes the search/shuffle belief transition with the exact identity ledger. The bridge derives the searching player's exact grouped Prize composition from materialized Prize instances, derives the current deck-plus-Prize pool from physical zones, materializes one exact sampled post-shuffle top, and requires every observer posterior to retain positive support on that exact world.
 
 In the five-card regression, the material world has A plus filler Prized and both B copies plus filler in deck. The bridge derives A=1 and B=0 as the actor's K1 Prize composition, derives pool counts A=1 and B=2, and materializes B as the exact shuffled top. The actor assigns B top probability 2/3 while the uninformed observer assigns 2/5. Both remain consistent with top=B and Prizes=(A, filler), and per-class card totals are conserved. An attempted A top is rejected independently by the physical ledger because the singleton A is Prized.
 
 **Working synthesis:** exact physical truth can serve as the conditioning source for K1 while observer-relative beliefs remain separate. Hidden-state transitions should validate both material conservation and posterior support for the material world.
+
+
+
+## 49. Revealed deck-search targets can leak K1 Prize information
+
+[deck_search_target_signal/](deck_search_target_signal/) treats a publicly revealed target chosen after full deck inspection as Bayesian evidence about the searcher's private Prize information. The target-selection policy is conditioned on grouped Prize composition, other observers update on the observed target, the searched copy leaves the deck-plus-Prize pool, and the shuffled-top distribution is then derived from each observer's posterior.
+
+A six-card labeled regression uses singleton A, singleton targets X and Y, and three fillers. Under a deterministic policy that prefers X when A is Prized and prefers Y when A is unprized, observing X leaves 42 exact ordered Prize/Prize/top branches. The opponent updates to P(A Prized)=4/7 and gets post-shuffle top probabilities A=1/7, Y=1/7, filler=5/7. In an exact actor world with A Prized, the actor's K1 top distribution is A=0, Y=1/3, filler=2/3. An incoherent policy that reveals singleton X from states where X is Prized is rejected by pool conservation.
+
+**Working synthesis:** public actions selected after private deck inspection can leak hidden-zone information through policy. K1 should therefore update the searcher's belief state and may also change an opponent's posterior when the search outcome is observable.
 
 
 ## Reusable infrastructure
