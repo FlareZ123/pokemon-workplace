@@ -7,7 +7,8 @@ from dataclasses import dataclass, replace
 from board_object_kernel import evolve as board_evolve, next_turn as board_next_turn
 from evolution_stack_state import EvolutionState, StackCard, replace_stack
 from identity_materialization import (
-    IdentityLedger, assert_conserved, move_instance, validate_board_attachment_bindings,
+    IdentityLedger, assert_conserved, move_instance, put_in_play_instance,
+    validate_board_attachment_bindings,
 )
 
 
@@ -23,10 +24,14 @@ def validate_ledger_binding(state: EvolutionState, ledger: IdentityLedger) -> No
     state.validate()
     validate_board_attachment_bindings(ledger, state.board)
     for stack in state.stacks:
-        expected_zone = "active" if stack.object_id == state.board.active_id else "bench"
         for card in stack.cards:
             row = ledger.instance(card.instance_id)
-            if row.card_name != card.card_name or row.zone != expected_zone or row.attached_to is not None:
+            if (
+                row.card_name != card.card_name
+                or row.zone != "in_play"
+                or row.board_object_id != stack.object_id
+                or row.attached_to is not None
+            ):
                 raise ValueError(f"Pokemon stack binding mismatch for {card.instance_id}")
 
 
@@ -44,7 +49,12 @@ def ordinary_evolve(
         row = ledger.instance(card.instance_id)
     except KeyError:
         return None
-    if row.zone != "hand" or row.card_name != card.card_name or row.attached_to is not None:
+    if (
+        row.zone != "hand"
+        or row.card_name != card.card_name
+        or row.attached_to is not None
+        or row.board_object_id is not None
+    ):
         return None
 
     board = board_evolve(
@@ -52,8 +62,7 @@ def ordinary_evolve(
     )
     if board is None:
         return None
-    zone = "active" if object_id == board.active_id else "bench"
-    next_ledger = move_instance(ledger, card.instance_id, zone)
+    next_ledger = put_in_play_instance(ledger, card.instance_id, object_id)
     assert_conserved(ledger, next_ledger)
     next_state = replace(state, board=board)
     next_state = replace_stack(next_state, replace(
@@ -66,8 +75,8 @@ def ordinary_evolve(
 def devolve_top(
     state: EvolutionState, ledger: IdentityLedger, object_id: str, *, destination_zone: str,
 ) -> EvolutionTransition | None:
-    if destination_zone == "attached":
-        raise ValueError("devolved Pokemon card cannot become an attachment")
+    if destination_zone in {"attached", "in_play"}:
+        raise ValueError("devolved Pokemon card must leave the board relation")
     stack = state.stack(object_id)
     if len(stack.cards) < 2:
         return None
