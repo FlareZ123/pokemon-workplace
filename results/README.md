@@ -1158,3 +1158,9 @@ The conserved evolution-stack regression confirms both authorized physical branc
 
 **Working synthesis:** positional value-of-information depends on resource history as well as the hidden-zone posterior. ALS prerequisites, fallback lines, and finite deadlines can require a non-additive terminal objective; fixed per-card values can select the wrong first information-gathering action.
 
+## Prize-position deadlines can force immediate coverage
+
+[prize_position_deadlines/](prize_position_deadlines/) adds per-target acquisition deadlines to the physical Prize belief-state planner. In a four-state posterior over A, B, C, and filler, relaxed deadlines give first-slot success values (3/4, 1, 1/2, 3/4), so the information-rich slot 1 guarantees all three targets. Making only A due on the current probe changes the values to (1/2, 0, 1/4, 1/4): slot 1 becomes impossible because it can never contain A, the optimum shifts to slot 0, and success falls from 100% to 50%.
+
+**Working synthesis:** hidden-zone information value is deadline-sensitive. Physical-position beliefs and strategic target deadlines must be carried together; a raw count of remaining probes can overvalue an information-gathering action whose prerequisite expires before that information can be converted into access.
+
