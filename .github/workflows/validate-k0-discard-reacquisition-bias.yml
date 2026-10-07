@@ -1,0 +1,24 @@
+name: Validate K0 discard reacquisition bias
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/k0_discard_reacquisition_bias.py"
+      - "tools/aichi_vileplume_secret_box.py"
+      - "results/k0_discard_reacquisition_bias/**"
+      - ".github/workflows/validate-k0-discard-reacquisition-bias.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce K0 discard reacquisition bias
+        run: python results/k0_discard_reacquisition_bias/reproduce.py
