@@ -70,8 +70,17 @@ def _validated_branch(
         target_groups,
         demand_channels,
     )
-    if action in base.actions:
-        return profile.required_discard_other_cards, False
+    base_axis_count = len(profile.base_outputs)
+    conditional_usage = action.axis_usage[base_axis_count:]
+
+    if not any(conditional_usage):
+        base_action = TypedTargetAction(
+            output=action.output,
+            target_cost=action.target_cost,
+            axis_usage=action.axis_usage[:base_axis_count],
+        )
+        if base_action in base.actions:
+            return profile.required_discard_other_cards, False
 
     if (
         profile.conditional_outputs
@@ -83,10 +92,9 @@ def _validated_branch(
             target_groups,
             demand_channels,
         )
-        base_axis_count = len(profile.base_outputs)
         if (
             action in allocation.actions
-            and any(action.axis_usage[base_axis_count:])
+            and any(conditional_usage)
         ):
             return (
                 profile.required_discard_other_cards
@@ -110,8 +118,16 @@ def _validated_retrieval_branch(
         profile.base_outputs,
         target_groups,
     )
-    if action in base:
-        return profile.required_discard_other_cards, False
+    base_axis_count = len(profile.base_outputs)
+    conditional_usage = action.axis_usage[base_axis_count:]
+
+    if not any(conditional_usage):
+        base_action = TypedRetrievalAction(
+            target_cost=action.target_cost,
+            axis_usage=action.axis_usage[:base_axis_count],
+        )
+        if base_action in base:
+            return profile.required_discard_other_cards, False
 
     if (
         profile.conditional_outputs
@@ -122,10 +138,9 @@ def _validated_retrieval_branch(
             all_outputs,
             target_groups,
         )
-        base_axis_count = len(profile.base_outputs)
         if (
             action in retrievals
-            and any(action.axis_usage[base_axis_count:])
+            and any(conditional_usage)
         ):
             return (
                 profile.required_discard_other_cards
