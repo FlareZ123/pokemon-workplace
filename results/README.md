@@ -666,6 +666,14 @@ This extends the single-witness physical bridge into a complete small-family fal
 **Working synthesis:** transient discardability should be derived from live replacement channels plus endpoint obligations. A current copy may be discardable even while its class remains required, but only when a conserved continuation restores that class before the deadline.
 
 
+## 56. Knock Out membership can grow during the KO trigger window
+
+[knockout_cascade_growth/](knockout_cascade_growth/) shows that the final disposal batch cannot always be known at the first KO check. A conservative legal-card audit finds 14 print rows across 11 names whose KO-trigger Ability can directly Knock Out the Attacking Pokémon or place damage counters on it after the original KO. Current Gengar ex Fainting Spell is a direct witness.
+
+The new growable cross-player context begins with either side's pending set empty, adds later KO members idempotently while the trigger window is open, and only then materializes the existing fixed `PendingKnockOutBatch` objects for promotion and conserved disposal. A regression starts with one defending Active pending, adds the Attacking Active on a Fainting Spell-like heads branch, then disposes both while conserving both players' physical-card totals.
+
+**Working synthesis:** atomic KO disposal does not imply fixed KO membership. Trigger execution must be allowed to enlarge the pending set before the batch is frozen.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
