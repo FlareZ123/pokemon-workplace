@@ -35,11 +35,12 @@ The model keeps this separate from once-per-game GX/VSTAR restrictions. Those ar
 
 - current player;
 - other player;
-- current `TurnActionBudget`;
+- the current player's `TurnActionBudget`;
+- the other player's retained budget/derived limits for their next turn;
 - whether an extra turn is queued;
 - whether Pokémon Checkup is skipped before that queued turn.
 
-`close_turn_with_attack(...)` consumes the attack boundary and can queue the extra turn. `advance_turn(...)` then either swaps players for an ordinary boundary or keeps the same current player for the queued extra turn. In both cases the new turn receives reset usage through `TurnActionBudget.next_turn()`.
+`close_turn_with_attack(...)` consumes the attack boundary and can queue the extra turn. For an ordinary boundary, `advance_turn(...)` swaps players and resets the incoming player's retained budget. For an extra turn, it keeps the same player and resets that player's own budget. This prevents player-specific quota effects such as Dual Brains from leaking across the turn handoff.
 
 The returned `TurnAdvance` records whether Pokémon Checkup occurs and whether the same player continues.
 
@@ -50,6 +51,7 @@ The reproducer:
 - verifies Timeless-GX and Star Chronos text in the bundled resources;
 - checks effective Expanded legality for their representative prints;
 - verifies an ordinary turn end swaps players and performs Pokémon Checkup;
+- verifies a two-Supporter limit owned by Player A does not leak into Player B's turn and returns when A becomes current again;
 - spends Supporter, Stadium, manual attachment, and Retreat before an extra-turn attack;
 - verifies the attack closes the current budget;
 - verifies the scheduled turn stays with the same player and skips Pokémon Checkup;
