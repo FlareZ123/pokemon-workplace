@@ -31,6 +31,24 @@ def main() -> None:
 
     assert summary["profiles"] == 143
     assert summary["unique_names"] == 70
+    assert summary["filter_print_counts"] == {
+        "basic": 4,
+        "colorless_and_damaged": 4,
+        "damaged": 4,
+        "exclude_name_corviknight": 1,
+        "name_combee": 1,
+        "none": 127,
+        "unqualified_scope": 2,
+    }
+    assert summary["filter_unique_name_counts"] == {
+        "basic": 1,
+        "colorless_and_damaged": 1,
+        "damaged": 2,
+        "exclude_name_corviknight": 1,
+        "name_combee": 1,
+        "none": 63,
+        "unqualified_scope": 1,
+    }
     assert summary["geometry_print_counts"] == {
         "both_active": 1,
         "opponent_active": 11,
@@ -76,6 +94,20 @@ def main() -> None:
     }
     for card_id, geometry in witnesses.items():
         assert _profile(profiles, card_id).target_geometry == geometry
+
+    assert _profile(profiles, "sm3-112").target_filter == "damaged"
+    assert _profile(profiles, "sv1-183").target_filter == "basic"
+    assert (
+        _profile(profiles, "swsh9-134").target_filter
+        == "colorless_and_damaged"
+    )
+    assert (
+        _profile(profiles, "swsh3-156").target_filter
+        == "exclude_name_corviknight"
+    )
+    assert _profile(profiles, "sv2-9").target_filter == "name_combee"
+    assert _profile(profiles, "xy4-91").target_filter == "unqualified_scope"
+    assert _profile(profiles, "bw10-95").target_filter == "none"
 
     excluded = {"bw6-115", "xy9-113", "xyp-XY93"}
     assert not excluded & {
