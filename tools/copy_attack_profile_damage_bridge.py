@@ -11,7 +11,7 @@ from dataclasses import replace
 from typing import Iterable, Mapping
 
 from attack_copy_physical_ko_bridge import PhysicalBoardEventProgram
-from board_position_state import BoardPokemon, BoardState
+from board_position_state import BoardState
 from damage_calculation_kernel import AttackDamage, DamageContext
 from pokemon_card_profile import PokemonCardProfile
 from profile_damage_context import resolve_printed_type_stages
@@ -21,13 +21,23 @@ from simple_attack_board_semantics import (
 )
 
 
-def top_card_profile(
-    pokemon: BoardPokemon,
+def current_profile(
+    pokemon_id: str,
     profiles: Mapping[str, PokemonCardProfile],
+    current_print_id_by_pokemon_id: Mapping[str, str],
 ) -> PokemonCardProfile:
-    """Resolve the current top Evolution card as the Pokemon's printed profile."""
+    """Resolve a board object through an explicit current-print binding.
 
-    print_id = pokemon.stack[-1].card_id
+    The stack's PokemonCard.card_id is a physical instance ID, not a database
+    print ID. Keeping the binding separate preserves those two identities.
+    """
+
+    try:
+        print_id = current_print_id_by_pokemon_id[pokemon_id]
+    except KeyError as exc:
+        raise ValueError(
+            f"no current print binding for Pokemon {pokemon_id!r}"
+        ) from exc
     profile = profiles.get(print_id)
     if profile is None:
         raise ValueError(f"no legal Pokemon profile for {print_id!r}")
@@ -37,9 +47,18 @@ def top_card_profile(
 def hp_by_stack_board(
     board: BoardState,
     profiles: Mapping[str, PokemonCardProfile],
+    current_print_id_by_pokemon_id: Mapping[str, str],
 ) -> dict[str, int]:
+    if set(current_print_id_by_pokemon_id) != {
+        pokemon.pokemon_id for pokemon in board.pokemon
+    }:
+        raise ValueError("current print bindings must match the board exactly")
     return {
-        pokemon.pokemon_id: top_card_profile(pokemon, profiles).hp
+        pokemon.pokemon_id: current_profile(
+            pokemon.pokemon_id,
+            profiles,
+            current_print_id_by_pokemon_id,
+        ).hp
         for pokemon in board.pokemon
     }
 
@@ -50,6 +69,7 @@ def materialize_profiled_copy_program(
     *,
     actor_profile: PokemonCardProfile,
     profiles: Mapping[str, PokemonCardProfile],
+    current_print_id_by_pokemon_id: Mapping[str, str],
     counter_allocation: Iterable[tuple[str, int]] = (),
     attacker_types: tuple[str, ...] | None = None,
     weakness_enabled: bool = True,
@@ -67,7 +87,11 @@ def materialize_profiled_copy_program(
         board,
         counter_allocation=counter_allocation,
     )
-    target = top_card_profile(board.get(board.active_id), profiles)
+    target = current_profile(
+        board.active_id,
+        profiles,
+        current_print_id_by_pokemon_id,
+    )
 
     live_attacker_types = (
         actor_profile.types
