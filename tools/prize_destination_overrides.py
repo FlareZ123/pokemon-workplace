@@ -1,12 +1,9 @@
 """Resolve destination overrides for Prize cards already staged as taken.
 
-This layer deliberately separates three questions:
-1. Which replacement effects are applicable to a pending Prize card?
-2. Do those effects agree on one destination?
-3. If they agree, execute the existing conserved physical Prize transition.
-
-Applicability and effect-order authority belong upstream. A disagreement between
-applicable replacements remains unresolved here instead of inventing precedence.
+The mechanical layer separates applicability from ordering authority. Compatible
+replacement effects can resolve directly. When applicable effects disagree, a
+caller with rules-backed chooser authority can select one effect for the exact
+pending Prize card; otherwise the choice remains pending without physical move.
 """
 
 from __future__ import annotations
@@ -39,11 +36,16 @@ class PrizeDestinationOverride:
 class PrizeDestinationDecision:
     overrides: tuple[PrizeDestinationOverride, ...]
     destination_zone: str | None
-    conflicting_zones: tuple[str, ...]
+    candidate_zones: tuple[str, ...]
+    chosen_effect_id: str | None = None
 
     @property
     def resolved(self) -> bool:
         return self.destination_zone is not None
+
+    @property
+    def requires_choice(self) -> bool:
+        return self.destination_zone is None and len(self.candidate_zones) > 1
 
 
 @dataclass(frozen=True)
@@ -60,13 +62,9 @@ def decide_prize_destination(
     overrides: Iterable[PrizeDestinationOverride],
     *,
     ordinary_destination: str = "hand",
+    chosen_effect_id: str | None = None,
 ) -> PrizeDestinationDecision:
-    """Return one destination only when every applicable override agrees.
-
-    The ordinary destination is used only when no replacement applies. Once an
-    explicit replacement applies, the ordinary hand destination is no longer a
-    competing assignment.
-    """
+    """Resolve one destination when replacement effects agree or a choice exists."""
 
     if not ordinary_destination:
         raise ValueError("ordinary_destination must be non-empty")
@@ -75,13 +73,45 @@ def decide_prize_destination(
 
     rows = tuple(sorted(overrides))
     if not rows:
-        return PrizeDestinationDecision((), ordinary_destination, ())
+        if chosen_effect_id is not None:
+            raise ValueError("cannot choose a replacement when none applies")
+        return PrizeDestinationDecision(
+            (),
+            ordinary_destination,
+            (ordinary_destination,),
+        )
 
     zones = tuple(sorted({row.destination_zone for row in rows}))
     if len(zones) == 1:
-        return PrizeDestinationDecision(rows, zones[0], ())
+        if chosen_effect_id is not None:
+            matching = tuple(
+                row for row in rows if row.effect_id == chosen_effect_id
+            )
+            if not matching:
+                raise ValueError("chosen replacement effect is not applicable")
+        return PrizeDestinationDecision(
+            rows,
+            zones[0],
+            zones,
+            chosen_effect_id,
+        )
 
-    return PrizeDestinationDecision(rows, None, zones)
+    if chosen_effect_id is None:
+        return PrizeDestinationDecision(rows, None, zones, None)
+
+    matches = tuple(
+        row for row in rows if row.effect_id == chosen_effect_id
+    )
+    if len(matches) != 1:
+        raise ValueError(
+            "chosen replacement effect must identify exactly one applicable effect"
+        )
+    return PrizeDestinationDecision(
+        rows,
+        matches[0].destination_zone,
+        zones,
+        chosen_effect_id,
+    )
 
 
 def resolve_pending_prize_with_overrides(
@@ -89,8 +119,9 @@ def resolve_pending_prize_with_overrides(
     overrides: Iterable[PrizeDestinationOverride],
     *,
     ordinary_destination: str = "hand",
+    chosen_effect_id: str | None = None,
 ) -> PrizeDestinationTransition:
-    """Resolve the next pending Prize only when its destination is unambiguous."""
+    """Resolve the next pending Prize only after its destination is determined."""
 
     if not state.pending:
         raise ValueError("no pending Prize card remains")
@@ -98,6 +129,7 @@ def resolve_pending_prize_with_overrides(
     decision = decide_prize_destination(
         overrides,
         ordinary_destination=ordinary_destination,
+        chosen_effect_id=chosen_effect_id,
     )
     if not decision.resolved:
         return PrizeDestinationTransition(decision, None)
