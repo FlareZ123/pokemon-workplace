@@ -1,0 +1,28 @@
+name: Validate attack-copy physical KO bridge
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_physical_ko_bridge.py"
+      - "tools/attack_copy_kernel.py"
+      - "tools/board_position_state.py"
+      - "tools/stack_knockout_conservation.py"
+      - "tools/simultaneous_knockout_conservation.py"
+      - "tools/damage_calculation_kernel.py"
+      - "results/attack_copy_physical_ko_bridge/**"
+      - ".github/workflows/validate-attack-copy-physical-ko-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check copied attack physical KO bridge
+        run: python results/attack_copy_physical_ko_bridge/reproduce.py
