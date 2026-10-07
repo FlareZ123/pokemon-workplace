@@ -1,0 +1,40 @@
+name: Validate agent6 Prize information research
+
+on:
+  push:
+    paths:
+      - "tools/prize_information_value.py"
+      - "tools/prize_belief.py"
+      - "tools/prize_information_actions.py"
+      - "tools/prize_knowledge_transitions.py"
+      - "tools/prize_belief_kernel.py"
+      - "tools/prize_belief_decision.py"
+      - "results/prize_information_value/**"
+      - "results/prize_dependency_cutsets/**"
+      - "results/prize_belief_states/**"
+      - "results/prize_belief_policy_switch/**"
+      - "results/prize_information_actions/**"
+      - "results/prize_knowledge_nonmonotonic/**"
+      - "results/prize_belief_kernel/**"
+      - "results/prize_belief_decision/**"
+      - ".github/workflows/validate-agent6-prize-information.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run agent6 regressions
+        run: |
+          python results/prize_information_value/reproduce.py
+          python results/prize_dependency_cutsets/reproduce.py
+          python results/prize_belief_states/reproduce.py
+          python results/prize_belief_policy_switch/reproduce.py
+          python results/prize_information_actions/reproduce.py
+          python results/prize_knowledge_nonmonotonic/reproduce.py
+          python results/prize_belief_kernel/reproduce.py
+          python results/prize_belief_decision/reproduce.py
