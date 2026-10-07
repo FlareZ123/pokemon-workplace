@@ -151,6 +151,27 @@ def lightning_units(cards: tuple[AttachedEnergy, ...]) -> int:
     )
 
 
+def energy_package_lightning_units(
+    reversal_count: int,
+    counter_count: int,
+    unit_lpm_count: int,
+    *,
+    comeback_active: bool,
+) -> int:
+    """Evaluate one exact Harto Energy-card package on Alolan Raichu."""
+
+    if not 0 <= reversal_count <= 4:
+        raise ValueError("reversal_count must be in [0, 4]")
+    if not 0 <= counter_count <= 4:
+        raise ValueError("counter_count must be in [0, 4]")
+    if not 0 <= unit_lpm_count <= 3:
+        raise ValueError("unit_lpm_count must be in [0, 3]")
+
+    if comeback_active:
+        return 3 * reversal_count + 2 * counter_count + unit_lpm_count
+    return unit_lpm_count
+
+
 def maximum_electro_rain_after_bomb(
     own_prizes_remaining: int,
     opponent_prizes_remaining: int,
