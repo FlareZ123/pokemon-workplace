@@ -1,0 +1,32 @@
+name: Validate restricted Special Energy revalidation
+
+on:
+  push:
+    paths:
+      - "tools/restricted_special_energy_attachment.py"
+      - "tools/restricted_special_energy_catalog.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "tools/energy_board_conservation.py"
+      - "tools/board_object_kernel.py"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - "results/restricted_special_energy_revalidation/**"
+      - ".github/workflows/validate-restricted-special-energy-revalidation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check restricted Special Energy revalidation
+        run: |
+          python results/restricted_special_energy_revalidation/reproduce.py
+          python results/special_energy_move_conservation/reproduce.py
+          python results/retreat_energy_transaction/reproduce.py
