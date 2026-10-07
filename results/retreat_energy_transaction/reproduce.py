@@ -18,8 +18,10 @@ from board_object_kernel import (
 )
 from energy_board_conservation import EnergyBoardState
 from multicopy_zone_state import ZoneCountState
+from retreat_cost_semantics import RetreatCostModifier, no_retreat_cost
 from retreat_energy_transaction import (
     RetreatEnergyTransactionState,
+    retreat_with_cost_modifiers,
     retreat_with_energy_destinations,
 )
 from turn_action_budget import TurnAction, TurnActionBudget
