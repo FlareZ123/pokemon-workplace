@@ -13,6 +13,7 @@ from before_hand_prize_profiles import build_before_hand_prize_profiles
 from board_position_state import BoardPokemon, PokemonCard
 from dream_ball_typed_bench_execution import (
     dream_ball_target_from_metadata,
+    execute_dream_ball_item_no_target_transaction,
     execute_dream_ball_item_transaction,
 )
 from identity_materialization import (
@@ -238,10 +239,49 @@ def main() -> None:
     assert final_board_b.ledger.exchangeable.count("xy7-3", "deck") == 0
     assert_conserved(initial_b, final_board_b.ledger)
 
+    # Branch C: Dream Ball is processed first, but its typed deck search
+    # deliberately selects no Pokemon. The Item resolves and discards without
+    # consuming the open slot, so Chansey can still use Lucky Bonus afterward.
+    initial_c, staged_c, board_c = make_state()
+    order_c = PendingPrizeBatchOrder.from_staged(staged_c)
+    dream_first_none = order_c.choose_next("dream")
+    dream_no_target = execute_dream_ball_item_no_target_transaction(
+        dream_first_none,
+        board_c,
+        profile=dream_profile,
+        during_own_turn=True,
+    )
+    assert dream_no_target.after_board.open_bench_slots == 1
+    assert dream_no_target.after_board.ledger.instance("dream").zone == "discard"
+    assert dream_no_target.after_board.ledger.exchangeable.count("xy7-3", "deck") == 1
+
+    order_c = order_c.advance_after_resolution(
+        dream_no_target.after_prizes,
+        resolved_instance_id="dream",
+    )
+    assert order_c is not None
+    chansey_after_none = order_c.choose_next("chansey")
+    lucky_after_none = use_lucky_bonus(
+        chansey_after_none,
+        dream_no_target.after_board,
+        pokemon_id="chansey-object",
+        coin_heads=False,
+        during_your_turn=True,
+    )
+    assert lucky_after_none is not None
+    final_board_c = lucky_after_none.after_board
+    assert final_board_c.open_bench_slots == 0
+    assert final_board_c.ledger.instance("chansey").zone == "in_play"
+    assert final_board_c.ledger.instance("dream").zone == "discard"
+    assert final_board_c.ledger.exchangeable.count("xy7-3", "deck") == 1
+    assert_conserved(initial_c, final_board_c.ledger)
+
     names_a = {row.name for row in final_board_a.pokemon}
     names_b = {row.name for row in final_board_b.pokemon}
+    names_c = {row.name for row in final_board_c.pokemon}
     assert "Chansey" in names_a and "Vileplume" not in names_a
     assert "Vileplume" in names_b and "Chansey" not in names_b
+    assert "Chansey" in names_c and "Vileplume" not in names_c
 
     print(
         json.dumps(
@@ -254,10 +294,16 @@ def main() -> None:
                     "dream_ball_destination": "hand",
                     "vileplume_remains_in_deck": True,
                 },
-                "dream_ball_first": {
+                "dream_ball_first_take_target": {
                     "vileplume_enters_play": True,
                     "chansey_lucky_bonus_usable": False,
                     "chansey_destination": "hand",
+                },
+                "dream_ball_first_select_none": {
+                    "dream_ball_destination": "discard",
+                    "vileplume_remains_in_deck": True,
+                    "chansey_lucky_bonus_usable": True,
+                    "chansey_enters_play": True,
                 },
                 "card_totals_conserved": True,
             },
