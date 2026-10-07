@@ -1,0 +1,26 @@
+name: Validate sampled turn-start draw
+
+on:
+  push:
+    paths:
+      - "tools/physical_deck_projection.py"
+      - "tools/turn_start_deck_loss.py"
+      - "tools/identity_materialization.py"
+      - "tools/deck_search_shuffle_topology.py"
+      - "results/sampled_turn_start_draw/**"
+      - ".github/workflows/validate-sampled-turn-start-draw.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check sampled unordered turn-start draw
+        run: python results/sampled_turn_start_draw/reproduce.py
