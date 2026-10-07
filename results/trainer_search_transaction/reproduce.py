@@ -309,6 +309,39 @@ def main() -> None:
     for card_class in ("gh_stadium", "gh_tool", "gh_special"):
         assert gh_tx.after.zones.count(card_class, "hand") == 1
 
+    gh_extra_copy_state = TrainerSearchExecutionState(
+        zones=ZoneCountState.from_mapping(
+            {
+                ("guzma_hala", "hand"): 2,
+                ("gh_fodder_a", "hand"): 1,
+                ("gh_stadium", "deck"): 1,
+                ("gh_tool", "deck"): 1,
+                ("gh_special", "deck"): 1,
+            }
+        )
+    )
+    gh_extra_candidates = (
+        DiscardCandidate("guzma_hala", max_copies=1),
+        DiscardCandidate("gh_fodder_a"),
+    )
+    gh_extra_selection = enumerate_discard_selections(
+        gh_extra_copy_state.zones,
+        gh_extra_candidates,
+        2,
+    )[0]
+    gh_extra_tx = execute_trainer_search_transaction(
+        gh_extra_copy_state,
+        profile=guzma_hala,
+        action_card_class="guzma_hala",
+        demands=gh_demands,
+        targets=gh_targets,
+        search_action=gh_action,
+        discard_candidates=gh_extra_candidates,
+        discard_selection=gh_extra_selection,
+    )
+    assert gh_extra_tx.after.zones.count("guzma_hala", "hand") == 0
+    assert gh_extra_tx.after.zones.count("guzma_hala", "discard") == 2
+
     print(
         json.dumps(
             {
