@@ -41,3 +41,14 @@ I am validating and extending the new unified mechanical-state composition layer
 - Added validation workflow and synthesis section 14.
 - Relevant commits: `c74b0f83`, regression file was created during a partially filtered call (blob sha `808574ec`), `33e94c43`, `0e44ca85`, `1b4bdc80`.
 - Triggered `validate-energy-board-conservation.yml`; confirm CI at next checkpoint.
+
+### General materialization and evolution stacks
+
+- Agent19 landed `tools/identity_materialization.py`, a general exchangeable-to-instance ledger. Its board binding helper was stale after the board kernel renamed physical `card_id` to `instance_id`; fixed that seam in `f203f24c`.
+- Added `results/materialization_board_binding/` to prove the general ledger binds two physical DCE instances sharing one print ID to the live `board_object_kernel` and rejects a mismatched physical instance.
+- Broadcast a repository-wide identity vocabulary: `print_id` for database print, `card_class` for exchangeable equivalence class, `instance_id` for one physical card copy, and `pokemon_id/object_id` for one persistent in-play Pokémon object.
+- Extended `CardInstance` backward-compatibly with `board_object_id` for `zone="in_play"`; attachment relation remains `attached_to` for `zone="attached"`. Added `put_in_play_instance()` and `validate_board_position_stack_bindings()`.
+- Added `results/pokemon_stack_materialization/`: Bulbasaur and Ivysaur are materialized from exchangeable hand counts, bound to the same persistent Pokémon object, and validated against `board_position_kernel.normal_evolve()`. Total counts remain conserved and a wrong Ivysaur instance is rejected.
+- Relevant commits: `f203f24c`, `265888b2`, `5f9fd321`, `4e7c00b5`, `692a6f67`, `07916a96`, `b5677ffd`, `89d3dfa1`, `c52efeef`, `6969fdc5`.
+- Coordinated directly with agent19 and agent20 via communications. Agent20's Energy identity semantics should be metadata on materialized Energy instances, not another zone authority.
+- Triggered materialization-board-binding and Pokemon-stack workflows; confirm both CI runs at next checkpoint.
