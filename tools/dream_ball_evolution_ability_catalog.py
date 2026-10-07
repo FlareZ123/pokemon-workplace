@@ -30,6 +30,11 @@ ACTIVATION_TURN_ACTION = "turn_action"
 ACTIVATION_TRIGGERED = "triggered"
 ACTIVATION_PASSIVE = "passive_or_continuous"
 
+_EVENT_GATED_ONCE_RE = re.compile(
+    r"^once during your turn(?: \(before your attack\))?, "
+    r"(?:if [^,]+, )?when(?:ever)?\b"
+)
+
 
 @dataclass(frozen=True)
 class EvolutionAbilityCandidate:
@@ -99,13 +104,21 @@ def classify_ability_geometry(text: str) -> str:
 
 def classify_ability_activation(text: str) -> str:
     normalized = _normalized(text)
+
+    # "Once during your turn" limits frequency. It does not turn an Ability
+    # tied to a specific event into a freely callable turn action.
+    if (
+        normalized.startswith("when ")
+        or normalized.startswith("whenever ")
+        or _EVENT_GATED_ONCE_RE.match(normalized)
+    ):
+        return ACTIVATION_TRIGGERED
+
     if (
         "once during your turn" in normalized
         or "as often as you like during your turn" in normalized
     ):
         return ACTIVATION_TURN_ACTION
-    if normalized.startswith("when ") or normalized.startswith("whenever "):
-        return ACTIVATION_TRIGGERED
     return ACTIVATION_PASSIVE
 
 
