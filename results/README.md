@@ -227,6 +227,10 @@ A persistent Pokémon board object can own several physical Pokémon-card instan
 
 This separates three facts that a simulator otherwise tends to conflate: the physical Pokémon cards in the stack, the persistent in-play Pokémon object, and that object's current Active or Bench position.
 
+## 16. Devolution reverses stack materialization
+
+[devolution_materialization/](devolution_materialization/) checks the reverse identity transition. The top Evolution card leaves the persistent stack and returns to an exchangeable zone count, while the lower-stage physical card remains bound to the same Pokémon object and total copy counts stay conserved.
+
 ## Reusable infrastructure
 
 The top-level [../tools/](../tools/) directory contains deterministic analyzers, catalog builders, exact combinatorial models, and state-transition kernels supporting these results. Many result directories contain a local `reproduce.py` that checks the corresponding claims against the bundled resources.
@@ -252,7 +256,7 @@ Particularly foundational components include:
 
 Several larger questions remain promising:
 
-1. **General conservation across unified state layers.** Energy attachments and ordinary Pokémon evolution stacks now have aggregate-to-instance conservation bridges. The next shared-kernel problem is extending the same contract to Tools, Knock Outs, devolution, recovery, Energy movement between Pokémon, hidden-state beliefs, and action budgets.
+1. **General conservation across unified state layers.** Energy attachments and Pokémon evolution/devolution stacks now have aggregate-to-instance conservation bridges. The next shared-kernel problem is extending the same contract to Tools, Knock Outs, recovery, Energy movement between Pokémon, hidden-state beliefs, and action budgets.
 2. **Compiler from card text to transitions.** Several models still use targeted or precompiled transitions. A conservative semantic compiler could reduce manual modeling while retaining auditable fallbacks for ambiguous text.
 3. **Policy evaluation across turns.** Many exact results analyze one action window or one narrow line. A multi-turn policy model could quantify when short-term access sacrifices later connector, Bench, Prize, or Supporter value.
 4. **Errata-aware reprint equivalence.** The repository now has an exact-fingerprint candidate scanner and an official Copycat counterexample showing why equality is incomplete. The next layer should normalize authoritative errata and semantic equivalence without turning same-name cards into automatic matches.
