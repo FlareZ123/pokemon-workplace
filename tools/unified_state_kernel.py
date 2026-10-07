@@ -21,6 +21,11 @@ from enum import Enum
 from math import fsum
 from typing import Mapping, Sequence
 
+from attached_energy_cards import (
+    AttachedEnergyCard,
+    attack_ready as attached_card_attack_ready,
+    minimum_generic_discard_outcomes,
+)
 from bench_state_kernel import (
     BenchResident,
     BenchState,
@@ -68,6 +73,7 @@ class UnifiedState:
     manual_attachment_used: bool = False
     stadium_used: bool = False
     attached_units: tuple[str, ...] = ()
+    attached_energy_cards: tuple[AttachedEnergyCard, ...] = ()
     attack_reductions: tuple[tuple[str, int], ...] = ()
     attacks_allowed: bool = True
     gladion_played: bool = False
@@ -125,6 +131,16 @@ def validate_state(state: UnifiedState) -> None:
             raise ValueError("active_tool_name set while no Tool is attached")
         if state.zone(state.active_tool_name) != Zone.ATTACHED.value:
             raise ValueError("active_tool_name is not in the attached zone")
+
+    if state.attached_units and state.attached_energy_cards:
+        raise ValueError(
+            "Use either legacy attached_units or physical attached_energy_cards, not both"
+        )
+    for energy_card in state.attached_energy_cards:
+        if state.zone(energy_card.key) != Zone.ATTACHED.value:
+            raise ValueError(
+                f"Attached Energy {energy_card.key!r} is not in the attached zone"
+            )
 
 
 def _move(state: UnifiedState, card: str, zone: Zone) -> UnifiedState:
@@ -339,12 +355,25 @@ def attach_dce_to_active(state: UnifiedState) -> UnifiedState | None:
     ):
         return None
 
+    if state.attached_units:
+        return None
+
     next_state = _move(state, "Double Colorless Energy", Zone.ATTACHED)
-    return replace(
+    next_state = replace(
         next_state,
         manual_attachment_used=True,
-        attached_units=next_state.attached_units + ("C", "C"),
+        attached_energy_cards=next_state.attached_energy_cards
+        + (
+            AttachedEnergyCard(
+                key="Double Colorless Energy",
+                card_name="Double Colorless Energy",
+                units=2,
+                provided_symbols=frozenset({"C"}),
+            ),
+        ),
     )
+    validate_state(next_state)
+    return next_state
 
 
 def play_thunder_mountain(state: UnifiedState) -> UnifiedState | None:
@@ -374,11 +403,23 @@ def attack_ready(
 
     if not state.attacks_allowed or state.active_name is None:
         return False
-    if not state.attached_units and not state.attack_reductions:
+    if (
+        not state.attached_units
+        and not state.attached_energy_cards
+        and not state.attack_reductions
+    ):
         return False
 
+    if state.attached_energy_cards:
+        return attached_card_attack_ready(
+            attack_cost,
+            state.attached_energy_cards,
+            reductions=state.attack_reductions,
+            target_tags=state.active_tags,
+        )
+
     route = EnergyRouteType(
-        "current active Energy state",
+        "legacy active Energy-unit state",
         1,
         (
             EnergyRouteProfile(
@@ -393,6 +434,42 @@ def attack_ready(
         state.active_tags,
         (route,),
     ).exact_feasible
+
+
+def discard_active_energy_units_minimum(
+    state: UnifiedState,
+    required_units: int,
+) -> list[Transition]:
+    """Enumerate minimum-card outcomes for a generic Energy-unit discard."""
+
+    if not state.attached_energy_cards:
+        return []
+
+    solved = minimum_generic_discard_outcomes(
+        state.attached_energy_cards,
+        required_units,
+    )
+    transitions: list[Transition] = []
+    subsets = solved["subsets"]
+    remaining_states = solved["remaining_states"]
+    for subset, remaining in zip(subsets, remaining_states, strict=True):
+        next_state = replace(state, attached_energy_cards=remaining)
+        discarded_names = []
+        for index in subset:
+            energy_card = state.attached_energy_cards[index]
+            next_state = _move(next_state, energy_card.key, Zone.DISCARD)
+            discarded_names.append(energy_card.card_name)
+        validate_state(next_state)
+        transitions.append(
+            (
+                "Discard "
+                + str(required_units)
+                + " Energy -> "
+                + ", ".join(discarded_names),
+                next_state,
+            )
+        )
+    return transitions
 
 
 def change_bench_capacity(
