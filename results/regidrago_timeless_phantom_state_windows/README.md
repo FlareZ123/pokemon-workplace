@@ -104,6 +104,22 @@ The six requested Bench counters place zero counters on the immune first target,
 
 Numeric HP-window eligibility is therefore insufficient when the effect-placement channel is blocked.
 
+## Concrete Expanded target bands
+
+The card database provides three useful effectively Expanded-legal reference HP values:
+
+| Card | HP | Prior damage if used as first target | Minimum prior damage if used as Phantom Dive Active target |
+| --- | ---: | ---: | ---: |
+| Iron Thorns ex `sv6-77` | 230 | 20 through 70 | 30 |
+| Regidrago VSTAR `swsh12-136` | 280 | 70 through 120 | 80 |
+| Shadow Rider Calyrex VMAX `swsh6-75` | 320 | 110 through 160 | 120 |
+
+For the first-target role, the lower bound supplies enough accumulated damage for the later six counters to finish the KO. The upper bound keeps Timeless-GX from Knocking Out the target before the extra turn.
+
+The regression checks both band endpoints through the full two-turn executor, plus the nearest 10-damage value outside each side of the interval.
+
+For the second-target role, the listed minimum prior damage is exactly the amount required to bring that HP within Phantom Dive's 200 damage.
+
 ## Validation
 
 The executor now accepts optional `DamageContext` values for Timeless-GX and Phantom Dive, plus a flag representing attack-effect immunity for the first target's later counter placement.
