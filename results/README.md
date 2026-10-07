@@ -37,6 +37,8 @@ The connector results formalize several distinct reasons a search route can be l
 
 - [trainer_search_profile_compiler/](trainer_search_profile_compiler/), [typed_search_target_allocator/](typed_search_target_allocator/), and [trainer_search_typed_integration/](trainer_search_typed_integration/) form a conservative card-text-to-action path for a validated multi-output Trainer search subset. The compiler emits text-level output/cost metadata, the typed allocator maps all 23 current output labels onto physical searchable-copy pools including Sabrina & Brycen's distinct-type constraint, and the state adapter carries locks, discard costs, Supporter/Stadium bandwidth, target multiplicity, and semantic target matching into the shared resource solver. One broad Trainer search can satisfy a narrower Item need when an Item target exists, while two connector copies still cannot reuse one singleton target.
 
+- [trainer_search_materialization/](trainer_search_materialization/) carries the typed Trainer-search planner's exact target-cost witness into the conserved physical zone ledger. Its Secret Box regression moves four distinct searched target classes from deck to hand, while a two-Arven witness moves exactly two copies from one shared target pool and rejects reuse of a stale witness after the physical state changes.
+
 **Working synthesis:** connector evaluation should preserve at least search eligibility, output multiplicity, payment costs, action-window costs, and competing uses of the same connector.
 
 ## 2. Prize cards: beliefs, cut sets, rescue timing, and information value
@@ -631,6 +633,7 @@ Particularly foundational components include:
 - `card_identity.py`
 - `typed_access_network.py`
 - `typed_energy_access.py`
+- `trainer_search_materialization.py`
 - `energy_action_budget.py`
 - `turn_action_budget.py`
 - `legacy_turn_budget_bridge.py`
