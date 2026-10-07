@@ -1,0 +1,26 @@
+name: Validate Prize take conservation
+
+on:
+  push:
+    paths:
+      - "tools/prize_take_conservation.py"
+      - "tools/prize_belief_kernel.py"
+      - "tools/identity_materialization.py"
+      - "tools/multicopy_zone_state.py"
+      - "results/prize_take_conservation/**"
+      - ".github/workflows/validate-prize-take-conservation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize take conservation and belief updates
+        run: python results/prize_take_conservation/reproduce.py
