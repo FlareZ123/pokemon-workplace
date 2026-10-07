@@ -1,0 +1,26 @@
+name: Validate Pokemon zone exit catalog
+
+on:
+  push:
+    paths:
+      - "tools/pokemon_zone_exit_catalog.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - "results/pokemon_zone_exit_catalog/**"
+      - ".github/workflows/validate-pokemon-zone-exit-catalog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check legal Pokemon zone exit catalog
+        run: python results/pokemon_zone_exit_catalog/reproduce.py
