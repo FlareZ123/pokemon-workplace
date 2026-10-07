@@ -26,6 +26,8 @@ The repository Advanced Player's Rulebook says that when card text has been upda
 
 Those rules create an authoritative normalization step. A raw card database can preserve historical printed wording while tournament play uses corrected wording.
 
+The exact-fingerprint path now runs through tools/official_print_errata.py before comparison. That layer covers all 41 print-specific entries in the current official errata resource and materially changes 24 bundled records. The present snapshot still has 106 exact historical candidates after that normalization, so the candidate partition below is unchanged while the semantics feeding it are now corrected.
+
 The 15 name-wide Trainer entries modeled here are:
 
 - Energy Recycler
@@ -129,7 +131,7 @@ The regression asserts:
 
 ## Limitations
 
-This first overlay includes only the name-wide Trainer entries in the official errata page's "Major Changes to Existing Cards" section. It excludes the page's print-specific correction section, the global historical Pokémon Tool category update, and later card-specific announcements that may not yet be reflected in that section.
+The name-wide candidate overlay still covers only the Trainer entries in the official errata page's "Major Changes to Existing Cards" section. Exact print-specific corrections are now normalized before fingerprint comparison through tools/official_print_errata.py. The global historical Pokémon Tool category update remains a separate normalization problem, as do later card-specific announcements that may not yet be reflected in the official errata resource.
 
 The overlay is static repository data and must be maintained as official errata changes.
 
@@ -137,4 +139,4 @@ This work also does not decide the remaining 4,110 semantic-review cases. Copyca
 
 ## Next work
 
-The next identity layer should normalize authoritative print-specific errata and then add a small auditable semantic grammar for Trainer and Energy text. It should preserve explicit positive and negative exemplars from the Tournament Handbook before being connected to `tools/deck_validator.py`.
+The next identity layer should normalize the global historical Pokémon Tool category rule and then add a small auditable semantic grammar for Trainer and Energy text. It should preserve explicit positive and negative exemplars from the Tournament Handbook before being connected to tools/deck_validator.py.
