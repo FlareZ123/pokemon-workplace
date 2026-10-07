@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import Mapping
+from typing import Callable, Iterable, Mapping
 
 from prize_position_belief import PrizeGroup, PrizePositionBelief
 
@@ -14,6 +14,16 @@ class PrizeProbePolicy:
     value: float
     best_position: int | None
     action_values: tuple[float, ...]
+
+
+@dataclass(frozen=True)
+class PrizeTerminalPolicy:
+    """Finite-horizon policy for state-dependent terminal utility."""
+
+    value: float
+    best_position: int | None
+    action_values: tuple[float, ...]
+    stop_value: float
 
 
 def _replace_observed_position_with_filler(
@@ -107,3 +117,93 @@ def optimal_prize_probe_policy(
         )
 
     return solve(state, probes)
+
+def optimal_prize_terminal_policy(
+    state: PrizePositionBelief,
+    terminal_utility: Callable[[frozenset[str]], float],
+    probes: int,
+    *,
+    initial_acquired: Iterable[str] = (),
+) -> PrizeTerminalPolicy:
+    """Optimize position probes for utility evaluated at a finite deadline.
+
+    Unlike ``optimal_prize_probe_policy``, utility need not decompose into a
+    fixed reward for each card group. The caller receives the acquired group
+    set and can assign conjunctive, threshold, fallback, or other
+    state-dependent value.
+
+    ``probes`` is an upper bound. The policy may stop early when the current
+    terminal utility is at least as good as every probe continuation.
+    """
+
+    if probes < 0:
+        raise ValueError("probes must be non-negative")
+
+    acquired = frozenset(initial_acquired)
+
+    @lru_cache(maxsize=None)
+    def solve(
+        current: PrizePositionBelief,
+        remaining: int,
+        current_acquired: frozenset[str],
+    ) -> PrizeTerminalPolicy:
+        stop_value = float(terminal_utility(current_acquired))
+
+        if remaining == 0 or current.prize_count == 0:
+            return PrizeTerminalPolicy(
+                value=stop_value,
+                best_position=None,
+                action_values=(),
+                stop_value=stop_value,
+            )
+
+        values: list[float] = []
+
+        for position in range(current.prize_count):
+            expected = 0.0
+
+            for group in (None,) + current.groups:
+                probability = current.group_probability_at(position, group)
+                if probability <= 0.0:
+                    continue
+
+                next_acquired = current_acquired
+                if group is not None:
+                    next_acquired = current_acquired | {group}
+
+                next_state = _replace_observed_position_with_filler(
+                    current,
+                    position=position,
+                    observed_group=group,
+                )
+                future = solve(
+                    next_state,
+                    remaining - 1,
+                    frozenset(next_acquired),
+                ).value
+                expected += probability * future
+
+            values.append(expected)
+
+        best_position = max(
+            range(current.prize_count),
+            key=values.__getitem__,
+        )
+        best_probe_value = values[best_position]
+
+        if stop_value >= best_probe_value:
+            return PrizeTerminalPolicy(
+                value=stop_value,
+                best_position=None,
+                action_values=tuple(values),
+                stop_value=stop_value,
+            )
+
+        return PrizeTerminalPolicy(
+            value=best_probe_value,
+            best_position=best_position,
+            action_values=tuple(values),
+            stop_value=stop_value,
+        )
+
+    return solve(state, probes, acquired)
