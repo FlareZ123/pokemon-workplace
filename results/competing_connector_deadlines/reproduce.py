@@ -83,7 +83,7 @@ def exhaustive_small_case(
                 hand_after.remove(rescue_in_hand[0])
                 action_states.append(
                     (
-                        critical_remainining - 1,
+                        critical_remaining - 1,
                         acquired,
                         tuple(sorted(hand_after)),
                         next_deck,
@@ -125,7 +125,7 @@ def exhaustive_small_case(
                     hand_after_play.remove(rescue_in_deck[0])
                     action_states.append(
                         (
-                            critical_remainining - 1,
+                            critical_remaining - 1,
                             acquired,
                             tuple(sorted(hand_after_play)),
                             tuple(sorted(deck_after)),
@@ -151,7 +151,7 @@ def exhaustive_small_case(
 
                     action_states.append(
                         (
-                            critical_remainining,
+                            critical_remaining,
                             True,
                             tuple(sorted(hand_after)),
                             tuple(sorted(deck_after)),
