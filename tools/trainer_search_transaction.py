@@ -247,6 +247,7 @@ def _execute_transaction(
     search_action: TypedTargetAction | TypedRetrievalAction,
     fixed_discard_cost: int,
     used_conditional: bool,
+    optional_discard_paid: bool,
     retrieval_first: bool,
     discard_candidates: Sequence[DiscardCandidate],
     discard_selection: DiscardSelection | None,
@@ -313,6 +314,9 @@ def _execute_transaction(
                 discard_selection,
             ).after
 
+    if not any(search_action.target_cost) and discard_cost == 0:
+        raise ValueError("represented Trainer effect would not change game state")
+
     if retrieval_first:
         if not isinstance(search_action, TypedRetrievalAction):
             raise TypeError("retrieval-first transaction requires TypedRetrievalAction")
@@ -360,6 +364,7 @@ def _execute_transaction(
         after=after,
         discard_cost=discard_cost,
         used_conditional_outputs=used_conditional,
+        optional_discard_paid=optional_discard_paid,
     )
 
 
@@ -374,14 +379,20 @@ def execute_trainer_search_transaction(
     discard_candidates: Sequence[DiscardCandidate] = (),
     discard_selection: DiscardSelection | None = None,
     play_condition_met: bool | None = None,
+    pay_optional_discard: bool | None = None,
 ) -> TrainerSearchTransaction:
     """Execute one demand-first compiled Item/Supporter search action."""
 
-    fixed_discard_cost, used_conditional = _validated_branch(
+    (
+        fixed_discard_cost,
+        used_conditional,
+        optional_discard_paid,
+    ) = _validated_branch(
         profile,
         demands,
         targets,
         search_action,
+        pay_optional_discard=pay_optional_discard,
     )
     return _execute_transaction(
         state,
@@ -391,6 +402,7 @@ def execute_trainer_search_transaction(
         search_action=search_action,
         fixed_discard_cost=fixed_discard_cost,
         used_conditional=used_conditional,
+        optional_discard_paid=optional_discard_paid,
         retrieval_first=False,
         discard_candidates=discard_candidates,
         discard_selection=discard_selection,
@@ -408,13 +420,19 @@ def execute_trainer_retrieval_transaction(
     discard_candidates: Sequence[DiscardCandidate] = (),
     discard_selection: DiscardSelection | None = None,
     play_condition_met: bool | None = None,
+    pay_optional_discard: bool | None = None,
 ) -> TrainerSearchTransaction:
     """Execute one retrieval-first action while preserving optional side outputs."""
 
-    fixed_discard_cost, used_conditional = _validated_retrieval_branch(
+    (
+        fixed_discard_cost,
+        used_conditional,
+        optional_discard_paid,
+    ) = _validated_retrieval_branch(
         profile,
         targets,
         retrieval_action,
+        pay_optional_discard=pay_optional_discard,
     )
     return _execute_transaction(
         state,
@@ -424,6 +442,7 @@ def execute_trainer_retrieval_transaction(
         search_action=retrieval_action,
         fixed_discard_cost=fixed_discard_cost,
         used_conditional=used_conditional,
+        optional_discard_paid=optional_discard_paid,
         retrieval_first=True,
         discard_candidates=discard_candidates,
         discard_selection=discard_selection,
