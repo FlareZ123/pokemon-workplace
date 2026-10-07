@@ -9,6 +9,7 @@ from tools.setup_hand_value_policy import (
     HandValue,
     OptimalSetupPolicy,
     SetupHandState,
+    conditioned_prize_hand_distribution,
     opening_hand_distribution,
     optimize_linear_mulligan_penalty,
 )
@@ -134,3 +135,120 @@ def optimize_count_dependent_mulligan_penalty(
         tail_step=tail_step,
         tail_policy=tail_policy,
     )
+
+
+def final_acceptance_source_masses(
+    policy: CountDependentPolicy,
+) -> tuple[tuple[int, float], ...]:
+    """Return mass accepted at each prefix count plus the stationary tail.
+
+    The final tuple uses the tail count, meaning "this count or later".
+    """
+    reach = 1.0
+    masses: list[tuple[int, float]] = []
+    for step in policy.prefix_steps:
+        accepted = reach * step.acceptance_probability
+        masses.append((step.failed_mulligans, accepted))
+        reach *= 1.0 - step.acceptance_probability
+    masses.append((policy.tail_step.failed_mulligans, reach))
+    return tuple(masses)
+
+
+def count_dependent_prize_distribution(
+    deck_size: int,
+    prize_count: int,
+    *,
+    forced_starters: int,
+    optional_group_sizes: Sequence[int],
+    feature_group_sizes: Sequence[int],
+    policy: CountDependentPolicy,
+    opening_hand_size: int = 7,
+) -> list[tuple[tuple[int, ...], float]]:
+    """Return final Prize counts after a count-dependent setup policy.
+
+    Prefix acceptance distributions are mixed by the probability of reaching
+    and accepting at each count. Once the stationary tail is reached, repeated
+    rejected tail hands do not further change the accepted-hand-conditioned
+    Prize distribution, so the entire tail contributes one aggregate mixture
+    component.
+    """
+    combined: dict[tuple[int, ...], float] = {}
+    reach = 1.0
+
+    for step in policy.prefix_steps:
+        acceptance = step.acceptance_probability
+        if acceptance > 0.0 and reach > 0.0:
+            keep_states = step.optional_keep_states
+            component = conditioned_prize_hand_distribution(
+                deck_size,
+                prize_count,
+                forced_starters=forced_starters,
+                optional_group_sizes=optional_group_sizes,
+                feature_group_sizes=feature_group_sizes,
+                optional_policy=lambda state, keep_states=keep_states: float(
+                    state in keep_states
+                ),
+                opening_hand_size=opening_hand_size,
+            )
+            weight = reach * acceptance
+            for counts, mass in component:
+                combined[counts] = combined.get(counts, 0.0) + weight * mass
+        reach *= 1.0 - acceptance
+
+    if reach > 0.0:
+        keep_states = policy.tail_step.optional_keep_states
+        component = conditioned_prize_hand_distribution(
+            deck_size,
+            prize_count,
+            forced_starters=forced_starters,
+            optional_group_sizes=optional_group_sizes,
+            feature_group_sizes=feature_group_sizes,
+            optional_policy=lambda state, keep_states=keep_states: float(
+                state in keep_states
+            ),
+            opening_hand_size=opening_hand_size,
+        )
+        for counts, mass in component:
+            combined[counts] = combined.get(counts, 0.0) + reach * mass
+
+    total = sum(combined.values())
+    if abs(total - 1.0) > 1e-12:
+        raise AssertionError(f"final Prize distribution has mass {total}")
+    return sorted(combined.items())
+
+
+def count_dependent_specific_class_prize_probability(
+    deck_size: int,
+    prize_count: int,
+    *,
+    forced_starters: int,
+    optional_group_sizes: Sequence[int],
+    feature_group_sizes: Sequence[int],
+    policy: CountDependentPolicy,
+    class_index: int,
+    opening_hand_size: int = 7,
+) -> float:
+    """Return one labeled class member's final Prize probability."""
+    optional = tuple(optional_group_sizes)
+    features = tuple(feature_group_sizes)
+    filler = deck_size - forced_starters - sum(optional) - sum(features)
+    category_sizes = (forced_starters, *optional, *features, filler)
+    if not 0 <= class_index < len(category_sizes):
+        raise ValueError("class_index is out of range")
+    class_size = category_sizes[class_index]
+    if class_size <= 0:
+        raise ValueError("requested class contains no cards")
+
+    expected_prized = sum(
+        counts[class_index] * mass
+        for counts, mass in count_dependent_prize_distribution(
+            deck_size,
+            prize_count,
+            forced_starters=forced_starters,
+            optional_group_sizes=optional,
+            feature_group_sizes=features,
+            policy=policy,
+            opening_hand_size=opening_hand_size,
+        )
+    )
+    return expected_prized / class_size
