@@ -41,11 +41,7 @@ def classify_text(card: dict[str, Any], text: str) -> tuple[str, ...]:
     if "knocked out" in lower and "instead of the discard pile" in lower:
         categories.append("knock_out_zone_redirection")
 
-    if (
-        "knocked out" in lower
-        and "attached" in lower
-        and ("into your hand" in lower or "to your hand" in lower)
-    ):
+    if KO_ATTACHED_TO_HAND.search(text):
         categories.append("knock_out_attached_recovery")
 
     if (
