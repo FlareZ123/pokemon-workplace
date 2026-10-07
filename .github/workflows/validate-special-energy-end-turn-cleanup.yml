@@ -1,0 +1,32 @@
+name: Validate Special Energy end-turn cleanup
+
+on:
+  push:
+    paths:
+      - "tools/special_energy_end_turn_catalog.py"
+      - "tools/special_energy_end_turn_cleanup.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "tools/turn_action_budget.py"
+      - "tools/energy_board_conservation.py"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - "results/special_energy_end_turn_cleanup/**"
+      - ".github/workflows/validate-special-energy-end-turn-cleanup.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Special Energy end-turn cleanup
+        run: |
+          python results/special_energy_end_turn_cleanup/reproduce.py
+          python results/restricted_special_energy_revalidation/reproduce.py
+          python results/turn_action_budget/reproduce.py
