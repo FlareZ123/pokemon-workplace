@@ -1,0 +1,25 @@
+name: Validate Prize visibility partition
+
+on:
+  push:
+    paths:
+      - "tools/prize_visibility_partition.py"
+      - "tools/prize_belief_kernel.py"
+      - "tools/prize_take_conservation.py"
+      - "results/prize_visibility_partition/**"
+      - ".github/workflows/validate-prize-visibility-partition.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Prize visibility partition
+        run: python results/prize_visibility_partition/reproduce.py
