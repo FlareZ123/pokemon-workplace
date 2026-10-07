@@ -16,12 +16,10 @@ from ability_lock_dependency_graph import (
     AbilityLockResolution,
     AbilityLockSourceRef,
     resolve_ability_lock_dependencies,
+    targets_for_source,
 )
 from board_object_kernel import BoardState
-from single_source_ability_lock_geometry import (
-    profile_for_source,
-    single_source_suppressed_object_ids,
-)
+from single_source_ability_lock_geometry import profile_for_source
 
 
 VERIFIED_ESTABLISHED_PRECEDENCE = frozenset({("Garbotoxin", "Cursed Land")})
@@ -35,46 +33,6 @@ def _source_profile_name(
     board = player_board if source.owner == "player" else opponent_board
     profile = profile_for_source(board.get(source.object_id))
     return None if profile is None else profile.name
-
-
-def _targets_for_source(
-    source: AbilityLockSourceRef,
-    player_board: BoardState,
-    opponent_board: BoardState,
-    *,
-    stadium_name: str | None,
-) -> tuple[frozenset[str], frozenset[str]]:
-    if source.owner == "player":
-        player_ids = single_source_suppressed_object_ids(
-            player_board,
-            opponent_board,
-            source_owner="player",
-            source_object_id=source.object_id,
-            stadium_name=stadium_name,
-        )
-        opponent_ids = single_source_suppressed_object_ids(
-            opponent_board,
-            player_board,
-            source_owner="opponent",
-            source_object_id=source.object_id,
-            stadium_name=stadium_name,
-        )
-    else:
-        player_ids = single_source_suppressed_object_ids(
-            player_board,
-            opponent_board,
-            source_owner="opponent",
-            source_object_id=source.object_id,
-            stadium_name=stadium_name,
-        )
-        opponent_ids = single_source_suppressed_object_ids(
-            opponent_board,
-            player_board,
-            source_owner="player",
-            source_object_id=source.object_id,
-            stadium_name=stadium_name,
-        )
-    return player_ids, opponent_ids
 
 
 def resolve_verified_established_precedence(
@@ -123,7 +81,7 @@ def resolve_verified_established_precedence(
     if (winner_name, loser_name) not in VERIFIED_ESTABLISHED_PRECEDENCE:
         return current
 
-    player_ids, opponent_ids = _targets_for_source(
+    player_ids, opponent_ids = targets_for_source(
         winner,
         player_board,
         opponent_board,
