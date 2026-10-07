@@ -20,7 +20,7 @@ from special_energy_move_conservation import (
 )
 
 
-def make_state() -> tuple[IdentityLedger, BoardMaterialState]:
+def make_state(target_name: str) -> tuple[IdentityLedger, BoardMaterialState]:
     initial = IdentityLedger(
         ZoneCountState.from_mapping(
             {
@@ -40,19 +40,19 @@ def make_state() -> tuple[IdentityLedger, BoardMaterialState]:
         "dde-a",
         "Double Dragon Energy",
         ("any", "any"),
-        print_id="roaring-skies-print",
+        print_id="xy6-97",
     )
     board = make_board(
         make_pokemon("dragon", "Dragon Pokemon", energy=(energy,)),
         (
-            make_pokemon("other", "Non-Dragon Pokemon"),
+            make_pokemon("other", target_name),
         ),
     )
     return initial, BoardMaterialState(ledger, board)
 
 
 def main() -> None:
-    initial, state = make_state()
+    initial, state = make_state("Dragon Pokemon 2")
 
     legal = move_special_energy_with_conservation(
         state,
@@ -69,7 +69,7 @@ def main() -> None:
     assert legal.ledger.instance("dde-a").attached_to == "other"
     assert_conserved(initial, legal.ledger)
 
-    initial, state = make_state()
+    initial, state = make_state("Non-Dragon Pokemon")
     rejected_destination = move_special_energy_with_conservation(
         state,
         "dde-a",
