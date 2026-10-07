@@ -9,7 +9,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from aichi_vileplume_als import simulate_any_route
+from aichi_vileplume_als import ANY_ROUTE_ENDPOINTS, simulate_any_route
 
 
 def main() -> None:
