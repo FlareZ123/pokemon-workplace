@@ -1,19 +1,35 @@
 {
-  "scope": "multi_pokemon_ko_trigger_order",
-  "legacy_official_faq": {
-    "source": "https://www.pokemon-card.com/rules/faq/details.php?id=8833",
-    "example": "Manaphy Last Wish plus Team Plasma Weezing Aftermath",
-    "chooser_role": "knocked_out_pokemon_owner",
-    "status": "superseded_by_2025_rule_change"
-  },
-  "rule_change": {
-    "source": "https://www.pokemon-card.com/info/005161.html",
-    "effective_date": "2025-08-01",
-    "statement": "E-04 simultaneous-KO effect ordering changed",
-    "chooser_role": "current_turn_player"
+  "effective_date": "2025-08-01",
+  "change_notice": "https://www.pokemon-card.com/info/005161.html",
+  "legacy_rulebook": {
+    "version": "3.0",
+    "source": "https://www.pokemon-card.com/info/2022/05/images/Ruleguide_ver3.pdf"
   },
   "current_rulebook": {
     "version": "3.4",
-    "chooser_role": "current_turn_player"
+    "source": "https://www.pokemon-card.com/assets/document/advanced_manual.pdf"
+  },
+  "changed_cases": [
+    {
+      "case": "multi_pokemon_ko_triggers",
+      "legacy_chooser_role": "knocked_out_pokemon_owner",
+      "current_chooser_role": "current_turn_player"
+    },
+    {
+      "case": "energy_attachment_triggers",
+      "legacy_chooser_role": "affected_pokemon_owner",
+      "current_chooser_role": "current_turn_player"
+    },
+    {
+      "case": "pokemon_checkup_effects",
+      "legacy_chooser_role": "affected_pokemon_owner",
+      "current_chooser_role": "next_turn_player"
+    }
+  ],
+  "stale_faq_witness": {
+    "source": "https://www.pokemon-card.com/rules/faq/details.php?id=8833",
+    "example": "Manaphy Last Wish plus Team Plasma Weezing Aftermath",
+    "chooser_role": "knocked_out_pokemon_owner",
+    "status": "superseded_for_generic_e04_ordering"
   }
 }
