@@ -1,0 +1,24 @@
+name: Validate forced search draw bandwidth
+
+on:
+  push:
+    paths:
+      - "tools/unrestricted_search_selection.py"
+      - "tools/search_draw_bandwidth.py"
+      - "results/forced_search_draw_bandwidth/**"
+      - ".github/workflows/validate-forced-search-draw-bandwidth.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check forced-search draw bandwidth
+        run: python results/forced_search_draw_bandwidth/reproduce.py
