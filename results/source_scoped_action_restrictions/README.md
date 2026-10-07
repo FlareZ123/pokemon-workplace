@@ -49,6 +49,17 @@ A concrete action attempt records card kind, source zone, action mode, card tags
 
 This keeps the existing broad `PlayerChannels` model useful as a coarse compatibility layer while giving newer transaction code a more precise legality predicate.
 
+
+## Exclusive branch resolution
+
+Two audited attack profiles contain mutually exclusive lock branches.
+
+Crobat `sv4-112` / Echoing Madness lets its user choose Item cards or Supporter cards. Vileplume `swsh11-3` / Allergy Storm uses a coin result to select Supporter lock on heads or Item lock on tails.
+
+The compiled profile records the printed alternatives and refuses legality evaluation until one branch is resolved. `resolve_exclusive_restriction` binds the chosen dimension and returns an ordinary concrete restriction for downstream permission checks.
+
+This prevents an unresolved union from blocking both categories simultaneously.
+
 ## Regression witnesses
 
 ### Vileplume and Prize-origin Dream Ball
