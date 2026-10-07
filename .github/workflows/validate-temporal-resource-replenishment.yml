@@ -1,0 +1,22 @@
+name: Validate temporal resource replenishment
+
+on:
+  push:
+    paths:
+      - "tools/temporal_resource_connectors.py"
+      - "results/temporal_resource_replenishment/**"
+      - ".github/workflows/validate-temporal-resource-replenishment.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/temporal_resource_replenishment/reproduce.py
