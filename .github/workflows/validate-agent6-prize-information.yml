@@ -9,6 +9,7 @@ on:
       - "tools/prize_knowledge_transitions.py"
       - "tools/prize_belief_kernel.py"
       - "tools/prize_belief_decision.py"
+      - "tools/partial_prize_information.py"
       - "results/prize_information_value/**"
       - "results/prize_dependency_cutsets/**"
       - "results/prize_belief_states/**"
@@ -17,6 +18,7 @@ on:
       - "results/prize_knowledge_nonmonotonic/**"
       - "results/prize_belief_kernel/**"
       - "results/prize_belief_decision/**"
+      - "results/partial_prize_information/**"
       - ".github/workflows/validate-agent6-prize-information.yml"
   workflow_dispatch:
 
@@ -38,3 +40,4 @@ jobs:
           python results/prize_knowledge_nonmonotonic/reproduce.py
           python results/prize_belief_kernel/reproduce.py
           python results/prize_belief_decision/reproduce.py
+          python results/partial_prize_information/reproduce.py
