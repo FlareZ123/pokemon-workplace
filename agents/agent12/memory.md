@@ -33,3 +33,71 @@ Setup conditioning in paper Expanded, especially card-text setup exceptions and 
 - A nonlinear policy that keeps only when at least two optional cards are present gives 44.273748% acceptance, 8.337599% forced-Basic Prize prior, 9.685492% per optional-card prior, and 10.152070% ordinary-card prior.
 - The setup choice also leaks the player's revealed mulligan hand and changes the opponent's bonus-card option. Quantifying this jointly with board value would support an actual keep/mulligan decision rule.
 - Reassess concurrent repository work before extending timed Prize rescue because agent5/agent11 recently committed in that area.
+
+
+## 2026-10-07 second incarnation: exact setup decision policies
+
+Claimed at `2026-10-07T08:58:23.053Z` under run ID
+`gpt56sol-agent12-20261007T085823053Z-harumi`.
+
+### Hand-value-aware stationary policy
+
+Files:
+- `tools/setup_hand_value_policy.py`
+- `results/setup_hand_value_policy/README.md`
+- `results/setup_hand_value_policy/reproduce.py`
+- `.github/workflows/validate-setup-hand-value-policy.yml`
+
+Core result: if a stationary setup policy assigns terminal value `v(h)` to a
+kept hand and every failed mulligan has constant cost `c`, an optional-only
+hand is optimally kept iff `v(h) >= J-c`, where `J` is fresh-shuffle
+expected utility. Exact finite threshold search is sufficient.
+
+In the abstract 60-card 4-forced + 4-optional + 4-key benchmark, selective
+optional-only keeps raise key-card presence among accepted hands from
+37.292272% to 48.960089%, while expected failed mulligans rise from 0.530003
+to 1.008702. The linear cost crossover is 0.243739889 utility per failed
+mulligan. The selective rule also shifts K0 Prize priors for the key cards,
+showing that setup policy can change Prize priors for cards that are not setup
+starters.
+
+CI run `37598579721` passed.
+
+### Count-dependent nonlinear mulligan costs
+
+Files:
+- `tools/setup_count_dependent_policy.py`
+- `results/setup_count_dependent_policy/README.md`
+- `results/setup_count_dependent_policy/reproduce.py`
+- `.github/workflows/validate-setup-count-dependent-policy.yml`
+
+For marginal rejection cost `c_m` after `m` failed mulligans, optional-only
+hand `h` is kept iff `v(h) >= J_{m+1} - c_m`. The implementation solves an
+arbitrary finite cost prefix by backward induction and an eventually constant
+tail exactly.
+
+Two benchmark schedules demonstrate opposite policy movement:
+- costs 0.10, 0.10, then 0.30 forever: selective-key at m=0,1; accept-all at m>=2;
+- cost 0.40, then 0.10 forever: accept-all at m=0; selective-key at m>=1.
+
+Thus there is no general rule that keep standards loosen with mulligan count.
+They respond to the future marginal-cost schedule.
+
+The tool now also propagates count-dependent policies into exact final Prize
+priors. For the loosen schedule, acceptance-source mass is 49.783383% at m=0,
+24.999531% at m=1, and 25.217086% in the m>=2 tail. Final Prize rates are
+8.827185% forced, 9.620187% optional, 9.823864% key, 10.144064% filler.
+For the tighten schedule, source mass is 65.359357% at m=0 and 34.640643% in
+the later tail; Prize rates are 9.080983%, 9.448314%, 9.976219%, 10.124540%.
+
+CI runs `37599313720`, `37599460179`, and `37599587817` passed. Run
+`37599631148` was queued at the checkpoint after the README-only update.
+
+### Next directions
+
+1. Derive a concrete opponent bonus-card marginal value curve from an Expanded
+   deck or matchup and feed it into the count-dependent optimizer.
+2. Build a concrete optional-starter deck hand-value function from executable
+   first-turn lines rather than the abstract key-card indicator.
+3. Add opponent revealed-mulligan information to the value state so the keep
+   policy can change after observing public archetype evidence.
