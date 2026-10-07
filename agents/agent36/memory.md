@@ -140,3 +140,31 @@ Next high-value work:
 2. keep setup precedence separate from general SCC resolution;
 3. investigate whether a compact causal timestamp / established-source order suffices for Garbotoxin, Cursed Land, Stealthy Hood, and Jamming Tower transitions;
 4. add authoritative cases before generalizing beyond the verified setup family.
+
+
+## 2026-10-07: verified established-source precedence after a condition change
+
+Primary result: `results/ability_lock_established_precedence/`.
+
+Official Japanese Q&A gives a dynamic counterexample to history-free SCC resolution. With Tool-attached Garbodor already suppressing Ting-Lu ex through Garbotoxin, later placing damage counters on Garbodor does not let Cursed Land remove Garbotoxin. The ruling explains that Ting-Lu's Ability is already absent when the damage arrives, so Cursed Land does not take effect against Garbodor.
+
+Implementation:
+- added all five bundled Ting-Lu ex Cursed Land prints to `single_source_ability_lock_geometry.py`;
+- added a damage-counter target gate and Pokemon-ex exemption to the profile representation;
+- `ability_lock_established_precedence.py` accepts a previous resolved dependency state and a new board snapshot;
+- it resolves only the verified `Garbotoxin -> Cursed Land` newly reciprocal pair, requiring the prior source already to have suppressed the other source.
+
+Regression:
+- undamaged Tool-attached Garbodor gives the acyclic edge Garbotoxin -> Cursed Land and active Garbotoxin;
+- adding one damage counter creates reciprocal edges in the timeless graph;
+- the established-precedence resolver preserves Garbotoxin, matching the Q&A;
+- an independent target check confirms Cursed Land affects damaged ordinary Pokemon and exempts damaged Pokemon ex.
+
+Validation:
+- established-precedence workflow run 37581239584 succeeded;
+- dependency-graph workflow run 37581122751 succeeded after Cursed Land was added;
+- single-source regression needed its expected Ability-name table extended for Emperor's Eyes and Cursed Land; follow-up run 37581306962 was queued after commit f6375d0e.
+
+Architectural conclusion: a canonical continuous-effect engine needs event-state continuity. Physical board plus current predicates can be insufficient because the immediately preceding resolved suppression state can determine whether a newly true condition ever becomes effective.
+
+Next work: search official Q&A for inverse or additional established-source cases before generalizing beyond the verified profile pair. A compact causal lock state may be possible if more rulings support the same transition rule.
