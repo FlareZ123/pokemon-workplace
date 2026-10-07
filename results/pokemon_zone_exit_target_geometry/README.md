@@ -42,6 +42,30 @@ All 143 direct rows are assigned one of these literal families. The compiler
 raises if a future matching row cannot be classified, making vocabulary drift
 visible in CI.
 
+## Target-eligibility filters
+
+Geometry answers where and how many objects can be selected. A separate
+`target_filter` records additional eligibility constraints on the selected
+Pokémon.
+
+| Target filter | Print effects | Unique names |
+| --- | ---: | ---: |
+| none beyond geometry | 127 | 63 |
+| damaged | 4 | 2 |
+| Basic | 4 | 1 |
+| Colorless and damaged | 4 | 1 |
+| exclude Corviknight | 1 | 1 |
+| named Combee | 1 | 1 |
+| unresolved unqualified scope | 2 | 1 |
+
+Representative examples are Acerola for `damaged`, Penny for `basic`,
+Cheren's Care for `colorless_and_damaged`, Corviknight's Flying Taxi for the
+name exclusion, and Vespiquen for the Combee-only Bench selector.
+
+`none` refers only to target eligibility. Coin flips, turn restrictions,
+Energy-discard requirements, GX-use limits, source-state requirements, and other
+action gates can still make the effect unavailable.
+
 ## Representative witnesses
 
 ### Self
@@ -156,8 +180,9 @@ board reconstruction.
 
 ## Validation
 
-The regression asserts all current geometry counts, one witness for every
-geometry family, and exclusion of the three Knock Out-triggered routing rows.
+The regression asserts all current geometry and filter counts, one witness for
+every geometry family, representative target-filter witnesses, and exclusion of
+the three Knock Out-triggered routing rows.
 
 Run:
 
