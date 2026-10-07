@@ -1,0 +1,26 @@
+name: Validate controlled attack-copy execution
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_controlled_execution.py"
+      - "tools/attack_copy_outer_control.py"
+      - "tools/attack_copy_kernel_compiler.py"
+      - "tools/attack_copy_kernel.py"
+      - "results/attack_copy_controlled_execution/**"
+      - ".github/workflows/validate-attack-copy-controlled-execution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check controlled copy execution
+        run: python results/attack_copy_controlled_execution/reproduce.py
