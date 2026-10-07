@@ -1,0 +1,26 @@
+name: Validate Knock Out zone routing
+
+on:
+  push:
+    paths:
+      - "tools/knockout_zone_routing.py"
+      - "tools/simultaneous_knockout_conservation.py"
+      - "tools/stack_knockout_conservation.py"
+      - "tools/identity_materialization.py"
+      - "results/knockout_zone_routing/**"
+      - ".github/workflows/validate-knockout-zone-routing.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Knock Out zone routing
+        run: python results/knockout_zone_routing/reproduce.py
