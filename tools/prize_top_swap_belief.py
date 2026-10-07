@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from math import isclose
-from typing import defaultdict as typing_defaultdict
-
 from prize_position_belief import PrizeGroup, PrizePositionBelief
 from prize_slot_visibility import PrizeSlotVisibilityBelief
 
