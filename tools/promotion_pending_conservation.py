@@ -63,6 +63,16 @@ class PromotionPendingState:
             return ()
         return tuple(row.pokemon_id for row in self.pokemon)
 
+    @property
+    def bench_occupancy(self) -> int:
+        if self.active_id is None:
+            return len(self.pokemon)
+        return len(self.pokemon) - 1
+
+    @property
+    def open_bench_slots(self) -> int:
+        return self.bench_capacity - self.bench_occupancy
+
     def validate(self) -> None:
         if self.bench_capacity < 0:
             raise ValueError("bench_capacity must be non-negative")
