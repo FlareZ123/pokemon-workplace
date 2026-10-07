@@ -12,22 +12,25 @@ Regression: `results/knockout_redirection_routes/reproduce.py`
 
 ## Result
 
-Yes. The new translator emits only per-instance destination overrides for the
-existing `discard_pending_with_zone_routes()` disposal transition. The
-conservation kernel still owns physical identity, board detachment,
-dematerialization, promotion legality, and copy-count invariants.
+Yes. The translator emits per-instance destination assignments for the existing
+`discard_pending_with_zone_routes()` disposal transition. The conservation
+kernel still owns physical identity, board detachment, dematerialization,
+promotion legality, and copy-count invariants.
 
 The four current signatures compile as follows:
 
-| Routing signature | Pokémon stack | Attachments |
+| Routing signature | Explicit Pokémon-stack assignment | Explicit attachment assignment |
 | --- | --- | --- |
 | `pokemon_to_hand_attached_discard` | hand | discard |
 | `pokemon_and_attached_to_lost_zone` | Lost Zone | Lost Zone |
 | `pokemon_to_lost_zone_attached_discard` | Lost Zone | discard |
-| `attached_energy_to_hand_default_discard` | discard | selected Energy to hand; other attachments discard |
+| `attached_energy_to_hand_default_discard` | none | selected Energy -> hand |
 
-Instances omitted from the override map use the router's normal discard
-destination.
+The distinction between an explicit `discard` assignment and no assignment is
+important. An isolated KO ultimately discards either case through the normal
+sink, but simultaneous effects can disagree with an explicit discard
+instruction. An unassigned instance remains available for another effect to
+redirect before ordinary disposal.
 
 ## Concrete card basis
 
@@ -62,8 +65,8 @@ of every card class, preservation of the surviving Bidoof instance, legal
 promotion, and full copy-total conservation.
 
 This exposes a useful representation boundary: a routing signature describes
-which physical relations change destination, while the identity ledger and KO
-disposal transition enforce conservation.
+which physical relations receive explicit destination instructions, while the
+identity ledger and KO disposal transition enforce conservation.
 
 ## Semantic boundary
 
@@ -74,7 +77,7 @@ that selected IDs are Energy attachments on the Knocked Out Pokémon, then
 routes them to hand.
 
 That keeps text/card semantics separate from physical movement. A future
-compiler can resolve predicates such as Basic Water, owner, damage-source, or
+compiler can resolve predicates such as Basic Water, owner, damage source, or
 optional-effect activation before calling this layer.
 
 ## Finding
@@ -87,12 +90,18 @@ Tyranitar-GX, Lost City, Huntail, and future cards with the same routing
 geometry. It also preserves lower Evolution cards correctly when a Pokémon
 stack changes zones.
 
+A second representation lesson is that destination programs should preserve
+explicit instructions even when they match the ordinary sink. Collapsing
+"explicitly discard this attachment" into "no override" is lossless for one
+effect in isolation but loses information required to reason about simultaneous
+redirections.
+
 ## Limits
 
 The current signature set comes from the repository's literal text taxonomy and
 is not claimed to cover every semantically equivalent historical wording.
 
-Competing replacement effects, ordering between multiple simultaneous
-redirections, ownership-sensitive destinations, direct transitions into new
-board relations, and automatic derivation of card-specific eligibility
-predicates remain open.
+Competing KO effects still require a higher-level conflict/order layer.
+Ownership-sensitive destinations, direct transitions into new board relations,
+and automatic derivation of card-specific eligibility predicates also remain
+open.
