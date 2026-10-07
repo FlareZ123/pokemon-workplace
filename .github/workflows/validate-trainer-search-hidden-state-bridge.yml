@@ -14,6 +14,10 @@ on:
       - "tools/discard_cost_witness.py"
       - "tools/typed_search_target_allocator.py"
       - "tools/trainer_search_profile_compiler.py"
+      - "tools/single_output_search_profile_compiler.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "resources/cards/**"
+      - "resources/sets/**"
       - "results/trainer_search_hidden_state_bridge/**"
       - ".github/workflows/validate-trainer-search-hidden-state-bridge.yml"
   workflow_dispatch:
