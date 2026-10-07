@@ -16,21 +16,21 @@ summary = summarize_reprint_resolver(resolver)
 counts = summary["counts"]
 
 assert counts["same_name_review_pool_prints"] == 4260
-assert counts["exact_fingerprint_candidate_prints"] == 106
-assert counts["historical_official_reprint_candidate_prints"] == 42
-assert counts["historical_official_reprint_candidate_names"] == 8
+assert counts["exact_fingerprint_candidate_prints"] == 112
+assert counts["historical_official_reprint_candidate_prints"] == 37
+assert counts["historical_official_reprint_candidate_names"] == 7
 assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
 assert counts["known_non_equivalent_prints"] == 34
 assert counts["known_non_equivalent_names"] == 4
 assert counts["official_semantic_candidate_prints"] == 3
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 4031
-assert counts["high_confidence_candidate_prints"] == 195
-assert counts["exact_fingerprint_trainer_candidate_prints"] == 2
+assert counts["semantic_review_prints"] == 4030
+assert counts["high_confidence_candidate_prints"] == 196
+assert counts["exact_fingerprint_trainer_candidate_prints"] == 8
 assert counts["trainer_same_name_review_pool_prints"] == 168
-assert counts["historical_official_trainer_candidate_prints"] == 41
-assert counts["high_confidence_trainer_candidate_prints"] == 90
+assert counts["historical_official_trainer_candidate_prints"] == 36
+assert counts["high_confidence_trainer_candidate_prints"] == 91
 assert counts["name_wide_trainer_errata_names"] == 15
 
 assert summary["official_semantic_candidates_by_name"] == {"Copycat": 3}
@@ -47,8 +47,7 @@ assert summary["historical_official_candidates_by_name"] == {
     "Double Colorless Energy": 1,
     "Energy Search": 7,
     "Energy Switch": 7,
-    "Full Heal": 1,
-    "Poké Ball": 9,
+    "Poké Ball": 5,
     "Recycle": 1,
     "Super Scoop Up": 6,
     "Switch": 10,
@@ -80,6 +79,9 @@ assert resolver.resolve("base1-96").kind == "historical_official_reprint_candida
 assert resolver.resolve("dp4-99").kind == "official_errata_candidate"
 assert resolver.resolve("ex2-88").kind == "official_errata_candidate"
 assert resolver.resolve("gym1-18").kind == "exact_fingerprint_candidate"
+assert resolver.resolve("hgss2-78").kind == "exact_fingerprint_candidate"
+assert resolver.resolve("hgss1-93").kind == "exact_fingerprint_candidate"
+assert resolver.resolve("dp1-110").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("ex7-83").kind == "official_semantic_candidate"
 assert resolver.resolve("ex15-73").kind == "official_semantic_candidate"
 assert resolver.resolve("ecard1-138").kind == "official_semantic_candidate"
