@@ -387,3 +387,74 @@ def next_turn(state: BoardState) -> BoardState:
     next_state = replace(state, retreat_used=False)
     next_state.validate()
     return next_state
+
+
+def knock_out(
+    state: BoardState,
+    object_id: str,
+    *,
+    promote_object_id: str | None = None,
+) -> tuple[BoardState | None, BoardPokemon] | None:
+    """Remove one Knocked Out Pokemon and return the complete removed object.
+
+    If the Active Pokemon is Knocked Out while a Bench remains, a valid
+    promotion must be supplied. If no Benched Pokemon remains, the returned
+    BoardState is None to represent the terminal no-Pokemon board without
+    constructing an invalid BoardState.
+
+    Knock Out triggers, Prize taking, simultaneous Knock Outs, and win/loss
+    resolution remain outside this mechanical board-object transition.
+    """
+
+    try:
+        knocked_out = state.get(object_id)
+    except KeyError:
+        return None
+
+    remaining_objects = tuple(
+        pokemon
+        for pokemon in state.objects
+        if pokemon.object_id != object_id
+    )
+
+    if object_id == state.active_id:
+        if not state.bench_ids:
+            if promote_object_id is not None:
+                return None
+            return None, knocked_out
+
+        if promote_object_id not in state.bench_ids:
+            return None
+
+        next_state = BoardState(
+            active_id=promote_object_id,
+            bench_ids=tuple(
+                bench_id
+                for bench_id in state.bench_ids
+                if bench_id != promote_object_id
+            ),
+            objects=remaining_objects,
+            bench_capacity=state.bench_capacity,
+            retreat_used=state.retreat_used,
+        )
+        next_state.validate()
+        return next_state, knocked_out
+
+    if promote_object_id is not None:
+        return None
+    if object_id not in state.bench_ids:
+        return None
+
+    next_state = BoardState(
+        active_id=state.active_id,
+        bench_ids=tuple(
+            bench_id
+            for bench_id in state.bench_ids
+            if bench_id != object_id
+        ),
+        objects=remaining_objects,
+        bench_capacity=state.bench_capacity,
+        retreat_used=state.retreat_used,
+    )
+    next_state.validate()
+    return next_state, knocked_out
