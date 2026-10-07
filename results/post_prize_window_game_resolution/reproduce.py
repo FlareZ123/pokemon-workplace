@@ -6,6 +6,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from before_hand_prize_executor import begin_before_hand_item_play
+from before_hand_prize_profiles import BeforeHandPrizeProfile
 from board_position_state import BoardPokemon, PokemonCard, make_state
 from identity_materialization import (
     IdentityLedger,
@@ -18,7 +20,10 @@ from post_knockout_game_resolution import (
     Outcome,
     resolve_prize_and_board_loss_conditions,
 )
-from post_prize_window_game_resolution import resolve_after_prize_window
+from post_prize_window_game_resolution import (
+    resolve_after_prize_window,
+    unresolved_prize_window_count,
+)
 from prize_before_hand_bench_entry import use_wish_upon_a_star
 from prize_pending_take import resolve_next_pending_prize, stage_prize_takes
 from promotion_pending_conservation import (
@@ -26,6 +31,7 @@ from promotion_pending_conservation import (
     PostKnockOutStage,
     dispose_pending_before_promotion,
     replace_player_state,
+    unresolved_prize_count,
 )
 from simultaneous_knockout_conservation import prepare_knock_out_batch
 from stack_knockout_conservation import StackBoardMaterialState
@@ -212,6 +218,58 @@ def main() -> None:
 
     assert_conserved(initial_a, resolved.context.state_for("A").ledger)
     assert_conserved(initial_b, resolved.context.state_for("B").ledger)
+
+    # A Prize-origin Item can leave prize_pending while its E-31 body remains
+    # unresolved. Terminal evaluation stays blocked in that temporary zone.
+    initial_d, state_d, physical_d = build_player(
+        "d",
+        prize_class="swsh7-146",
+        prize_name="Dream Ball",
+    )
+    initial_e, state_e, physical_e = build_player(
+        "e",
+        prize_class="e-filler-prize",
+        prize_name="Filler Prize",
+    )
+    pending_d = dispose_active(state_d)
+    pending_e = dispose_active(state_e)
+    physical_d = sync_physical(physical_d, pending_d.ledger)
+    physical_e = sync_physical(physical_e, pending_e.ledger)
+    prizes_d = stage_prize_takes(physical_d, positions=(0,))
+    prizes_e = stage_prize_takes(physical_e, positions=(0,))
+    filler_e = resolve_next_pending_prize(prizes_e)
+
+    dream_profile = BeforeHandPrizeProfile(
+        card_id="swsh7-146",
+        card_name="Dream Ball",
+        source="rule:0",
+        activation_family="item_play",
+        self_destination="discard_after_use",
+        during_own_turn_explicit=True,
+        card_text_requires_open_bench=False,
+        extra_prize_mode="none",
+        searches_pokemon_to_bench=True,
+    )
+    resolving_d = begin_before_hand_item_play(
+        prizes_d,
+        dream_profile,
+        during_own_turn=True,
+    )
+    item_context = PostKnockOutPromotionContext(
+        (
+            ("D", pending_d.with_ledger(resolving_d.physical.ledger)),
+            ("E", pending_e.with_ledger(filler_e.after.physical.ledger)),
+        ),
+        next_player_id="E",
+    )
+    assert unresolved_prize_count(item_context) == 0
+    assert unresolved_prize_window_count(item_context) == 1
+    assert resolve_after_prize_window(
+        item_context,
+        prizes_remaining={"D": 0, "E": 0},
+    ) is None
+    assert_conserved(initial_d, item_context.state_for("D").ledger)
+    assert_conserved(initial_e, item_context.state_for("E").ledger)
 
     print("post-Prize-window terminal timing regression passed")
     print("early counterfactual: tie")
