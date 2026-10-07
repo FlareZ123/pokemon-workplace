@@ -1,0 +1,32 @@
+name: Validate deck search shuffle physical belief
+
+on:
+  push:
+    paths:
+      - "tools/deck_search_shuffle_physical_belief.py"
+      - "tools/deck_search_shuffle_belief.py"
+      - "tools/deck_search_shuffle_topology.py"
+      - "tools/top_prize_physical_bridge.py"
+      - "tools/observer_top_prize_beliefs.py"
+      - "tools/prize_top_swap_belief.py"
+      - "tools/prize_slot_visibility.py"
+      - "tools/prize_position_belief.py"
+      - "tools/identity_materialization.py"
+      - "tools/multicopy_zone_state.py"
+      - "results/deck_search_shuffle_physical_belief/**"
+      - ".github/workflows/validate-deck-search-shuffle-physical-belief.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check physical search-shuffle belief bridge
+        run: python results/deck_search_shuffle_physical_belief/reproduce.py
