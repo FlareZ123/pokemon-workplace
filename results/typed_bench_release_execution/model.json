@@ -1,0 +1,82 @@
+{
+  "card_text_anchors": {
+    "supporter_release": "Penny sv1-183: put 1 of your Basic Pokémon and all attached cards into your hand; Penny is a Supporter.",
+    "deterministic_item_release": "Scoop Up Cyclone bw10-95: put 1 of your Pokémon and all attached cards into your hand; it is an ACE SPEC Item.",
+    "stochastic_item_release": "Super Scoop Up bw1-103: flip a coin; on heads, put 1 of your Pokémon and all attached cards into your hand.",
+    "attack_release": "Pelipper sm1-38 / Courier: put 1 of your Benched Pokémon and all cards attached to it into your hand.",
+    "ability_release": "Corviknight swsh3-156 / Flying Taxi: when played from hand to evolve, it may put another of your Pokémon and all attached cards into your hand."
+  },
+  "mechanical_same_turn_collision": {
+    "supporter_limit_1": null,
+    "supporter_limit_2": [
+      "AZ/Penny-like Supporter releases spent support",
+      "play required Supporter",
+      "Bench required Pokémon"
+    ],
+    "deterministic_item": [
+      "Scoop Up Cyclone releases spent support",
+      "play required Supporter",
+      "Bench required Pokémon"
+    ],
+    "deterministic_item_under_item_lock": null,
+    "coin_item_heads_branch": [
+      "Super Scoop Up (heads branch) releases spent support",
+      "play required Supporter",
+      "Bench required Pokémon"
+    ],
+    "attack_release": null,
+    "ability_release_ready": [
+      "Corviknight Flying Taxi releases spent support",
+      "play required Supporter",
+      "Bench required Pokémon"
+    ],
+    "ability_release_not_ready": null
+  },
+  "coin_release_probability": {
+    "toy_setup_base_success_percent": 35.54546449283291,
+    "toy_setup_support_success_percent": 42.70707954918481,
+    "ordinary_no_release_break_even_collision_percent": 16.76915193440943,
+    "super_scoop_up_attempts": [
+      {
+        "attempts": 0,
+        "release_success_fraction": "0/1",
+        "release_success_percent": 0.0,
+        "break_even_collision_fraction": "1309/7806",
+        "break_even_collision_percent": 16.76915193440943,
+        "support_wins_for_all_collision_probabilities": false
+      },
+      {
+        "attempts": 1,
+        "release_success_fraction": "1/2",
+        "release_success_percent": 50.0,
+        "break_even_collision_fraction": "1309/3903",
+        "break_even_collision_percent": 33.53830386881886,
+        "support_wins_for_all_collision_probabilities": false
+      },
+      {
+        "attempts": 2,
+        "release_success_fraction": "3/4",
+        "release_success_percent": 75.0,
+        "break_even_collision_fraction": "2618/3903",
+        "break_even_collision_percent": 67.07660773763772,
+        "support_wins_for_all_collision_probabilities": false
+      },
+      {
+        "attempts": 3,
+        "release_success_fraction": "7/8",
+        "release_success_percent": 87.5,
+        "break_even_collision_fraction": "5236/3903",
+        "break_even_collision_percent": 134.15321547527543,
+        "support_wins_for_all_collision_probabilities": true
+      },
+      {
+        "attempts": 4,
+        "release_success_fraction": "15/16",
+        "release_success_percent": 93.75,
+        "break_even_collision_fraction": "10472/3903",
+        "break_even_collision_percent": 268.30643095055086,
+        "support_wins_for_all_collision_probabilities": true
+      }
+    ]
+  }
+}
