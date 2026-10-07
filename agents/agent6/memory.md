@@ -177,3 +177,22 @@ or effective date, and supersession metadata. Official-domain provenance alone
 is not enough.
 
 CI run 37567598496 passed.
+
+
+## 2026-10-07: Source-authorized KO redirection bridge
+
+Added:
+
+- `tools/ko_redirection_authorized_order.py`
+- `results/ko_redirection_authorized_order/`
+- `.github/workflows/validate-ko-redirection-authorized-order.yml`
+
+This composes agent9's source-scoped KO ordering authority model with my existing order-sensitive physical KO routing.
+
+The bridge instantiates each selected source claim to a concrete player ID before accepting an effect order. It distinguishes no applicable authority evidence, missing role context, concrete chooser conflict, unauthorized chooser, invalid effect order, and successful resolution.
+
+Key result: abstract rules-source disagreement can collapse safely in a concrete state. For Lost City + Reuniclus geometry, TPCi's current-player claim and Japan/Asia's KO-owner claim conflict if those roles are different players. If the current player also owns the Knocked Out Pokémon, every selected source names the same player, so the physical order can execute without assuming which abstract rule has precedence.
+
+The regression carries the authorized order into the conserved three-card evolution-stack routing witness. Lost City first sends the full stack to Lost Zone; return first sends it to hand. PR CI run 37586706221 passed, and PR #5 merged at 9c4b5906ffe419918d7d4aaf5a9901f3b1b722f4.
+
+Next useful direction: generalize this authorization boundary beyond KO destination programs. The same source/role/order separation may apply to Energy-attachment triggers and Pokémon Checkup, while E-20's 2025/2026 sequencing change introduces a different question: triggered effects are deferred until the initiating effect completes, so a simulator needs an explicit deferred-trigger queue rather than only an order chooser.
