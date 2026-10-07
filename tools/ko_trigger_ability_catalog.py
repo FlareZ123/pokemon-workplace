@@ -12,21 +12,21 @@ from build_expanded_legality_baseline import classify_effective_legality
 
 TRIGGER_PATTERNS = (
     ("self", re.compile(
-        r"(?:when|if) this pokémon(?: [^,.]{0,100})? is knocked out\\b",
+        r"(?:when|if) this pokémon(?: [^,.]{0,100})? is knocked out\b",
         re.IGNORECASE,
     )),
     ("allied", re.compile(
         r"(?:when|if) (?:1 of )?your (?!opponent)[^,.]{0,120}"
-        r"pokémon is knocked out\\b",
+        r"pokémon is knocked out\b",
         re.IGNORECASE,
     )),
     ("opponent", re.compile(
         r"(?:when|if) your opponent(?:'s|’s) [^,.]{0,120}"
-        r"pokémon is knocked out\\b",
+        r"pokémon is knocked out\b",
         re.IGNORECASE,
     )),
     ("attached", re.compile(
-        r"when the pokémon this card is attached to is knocked out\\b",
+        r"when the pokémon this card is attached to is knocked out\b",
         re.IGNORECASE,
     )),
 )
