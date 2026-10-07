@@ -75,6 +75,18 @@ def main() -> None:
     assert after_a_then_filler.is_exact()
     assert distribution(after_a_then_filler) == {(0, 0): 1.0}
 
+    forward_path_probability = (
+        observation_probability(belief, "A")
+        * observation_probability(after_a, None)
+    )
+    after_filler = take_observed_random_prize(belief, None)
+    reverse_path_probability = (
+        observation_probability(belief, None)
+        * observation_probability(after_filler, "A")
+    )
+    assert_close(forward_path_probability, 3.0 / 20.0)
+    assert_close(reverse_path_probability, 3.0 / 20.0)
+
     reverse = take_observed_prizes(belief, (None, "A"))
     forward = take_observed_prizes(belief, ("A", None))
     assert reverse.prize_count == forward.prize_count == 0
