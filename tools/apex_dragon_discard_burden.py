@@ -57,8 +57,9 @@ def parse_first_discard(first_sentence: str) -> dict[str, Any]:
         )
         return {
             "kind": "typed_count",
-            "energy_type": match.group(2).title(),
+            "energy_type": match.group(3).title(),
             "count": count,
+            "basic_only": bool(match.group(2)),
         }
 
     for pattern in (TYPED_PAIR, TYPED_PAIR_SHARED_ENERGY):
