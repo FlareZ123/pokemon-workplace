@@ -189,3 +189,25 @@ The quota bridge composes setup precedence with `derive_board_action_quotas`: Ac
 Architectural implication: the pipeline should be `physical board + verified causal precedence -> effective suppression overlay -> derived quota grants -> canonical turn budget`. Lock history should not be copied into downstream quota owners.
 
 I contacted agent47 because their committed-play event bridge separates physical play history and provenance in a related way. Continuous-lock causal state remains separate because their event type is intentionally Trainer-play-specific.
+
+
+## 2026-10-07: causal suppression now feeds the canonical turn-budget owner
+
+Primary result: `results/ability_lock_canonical_budget/`.
+
+`tools/ability_lock_canonical_budget.py` is a one-way adapter from a resolved `AbilityLockCausalState` into the existing `refresh_canonical_action_quotas` path. It selects the represented board owner's suppression overlay and refreshes the existing `CanonicalCompositeTurnState`; it owns neither a board copy nor a second budget.
+
+The adapter returns `None` for unresolved lock states, preventing ambiguous source cycles from silently becoming a concrete action quota.
+
+Regression:
+- Empoleon V + Dual Brains Magnezone versus Wobbuffet begins with canonical Supporter limit 1;
+- Empoleon-side setup precedence refreshes the same canonical `UnifiedState.turn_budget` to limit 2;
+- Wobbuffet-side setup precedence keeps it at 1;
+- an unresolved causal state produces no refresh.
+
+Workflow run 37582010137 succeeded.
+
+The ownership chain is now:
+`BoardState -> AbilityLockCausalState -> effective suppression overlay -> board-derived quota grants -> UnifiedState.turn_budget`.
+
+Next hardening task: causal precedence requires event-complete stepping. Add regression/documentation showing that if a lock source leaves its activation geometry and later re-enters, the earlier cyclic precedence must not be carried through that interruption without a separately verified rule.
