@@ -68,3 +68,52 @@ Compose the corrected payment witness with:
 A useful next regression is a full Dashing Pouch retreat transaction where two
 legal payments from the same state produce different post-retreat hand/discard
 resources while consuming exactly one Retreat action.
+
+
+## Conserved Retreat Energy transaction
+
+Created:
+
+- `tools/retreat_energy_transaction.py`
+- `results/retreat_energy_transaction/README.md`
+- `results/retreat_energy_transaction/reproduce.py`
+- `.github/workflows/validate-retreat-energy-transaction.yml`
+
+The transaction composes canonical Retreat quota, the corrected exact payment
+witness, board movement/transient-state clearing, EnergyBoardState conservation,
+Dashing Pouch, Scoop-Up Block, and the existing Prism Star destination analyzer.
+
+A two-DCE Dashing Pouch regression proves two different legal payment witnesses
+from the same starting state produce different continuations: selecting one DCE
+returns one copy to hand and leaves one attached; selecting both returns both
+copies to hand. Both consume exactly one Retreat use.
+
+The unresolved Dashing Pouch plus Prism Star replacement overlap remains an
+explicit uncommitted result. Because the transaction evaluates a candidate
+immutably, conflict detection returns the original state with zero Retreat uses
+spent. With damaged-holder Scoop-Up Block active, the hand route disappears and
+the remaining Prism Star rule sends the Energy to Lost Zone.
+
+CI run `37578920941` passed the new transaction regression together with
+canonical turn-budget ownership, Energy conservation, and destination-conflict
+regressions.
+
+### Canonical bug propagation
+
+The newer `board_object_kernel.legal_retreat_energy_choices()` also contained
+the old minimal-subset assumption. It was corrected to enumerate represented
+payments with selected-card count at most the numeric Retreat Cost and enough
+Energy units. The Energy conservation regression now explicitly checks two DCE
+copies both leaving attached state for a cost-2 retreat. Focused cross-layer CI
+run `37578655767` passed.
+
+## Next candidates
+
+- Replace the upstream boolean `opposing_scoop_up_block_active` with a derived
+  opponent-board Ability predicate so Retreat destination legality can respond
+  to source position, Ability suppression, and owner scope.
+- Audit Retreat Cost modifiers and no-Retreat-Cost effects against the current
+  board model. Dynamic cost is still passed as an external integer.
+- Audit Special Energy provider state during Retreat, especially cards whose
+  unit count changes with holder state, because `EnergyAttachment.units` is a
+  resolved snapshot.
