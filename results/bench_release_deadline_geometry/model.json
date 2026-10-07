@@ -1,0 +1,22 @@
+{
+  "deadline_semantics": {
+    "0": "required Bench entrant must be placed during the current turn",
+    "1": "required Bench entrant becomes available on the player's next own turn and must be placed that turn"
+  },
+  "scenarios": {
+    "same_turn_entry_item": ["deterministic Item releases spent support", "Bench required Pokémon"],
+    "same_turn_entry_supporter": ["Supporter pickup releases spent support", "Bench required Pokémon"],
+    "same_turn_entry_attack": null,
+    "next_turn_entry_attack_plus_next_supporter": ["release attack releases spent support", "advance to next own turn", "play next-turn required Supporter", "Bench required Pokémon"],
+    "next_turn_entry_supporter_plus_next_supporter": ["Supporter pickup releases spent support", "end current turn", "advance to next own turn", "play next-turn required Supporter", "Bench required Pokémon"],
+    "next_turn_entry_attack_plus_distinct_current_attack": null,
+    "next_turn_entry_aligned_attack_objective": ["release attack releases spent support", "advance to next own turn", "Bench required Pokémon"],
+    "next_turn_entry_item_plus_distinct_current_attack": ["deterministic Item releases spent support", "use distinct required attack", "advance to next own turn", "Bench required Pokémon"]
+  },
+  "findings": {
+    "attack_release": "misses a same-turn Bench deadline but can preload Bench capacity for the next own turn",
+    "supporter_release": "its quota cost does not carry across the turn boundary; a next-turn required Supporter gets a fresh quota",
+    "attack_contention": "an attack release conflicts with a distinct current-turn attack objective unless the release attack itself satisfies that objective",
+    "item_release": "a pre-attack Item release can preserve the current attack window while preloading future Bench capacity"
+  }
+}
