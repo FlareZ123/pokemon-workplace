@@ -1,0 +1,28 @@
+name: Validate canonical turn budget owner
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/unified_state_kernel.py"
+      - "tools/legacy_turn_budget_bridge.py"
+      - "tools/canonical_turn_budget_owner.py"
+      - "tools/turn_action_budget.py"
+      - "tools/action_quota_effects.py"
+      - "tools/board_object_kernel.py"
+      - "results/canonical_turn_budget_owner/**"
+      - ".github/workflows/validate-canonical-turn-budget-owner.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce canonical turn budget ownership
+        run: python results/canonical_turn_budget_owner/reproduce.py
