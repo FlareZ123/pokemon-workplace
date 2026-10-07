@@ -1,0 +1,22 @@
+name: Validate attack damage notation catalog
+
+on:
+  push:
+    paths:
+      - "tools/attack_damage_notation_catalog.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/attack_damage_notation_catalog/**"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - ".github/workflows/validate-attack-damage-notation-catalog.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/attack_damage_notation_catalog/reproduce.py
