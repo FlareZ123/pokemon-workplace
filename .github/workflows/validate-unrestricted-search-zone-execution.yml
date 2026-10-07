@@ -1,0 +1,25 @@
+name: Validate unrestricted search zone execution
+
+on:
+  push:
+    paths:
+      - "tools/unrestricted_search_selection.py"
+      - "tools/unrestricted_search_zone_execution.py"
+      - "tools/multicopy_zone_state.py"
+      - "results/unrestricted_search_zone_execution/**"
+      - ".github/workflows/validate-unrestricted-search-zone-execution.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check unrestricted search zone execution
+        run: python results/unrestricted_search_zone_execution/reproduce.py
