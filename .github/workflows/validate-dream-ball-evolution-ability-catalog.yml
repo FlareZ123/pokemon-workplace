@@ -1,0 +1,25 @@
+name: Validate Dream Ball Evolution Ability catalog
+
+on:
+  push:
+    paths:
+      - "tools/dream_ball_evolution_ability_catalog.py"
+      - "tools/card_search_target_index.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/dream_ball_evolution_ability_catalog/**"
+      - ".github/workflows/validate-dream-ball-evolution-ability-catalog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Dream Ball Evolution Ability catalog
+        run: python results/dream_ball_evolution_ability_catalog/reproduce.py
