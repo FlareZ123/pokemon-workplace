@@ -13,6 +13,8 @@ on:
       - "tools/reprint_positive_evidence.py"
       - "tools/reprint_semantic_benchmark.py"
       - "tools/reprint_divergence_predicates.py"
+      - "tools/trainer_boilerplate_candidate_audit.py"
+      - "tools/trainer_boilerplate_normalization.py"
       - "results/print_specific_errata_audit/**"
       - "results/reprint_errata_resolution/**"
       - "results/tool_category_normalization/**"
@@ -21,6 +23,8 @@ on:
       - "results/reprint_positive_evidence/**"
       - "results/reprint_semantic_benchmark/**"
       - "results/reprint_divergence_predicates/**"
+      - "results/trainer_boilerplate_candidate_audit/**"
+      - "results/trainer_boilerplate_normalization/**"
       - ".github/workflows/validate-agent3-print-specific-errata.yml"
   workflow_dispatch:
 
@@ -40,3 +44,5 @@ jobs:
       - run: python results/reprint_positive_evidence/reproduce.py
       - run: python results/reprint_semantic_benchmark/reproduce.py
       - run: python results/reprint_divergence_predicates/reproduce.py
+      - run: python results/trainer_boilerplate_normalization/reproduce.py
+      - run: python results/trainer_boilerplate_candidate_audit/reproduce.py
