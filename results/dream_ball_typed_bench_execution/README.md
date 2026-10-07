@@ -23,10 +23,10 @@ The Advanced Player's Rulebook defines E-31 as the interval after a previously f
 
 A low-dimensional search result such as "one Pokémon found" is insufficient for state mutation.
 
-The regression gives Dream Ball two legal Pokémon targets:
+The regression gives Dream Ball two exact legal Pokémon targets compiled from database metadata:
 
-- one Basic Pokémon target;
-- Pidgeot ex `sv3-164`, a Stage 2 Pokémon.
+- Tapu Lele-GX `sm2-60`, a Basic Pokémon with Retreat Cost 1;
+- Pidgeot ex `sv3-164`, a Stage 2 Pokémon evolving from Pidgeotto with Retreat Cost 0.
 
 Both satisfy the same one-unit strategic demand profile `(1,)`, while the typed allocator retains two exact physical witnesses:
 
@@ -37,7 +37,7 @@ An Item decoy occupies the third target axis and is rejected as a Dream Ball tar
 
 ## Conserved direct-to-Bench transition
 
-The executor requires Dream Ball's resolving physical ledger and the promotion-pending board to be identical before mutation.
+The executor requires Dream Ball's resolving physical ledger and the promotion-pending board to be identical before mutation. Exact Pokémon metadata is loaded from the bundled legal Expanded card pool by `tools/pokemon_board_metadata.py`, which reuses the repository's legality classifier and conservative search-tag compiler.
 
 For the selected exact target it then:
 
@@ -79,7 +79,7 @@ Dream Ball is a useful boundary case because its searched card skips the hand an
 
 This result does not model deck order or the post-search shuffle because the surrounding deck-count state is exchangeable.
 
-It accepts trusted target metadata such as card name, retreat cost, and evolution origin from the caller. A future card-database adapter can compile that metadata for exact card IDs.
+The metadata adapter covers exact effectively legal Pokémon prints in Expanded-marked sets and deliberately excludes currently banned prints through the shared legality overlay. The regression checks that Medicham V `swsh7-83` is absent.
 
 The executor covers the one-card successful-search branch. Search failure or voluntarily selecting fewer cards should remain an explicit branch of a higher-level Dream Ball action model.
 
