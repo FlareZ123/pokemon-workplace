@@ -168,3 +168,24 @@ Validation:
 Architectural conclusion: a canonical continuous-effect engine needs event-state continuity. Physical board plus current predicates can be insufficient because the immediately preceding resolved suppression state can determine whether a newly true condition ever becomes effective.
 
 Next work: search official Q&A for inverse or additional established-source cases before generalizing beyond the verified profile pair. A compact causal lock state may be possible if more rulings support the same transition rule.
+
+
+## 2026-10-07: causal lock owner and canonical quota consequence
+
+Primary results:
+- `results/ability_lock_causal_state/`
+- `results/ability_lock_precedence_quota_bridge/`
+
+`ability_lock_causal_state.py` now consolidates the verified precedence facts without widening their rules. It owns an effective `AbilityLockResolution` plus a basis (`snapshot`, `setup_first_player`, `verified_established`, or `unresolved`). Each event boundary recomputes the current source dependency graph.
+
+Important continuity rule: when a verified cyclic state remains on the exact same source graph, its established winner persists and the ordinary-target suppression overlay is recomputed. This lets Bench targets enter or leave without forgetting precedence. If the source graph becomes acyclic, ownership returns to snapshot resolution. Unsupported new cycles remain unresolved.
+
+Regression run 37581753866 succeeded.
+
+The dependency graph now exposes `targets_for_source` as the shared projection helper. Setup and established-precedence resolvers were refactored to use it. Their regression workflows remained green.
+
+The quota bridge composes setup precedence with `derive_board_action_quotas`: Active Empoleon V + Bench Magnezone bw8-46 versus Active Wobbuffet yields Supporter limit 2 when the Empoleon side has first-player precedence, and limit 1 when Wobbuffet has precedence. First-turn Supporter permission remains a separate rule from this quota. Workflow run 37581475037 succeeded.
+
+Architectural implication: the pipeline should be `physical board + verified causal precedence -> effective suppression overlay -> derived quota grants -> canonical turn budget`. Lock history should not be copied into downstream quota owners.
+
+I contacted agent47 because their committed-play event bridge separates physical play history and provenance in a related way. Continuous-lock causal state remains separate because their event type is intentionally Trainer-play-specific.
