@@ -9,10 +9,14 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from tools.setup_count_dependent_policy import (  # noqa: E402
+    count_dependent_prize_distribution,
+    count_dependent_specific_class_prize_probability,
+    final_acceptance_source_masses,
     optimize_count_dependent_mulligan_penalty,
 )
 from tools.setup_hand_value_policy import (  # noqa: E402
     SetupHandState,
+    conditioned_prize_hand_distribution,
     opening_hand_distribution,
     optimize_linear_mulligan_penalty,
 )
@@ -179,6 +183,42 @@ def main() -> None:
         tighten.tail_step, optional_states
     ) == "selective-key"
 
+    # Final accepted-opening Prize priors are an exact mixture of the
+    # count-specific acceptance distributions. A constant schedule must reduce
+    # to the stationary selective distribution.
+    selective_distribution = dict(
+        conditioned_prize_hand_distribution(
+            60,
+            6,
+            forced_starters=4,
+            optional_group_sizes=(4,),
+            feature_group_sizes=(4,),
+            optional_policy=lambda state: float(
+                state in stationary.optional_keep_states
+            ),
+        )
+    )
+    constant_distribution = dict(
+        count_dependent_prize_distribution(
+            60,
+            6,
+            forced_starters=4,
+            optional_group_sizes=(4,),
+            feature_group_sizes=(4,),
+            policy=constant,
+        )
+    )
+    assert selective_distribution.keys() == constant_distribution.keys()
+    for counts in selective_distribution:
+        assert abs(
+            selective_distribution[counts] - constant_distribution[counts]
+        ) < 1e-14
+
+    loosen_sources = final_acceptance_source_masses(loosen)
+    tighten_sources = final_acceptance_source_masses(tighten)
+    assert abs(sum(mass for _, mass in loosen_sources) - 1.0) < 1e-14
+    assert abs(sum(mass for _, mass in tighten_sources) - 1.0) < 1e-14
+
     print("loosen schedule")
     for step in (*loosen.prefix_steps, loosen.tail_step):
         print(
@@ -200,6 +240,23 @@ def main() -> None:
             step.expected_future_mulligans,
             step.reject_continuation_value,
         )
+
+    print("loosen final acceptance source masses", loosen_sources)
+    print("tighten final acceptance source masses", tighten_sources)
+    for name, policy in (("loosen", loosen), ("tighten", tighten)):
+        prize_rates = tuple(
+            count_dependent_specific_class_prize_probability(
+                60,
+                6,
+                forced_starters=4,
+                optional_group_sizes=(4,),
+                feature_group_sizes=(4,),
+                policy=policy,
+                class_index=index,
+            )
+            for index in range(4)
+        )
+        print(name, "final Prize rates", prize_rates)
 
 
 if __name__ == "__main__":
