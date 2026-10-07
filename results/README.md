@@ -476,7 +476,7 @@ The regression rejects a full Bench, a stale target witness whose selected Poké
 
 **Working synthesis:** search-demand output is a planning projection. When a searched card immediately acquires board topology, the exact target witness is the correct bridge from exchangeable deck multiplicity to materialized physical identity.
 
-## 38. Terminal game resolution occurs after board-changing E-31 Prize effects
+## 39. Terminal game resolution occurs after board-changing E-31 Prize effects
 
 [post_prize_window_game_resolution/](post_prize_window_game_resolution/) resolves a timing ambiguity with an official Jirachi Prism Star ruling.
 
@@ -487,6 +487,16 @@ A terminal check taken immediately after KO disposal and final-Prize counts woul
 The new `resolve_after_prize_window()` adapter refuses terminal evaluation while any `prize_pending` card remains. Once the queue closes, it evaluates Prize/no-Pokémon conditions from the current physical board and advances to `TERMINAL` or `PROMOTION`.
 
 **Working synthesis:** before-hand Prize effects belong inside the game-resolution phase. They can change the final no-Pokémon condition, so Prize counts alone are insufficient until the E-31 window has closed.
+
+## 40. Simultaneous E-31 Prize effects expose an owner-selected order after reveal
+
+[before_hand_prize_ordering/](before_hand_prize_ordering/) separates the physical selection of several Prize cards from the later resolution order of their before-hand effects.
+
+The official Japanese Q&A gives a mixed Chansey plus Dream Ball two-Prize example and says the Chansey owner chooses which effect to process first. The new `PendingPrizeBatchOrder` therefore opens an explicit same-award sibling choice after the Prize cards have been staged. It does not treat physical Prize position or pre-reveal selection order as the effect order.
+
+Nested additional Prize work remains a barrier. If the chosen sibling takes another Prize, that new pending card stays ahead of unresolved siblings from the original award. The regression rejects an attempt to move Dream Ball past such a nested Prize, then permits Dream Ball once the nested card has finished.
+
+**Working synthesis:** simultaneous hidden-zone selection and effect ordering can have different information sets. E-31 policy should reveal the awarded cards first, expose owner-controlled ordering among same-award effects, and preserve stack-like priority for nested Prize work.
 
 ## Reusable infrastructure
 
