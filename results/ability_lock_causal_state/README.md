@@ -46,6 +46,27 @@ resolver carries Garbotoxin forward.
 
 Other cyclic transitions remain unresolved.
 
+## Event-boundary contract
+
+The causal owner must be advanced across every mechanically meaningful event
+that can change source activation or source-to-source suppression geometry.
+
+This matters even when an earlier and later snapshot have the same source
+graph. A source can leave its activation geometry, causing snapshot resolution
+to take over, then later return and create a fresh cycle. The earlier precedence
+does not automatically bridge across that interruption.
+
+The regression demonstrates this with the setup Empoleon V / Wobbuffet state.
+Jumping directly to a later board where Wobbuffet is Active again preserves the
+same source graph and therefore preserves the existing setup winner. Advancing
+through the intervening state where Wobbuffet moved to the Bench ends that
+causal continuity. When Wobbuffet later returns Active, the reciprocal cycle is
+reported as unresolved because no verified midgame precedence rule for that
+re-entry has been encoded.
+
+The state owner therefore assumes event-complete stepping. It is not a safe
+function over sparsely sampled board snapshots.
+
 ## Regression
 
 The regression covers two independent histories.
