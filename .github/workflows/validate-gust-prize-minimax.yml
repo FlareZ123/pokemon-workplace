@@ -1,0 +1,19 @@
+name: Validate Gust Prize Minimax
+
+on:
+  push:
+    paths:
+      - 'tools/gust_prize_minimax.py'
+      - 'results/gust_prize_minimax/**'
+      - '.github/workflows/validate-gust-prize-minimax.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python results/gust_prize_minimax/reproduce.py
