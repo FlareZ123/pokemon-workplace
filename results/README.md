@@ -118,6 +118,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [teleport_discard_goal_closure/](teleport_discard_goal_closure/) corrects the searched-target-only metric to count the same goal when the singleton Pokémon is naturally drawn. In the 46-card unseen-pool K0 example, the additional hand-target branch raises the bounded goal access from 4.171035% to 4.474518%; under K1 with all required groups unprized, from 6.793838% to 7.309334%. Physical reproduction uncovered and repaired a canonical Trainer validator that rejected an otherwise legal zero-result restricted search even when mandatory two-card discard had changed state; general Trainer and goal-specific CI pass.
 
+[teleport_connector_comparison/](teleport_connector_comparison/) shows a typed search-versus-payment ranking reversal using physical Quick Ball-to-Sky Field-to-Teleport Room execution. In the 46-card conditional K0 example, four Quick Ball copies give 5.804898% goal access for a Basic target versus Ultra Ball's 4.474518%; for Evolution card-in-hand access Quick Ball yields only 0.479006% versus Ultra Ball's 4.474518%. The SFT checks both Items' legality and exact texts, conserves physical zones, and matches independent exhaustive Prize/hand enumeration.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
