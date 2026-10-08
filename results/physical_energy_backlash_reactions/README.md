@@ -65,10 +65,12 @@ and destination Bench.
 
 - A legal source and target condition must already be provided or derived
   from current physical state. Ability suppression remains a caller fact.
-- Handheld Fan currently moves **Basic Energy** only. Special Energy may
-  have destination-specific attachment restrictions, which require a
-  stronger receiver-binding model; attempting unsupported Special Energy
-  movement is rejected.
+- Handheld Fan currently moves **Basic Energy or Double Colorless Energy**.
+  The latter is a verified unrestricted Special Energy print, and its
+  movement is exercised by the owner-ordering witness in
+  [physical_energy_reaction_orderings/](../physical_energy_reaction_orderings/).
+  Other Special Energy may have destination-specific restrictions requiring
+  a stronger receiver-binding model; unsupported movement is rejected.
 - The model does not infer whether a chosen Energy is strategically
   disposable, automatically optimize the owner's target choice, or
   recompute HP from continuous attached-Energy-dependent Abilities
