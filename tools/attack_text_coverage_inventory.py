@@ -13,6 +13,7 @@ from pathlib import Path
 from board_position_state import BoardState
 from attack_copy_physical_ko_bridge import PhysicalBoardEventProgram
 from attack_status_text_contracts import parse_exact_attack_status_text
+from position_effect_profile_compiler import parse_exact_attack_position_text
 from simple_attack_board_semantics import (
     CompiledAttackBoardSemantics,
     compile_legal_index,
@@ -83,6 +84,13 @@ def classify_attack_text(
             ("status_condition", "coin_flip")
             if status[1] is not None else ("status_condition",)
         )
+    elif (position := parse_exact_attack_position_text(core)) is not None:
+        kind = "exact_position_effect"
+        handlers = ("position_effect",)
+        if position.coin_heads_required:
+            handlers += ("coin_flip",)
+        if position.optional:
+            handlers += ("optional_choice",)
     else:
         kind = "uncompiled_effect_text"
         handlers = ("source_specific_effects",)
