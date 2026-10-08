@@ -8,11 +8,7 @@ from functools import lru_cache
 from math import comb, sqrt
 import random
 
-from aichi_secret_box_k0_policy import (
-    _active_for_opening,
-    _decrement,
-    _hidden_deck_worlds,
-)
+from aichi_secret_box_k0_policy import _active_for_opening, _decrement
 from aichi_vileplume_als import BASICS, DECK
 
 BASICS_BY_ENDPOINT = {
@@ -139,6 +135,42 @@ def _observation(opening, draw, endpoint, visible):
     return Observation(endpoint, hand_tuple, pool, active)
 
 
+@lru_cache(maxsize=None)
+def _worlds(unknown_pool: tuple[int, ...], prize_count: int = 6):
+    """Return tracked deck counts and exact labeled Prize weights."""
+    allocation = [0] * len(unknown_pool)
+    worlds = []
+
+    def visit(index: int, left: int, weight: int):
+        if index == len(unknown_pool):
+            if left == 0:
+                worlds.append((
+                    tuple(
+                        unknown_pool[i] - allocation[i]
+                        for i in range(len(unknown_pool) - 1)
+                    ),
+                    weight,
+                ))
+            return
+        remaining = sum(unknown_pool[index + 1:])
+        lower = max(0, left - remaining)
+        upper = min(unknown_pool[index], left)
+        for prized in range(lower, upper + 1):
+            allocation[index] = prized
+            visit(
+                index + 1,
+                left - prized,
+                weight * comb(unknown_pool[index], prized),
+            )
+        allocation[index] = 0
+
+    visit(0, prize_count, 1)
+    denominator = comb(sum(unknown_pool), prize_count)
+    if sum(weight for _, weight in worlds) != denominator:
+        raise AssertionError("hidden Prize weights do not sum to denominator")
+    return tuple(worlds)
+
+
 def _selections(hand: tuple[int, ...], count: int = 2):
     out = []
     chosen = [0] * len(hand)
@@ -219,7 +251,7 @@ def _value(observation: Observation):
     actions = (None,) + _selections(observation.hand)
     weights = [0] * len(actions)
     oracle = 0
-    worlds = _hidden_deck_worlds(observation.unknown_pool)
+    worlds = _worlds(observation.unknown_pool)
     denominator = comb(52, 6)
 
     for deck, weight in worlds:
