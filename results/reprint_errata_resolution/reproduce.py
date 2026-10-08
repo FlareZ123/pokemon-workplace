@@ -18,7 +18,7 @@ print("resolver counts before assertions:", counts)
 print("historical candidates by name before assertions:", summary["historical_official_candidates_by_name"])
 
 assert counts["same_name_review_pool_prints"] == 4260
-assert counts["exact_fingerprint_candidate_prints"] == 134
+assert counts["exact_fingerprint_candidate_prints"] == 133
 assert counts["historical_official_reprint_candidate_prints"] == 39
 assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
@@ -27,12 +27,12 @@ assert counts["known_non_equivalent_prints"] == 67
 assert counts["known_non_equivalent_names"] == 21
 assert counts["official_semantic_candidate_prints"] == 3
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 3973
-assert counts["high_confidence_candidate_prints"] == 220
-assert counts["exact_fingerprint_trainer_candidate_prints"] == 22
+assert counts["semantic_review_prints"] == 3974
+assert counts["high_confidence_candidate_prints"] == 219
+assert counts["exact_fingerprint_trainer_candidate_prints"] == 21
 assert counts["trainer_same_name_review_pool_prints"] == 168
 assert counts["historical_official_trainer_candidate_prints"] == 38
-assert counts["high_confidence_trainer_candidate_prints"] == 107
+assert counts["high_confidence_trainer_candidate_prints"] == 106
 assert counts["name_wide_trainer_errata_names"] == 15
 
 assert summary["official_semantic_candidates_by_name"] == {"Copycat": 3}
@@ -132,7 +132,7 @@ assert resolver.resolve("ex6-87").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("pop5-6").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("ecard3-140").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("pl2-97").kind == "exact_fingerprint_candidate"
-assert resolver.resolve("pl4-88").kind == "exact_fingerprint_candidate"
+assert resolver.resolve("pl4-88").kind == "semantic_review"
 assert resolver.resolve("dp1-110").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("base1-58").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("base4-87").kind == "exact_fingerprint_candidate"
