@@ -1,0 +1,24 @@
+name: Validate paired switch event journal
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/paired_switch_event_bridge.py"
+      - "tools/causal_event_journal.py"
+      - "results/paired_switch_event_journal/**"
+      - ".github/workflows/validate-paired-switch-event-journal.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce paired switch microsteps
+        run: python results/paired_switch_event_journal/reproduce.py
