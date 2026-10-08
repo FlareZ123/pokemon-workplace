@@ -52,6 +52,24 @@ Three different replacement blocks cannot *all* contain at least one of only two
 
 More generally, if a state is initially blocked solely by targets in old Prizes and has `m` vulnerable physical target cards still in the original deck, any `m+1` **disjoint** replacement blocks must include at least one block containing none of those `m` cards. A reinspection-and-stop policy therefore guarantees success by `m+1` Tickets when `(m+1)P <= D` and all required target cards are located either in the old Prizes or original deck. This is a conservative sufficient condition; fewer Tickets may suffice.
 
+
+## Natural Item-access feasibility under the exact witness
+
+The stopping-policy calculation assumes the necessary Tickets and non-shuffling reinspection actions are playable. To quantify one access bottleneck, [\`tools/prize_ticket_natural_access.py\`](../../tools/prize_ticket_natural_access.py) now computes exact **natural opening-and-one-draw access**, conditional on the same K1-style singleton-zone witness. A three-Ticket stopping policy needs **two** inter-reset Town Maps; inspection after the final reset is unnecessary because no further decision is made.
+
+Illustrative 60-card composition: **14 ordinary Basic starters, four Tickets, four Town Maps, A/B/C as non-Basic singletons, and 35 other cards**. Condition on a legal starter-containing seven-card hand; set six Prizes; draw one card. The witness requires A in the initial Prizes and B/C still in the deck *after* that draw. The state has probability **6.166421481%** among valid openings before assuming any search access.
+
+| Natural Item package available in opening plus draw | P(access \| exact singleton-zone witness) | P(witness and access \| valid opening) |
+| --- | ---: | ---: |
+| ≥1 Ticket | 45.011963876% | 2.775627410% |
+| ≥2 Tickets, ≥1 Town Map | 3.035978791% | 0.187211248% |
+| ≥3 Tickets, ≥2 Town Maps | 0.018720640% | 0.001154394% |
+
+These are exact enumeration results, not Monte Carlo estimates. They show how an impressive **conditional** three-reset success guarantee can have very small immediate **unconditional** relevance if every required Item must be naturally drawn in the same early window. They do not model finding Items through search or draw engines, obtaining the initial K1 observation, or the opportunity costs of four-of copies in a realistic deck.
+
+The calculation exploits an exchangeability identity. Conditional on all three designated non-starter singletons being excluded from the opening, one being Prized, and the other two surviving in the deck after the later draw, the ordinary opening and later draw are distributed as an accepted 7-card hand plus a random card from the remaining **57 non-target cards**. Their Item composition can be enumerated without explicitly enumerating the middle six-Prize subset. The companion [\`access_reproduce.py\`](access_reproduce.py) confirms this identity against an independent, exhaustive 10-card enumeration of hand, Prize, and later draw zones.
+
+
 ## Assumptions and practical limitations
 
 - The model starts *after* an initial Prize-identifying observation and conditions on a particular known physical-zone composition. It does not estimate how often that state is reached from shuffled openings.
