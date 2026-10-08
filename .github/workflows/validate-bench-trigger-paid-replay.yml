@@ -20,3 +20,4 @@ jobs:
         with:
           python-version: "3.13"
       - run: python results/bench_trigger_paid_replay/reproduce.py
+      - run: python results/bench_trigger_paid_replay/ablation.py
