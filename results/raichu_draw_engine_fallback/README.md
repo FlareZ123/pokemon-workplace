@@ -201,3 +201,12 @@ A whole-action planner should compare those visible reset-first lines against:
 - hosted Forest Seal Stone first;
 - Quick Ball -> K1 -> best engine;
 - and the future resource cost of destroying the hand.
+
+
+## Subsequent sequencing result
+
+The follow-up `pre_reset_search_dominance/` resolves the simplest visible reset-first comparison inside this same state projection.
+
+Because constrained deck searches may intentionally take zero cards, a legal Quick Ball can be used before an immediately planned Dedechange or Squawk and Seize reset. Quick Ball and its payment would otherwise be discarded by that reset. With zero search output and the same fresh-draw witness, the projected material state after the reset is identical while the Quick Ball line has gained K1 information.
+
+Therefore the naive reset-first line does not improve this local endpoint under the current assumptions. Future work should focus on states that break that equivalence, such as known top-deck order, discard-timing triggers, lock changes, or future value assigned to Quick Ball itself.
