@@ -120,6 +120,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [teleport_connector_comparison/](teleport_connector_comparison/) shows a typed search-versus-payment ranking reversal using physical Quick Ball-to-Sky Field-to-Teleport Room execution. In the 46-card conditional K0 example, four Quick Ball copies give 5.804898% goal access for a Basic target versus Ultra Ball's 4.474518%; for Evolution card-in-hand access Quick Ball yields only 0.479006% versus Ultra Ball's 4.474518%. The SFT checks both Items' legality and exact texts, conserves physical zones, and matches independent exhaustive Prize/hand enumeration.
 
+[teleport_same_pool_policy/](teleport_same_pool_policy/) combines Quick Ball and Ultra Ball in one explicit 46-card unknown pool and calculates the overlapping access-policy union exactly. For the bounded Basic-target goal, Quick-only covers 5.804898%, Ultra-only 4.474518%, and adaptive choice 9.285497%. For an Evolution target requiring hand access, the adaptive policy reaches 5.400934% by allowing Quick Ball to become Ultra Ball's second discard; even with no independently approved other discard, this dependent channel retains 1.920335% access. Exact small-state enumeration and a physical Quick+Sky discarded for Ultra-to-Stage-1 search pass CI.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
