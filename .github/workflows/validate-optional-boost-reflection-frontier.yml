@@ -1,0 +1,24 @@
+name: Validate optional boost reflection frontier
+
+on:
+  push:
+    paths:
+      - "tools/optional_boost_reflection_frontier.py"
+      - "tools/optional_attack_damage_catalog.py"
+      - "results/optional_boost_reflection_frontier/**"
+      - ".github/workflows/validate-optional-boost-reflection-frontier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify reflected damage survival frontiers
+        run: python results/optional_boost_reflection_frontier/reproduce.py
