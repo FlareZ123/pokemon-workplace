@@ -154,3 +154,58 @@ Synthesis integrated in `results/README.md`.
 Next: derive Ability suppression/Stadium effect state from canonical
 world state, audit conditional attack-duration Retreat modifiers,
 and consider explicitly tracking provider information confidence.
+
+
+### Additional 2026-10-08 Retreat work
+
+**Continuous Ability prohibitions:** `tools/retreat_ability_denial.py`,
+`results/retreat_ability_denial/`,
+`.github/workflows/validate-retreat-ability-denial.yml`.
+Exact printed sources: Snorlax Block `bw8-101`/`pgo-55`;
+Spiritomb Cursed Whirlpool `sm35-47`; Omastar Primordial
+Tentacles `sv3pt5-139`; Flygon Labyrinth of Sand `swsh3-91`;
+Cradily Swaying Strangle `sm12-11`; Dragalge Poison Barrier
+`xy2-71`/`xyp-XY10`.
+An opponent Ability can prohibit Retreat even at effective cost zero
+(Float Stone), but a separate effect-based Switch still works.
+CI `37837915736` succeeded.
+
+**Causal Ability suppression bridge:** `tools/retreat_ability_lock_bridge.py`,
+`results/retreat_causal_ability_overlay/`,
+`.github/workflows/validate-retreat-causal-ability-overlay.yml`.
+Optional `ability_lock_state` in `attempt_board_derived_retreat`
+projects the existing causal source suppression overlay to derived boards
+without mutating physical objects, and prevents a transaction if that
+causal state is unresolved. Benched Alolan Muk removes Snorlax Block,
+Tool-attached Garbodor removes Cradily's denial, opposing Active Galarian
+Weezing suppresses friendly Sneasler's cost reduction (making DCE payment
+necessary), and a reciprocal Wobbuffet/Weezing cycle remains unresolved.
+CI `37838282757` succeeded. Causal input must be current and
+event-complete; no unsupported cycle precedence inferred.
+
+**Jamming Tower Tool-effect layer:** `tools/retreat_stadium_tool_overlay.py`,
+`results/retreat_stadium_tool_overlay/`,
+`.github/workflows/validate-retreat-stadium-tool-overlay.yml`.
+Effective exact Jamming Tower prints `sv6-153`, `sv10-243`,
+`me2pt5-261` temporarily suppress all attached Tool effects on both
+boards before cost, Ability-protection, and Energy destination resolution.
+All three prints tested; Float Stone loses its no-cost effect, opposing
+Gravity Gemstone's +1 disappears, Dashing Pouch changes DCE destination
+from hand to discard, and Stealthy Hood no longer prevents Snorlax's
+Ability lock. Target Hood protection uses the existing opponent-Ability
+protection predicate from `garbotoxin_suppression`.
+CI `37838674247` passed.
+
+A 576-case independent finite oracle was added to
+`results/retreat_prize_provider_uncertainty/exhaustive.py`.
+The first CI failed on fixture-specific canonical instance sorting, which
+was fixed. CI `37837548053` succeeded.
+
+`results/README.md` has now been updated with all these integrations.
+The major next frontier is an authoritative, currently effective Stadium/
+Tool/Ability world-state owner to replace externally supplied
+`stadium_print_id`, `stadium_effect_enabled` and upstream suppression
+flags while preserving cross-action reactivation semantics. Also audit
+what can make opponent origin Tool protections irrelevant (effect on
+player rather than on holder) rather than overgeneralizing Hood.
+
