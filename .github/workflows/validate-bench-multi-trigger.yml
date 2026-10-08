@@ -1,0 +1,24 @@
+name: Validate multi-support Bench trigger access
+
+on:
+  push:
+    paths:
+      - "tools/bench_double_trigger_access.py"
+      - "tools/bench_multi_trigger_access.py"
+      - "results/bench_multi_trigger_access/**"
+      - ".github/workflows/validate-bench-multi-trigger.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify N-support exact pickup tails
+        run: python results/bench_multi_trigger_access/reproduce.py
