@@ -1,0 +1,23 @@
+name: Validate full-hand reset catalog
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/catalog_full_hand_resets.py"
+      - "results/full_hand_reset_catalog/**"
+      - ".github/workflows/validate-full-hand-reset-catalog.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate full-hand reset catalog
+        run: python results/full_hand_reset_catalog/reproduce.py
