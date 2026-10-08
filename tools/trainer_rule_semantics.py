@@ -43,6 +43,23 @@ BILLS_MAINTENANCE_LEGACY = (
     "If you have any cards in your hand, shuffle 1 of them into your deck, then draw 3 cards."
 )
 
+UNDERGROUND_EXPEDITION_CURRENT = (
+    "Look at the bottom 4 cards of your deck and put 2 of them into your hand. "
+    "Put the other cards back on the bottom of your deck in any order."
+)
+UNDERGROUND_EXPEDITION_LEGACY = frozenset(
+    {
+        (
+            "Look at the bottom 4 cards of your deck. Put 2 of those cards into your hand, "
+            "and then return the remaining cards to the bottom of your deck in any order."
+        ),
+        (
+            "Look at the 4 cards from the bottom of your deck. Choose any 2 cards there and "
+            "put them into your hand. Put the remaining cards back on the bottom of your deck in any order."
+        ),
+    }
+)
+
 RULE_EVIDENCE = {
     "fisherman_number_shortage": "resources/advanced-players-rulebook.md II-A",
     "fisherman_public_discard": "https://www.pokemon.com/us/play-pokemon/about/pokemon-tcg-glossary",
@@ -54,6 +71,8 @@ RULE_EVIDENCE = {
     "vs_seeker_implied_choice": "resources/advanced-players-rulebook.md D-04",
     "bills_maintenance_supporter_playability": "resources/advanced-players-rulebook.md B-03",
     "bills_maintenance_dependency": "resources/advanced-players-rulebook.md E-20",
+    "underground_expedition_number_shortage": "resources/advanced-players-rulebook.md II-A",
+    "underground_expedition_choice": "resources/advanced-players-rulebook.md D-04",
 }
 
 
@@ -88,6 +107,11 @@ def normalize_rule_grounded_trainer_semantics(card: dict[str, Any]) -> dict[str,
     elif normalized.get("name") == "Bill's Maintenance":
         rules = [
             BILLS_MAINTENANCE_CURRENT if rule == BILLS_MAINTENANCE_LEGACY else rule
+            for rule in rules
+        ]
+    elif normalized.get("name") == "Underground Expedition":
+        rules = [
+            UNDERGROUND_EXPEDITION_CURRENT if rule in UNDERGROUND_EXPEDITION_LEGACY else rule
             for rule in rules
         ]
 
