@@ -16,12 +16,12 @@ They currently resolve as:
 - 39 historical-official reprint candidates;
 - 44 name-wide official-errata candidates;
 - 3 current-handbook semantic candidates;
-- 65 known non-equivalent prints;
-- 3,990 unresolved semantic-review prints.
+- 67 known non-equivalent prints;
+- 3,988 unresolved semantic-review prints.
 
 The positive high-confidence candidate set contains 205 prints.
 
-For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 15, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. The explicit historical Trainer name-reuse audit adds 16 more known-negative Trainer prints. That gives 100 positive Trainer candidates and 33 known-negative Trainer prints before broader semantic comparison.
+For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 15, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. The explicit historical Trainer name-reuse audit adds 16 more known-negative Trainer prints. That gives 100 positive Trainer candidates and 35 known-negative Trainer prints before broader semantic comparison.
 
 ## Evidence ladder
 
@@ -75,7 +75,7 @@ The Tournament Handbook explicitly says Team Rocket Rainbow Energy number 17 is 
 
 Two historical Life Herb printings add a fourth negative name. Their printed text excludes Pokémon-ex targets, while current Life Herb does not, and current Expanded contains a directly legal Pokémon-ex witness. The predicate derivation lives in [../reprint_divergence_predicates/](../reprint_divergence_predicates/).
 
-The dedicated Trainer name-reuse audit adds 16 more source prints across Master Ball, Pokémon Breeder, Pokémon Center, Max Revive, Revive, Devolution Spray, Power Plant, and Magnetic Storm. Each family has a direct distinguishing game-state witness. A further optionality audit proves six old PokéNav, Pokégear 3.0, and Dusk Ball prints non-equivalent because their mandatory `choose` wording differs from current optional `you may` semantics. A separate semantic-review audit adds eight more prints across Apricorn Maker, Pokémon Fan Club, Super Potion, and TV Reporter using explicit target-domain, destination-zone, healing-amount, and empty-deck playability witnesses. Friend Ball adds one further target-domain negative: official Restored Pokémon rules make Expanded-legal Restored Archen searchable by the current generic Pokémon wording but outside the historical Baby/Basic/Evolution target classes. This yields 65 known non-equivalent historical prints across 20 names.
+The dedicated Trainer name-reuse audit adds 16 more source prints across Master Ball, Pokémon Breeder, Pokémon Center, Max Revive, Revive, Devolution Spray, Power Plant, and Magnetic Storm. Each family has a direct distinguishing game-state witness. A further optionality audit proves six old PokéNav, Pokégear 3.0, and Dusk Ball prints non-equivalent because their mandatory `choose` wording differs from current optional `you may` semantics. A separate semantic-review audit adds eight more prints across Apricorn Maker, Pokémon Fan Club, Super Potion, and TV Reporter using explicit target-domain, destination-zone, healing-amount, and empty-deck playability witnesses. Friend Ball adds one further target-domain negative: official Restored Pokémon rules make Expanded-legal Restored Archen searchable by the current generic Pokémon wording but outside the historical Baby/Basic/Evolution target classes. Computer Search contributes two further rule-category negatives because the legal Expanded print is an ACE SPEC with a one-ACE-SPEC deck rule while the historical prints lack that rule. This yields 67 known non-equivalent historical prints across 21 names.
 
 ## Current-semantics normalization
 
@@ -118,6 +118,7 @@ Positive candidate states remain separate so downstream code can choose its evid
 - base5-17 and base5-80 Rainbow Energy resolve as known non-equivalent.
 - ex5-90 and ex6-93 Life Herb resolve as known non-equivalent because the current format realizes their Pokémon-ex target exclusion.
 - old Special Darkness Energy and Metal Energy resolve as known non-equivalent to current Basic cards.
+- base1-71 and base4-101 Computer Search are known non-equivalent because the current Expanded print is an ACE SPEC with an explicit deck-construction restriction absent from the historical prints.
 - ecard3-121 Apricorn Maker is known non-equivalent because historical Trainer-card targeting can reach Ball Guy while current Apricorn Maker is Item-only.
 - ecard3-126 Friend Ball is known non-equivalent because current generic Pokémon targeting can reach Restored Pokémon while the historical Baby/Basic/Evolution classes cannot.
 - ecard2-130 and pop4-9 Pokémon Fan Club are known non-equivalent because they put searched Basics directly onto the Bench rather than into hand.
@@ -157,7 +158,7 @@ Related regressions:
 
 ## Limitations
 
-The remaining 4,002 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
+The remaining 3,988 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
 
 Historical reprint evidence is intentionally restricted to no-reference entries with a Black & White-onward bridge already present by the source date. Reference-required entries need separate current-semantics analysis.
 
