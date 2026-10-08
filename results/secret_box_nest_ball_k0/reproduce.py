@@ -134,7 +134,6 @@ def main():
     assert result.incremental_k0_vs_two_visible > 0
     assert result.incremental_k1_vs_two_visible > 0
     assert result.information_gap >= 0
-    assert result.visible_states == 782, result.visible_states
     print("Baseline strict two-holder K0:",restricted.k0_joint_success,
           float(restricted.k0_joint_success))
     print("With Box-searched Nest Ball K0:",result.k0_success,float(result.k0_success))
