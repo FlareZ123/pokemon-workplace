@@ -9,6 +9,9 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 import re
+from typing import Mapping
+
+from board_position_state import BoardState
 
 from simple_attack_board_semantics import legal_cards
 
@@ -116,3 +119,91 @@ def catalog(resources_root: Path) -> dict:
         "supplemental_rows": sum(g.additional_to_printed for g in rows),
         "shapes": dict(sorted(shapes.items())),
     }
+
+
+@dataclass(frozen=True)
+class TargetDamageInstruction:
+    target_id: str
+    amount: int
+    source: str
+    ignore_weakness_resistance: bool
+
+
+@dataclass(frozen=True)
+class LiteralDamageTargetPlan:
+    geometry: LiteralDamageGeometry
+    selected_text_targets: tuple[str, ...]
+    instructions: tuple[TargetDamageInstruction, ...]
+
+
+def plan_literal_damage_targets(
+    geometry: LiteralDamageGeometry,
+    board: BoardState,
+    *,
+    selected_target_ids: tuple[str, ...] = (),
+    target_tags_by_id: Mapping[str, frozenset[str]] | None = None,
+) -> LiteralDamageTargetPlan:
+    """Validate a complete target selection without executing damage.
+
+    The board represents the opponent. Live target-tag membership is supplied
+    explicitly for text filters; never infer it from physical instance IDs.
+    For a fixed number, choose the number stated or all eligible if fewer
+    exist. An 'each' attack necessarily targets every eligible Pokémon.
+    """
+    if geometry.target_scope in {"opponent_any", "opponent_all"}:
+        possible = (board.active_id, *board.bench_ids)
+    elif geometry.target_scope == "opponent_bench":
+        possible = board.bench_ids
+    else:
+        raise ValueError("unrecognized target scope")
+
+    if geometry.target_filter is None:
+        eligible = possible
+    else:
+        if target_tags_by_id is None or any(
+            target not in target_tags_by_id for target in possible
+        ):
+            raise ValueError("target subtype eligibility is not fully known")
+        eligible = tuple(
+            target for target in possible
+            if geometry.target_filter in target_tags_by_id[target]
+        )
+
+    if geometry.target_count is None:
+        if selected_target_ids:
+            raise ValueError("'each' damage does not permit a subset")
+        targets = tuple(eligible)
+    else:
+        required = min(geometry.target_count, len(eligible))
+        if len(selected_target_ids) != required:
+            raise ValueError("chosen target count disagrees with eligibility")
+        if len(set(selected_target_ids)) != len(selected_target_ids):
+            raise ValueError("chosen damage targets must be distinct")
+        if any(target not in eligible for target in selected_target_ids):
+            raise ValueError("chosen target is ineligible")
+        targets = selected_target_ids
+
+    instructions: list[TargetDamageInstruction] = []
+    if geometry.printed_active_damage:
+        instructions.append(
+            TargetDamageInstruction(
+                board.active_id,
+                geometry.printed_active_damage,
+                "printed",
+                False,
+            )
+        )
+    instructions.extend(
+        TargetDamageInstruction(
+            target,
+            geometry.text_damage,
+            "attack_text",
+            target != board.active_id,
+        )
+        for target in targets
+    )
+    return LiteralDamageTargetPlan(
+        geometry,
+        targets,
+        tuple(instructions),
+    )
