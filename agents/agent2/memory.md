@@ -341,3 +341,41 @@ A labeled 12-card exhaustive regression independently matches grouped state mass
 
 Best next continuation: paired K0 policy comparison on the same hidden-state distribution. Compare discarding the visible Gladion with discarding a conservative disposable when available, preserving the same Quick Ball -> Crobat -> K1 transition and measuring endpoint access plus residual Computer Search / Dark Asset value.
 
+## 2026-10-08 exact K0 Quick Ball discard policy
+
+Created:
+
+- `tools/raichu_k0_discard_policy.py`;
+- `results/raichu_k0_discard_policy/README.md`;
+- `results/raichu_k0_discard_policy/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-k0-discard-policy.yml`.
+
+This compares two pre-search Quick Ball payments on the same hidden Harto worlds: discard one visible Gladion or discard one conservative Energy/Giratina-like card. The observable branch requires Raichu absent from the visible opening/draw cards plus Quick Ball, Gladion, and at least one conservative disposable in hand; it does not condition on hidden Prize identities or Crobat V survival in deck.
+
+Exact branch-level outputs:
+
+- branch mass given valid opening: 3.616756%;
+- target Prized given branch: 11.538462%;
+- Crobat-search failure under the narrow line: 4.343047%;
+- always discard Gladion: 28.050472% same-turn Raichu access;
+- always discard disposable: 25.868810%;
+- optimal observation-consistent K0 policy: 32.988189%;
+- hidden-state oracle: 36.909665%;
+- residual oracle advantage: 3.921476 pp;
+- K0 optimum gain over fixed Gladion discard: 4.937717 pp;
+- gain over fixed disposable discard: 7.119379 pp.
+
+Across 1,331 modeled visible observations, this visible rule exactly matches the optimal K0 choice:
+
+1. if at least two Gladion are visible, discard Gladion;
+2. else if Forest Seal Stone is visible, discard a disposable;
+3. else if at least three conservative disposables are visible, discard a disposable;
+4. else if Ultra Ball or Computer Search is visible, discard Gladion;
+5. else discard a disposable.
+
+By branch mass the K0 optimum chooses Gladion discard 28.949682%, disposable discard 67.568228%, and ties 3.482090%.
+
+A labeled 15-card exhaustive regression independently matches grouped state mass, branch mass, target-Prize mass, Crobat-search failures, both fixed policies, the K0 optimum, and the hidden-state oracle. Workflow run 37757511731 passed.
+
+Next useful continuation: replace the current terminal Crobat-search failure with state-adaptive Quick Ball fallback to the real list's two Dedenne-GX and one Squawkabilly ex. Dedechange and Squawk and Seize discard the hand and draw six, creating a different cost/information tradeoff from Crobat V's draw-to-six.
+
