@@ -1,0 +1,23 @@
+name: Validate protected paired switch execution
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/protected_paired_switch_execution.py"
+      - "results/protected_paired_switch_execution/**"
+      - ".github/workflows/validate-protected-paired-switch.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify protected first versus second switch
+        run: python results/protected_paired_switch_execution/reproduce.py
