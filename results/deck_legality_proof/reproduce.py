@@ -130,6 +130,14 @@ assert any(
     for issue in copy_rule.construction.issues
 )
 
+historical_shining = deck(
+    ("neo4-106", 1),
+    (GRASS, 59),
+    policy="current_semantic_evidence",
+)
+assert historical_shining.disposition == "eligible_snapshot"
+assert proof(historical_shining, "neo4-106").provenance.reprint_kind == "exact_fingerprint_candidate"
+
 historical_copy_rule = deck(("neo4-106", 2), (GRASS, 58))
 assert historical_copy_rule.disposition == "invalid"
 assert any(
