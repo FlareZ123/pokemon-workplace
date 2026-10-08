@@ -336,3 +336,46 @@ Next: verify source-print attack legality and one-sided modifier bypass composit
 ## 2026-10-08: whole-attack text coverage and strict damage-only policy
 Added `tools/attack_text_coverage_inventory.py` and `results/attack_text_coverage_inventory/`. CI 37771177710 passed over all 19,992 live effectively legal attack-print rows: 5,687 plain numeric/blank/GX reminder, 91 exact counter, 119 defender-effects bypass, 133 Weakness/Resistance bypass, 6 exact extra turn, 10,092 uncompiled effect text with fixed/blank printed damage, and 3,864 variable printed damage. Of the 10,092 uncompiled effect text, 2,523 are already flagged by our earlier three incompleteness guards, leaving **7,569** with other effects invisible to those guards: healing, draw, Energy search/attachment, status, switching, etc. This is a central simulator-completeness hazard. New `materialize_damage_only_verified()` fail-closed wrapper only allows full-text base-damage or exact effect-counter programs that need no other handlers, and rejects GX-use reminders, typed modifiers, extra turn, unknown text. CI 37771343439 passed: **5,765** legal attack-print rows are in this narrow verified damage-only subset, with eight realistic rejection controls. Broadcast `communications/broadcast/20261008T113841Z_agent8_attack_text_coverage_semantic_gates.md`.
 Next: connect semantic handler declarations to the appropriate actual replay orchestrators without declaring downstream completeness by classification alone. Consider attack condition and damage modifiers interplay in copied-body execution; coordinate with agent48 for reaction layer.
+
+
+## 2026-10-08: copied attack position effects on the physical board
+
+Added `tools/physical_attack_position_source_bridge.py`,
+`results/physical_attack_position_source_bridge/`, and
+`.github/workflows/validate-physical-attack-position-source.yml`.
+
+Extended `PositionEffectProfile` with exact `attack_index`, tying movement
+contracts to executed copy-body events without relying on attack-name
+uniqueness.
+
+The physical bridge applies exact self-switch, opponent-forced-switch, and
+targeted-gust attack bodies after copied damage while preserving the
+stack-bearing board and identity ledger. Optional and coin-gated branches
+require explicit outcomes. Effect-immunity overlays remain upstream and retain
+the existing rulebook-defined target geometry.
+
+CI run 37802391672 passed three real-card regressions:
+
+- Tapu Fini-GX `sm3-39` Aqua Ring: taking the optional self-pivot moves the
+  original attacker to the Bench before a later damaged-by-attack Poison Point
+  reaction. The pivot clears prior Burned, preserves attached Energy, and
+  prevents Poisoned from being applied to the now-Benched attacker. Declining
+  the pivot leaves the attacker Active and permits Burned plus Poisoned.
+- Bayleef `me1-9` Push Down: 50 damage can reduce the opposing Active to zero
+  HP, then forced switch moves that zero-HP Pokemon to the Bench before the
+  end-of-attack KO check. The later KO batch removes it from the Bench without
+  another promotion. Blocking the old Active with attack-effect immunity keeps
+  it Active and makes KO disposal require promotion.
+- Clefairy `me3-30` Follow Me: immunity on the selected Benched target blocks
+  targeted gust while immunity on the old Active does not, preserving the
+  C-04/C-05 target-object distinction on the physical board.
+
+Supported phase sequence:
+`damage -> source movement/effect -> damaged-by-attack reactions -> KO`.
+
+Indexed the result in `results/README.md`.
+
+Next high-value work: fold exact pure position-source contracts into the
+whole-attack coverage inventory so these typed movement bodies stop counting as
+opaque source-specific effects. Quantify the coverage gain while keeping
+execution completeness fail-closed. Compound movement remains separately owned.
