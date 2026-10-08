@@ -30,6 +30,34 @@ Results include distribution of recognized semantic families, attack
 prints needing unmodeled text, GX-attack prints requiring the global
 GX budget, and nested copy text requiring cycle-safe execution.
 
+## Live source-pool counts
+
+[GitHub Actions validation 37771737035](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37771737035)
+found **537** effectively legal Dragon Pokémon card prints, carrying
+**950** printed attacks that collapse to **500** distinct lexical
+attack-body signatures.
+
+| Text classification | Attack prints | Distinct bodies |
+| --- | ---: | ---: |
+| Plain fixed/blank or GX reminder | 228 | 111 |
+| Exact damage counters | 5 | 1 |
+| Exact defender-effect bypass | 49 | 14 |
+| Exact extra turn | 3 | 1 |
+| Uncompiled effect text | 514 | 279 |
+| Variable printed damage | 151 | 94 |
+| **Total** | **950** | **500** |
+
+Only **229 print rows and 111 distinct bodies** satisfy the very narrow
+verified damage-only policy. Some other recognized bodies are executable
+with additional typed handlers. The catalog also found **64** GX-attack
+print rows and **2** nested-copy attack prints (the two Regidrago VSTAR
+Apex Dragon prints).
+
+This is a methodological warning for automated Regidrago optimization:
+most distinct legal Dragon attack bodies still need semantic interpretation
+beyond a plain fixed-damage board transition. The counts are for the
+complete legal source pool rather than any tournament deck's chosen payloads.
+
 ## Real source witnesses
 
 - Dragapult ex `sv6-130` Phantom Dive has a supported exact six-counter
