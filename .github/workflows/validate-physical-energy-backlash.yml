@@ -1,0 +1,23 @@
+name: Validate physical Energy backlash
+
+on:
+  push:
+    paths:
+      - "tools/physical_energy_backlash_reactions.py"
+      - "results/physical_energy_backlash_reactions/**"
+      - ".github/workflows/validate-physical-energy-backlash.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify physical Energy backlash and conservation
+        run: python results/physical_energy_backlash_reactions/reproduce.py
