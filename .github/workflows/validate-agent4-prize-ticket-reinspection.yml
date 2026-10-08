@@ -6,6 +6,7 @@ on:
       - "tools/prize_ticket_reinspection.py"
       - "tools/prize_ticket_natural_access.py"
       - "tools/prize_ticket_policy_access.py"
+      - "tools/prize_ticket_shuffle_intervention.py"
       - "results/prize_ticket_reinspection/**"
       - ".github/workflows/validate-agent4-prize-ticket-reinspection.yml"
   workflow_dispatch:
@@ -23,3 +24,4 @@ jobs:
           python results/prize_ticket_reinspection/reproduce.py
           python results/prize_ticket_reinspection/access_reproduce.py
           python results/prize_ticket_reinspection/policy_reproduce.py
+          python results/prize_ticket_reinspection/shuffle_reproduce.py
