@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable, Mapping
 
-from ko_order_outcome_space import ko_order_outcomes
+from ko_order_component_factorization import factorized_ko_order_outcomes
 from ko_order_terminal_projection import TerminalOutcome
 from ko_order_zone_signature import terminal_zone_signature
 from knockout_zone_routing import discard_pending_with_zone_routes
@@ -36,7 +36,7 @@ def project_with_zone_signatures(
         tuple[tuple[str, str, int], ...],
         tuple[int, int, tuple[tuple[str, ...], ...], dict[str, str]],
     ] = {}
-    route_outcomes = ko_order_outcomes(programs, precedences=precedences)
+    route_outcomes = factorized_ko_order_outcomes(programs, precedences=precedences)
     for route in route_outcomes:
         destinations = dict(route.destinations)
         signature = terminal_zone_signature(
