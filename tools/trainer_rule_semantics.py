@@ -38,6 +38,11 @@ VS_SEEKER_LEGACY = (
     "Search your discard pile for a Supporter card, show it to your opponent, and put it into your hand."
 )
 
+BILLS_MAINTENANCE_CURRENT = "Shuffle a card from your hand into your deck. If you do, draw 3 cards."
+BILLS_MAINTENANCE_LEGACY = (
+    "If you have any cards in your hand, shuffle 1 of them into your deck, then draw 3 cards."
+)
+
 RULE_EVIDENCE = {
     "fisherman_number_shortage": "resources/advanced-players-rulebook.md II-A",
     "fisherman_public_discard": "https://www.pokemon.com/us/play-pokemon/about/pokemon-tcg-glossary",
@@ -47,6 +52,8 @@ RULE_EVIDENCE = {
     "moomoo_milk_damage_counter": "resources/advanced-players-rulebook.md C-07",
     "vs_seeker_public_discard": "https://www.pokemon.com/us/play-pokemon/about/pokemon-tcg-glossary",
     "vs_seeker_implied_choice": "resources/advanced-players-rulebook.md D-04",
+    "bills_maintenance_supporter_playability": "resources/advanced-players-rulebook.md B-03",
+    "bills_maintenance_dependency": "resources/advanced-players-rulebook.md E-20",
 }
 
 
@@ -76,6 +83,11 @@ def normalize_rule_grounded_trainer_semantics(card: dict[str, Any]) -> dict[str,
     elif normalized.get("name") == "VS Seeker":
         rules = [
             VS_SEEKER_CURRENT if rule == VS_SEEKER_LEGACY else rule
+            for rule in rules
+        ]
+    elif normalized.get("name") == "Bill's Maintenance":
+        rules = [
+            BILLS_MAINTENANCE_CURRENT if rule == BILLS_MAINTENANCE_LEGACY else rule
             for rule in rules
         ]
 
