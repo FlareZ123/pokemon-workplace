@@ -44,6 +44,11 @@ def main() -> None:
         "indispensable_category_counts="
         f"{result.indispensable_category_counts}"
     )
+    print(f"singleton_route_count_counts={result.singleton_route_count_counts}")
+    print("singleton_signature_counts=")
+    for signature, count in enumerate(result.singleton_signature_counts):
+        if count:
+            print(f"{signature:02d} {result.mask_label(signature):28s} {count}")
     print("mask_success_counts=")
     for mask, count in enumerate(result.mask_success_counts):
         print(f"{mask:02d} {result.mask_label(mask):28s} {count}")
