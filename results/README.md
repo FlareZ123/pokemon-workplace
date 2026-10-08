@@ -1440,3 +1440,12 @@ The proof harness checks held Dedenne-GX and an already-in-play Squawkabilly ex 
 For the Harto-sized 46-card, six-draw window, the neutral threshold is 13.043478%. A target certainly inside the next six makes the shuffle cost 86.956522 percentage points of direct exposure, while a target certainly outside that window makes the shuffle gain 13.043478 points. Knowing only that the top card is a non-target gives 5/45 = 11.111111% no-shuffle exposure, so shuffling improves the singleton hit rate by 1.932367 points.
 
 **Working synthesis:** the material cost of Quick Ball can be incrementally free before a full-hand reset while the mandatory shuffle still has a separate deck-order information cost. Composition belief and position belief must remain distinct when prior effects make the top of deck non-exchangeable.
+
+
+## K1 can create option value by letting the player cancel a destructive reset
+
+[raichu_reset_cancel_option/](raichu_reset_cancel_option/) measures a decision node that the material-equivalence proof deliberately omitted. After Quick Ball establishes K1, a player holding Dedenne-GX or a first-turn Squawkabilly ex can decline the reset when the residual hand already reaches Alolan Raichu.
+
+In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable after Quick Ball in 11.581746% of branch states. Retaining the right to stop adds **+1.118200 percentage points** across the full later-turn branch, or **+9.654847 points** conditional on reset-capable states. On the first turn, adding Squawk expands reset-capable mass to 18.410106%; the cancel option is worth **+1.788257 points** across the branch, or **+9.713452 points** conditional on reset capability.
+
+**Working synthesis:** information can be valuable because it changes whether a later action should occur at all. A planner that commits to a draw reset before acquiring K1 misses this cancellation option.
