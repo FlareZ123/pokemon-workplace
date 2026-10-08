@@ -1,0 +1,21 @@
+name: Validate authority-neutral KO terminal projection
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_authority_invariant_projection.py"
+      - "tools/ko_order_signature_projection.py"
+      - "tools/ko_trigger_order_authority.py"
+      - "results/ko_authority_neutral_projection/**"
+      - ".github/workflows/validate-ko-authority-neutral-projection.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/ko_authority_neutral_projection/reproduce.py
