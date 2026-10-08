@@ -1,0 +1,27 @@
+name: Validate physical copied attack healing sources
+
+on:
+  push:
+    paths:
+      - "tools/physical_attack_healing_source_bridge.py"
+      - "tools/healing_profile_compiler.py"
+      - "tools/attack_copy_physical_ko_bridge.py"
+      - "tools/physical_copy_damage_reaction_bridge.py"
+      - "tools/physical_damage_reaction_sources.py"
+      - "results/physical_attack_healing_source_bridge/**"
+      - ".github/workflows/validate-physical-attack-healing-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Replay copied self-healing effects on physical actor
+        run: python results/physical_attack_healing_source_bridge/reproduce.py
