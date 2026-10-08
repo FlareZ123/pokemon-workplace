@@ -3,16 +3,34 @@
 from aichi_gnh_k0_policy import ENDPOINTS, simulate
 
 
+EXPECTED_UNIQUE = {
+    "core": 98,
+    "pidgeot": 324,
+    "stoutland": 290,
+    "dual": 602,
+    "item": 329,
+    "item_pidgeot": 651,
+    "item_stoutland": 597,
+}
+
+
 def main():
     trials = 10_000
     qualifying, results = simulate(trials)
-    assert qualifying > 0
+    assert qualifying == 1082
     assert tuple(result.endpoint for result in results) == ENDPOINTS
+
     for result in results:
-        assert 0 <= result.k0_weight <= result.oracle_weight
+        assert result.unique_observations == EXPECTED_UNIQUE[result.endpoint]
         assert result.qualifying == qualifying
         assert result.trials == trials
         assert result.denominator > 0
+        assert result.oracle_weight == result.k0_weight
+        assert result.positive_gap_states == 0
+        assert result.positive_gap_observations == 0
+        assert result.conditional_gap == 0.0
+        assert result.overall_gap == 0.0
+        assert result.max_gap == 0.0
 
     print(f"trials={trials}")
     print(f"qualifying={qualifying} ({qualifying / trials:.6%})")
