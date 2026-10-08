@@ -89,6 +89,36 @@ witness.
 Verified with GitHub Actions run
 [37839905539](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37839905539).
 
+## Robustness under unknown Prize information
+
+`robust_prize_oracle.py` independently compares the unknown-Prize action
+frontier to the intersection of frontiers produced when the player is
+definitely behind on Prizes versus definitely tied. Its bounded cases
+include selected subsets of Counter Energy, Reversal Energy, Double
+Colorless Energy, and Basic Energy, each of the relevant cached unit
+quantities, four different holder tag sets (including Pokémon-GX and
+other Rule Box restrictions), and seven positive-or-zero Retreat Costs.
+
+Across **1,792 bounded states**, the unknown-context actions equal that
+intersection exactly. This is a robustness result: the returned actions
+can be committed regardless of which Prize regime is true. In the
+simplified family, being behind only increases the possible units of
+Counter/Reversal, so the tied state is the lower-unit world.
+
+A concrete instance selects Counter Energy and Double Colorless Energy.
+They always provide at least three units, so a cost-3 action is
+executable without Prize information. Cost 4 requires the behind
+state, so it is deliberately absent from the unknown-context frontier.
+
+This equivalence is proven by the direct lower/upper-bound predicate for
+these exact provider families and independently tested by enumerating
+both known worlds. It must not be generalized to unknown effects that
+change Retreat Cost or suppress the action itself.
+
+The [CI run](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37840238608)
+passed this robustness oracle together with the 1,800-scenario physical
+subset oracle and earlier regressions.
+
 ## Limits
 
 Card legality and the completeness of already compiled Retreat source
