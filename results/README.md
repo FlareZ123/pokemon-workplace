@@ -1451,3 +1451,12 @@ For the Harto-sized 46-card, six-draw window, the neutral threshold is 13.043478
 In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable after Quick Ball in 11.581746% of branch states. Retaining the right to stop adds **+1.118200 percentage points** across the full later-turn branch, or **+9.654847 points** conditional on reset-capable states. On the first turn, adding Squawk expands reset-capable mass to 18.410106%; the cancel option is worth **+1.788257 points** across the branch, or **+9.713452 points** conditional on reset capability.
 
 **Working synthesis:** information can be valuable because it changes whether a later action should occur at all. A planner that commits to a draw reset before acquiring K1 misses this cancellation option.
+
+
+## Full-hand reset catalog and typed transition compiler
+
+[full_hand_reset_catalog/](full_hand_reset_catalog/) generalizes the Harto reset phenomenon across the current paper-Expanded snapshot. The shared legality classifier finds **80 legal prints across 15 canonical effect families** with literal `Discard your hand and draw N cards` text. These include five Supporter families, six Ability families and four attack families.
+
+[reset_transition_profiles/](reset_transition_profiles/) compiles those families into a typed state-transition layer. Five families end the turn, ten leave the fresh hand actionable in the same turn, five consume the Supporter window, one consumes VSTAR Power, one consumes the GX attack, one requires a hand-to-Bench entry, and one is explicitly top/bottom-deck position-sensitive.
+
+[pre_reset_sequencing_synthesis/](pre_reset_sequencing_synthesis/) integrates the Harto draw-engine, doomed-resource, shuffle-value and reset-cancellation results. Its core state recommendation is to keep material zones, deck/Prize composition belief, deck-position belief, action budgets and reset commitment separate rather than collapsing them into a scalar draw or connector value.
