@@ -1,0 +1,25 @@
+name: Validate physical multi-target damage reactions
+
+on:
+  push:
+    paths:
+      - "tools/attack_copy_physical_ko_bridge.py"
+      - "tools/physical_copy_damage_reaction_bridge.py"
+      - "tools/physical_damage_reaction_sources.py"
+      - "results/physical_multitarget_damage_reactions/**"
+      - ".github/workflows/validate-physical-multitarget-damage-reactions.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify multi-target source-specific copied reactions
+        run: python results/physical_multitarget_damage_reactions/reproduce.py
