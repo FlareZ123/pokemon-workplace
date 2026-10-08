@@ -153,3 +153,7 @@ Build a small typed Bench-occupancy state kernel that consumes capacity on suppo
 ## October 8, 2026: two-support Bench access
 
 Implemented `tools/bench_double_trigger_access.py` and `results/bench_double_trigger_release/` with exact two-singleton setup, Prize, one-use search, and coin-pickup access probabilities. The 60-card conditional benchmark gives 20.867773% nominal versus 2.454142% realized. Small-deck exhaustive oracle agrees on 8,880 paths; CI run 37836891826 passed. Next: enforce actual support-Ability hand effects, real search discard payments, and trigger ordering.
+
+## October 8 continuation: three-support chains
+
+Created `tools/bench_multi_trigger_access.py` and `results/bench_multi_trigger_access/` as an exact extension to two through five distinct singleton support targets. With n support entries and q free Bench slots the minimum pickup successes is max(0,n-q); g deterministic and r coin pickups have a binomial-tail completion probability. The n=2 mode exactly reproduces `bench_double_trigger_access.analyze()` across independent parameter sets. A labeled 12-card oracle checks 309,120 accepted opening, Prize, draw and coin paths, and verifies all 4 nested probabilities at q=1,2,3. In an idealized 60-card triple-support benchmark with four coin pickups, four further random cards and one free slot: nominal 7.527194%, typed 0.393795%, coin-weighted 0.105588%. With q=2 coin-weighted 1.180277%; q=3, 4.827882%. Next priority remains real hand mutation / discard cost sequencing.
