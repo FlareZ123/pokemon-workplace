@@ -1,0 +1,22 @@
+name: Validate exact pickup package frontier
+
+on:
+  push:
+    paths:
+      - "tools/bench_trigger_paid_replay.py"
+      - "results/bench_pickup_package_frontier/**"
+      - ".github/workflows/validate-bench-pickup-frontier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/bench_pickup_package_frontier/reproduce.py
