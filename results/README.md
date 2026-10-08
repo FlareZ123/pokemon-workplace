@@ -1252,3 +1252,12 @@ The regression proves that ordinary evolution still fails on the player's first 
 
 **Working synthesis:** effect-based evolution should be compiled as a timing policy and executed against canonical physical state. C-12 can relax evolution timing without granting permission to the source action, and the two ordinary timing gates cannot safely be collapsed into one boolean.
 
+
+
+## Reachable-state witnesses can shrink the historical Trainer semantic-review pool
+
+[trainer_semantic_divergence/](trainer_semantic_divergence/) proves four additional same-name Trainer families non-equivalent across eight historical prints. The witnesses are deliberately state-semantic rather than text-similarity based: Apricorn Maker's historical Trainer-card target domain can reach Ball Guy while the current card is Item-only; Pokémon Fan Club sends the searched Basic to Bench instead of hand; historical Super Potion heals at most 40 damage where the current print heals 60; and historical TV Reporter remains able to change state in an empty-deck window where the current print is explicitly unplayable.
+
+The integrated reprint resolver now records **64 known non-equivalent historical prints across 19 names**, leaving **3,994** same-name historical prints in semantic review while the positive high-confidence candidate set remains 202.
+
+**Working synthesis:** historical reprint analysis should search for distinguishing reachable states across target domain, zone destination, action availability, information, timing, and material transitions. Small wording differences are important only when they induce a semantic difference under current rules.
