@@ -11,6 +11,7 @@ from attached_tool_retreat_modifiers import (
     derive_tool_retreat_modifiers,
 )
 from board_object_kernel import BoardState
+from retreat_ability_denial import opposing_retreat_denial_source_ids
 from retreat_board_effects import active_scoop_up_block_source_ids
 from retreat_cost_semantics import RetreatCostModifier, effective_retreat_cost
 from retreat_dynamic_energy_units import (
@@ -35,6 +36,7 @@ class BoardDerivedRetreatAttempt:
     effective_retreat_cost: int
     applied_modifiers: tuple[RetreatCostModifier, ...]
     scoop_up_block_source_ids: tuple[str, ...]
+    retreat_denial_source_ids: tuple[str, ...]
     unresolved_tool_conditions: tuple[UnresolvedToolRetreatCondition, ...]
     unresolved_selected_provider_ids: tuple[str, ...]
     transaction: RetreatEnergyTransactionResult | None
@@ -84,6 +86,9 @@ def attempt_board_derived_retreat(
     )
     retreat_cost = effective_retreat_cost(base_retreat_cost, modifiers)
     scoop_sources = active_scoop_up_block_source_ids(opponent_board)
+    denial_sources = opposing_retreat_denial_source_ids(
+        prepared.energy.board, opponent_board,
+    )
     unresolved_providers = unresolved_selected_prize_provider_ids(
         prepared,
         selected_energy_ids,
@@ -92,7 +97,7 @@ def attempt_board_derived_retreat(
     )
 
     transaction = None
-    if tool_derivation.exact and not unresolved_providers:
+    if tool_derivation.exact and not unresolved_providers and not denial_sources:
         transaction = retreat_with_energy_destinations(
             prepared,
             bench_object_id,
@@ -107,6 +112,7 @@ def attempt_board_derived_retreat(
         effective_retreat_cost=retreat_cost,
         applied_modifiers=modifiers,
         scoop_up_block_source_ids=scoop_sources,
+        retreat_denial_source_ids=denial_sources,
         unresolved_tool_conditions=tool_derivation.unresolved_conditions,
         unresolved_selected_provider_ids=unresolved_providers,
         transaction=transaction,
