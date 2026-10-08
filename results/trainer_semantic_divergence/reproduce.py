@@ -19,15 +19,16 @@ reasons = collect_proven_trainer_semantic_non_equivalent_ids(RESOURCES)
 witnesses = distinguishing_witnesses()
 
 assert summary["counts"] == {
-    "cases": 4,
-    "source_prints": 8,
-    "names": 4,
+    "cases": 5,
+    "source_prints": 9,
+    "names": 5,
 }
-assert len(CASES) == 4
-assert len(reasons) == 8
+assert len(CASES) == 5
+assert len(reasons) == 9
 
 assert {case.name: len(case.source_ids) for case in CASES} == {
     "Apricorn Maker": 1,
+    "Friend Ball": 1,
     "Pokémon Fan Club": 2,
     "Super Potion": 2,
     "TV Reporter": 3,
@@ -38,6 +39,12 @@ assert witnesses["Apricorn Maker"] == {
     "witness_subtype": "Supporter",
     "historical_eligible": True,
     "current_eligible": False,
+}
+assert witnesses["Friend Ball"] == {
+    "witness_card": "Archen",
+    "witness_subtype": "Restored",
+    "historical_eligible": False,
+    "current_eligible": True,
 }
 assert witnesses["Pokémon Fan Club"] == {
     "historical_destination": "bench",
@@ -61,6 +68,7 @@ for card_id in reasons:
 
 for card_id in (
     "ecard3-121",
+    "ecard3-126",
     "ecard2-130",
     "pop4-9",
     "base1-90",
