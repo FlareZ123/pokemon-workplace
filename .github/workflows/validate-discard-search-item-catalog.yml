@@ -1,0 +1,23 @@
+name: Validate discard-search Item catalog
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/discard_search_item_catalog.py"
+      - "results/discard_search_item_catalog/**"
+      - ".github/workflows/validate-discard-search-item-catalog.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce discard-search Item catalog
+        run: python results/discard_search_item_catalog/reproduce.py
