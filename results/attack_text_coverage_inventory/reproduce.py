@@ -37,7 +37,10 @@ def main() -> None:
         ("bw1-53", "Poison Sting", "exact_special_condition"),
         ("bw1-24", "Singe", "exact_special_condition"),
         ("bw1-17", "Flame Charge", "uncompiled_effect_text"),
-        ("bw1-37", "Aqua Ring", "uncompiled_effect_text"),
+        ("bw1-37", "Aqua Ring", "exact_position_effect"),
+        ("me1-9", "Push Down", "exact_position_effect"),
+        ("me3-30", "Follow Me", "exact_position_effect"),
+        ("sm3-39", "Aqua Ring", "exact_position_effect"),
         ("bw1-81", "Collect", "uncompiled_effect_text"),
     )
     for card_id, attack_name, expected in witnesses:
@@ -49,6 +52,19 @@ def main() -> None:
         classified = classify_attack_text(matches[0])
         assert classified.kind == expected, (card_id, attack_name, classified)
         assert classified == by_id[matches[0].attack_id]
+
+    swanna_aqua = next(
+        row for row in index["bw1-37"] if row.attack_name == "Aqua Ring"
+    )
+    tapu_aqua = next(
+        row for row in index["sm3-39"] if row.attack_name == "Aqua Ring"
+    )
+    assert classify_attack_text(swanna_aqua).requires_handlers == (
+        "position_effect",
+    )
+    assert classify_attack_text(tapu_aqua).requires_handlers == (
+        "position_effect", "optional_choice",
+    )
 
     all_unguarded = tuple(
         source for entries in index.values() for source in entries
