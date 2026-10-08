@@ -6,7 +6,7 @@ Can current rules resolve any of the four remaining semantic-review rows in the 
 
 ## Result
 
-Yes. Two wording families can be normalized from explicit current rules while preserving the benchmark's known negative boundaries.
+Yes. Three wording families can be normalized from explicit current rules while preserving the benchmark's known negative boundaries.
 
 ### Fisherman
 
@@ -27,6 +27,14 @@ Advanced Player's Rulebook C-06 defines healing as removing damage counters and 
 
 The normalizer is deliberately limited to the exact no-exclusion wording. The historical `ex5-90` and `ex6-93` Life Herb printings exclude Pokémon-ex targets and remain distinct, preserving the repository's current format-relative negative evidence.
 
+### Moomoo Milk
+
+Historical Moomoo Milk `hgss1-94` says that each heads removes three damage counters from the chosen Pokémon. Current Moomoo Milk `sm8-185` says that each heads heals 30 damage.
+
+Advanced Player's Rulebook C-06 defines healing as removing damage counters. C-07 defines each damage counter as 10 damage. For each heads, removing three damage counters is therefore exactly a 30-damage heal under current terminology, including the ordinary rule that healing removes all available damage if less than the stated amount remains.
+
+The normalizer maps only the exact historical Moomoo Milk effect string to the current effect string.
+
 ## Benchmark consequence
 
 After composing this normalizer into `current_card_semantics.py`:
@@ -37,7 +45,7 @@ After composing this normalizer into `current_card_semantics.py`:
 - both remaining rows are the older Pokédex wordings with "up to 5 cards";
 - the two Pokémon-ex-excluding Life Herb prints stay `known_non_equivalent`.
 
-The broader archive also resolves the same exact no-exclusion Life Herb wording on `hgss2-79` and the same public-discard Fisherman wording on `hgss1-92`.
+The broader archive also resolves the same exact no-exclusion Life Herb wording on `hgss2-79`, the same public-discard Fisherman wording on `hgss1-92`, and historical Moomoo Milk `hgss1-94`.
 
 ## Why Pokédex remains unresolved
 
@@ -45,7 +53,7 @@ The older Pokédex wording lets the player look at "up to 5" cards, while the la
 
 ## Implementation
 
-`tools/trainer_rule_semantics.py` contains only exact-string, exact-name transformations supported by the rules above. `tools/current_card_semantics.py` applies it after print errata, legacy Tool normalization, and Trainer category-boilerplate removal.
+`tools/trainer_rule_semantics.py` contains only exact-string, exact-name transformations supported by the rules above, including Moomoo Milk's three-counter to 30-damage healing equivalence. `tools/current_card_semantics.py` applies it after print errata, legacy Tool normalization, and Trainer category-boilerplate removal.
 
 The reproducer verifies positive Fisherman and Life Herb convergence, the two Life Herb negative witnesses, the unresolved Pokédex boundary, and the updated 76-row official benchmark partition.
 
