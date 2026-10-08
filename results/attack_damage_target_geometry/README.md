@@ -32,6 +32,22 @@ This is a **lexical geometry index**. The parser refuses extra condition
 clauses and unsupported target phrases. It does not execute damage, choose
 targets, resolve type modifiers or grant legality under locks.
 
+## Live corpus results
+
+On the current effectively legal Expanded English snapshot, CI run
+[37769867818](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37769867818)
+confirmed **471** exact full-text damage-targeting attack prints:
+
+- **224** damage solely specified by the text, without printed Active damage.
+- **247** additional damage clauses attached to printed Active damage.
+- **55** each-opponent spread rows (52 unfiltered, 3 ex-filtered).
+- **57** each-opponent-Bench spread rows (53 unfiltered, 4 Basic-filtered).
+- **137** one, two, or three selected opponent Pokémon rows.
+- **222** one, two, or three selected opposing Benched Pokémon rows.
+
+The shape counts partition 471 attack-print rows and represent the narrow
+exact grammar, not all attacks capable of non-Active damage.
+
 ## Reproducible examples
 
 - Octillery `bw10-19` Sharpshooting: 30 damage to one opposing Pokémon,
