@@ -49,6 +49,7 @@ class CompiledAttackBoardSemantics:
     energy_cost: tuple[str, ...]
     fixed_damage: int | None
     counter_effect: CounterEffectContract | None
+    has_uncompiled_damage_text: bool
     take_another_turn: bool
     skip_pokemon_checkup: bool
     is_gx_attack: bool
@@ -144,6 +145,13 @@ _COUNTER_PATTERNS: tuple[tuple[str, str, re.Pattern[str]], ...] = (
 )
 
 
+_UNCOMPILED_DAMAGE_PHRASE = re.compile(
+    r"\b(?:do(?:es)?|deal(?:s)?|take(?:s)?)\b[^.!?]{0,90}\bdamage\b"
+    r"|\b(?:put|place|move)\b[^.!?]{0,90}\bdamage counters?\b",
+    re.IGNORECASE,
+)
+
+
 def _compile_counter_effect(text: str) -> CounterEffectContract | None:
     normalized = re.sub(r"\s+", " ", text).strip()
     for scope, distribution, pattern in _COUNTER_PATTERNS:
@@ -182,6 +190,12 @@ def compile_attack(
         )
     )
 
+    counter_effect = _compile_counter_effect(raw_text)
+    has_uncompiled_damage_text = (
+        counter_effect is None
+        and _UNCOMPILED_DAMAGE_PHRASE.search(raw_text) is not None
+    )
+
     lowered_text = raw_text.casefold()
     ignore_both = (
         "damage isn't affected by weakness or resistance" in lowered_text
@@ -209,7 +223,8 @@ def compile_attack(
         attack_name=attack.get("name") or "",
         energy_cost=tuple(attack.get("cost") or ()),
         fixed_damage=fixed_damage,
-        counter_effect=_compile_counter_effect(raw_text),
+        counter_effect=counter_effect,
+        has_uncompiled_damage_text=has_uncompiled_damage_text,
         take_another_turn=extra_turn,
         skip_pokemon_checkup=skip_checkup,
         is_gx_attack=(attack.get("name") or "").endswith("-GX"),
@@ -308,6 +323,8 @@ def materialize_opponent_board_program(
 
     if semantics.fixed_damage is None:
         raise ValueError("attack does not have supported fixed numeric damage")
+    if semantics.has_uncompiled_damage_text:
+        raise ValueError("attack has uncompiled damage text")
 
     allocation = tuple(counter_allocation)
     placements: tuple[EffectCounterPlacement, ...] = ()
