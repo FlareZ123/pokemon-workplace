@@ -45,6 +45,22 @@ The negative control gives a synthetic additional hit to an Active
 already hit by the same body's printed damage. This is rejected until
 repeated event/recipient damage can be disambiguated in reaction handling.
 
+## Physical damage reaction source
+
+The extended regression gives both defending Dratini a physically attached
+Spiky Energy. The card-derived Night Spear hits both recipients, but only
+the Active Dratini's Spiky Energy qualifies for a two-counter reaction. The
+Benched Dratini's identical Energy produces no reaction. This remains true
+when the 50 HP Active Pokémon is already a Knock Out candidate; its attached
+Energy stays physically present during the reaction window.
+
+The opponent-Pokémon attack gate also works: if the same physical damage
+record is marked as coming from a non-opponent source, Spiky Energy does
+not trigger. The actual counter placement on the attacking board remains
+a separate downstream reaction transition.
+
+[Source eligibility regression passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37770806059).
+
 ## Verification
 
 The single-file regression is
