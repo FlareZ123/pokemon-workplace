@@ -482,6 +482,8 @@ The regression materializes a Bulbasaur/Ivysaur evolution stack, Muscle Band, an
 **Working synthesis:** selecting a destination and successfully forming an attachment relation are distinct transition stages. Physical identity should persist through a legal topology move and dematerialize only when the card leaves board topology.
 
 
+**Retreat source and information composition:** [retreat_environment_modifiers/](retreat_environment_modifiers/) adds exact-board Galar Mine, Big Net Ariados, and Benched Hisuian Sneasler modifiers to the conserved Retreat transaction. With one attached Double Colorless Energy, adding a friendly Benched Sneasler changes a modeled cost-4 failed payment into a cost-2 legal payment. [retreat_prize_provider_uncertainty/](retreat_prize_provider_uncertainty/) prevents an unknown Prize-dependent Counter/Reversal Energy unit snapshot from authorizing conditional payments while admitting guaranteed payments through lower/upper unit bounds. Both regressions execute through the existing board-derived Retreat adapter. Their limits are explicit: an externally identified effective Stadium, already-resolved Ability suppression, and an exact six-family provider surface. These are source- and information-composition results, not deck-level win-rate estimates.
+
 ## 21. Simultaneous Knock Outs require a pre-discard batch state
 
 [simultaneous_knockout_conservation/](simultaneous_knockout_conservation/) adds an explicit pending Knock Out batch before physical disposal.
