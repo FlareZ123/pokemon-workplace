@@ -1,0 +1,23 @@
+name: Validate Harto connector order decomposition
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/raichu_connector_order_decomposition.py"
+      - "results/raichu_connector_order_decomposition/**"
+      - ".github/workflows/validate-raichu-connector-order-decomposition.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce connector order decomposition
+        run: python results/raichu_connector_order_decomposition/reproduce.py
