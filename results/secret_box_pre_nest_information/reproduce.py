@@ -10,6 +10,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[2]/"tools"))
 
 from secret_box_gnh_tool_pipeline import KINDS,counts
 from secret_box_pre_nest_information import optimal_pre_nest_choice
+from secret_box_nest_ball_k0 import exact_nest_payment_policy
 
 
 def independent_nest_first(hand_counts,unknown_counts, *,
@@ -124,6 +125,13 @@ def main():
             unseen_basics=2,prizes=2
         )
         assert r.informational_upper_bound>=r.optimal_first_action_success
+        previous=exact_nest_payment_policy(
+            visible,unknown,visible_basics=1,
+            unknown_basics=2,prize_count=2
+        )
+        assert r.informational_upper_bound==previous.clairvoyant_success
+        if d>=3:
+            assert r.box_first_k0==r.informational_upper_bound
         if r.gain_from_nest_first>0:
             winners.append((r.gain_from_nest_first,
                 (d,ha,hg,hs,di,da,dg,ds),r))
