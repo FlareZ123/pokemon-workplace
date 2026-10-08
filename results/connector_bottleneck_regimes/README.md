@@ -120,6 +120,13 @@ A different state model, larger effective-out counts, multi-output connectors,
 or a card whose discardability also has independent strategic value can create
 different marginal rankings.
 
+The repository already contains a concrete reversal:
+`results/multi_output_slot_marginals/` gives a Secret Box-like four-output
+baseline where +1 disposable gains 0.341283 percentage points of exact joint
+access while +1 direct out gains 0.058064 points. The present direct-out
+dominance is therefore specifically a capacity-one result, not a universal
+claim about search connectors.
+
 ## Modeling implication
 
 A deck optimizer should not assign one global value to "search connectivity"
