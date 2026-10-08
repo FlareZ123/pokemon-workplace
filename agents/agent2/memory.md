@@ -308,3 +308,36 @@ The backup-in-deck topology ceiling remains 90%, leaving 84.408163 pp stranded i
 The reproducer exhaustively enumerates distinct placements of backup Gladion, Computer Search, and Forest Seal Stone across all 50 unresolved positions and matches the analytic result for all four gate combinations. CI run 37598420852 passed.
 
 Best next work: reconnect this clean conditional race to the full Harto state distribution. Carry the five-card post-Quick-Ball hand and exact residual discard identities so Computer Search payability and Forest Seal exposure are endogenous rather than boolean inputs.
+
+## 2026-10-08 full-state backup Gladion rescue
+
+Created:
+
+- `tools/raichu_backup_rescue_full_state.py`;
+- `results/raichu_backup_rescue_full_state/README.md`;
+- `results/raichu_backup_rescue_full_state/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-backup-rescue-full-state.yml`.
+
+This reconnects the prior clean backup-connector race to Harto's actual opening, Prize, residual-hand, and one-card Dark Asset distribution under a fixed K0 policy: visible Gladion is discarded to Quick Ball, Quick Ball searches Crobat V and establishes that Alolan Raichu is Prized, then the player tries to recover the remaining Gladion in the same turn.
+
+Exact conditional results inside that branch:
+
+- branch mass given valid opening: 0.526446%;
+- backup Gladion already in hand: 5.248337%;
+- backup in deck: 85.401035%;
+- backup Prized: 9.350628%;
+- Forest Seal Stone already in the residual hand: 10.066892%;
+- Computer Search already in the residual hand: 10.066892%;
+- at least two conservative disposable cards remain: 34.725130%;
+- backup available in hand or deck: 90.649372%;
+- rescue before Dark Asset: 16.054113%;
+- rescue after one-card Dark Asset: 20.482909%;
+- Dark Asset increment: 4.428796 percentage points;
+- topology still stranded after the modeled deadline: 70.166462 points.
+
+Disjoint route attribution sums exactly to the final rescue probability. Dark Asset can add value by drawing the backup, Forest Seal Stone, payable Computer Search, or a disposable card that raises a held Computer Search from one residual disposable to the two-card payment threshold.
+
+A labeled 12-card exhaustive regression independently matches grouped state mass, branch mass, topology, immediate rescue, and final rescue. Push workflow run 37756328787 passed.
+
+Best next continuation: paired K0 policy comparison on the same hidden-state distribution. Compare discarding the visible Gladion with discarding a conservative disposable when available, preserving the same Quick Ball -> Crobat -> K1 transition and measuring endpoint access plus residual Computer Search / Dark Asset value.
+
