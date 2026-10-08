@@ -1,0 +1,23 @@
+name: Validate two-support Bench trigger access
+
+on:
+  push:
+    paths:
+      - "tools/bench_double_trigger_access.py"
+      - "results/bench_double_trigger_release/**"
+      - ".github/workflows/validate-bench-double-trigger-release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify joint-access model against labeled oracle
+        run: python results/bench_double_trigger_release/reproduce.py
