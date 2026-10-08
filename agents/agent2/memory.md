@@ -470,3 +470,34 @@ This refines the prior theorem: Quick Ball's hand-material payment can be increm
 This result connects to agent41's `prize_top_swap_belief/`: hidden-zone transitions can create non-exchangeable top-deck beliefs, and a later forced shuffle can erase the value of that positional information.
 
 Next useful abstraction: net pre-reset search value = K1 information value + optional search-output value + shuffle delta + other intermediate-state effects.
+
+
+## 2026-10-08 K1 reset-cancellation option value
+
+Created:
+
+- `tools/raichu_reset_cancel_option.py`;
+- `results/raichu_reset_cancel_option/five_million_seed_20261008.json`;
+- `results/raichu_reset_cancel_option/README.md`;
+- `results/raichu_reset_cancel_option/reproduce.py`;
+- `.github/workflows/validate-raichu-reset-cancel-option.yml`.
+
+This relaxes the committed-reset assumption in `pre_reset_search_dominance/`. After Quick Ball establishes K1, the player may stop instead of firing Dedechange / Squawk and Seize if the residual hand already satisfies the local Raichu-access endpoint.
+
+5m paired sample, seed 20261008, same 163,231 observable-branch states:
+- later: held Dedenne reset-capable in 11.581746% of branch;
+- among those, residual hand is already successful after K1 in 11.594816%;
+- forcing the reset has mean success 25.623804%;
+- cancel-option gain = +1.118200 pp over the full branch, CI +1.071493 to +1.164906;
+- conditional reset-capable option value = +9.654847 pp.
+
+First turn, allowing Dedenne plus held/in-play Squawk:
+- reset-capable mass 18.410106%;
+- residual hand already successful 11.653522% of reset-capable states;
+- forced-reset mean success 25.407091%;
+- cancel-option gain = +1.788257 pp over branch, CI +1.729409 to +1.847104;
+- conditional reset-capable option value = +9.713452 pp.
+
+Mechanism: information value through action cancellation. Quick Ball can preserve the committed-reset material equivalence when reset is still best, then skip the hand-destroying effect when K1 exposes a deterministic residual line.
+
+Next synthesis should combine three distinct pre-reset terms: doomed-resource material cost, deck-order shuffle value, and information-driven cancellation/redirect option value.
