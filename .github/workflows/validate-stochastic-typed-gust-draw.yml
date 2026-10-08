@@ -1,0 +1,20 @@
+name: Validate Stochastic Typed Gust Draw
+
+on:
+  push:
+    paths:
+      - 'tools/stochastic_typed_gust_draw.py'
+      - 'tools/stochastic_gust_draw.py'
+      - 'results/stochastic_typed_gust_draw/**'
+      - '.github/workflows/validate-stochastic-typed-gust-draw.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.stochastic_typed_gust_draw.reproduce
