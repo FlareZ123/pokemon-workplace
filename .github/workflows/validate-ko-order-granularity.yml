@@ -1,0 +1,19 @@
+name: Validate KO ordering granularity theorem
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_order_outcome_space.py"
+      - "results/ko_order_granularity_combinatorics/**"
+      - ".github/workflows/validate-ko-order-granularity.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/ko_order_granularity_combinatorics/reproduce.py
