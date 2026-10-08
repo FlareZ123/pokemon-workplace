@@ -9,6 +9,7 @@ from attached_energy_retreat_modifiers import attached_energy_retreat_modifiers
 from attached_tool_retreat_modifiers import (
     UnresolvedToolRetreatCondition,
     derive_tool_retreat_modifiers,
+    tool_retreat_cost_decision_sufficient,
 )
 from ability_lock_causal_state import AbilityLockCausalState
 from board_object_kernel import BoardState
@@ -50,6 +51,7 @@ class BoardDerivedRetreatAttempt:
     suppressed_own_tool_ids: tuple[str, ...]
     suppressed_opponent_tool_ids: tuple[str, ...]
     unresolved_tool_conditions: tuple[UnresolvedToolRetreatCondition, ...]
+    tool_action_sufficient: bool
     unresolved_selected_provider_ids: tuple[str, ...]
     transaction: RetreatEnergyTransactionResult | None
 
@@ -120,6 +122,9 @@ def attempt_board_derived_retreat(
         + environmental_modifiers
     )
     retreat_cost = effective_retreat_cost(base_retreat_cost, modifiers)
+    tool_action_sufficient = tool_retreat_cost_decision_sufficient(
+        tool_derivation, retreat_cost,
+    )
     scoop_sources = active_scoop_up_block_source_ids(opponent_sources)
     denial_sources = opposing_retreat_denial_source_ids(
         own_sources, opponent_sources,
@@ -133,7 +138,7 @@ def attempt_board_derived_retreat(
 
     transaction = None
     if (
-        tool_derivation.exact
+        tool_action_sufficient
         and ability_projection.resolved
         and not unresolved_providers
         and not denial_sources
@@ -173,6 +178,7 @@ def attempt_board_derived_retreat(
         suppressed_own_tool_ids=tool_projection.suppressed_own_tool_ids,
         suppressed_opponent_tool_ids=tool_projection.suppressed_opponent_tool_ids,
         unresolved_tool_conditions=tool_derivation.unresolved_conditions,
+        tool_action_sufficient=tool_action_sufficient,
         unresolved_selected_provider_ids=unresolved_providers,
         transaction=transaction,
     )
