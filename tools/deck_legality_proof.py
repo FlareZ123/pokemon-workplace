@@ -109,7 +109,10 @@ def adjudicate_deck(
         deck_size=deck_size,
     )
     index = LegalityProvenanceIndex.from_resources(resources_root)
-    snapshot_reference_date = max(index.set_release_dates.values())
+    snapshot_reference_date = max(
+        index.set_release_dates[set_id]
+        for set_id in index.resolver.expanded_sets
+    )
 
     quantities: Counter[str] = Counter()
     card_ids: set[str] = set()
