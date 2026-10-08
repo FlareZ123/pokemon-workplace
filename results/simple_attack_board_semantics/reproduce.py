@@ -201,6 +201,33 @@ def main() -> None:
         else:
             raise AssertionError(f"silently materialized {incomplete.attack_id}")
 
+    bring_down = next(
+        row for row in index["me1-41"]
+        if row.attack_name == "Bring Down"
+    )
+    terminal_period = next(
+        row for row in index["me1-86"]
+        if row.attack_name == "Terminal Period"
+    )
+    for incomplete in (bring_down, terminal_period):
+        assert incomplete.fixed_damage == 0
+        assert incomplete.has_uncompiled_knockout_text
+        try:
+            materialize_opponent_board_program(incomplete, board)
+        except ValueError as error:
+            assert "uncompiled Knock Out text" in str(error)
+        else:
+            raise AssertionError(f"silently materialized {incomplete.attack_id}")
+
+    uncompiled_knockout_rows = sum(
+        row.has_uncompiled_knockout_text for row in semantics
+        if row.fixed_damage is not None
+    )
+    uncompiled_blank_knockout_rows = sum(
+        row.has_uncompiled_knockout_text and row.raw_damage == ""
+        for row in semantics
+    )
+
     uncompiled_damage_rows = sum(
         row.has_uncompiled_damage_text for row in semantics
         if row.fixed_damage is not None
@@ -216,6 +243,8 @@ def main() -> None:
             "supported_fixed_or_effect_only_damage": supported_damage_rows,
             "uncompiled_damage_text_rows_with_numeric_or_blank_field": uncompiled_damage_rows,
             "uncompiled_blank_damage_rows": uncompiled_blank_damage_rows,
+            "uncompiled_knockout_text_rows": uncompiled_knockout_rows,
+            "uncompiled_blank_knockout_rows": uncompiled_blank_knockout_rows,
             "extra_turn_rows": extra_turn_rows,
             "exact_counter_rows": len(counter_rows),
             "counter_shapes": dict(sorted(counter_shapes.items())),
