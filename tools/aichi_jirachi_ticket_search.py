@@ -31,6 +31,68 @@ def stellar_available(order: list[int], active: str) -> bool:
     return not any(card in ("Guzma & Hala", "Tag Call") for card in top_five)
 
 
+def prepare_with_deferred_stellar(order: list[int]):
+    """Preserve an unspent Stellar Wish when natural G&H/Tag Call suffices.
+
+    The baseline Aichi preparer prioritizes a first-window Stellar Wish hit
+    on G&H or Tag Call even when one of those connectors is already present
+    naturally. When the original hand/draw already contains a usable G&H
+    route, the player may instead decline to use Stellar Wish until after
+    G&H searches and shuffles the deck.
+
+    Returns (new Prepared state, was_deferred). This is an *alternative*
+    legal sequencing policy, whose Tag Call consumption can impose future
+    strategic costs not represented by the first-turn endpoint.
+    """
+    from tools.aichi_post_gnh_prize_reset import Prepared
+
+    state = prepare(order)
+    if state is None or state.active != "Jirachi":
+        return state, False
+
+    observed = [DECK[i] for i in order[14:19]]
+    early_pick = ("Guzma & Hala" if "Guzma & Hala" in observed
+                  else "Tag Call" if "Tag Call" in observed else None)
+    if early_pick is None:
+        return state, False
+
+    natural_hand = Counter(DECK[i] for i in order[:7] + [order[13]])
+    natural_hand["Jirachi"] -= 1  # Active is removed from the hand.
+    direct_supporter = natural_hand["Guzma & Hala"] >= 1
+    direct_tagcall = natural_hand["Tag Call"] >= 1
+    if not direct_supporter and not direct_tagcall:
+        return state, False
+    if not state.gnh_access:
+        return state, False
+
+    hand = state.hand.copy()
+    remaining = state.remaining.copy()
+    if direct_supporter:
+        # Original Aichi preparer acquired a redundant early Trainer. Move
+        # that physical selection back into the searched deck, preserving
+        # the naturally held G&H used on this turn.
+        hand[early_pick] -= 1
+        if hand[early_pick] == 0:
+            del hand[early_pick]
+        remaining[early_pick] += 1
+    elif early_pick == "Guzma & Hala":
+        # Original early Wish found G&H and kept the natural Tag Call.
+        # Instead spend Tag Call to fetch the very same G&H from the deck.
+        hand["Tag Call"] -= 1
+        if hand["Tag Call"] == 0:
+            del hand["Tag Call"]
+    else:
+        # Original Wish added Tag Call, then one of the two Tag Calls was
+        # spent for G&H. Spend the natural one instead, return the early
+        # selection to the deck.
+        hand["Tag Call"] -= 1
+        if hand["Tag Call"] == 0:
+            del hand["Tag Call"]
+        remaining["Tag Call"] += 1
+
+    return Prepared(hand, remaining, state.active, state.prizes, True), True
+
+
 def select_post_gnh_stellar(
     hand: Counter[str], assignment: tuple[str, ...],
     top_five: tuple[tuple[int, str], ...],
@@ -78,7 +140,8 @@ class Summary:
     second_item_access_gain: Counter[str]
 
 
-def simulate(raw_trials: int = 200_000, seed: int = 20261008) -> Summary:
+def simulate(raw_trials: int = 200_000, seed: int = 20261008, *,
+             defer_redundant_stellar: bool = False) -> Summary:
     starting_rng = random.Random(seed)
     order_rng = random.Random(seed ^ 0xA1C41)
     reshuffle_rng = random.Random(seed ^ 0x571A)
@@ -94,7 +157,9 @@ def simulate(raw_trials: int = 200_000, seed: int = 20261008) -> Summary:
 
     for _ in range(raw_trials):
         order = starting_rng.sample(range(len(DECK)), len(DECK))
-        state = prepare(order)
+        state, was_deferred = (prepare_with_deferred_stellar(order)
+                               if defer_redundant_stellar
+                               else (prepare(order), False))
         if state is None:
             continue
         accepted += 1
@@ -106,7 +171,7 @@ def simulate(raw_trials: int = 200_000, seed: int = 20261008) -> Summary:
         before = {endpoint: endpoint_success(endpoint, hand, remaining, state.active)
                   for endpoint in ENDPOINTS}
         baseline.update(endpoint for endpoint, success in before.items() if success)
-        eligible = stellar_available(order, state.active)
+        eligible = was_deferred or stellar_available(order, state.active)
         eligible_count += int(eligible)
 
         # Materialize an explicitly labeled deck so one chosen top-five card
