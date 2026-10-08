@@ -1,0 +1,23 @@
+name: Validate Quick Ball Bench ordering
+
+on:
+  push:
+    paths:
+      - 'tools/bench_quickball_sequence.py'
+      - 'tools/bench_quickball_access.py'
+      - 'results/bench_quickball_payment_order/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Exact Quick Ball payment ordering test
+        run: python results/bench_quickball_payment_order/reproduce.py
