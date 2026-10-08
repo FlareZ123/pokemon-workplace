@@ -25,6 +25,11 @@ assert current_semantic_fingerprint(resolver.cards_by_id["hgss2-79"]) == current
     resolver.cards_by_id["sm7-136"]
 )
 
+assert current_semantic_fingerprint(resolver.cards_by_id["hgss1-94"]) == current_semantic_fingerprint(
+    resolver.cards_by_id["sm8-185"]
+)
+assert resolver.resolve("hgss1-94").kind == "exact_fingerprint_candidate"
+
 assert current_semantic_fingerprint(resolver.cards_by_id["ex5-90"]) != current_semantic_fingerprint(
     resolver.cards_by_id["sm7-136"]
 )
