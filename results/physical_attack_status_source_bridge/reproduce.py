@@ -20,12 +20,16 @@ from damage_calculation_kernel import AttackDamage, DamageContext
 from identity_materialization import IdentityLedger, materialize, put_in_play_instance
 from multicopy_zone_state import ZoneCountState
 from physical_attack_status_source_bridge import apply_physical_attack_source_status
+from physical_copy_damage_reaction_bridge import resolve_physical_copy_damage_reactions
+from physical_damage_condition_reactions import (
+    eligible_printed_condition_reactions, apply_physical_condition_reactions,
+)
 from simple_attack_board_semantics import compile_attack
 from special_condition_state import ConditionKind
 from stack_knockout_conservation import StackBoardMaterialState
 
 
-def physical_defender() -> StackBoardMaterialState:
+def physical_defender(*, name: str = "Defender") -> StackBoardMaterialState:
     initial = IdentityLedger(ZoneCountState.from_mapping({
         ("a-class", "hand"): 1,
         ("b-class", "hand"): 1,
@@ -35,12 +39,12 @@ def physical_defender() -> StackBoardMaterialState:
     for pokemon_id, card_class in (("active", "a-class"), ("bench", "b-class")):
         instance = pokemon_id + "-instance"
         ledger = materialize(
-            ledger, card_class=card_class, card_name="Defender",
+            ledger, card_class=card_class, card_name=name,
             source_zone="hand", instance_id=instance,
         )
         ledger = put_in_play_instance(ledger, instance, pokemon_id)
         pokemon.append(BoardPokemon(
-            pokemon_id, (PokemonCard(instance, "Defender"),), retreat_cost=1,
+            pokemon_id, (PokemonCard(instance, name),), retreat_cost=1,
         ))
     return StackBoardMaterialState(ledger, make_state(pokemon, active_id="active"))
 
@@ -170,6 +174,49 @@ def main() -> None:
     assert not suppressed.applied
     assert suppressed.state == poison_replay.state
 
+    # The attacking source's step-5 status and a damaged-by-attack
+    # Ability on that defender are separate timing windows. Neither
+    # overwrites the other's physical board or card instances.
+    persian_state = physical_defender(name="Persian")
+    roselia_state = physical_defender(name="Roselia")
+    source, roselia_replay = copied_status_source(
+        "bw1-53", "Poison Sting", roselia_state,
+    )
+    source_effect = apply_physical_attack_source_status(roselia_replay, source)
+    assert source_effect.updated_copy_resolution.state == source_effect.state
+    condition_sources = eligible_printed_condition_reactions(
+        source_effect.updated_copy_resolution,
+        resources=ROOT / "resources",
+        body_event=source_effect.body_event,
+        damaged_pokemon_id="active",
+        defending_print_id="sv5-8",
+        ability_is_enabled=True,
+        from_opponents_pokemon=True,
+    )
+    assert condition_sources == (ConditionKind.POISONED,)
+    reflected = resolve_physical_copy_damage_reactions(
+        source_effect.updated_copy_resolution,
+        persian_state,
+        body_event=source_effect.body_event,
+        damaged_pokemon_id="active",
+        attacking_pokemon_id="active",
+        reactions=(),
+        attacker_hp_by_pokemon_id={"active": 200, "bench": 100},
+        defender_hp_by_pokemon_id={"active": 60, "bench": 100},
+    )
+    both_status, triggered = apply_physical_condition_reactions(
+        reflected, condition_sources,
+    )
+    assert triggered == (ConditionKind.POISONED,)
+    assert both_status.attacker_state.board.get("active").special_conditions == {
+        "Poisoned",
+    }
+    assert both_status.defender_state.board.get("active").special_conditions == {
+        "Poisoned",
+    }
+    assert both_status.attacker_state.ledger == persian_state.ledger
+    assert both_status.defender_state.ledger == roselia_state.ledger
+
     rejected = 0
     for operation in (
         lambda: apply_physical_attack_source_status(
@@ -201,6 +248,13 @@ def main() -> None:
         "effect_immunity_suppresses_status": not suppressed.applied,
         "failed_state_gates": rejected,
         "physical_instance_ledger_preserved": heads.state.ledger == initial.ledger,
+        "attack_status_before_passive_poison_reflection": tuple(
+            (side, state.board.get("active").special_conditions)
+            for side, state in (
+                ("actor", both_status.attacker_state),
+                ("defender", both_status.defender_state),
+            )
+        ),
     })
 
 
