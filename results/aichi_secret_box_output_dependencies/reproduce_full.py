@@ -34,6 +34,14 @@ def main() -> None:
     print(f"incremental_successes={result.incremental_successes}")
     print(f"minimum_category_counts={result.minimum_category_counts}")
     print(
+        "item_failure_tag_call_deck_counts="
+        f"{result.item_failure_tag_call_deck_counts}"
+    )
+    print(
+        "supporter_failure_gnh_deck_counts="
+        f"{result.supporter_failure_gnh_deck_counts}"
+    )
+    print(
         "indispensable_category_counts="
         f"{result.indispensable_category_counts}"
     )
