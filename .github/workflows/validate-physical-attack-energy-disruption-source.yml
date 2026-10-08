@@ -1,0 +1,26 @@
+name: Validate physical copied attack Energy disruption
+
+on:
+  push:
+    paths:
+      - "tools/physical_attack_energy_disruption_source_bridge.py"
+      - "tools/energy_disruption_profile_compiler.py"
+      - "tools/energy_disruption_executor.py"
+      - "tools/physical_damage_reaction_sources.py"
+      - "results/physical_attack_energy_disruption_source_bridge/**"
+      - ".github/workflows/validate-physical-attack-energy-disruption-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Replay Energy disruption before damage reactions
+        run: python results/physical_attack_energy_disruption_source_bridge/reproduce.py
