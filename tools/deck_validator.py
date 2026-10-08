@@ -58,6 +58,27 @@ class ValidationReport:
         return not any(issue.severity == "error" for issue in self.issues)
 
 
+def _card_record(raw: dict) -> CardRecord:
+    status, source = classify_effective_legality(raw)
+    return CardRecord(
+        card_id=raw["id"],
+        name=raw["name"],
+        supertype=raw["supertype"],
+        subtypes=tuple(raw.get("subtypes") or ()),
+        rules=tuple(raw.get("rules") or ()),
+        effective_status=status,
+        legality_source=source,
+    )
+
+
+def load_all_card_records(resources_root: Path) -> dict[str, CardRecord]:
+    records: dict[str, CardRecord] = {}
+    for path in sorted((resources_root / "cards" / "en").glob("*.json")):
+        for raw in load_json(path):
+            records[raw["id"]] = _card_record(raw)
+    return records
+
+
 def load_expanded_card_records(resources_root: Path) -> dict[str, CardRecord]:
     sets = load_json(resources_root / "sets" / "en.json")
     expanded_sets = {
@@ -71,16 +92,7 @@ def load_expanded_card_records(resources_root: Path) -> dict[str, CardRecord]:
         if path.stem not in expanded_sets:
             continue
         for raw in load_json(path):
-            status, source = classify_effective_legality(raw)
-            records[raw["id"]] = CardRecord(
-                card_id=raw["id"],
-                name=raw["name"],
-                supertype=raw["supertype"],
-                subtypes=tuple(raw.get("subtypes") or ()),
-                rules=tuple(raw.get("rules") or ()),
-                effective_status=status,
-                legality_source=source,
-            )
+            records[raw["id"]] = _card_record(raw)
     return records
 
 
@@ -107,13 +119,14 @@ def _recognized_copy_constraint(record: CardRecord, rule: str) -> bool:
     return rule == f"You can't have more than 1 {record.name} in your deck."
 
 
-def validate_deck(
+def _validate_with_records(
     entries: Iterable[DeckEntry],
-    resources_root: Path,
+    records: dict[str, CardRecord],
     *,
-    deck_size: int = 60,
+    deck_size: int,
+    enforce_format_legality: bool,
+    unknown_scope: str,
 ) -> ValidationReport:
-    records = load_expanded_card_records(resources_root)
     quantities: Counter[str] = Counter()
     issues: list[ValidationIssue] = []
     total_cards = 0
@@ -138,31 +151,32 @@ def validate_deck(
         ))
 
     known: dict[str, CardRecord] = {}
-    for card_id, quantity in sorted(quantities.items()):
+    for card_id in sorted(quantities):
         record = records.get(card_id)
         if record is None:
             issues.append(ValidationIssue(
                 "error",
                 "unknown_print",
-                f"Card ID {card_id} is not present in the Expanded-scope card index.",
+                f"Card ID {card_id} is not present in the {unknown_scope}.",
                 (card_id,),
             ))
             continue
         known[card_id] = record
-        if record.effective_status == "Banned":
-            issues.append(ValidationIssue(
-                "error",
-                "illegal_print",
-                f"{record.name} ({card_id}) is excluded from the research format by {record.legality_source}.",
-                (card_id,),
-            ))
-        elif record.legality_source == "set_fallback":
-            issues.append(ValidationIssue(
-                "warning",
-                "set_fallback_legality",
-                f"{record.name} ({card_id}) is treated as legal via set-level fallback because its card-level Expanded field is absent.",
-                (card_id,),
-            ))
+        if enforce_format_legality:
+            if record.effective_status == "Banned":
+                issues.append(ValidationIssue(
+                    "error",
+                    "illegal_print",
+                    f"{record.name} ({card_id}) is excluded from the research format by {record.legality_source}.",
+                    (card_id,),
+                ))
+            elif record.legality_source == "set_fallback":
+                issues.append(ValidationIssue(
+                    "warning",
+                    "set_fallback_legality",
+                    f"{record.name} ({card_id}) is treated as legal via set-level fallback because its card-level Expanded field is absent.",
+                    (card_id,),
+                ))
 
         for rule in record.rules:
             low = rule.lower()
@@ -268,3 +282,35 @@ def validate_deck(
             ))
 
     return ValidationReport(total_cards=total_cards, issues=tuple(issues))
+
+
+def validate_deck_construction(
+    entries: Iterable[DeckEntry],
+    resources_root: Path,
+    *,
+    deck_size: int = 60,
+) -> ValidationReport:
+    """Validate deck-construction rules against every exact print in the snapshot."""
+
+    return _validate_with_records(
+        entries,
+        load_all_card_records(resources_root),
+        deck_size=deck_size,
+        enforce_format_legality=False,
+        unknown_scope="bundled card snapshot",
+    )
+
+
+def validate_deck(
+    entries: Iterable[DeckEntry],
+    resources_root: Path,
+    *,
+    deck_size: int = 60,
+) -> ValidationReport:
+    return _validate_with_records(
+        entries,
+        load_expanded_card_records(resources_root),
+        deck_size=deck_size,
+        enforce_format_legality=True,
+        unknown_scope="Expanded-scope card index",
+    )
