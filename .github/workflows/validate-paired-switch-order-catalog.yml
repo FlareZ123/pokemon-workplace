@@ -1,0 +1,20 @@
+name: Validate Paired Switch Order Catalog
+
+on:
+  push:
+    paths:
+      - 'tools/paired_switch_order_catalog.py'
+      - 'tools/trainer_gust_catalog.py'
+      - 'results/paired_switch_order_catalog/**'
+      - '.github/workflows/validate-paired-switch-order-catalog.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.paired_switch_order_catalog.reproduce
