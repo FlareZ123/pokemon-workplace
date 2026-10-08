@@ -1,0 +1,19 @@
+name: Validate Trainer Gust Catalog
+
+on:
+  push:
+    paths:
+      - 'tools/trainer_gust_catalog.py'
+      - 'results/trainer_gust_catalog/**'
+      - '.github/workflows/validate-trainer-gust-catalog.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python results/trainer_gust_catalog/reproduce.py
