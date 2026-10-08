@@ -1,0 +1,24 @@
+name: Validate play occurrence versus identity
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/causal_event_journal.py"
+      - "tools/paired_switch_event_bridge.py"
+      - "results/play_occurrence_identity_separation/**"
+      - ".github/workflows/validate-play-occurrence-identity.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce occurrence and copy-ID evidence
+        run: python results/play_occurrence_identity_separation/reproduce.py

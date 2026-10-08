@@ -18,6 +18,20 @@ from board_object_kernel import BoardState
 from committed_play_event import CommittedPlayEvent, PlayKind, has_play_history
 
 
+
+@dataclass(frozen=True)
+class UnmaterializedPlay:
+    """Card class/name and copy count known, physical instance identities unknown."""
+    player: str
+    kind: PlayKind
+    card_name: str
+    copies: int
+
+    def __post_init__(self) -> None:
+        if not self.player or not self.card_name or self.copies < 1:
+            raise ValueError("unmaterialized play needs player, card and positive count")
+
+
 @dataclass(frozen=True)
 class JournalBoundary:
     sequence: int
@@ -29,6 +43,7 @@ class JournalBoundary:
     play_batch: tuple[CommittedPlayEvent, ...]
     lock_state: AbilityLockCausalState
     play_record_complete: bool = True
+    unmaterialized_plays: tuple[UnmaterializedPlay, ...] = ()
 
     @property
     def committed_play(self) -> CommittedPlayEvent | None:
@@ -62,8 +77,24 @@ class CausalEventJournal:
 
     @property
     def play_history_complete(self) -> bool:
-        """True only when every boundary had complete play-event capture."""
+        """Whether exact physical copy IDs are recorded at every boundary."""
         return all(boundary.play_record_complete for boundary in self.boundaries)
+
+    @property
+    def occurrence_history_complete(self) -> bool:
+        """Whether all submitted boundaries identify every play's name and kind."""
+        return all(
+            boundary.play_record_complete or bool(boundary.unmaterialized_plays)
+            for boundary in self.boundaries
+        )
+
+    @property
+    def unmaterialized_plays(self) -> tuple[UnmaterializedPlay, ...]:
+        return tuple(
+            event
+            for boundary in self.boundaries
+            for event in boundary.unmaterialized_plays
+        )
 
     def queried_play(
         self,
@@ -72,13 +103,19 @@ class CausalEventJournal:
         kind: PlayKind,
         name_contains: str | None = None,
     ) -> bool | None:
-        """True if witnessed, False if ruled out, None if coverage is incomplete."""
+        """Occurrence exists, absent, or cannot be decided from source evidence."""
         if has_play_history(
             self.committed_plays, player=player, kind=kind,
             name_contains=name_contains,
         ):
             return True
-        return False if self.play_history_complete else None
+        if any(
+            event.player == player and event.kind is kind
+            and (name_contains is None or name_contains in event.card_name)
+            for event in self.unmaterialized_plays
+        ):
+            return True
+        return False if self.occurrence_history_complete else None
 
 
 def begin_journal(
@@ -118,6 +155,7 @@ def append_boundary(
     committed_play: CommittedPlayEvent | None = None,
     committed_plays: tuple[CommittedPlayEvent, ...] = (),
     play_record_complete: bool = True,
+    unmaterialized_plays: tuple[UnmaterializedPlay, ...] = (),
 ) -> CausalEventJournal:
     """Fold exactly one ordered boundary, rejecting stale/duplicate submissions.
 
@@ -126,6 +164,8 @@ def append_boundary(
     """
     if journal.revision != expected_revision:
         raise ValueError("stale journal revision")
+    if play_record_complete and unmaterialized_plays:
+        raise ValueError("unmaterialized plays require partial physical identity coverage")
     if not play_record_complete and (committed_play is not None or committed_plays):
         raise ValueError("partial play capture cannot claim committed cards")
     if committed_play is not None and committed_plays:
@@ -144,7 +184,7 @@ def append_boundary(
     )
     step = JournalBoundary(
         journal.revision + 1, event_id, description, player_board, opponent_board,
-        stadium_name, batch, lock, play_record_complete,
+        stadium_name, batch, lock, play_record_complete, unmaterialized_plays,
     )
     from dataclasses import replace
     return replace(journal, boundaries=journal.boundaries + (step,))
@@ -166,6 +206,7 @@ def replay_journal(journal: CausalEventJournal) -> CausalEventJournal:
             opponent_board=step.opponent_board, stadium_name=step.stadium_name,
             committed_plays=step.play_batch,
             play_record_complete=step.play_record_complete,
+            unmaterialized_plays=step.unmaterialized_plays,
         )
         if replayed.boundaries[-1] != step:
             raise AssertionError(f"lock or play event divergence at {step.event_id}")

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from board_object_kernel import switch_active
 from causal_event_journal import (
-    CausalEventJournal, append_boundary,
+    CausalEventJournal, UnmaterializedPlay, append_boundary,
 )
 from committed_play_event import CommittedPlayEvent, PlayChannel, PlayKind
 from paired_switch_order_catalog import PairedSwitchProgram
@@ -26,6 +26,7 @@ def record_paired_switch(
     own_promote_id: str | None,
     committed_supporter: CommittedPlayEvent | None = None,
     committed_items: tuple[CommittedPlayEvent, ...] = (),
+    acting_player: str = "player",
 ) -> CausalEventJournal:
     """Fold a complete validated transaction at its individual switch boundaries.
 
@@ -34,8 +35,8 @@ def record_paired_switch(
     Item source identities are optional when the upstream transaction has not
     materialized its source cards. That boundary is marked partially observed.
     """
-    if not action_id:
-        raise ValueError("action_id must be nonempty")
+    if not action_id or not acting_player:
+        raise ValueError("action_id and acting_player must be nonempty")
     if program.name not in ITEMS | SUPPORTERS:
         raise ValueError("unsupported paired switch program")
     if transaction.source_copies_spent != program.copies_together:
@@ -105,6 +106,13 @@ def record_paired_switch(
             play_record_complete=(
                 bool(committed_items) if index == 1 and program.name in ITEMS
                 else True
+            ),
+            unmaterialized_plays=(
+                (UnmaterializedPlay(
+                    acting_player, PlayKind.ITEM, program.name, program.copies_together,
+                ),)
+                if index == 1 and program.name in ITEMS and not committed_items
+                else ()
             ),
         )
 

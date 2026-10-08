@@ -1,4 +1,6 @@
-# Unknown Item-play provenance is distinct from a verified absence
+# Source-ID incompleteness: superseded interpretation
+
+**Correction (2026-10-08):** [play_occurrence_identity_separation](../play_occurrence_identity_separation/) supersedes the interpretation of an opaque Prime Catcher action as an unknown Item-play occurrence. The program and successful physical transaction already establish its Item class/name, while only the physical source instance identity remains missing. The older regression and statements below document the earlier coarser abstraction and should not be used as the recommended query semantics.
 
 ## Problem
 
