@@ -1,0 +1,23 @@
+name: Validate payment substitution slack
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/payment_substitution_slack.py"
+      - "results/payment_substitution_slack/**"
+      - ".github/workflows/validate-payment-substitution-slack.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce payment substitution slack
+        run: python results/payment_substitution_slack/reproduce.py
