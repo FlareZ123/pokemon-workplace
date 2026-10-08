@@ -1,0 +1,23 @@
+name: Validate source-complementary gust minimax
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gust_source_mix_minimax.py"
+      - "results/gust_source_mix_minimax/**"
+      - ".github/workflows/validate-gust-source-mix-minimax.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce full minimax and independent feasibility census
+        run: python results/gust_source_mix_minimax/reproduce.py
