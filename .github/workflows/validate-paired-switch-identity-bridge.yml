@@ -1,0 +1,21 @@
+name: Validate Paired Switch Identity Bridge
+
+on:
+  push:
+    paths:
+      - 'tools/paired_switch_identity_bridge.py'
+      - 'tools/paired_switch_physical_transaction.py'
+      - 'tools/identity_materialization.py'
+      - 'results/paired_switch_identity_bridge/**'
+      - '.github/workflows/validate-paired-switch-identity-bridge.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.paired_switch_identity_bridge.reproduce
