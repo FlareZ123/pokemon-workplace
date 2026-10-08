@@ -26,6 +26,8 @@ results.
 - **Sky Field** `xy6-89`: maximum eight Benched Pokémon.
 - **Area Zero Underdepths** `sv7-131`: maximum eight Benched Pokémon only
   while a Tera Pokémon is in play; otherwise the normal maximum is five.
+- **Sudowoodo** `sm2-66`, Roadblock: the opponent cannot have more than four
+  Benched Pokémon while this Ability applies; the smaller capacity limit wins.
 - **Advanced Player's Rulebook** I-B-04 restricts ordinary Stadium play to one
   per turn. Its general partial-resolution rule and II-E-20 support Teleport
   Room's removal-only outcome when no eligible replacement exists.
@@ -39,7 +41,9 @@ https://www.pokemon-card.com/rules/faq/details.php?id=9756
 The adapter retains canonical physical Stadium-copy IDs, hand/discard/in-play
 zones, source-specific once-per-turn usage, and the ordinary `TurnActionBudget`.
 It adds physical Active/Bench/hand Pokémon, Tera status, an upstream Ability-lock
-gate, and effective Bench capacity. When Stadium changes contract capacity,
+gate, and effective Bench capacity, derived using the shared
+`bench_capacity_model.effective_capacity` and an independently live opposing
+Roadblock restriction. When Stadium changes contract capacity,
 the affected player chooses surviving own Benched Pokémon, and every legal
 survivor subset is enumerated. A Teleport source removed from the Bench is also
 removed from the set of available physical sources.
@@ -56,6 +60,7 @@ hand. It isolates execution from how the Stage 2 and targets were accessed.
 | Sky Field in discard: Teleport places Sky Field | 8 | 4 | 0 |
 | Area Zero in discard, no Tera yet | 5 initially, then 8 if a Tera enters first | 2 tested in Tera-first branch | 0 |
 | Ordinary (non-capacity-modifying) Stadium is the only discard replacement | 5 | 1 | 0 |
+| Opposing Roadblock still live, regardless of Sky Field or removal | 4 | 0 | 0 |
 | Ability suppressed or source already used | 4 | 0 through this Ability | 0 |
 
 The regression directly witnesses two entrants after Sky Field despite an
@@ -75,9 +80,17 @@ The ordinary Stadium play may follow Teleport in the same turn because the
 Ability leaves that quota unused. A separate contraction regression expands
 from four to six Benched Pokémon with Sky Field, then plays Collapsed Stadium
 from hand: exactly **15** four-survivor Bench subsets are enumerated, matching
-`C(6,4)`, and all have final effective capacity four.
+`C(6,4)`, and all have final effective capacity four. In the complementary test where
+Gothitelle is itself one of the six Benched occupants, exactly ten survivor
+subsets keep that physical Ability source and five discard it. Those five
+successor states no longer advertise a live Teleport Room source.
 
 ## Interpretation
+
+An opposing **Roadblock is a separate active restriction**. A successful
+Teleport from Collapsed to Sky Field does not reopen a slot while Roadblock
+continues to cap the affected Bench at four. Stadium transitions can succeed
+physically while completely failing the capacity objective.
 
 An already-established Gothitelle provides a **third physical recovery
 channel** beyond a new Stadium played from hand or a Stadium remover that must
@@ -100,7 +113,9 @@ specified cases; it is not a whole-game simulator.
 The adapter treats Ability suppression as an upstream Boolean, assumes source
 turn history is supplied correctly, and does not model opponents' simultaneous
 Bench contraction, Stadium immunity/locks, search access, evolutions, damage,
-Prize cards, or how cards reached the discard. Only the three named
+Prize cards, or how cards reached the discard. The effective opposing Roadblock flag
+represents an already-resolved Ability state rather than simulating all sources
+of Ability suppression. Only the three named
 Bench-capacity Stadiums have specialized capacity semantics; other Stadium
 names default to ordinary capacity five.
 
