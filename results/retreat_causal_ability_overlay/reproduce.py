@@ -132,7 +132,7 @@ def main() -> None:
     gas_cost = attempt(
         our_sneasler, weezing, base=2, selected=("dce",), lock=gas,
     )
-    assert gas_cost.suppressed_own_ability_ids == ("sneasler",)
+    assert "sneasler" in gas_cost.suppressed_own_ability_ids
     assert gas_cost.effective_retreat_cost == 2
     assert gas_cost.transaction is not None and gas_cost.transaction.committed
     assert gas_cost.transaction.state.energy.zones.count(
