@@ -73,6 +73,34 @@ A deliberately source-typed comparison uses Dragapult's Dragon type and reaches
 The executable Haughty Order copy replay uses the actor-typed 200 value, places
 six effect counters on the Bench, and preserves the outer shuffle continuation.
 
+## Independent modifier bypass
+
+Some attack texts skip exactly one of the two type-modifier stages. The
+compiled attack contract now retains `ignore_weakness` and
+`ignore_resistance` separately, alongside the older combined
+`ignore_weakness_resistance` compatibility property.
+
+Two real Expanded witnesses distinguish the semantics:
+
+- Cramorant `swsh11-50`, Spit Innocently: 110 Water damage against
+  Water-weak Growlithe `sv1-30` remains **110**, whereas applying
+  Weakness would yield **220**.
+- Landorus `sv8-110`, Buster Swing: 130 Fighting damage against
+  Fighting-resistant Drowzee `sv1-82` remains **130**, whereas applying
+  Resistance would yield **100**.
+
+The bridge implements these one-sided bypasses when resolving printed type
+stages. An explicit `ignore_weakness_resistance=False` remains a useful
+controlled counterfactual that restores both stages, while `True` bypasses
+both stages. This extension does not require new fields in the shared damage
+kernel and retains its existing calculation order.
+
+The parser recognizes exact `damage isn't affected by Weakness`,
+`damage isn't affected by Resistance`, and combined forms. It intentionally
+does not infer Active-target bypass from generic Bench-only reminders
+such as `Don't apply Weakness and Resistance for Benched Pokémon`.
+Other attack-text phrasings require separate coverage review.
+
 ## Live type override
 
 The same bridge is rerun with an explicit current attacker type of Dragon. That
@@ -104,8 +132,8 @@ The bridge currently uses printed target Weakness/Resistance plus explicit
 enable/disable flags. It does not yet derive live type changes or
 Weakness/Resistance removal from board effects automatically.
 
-Attack text that ignores Weakness/Resistance must also be supplied explicitly;
-the simple attack compiler does not yet parse that wording.
+The text compiler covers a conservative subset of explicit Weakness/Resistance
+bypass wording. Unknown or conditional text still requires independent review.
 
 Multi-match Weakness/Resistance remains subject to the conservative limits of
 `profile_damage_context.py`.
