@@ -1,0 +1,19 @@
+name: Validate Tyranitar-GX Aegislash KO ordering
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_trigger_order_authority.py"
+      - "results/tyranitar_aegislash_authority/**"
+      - ".github/workflows/validate-tyranitar-aegislash-authority.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/tyranitar_aegislash_authority/reproduce.py
