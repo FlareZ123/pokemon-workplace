@@ -60,7 +60,7 @@ def _has_available_reprint_target(
     return False
 
 
-def _classify_print(
+def classify_print_eligibility(
     provenance: CardLegalityProvenance,
     *,
     snapshot_reference_date: date,
@@ -182,7 +182,7 @@ def adjudicate_deck(
             continue
 
         provenance = index.resolve(card_id, as_of=as_of)
-        eligibility, reason = _classify_print(
+        eligibility, reason = classify_print_eligibility(
             provenance,
             snapshot_reference_date=snapshot_reference_date,
             reprint_evidence_policy=reprint_evidence_policy,
@@ -216,3 +216,7 @@ def adjudicate_deck(
         print_proofs=tuple(proofs),
         reprint_evidence_policy=reprint_evidence_policy,
     )
+
+
+# Compatibility alias for early callers created during this research thread.
+_classify_print = classify_print_eligibility
