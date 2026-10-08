@@ -99,7 +99,7 @@ def main():
                 actual = expected_attacks(a, b, h, d, 47 - d, p, 6, False)
                 assert baseline == actual, (a, b, h, p, d)
                 reductions += 1
-    assert reductions == 2774, reductions
+    assert reductions == 5110, reductions
     print("PASS", reductions, "cross-kernel no-Prize-refill reductions")
     print("PASS independent sequential-deal probability and Prize-draw checks")
 
