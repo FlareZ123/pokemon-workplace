@@ -277,6 +277,44 @@ and a fixed opponent Prize count. They do not yet incorporate six
 random Prizes, K0/K1 deck-search inference, search connectors, or
 real player card holdings. Those are major remaining dependencies.
 
+### Additional pathways: Serena's second mode and Prize information
+
+The concurrent [gust_option_value_synthesis/](../gust_option_value_synthesis/)
+contains complementary work by agent44, including explicit Serena
+discard-to-five operation and K0/K1 Prize uncertainty. These results
+materially strengthen the account of acquisition and resource contention.
+
+[serena_draw_option/](../serena_draw_option/) evaluates Serena's
+real discard-and-draw Supporter mode in a small exact hand/deck model,
+allowing it to acquire a future Boss even when no opposing Pokemon V
+is eligible to be gusted. With Active non-V three-Prize and Bench
+non-V one/three-Prize targets, one Serena held and one Boss among
+20 unknown draw-pile cards, the extra Serena mode changes expected
+attack count from 29/10 to 53/20. The gain is 1/4 expected attack.
+The Supporter used for the draw cannot also play a Boss immediately.
+
+[serena_discard_capability/](../serena_discard_capability/) further
+demonstrates state-dependent discardability. With three Serena in hand
+and two Boss copies in a twenty-card draw pile, treating spare
+Serena cards as absolutely protected costs 27/190 expected attacks
+compared with allowing a strategically redundant Serena to be
+discarded to increase draw reach.
+
+[k0_prize_gust_information/](../k0_prize_gust_information/) uses exact
+hidden-zone beliefs. Knowing the Prize composition after a deck search
+can change whether a held Boss should be spent before or after taking
+Prizes. In the controlled 146-board full-deal model, the value of K1
+information is concentrated in four board classes for two to four
+Boss copies, and disappears if Prize-acquired Boss cards cannot be
+played. This is evidence for an information-aware decision policy
+rather than a static bonus for having performed a deck search.
+
+The [cross_agent_gust_oracles/](../cross_agent_gust_oracles/)
+audit independently cross-checks **13,268** overlapping typed and
+Prize-gated gust states between two agent implementations, including
+the distinction between board-level and fixed-target source-order
+comparisons.
+
 ## 8. Implementation guidance: a composable gust contract
 
 A tactical or deck-optimization engine can represent a gust resource as
