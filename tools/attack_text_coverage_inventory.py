@@ -13,6 +13,9 @@ from pathlib import Path
 from board_position_state import BoardState
 from attack_copy_physical_ko_bridge import PhysicalBoardEventProgram
 from attack_status_text_contracts import parse_exact_attack_status_text
+from energy_disruption_profile_compiler import (
+    parse_exact_attack_energy_disruption_text,
+)
 from healing_profile_compiler import parse_exact_attack_healing_text
 from position_effect_profile_compiler import parse_exact_attack_position_text
 from simple_attack_board_semantics import (
@@ -95,6 +98,13 @@ def classify_attack_text(
     elif parse_exact_attack_healing_text(core) is not None:
         kind = "exact_self_healing"
         handlers = ("healing",)
+    elif (
+        disruption := parse_exact_attack_energy_disruption_text(core)
+    ) is not None:
+        kind = "exact_energy_disruption"
+        handlers = ("energy_disruption",)
+        if disruption[2]:
+            handlers += ("coin_flip",)
     else:
         kind = "uncompiled_effect_text"
         handlers = ("source_specific_effects",)
