@@ -8,12 +8,9 @@ When a card effect puts an Evolution Pokémon onto another Pokémon to evolve it
 
 No global evolution gate is sufficient. The Advanced Player's Rulebook gives effect-based evolution its own timing rule in C-12. Unless the card specifies otherwise, an effect that says to put an Evolution Pokémon onto another Pokémon to evolve it can do so during the player's first turn or on the turn that Pokémon entered play. Ordinary evolution in A-05 remains prohibited in those windows.
 
-This creates two distinct legality layers:
+This creates separate timing dimensions. The compiler records the player's first-turn policy, the target's entry-turn policy, and the source action's own availability.
 
-1. the evolution effect's C-12 timing policy;
-2. the source action's own availability, such as attack timing or the first-player Supporter restriction.
-
-The conservative legal-card scan finds **115 print-level direct-evolution profiles across 53 card names**. Of those profiles, **76 rely on C-12's default permission**, **9 state an explicit first-turn permission**, and **30 explicitly block the relevant first-turn evolution window**.
+The conservative legal-card scan finds **115 print-level direct-evolution profiles across 53 card names**. For the player's first-turn axis, **76 rely on C-12's default permission**, **9 state an explicit permission**, and **30 explicitly block the window**. For the target-entry-turn axis, the counts are **76 default**, **10 explicit**, and **29 blocked**.
 
 A text scanner that searches only for phrases such as "during your first turn" misses most of this surface. A simulator that applies one ordinary-evolution boolean to every evolution transition rejects legal effect-based lines.
 
@@ -38,7 +35,7 @@ tools/effect_evolution_timing.py scans the bundled English card pool after the r
 - put ... onto ... to evolve
 - put ... on/onto ... . (This counts as evolving ...)
 
-The compiler records the card, effect source, source channel, C-12 timing policy, source-action first-turn window, and their composed structural first-turn window.
+The compiler records the card, effect source, source channel, first-turn policy, entry-turn policy, source-action first-turn window, and the composed structural first-turn window.
 
 The scan does not infer strategic executability from that structural window. Energy requirements, attack costs, card availability, search targets, locks, coin flips, Bench state, activation prerequisites, and other effects remain separate gates.
 
@@ -48,9 +45,12 @@ The scan does not infer strategic executability from that structural window. Ene
 | --- | ---: |
 | Direct-evolution print profiles | 115 |
 | Unique card names | 53 |
-| C-12 default permission | 76 |
-| Explicit first-turn permission | 9 |
-| Explicitly blocked | 30 |
+| First-turn: C-12 default permission | 76 |
+| First-turn: explicit permission | 9 |
+| First-turn: explicitly blocked | 30 |
+| Entry-turn: C-12 default permission | 76 |
+| Entry-turn: explicit permission | 10 |
+| Entry-turn: explicitly blocked | 29 |
 | Attack sources | 61 |
 | Ability sources | 22 |
 | Item sources | 20 |
@@ -84,16 +84,21 @@ The attack puts searched Evolution cards onto up to two Benched Pokémon to evol
 
 Precocious Evolution says the attack can be used during the first turn even when going first, then directly evolves Exeggcute. Both layers are open, so the structural first-turn window is available to either player.
 
+### Phantump, Spiteful Evolution (me4-38)
+
+Spiteful Evolution explicitly blocks the Ability during the player's first turn. Its text does not block the turn Phantump entered play, so C-12 still supplies entry-turn permission on a later turn. This is a direct counterexample to collapsing the two timing axes into one boolean.
+
 ### Rare Candy and Grand Tree
 
-Rare Candy (sv1-191) explicitly says it cannot be used during the first turn or on a Basic Pokémon put into play that turn. Grand Tree (sv7-136) similarly blocks evolving a Basic during the player's first turn or during the Basic's entry turn. These texts override C-12's default permission.
+Rare Candy (sv1-191) explicitly says it cannot be used during the first turn or on a Basic Pokémon put into play that turn. Grand Tree (sv7-136) similarly blocks evolving a Basic during the player's first turn or during the Basic's entry turn. These texts override C-12's default permission on both axes.
 
 ## Modeling consequence
 
 A reusable transition model should encode evolution origin and source-action timing separately. A compact representation can carry at least:
 
 - ordinary_evolution, which uses A-05 timing;
-- effect_evolution, which uses C-12 timing plus card-text overrides;
+- effect_evolution first-turn policy;
+- effect_evolution entry-turn policy;
 - the source action channel and its own turn restrictions.
 
 A planner may project these dimensions to a simple executable edge only after all relevant gates are known for the current state.
