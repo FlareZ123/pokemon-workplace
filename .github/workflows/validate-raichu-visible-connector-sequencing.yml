@@ -1,0 +1,23 @@
+name: Validate Harto visible connector sequencing
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/raichu_visible_connector_sequencing.py"
+      - "results/raichu_visible_connector_sequencing/**"
+      - ".github/workflows/validate-raichu-visible-connector-sequencing.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce visible connector sequencing
+        run: python results/raichu_visible_connector_sequencing/reproduce.py
