@@ -1226,3 +1226,11 @@ This is a policy-information audit rather than a deck-level correction. Later Gu
 
 **Working synthesis:** reacquirability is quantitative. Copy multiplicity, Prize uncertainty, the number of forced critical discards, and the actor's information state jointly determine discard safety.
 
+## Effect-based evolution has separate first-turn timing
+
+[effect_evolution_timing/](effect_evolution_timing/) separates ordinary A-05 evolution timing from C-12 effect-based evolution timing. A conservative literal scan finds **115 print-level direct-evolution profiles across 53 card names**. Seventy-six profiles rely on C-12's default permission to evolve during the player's first turn or on the turn the target entered play, nine state an explicit first-turn permission, and 30 explicitly block that window.
+
+The source action remains a separate gate. Eevee's Energy Evolution can have a structural first-turn window for either player, Salvatore's Supporter source ordinarily narrows the window to the player going second, Technical Machine: Evolution inherits attack timing, and Precocious Evolution explicitly opens the attack window even when going first.
+
+**Working synthesis:** evolution transitions should preserve their origin. Ordinary evolution uses A-05 timing. Effect-based evolution uses C-12 plus card-text overrides, then composes with the source action's own timing and resource gates. A global first-turn evolution boolean loses legal lines and can also invent illegal source-action access.
+
