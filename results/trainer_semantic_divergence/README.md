@@ -6,16 +6,17 @@ Can unresolved historical same-name Trainer prints be ruled out by current rules
 
 ## Result
 
-Yes. Four unresolved Trainer families contain eight historical prints with direct semantic divergences from a legal Expanded print:
+Yes. Five unresolved Trainer families contain nine historical prints with direct semantic divergences from a legal Expanded print:
 
 | Name | Historical prints | Axis | Distinguishing state |
 | --- | ---: | --- | --- |
 | Apricorn Maker | 1 | target domain | Ball Guy is a legal Expanded Supporter with `Ball` in its name. Historical Apricorn Maker can search a Trainer card with Ball in its name; the current print is restricted to Item cards. |
+| Friend Ball | 1 | target domain | Restored Archen is neither Basic nor Evolution under the official rules. Historical Friend Ball cannot search it, while current Friend Ball can search any same-type Pokémon. |
 | Pokémon Fan Club | 2 | material transition | With an open Bench and an eligible Basic Pokémon in deck, the historical effect puts the Pokémon directly onto the Bench; the current effect puts it into hand. |
 | Super Potion | 2 | material transition | With exactly 60 damage and an attached Energy, the historical effect can remove at most four damage counters (40 damage), while the current effect heals all 60. |
 | TV Reporter | 3 | material transition / playability | With an empty deck, another card in hand, and an unused Supporter action, the current print is explicitly unplayable. The historical text can resolve the unavailable draw as zero and still discard the other hand card, changing the game state. |
 
-All eight historical source prints are therefore added to the resolver's `known_non_equivalent` evidence set.
+All nine historical source prints are therefore added to the resolver's `known_non_equivalent` evidence set.
 
 ## Rules basis
 
@@ -38,6 +39,14 @@ Historical `ecard3-121` searches for up to two **Trainer cards** with Ball in th
 Current `sm7-124` searches for up to two **Item cards** with the word Ball in their names.
 
 `swsh45-57` Ball Guy is a directly legal Expanded Supporter and provides the distinguishing target.
+
+### Friend Ball
+
+Historical `ecard3-126` searches only for a Baby Pokémon, Basic Pokémon, or Evolution card matching the chosen opponent Pokémon's type.
+
+Current `sm7-131` searches for any Pokémon matching an opponent Pokémon's type. Official Pokémon TCG rules for Restored Pokémon explicitly state that Restored Pokémon are neither Basic Pokémon nor Evolution cards, and that a generic search for a Pokémon can find them. Expanded-legal Fighting Restored Archen `bw3-66` therefore provides a direct distinguishing target when the opponent has a Fighting Pokémon in play.
+
+Official rules source: `https://assets.pokemon.com/assets/cms2-nb-no/pdf/trading-card-game/rulebook/swsh5_rulebook_en.pdf`, Appendix S.
 
 ### Pokémon Fan Club
 
@@ -73,7 +82,7 @@ With an empty deck and another hand card available, current rules let the histor
 
 ## Tooling
 
-`tools/trainer_semantic_divergence.py` stores the four audited cases, validates source and target identity, checks direct Expanded legality for the target prints, validates the Ball Guy witness, and exposes compact distinguishing states.
+`tools/trainer_semantic_divergence.py` stores the four audited cases, validates source and target identity, checks direct Expanded legality for the target prints, validates the Ball Guy and Restored Archen witnesses, and exposes compact distinguishing states.
 
 The collector returns the eight historical source IDs as explicit negative reprint evidence.
 
