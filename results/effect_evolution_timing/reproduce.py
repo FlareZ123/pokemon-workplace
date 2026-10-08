@@ -35,6 +35,11 @@ def main() -> None:
             "c12_default_permitted": 76,
             "explicit_permitted": 9,
         },
+        "by_entry_turn_policy": {
+            "blocked": 29,
+            "c12_default_permitted": 76,
+            "explicit_permitted": 10,
+        },
         "by_source_channel": {
             "ability": 22,
             "attack": 61,
@@ -65,11 +70,13 @@ def main() -> None:
     assert eevee.source_name == "Energy Evolution"
     assert eevee.source_channel == "ability"
     assert eevee.timing_policy == "c12_default_permitted"
+    assert eevee.entry_turn_policy == "c12_default_permitted"
     assert eevee.structural_first_turn_window == "both"
 
     salvatore = by_id(profiles, "sv5-160")
     assert salvatore.source_channel == "supporter"
     assert salvatore.timing_policy == "c12_default_permitted"
+    assert salvatore.entry_turn_policy == "explicit_permitted"
     assert salvatore.structural_first_turn_window == "second_only"
 
     wally = by_id(profiles, "xy6-94")
@@ -86,16 +93,19 @@ def main() -> None:
     assert exeggcute.source_name == "Precocious Evolution"
     assert exeggcute.source_channel == "attack"
     assert exeggcute.timing_policy == "explicit_permitted"
+    assert exeggcute.entry_turn_policy == "c12_default_permitted"
     assert exeggcute.structural_first_turn_window == "both"
 
     rare_candy = by_id(profiles, "sv1-191")
     assert rare_candy.source_channel == "item"
     assert rare_candy.timing_policy == "blocked"
+    assert rare_candy.entry_turn_policy == "blocked"
     assert rare_candy.structural_first_turn_window == "none"
 
     grand_tree = by_id(profiles, "sv7-136")
     assert grand_tree.source_channel == "stadium"
     assert grand_tree.timing_policy == "blocked"
+    assert grand_tree.entry_turn_policy == "blocked"
     assert grand_tree.structural_first_turn_window == "none"
 
     meganium = by_id(profiles, "sm8-8")
@@ -108,6 +118,7 @@ def main() -> None:
     assert phantump.source_name == "Spiteful Evolution"
     assert phantump.source_channel == "ability"
     assert phantump.timing_policy == "blocked"
+    assert phantump.entry_turn_policy == "c12_default_permitted"
     assert phantump.structural_first_turn_window == "none"
 
     tm_evolution = by_id(profiles, "sv4-178")
