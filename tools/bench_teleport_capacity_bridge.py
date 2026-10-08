@@ -9,6 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from itertools import combinations
 
+from bench_capacity_model import effective_capacity
 from stadium_entry_channels import (
     StadiumCopy,
     StadiumEntryState,
@@ -32,6 +33,7 @@ class BenchTeleportState:
     bench: tuple[BenchPokemon, ...]
     hand_pokemon: tuple[BenchPokemon, ...]
     ability_locked: bool = False
+    opponent_roadblock_live: bool = False
 
     def __post_init__(self) -> None:
         all_pokemon = (self.active,) + self.bench + self.hand_pokemon
@@ -48,25 +50,32 @@ class BenchTeleportState:
             raise ValueError("Initial Bench exceeds current effective capacity")
 
 
-def _capacity_for(stadium: StadiumCopy | None, active: BenchPokemon, bench: tuple[BenchPokemon, ...]) -> int:
+def _capacity_for(
+    stadium: StadiumCopy | None,
+    active: BenchPokemon,
+    bench: tuple[BenchPokemon, ...],
+    opponent_roadblock_live: bool,
+) -> int:
     name = stadium.name if stadium else None
-    if name == "Collapsed Stadium":
-        return 4
-    if name == "Sky Field":
-        return 8
-    if name == "Area Zero Underdepths":
-        return 8 if any(mon.tera for mon in (active,) + bench) else 5
-    return 5
-
+    expansion = (
+        (8,) if name == "Sky Field"
+        or (name == "Area Zero Underdepths"
+            and any(mon.tera for mon in (active,) + bench))
+        else ()
+    )
+    restriction = (
+        (4,) if name == "Collapsed Stadium" or opponent_roadblock_live else ()
+    )
+    return effective_capacity(expansion, restriction)
 
 def bench_capacity(state: BenchTeleportState) -> int:
-    return _capacity_for(state.stadiums.in_play, state.active, state.bench)
+    return _capacity_for(state.stadiums.in_play, state.active, state.bench, state.opponent_roadblock_live)
 
 def _settle_stadium_change(
     state: BenchTeleportState, stadiums: StadiumEntryState
 ) -> tuple[BenchTeleportState, ...]:
     """Apply mandatory capacity contraction, enumerating owner's discard choices."""
-    limit = _capacity_for(stadiums.in_play, state.active, state.bench)
+    limit = _capacity_for(stadiums.in_play, state.active, state.bench, state.opponent_roadblock_live)
     occupied = len(state.bench)
     if occupied <= limit:
         return (replace(state, stadiums=stadiums),)
@@ -133,6 +142,7 @@ def sample_state(
     hand_pokemon: tuple[BenchPokemon, ...] = (),
     stadium_plays_used: int = 0,
     ability_locked: bool = False,
+    opponent_roadblock_live: bool = False,
 ) -> BenchTeleportState:
     """Four full Bench occupants, a live Active Gothitelle, Collapsed Stadium."""
     goth = BenchPokemon("goth-1", teleport_room=True)
@@ -149,4 +159,5 @@ def sample_state(
         bench=tuple(BenchPokemon(f"core-{i}") for i in range(4)),
         hand_pokemon=hand_pokemon,
         ability_locked=ability_locked,
+        opponent_roadblock_live=opponent_roadblock_live,
     )
