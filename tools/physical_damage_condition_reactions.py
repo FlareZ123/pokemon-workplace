@@ -57,6 +57,12 @@ def eligible_printed_condition_reactions(
         raise ValueError("reaction-source Pokémon is no longer in play")
 
     source_id = defending_print_id.split("-")[0]
+    all_sets = json.loads(
+        (resources / "sets" / "en.json").read_text(encoding="utf-8")
+    )
+    set_entry = next(row for row in all_sets if row["id"] == source_id)
+    if (set_entry.get("legalities") or {}).get("expanded") != "Legal":
+        raise ValueError("reaction source set is outside paper Expanded")
     cards = json.loads(
         (resources / "cards" / "en" / f"{source_id}.json")
         .read_text(encoding="utf-8")
