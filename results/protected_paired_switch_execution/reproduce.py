@@ -9,7 +9,8 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tools"))
 
 from board_object_kernel import make_board, make_pokemon
-from causal_event_journal import begin_journal, record_paired_switch
+from causal_event_journal import begin_journal
+from paired_switch_event_bridge import record_paired_switch
 from committed_play_event import from_supporter_execution
 from supporter_play_event_history import (
     SupporterExecutionState, SupporterIdentity, play_supporter_from_hand,
