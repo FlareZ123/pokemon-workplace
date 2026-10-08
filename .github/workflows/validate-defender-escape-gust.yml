@@ -1,0 +1,20 @@
+name: Validate Defender Escape Gust
+
+on:
+  push:
+    paths:
+      - 'tools/defender_escape_gust.py'
+      - 'tools/durable_gust_minimax.py'
+      - 'results/defender_escape_gust/**'
+      - '.github/workflows/validate-defender-escape-gust.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python results/defender_escape_gust/reproduce.py
