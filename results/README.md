@@ -122,6 +122,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [teleport_same_pool_policy/](teleport_same_pool_policy/) combines Quick Ball and Ultra Ball in one explicit 46-card unknown pool and calculates the overlapping access-policy union exactly. For the bounded Basic-target goal, Quick-only covers 5.804898%, Ultra-only 4.474518%, and adaptive choice 9.285497%. For an Evolution target requiring hand access, the adaptive policy reaches 5.400934% by allowing Quick Ball to become Ultra Ball's second discard; even with no independently approved other discard, this dependent channel retains 1.920335% access. Exact small-state enumeration and a physical Quick+Sky discarded for Ultra-to-Stage-1 search pass CI.
 
+[gothitelle_natural_setup_window/](gothitelle_natural_setup_window/) calibrates the major existing-Stage-2 assumption in the Teleport studies. For an illustrative 60-card list with three Gothita, two Gothitelle, four Rare Candy, and eight other Basics, 4.694346% of legally accepted opening hands naturally provide turn-two Rare Candy evolution readiness without any search or extra draw. An exact opening/Prize/turn-one/turn-two model matches independent labeled enumeration and demonstrates random-Prize marginal invariance in the no-search setting; it is not a competitive deck's optimized setup probability.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
