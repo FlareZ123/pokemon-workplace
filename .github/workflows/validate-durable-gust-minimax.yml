@@ -1,0 +1,20 @@
+name: Validate Durable Gust Minimax
+
+on:
+  push:
+    paths:
+      - 'tools/durable_gust_minimax.py'
+      - 'tools/gust_prize_minimax.py'
+      - 'results/durable_gust_minimax/**'
+      - '.github/workflows/validate-durable-gust-minimax.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python results/durable_gust_minimax/reproduce.py
