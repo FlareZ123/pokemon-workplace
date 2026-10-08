@@ -1,0 +1,24 @@
+name: Validate attack text coverage inventory
+
+on:
+  push:
+    paths:
+      - "tools/attack_text_coverage_inventory.py"
+      - "tools/simple_attack_board_semantics.py"
+      - "results/attack_text_coverage_inventory/**"
+      - ".github/workflows/validate-attack-text-coverage-inventory.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Classify complete and unmodeled attack text
+        run: python results/attack_text_coverage_inventory/reproduce.py
