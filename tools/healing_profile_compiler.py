@@ -30,6 +30,7 @@ class HealingProfile:
     effect_text: str
     attack_cost: tuple[str, ...] = ()
     attack_damage: str | None = None
+    attack_index: int | None = None
 
     def __post_init__(self) -> None:
         if self.source_kind not in {"trainer", "attack"}:
