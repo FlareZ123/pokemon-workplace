@@ -1,0 +1,20 @@
+name: Validate sourced KO terminal-state payoff choice
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_source_terminal_choice.py"
+      - "tools/ko_order_histogram_convolution.py"
+      - "results/ko_source_terminal_choice/**"
+      - ".github/workflows/validate-ko-source-terminal-choice.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/ko_source_terminal_choice/reproduce.py
