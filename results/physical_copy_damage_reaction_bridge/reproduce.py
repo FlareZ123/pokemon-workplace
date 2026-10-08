@@ -131,6 +131,7 @@ def test_reflection_full_physical_batch():
 
     result = resolve_physical_copy_damage_reactions(
         replay, a, body_event=BODY, damaged_pokemon_id="b-active",
+        attacking_pokemon_id="a-active",
         reactions=(DamageReaction(DamageReactionKind.MIRROR_FINAL_DAMAGE),) + spiky,
         attacker_hp_by_pokemon_id={"a-active": 170, "a-bench": 100},
         defender_hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
@@ -189,6 +190,7 @@ def test_prevented_damage_and_one_sided_ko():
     )
     prevented = resolve_physical_copy_damage_reactions(
         prevented_replay, a, body_event=BODY, damaged_pokemon_id="b-active",
+        attacking_pokemon_id="a-active",
         reactions=(DamageReaction(DamageReactionKind.MIRROR_FINAL_DAMAGE),),
         attacker_hp_by_pokemon_id={"a-active": 10, "a-bench": 100},
         defender_hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
@@ -213,6 +215,7 @@ def test_prevented_damage_and_one_sided_ko():
     )
     one_sided = resolve_physical_copy_damage_reactions(
         unprevented_replay, a, body_event=BODY, damaged_pokemon_id="b-active",
+        attacking_pokemon_id="a-active",
         reactions=(DamageReaction(DamageReactionKind.MIRROR_FINAL_DAMAGE),),
         attacker_hp_by_pokemon_id={"a-active": 160, "a-bench": 100},
         defender_hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
@@ -227,6 +230,7 @@ def test_prevented_damage_and_one_sided_ko():
     try:
         resolve_physical_copy_damage_reactions(
             unprevented_replay, a, body_event="missing", damaged_pokemon_id="b-active",
+            attacking_pokemon_id="a-active",
             reactions=(),
             attacker_hp_by_pokemon_id={"a-active": 160, "a-bench": 100},
             defender_hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
