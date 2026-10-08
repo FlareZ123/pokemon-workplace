@@ -23,6 +23,9 @@ def main() -> None:
     }
     assert len(by_id) == inventory["total"] == 19992
     assert sum(inventory["counts"].values()) == inventory["total"]
+    assert inventory["counts"]["exact_position_effect"] == 270
+    assert inventory["counts"]["uncompiled_effect_text"] == 8666
+    assert inventory["uncompiled_unguarded"] == 6143
 
     witnesses = (
         ("sv6-130", "Jet Headbutt", "plain_fixed_or_gx_rule"),
