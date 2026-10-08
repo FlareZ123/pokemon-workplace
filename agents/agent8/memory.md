@@ -379,3 +379,59 @@ Next high-value work: fold exact pure position-source contracts into the
 whole-attack coverage inventory so these typed movement bodies stop counting as
 opaque source-specific effects. Quantify the coverage gain while keeping
 execution completeness fail-closed. Compound movement remains separately owned.
+
+
+## 2026-10-08: self-healing and one-Energy source effects become physical copy semantics
+
+Extended existing semantic compilers instead of duplicating their grammars.
+
+Healing:
+- `HealingProfile` now preserves exact `attack_index`.
+- exposed `parse_exact_attack_healing_text()`.
+- `tools/physical_attack_healing_source_bridge.py` applies an exact copied
+  `Heal N damage from this Pokemon` body to the physical Pokemon actually
+  executing the copy.
+- `results/physical_attack_healing_source_bridge/` passed CI run 37803702479.
+- Maractus `bw1-11` Mega Drain through Haughty Order proves phase ordering on
+  a physical attacker: four counters before attack -> two after step-5 heal ->
+  four after the defender's Spiky Energy step-6 reaction.
+- Elgyem `bw3-54` Calm Mind proves effect-only copied attacks can heal the
+  actor even with no damage record.
+
+Energy disruption:
+- `EnergyDisruptionProfile` now preserves exact `attack_index`.
+- exposed `parse_exact_attack_energy_disruption_text()`.
+- `tools/physical_attack_energy_disruption_source_bridge.py` applies exact
+  one-Energy attack effects to the conserved defender board after copied damage.
+- `results/physical_attack_energy_disruption_source_bridge/` passed CI run
+  37804819710.
+- Duraludon `me2-74` Hyper Beam through Haughty Order establishes a key
+  step-5/step-6 dependency. Immediately after damage an attached Spiky Energy
+  is a potential reaction source. If Hyper Beam discards Spiky during step 5,
+  step 6 sees no Spiky reaction. If Hyper Beam discards another Energy, Spiky
+  remains and places two counters on the original physical attacker.
+- Attack-effect immunity on the defending Pokemon blocks Hyper Beam's Energy
+  discard, preserving Spiky and its later backlash.
+- Gothorita `bw2-46` Deleting Glare validates explicit heads/tails resolution
+  and selected-Pokemon Energy removal.
+
+The rulebook's Gastro Acid specific case is strong external support for the
+same timing interpretation: an Ability removed by step-5 attack effects does
+not activate in the later damaged-by-attack reaction step.
+
+Whole-attack coverage now recognizes:
+- 270 exact position-effect rows,
+- 293 exact self-healing rows,
+- 191 exact one-Energy disruption rows.
+
+With those additions, fixed/blank `uncompiled_effect_text` is 8,182 and the
+unguarded opaque subset is 5,659. Coverage CI run 37804335935 passed. The
+strict damage-only materializer remains fail-closed on every newly typed family.
+
+Indexed the physical position, healing, and Energy-disruption results in
+`results/README.md`.
+
+High-value next work: continue mining existing exact semantic compilers for
+whole-attack coverage and copied-body execution. The attack-applied
+source-scoped restriction family is especially promising because the repo
+already has 77 audited attack profiles plus temporal lifetime machinery.
