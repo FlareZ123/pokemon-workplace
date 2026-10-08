@@ -14,6 +14,8 @@ The repository therefore increasingly favors **typed, resource-constrained state
 
 [physical_state_conservation/](physical_state_conservation/) now provides a higher-level synthesis of the identity hierarchy, materialization lifetime, physical-card conservation law, Knock Out phase boundaries, destination routing, and promotion-order results developed across the state-kernel work.
 
+**Tactical Prize racing:** [gust_prize_minimax/](gust_prize_minimax/) gives an exact adversarial-promotion six-Prize endgame model. Across 146 structural board classes, 41 exhibit increasing marginal benefit from the second gust, and forcing a single gust on turn one loses attack tempo in 55. This introduces terminal tactical utility and optional timing into the otherwise access-oriented evaluation of gust Supporters.
+
 ## 1. Connector realism: access, payment, output capacity, and opportunity cost
 
 The connector results formalize several distinct reasons a search route can be less useful than its graph connectivity suggests.
