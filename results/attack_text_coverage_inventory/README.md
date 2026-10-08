@@ -29,6 +29,22 @@ claiming full simulation. In particular, the typed damage bridge, counter
 placement, global GX budget, and turn-boundary scheduler are distinct
 components.
 
+## Live inventory
+
+The 2026-10-08 CI validation counted 19,992 effectively legal attack-print
+rows: 5,687 plain fixed/blank or GX-reminder-only, 91 exact counter clauses,
+119 exact defender-effect bypasses, 133 exact type-modifier bypasses,
+6 exact extra-turn clauses, 10,092 uncompiled effect texts, and
+3,864 variable printed-damage expressions.
+
+Among those 10,092 uncompiled text rows, 2,523 already fall under a
+specific damage/Knock Out/attack-use guard. The remaining **7,569** have
+other unmodeled effect text. A recognized clause still requires its own
+typed handler. The inventory is a coverage metric rather than a guarantee
+of complete gameplay execution.
+
+CI: https://github.com/FlareZ123/pokemon-workplace/actions/runs/37771177710
+
 ## Representative omissions outside existing guards
 
 The specific fail-closed flags currently recognize uncompiled text-damage,
