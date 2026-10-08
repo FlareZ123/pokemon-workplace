@@ -1,0 +1,21 @@
+name: Validate connector bottleneck regimes
+
+on:
+  push:
+    paths:
+      - "tools/connector_bottleneck_regimes.py"
+      - "tools/connector_domination.py"
+      - "tools/connector_slot_marginals.py"
+      - "results/connector_bottleneck_regimes/**"
+      - ".github/workflows/validate-connector-bottleneck-regimes.yml"
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/connector_bottleneck_regimes/reproduce.py
