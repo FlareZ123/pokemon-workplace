@@ -114,6 +114,44 @@ This is a **conditional comparison between two idealized sequencing regimes**. A
 [\`shuffle_reproduce.py\`](shuffle_reproduce.py) validates the grouped rational Markov model against an independent exhaustive labeled-card transition enumerator on a six-card toy deck. All first-through-third reset probabilities and Ticket-use expectations agree exactly. These regressions run alongside the earlier tests in the shared GitHub Actions workflow.
 
 
+
+## Blind repeated Tickets after shuffling can reduce searchability
+
+There is another important policy distinction in the full-reshuffle regime: using a Ticket **without** reinspection may undo an earlier successful repair. The stop-on-success probability in the preceding table assumes the player learns the current Prize configuration between actions.
+
+[\`tools/prize_ticket_shuffle_blind.py\`](../../tools/prize_ticket_shuffle_blind.py) instead commits to playing exactly \`k\` Tickets, fully shuffling the existing deck between every pair, without looking at the new Prize set. The original A-Prized, B/C-deck singleton state gives:
+
+| Fixed blind Ticket uses | Final deck-searchability |
+| ---: | ---: |
+| 0 | 0.000000000% |
+| 1 | **75.855689177%** |
+| 2 | 68.341461564% |
+| 3 | 69.329450806% |
+| 4 | 69.203724824% |
+| 5 | 69.219780502% |
+| 10 | 69.217962886% |
+
+**One fixed Ticket is optimal among 0–10** in this starting state. Playing a blind second Ticket after the first and an intervening shuffle lowers the searchability probability by **7.514227613 percentage points**, even though the second action successfully restores whichever cards were in the old Prize set.
+
+### Why repeated blind shuffles approach a uniform Prize prior
+
+Consider the physical set of \`D+P\` cards partitioned into deck \`D\` and Prizes \`P\`, without any other zone mutation. A Ticket followed by a full shuffle transitions the current Prize subset \`B\` to a replacement Prize subset \`B'\` drawn uniformly from the complementary deck. Its transition kernel is:
+
+\`Pr(B' | B) = 1 / C(D,P)\` if \`B ∩ B' = ∅\`, and zero otherwise.
+
+This random walk is symmetric and doubly stochastic over all \`P\`-card Prize subsets. Its uniform distribution is stationary. With 47 deck cards, six Prizes, and three distinguished singleton targets, the stationary probability that **all three** are in the deck is:
+
+\`C(47,3) / C(53,3) = 16215 / 23426 = 69.217962947%\`.
+
+The ten-reset exact Markov value differs from that stationary probability by less than one ten-millionth in probability units. The first Ticket is unusually attractive because it guarantees the initially Prized singleton A returns to the deck, but enough subsequent blind reshuffles remove that initial conditional advantage.
+
+The distinction between shuffle regimes is precise: consecutive Ticket Prize sets cannot overlap, because the immediately preceding Prize set is outside the deck when the next Prize cards are chosen. With **no shuffle**, the first \`floor(D/P)\` Prize sets are mutually disjoint segments of the original fixed deck order. With full shuffles between uses, a Prize card may return to the Prize set after an intervening Ticket and shuffle.
+
+[\`blind_shuffle_reproduce.py\`](blind_shuffle_reproduce.py) independently enumerates the complete labeled physical-card transition tree and matches the grouped rational Markov model for each of the first four fixed resets. It checks convergence against the independent exact stationary formula.
+
+**Strategic consequence:** when the player cannot observe the new Prize composition, a second Ticket and the shuffle needed to acquire it can make the target search problem harder. The correct policy may involve abstaining from additional reset attempts. Reinspection adds value by allowing the player to preserve successful states.
+
+
 ## Assumptions and practical limitations
 
 - The model starts *after* an initial Prize-identifying observation and conditions on a particular known physical-zone composition. It does not estimate how often that state is reached from shuffled openings.
