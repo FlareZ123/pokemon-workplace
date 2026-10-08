@@ -111,7 +111,7 @@ def _visible(opening: tuple[str, ...], draw: str):
     _decrement(hand, active)
     if hand["Guzma & Hala"] == 0:
         return None
-    if any(hand[name] > 0 for name in ("Tag Call", "Artazon", "Fan Rotom", "Capture Energy")):
+    if any(hand[name] > 0 for name in ("Tag Call", "Artazon", "Fan Rotom", "Capture Energy", "Jirachi")):
         return None
     _decrement(hand, "Guzma & Hala")
     return active, hand
