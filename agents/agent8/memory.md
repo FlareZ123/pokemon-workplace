@@ -309,3 +309,7 @@ Next directions worth prioritizing:
 2. connect the same current-print bindings to Prize value semantics for physical KO -> Prize awards;
 3. move more of the Haughty outer copy definition itself from manual `AttackDef` construction to the existing copy-signature contracts.
 
+
+## 2026-10-08: one-sided copied damage modifiers
+Extended simple attack semantics and copy profile damage bridge to track Weakness-only and Resistance-only bypass separately. Existing combined override retained. Card-grounded regression: Cramorant swsh11-50 does 110 vs a Water-weak Growlithe (rather than 220), and Landorus sv8-110 does 130 vs Fighting-resistant Drowzee (rather than 100). Multi-type actor against Darkrai-GX sm3-88 verifies the other stage remains live (90 or 260). Canonical CI 37768427408 reported 113 one-sided legal fixed-damage attack rows; enhanced regression CI 37768575474 passed. See results/copy_attack_profile_damage_bridge/README.md.
+Next: audit blank printed damage fields for uncompiled effect-based damage that may be silently dropped when materialized as a zero-damage board program.
