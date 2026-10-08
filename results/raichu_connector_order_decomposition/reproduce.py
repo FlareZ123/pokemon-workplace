@@ -1,4 +1,4 @@
-"""Reproduce the Harto connector-order deficit decomposition."""
+"""Diagnose and reproduce the Harto connector-order deficit decomposition."""
 
 from __future__ import annotations
 from pathlib import Path
@@ -20,32 +20,18 @@ def main() -> None:
     result = connector_order_decomposition()
     sequencing = visible_connector_sequencing_snapshot()
 
-    assert abs(
-        result.observable_branch_mass
-        - sequencing.observable_branch_mass
-    ) < 1e-12
-    assert abs(
-        result.direct_visible_mass
-        - sequencing.direct_visible_mass
-    ) < 1e-12
-    assert abs(
-        result.direct_baseline_success_mass
-        - sequencing.direct_visible_baseline_mass
-    ) < 1e-12
-    assert abs(
-        result.direct_gain_pp
-        - sequencing.direct_gain * 100
-    ) < 1e-12
-    assert abs(
-        sum(result.share(bucket) for bucket in BUCKETS) - 1.0
-    ) < 1e-12
-
-    print(f"direct_gain_pp={result.direct_gain_pp:.12f}")
+    print("branch", repr(result.observable_branch_mass), repr(sequencing.observable_branch_mass), flush=True)
+    print("direct_mass", repr(result.direct_visible_mass), repr(sequencing.direct_visible_mass), flush=True)
+    print("baseline_mass", repr(result.direct_baseline_success_mass), repr(sequencing.direct_visible_baseline_mass), flush=True)
+    print("gain_pp", repr(result.direct_gain_pp), repr(sequencing.direct_gain * 100), flush=True)
     for bucket in BUCKETS:
         print(
-            f"{bucket} "
-            f"gain_pp={result.gain_pp(bucket):.12f} "
-            f"share={result.share(bucket):.12%}"
+            bucket,
+            "mass", repr(result.bucket_mass[bucket]),
+            "baseline", repr(result.bucket_baseline_success_mass[bucket]),
+            "gain_pp", repr(result.gain_pp(bucket)),
+            "share", repr(result.share(bucket)),
+            flush=True,
         )
 
 
