@@ -52,6 +52,8 @@ class CompiledAttackBoardSemantics:
     take_another_turn: bool
     skip_pokemon_checkup: bool
     is_gx_attack: bool
+    ignore_weakness: bool
+    ignore_resistance: bool
     ignore_weakness_resistance: bool
     ignore_defender_effects: bool
     raw_damage: str
@@ -181,10 +183,17 @@ def compile_attack(
     )
 
     lowered_text = raw_text.casefold()
-    ignore_weakness_resistance = (
+    ignore_both = (
         "damage isn't affected by weakness or resistance" in lowered_text
         or "damage isn't affected by weakness, resistance" in lowered_text
     )
+    ignore_weakness = (
+        ignore_both or "damage isn't affected by weakness" in lowered_text
+    )
+    ignore_resistance = (
+        ignore_both or "damage isn't affected by resistance" in lowered_text
+    )
+    ignore_weakness_resistance = ignore_weakness and ignore_resistance
     ignore_defender_effects = (
         "damage isn't affected by" in lowered_text
         and (
@@ -204,6 +213,8 @@ def compile_attack(
         take_another_turn=extra_turn,
         skip_pokemon_checkup=skip_checkup,
         is_gx_attack=(attack.get("name") or "").endswith("-GX"),
+        ignore_weakness=ignore_weakness,
+        ignore_resistance=ignore_resistance,
         ignore_weakness_resistance=ignore_weakness_resistance,
         ignore_defender_effects=ignore_defender_effects,
         raw_damage=raw_damage,
