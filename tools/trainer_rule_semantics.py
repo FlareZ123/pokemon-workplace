@@ -33,6 +33,11 @@ MOOMOO_MILK_LEGACY = (
     "Choose 1 of your Pokémon. Flip 2 coins. For each heads, remove 3 damage counters from that Pokémon."
 )
 
+VS_SEEKER_CURRENT = "Put a Supporter card from your discard pile into your hand."
+VS_SEEKER_LEGACY = (
+    "Search your discard pile for a Supporter card, show it to your opponent, and put it into your hand."
+)
+
 RULE_EVIDENCE = {
     "fisherman_number_shortage": "resources/advanced-players-rulebook.md II-A",
     "fisherman_public_discard": "https://www.pokemon.com/us/play-pokemon/about/pokemon-tcg-glossary",
@@ -40,6 +45,8 @@ RULE_EVIDENCE = {
     "life_herb_damage_counter": "resources/advanced-players-rulebook.md C-07",
     "moomoo_milk_heal": "resources/advanced-players-rulebook.md C-06",
     "moomoo_milk_damage_counter": "resources/advanced-players-rulebook.md C-07",
+    "vs_seeker_public_discard": "https://www.pokemon.com/us/play-pokemon/about/pokemon-tcg-glossary",
+    "vs_seeker_implied_choice": "resources/advanced-players-rulebook.md D-04",
 }
 
 
@@ -64,6 +71,11 @@ def normalize_rule_grounded_trainer_semantics(card: dict[str, Any]) -> dict[str,
     elif normalized.get("name") == "Moomoo Milk":
         rules = [
             MOOMOO_MILK_CURRENT if rule == MOOMOO_MILK_LEGACY else rule
+            for rule in rules
+        ]
+    elif normalized.get("name") == "VS Seeker":
+        rules = [
+            VS_SEEKER_CURRENT if rule == VS_SEEKER_LEGACY else rule
             for rule in rules
         ]
 
