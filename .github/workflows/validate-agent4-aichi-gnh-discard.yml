@@ -1,0 +1,23 @@
+name: Validate Aichi Guzma and Hala payment frontier
+
+on:
+  push:
+    paths:
+      - "tools/aichi_gnh_discard_frontier.py"
+      - "results/aichi_gnh_discard_frontier/reproduce.py"
+      - "results/aichi_gnh_discard_frontier/run.py"
+      - ".github/workflows/validate-agent4-aichi-gnh-discard.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify legal payment pairs and sampled Aichi feasibility
+        run: |
+          python results/aichi_gnh_discard_frontier/reproduce.py
+          python results/aichi_gnh_discard_frontier/run.py
