@@ -24,12 +24,12 @@ The distinct tested prints are:
 - Heatran `sv6-123`, **Incandescent Body**: Burned;
 - Hatterene `swsh35-20`, **Hazard Sensor**: Confused.
 
-The bundled Extended damage-reaction catalog finds 12 print-level rows of
+The bundled Expanded damage-reaction catalog finds 12 print-level rows of
 this form spanning 4 distinct text signatures, including other eligible
 printed variants of these conditions.
 
 For each invoked source, the compiler checks the actual named damage target,
-the current printed identity and Extended-set status, positive final attack
+the current printed identity and Expanded-set status, positive final attack
 damage, Active Spot location, the opponent's attack origin, and whether
 the Ability is enabled. The caller currently supplies the last two dynamic
 eligibility facts, since global Ability-lock evaluation belongs upstream.
