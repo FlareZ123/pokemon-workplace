@@ -1,0 +1,20 @@
+name: Validate exact KO histogram convolution
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_order_histogram_convolution.py"
+      - "tools/ko_order_component_factorization.py"
+      - "results/ko_order_histogram_convolution/**"
+      - ".github/workflows/validate-ko-order-histogram-convolution.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/ko_order_histogram_convolution/reproduce.py
