@@ -83,6 +83,17 @@ def _parse_healing(text: str) -> tuple[HealingTarget, int] | None:
     return None
 
 
+def parse_exact_attack_healing_text(
+    text: str,
+) -> tuple[HealingTarget, int] | None:
+    """Parse one complete attack body in the supported self-healing family."""
+
+    parsed = _parse_healing(text)
+    if parsed is None or parsed[0] != HealingTarget.SOURCE_POKEMON:
+        return None
+    return parsed
+
+
 def _trainer_action_class(card: dict[str, Any]) -> str | None:
     subtypes = tuple(card.get("subtypes") or ())
     for candidate in ("Item", "Supporter", "Stadium", "Pokémon Tool"):
