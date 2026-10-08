@@ -1,0 +1,28 @@
+name: Validate continuous Ability Retreat denial
+
+on:
+  push:
+    paths:
+      - "tools/retreat_ability_denial.py"
+      - "tools/board_derived_retreat.py"
+      - "results/retreat_ability_denial/**"
+      - ".github/workflows/validate-retreat-ability-denial.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify continuous Retreat prohibitions and composed mechanics
+        run: |
+          python results/retreat_ability_denial/reproduce.py
+          python results/board_derived_retreat/reproduce.py
+          python results/retreat_environment_modifiers/reproduce.py
+          python results/retreat_prize_provider_uncertainty/exhaustive.py
