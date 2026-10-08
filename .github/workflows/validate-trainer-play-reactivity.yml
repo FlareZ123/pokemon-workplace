@@ -1,0 +1,25 @@
+name: Validate Trainer play reactivity catalog
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/trainer_play_reactivity_catalog.py"
+      - "results/trainer_play_reactivity_catalog/**"
+      - "resources/cards/en/**"
+      - "resources/sets/en.json"
+      - ".github/workflows/validate-trainer-play-reactivity.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Audit legal Trainer play reaction prints
+        run: python results/trainer_play_reactivity_catalog/reproduce.py
