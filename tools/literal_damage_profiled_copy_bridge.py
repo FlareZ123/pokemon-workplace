@@ -46,7 +46,6 @@ def materialize_profiled_literal_damage_program(
         board.get(instruction.target_id)
         target = current_profile(
             instruction.target_id,
-            board,
             profiles,
             current_print_id_by_pokemon_id,
         )
