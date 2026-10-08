@@ -1,0 +1,26 @@
+name: Validate physical copied-attack reactions
+
+on:
+  push:
+    paths:
+      - "tools/physical_copy_damage_reaction_bridge.py"
+      - "tools/attack_copy_physical_ko_bridge.py"
+      - "tools/damage_reaction_kernel.py"
+      - "tools/cross_player_knockout_resolution.py"
+      - "results/physical_copy_damage_reaction_bridge/**"
+      - ".github/workflows/validate-physical-copy-damage-reaction.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate copied-attack physical reaction phase
+        run: python results/physical_copy_damage_reaction_bridge/reproduce.py
