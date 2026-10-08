@@ -108,7 +108,7 @@ def enumerate_board_derived_retreat_actions(
         or bool(preflight.unresolved_tool_conditions)
         or _prize_provider_ambiguity(preflight.normalization.state, provider_context)
     )
-    if preflight.unresolved_ability_lock or preflight.unresolved_tool_conditions:
+    if preflight.unresolved_ability_lock or not preflight.tool_action_sufficient:
         return RetreatActionEnumeration(preflight, (), 0, False)
 
     normalized_board = preflight.normalization.state.energy.board
