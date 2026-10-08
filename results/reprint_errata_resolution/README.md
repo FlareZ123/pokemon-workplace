@@ -16,12 +16,12 @@ They currently resolve as:
 - 39 historical-official reprint candidates;
 - 44 name-wide official-errata candidates;
 - 3 current-handbook semantic candidates;
-- 56 known non-equivalent prints;
-- 4,002 unresolved semantic-review prints.
+- 64 known non-equivalent prints;
+- 3,994 unresolved semantic-review prints.
 
 The positive high-confidence candidate set contains 202 prints.
 
-For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 12, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. The explicit historical Trainer name-reuse audit adds 16 more known-negative Trainer prints. That gives 97 positive Trainer candidates and 24 known-negative Trainer prints before broader semantic comparison.
+For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 12, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. The explicit historical Trainer name-reuse audit adds 16 more known-negative Trainer prints. That gives 97 positive Trainer candidates and 32 known-negative Trainer prints before broader semantic comparison.
 
 ## Evidence ladder
 
@@ -75,7 +75,7 @@ The Tournament Handbook explicitly says Team Rocket Rainbow Energy number 17 is 
 
 Two historical Life Herb printings add a fourth negative name. Their printed text excludes Pokémon-ex targets, while current Life Herb does not, and current Expanded contains a directly legal Pokémon-ex witness. The predicate derivation lives in [../reprint_divergence_predicates/](../reprint_divergence_predicates/).
 
-The dedicated Trainer name-reuse audit adds 16 more source prints across Master Ball, Pokémon Breeder, Pokémon Center, Max Revive, Revive, Devolution Spray, Power Plant, and Magnetic Storm. Each family has a direct distinguishing game-state witness. A further optionality audit proves six old PokéNav, Pokégear 3.0, and Dusk Ball prints non-equivalent because their mandatory `choose` wording differs from current optional `you may` semantics. This yields 56 known non-equivalent historical prints across 15 names.
+The dedicated Trainer name-reuse audit adds 16 more source prints across Master Ball, Pokémon Breeder, Pokémon Center, Max Revive, Revive, Devolution Spray, Power Plant, and Magnetic Storm. Each family has a direct distinguishing game-state witness. A further optionality audit proves six old PokéNav, Pokégear 3.0, and Dusk Ball prints non-equivalent because their mandatory `choose` wording differs from current optional `you may` semantics. A separate semantic-review audit adds eight more prints across Apricorn Maker, Pokémon Fan Club, Super Potion, and TV Reporter using explicit target-domain, destination-zone, healing-amount, and empty-deck playability witnesses. This yields 64 known non-equivalent historical prints across 19 names.
 
 ## Current-semantics normalization
 
@@ -116,6 +116,10 @@ Positive candidate states remain separate so downstream code can choose its evid
 - base5-17 and base5-80 Rainbow Energy resolve as known non-equivalent.
 - ex5-90 and ex6-93 Life Herb resolve as known non-equivalent because the current format realizes their Pokémon-ex target exclusion.
 - old Special Darkness Energy and Metal Energy resolve as known non-equivalent to current Basic cards.
+- ecard3-121 Apricorn Maker is known non-equivalent because historical Trainer-card targeting can reach Ball Guy while current Apricorn Maker is Item-only.
+- ecard2-130 and pop4-9 Pokémon Fan Club are known non-equivalent because they put searched Basics directly onto the Bench rather than into hand.
+- base1-90 and base4-117 Super Potion are known non-equivalent because they heal at most 40 damage rather than 60.
+- ex15-82, ex3-88, and pop2-11 TV Reporter are known non-equivalent because they lack the current empty-deck play prohibition.
 - ecard1-138, ex15-73, and ex7-83 Copycat resolve through the current-handbook semantic example; hgss1-90 and col1-77 remain semantic-review cases.
 
 ## Evidence
@@ -144,6 +148,7 @@ Related regressions:
 - results/reprint_divergence_predicates/reproduce.py
 - results/trainer_name_reuse_divergence/reproduce.py
 - results/trainer_optionality_divergence/reproduce.py
+- results/trainer_semantic_divergence/reproduce.py
 - results/trainer_boilerplate_normalization/reproduce.py
 - results/trainer_boilerplate_candidate_audit/reproduce.py
 
