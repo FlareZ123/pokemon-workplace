@@ -64,7 +64,7 @@ def _get_gnh_outputs(
     return PaidState(held, deck, payment)
 
 
-def paid_gnh_states(state: Prepared) -> list[PaidState]:
+def paid_gnh_states(state: Prepared, protected_names: frozenset[str] = frozenset()) -> list[PaidState]:
     """Enumerate physically legal full-output paths for the available G&H.
 
     Payment is required only when the necessary Tool or Special Energy is not
@@ -81,7 +81,7 @@ def paid_gnh_states(state: Prepared) -> list[PaidState]:
     choices = sorted(name for name, count in state.hand.items() if count > 0)
     options = []
     for a, b in combinations_with_replacement(choices, 2):
-        if a == b and state.hand[a] < 2:
+        if (a in protected_names or b in protected_names) or (a == b and state.hand[a] < 2):
             continue
         candidate = _get_gnh_outputs(state.hand, state.remaining, (a, b))
         if candidate is not None:
