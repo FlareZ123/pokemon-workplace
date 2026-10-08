@@ -1,0 +1,26 @@
+name: Validate source-aware Retreat environment
+
+on:
+  push:
+    paths:
+      - "tools/retreat_environment_modifiers.py"
+      - "tools/board_derived_retreat.py"
+      - "results/retreat_environment_modifiers/**"
+      - ".github/workflows/validate-retreat-environment-modifiers.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate environmental modifiers and composed Retreat
+        run: |
+          python results/retreat_environment_modifiers/reproduce.py
+          python results/board_derived_retreat/reproduce.py
