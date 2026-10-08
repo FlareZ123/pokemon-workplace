@@ -1,0 +1,19 @@
+name: Validate composed connector fan-out
+
+on:
+  push:
+    paths:
+      - "results/composed_connector_fanout/**"
+      - "tools/temporal_resource_connectors.py"
+      - ".github/workflows/validate-composed-connector-fanout.yml"
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/composed_connector_fanout/reproduce.py
