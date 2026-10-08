@@ -6,7 +6,7 @@ Can current rules resolve any of the four remaining semantic-review rows in the 
 
 ## Result
 
-Yes. Four wording families can be normalized from explicit current rules while preserving the benchmark's known negative boundaries.
+Yes. Five wording families can be normalized from explicit current rules while preserving the benchmark's known negative boundaries.
 
 ### Fisherman
 
@@ -43,6 +43,14 @@ The discard pile is a public zone: Pokémon's official glossary says its cards a
 
 The normalizer maps only the exact historical VS Seeker effect string to the current effect string.
 
+### Bill's Maintenance
+
+Historical Bill's Maintenance `ecard1-137`, `ex14-71`, `ex6-87`, and `pop5-6` say that if any cards remain in hand, shuffle one into the deck and then draw three. Current `sm7-126` says to shuffle a card from hand into the deck and, if that happens, draw three.
+
+Advanced Player's Rulebook B-03 prevents a Supporter from being played when carrying out its effect would not change the game state. Therefore, the apparent historical empty-hand branch does not create an extra legal action under current rules. Whenever the effect is playable, both versions move exactly one hand card into the deck and then draw three. E-20 preserves the dependency between the first action and the draw.
+
+The normalizer maps only the exact historical Bill's Maintenance effect string to the current effect string.
+
 ## Benchmark consequence
 
 After composing this normalizer into `current_card_semantics.py`:
@@ -53,7 +61,7 @@ After composing this normalizer into `current_card_semantics.py`:
 - both remaining rows are the older Pokédex wordings with "up to 5 cards";
 - the two Pokémon-ex-excluding Life Herb prints stay `known_non_equivalent`.
 
-The broader archive also resolves the same exact no-exclusion Life Herb wording on `hgss2-79`, the same public-discard Fisherman wording on `hgss1-92`, historical Moomoo Milk `hgss1-94`, and historical VS Seeker `ex6-100` and `pl3-140`.
+The broader archive also resolves the same exact no-exclusion Life Herb wording on `hgss2-79`, the same public-discard Fisherman wording on `hgss1-92`, historical Moomoo Milk `hgss1-94`, historical VS Seeker `ex6-100` and `pl3-140`, and four historical Bill's Maintenance prints.
 
 ## Why Pokédex remains unresolved
 
