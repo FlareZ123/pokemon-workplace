@@ -120,16 +120,15 @@ def main() -> None:
     assert attempt.transaction is not None and attempt.transaction.committed
     assert attempt.transaction.state.energy.zones.count("class-dce", "discard") == 1
 
-    # Move the same Sneasler source into the Active Spot, losing the -2.
-    # There is now insufficient Energy for cost 4.
+    # Remove the Benched Sneasler: the same DCE no longer pays cost 4.
     attempt2 = attempt_board_derived_retreat(
-        actor(sn1, funded, pivot), "pivot",
+        actor(funded, pivot), "pivot",
         base_retreat_cost=1,
         discard_energy_ids=("dce",),
         opponent_board=board(a1),
         stadium_print_id="swsh2-160",
     )
-    assert attempt2.effective_retreat_cost == 3
+    assert attempt2.effective_retreat_cost == 4
     assert attempt2.transaction is None
 
     # Float Stone has D-13 priority over all additive modifiers.
