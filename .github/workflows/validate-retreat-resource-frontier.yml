@@ -1,0 +1,29 @@
+name: Validate Retreat resource allocation frontier
+
+on:
+  push:
+    paths:
+      - "tools/retreat_action_enumerator.py"
+      - "tools/retreat_energy_transaction.py"
+      - "tools/retreat_destination_conflicts.py"
+      - "results/retreat_resource_allocation_frontier/**"
+      - ".github/workflows/validate-retreat-resource-frontier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Confirm nonminimal payment frontier and conservation
+        run: |
+          python results/retreat_resource_allocation_frontier/reproduce.py
+          python results/retreat_energy_payment_semantics/reproduce.py
+          python results/retreat_destination_conflicts/reproduce.py
+          python results/retreat_action_enumeration/reproduce.py
