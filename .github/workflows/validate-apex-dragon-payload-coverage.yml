@@ -1,0 +1,25 @@
+name: Validate Apex Dragon payload semantic coverage
+
+on:
+  push:
+    paths:
+      - "tools/apex_dragon_payload_coverage.py"
+      - "tools/attack_text_coverage_inventory.py"
+      - "tools/simple_attack_board_semantics.py"
+      - "results/apex_dragon_payload_coverage/**"
+      - ".github/workflows/validate-apex-dragon-payload-coverage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Classify legal Dragon copy-source attacks
+        run: python results/apex_dragon_payload_coverage/reproduce.py
