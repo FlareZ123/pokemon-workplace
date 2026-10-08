@@ -175,29 +175,72 @@ def current_retreat_units(
         energy.card_name == "Counter Energy"
         and energy.print_id in COUNTER_ENERGY_PRINT_IDS
     ):
-        behind = context.behind_on_prizes
-        if behind is None:
-            return energy.units
         eligible_holder = not (
             holder_is_pokemon_gx(holder_tags)
             or holder_is_pokemon_ex(holder_tags)
         )
-        return _units(2 if behind and eligible_holder else 1)
+        if not eligible_holder:
+            return _units(1)
+        behind = context.behind_on_prizes
+        if behind is None:
+            return energy.units
+        return _units(2 if behind else 1)
 
     if (
         energy.card_name == "Reversal Energy"
         and energy.print_id in REVERSAL_ENERGY_PRINT_IDS
     ):
-        behind = context.behind_on_prizes
-        if behind is None:
-            return energy.units
         eligible_holder = (
             holder_is_evolution(holder_tags)
             and not holder_has_rule_box(holder_tags)
         )
-        return _units(3 if behind and eligible_holder else 1)
+        if not eligible_holder:
+            return _units(1)
+        behind = context.behind_on_prizes
+        if behind is None:
+            return energy.units
+        return _units(3 if behind else 1)
 
     return energy.units
+
+
+
+def unresolved_selected_prize_provider_ids(
+    state: RetreatEnergyTransactionState,
+    selected_energy_ids: Iterable[str],
+    *,
+    context: RetreatEnergyProviderContext | None = None,
+) -> tuple[str, ...]:
+    """Identify selected payment cards whose unit count needs Prize counts.
+
+    Ineligible holders have an unconditional one-unit provider, so they
+    cannot create a Prize-information dependency.
+    """
+    if context is not None and context.prize_counts_known:
+        return ()
+
+    active = state.energy.board.get(state.energy.board.active_id)
+    selected = frozenset(selected_energy_ids)
+    unresolved: list[str] = []
+    for energy in active.energy:
+        if energy.instance_id not in selected:
+            continue
+        if (
+            energy.card_name == "Counter Energy"
+            and energy.print_id in COUNTER_ENERGY_PRINT_IDS
+            and not holder_is_pokemon_gx(active.tags)
+            and not holder_is_pokemon_ex(active.tags)
+        ):
+            unresolved.append(energy.instance_id)
+        elif (
+            energy.card_name == "Reversal Energy"
+            and energy.print_id in REVERSAL_ENERGY_PRINT_IDS
+            and holder_is_evolution(active.tags)
+            and not holder_has_rule_box(active.tags)
+        ):
+            unresolved.append(energy.instance_id)
+
+    return tuple(sorted(unresolved))
 
 
 def refresh_active_retreat_energy_units(
@@ -261,6 +304,11 @@ def retreat_with_dynamic_energy_units(
 ) -> RetreatEnergyTransactionResult | None:
     """Refresh supported providers, then execute the conserved Retreat."""
 
+    selected = tuple(discard_energy_ids)
+    if unresolved_selected_prize_provider_ids(
+        state, selected, context=provider_context,
+    ):
+        return None
     refreshed = refresh_active_retreat_energy_units(
         state,
         context=provider_context,
@@ -269,7 +317,7 @@ def retreat_with_dynamic_energy_units(
         refreshed,
         bench_object_id,
         retreat_cost=retreat_cost,
-        discard_energy_ids=discard_energy_ids,
+        discard_energy_ids=selected,
         opposing_scoop_up_block_active=opposing_scoop_up_block_active,
         prism_star_energy_ids=prism_star_energy_ids,
     )
