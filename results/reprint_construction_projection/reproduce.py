@@ -29,8 +29,8 @@ assert Counter(row.name for row in rows) == {
 
 for card_id in ("base1-71", "base4-101"):
     row = by_id[card_id]
-    assert row.resolution_kind == "semantic_review"
-    assert row.divergent_resolver_target_ids == ("bw7-137",)
+    assert row.resolution_kind == "known_non_equivalent"
+    assert row.resolver_target_ids == ()
 
 for card_id in ("ex8-88", "ex11-99", "ex16-78", "ecard1-143", "gym2-116"):
     row = by_id[card_id]
@@ -38,9 +38,9 @@ for card_id in ("ex8-88", "ex11-99", "ex16-78", "ecard1-143", "gym2-116"):
     assert row.resolver_target_ids == ()
 
 celebi = by_id["neo4-106"]
-assert celebi.resolution_kind == "exact_fingerprint_candidate"
-assert "me55c-106" in celebi.resolver_target_ids
-assert celebi.divergent_resolver_target_ids == ()
+assert celebi.resolution_kind == "semantic_review"
+assert set(celebi.resolver_target_ids) == {"me55c-106", "smp-SM79"}
+assert celebi.divergent_resolver_target_ids == ("smp-SM79",)
 
 print("reprint construction projection regression passed")
 print("name-level hazard prints:", len(rows))
