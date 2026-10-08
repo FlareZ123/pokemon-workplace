@@ -1,0 +1,23 @@
+name: Validate Gothitelle Quick Ball turn-one search
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_quick_ball_first_turn.py"
+      - "results/gothitelle_quick_ball_first_turn/**"
+      - ".github/workflows/validate-gothitelle-quick-ball-first-turn.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify exact first-turn Quick Ball setup
+        run: python results/gothitelle_quick_ball_first_turn/reproduce.py
