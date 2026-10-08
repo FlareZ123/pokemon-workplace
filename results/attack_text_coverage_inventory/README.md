@@ -45,6 +45,23 @@ of complete gameplay execution.
 
 CI: https://github.com/FlareZ123/pokemon-workplace/actions/runs/37771177710
 
+## Strict damage-only entry point
+
+`materialize_damage_only_verified()` accepts only text whose complete
+currently modeled board consequence is base damage or one of the exact
+damage-counter templates. It explicitly rejects effects that need
+typed-damage bypass, defender-effect handling, a GX budget, extra-turn
+scheduling, or any uncompiled clause.
+
+The live regression identifies **5,765** suitable attack-print rows.
+It verifies plain Jet Headbutt and compound Phantom Dive, while rejecting
+eight real counterexamples spanning status changes, card movement, draws,
+extra turns, and type-effect exceptions. This is a conservative route to
+construct damage-only programs, with downstream attack-legality and live
+damage modifiers still independently required.
+
+[Strict materializer CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37771343439).
+
 ## Representative omissions outside existing guards
 
 The specific fail-closed flags currently recognize uncompiled text-damage,
