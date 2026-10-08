@@ -52,11 +52,11 @@ def copied_timeless():
         ),
     }
     return resolve_attack(
-        actor_player="A", actor_card_id="a-active-card",
+        actor_player="P1", actor_card_id="a-active-card",
         declared_attack_id=HAUGHTY, attacks=attacks,
         state=State(pokemon=(
             PokemonRef(
-                "b-dialga-revealed", "Dialga-GX", "B",
+                "b-dialga-revealed", "Dialga-GX", "P2",
                 "revealed", attacks=(TIMELESS,),
             ),
         )),
