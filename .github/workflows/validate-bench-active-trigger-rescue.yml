@@ -1,0 +1,23 @@
+name: Validate starting Active support rescue
+
+on:
+  push:
+    paths:
+      - 'tools/bench_active_trigger_rescue.py'
+      - 'results/bench_active_trigger_rescue/**'
+      - '.github/workflows/validate-bench-active-trigger-rescue.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Verify forced Active rescue probability
+        run: python results/bench_active_trigger_rescue/reproduce.py
