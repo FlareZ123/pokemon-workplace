@@ -54,9 +54,10 @@ This preserves the repository's distinction between evidence quality and final t
 - old Copycat `ex7-83` remains unresolved despite official-semantic candidate evidence;
 - old Pokédex `base1-87` remains unresolved under semantic review;
 - old Rainbow Energy `base5-17` is invalid because the handbook-backed evidence marks the wording non-equivalent;
+- old Computer Search `base1-71` is invalid because its ACE SPEC target has a deck rule absent from the historical print;
 - a current banned print is invalid;
 - a historical query predating the snapshot reference does not inherit unaudited current timing as certainty;
-- exact-print Shining Celebi construction limits remain enforced;
+- exact-print Shining Celebi construction limits remain enforced on both the current Classic Collection print and historical `neo4-106`;
 - unknown print IDs fail explicitly.
 
 ## Scope
