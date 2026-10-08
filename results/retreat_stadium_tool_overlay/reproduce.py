@@ -64,7 +64,7 @@ def main():
         assert cancelled.suppressed_own_tool_ids == ("float",)
         assert cancelled.effective_retreat_cost == 2
         assert cancelled.transaction is None
-        assert not cancelled.normalization.state.energy.board.get(
+        assert cancelled.normalization.state.energy.board.get(
             "active"
         ).pokemon_state.tool_effect_enabled
 
@@ -92,6 +92,12 @@ def main():
     assert discarded.transaction is not None and discarded.transaction.committed
     assert discarded.transaction.destinations[0].destination_zone == "discard"
     assert discarded.suppressed_own_tool_ids == ("pouch",)
+    assert discarded.transaction.state.energy.board.get(
+        "active"
+    ).pokemon_state.tool_effect_enabled
+    assert discarded.normalization.state.energy.board.get(
+        "active"
+    ).pokemon_state.tool_effect_enabled
 
     # An opposing Tool's increase can also be blanked.
     gravity = ToolAttachment("gravity", "Gravity Gemstone", "sv7-137")
