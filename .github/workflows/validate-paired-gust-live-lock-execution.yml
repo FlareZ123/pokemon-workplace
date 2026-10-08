@@ -1,0 +1,21 @@
+name: Validate Paired Gust Live Lock Execution
+
+on:
+  push:
+    paths:
+      - 'tools/paired_gust_live_lock_execution.py'
+      - 'tools/paired_gust_source_permissions.py'
+      - 'tools/board_derived_continuous_restrictions.py'
+      - 'results/paired_gust_live_lock_execution/**'
+      - '.github/workflows/validate-paired-gust-live-lock-execution.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.paired_gust_live_lock_execution.reproduce
