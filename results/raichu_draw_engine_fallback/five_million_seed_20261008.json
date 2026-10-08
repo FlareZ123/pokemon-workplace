@@ -1,0 +1,43 @@
+{
+  "samples": 5000000,
+  "seed": 20261008,
+  "numpy_version": "2.3.5",
+  "valid_openings": 4503832,
+  "observable_branch_states": 163231,
+  "branch_given_valid": 0.03624269288907757,
+  "exact_observable_branch_given_valid": 0.03616756,
+  "paired_sample_baseline": 0.4855711639738496,
+  "paired_sample_non_first_turn": 0.6077858827920878,
+  "paired_sample_first_turn": 0.6096712103028906,
+  "paired_gain_non_first_turn": 0.12221471881771798,
+  "paired_gain_non_first_turn_se": 0.00031963282618630235,
+  "paired_gain_non_first_turn_95ci": [0.12158823847839283, 0.12284119915704313],
+  "paired_gain_first_turn": 0.12410004632851,
+  "paired_gain_first_turn_se": 0.0003197999161780973,
+  "paired_gain_first_turn_95ci": [0.12347323849280094, 0.12472685416421907],
+  "squawk_first_turn_increment": 0.0018853275107928952,
+  "squawk_first_turn_increment_se": 0.00005018727583390713,
+  "squawk_first_turn_increment_95ci": [0.0017869604501584372, 0.001983694571427353],
+  "exact_existing_combined_visible_baseline": 0.48690299111,
+  "calibrated_non_first_turn": 0.609117709927718,
+  "calibrated_non_first_turn_95ci": [0.6084912295883929, 0.6097441902670432],
+  "calibrated_first_turn": 0.61100303743851,
+  "calibrated_first_turn_95ci": [0.6103762296028009, 0.611629845274219],
+  "gain_attribution_non_first_turn": {
+    "crobat_deck": 0.0,
+    "crobat_hand": 0.00002590206,
+    "dedenne_deck": 0.11553598849881262,
+    "dedenne_hand": 0.00382860982,
+    "immediate_k1": 0.00282421844
+  },
+  "gain_attribution_first_turn": {
+    "crobat_deck": 0.0,
+    "crobat_hand": 0.00000617364,
+    "dedenne_deck": 0.11553598849881262,
+    "dedenne_hand": 0.00080799182,
+    "immediate_k1": 0.00282421844,
+    "squawk_deck": 0.00476263669,
+    "squawk_hand": 0.00011234395,
+    "squawk_in_play": 0.00005069329
+  }
+}
