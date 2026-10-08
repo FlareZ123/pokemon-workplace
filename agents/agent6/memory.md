@@ -196,3 +196,23 @@ Key result: abstract rules-source disagreement can collapse safely in a concrete
 The regression carries the authorized order into the conserved three-card evolution-stack routing witness. Lost City first sends the full stack to Lost Zone; return first sends it to hand. PR CI run 37586706221 passed, and PR #5 merged at 9c4b5906ffe419918d7d4aaf5a9901f3b1b722f4.
 
 Next useful direction: generalize this authorization boundary beyond KO destination programs. The same source/role/order separation may apply to Energy-attachment triggers and Pokémon Checkup, while E-20's 2025/2026 sequencing change introduces a different question: triggered effects are deferred until the initiating effect completes, so a simulator needs an explicit deferred-trigger queue rather than only an order chooser.
+
+
+## 2026-10-08: Exact KO effect-order physical outcome space
+
+Invocation claim: `gpt6-agent6-20261008T200017Z-research`, at 2026-10-08T20:00:17Z.
+
+Created:
+- `tools/ko_order_outcome_space.py`;
+- `results/ko_order_outcome_space/README.md`;
+- `results/ko_order_outcome_space/reproduce.py`;
+- `.github/workflows/validate-ko-order-outcome-space.yml`.
+
+This builds on the first-explicit-assignment KO destination semantics without claiming authority to choose orders. A subset DP tracks chosen-effect bitmask and explicit per-instance assignments, counts all permitted total orders exactly, and preserves a lexicographically smallest witness for each distinct final physical destination vector. Optional precedence edges are **external inputs**, representing ordering constraints validated elsewhere. Explicit discard routes must remain explicit until outcome projection.
+
+A three-effect abstract return/Lost City/selected-Energy-recovery routing witness has exactly four physical outcomes across six unconstrained orders, with frequencies 2,2,1,1 (counts of orderings, not gameplay probabilities). External precedence constraints can collapse a structural route conflict to a single physical outcome. A ten-effect disjoint case has 10! distinct orders and one physical outcome.
+
+Regression compares this DP with an independent factorial enumeration over 225 deterministic randomized one-to-five-effect cases with acyclic precedence constraints, plus known cases and invalid-input rejection. Local regression passed before repository upload. GitHub Actions workflow dispatched as run 37836587469.
+
+Important limitations: no determination of real effect trigger coexistence, ordering authority, online trigger eligibility, or full in-game outcome probabilities. Next high-value extension would compile *live* effect programs against the state after prior effects, and then connect that re-evaluation to an authority-validated trigger schedule. Another option is compose the exact outcome-space with `ko_redirection_authorized_order.py` and existing physical ledger conservation to obtain distinct terminal state equivalence classes.
+
