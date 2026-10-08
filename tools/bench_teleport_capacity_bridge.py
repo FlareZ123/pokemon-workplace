@@ -48,31 +48,33 @@ class BenchTeleportState:
             raise ValueError("Initial Bench exceeds current effective capacity")
 
 
-def bench_capacity(state: BenchTeleportState) -> int:
-    name = state.stadiums.in_play.name if state.stadiums.in_play else None
+def _capacity_for(stadium: StadiumCopy | None, active: BenchPokemon, bench: tuple[BenchPokemon, ...]) -> int:
+    name = stadium.name if stadium else None
     if name == "Collapsed Stadium":
         return 4
     if name == "Sky Field":
         return 8
     if name == "Area Zero Underdepths":
-        return 8 if any(mon.tera for mon in (state.active,) + state.bench) else 5
+        return 8 if any(mon.tera for mon in (active,) + bench) else 5
     return 5
 
+
+def bench_capacity(state: BenchTeleportState) -> int:
+    return _capacity_for(state.stadiums.in_play, state.active, state.bench)
 
 def _settle_stadium_change(
     state: BenchTeleportState, stadiums: StadiumEntryState
 ) -> tuple[BenchTeleportState, ...]:
     """Apply mandatory capacity contraction, enumerating owner's discard choices."""
-    tentative = replace(state, stadiums=stadiums)
-    limit = bench_capacity(tentative)
-    occupied = len(tentative.bench)
+    limit = _capacity_for(stadiums.in_play, state.active, state.bench)
+    occupied = len(state.bench)
     if occupied <= limit:
-        return (tentative,)
+        return (replace(state, stadiums=stadiums),)
     outcomes = []
     for positions in combinations(range(occupied), limit):
-        survivors = tuple(tentative.bench[i] for i in positions)
+        survivors = tuple(state.bench[i] for i in positions)
         sources = frozenset(
-            mon.copy_id for mon in (tentative.active,) + survivors
+            mon.copy_id for mon in (state.active,) + survivors
             if mon.teleport_room
         )
         adjusted_stadiums = replace(
@@ -80,7 +82,7 @@ def _settle_stadium_change(
             teleport_room_sources=sources,
             teleport_room_used=stadiums.teleport_room_used & sources,
         )
-        outcomes.append(replace(tentative, stadiums=adjusted_stadiums, bench=survivors))
+        outcomes.append(replace(state, stadiums=adjusted_stadiums, bench=survivors))
     return tuple(outcomes)
 
 
