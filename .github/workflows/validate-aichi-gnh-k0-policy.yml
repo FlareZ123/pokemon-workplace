@@ -1,0 +1,23 @@
+name: Validate Aichi G&H K0 policy
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/aichi_gnh_k0_policy.py"
+      - "results/aichi_gnh_k0_policy/**"
+      - ".github/workflows/validate-aichi-gnh-k0-policy.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Audit belief-constrained direct Guzma & Hala payment
+        run: python results/aichi_gnh_k0_policy/reproduce.py
