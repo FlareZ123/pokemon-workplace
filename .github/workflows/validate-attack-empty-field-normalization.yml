@@ -1,0 +1,42 @@
+name: validate attack empty field normalization
+
+on:
+  push:
+    paths:
+      - "tools/attack_empty_field_normalization.py"
+      - "tools/current_card_semantics.py"
+      - "tools/reprint_errata_resolution.py"
+      - "tools/deck_legality_proof.py"
+      - "results/attack_empty_field_normalization/**"
+      - "results/reprint_errata_resolution/**"
+      - "results/reprint_construction_projection/**"
+      - "results/reprint_policy_coverage/**"
+      - "results/deck_legality_proof/**"
+      - ".github/workflows/validate-attack-empty-field-normalization.yml"
+  pull_request:
+    paths:
+      - "tools/attack_empty_field_normalization.py"
+      - "tools/current_card_semantics.py"
+      - "tools/reprint_errata_resolution.py"
+      - "tools/deck_legality_proof.py"
+      - "results/attack_empty_field_normalization/**"
+      - "results/reprint_errata_resolution/**"
+      - "results/reprint_construction_projection/**"
+      - "results/reprint_policy_coverage/**"
+      - "results/deck_legality_proof/**"
+      - ".github/workflows/validate-attack-empty-field-normalization.yml"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.attack_empty_field_normalization.reproduce
+      - run: python -m results.reprint_errata_resolution.reproduce
+      - run: python -m results.reprint_construction_projection.reproduce
+      - run: python -m results.reprint_policy_coverage.reproduce
+      - run: python -m results.deck_legality_proof.reproduce
