@@ -1,0 +1,22 @@
+name: Validate Cross Agent Gust Oracles
+
+on:
+  push:
+    paths:
+      - 'tools/typed_gust_target_minimax.py'
+      - 'tools/target_restricted_gust_minimax.py'
+      - 'tools/mixed_boss_counter_minimax.py'
+      - 'tools/mixed_gust_prize_minimax.py'
+      - 'results/cross_agent_gust_oracles/**'
+      - '.github/workflows/validate-cross-agent-gust-oracles.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.cross_agent_gust_oracles.reproduce
