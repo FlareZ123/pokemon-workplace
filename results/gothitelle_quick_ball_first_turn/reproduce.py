@@ -105,8 +105,29 @@ def main()->None:
         no_prize_results.quick_enabled.per_seven_card_attempt,
     )
     assert no_prize_results.natural==analytical.natural
-    assert no_prize_results.quick_enabled!=analytical.quick_enabled
-    print("PASS: natural-only Prize marginal invariant, search branch Prize-sensitive")
+    print("PASS: natural-only Prize marginal invariant in small labeled test")
+
+    # An example with one Gothita and enough early observation slots for
+    # Gothitelle, Candy, Quick, a fodder card and a legal other Basic
+    # isolates the chance of the searchable Gothita being Prized.
+    sensitive=QuickSetup(
+        total=12,opening=5,prizes=2,
+        gothita=1,gothitelle=1,rare_candy=1,
+        other_basics=1,quick_ball=1,approved_discard=1,
+    )
+    sensitive_with=exact_quick_setup(sensitive)
+    sensitive_without=exact_quick_setup(replace(sensitive,prizes=0))
+    assert sensitive_with.natural==sensitive_without.natural
+    assert sensitive_with.quick_enabled!=sensitive_without.quick_enabled
+    assert brute(sensitive)==(
+        sensitive_with.natural.per_seven_card_attempt,
+        sensitive_with.quick_enabled.per_seven_card_attempt,
+    )
+    assert brute(replace(sensitive,prizes=0))==(
+        sensitive_without.natural.per_seven_card_attempt,
+        sensitive_without.quick_enabled.per_seven_card_attempt,
+    )
+    print("PASS: searchability is Prize-sensitive in the richer labeled test")
 
     base=QuickSetup()
     out=exact_quick_setup(base)
