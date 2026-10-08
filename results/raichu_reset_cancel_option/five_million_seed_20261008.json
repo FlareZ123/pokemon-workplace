@@ -1,0 +1,28 @@
+{
+  "samples": 5000000,
+  "seed": 20261008,
+  "numpy_version": "2.3.5",
+  "observable_branch_states": 163231,
+  "later": {
+    "reset_capable_states": 18905,
+    "reset_capable_fraction_branch": 0.11581746114402289,
+    "immediate_success_states": 2192,
+    "immediate_fraction_reset_capable": 0.11594816186194129,
+    "forced_reset_mean_success_reset_capable": 0.256238036234205,
+    "cancel_option_gain_branch": 0.011181998347670771,
+    "cancel_option_gain_branch_se": 0.00023829811312155925,
+    "cancel_option_gain_branch_95ci": [0.010714934045952515, 0.011649062649389027],
+    "cancel_option_gain_reset_capable": 0.09654846719326356
+  },
+  "first": {
+    "reset_capable_states": 30051,
+    "reset_capable_fraction_branch": 0.18410105923507178,
+    "immediate_success_states": 3502,
+    "immediate_fraction_reset_capable": 0.11653522345346244,
+    "forced_reset_mean_success_reset_capable": 0.25407090877209204,
+    "cancel_option_gain_branch": 0.01788256838746996,
+    "cancel_option_gain_branch_se": 0.0003002419858674285,
+    "cancel_option_gain_branch_95ci": [0.017294094095169802, 0.01847104267977012],
+    "cancel_option_gain_reset_capable": 0.0971345219944464
+  }
+}
