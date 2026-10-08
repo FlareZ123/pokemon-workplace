@@ -246,3 +246,15 @@ Independent 220-route randomized regression compared zone-signature equality wit
 One pair of competing synthetic routes for the two Basic Water attachments collapses two instance-specific routes into one complete terminal state and reduces physical disposals from two to one. Exact outcome order counts remain preserved. No real coexistence or chooser authority is asserted; this is valid under a fixed same-board, destination-only equivalence boundary.
 
 The synthesis includes original trigger eligibility, authority source conflicts, fixed-order outcomes, exact DP order counts, complete conserved states, and safe signature coalescence. Future work should either integrate route-space compression with a real source-authorized chooser or develop the deferred, state-dependent KO trigger semantics that this static compiler deliberately excludes.
+
+### 2026-10-08 continuation: official Lost Out / Durable Blade ordering authority
+
+Created `results/tyranitar_aegislash_authority/` with an official Japanese Q&A link, a source-specific authority regression, and workflow `validate-tyranitar-aegislash-authority.yml`. Added source `JAPAN_LOST_OUT_AEGISLASH_QA` and exact interaction `LOST_OUT_AEGISLASH` in `tools/ko_trigger_order_authority.py`.
+
+Japan's currently served official card-specific Q&A (search keyword ギルガルド page 2, https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%82%AE%E3%83%AB%E3%82%AC%E3%83%AB%E3%83%89&page=2&regulation_faq_main=) says Knocked Out Aegislash's owner chooses whether Durable Blade or Tyranitar-GX Lost Out resolves first; return-first puts it into hand, Lost Out-first puts it into Lost Zone; previous Doublade and Honedge return with Aegislash. The site's original answer date is not established.
+
+The regression uses existing Aegislash pre-KO materialized board and compiled SELF_TO_HAND/ALL_TO_LOST routes, source-scoped concrete chooser permission, and conserved disposal. Both branches tested, full stack routed and attachments discharged as written; CI run 37838101096 passed. Selected TPCi February 2026 broad current-player and Japan card-specific owner claims conflict when roles differ. Model refuses to invent source precedence and allows the case only when selected source claims agree in concrete state.
+
+Also created the separate printed-card pair fixture `results/huntail_lost_out_conflict/`, with real Tyranitar-GX (sm8-121) Dusty Ruckus 130 vs Lapras (bw4-25, Water Basic HP100) and Bench Huntail (sv10-55) Diver's Catch; two conditional orders route the two Basic Water Energy either to hand or Lost Zone. CI run 37837767633 passed. Actual order-choice authority for that exact pairing remains unresolved; avoid borrowing the Aegislash answer as universal law.
+
+Next valuable study: official February 2026 deferred-trigger-before-initial-effect-completion rule, which can affect the current static destination compiler if prior effects add triggers or mutate eligibility.
