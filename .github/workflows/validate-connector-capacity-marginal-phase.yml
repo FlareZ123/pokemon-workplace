@@ -1,0 +1,20 @@
+name: Validate connector capacity marginal phase
+
+on:
+  push:
+    paths:
+      - "tools/connector_capacity_marginal_phase.py"
+      - "tools/multi_channel_connector.py"
+      - "results/connector_capacity_marginal_phase/**"
+      - ".github/workflows/validate-connector-capacity-marginal-phase.yml"
+  workflow_dispatch:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/connector_capacity_marginal_phase/reproduce.py
