@@ -228,6 +228,36 @@ def main() -> None:
         for row in semantics
     )
 
+    # Current-turn attack eligibility and failure conditions cannot be
+    # inferred from a fixed printed damage field.
+    dream_eater = next(
+        row for row in index["bw1-48"]
+        if row.attack_name == "Dream Eater"
+    )
+    lunge = next(
+        row for row in index["bw1-70"]
+        if row.attack_name == "Lunge"
+    )
+    assault_gate = next(
+        row for row in index["swsh3-111"]
+        if row.attack_name == "Assault Gate"
+    )
+    for incomplete in (dream_eater, lunge, assault_gate):
+        assert incomplete.fixed_damage is not None
+        assert incomplete.fixed_damage > 0
+        assert incomplete.has_uncompiled_attack_gate
+        try:
+            materialize_opponent_board_program(incomplete, board)
+        except ValueError as error:
+            assert "uncompiled attack-use gate" in str(error)
+        else:
+            raise AssertionError(f"silently materialized {incomplete.attack_id}")
+
+    uncompiled_attack_gate_rows = sum(
+        row.has_uncompiled_attack_gate for row in semantics
+        if row.fixed_damage is not None
+    )
+
     uncompiled_damage_rows = sum(
         row.has_uncompiled_damage_text for row in semantics
         if row.fixed_damage is not None
@@ -245,6 +275,7 @@ def main() -> None:
             "uncompiled_blank_damage_rows": uncompiled_blank_damage_rows,
             "uncompiled_knockout_text_rows": uncompiled_knockout_rows,
             "uncompiled_blank_knockout_rows": uncompiled_blank_knockout_rows,
+            "uncompiled_attack_gate_rows": uncompiled_attack_gate_rows,
             "extra_turn_rows": extra_turn_rows,
             "exact_counter_rows": len(counter_rows),
             "counter_shapes": dict(sorted(counter_shapes.items())),
