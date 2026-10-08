@@ -55,3 +55,34 @@ def project_stadium_tool_state(
     own, own_ids = apply(own_board)
     opponent, opponent_ids = apply(opponent_board)
     return StadiumToolProjection(own, opponent, own_ids, opponent_ids)
+
+
+def restore_persistent_tool_flags(
+    baseline: BoardState,
+    result_board: BoardState,
+) -> BoardState:
+    """Remove an ephemeral Stadium overlay after resolving a Retreat action.
+
+    The physical board does not own the current Stadium identity; its Tool
+    flags remain the source's baseline for later independent derivations.
+    Retreat changes positions and Energy, but preserves attached Tools.
+    """
+    baseline_flags = {
+        pokemon.object_id: pokemon.pokemon_state.tool_effect_enabled
+        for pokemon in baseline.objects
+    }
+    result = replace(
+        result_board,
+        objects=tuple(
+            replace(
+                pokemon,
+                pokemon_state=replace(
+                    pokemon.pokemon_state,
+                    tool_effect_enabled=baseline_flags[pokemon.object_id],
+                ),
+            )
+            for pokemon in result_board.objects
+        ),
+    )
+    result.validate()
+    return result
