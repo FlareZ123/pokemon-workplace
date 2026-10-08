@@ -143,7 +143,7 @@ def _attack_profiles(card: dict[str, Any]) -> tuple[HealingProfile, ...]:
         return ()
 
     rows: list[HealingProfile] = []
-    for attack in card.get("attacks") or ():
+    for attack_index, attack in enumerate(card.get("attacks") or ()):
         effect_text = _normalized(attack.get("text") or "")
         parsed = _parse_healing(effect_text)
         if parsed is None:
@@ -163,6 +163,7 @@ def _attack_profiles(card: dict[str, Any]) -> tuple[HealingProfile, ...]:
                 effect_text=effect_text,
                 attack_cost=tuple(attack.get("cost") or ()),
                 attack_damage=attack.get("damage"),
+                attack_index=attack_index,
             )
         )
     return tuple(rows)
