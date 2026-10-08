@@ -1,0 +1,27 @@
+name: Validate physical copied attack position sources
+
+on:
+  push:
+    paths:
+      - "tools/physical_attack_position_source_bridge.py"
+      - "tools/position_effect_profile_compiler.py"
+      - "tools/attack_copy_physical_ko_bridge.py"
+      - "tools/physical_copy_damage_reaction_bridge.py"
+      - "tools/physical_damage_condition_reactions.py"
+      - "results/physical_attack_position_source_bridge/**"
+      - ".github/workflows/validate-physical-attack-position-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Replay copied attack position effects on physical boards
+        run: python results/physical_attack_position_source_bridge/reproduce.py
