@@ -45,9 +45,15 @@ relative Prize counts. Counter Energy plus Double Colorless Energy
 can guarantee the three-unit cost, so that branch may still be returned
 with incomplete information.
 
-Tool thresholds such as Rescue Board may make a cost or payment
-unresolved; the enumerator propagates the composed model's uncertainty
-rather than creating a physically committed branch by assumption.
+Tool thresholds such as Rescue Board can leave card-state information
+unresolved while the Retreat decision is already determined. When base
+Retreat Cost 1 becomes zero from Rescue Board's unconditional -1, its
+additional low-HP no-cost effect cannot alter payment legality, so the
+empty-payment branch is safe even without knowing remaining HP.
+When base cost 2 becomes cost 1 except at 30 HP or less, the same
+missing information changes payment legality; those branches remain
+unresolved. The enumerator returns `information_complete=False` in
+both cases to expose missing source information.
 
 ## Research use
 
