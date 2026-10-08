@@ -1,0 +1,23 @@
+name: Validate Trainer effect gust protection
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/trainer_effect_gust_protection.py"
+      - "results/trainer_effect_gust_protection/**"
+      - ".github/workflows/validate-trainer-effect-gust-protection.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify source-class target permissions
+        run: python results/trainer_effect_gust_protection/reproduce.py
