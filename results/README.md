@@ -1258,7 +1258,9 @@ The regression proves that ordinary evolution still fails on the player's first 
 
 [trainer_semantic_divergence/](trainer_semantic_divergence/) proves four additional same-name Trainer families non-equivalent across eight historical prints. The witnesses are deliberately state-semantic rather than text-similarity based: Apricorn Maker's historical Trainer-card target domain can reach Ball Guy while the current card is Item-only; Pokémon Fan Club sends the searched Basic to Bench instead of hand; historical Super Potion heals at most 40 damage where the current print heals 60; and historical TV Reporter remains able to change state in an empty-deck window where the current print is explicitly unplayable.
 
-The integrated reprint resolver now records **64 known non-equivalent historical prints across 19 names**, leaving **3,993** same-name historical prints in semantic review. The positive high-confidence candidate set is now **203** after a separate rules-grounded Moomoo Milk normalization.
+The integrated reprint resolver now records **65 known non-equivalent historical prints across 20 names**, leaving **3,992** same-name historical prints in semantic review. The positive high-confidence candidate set is **203** after the separate rules-grounded Moomoo Milk normalization.
+
+Friend Ball adds a fifth target-domain case: official Restored Pokémon rules explicitly exclude Restored Pokémon from Basic and Evolution classes while permitting generic Pokémon search. Current Friend Ball can therefore reach a legal Expanded Restored Archen that the historical wording cannot.
 
 **Working synthesis:** historical reprint analysis should search for distinguishing reachable states across target domain, zone destination, action availability, information, timing, and material transitions. Small wording differences are important only when they induce a semantic difference under current rules.
 
