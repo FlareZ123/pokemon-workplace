@@ -30,8 +30,16 @@ Tool instance IDs.
 `tools/board_derived_retreat.py` now normalizes physical Energy, applies
 the Tool overlay, then projects continuous Ability suppression. All subsequent
 cost, denial, and destination checks consume the projected source state.
-The committing Retreat transaction uses the corrected own-board Tool effect
+The pending Retreat transaction uses the corrected own-board Tool effect
 flags, so Dashing Pouch cannot redirect Energy while Jamming Tower is live.
+
+The committed physical state and the returned pre-action normalization retain
+the prior Tool-effect baseline. The temporary Stadium overlay is undone after
+the internal action is resolved, and is recomputed for each future decision
+from its current Stadium input. This prevents a removed Jamming Tower from
+silently leaving all previously suppressed Tools disabled. The regression
+checks that a zero-cost Float Stone Retreat becomes available again directly
+from the failed Tower-attempt's returned normalized physical state.
 
 `tools/retreat_ability_denial.py` consults the already existing
 `stealthy_hood_protects_from_opponent()` predicate. An active Hood
@@ -68,5 +76,10 @@ are outside this module.
 The existing causal Ability-lock graph must be evaluated with Stadium
 effects already considered (for example, Jamming Tower can remove Hood
 protection and change lock dependency edges).
+
+The exact Stealthy Hood card text is also available from the
+[official Japanese Pokémon card database](https://www.pokemon-card.com/card-search/details.php/card/36191/regu/all).
+The [official Japanese Block Snorlax entry](https://www.pokemon-card.com/card-search/details.php/card/41737/regu/BW)
+confirms that its prohibition applies to the opponent's Active Pokémon.
 
 Reproduce with `python results/retreat_stadium_tool_overlay/reproduce.py`.
