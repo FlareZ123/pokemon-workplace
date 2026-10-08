@@ -15,22 +15,27 @@ from attack_copy_physical_ko_bridge import replay_copy_attack_physical_board
 from attack_damage_target_geometry import (
     catalog, plan_literal_damage_targets,
 )
-from board_position_state import BoardPokemon, PokemonCard, make_state
+from board_position_state import AttachmentKind, BoardPokemon, PokemonCard, make_state
 from damage_calculation_kernel import calculate_damage
 from identity_materialization import IdentityLedger, materialize, put_in_play_instance
 from literal_damage_profiled_copy_bridge import materialize_profiled_literal_damage_program
 from multicopy_zone_state import ZoneCountState
 from pokemon_card_profile import build_pokemon_card_profile_index
 from simple_attack_board_semantics import compile_legal_index
-from stack_knockout_conservation import StackBoardMaterialState
+from stack_knockout_conservation import StackBoardMaterialState, attach_from_hand
+from physical_damage_reaction_sources import eligible_spiky_energy_reactions
+from damage_reaction_kernel import DamageReaction, DamageReactionKind
 from stack_board_profile_binding import hp_by_stack_board
 
 
-def defender_board() -> StackBoardMaterialState:
-    original = IdentityLedger(ZoneCountState.from_mapping({
+def defender_board(*, with_spiky: bool = False) -> StackBoardMaterialState:
+    classes = {
         ("a-class", "hand"): 1,
         ("b-class", "hand"): 1,
-    }))
+    }
+    if with_spiky:
+        classes[("spiky-energy", "hand")] = 2
+    original = IdentityLedger(ZoneCountState.from_mapping(classes))
     ledger = original
     rows: list[BoardPokemon] = []
     for pokemon_id, card_class in (("active", "a-class"), ("bench", "b-class")):
@@ -45,7 +50,18 @@ def defender_board() -> StackBoardMaterialState:
             (PokemonCard(instance, "Dratini"),),
             retreat_cost=1,
         ))
-    return StackBoardMaterialState(ledger, make_state(rows, active_id="active"))
+    state = StackBoardMaterialState(ledger, make_state(rows, active_id="active"))
+    if with_spiky:
+        for pokemon_id in ("active", "bench"):
+            state = attach_from_hand(
+                state, pokemon_id=pokemon_id, card_class="spiky-energy",
+                instance_id=f"{pokemon_id}-spiky",
+                card_name="Spiky Energy",
+                kind=AttachmentKind.ENERGY,
+                retreat_units=1,
+            )
+            assert state is not None
+    return state
 
 
 def copy_source(source, source_def):
@@ -163,6 +179,41 @@ def main() -> None:
     else:
         raise AssertionError("duplicated body/target pair was accepted")
 
+    # A copied attack can trigger an attached Spiky Energy despite the
+    # defender being Knocked Out. The Benched copy of the same Energy has no
+    # such Active-Spot reaction, even if its holder took damage.
+    spiky_state = defender_board(with_spiky=True)
+    assert spiky_state.board is not None
+    spiky_replay = replay_copy_attack_physical_board(
+        night_copy, spiky_state,
+        event_programs={night_attack.event_label: night_program},
+        hp_by_pokemon_id=hp,
+    )
+    active_reaction = eligible_spiky_energy_reactions(
+        spiky_replay,
+        body_event=night_attack.event_label,
+        damaged_pokemon_id="active",
+        from_opponents_pokemon=True,
+    )
+    bench_reaction = eligible_spiky_energy_reactions(
+        spiky_replay,
+        body_event=night_attack.event_label,
+        damaged_pokemon_id="bench",
+        from_opponents_pokemon=True,
+    )
+    assert active_reaction == (
+        DamageReaction(DamageReactionKind.FIXED_COUNTERS, 2),
+    )
+    assert bench_reaction == ()
+    assert eligible_spiky_energy_reactions(
+        spiky_replay,
+        body_event=night_attack.event_label,
+        damaged_pokemon_id="active",
+        from_opponents_pokemon=False,
+    ) == ()
+    assert spiky_replay.knocked_out_ids == ("active",)
+    assert len(spiky_replay.state.board.get("active").attachments) == 1
+
     print({
         "card_grounded_copy_programs": 2,
         "night_spear_damage_sites": tuple(
@@ -175,6 +226,7 @@ def main() -> None:
         ),
         "printed_vs_text_damage_distinguished": True,
         "repeated_site_rejected": True,
+        "card_grounded_spiky_active_vs_bench": (len(active_reaction), len(bench_reaction)),
     })
 
 
