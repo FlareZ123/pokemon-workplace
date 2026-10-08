@@ -20,7 +20,10 @@ It recognizes exact and disjoint semantic islands:
 - exact Weakness/Resistance bypass instructions;
 - exact defender-effect bypass instructions;
 - unconditional extra-turn directives, including Pokémon Checkup wording;
+- exact Special Condition bodies;
 - exact self-switch, opponent-forced-switch, and targeted-gust attack bodies;
+- exact self-healing bodies;
+- exact one-Energy opponent-discard bodies;
 - unknown text;
 - nonfixed printed damage not yet resolved by the narrow fixed-number compiler.
 
@@ -37,17 +40,20 @@ attack-print rows: 5,687 plain fixed/blank or GX-reminder-only,
 91 exact counter clauses, 119 exact defender-effect bypasses,
 133 exact type-modifier bypasses, 6 exact extra-turn clauses,
 **1,156 exact Special Condition clauses**, **270 exact position-effect
-clauses**, **293 exact self-healing clauses**, 8,373 uncompiled effect texts,
-and 3,864 variable printed-damage expressions.
+clauses**, **293 exact self-healing clauses**, **191 exact one-Energy
+disruption clauses**, 8,182 uncompiled effect texts, and 3,864 variable
+printed-damage expressions.
 
-Among the 8,373 uncompiled text rows, 2,523 fall under a specific
-damage/Knock Out/attack-use guard. The remaining **5,850** have
+Among the 8,182 uncompiled text rows, 2,523 fall under a specific
+damage/Knock Out/attack-use guard. The remaining **5,659** have
 other unmodeled effect text. The position family reclassifies all 270
 fixed/blank-damage attack profiles already supported by the conservative
 movement compiler, so these rows now advertise `position_effect` and any
 required `coin_flip` or `optional_choice` handler. The self-healing family
 reclassifies all 293 exact profiles from the existing healing compiler and
-advertises a `healing` handler. Both families therefore leave the generic
+advertises a `healing` handler. The one-Energy disruption family moves 191
+attack rows to an `energy_disruption` handler and adds `coin_flip` where the
+printed body is heads-gated. These families therefore leave the generic
 `source_specific_effects` fallback without weakening the strict damage-only
 entry point. The standalone status parser recognizes
 1,143 literal full-text clauses; this inventory additionally strips
@@ -58,6 +64,8 @@ of complete gameplay execution.
 Position-handler coverage CI: https://github.com/FlareZ123/pokemon-workplace/actions/runs/37802807009
 
 Self-healing coverage CI: https://github.com/FlareZ123/pokemon-workplace/actions/runs/37803453917
+
+Energy-disruption coverage CI: https://github.com/FlareZ123/pokemon-workplace/actions/runs/37804335935
 
 ## Strict damage-only entry point
 
