@@ -1,0 +1,20 @@
+name: Validate KO source authority local certainty
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_authority_local_certificate.py"
+      - "tools/ko_component_state_invariance.py"
+      - "results/ko_authority_local_certificate/**"
+      - ".github/workflows/validate-ko-authority-local-certificate.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/ko_authority_local_certificate/reproduce.py
