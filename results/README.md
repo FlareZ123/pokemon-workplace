@@ -1258,7 +1258,7 @@ The regression proves that ordinary evolution still fails on the player's first 
 
 [trainer_semantic_divergence/](trainer_semantic_divergence/) proves four additional same-name Trainer families non-equivalent across eight historical prints. The witnesses are deliberately state-semantic rather than text-similarity based: Apricorn Maker's historical Trainer-card target domain can reach Ball Guy while the current card is Item-only; Pokémon Fan Club sends the searched Basic to Bench instead of hand; historical Super Potion heals at most 40 damage where the current print heals 60; and historical TV Reporter remains able to change state in an empty-deck window where the current print is explicitly unplayable.
 
-The integrated reprint resolver now records **67 known non-equivalent historical prints across 21 names**, leaving **3,981** same-name historical prints in semantic review. The positive high-confidence candidate set is **212** after rules-grounded Moomoo Milk, VS Seeker, Bill's Maintenance, Underground Expedition, and Lucky Egg normalizations.
+The integrated reprint resolver now records **67 known non-equivalent historical prints across 21 names**, leaving **3,974** same-name historical prints in semantic review. The positive high-confidence candidate set is **219** after the rules-grounded Trainer normalizations plus eight schema-only empty-attack-field matches.
 
 Computer Search adds a separate rule-category boundary from Agent 1's deck-construction audit: the current Expanded print is an ACE SPEC with an explicit one-ACE-SPEC deck restriction that the two historical prints lack.
 
@@ -1282,14 +1282,16 @@ The rule preserves Gladion when Forest Seal Stone is already visible or when eno
 
 [rule_grounded_trainer_semantics/](rule_grounded_trainer_semantics/) now also normalizes historical Moomoo Milk `hgss1-94`. Its older effect removes three damage counters for each heads, while current `sm8-185` heals 30 damage for each heads. Under current rules, one damage counter represents 10 damage and healing removes damage counters, so the two phrasings induce the same damage-state transition.
 
-The resolver therefore promotes `hgss1-94` from semantic review to `exact_fingerprint_candidate`. With the later VS Seeker, Bill's Maintenance, Underground Expedition, and Lucky Egg normalizations, exact current-semantic candidates reach **126**, positive high-confidence historical candidates reach **212**, and Trainer high-confidence candidates reach **107/168**.
+The resolver therefore promotes `hgss1-94` from semantic review to `exact_fingerprint_candidate`. With the later VS Seeker, Bill's Maintenance, and Underground Expedition normalizations, plus the independent empty-attack-field canonicalization, exact current-semantic candidates reach **133**, positive high-confidence historical candidates reach **219**, and Trainer high-confidence candidates reach **106/168**.
 
 Bill's Maintenance adds four further exact candidates: current Supporter playability rules prevent the historical no-card-in-hand branch from creating a usable no-op Supporter, so every playable state performs the same one-card shuffle followed by a three-card draw.
 
-Lucky Egg contributes one more exact candidate. Its legacy attachment/discard reminder is supplied by the current Tool rules, and its “when” versus “if” Knock Out trigger wording is explicitly semantically equivalent under E-04.
+Lucky Egg does not join that positive set. Official print-specific errata for `pl4-88` adds a condition that the Knocked Out Pokémon reach the discard pile before the draw applies, so it remains in semantic review.
 
 Underground Expedition contributes two more exact candidates because all three wordings inspect the same bottom-four window, move the same required count to hand, and return the remainder to the same deck region under current numbered-choice rules.
 
 Historical VS Seeker also converges under the same evidence standard. Its old reveal step occurs in the already-public discard pile, and both texts retrieve one Supporter into hand.
+
+Empty optional attack fields add eight separate exact Pokémon matches by canonicalizing database schema noise only. That work is documented in [attack_empty_field_normalization/](attack_empty_field_normalization/).
 
 **Working synthesis:** terminology changes should be normalized only when current rules give an explicit semantic bridge. This is stronger evidence than edit-distance similarity and can produce positive equivalence candidates without weakening known-negative boundaries.
