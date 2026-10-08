@@ -1,0 +1,24 @@
+name: Validate reset transition profiles
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/catalog_full_hand_resets.py"
+      - "tools/compile_reset_transition_profiles.py"
+      - "results/reset_transition_profiles/**"
+      - ".github/workflows/validate-reset-transition-profiles.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate reset transition profiles
+        run: python results/reset_transition_profiles/reproduce.py
