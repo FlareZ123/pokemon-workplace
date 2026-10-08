@@ -54,6 +54,7 @@ def expected_attacks(
     deck_filler: int,
     prizes_needed: int = 6,
     enable_serena_draw: bool = True,
+    protect_gust_resources: bool = False,
 ) -> Fraction:
     """Expected attack turns from before a turn's mandatory natural draw."""
     remaining = deck_boss + deck_serena + deck_filler
@@ -64,19 +65,19 @@ def expected_attacks(
         total += Fraction(deck_boss, remaining) * _after_natural_draw(
             active, bench, hand_boss + 1, hand_serena, hand_filler,
             deck_boss - 1, deck_serena, deck_filler,
-            prizes_needed, enable_serena_draw,
+            prizes_needed, enable_serena_draw, protect_gust_resources,
         )
     if deck_serena:
         total += Fraction(deck_serena, remaining) * _after_natural_draw(
             active, bench, hand_boss, hand_serena + 1, hand_filler,
             deck_boss, deck_serena - 1, deck_filler,
-            prizes_needed, enable_serena_draw,
+            prizes_needed, enable_serena_draw, protect_gust_resources,
         )
     if deck_filler:
         total += Fraction(deck_filler, remaining) * _after_natural_draw(
             active, bench, hand_boss, hand_serena, hand_filler + 1,
             deck_boss, deck_serena, deck_filler - 1,
-            prizes_needed, enable_serena_draw,
+            prizes_needed, enable_serena_draw, protect_gust_resources,
         )
     return total
 
@@ -93,13 +94,14 @@ def _after_natural_draw(
     deck_filler: int,
     prizes_needed: int,
     enable_serena_draw: bool,
+    protect_gust_resources: bool,
 ) -> Fraction:
     """Select no Supporter, targeted gust, or the full Serena draw mode."""
     return min(
         cost for _description, cost in action_values(
             active, bench, hand_boss, hand_serena, hand_filler,
             deck_boss, deck_serena, deck_filler,
-            prizes_needed, enable_serena_draw,
+            prizes_needed, enable_serena_draw, protect_gust_resources,
         )
     )
 
@@ -115,6 +117,7 @@ def action_values(
     deck_filler: int,
     prizes_needed: int = 6,
     enable_serena_draw: bool = True,
+    protect_gust_resources: bool = False,
 ) -> tuple[tuple[str, Fraction], ...]:
     """After-draw conditional choices and their continuation value."""
     def attack(
@@ -130,7 +133,8 @@ def action_values(
             expected_attacks(
                 promoted, remaining[:i] + remaining[i + 1:],
                 b, s, f, deck_boss, deck_serena, deck_filler,
-                prizes_needed - target.prizes, enable_serena_draw
+                prizes_needed - target.prizes, enable_serena_draw,
+                protect_gust_resources
             )
             for i, promoted in enumerate(remaining)
         )
@@ -152,9 +156,11 @@ def action_values(
     if hand_serena and enable_serena_draw:
         # Serena is played first, leaving (hand_serena-1) other copies.
         other_serenas = hand_serena - 1
-        for discarded_boss in range(min(3, hand_boss) + 1):
+        for discarded_boss in range(
+            1 if protect_gust_resources else min(3, hand_boss) + 1
+        ):
             for discarded_serena in range(
-                min(3 - discarded_boss, other_serenas) + 1
+                1 if protect_gust_resources else min(3 - discarded_boss, other_serenas) + 1
             ):
                 for discarded_filler in range(
                     min(3 - discarded_boss - discarded_serena, hand_filler) + 1
@@ -195,7 +201,7 @@ def action_values(
                                     deck_serena - got_serena,
                                     deck_filler - got_filler,
                                     prizes_needed - active.prizes,
-                                    enable_serena_draw,
+                                    enable_serena_draw, protect_gust_resources,
                                 )
                                 for got_boss, got_serena, got_filler, likelihood in outcomes
                             ),
