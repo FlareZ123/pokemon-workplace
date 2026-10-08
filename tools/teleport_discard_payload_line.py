@@ -12,7 +12,7 @@ from dataclasses import dataclass, replace
 from bench_teleport_capacity_bridge import BenchPokemon, BenchTeleportState
 from discard_cost_witness import DiscardCandidate, DiscardSelection
 from multicopy_zone_state import ZoneCountState
-from raichu_search_to_crobat_execution import ULTRA_BALL_PROFILE
+from raichu_search_to_crobat_execution import QUICK_BALL_PROFILE, ULTRA_BALL_PROFILE
 from search_zone_transition import SearchZoneTarget
 from stadium_entry_channels import StadiumCopy
 from trainer_search_transaction import (
@@ -213,6 +213,90 @@ def execute_ultra_ball_with_held_entrant(
     )
     assert_stadium_projection(after_board, txn.after.zones)
     return PayloadTransaction(txn, after_board)
+
+
+def execute_quick_ball_for_entrant(
+    board: BenchTeleportState,
+    execution: TrainerSearchExecutionState,
+    *,
+    target_held: bool = False,
+) -> PayloadTransaction:
+    """Use a single Sky Field discard as Quick Ball's complete payment.
+
+    If the specified Basic is already in hand, make a zero-target restricted
+    search; otherwise retrieve that Basic from the deck. In both cases the
+    first physical half-step discards Sky Field into the Teleport Room zone.
+    """
+    assert_stadium_projection(board, execution.zones)
+    if board.stadiums.budget != execution.budget:
+        raise ValueError("board and Trainer budgets must match")
+    sky_card = _sky_hand_card(board)
+    if execution.zones.count("sky_field", "hand") != 1:
+        raise ValueError("the physical Sky Field must be in the counted hand")
+    if target_held:
+        if (
+            execution.zones.count("searched_basic", "hand") != 1
+            or not any(
+                mon.copy_id == "searched_basic"
+                for mon in board.hand_pokemon
+            )
+        ):
+            raise ValueError("target_held requires physical target in hand")
+        txn = execute_trainer_retrieval_transaction(
+            execution,
+            profile=QUICK_BALL_PROFILE,
+            action_card_class="quick_ball",
+            targets=(),
+            retrieval_action=TypedRetrievalAction(
+                target_cost=(), axis_usage=(0,)
+            ),
+            discard_candidates=(DiscardCandidate("sky_field"),),
+            discard_selection=DiscardSelection((1,)),
+        )
+        after_pokemon = board.hand_pokemon
+    else:
+        if execution.zones.count("searched_basic", "deck") != 1:
+            raise ValueError("searched Basic target must be in deck")
+        target = SearchZoneTarget(
+            "searched_basic",
+            TargetGroup("Searched Basic", 1, frozenset({BASIC_POKEMON})),
+        )
+        demand = make_demand("searched Basic target", "Basic Pokémon")
+        allocation = enumerate_typed_target_profiles(
+            QUICK_BALL_PROFILE.base_outputs,
+            (target.group,), (demand,),
+        )
+        action = next(
+            row for row in allocation.actions
+            if row.output == (1,) and row.target_cost == (1,)
+        )
+        txn = execute_trainer_search_transaction(
+            execution,
+            profile=QUICK_BALL_PROFILE,
+            action_card_class="quick_ball",
+            demands=(demand,),
+            targets=(target,),
+            search_action=action,
+            discard_candidates=(DiscardCandidate("sky_field"),),
+            discard_selection=DiscardSelection((1,)),
+        )
+        after_pokemon = board.hand_pokemon + (BenchPokemon("searched_basic"),)
+    if txn.discard_cost != 1:
+        raise AssertionError("Quick Ball must discard exactly one other card")
+    updated_stadiums = replace(
+        board.stadiums,
+        hand=tuple(
+            card for card in board.stadiums.hand
+            if card.copy_id != sky_card.copy_id
+        ),
+        discard=board.stadiums.discard + (sky_card,),
+        budget=txn.after.budget,
+    )
+    after = replace(
+        board, stadiums=updated_stadiums, hand_pokemon=after_pokemon,
+    )
+    assert_stadium_projection(after, txn.after.zones)
+    return PayloadTransaction(txn, after)
 
 
 def mirror_teleport_to_trainer_zones(
