@@ -128,3 +128,46 @@ allowed as discard payment when the planner can afford them.
 The next valuable extension is a controlled ablation separating the
 different roles of Nest Ball and testing when card availability for
 discard, backup creation or direct replay is the binding bottleneck.
+
+
+## Exact Nest Ball role ablation
+
+The baseline output above bundles all Nest Ball uses together. To isolate
+the distinct causal contributions, the planner exposes two independent
+transition switches:
+
+- whether Nest Ball can establish a backup ordinary Basic O when A starts
+  Active;
+- whether Nest Ball can put target A onto Bench for pickup replay.
+
+Both switches leave Nest Ball available as a Quick Ball discard payment.
+With both disabled, Nest Balls contribute only to *payment stock*.
+
+For the three-ordinary-Basic benchmark with four Nest Balls:
+
+| Enabled Nest Ball role | Exact access |
+| --- | ---: |
+| No Nest Ball copies at all | 24.598705% |
+| Four Nest Balls as Quick Ball discard stock only | 29.794674% |
+| Stock plus backup-O placement | 30.945237% |
+| Stock plus target-A Bench replay | 33.260339% |
+| All three roles enabled | **34.410901%** |
+
+The total **9.812196 percentage-point** improvement from adding four
+Nest Balls decomposes exactly into:
+
+- **+5.195969 pp** from being discardable Quick Ball payment;
+- **+1.150562 pp** from establishing a backup Basic for Active A;
+- **+3.465665 pp** from direct-Bench A pickup replay.
+
+In this specified access model these increments sum without an
+interaction term. At setup A is either forced Active or resides elsewhere;
+the specialized backup and target-replay opportunities occupy disjoint
+starting-role branches. The ablation is verified using exact rational
+arithmetic by [ablation.py](ablation.py) at one, three, and five copies
+of other ordinary Basics.
+
+This makes an important distinction: a direct-Bench connector can be
+valuable for several different reasons in the same deck, and a
+single nominal count of compatible search outs conceals those mechanisms.
+The figures are sensitive to the assumed search and discard timing.
