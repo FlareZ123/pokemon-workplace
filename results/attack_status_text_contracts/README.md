@@ -17,6 +17,26 @@ Both old `The Defending Pokémon` and newer `Your opponent's Active Pokémon`
 wording are accepted. Extra conditional effects, second instructions,
 and other wordings remain outside this grammar.
 
+## Corpus result
+
+[GitHub Actions validation 37772140275](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37772140275)
+identified **1,143** exact source-text attack-print rows in the current
+paper-Expanded pool: **693** unconditional and **450** gated on a
+heads coin result.
+
+| Condition | Unconditional | Heads |
+| --- | ---: | ---: |
+| Asleep | 190 | 15 |
+| Burned | 130 | 14 |
+| Confused | 226 | 29 |
+| Paralyzed | 0 | 374 |
+| Poisoned | 147 | 18 |
+| **Total** | **693** | **450** |
+
+No tails-only matches appear under the currently recognized grammar.
+This is a text coverage observation; more elaborate condition-setting
+attacks can exist outside the exact full-sentence subset.
+
 ## Representative real cards
 
 - Alomomola `bw1-39` Water Pulse: Asleep, unconditional.
