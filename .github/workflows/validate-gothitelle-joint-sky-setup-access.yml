@@ -1,0 +1,23 @@
+name: Validate joint Gothitelle Sky payload access
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_joint_sky_setup_access.py"
+      - "results/gothitelle_joint_sky_setup_access/**"
+      - ".github/workflows/validate-gothitelle-joint-sky-setup-access.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check joint Sky payment and setup odds
+        run: python results/gothitelle_joint_sky_setup_access/reproduce.py
