@@ -110,6 +110,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [bench_restore_prize_conditioning/](bench_restore_prize_conditioning/) adds six random Prizes from a 46-card unknown pool and cross-validates the grouped states against `PrizeBelief`. K0 expected access is 20.772947% at zero slack and 37.941600% at one slack. Under K1, one direct restorer Prized drops zero-slack access to 12.5%, while one remover Prized leaves it at 23.717949%; at one slack those two Prize identities become symmetric live-out losses.
 
+[bench_teleport_capacity_bridge/](bench_teleport_capacity_bridge/) composes the physical Gothitelle Teleport Room discard-to-Stadium channel with Bench limits and ordinary Stadium-play quota. From a full four-of-four Collapsed Stadium board, a live Active Gothitelle can remove the Stadium to reopen one slot even without a discard-pile replacement; Sky Field from discard expands to eight, while Area Zero requires Tera-first entry. Teleport preserves spent Stadium-play bandwidth, and the CI regression verifies mandatory replacement, timing/lock gates, and all 15 four-of-six contraction choices.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
