@@ -1,6 +1,6 @@
 """Independent deadline oracle and structural census for mixed gust timing.
 
-Run: python results/mixed_gust_prize_minimax/reproduce.py
+Run: python -m results.mixed_gust_prize_minimax.reproduce
 """
 from collections import Counter
 from functools import lru_cache
