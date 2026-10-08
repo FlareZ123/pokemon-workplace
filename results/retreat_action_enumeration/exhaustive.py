@@ -123,7 +123,7 @@ def main() -> None:
         total_branches += bench_count * 2 ** len(units)
         total_scenarios += 1
 
-    assert total_scenarios == 900
+    assert total_scenarios == 1800
     print("Retreat enumerator independent finite oracle: PASS")
     print({
         "scenarios": total_scenarios,
