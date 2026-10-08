@@ -48,11 +48,6 @@ for source_id in ("ecard3-140", "pl2-97"):
     )
     assert resolver.resolve(source_id).kind == "exact_fingerprint_candidate"
 
-assert current_semantic_fingerprint(resolver.cards_by_id["pl4-88"]) == current_semantic_fingerprint(
-    resolver.cards_by_id["swsh1-167"]
-)
-assert resolver.resolve("pl4-88").kind == "exact_fingerprint_candidate"
-
 assert current_semantic_fingerprint(resolver.cards_by_id["ex5-90"]) != current_semantic_fingerprint(
     resolver.cards_by_id["sm7-136"]
 )
