@@ -18,7 +18,7 @@ The local card record `swsh8-230` requires playing **two Cross Switcher Item car
 
 The rules manual's E-29 describes effects that prevent effects of a Trainer played from hand. Most of the matching reactive texts are prevention effects and can be modeled as target/effect eligibility predicates. Venomoth's Dizzying Wind is structurally different because it requires a coin outcome after a Trainer play.
 
-**Open ruling question:** does playing two Cross Switcher cards at once under an applicable `Dizzying Wind` effect require one coin flip or two, and what happens to the pair when a flip fails? The bundled Advanced Player's Rulebook excerpt and print text do not by themselves establish this interaction decisively. Do **not** bake either possibility into a full-game simulator without an official, print-specific ruling.
+**Official analog found:** the [Pokémon Card Q&A](https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%83%A2%E3%83%AB%E3%83%95%E3%82%A9%E3%83%B3&page=2&regulation=all&regulation_faq_main_item1=all) explicitly states that two simultaneously played Poké Drawer+ Items require **one** Dizzying Wind coin flip. Cross Switcher also plays two cards for one effect, strongly suggesting the same one-flip behavior. That is an analogy from an official ruling on another card; no direct Cross Switcher ruling was located. The same Q&A establishes that a failed Supporter is discarded while another Supporter remains playable, and an Ultra Ball discard payment occurs only after the coin gate. See [dizzying_wind_attempt_event](../dizzying_wind_attempt_event/) for a verified Supporter model.
 
 ## Strategic implication
 

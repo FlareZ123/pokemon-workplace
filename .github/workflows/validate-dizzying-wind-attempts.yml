@@ -1,0 +1,24 @@
+name: Validate Dizzying Wind Trainer attempts
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/dizzying_wind_attempt_event.py"
+      - "tools/causal_event_journal.py"
+      - "results/dizzying_wind_attempt_event/**"
+      - ".github/workflows/validate-dizzying-wind-attempts.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce official failed Supporter semantics
+        run: python results/dizzying_wind_attempt_event/reproduce.py

@@ -16,6 +16,7 @@ from ability_lock_causal_state import (
 )
 from board_object_kernel import BoardState
 from committed_play_event import CommittedPlayEvent, PlayKind, has_play_history
+from dizzying_wind_attempt_event import FailedTrainerAttempt
 
 
 
@@ -44,6 +45,7 @@ class JournalBoundary:
     lock_state: AbilityLockCausalState
     play_record_complete: bool = True
     unmaterialized_plays: tuple[UnmaterializedPlay, ...] = ()
+    failed_attempt: FailedTrainerAttempt | None = None
 
     @property
     def committed_play(self) -> CommittedPlayEvent | None:
@@ -73,6 +75,14 @@ class CausalEventJournal:
             event
             for boundary in self.boundaries
             for event in boundary.play_batch
+        )
+
+    @property
+    def failed_trainers(self) -> tuple[FailedTrainerAttempt, ...]:
+        return tuple(
+            boundary.failed_attempt
+            for boundary in self.boundaries
+            if boundary.failed_attempt is not None
         )
 
     @property
@@ -156,6 +166,7 @@ def append_boundary(
     committed_plays: tuple[CommittedPlayEvent, ...] = (),
     play_record_complete: bool = True,
     unmaterialized_plays: tuple[UnmaterializedPlay, ...] = (),
+    failed_attempt: FailedTrainerAttempt | None = None,
 ) -> CausalEventJournal:
     """Fold exactly one ordered boundary, rejecting stale/duplicate submissions.
 
@@ -164,6 +175,8 @@ def append_boundary(
     """
     if journal.revision != expected_revision:
         raise ValueError("stale journal revision")
+    if failed_attempt is not None and (committed_play is not None or committed_plays or unmaterialized_plays):
+        raise ValueError("failed attempt cannot also be a successful use")
     if play_record_complete and unmaterialized_plays:
         raise ValueError("unmaterialized plays require partial physical identity coverage")
     if not play_record_complete and (committed_play is not None or committed_plays):
@@ -185,6 +198,7 @@ def append_boundary(
     step = JournalBoundary(
         journal.revision + 1, event_id, description, player_board, opponent_board,
         stadium_name, batch, lock, play_record_complete, unmaterialized_plays,
+        failed_attempt,
     )
     from dataclasses import replace
     return replace(journal, boundaries=journal.boundaries + (step,))
@@ -207,6 +221,7 @@ def replay_journal(journal: CausalEventJournal) -> CausalEventJournal:
             committed_plays=step.play_batch,
             play_record_complete=step.play_record_complete,
             unmaterialized_plays=step.unmaterialized_plays,
+            failed_attempt=step.failed_attempt,
         )
         if replayed.boundaries[-1] != step:
             raise AssertionError(f"lock or play event divergence at {step.event_id}")
