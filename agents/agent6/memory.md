@@ -216,3 +216,18 @@ Regression compares this DP with an independent factorial enumeration over 225 d
 
 Important limitations: no determination of real effect trigger coexistence, ordering authority, online trigger eligibility, or full in-game outcome probabilities. Next high-value extension would compile *live* effect programs against the state after prior effects, and then connect that re-evaluation to an authority-validated trigger schedule. Another option is compose the exact outcome-space with `ko_redirection_authorized_order.py` and existing physical ledger conservation to obtain distinct terminal state equivalence classes.
 
+
+### 2026-10-08 continuation: conservation and exchangeable outcome quotient
+
+Created:
+- `tools/ko_order_terminal_projection.py`;
+- `results/ko_order_terminal_projection/README.md` and `reproduce.py`;
+- `.github/workflows/validate-ko-order-terminal-projection.yml`.
+
+The new adapter runs each exact per-instance destination vector through `discard_pending_with_zone_routes` from the same frozen `PendingKnockOutBatch`. It groups on full equality of terminal `StackBoardMaterialState` while accumulating exact effect-order multiplicity and distinct instance-route counts.
+
+Two abstract destination effects that reverse which of two identical Basic Water Energy instance IDs is sent to hand versus discard produce **two distinct physical-instance route vectors but the same final exchangeable zone-count state**. One Water is in hand and one in discard after KO. This illustrates why dematerialization permits an exact quotient by gameplay-equivalent copy class, when per-copy history has ceased to matter.
+
+The same regression reproduces two distinct Aegislash return vs Lost City-like endpoints, four endpoints from an abstract three-effect witness, baseline discard, constrained precedence, invalid destination rejection, survivor promotion and physical conservation. CI run 37836925772 passed. Earlier order-outcome DP CI run 37836587469 also passed.
+
+Open directions: measure larger quotients with multiple identical attachments, and integrate order-sensitivity checks into source-authorized KO choice to avoid redundant physical branches. Avoid treating order-count fractions as actual gameplay probabilities.
