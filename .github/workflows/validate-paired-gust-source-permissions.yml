@@ -1,0 +1,22 @@
+name: Validate Paired Gust Source Permissions
+
+on:
+  push:
+    paths:
+      - 'tools/paired_gust_source_permissions.py'
+      - 'tools/paired_switch_identity_bridge.py'
+      - 'tools/source_scoped_action_restrictions.py'
+      - 'tools/source_scoped_channel_projection.py'
+      - 'results/paired_gust_source_permissions/**'
+      - '.github/workflows/validate-paired-gust-source-permissions.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.paired_gust_source_permissions.reproduce
