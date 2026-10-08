@@ -1,0 +1,25 @@
+name: Validate optional overkill reflection
+
+on:
+  push:
+    paths:
+      - "results/optional_overkill_reflection/**"
+      - "tools/damage_calculation_kernel.py"
+      - "tools/damage_reaction_kernel.py"
+      - "tools/post_knockout_game_resolution.py"
+      - ".github/workflows/validate-optional-overkill-reflection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce optional damage comparison
+        run: python results/optional_overkill_reflection/reproduce.py
