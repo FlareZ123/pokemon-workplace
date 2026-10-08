@@ -52,14 +52,19 @@ class PositionEffectProfile:
     attack_damage: str | None = None
     coin_heads_required: bool = False
     optional: bool = False
+    attack_index: int | None = None
 
     def __post_init__(self) -> None:
         if self.source_kind not in {"trainer", "attack"}:
             raise ValueError("unsupported source_kind")
         if self.source_kind == "attack" and not self.source_name:
             raise ValueError("attack profiles require source_name")
+        if self.source_kind == "attack" and self.attack_index is None:
+            raise ValueError("attack profiles require attack_index")
         if self.source_kind == "trainer" and self.source_name is not None:
             raise ValueError("Trainer profiles do not use source_name")
+        if self.source_kind == "trainer" and self.attack_index is not None:
+            raise ValueError("Trainer profiles do not use attack_index")
 
 
 @dataclass(frozen=True)
@@ -263,7 +268,7 @@ def _attack_profiles(card: dict[str, Any]) -> tuple[PositionEffectProfile, ...]:
         return ()
 
     profiles: list[PositionEffectProfile] = []
-    for attack in card.get("attacks") or ():
+    for attack_index, attack in enumerate(card.get("attacks") or ()):
         effect_text = _normalized(attack.get("text") or "")
         parsed = _parse_movement(effect_text)
         if parsed is None:
@@ -284,6 +289,7 @@ def _attack_profiles(card: dict[str, Any]) -> tuple[PositionEffectProfile, ...]:
                 attack_damage=attack.get("damage"),
                 coin_heads_required=coin_heads_required,
                 optional=optional,
+                attack_index=attack_index,
             )
         )
     return tuple(profiles)
