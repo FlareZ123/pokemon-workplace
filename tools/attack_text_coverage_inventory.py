@@ -10,9 +10,12 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
+from board_position_state import BoardState
+from attack_copy_physical_ko_bridge import PhysicalBoardEventProgram
 from simple_attack_board_semantics import (
     CompiledAttackBoardSemantics,
     compile_legal_index,
+    materialize_opponent_board_program,
 )
 
 
@@ -121,3 +124,27 @@ def build_coverage(resources_root: Path) -> dict:
         "guarded_uncompiled": len(unresolved) - len(unguarded),
         "examples": examples,
     }
+
+
+def materialize_damage_only_verified(
+    row: CompiledAttackBoardSemantics,
+    board: BoardState,
+    *,
+    counter_allocation: tuple[tuple[str, int], ...] = (),
+) -> PhysicalBoardEventProgram:
+    """Only accept source text whose entire board effect this path handles.
+
+    This conservative entry point is for damage-only board replays. It
+    excludes GX budget, type bypass, extra turns, defender-effect bypass,
+    and any unresolved attack text that needs a different execution layer.
+    """
+    classified = classify_attack_text(row)
+    if classified.kind not in {
+        "plain_fixed_or_gx_rule", "exact_damage_counter_clause"
+    } or "gx_budget" in classified.requires_handlers:
+        raise ValueError(
+            f"attack requires additional semantic handlers: {row.attack_id}"
+        )
+    return materialize_opponent_board_program(
+        row, board, counter_allocation=counter_allocation,
+    )
