@@ -7,7 +7,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from attack_text_coverage_inventory import build_coverage, classify_attack_text
+from attack_text_coverage_inventory import (
+    build_coverage, classify_attack_text, materialize_damage_only_verified,
+)
+from board_position_state import BoardPokemon, PokemonCard, make_state
 from simple_attack_board_semantics import compile_legal_index
 
 
@@ -58,6 +61,52 @@ def main() -> None:
     assert inventory["uncompiled_unguarded"] > 1000
     assert inventory["guarded_uncompiled"] > 500
 
+    board = make_state(
+        (
+            BoardPokemon("active", (PokemonCard("a", "A"),), retreat_cost=1),
+            BoardPokemon("bench", (PokemonCard("b", "B"),), retreat_cost=1),
+        ),
+        active_id="active",
+    )
+    safe_plain = next(
+        r for r in index["sv6-130"] if r.attack_name == "Jet Headbutt"
+    )
+    safe_counter = next(
+        r for r in index["sv6-130"] if r.attack_name == "Phantom Dive"
+    )
+    plain_program = materialize_damage_only_verified(safe_plain, board)
+    assert plain_program.damage_context.attack.base == 70
+    counter_program = materialize_damage_only_verified(
+        safe_counter, board, counter_allocation=(("bench", 6),),
+    )
+    assert counter_program.damage_context.attack.base == 200
+    assert counter_program.counter_placements[0].count == 6
+
+    should_refuse = (
+        ("bw1-3", "Wrap"),
+        ("bw1-5", "Leaf Storm"),
+        ("bw1-17", "Flame Charge"),
+        ("bw1-37", "Aqua Ring"),
+        ("bw1-81", "Collect"),
+        ("sm5-100", "Timeless-GX"),
+        ("sm5-100", "Shred"),
+        ("sm8-94", "Mind Shock"),
+    )
+    for card_id, name in should_refuse:
+        row = next(r for r in index[card_id] if r.attack_name == name)
+        try:
+            materialize_damage_only_verified(row, board)
+        except ValueError as error:
+            assert "additional semantic handlers" in str(error)
+        else:
+            raise AssertionError((card_id, name))
+
+    verified_damage_only_rows = sum(
+        row.kind in ("plain_fixed_or_gx_rule", "exact_damage_counter_clause")
+        and "gx_budget" not in row.requires_handlers
+        for row in inventory["rows"]
+    )
+
     print({
         "legal_attack_rows": inventory["total"],
         "kinds": inventory["counts"],
@@ -65,6 +114,8 @@ def main() -> None:
             inventory["uncompiled_unguarded"],
         "guarded_uncompiled_effect_text": inventory["guarded_uncompiled"],
         "real_card_witnesses": len(witnesses),
+        "verified_damage_only_source_rows": verified_damage_only_rows,
+        "verified_materializer_rejection_witnesses": len(should_refuse),
     })
 
 
