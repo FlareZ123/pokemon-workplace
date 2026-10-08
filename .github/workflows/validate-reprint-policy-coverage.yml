@@ -1,0 +1,30 @@
+name: validate reprint policy coverage
+
+on:
+  push:
+    paths:
+      - "tools/deck_legality_proof.py"
+      - "tools/legality_provenance.py"
+      - "tools/reprint_errata_resolution.py"
+      - "tools/reprint_policy_coverage.py"
+      - "results/reprint_policy_coverage/**"
+      - ".github/workflows/validate-reprint-policy-coverage.yml"
+  pull_request:
+    paths:
+      - "tools/deck_legality_proof.py"
+      - "tools/legality_provenance.py"
+      - "tools/reprint_errata_resolution.py"
+      - "tools/reprint_policy_coverage.py"
+      - "results/reprint_policy_coverage/**"
+      - ".github/workflows/validate-reprint-policy-coverage.yml"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.reprint_policy_coverage.reproduce
