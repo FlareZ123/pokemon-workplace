@@ -1,0 +1,31 @@
+name: validate Trainer semantic divergence
+
+on:
+  push:
+    paths:
+      - "tools/trainer_semantic_divergence.py"
+      - "tools/reprint_negative_evidence.py"
+      - "results/trainer_semantic_divergence/**"
+      - "results/reprint_negative_evidence/**"
+      - "results/reprint_errata_resolution/**"
+      - ".github/workflows/validate-trainer-semantic-divergence.yml"
+  pull_request:
+    paths:
+      - "tools/trainer_semantic_divergence.py"
+      - "tools/reprint_negative_evidence.py"
+      - "results/trainer_semantic_divergence/**"
+      - "results/reprint_negative_evidence/**"
+      - "results/reprint_errata_resolution/**"
+      - ".github/workflows/validate-trainer-semantic-divergence.yml"
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.trainer_semantic_divergence.reproduce
+      - run: python -m results.reprint_negative_evidence.reproduce
+      - run: python -m results.reprint_errata_resolution.reproduce
