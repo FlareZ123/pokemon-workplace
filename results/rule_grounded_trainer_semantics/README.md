@@ -6,7 +6,7 @@ Can current rules resolve any of the four remaining semantic-review rows in the 
 
 ## Result
 
-Yes. Three wording families can be normalized from explicit current rules while preserving the benchmark's known negative boundaries.
+Yes. Four wording families can be normalized from explicit current rules while preserving the benchmark's known negative boundaries.
 
 ### Fisherman
 
@@ -35,6 +35,14 @@ Advanced Player's Rulebook C-06 defines healing as removing damage counters. C-0
 
 The normalizer maps only the exact historical Moomoo Milk effect string to the current effect string.
 
+### VS Seeker
+
+Historical VS Seeker `ex6-100` and `pl3-140` say to search the discard pile for a Supporter, show it to the opponent, and put it into hand. Current `xy4-109` says to put a Supporter from the discard pile into hand.
+
+The discard pile is a public zone: Pokémon's official glossary says its cards are always face up and anyone may inspect them at any time. The historical reveal therefore contributes no additional observation. Advanced Player's Rulebook D-04 also explains that required card choices can be implicit in wording, so both effects select one Supporter when the effect is usable.
+
+The normalizer maps only the exact historical VS Seeker effect string to the current effect string.
+
 ## Benchmark consequence
 
 After composing this normalizer into `current_card_semantics.py`:
@@ -45,7 +53,7 @@ After composing this normalizer into `current_card_semantics.py`:
 - both remaining rows are the older Pokédex wordings with "up to 5 cards";
 - the two Pokémon-ex-excluding Life Herb prints stay `known_non_equivalent`.
 
-The broader archive also resolves the same exact no-exclusion Life Herb wording on `hgss2-79`, the same public-discard Fisherman wording on `hgss1-92`, and historical Moomoo Milk `hgss1-94`.
+The broader archive also resolves the same exact no-exclusion Life Herb wording on `hgss2-79`, the same public-discard Fisherman wording on `hgss1-92`, historical Moomoo Milk `hgss1-94`, and historical VS Seeker `ex6-100` and `pl3-140`.
 
 ## Why Pokédex remains unresolved
 
@@ -53,7 +61,7 @@ The older Pokédex wording lets the player look at "up to 5" cards, while the la
 
 ## Implementation
 
-`tools/trainer_rule_semantics.py` contains only exact-string, exact-name transformations supported by the rules above, including Moomoo Milk's three-counter to 30-damage healing equivalence. `tools/current_card_semantics.py` applies it after print errata, legacy Tool normalization, and Trainer category-boilerplate removal.
+`tools/trainer_rule_semantics.py` contains only exact-string, exact-name transformations supported by the rules above, including Moomoo Milk's three-counter to 30-damage healing equivalence and VS Seeker's public-discard retrieval equivalence. `tools/current_card_semantics.py` applies it after print errata, legacy Tool normalization, and Trainer category-boilerplate removal.
 
 The reproducer verifies positive Fisherman and Life Herb convergence, the two Life Herb negative witnesses, the unresolved Pokédex boundary, and the updated 76-row official benchmark partition.
 
