@@ -22,7 +22,10 @@ from retreat_dynamic_energy_units import (
     unresolved_selected_prize_provider_ids,
 )
 from retreat_environment_modifiers import derive_environment_retreat_modifiers
-from retreat_stadium_tool_overlay import project_stadium_tool_state
+from retreat_stadium_tool_overlay import (
+    project_stadium_tool_state,
+    restore_persistent_tool_flags,
+)
 from retreat_energy_normalization import (
     RetreatEnergyNormalization,
     normalize_retreat_energy_state,
@@ -89,7 +92,6 @@ def attempt_board_derived_retreat(
                 instance_classes=prepared.energy.instance_classes,
             ),
         )
-        normalization = replace(normalization, state=prepared)
     active = prepared.energy.board.get(prepared.energy.board.active_id)
     ability_projection = project_retreat_ability_state(
         prepared.energy.board,
@@ -144,6 +146,20 @@ def attempt_board_derived_retreat(
             opposing_scoop_up_block_active=bool(scoop_sources),
             prism_star_energy_ids=prism_star_energy_ids,
         )
+        if transaction is not None and tool_projection.suppressed_own_tool_ids:
+            corrected_board = restore_persistent_tool_flags(
+                normalization.state.energy.board,
+                transaction.state.energy.board,
+            )
+            physical_result = RetreatEnergyTransactionState(
+                unified=transaction.state.unified,
+                energy=EnergyBoardState(
+                    zones=transaction.state.energy.zones,
+                    board=corrected_board,
+                    instance_classes=transaction.state.energy.instance_classes,
+                ),
+            )
+            transaction = replace(transaction, state=physical_result)
 
     return BoardDerivedRetreatAttempt(
         normalization=normalization,
