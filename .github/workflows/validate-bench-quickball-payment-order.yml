@@ -6,6 +6,7 @@ on:
       - 'tools/bench_quickball_sequence.py'
       - 'tools/bench_quickball_access.py'
       - 'results/bench_quickball_payment_order/**'
+      - '.github/workflows/validate-bench-quickball-payment-order.yml'
   workflow_dispatch:
 
 permissions:
