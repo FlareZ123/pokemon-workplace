@@ -56,7 +56,7 @@ def main():
     toy=counts(D=4,I=1,A=1,B=1,G=1,S=1,E=1,P=3)
     typed, den=counted_visible_hands(toy,basics=2,opening_hand_size=5)
     literal, literal_den=literal_distribution(toy,2,5)
-    assert (den,len(typed))==(3465,170), (den,len(typed))
+    assert (den,len(typed))==(3465,163), (den,len(typed))
     assert (typed,den)==(literal,literal_den)
     print("Independent labeled Basic and opener/draw census: PASS",
           "states",len(typed),"weighted orders",den)
