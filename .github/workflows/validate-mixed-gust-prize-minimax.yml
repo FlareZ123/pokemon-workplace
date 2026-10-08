@@ -18,4 +18,4 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: python results/mixed_gust_prize_minimax/reproduce.py
+      - run: python -m results.mixed_gust_prize_minimax.reproduce
