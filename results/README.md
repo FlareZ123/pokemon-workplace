@@ -128,6 +128,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [gothitelle_natural_setup_window/](gothitelle_natural_setup_window/) calibrates the major existing-Stage-2 assumption in the Teleport studies. For an illustrative 60-card list with three Gothita, two Gothitelle, four Rare Candy, and eight other Basics, 4.694346% of legally accepted opening hands naturally provide turn-two Rare Candy evolution readiness without any search or extra draw. An exact opening/Prize/turn-one/turn-two model matches independent labeled enumeration and demonstrates random-Prize marginal invariance in the no-search setting; it is not a competitive deck's optimized setup probability.
 
+[gothitelle_quick_ball_first_turn/](gothitelle_quick_ball_first_turn/) extends exact turn-two Gothitelle/Rare Candy timing to one first-turn Quick Ball search for missing Gothita, with mandatory other-card discard and random-Prize searchability. In an illustrative 60-card list (Gothita 3, Gothitelle 2, Rare Candy 4, other Basics 8, Quick Ball 4, approved discard cards 12), turn-two readiness conditional on a legal opener rises from 4.694346% natural-only to 6.547707% with the targeted search, a 1.853361-percentage-point gain. Independent labeled enumeration and a Prize-sensitive negative test passed CI.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
