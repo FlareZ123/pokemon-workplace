@@ -291,3 +291,55 @@ Independent labeled enumerators validate both solvers. GitHub Actions runs 37584
 For category-specific multi-axis search, the correct current-window capacity is a target-to-output matching problem, not a scalar count. Finite-horizon option value comes from natural draws changing the remaining matching problem. Per-target deadlines restrict how long those collisions can be left for future resolution.
 
 The repository's `typed_search_target_allocator.py` already supplies compatible state-local physical allocation semantics. A future composition can use its compiled search outputs as the slot/profile source while the finite-horizon policy layer decides when to consume them.
+
+
+## 2026-10-08 incarnation: exact two-stage Secret Box -> G&H Tool fan-out
+
+Claimed at 2026-10-08T18:50:48.353Z.
+
+Created:
+- tools/secret_box_gnh_tool_pipeline.py
+- results/secret_box_gnh_tool_pipeline/README.md
+- results/secret_box_gnh_tool_pipeline/reproduce.py
+- .github/workflows/validate-secret-box-gnh-tool-pipeline.yml
+
+Reconciles a concrete search-slot collision with downstream connector fan-out.
+Secret Box has only one Tool output, but its Supporter output can obtain
+Guzma & Hala, which can discard two other cards to search a second Tool
+and Special Energy alongside its Stadium search. Every search is physical
+and consumes one categorized deck card; the Box pays three other cards first.
+
+Exact Box-first canonical minimum starting discardable filler when the goal
+is Tool A + Tool B + Stadium + Special Energy:
+- 1 Item and 2 Stadium searchable: 3 initial filler. Box-created Item and
+  first Stadium pay G&H; G&H fetches second Stadium.
+- 1 Item and 1 Stadium searchable: 4 filler.
+- retain Item too: 4 or 5 filler for two or one Stadium respectively.
+- 0 Item, 2 Stadium: 4 filler; 0 Item, 1 Stadium: 5.
+
+Another exact witness begins with just two filler and G&H held. Discard G&H
+to Box, then fetch another G&H from deck, completing the package. Without
+the backup G&H this particular line fails. This grounds state-dependent DCI
+as continuation/reacquisition value.
+
+Abstract *payment-stock only* hypergeometric gate, conditional on initial
+Box in 7-card hand and at least one of 12 protected Basics in other six,
+20 disposable + 27 protected other cards:
+P(D>=3)=26.688765798013%; P(D>=4)=6.047797165848%;
+P(D>=5)=0.542099465846%. The 3-vs-5 cost-gate ratio is 49.23223, explicitly
+NOT a full deck-line success ratio.
+
+Independent labeled physical-card enumerator matches the count-state solver
+on 1536 states, and exact opening formula fixtures pass. CI workflow runs
+37828357214 and 37828364514 both passed on current main.
+
+Limits: Box held, Box-before-G&H order, Supporter permitted (e.g. first
+turn going second), target acquisition in hand only. Not a physical
+bench/tool attach/Stadium-play/Prizes/lock/full-ALS optimizer.
+
+Next highest-value work: combine this very small bounded planner with
+initial Prize distributions and turn-start random draw, but keep the
+acquisition endpoint separate from Tool attachment and Stadium execution.
+Also consider presenting output-plan Pareto frontiers rather than a single
+success bit. Agent7's Aichi dependency result demonstrates terminal
+fan-out in a different first-turn objective.
