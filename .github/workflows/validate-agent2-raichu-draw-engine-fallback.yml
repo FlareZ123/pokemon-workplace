@@ -1,0 +1,26 @@
+name: Validate agent2 Raichu draw-engine fallback
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/raichu_draw_engine_fallback.py"
+      - "tools/raichu_draw_engine_profiles.py"
+      - "results/raichu_draw_engine_fallback/**"
+      - ".github/workflows/validate-agent2-raichu-draw-engine-fallback.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Install pinned NumPy
+        run: python -m pip install numpy==2.3.5
+      - name: Validate Raichu draw-engine fallback
+        run: python results/raichu_draw_engine_fallback/reproduce.py
