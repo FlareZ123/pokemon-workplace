@@ -146,18 +146,33 @@ def main() -> None:
     assert len(guaranteed.actions) == 1
     assert set(guaranteed.actions[0].discard_energy_ids) == {"counter", "dce"}
 
-    # Exact tool condition without remaining HP cannot authorize a Retreat.
+    # Rescue Board threshold is unknown, but base cost 1 already becomes
+    # zero from its unconditional -1: the no-cost mode changes nothing.
     rescue = actor(
         (), pivots=1,
         tool=ToolAttachment("rescue", "Rescue Board", "sv5-159"),
     )
-    unresolved = options(rescue, blank, 1)
-    assert not unresolved.information_complete
-    assert unresolved.actions == ()
-    assert unresolved.checked_candidate_count == 0
-    resolved = options(rescue, blank, 1, active_remaining_hp=30)
+    safe_rescue = options(rescue, blank, 1)
+    assert not safe_rescue.information_complete
+    assert safe_rescue.preflight is not None
+    assert safe_rescue.preflight.tool_action_sufficient
+    assert safe_rescue.checked_candidate_count == 1
+    assert len(safe_rescue.actions) == 1
+    assert safe_rescue.actions[0].discard_energy_ids == ()
+
+    # At base cost 2, the unknown threshold changes cost 1 versus 0.
+    unknown_rescue = options(rescue, blank, 2)
+    assert not unknown_rescue.information_complete
+    assert unknown_rescue.preflight is not None
+    assert not unknown_rescue.preflight.tool_action_sufficient
+    assert unknown_rescue.actions == ()
+    assert unknown_rescue.checked_candidate_count == 0
+    resolved = options(rescue, blank, 2, active_remaining_hp=30)
     assert len(resolved.actions) == 1
     assert resolved.actions[0].discard_energy_ids == ()
+    assert options(
+        rescue, blank, 2, active_remaining_hp=100,
+    ).actions == ()
 
     # Outgoing with no Bench has no legal Retreat destination.
     alone = actor((dce,), pivots=0)
