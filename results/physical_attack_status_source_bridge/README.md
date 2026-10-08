@@ -52,6 +52,15 @@ condition payloads, and a contract whose attack was never copied.
 Attack-effect immunity suppresses infliction without undoing damage.
 The materialized card ledger is unchanged across the sequence.
 
+## Validation outcome
+
+[GitHub Actions run 37772749829](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37772749829)
+passed the five real source-card sequences, all three invalid-state
+rejection controls, and ledger conservation checks. The final condition
+stack contains Burned, Paralyzed, and Poisoned after the heads outcome
+replaces Asleep. The same coin-gated attack on tails leaves the earlier
+Asleep state unchanged.
+
 ## Boundaries
 
 Only ordinary statuses from exact recognized full-text clauses are
