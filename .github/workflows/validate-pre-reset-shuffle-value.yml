@@ -1,0 +1,23 @@
+name: Validate pre-reset shuffle value
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/pre_reset_shuffle_value.py"
+      - "results/pre_reset_shuffle_value/**"
+      - ".github/workflows/validate-pre-reset-shuffle-value.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate pre-reset shuffle value
+        run: python results/pre_reset_shuffle_value/reproduce.py
