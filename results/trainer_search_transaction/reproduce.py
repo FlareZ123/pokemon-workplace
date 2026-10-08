@@ -16,7 +16,11 @@ from discard_cost_witness import (
 from lock_state_kernel import PlayerChannels
 from multicopy_zone_state import ZoneCountState
 from search_zone_transition import SearchZoneTarget
-from trainer_search_profile_compiler import compile_multi_output_trainer_profiles
+from trainer_search_profile_compiler import (
+    CompiledTrainerSearchProfile,
+    SearchOutput,
+    compile_multi_output_trainer_profiles,
+)
 from trainer_search_transaction import (
     TrainerSearchExecutionState,
     execute_trainer_retrieval_transaction,
@@ -398,6 +402,53 @@ def main() -> None:
     )
     assert free_zero_rejected
 
+    # A restricted search with mandatory discard payment changes game state
+    # even when its searched output is intentionally empty. Contrast the
+    # free zero-result rejection above and the optional paid case below.
+    ultra_zero_profile = CompiledTrainerSearchProfile(
+        card_id="swsh9-150",
+        name="Ultra Ball",
+        action_class="Item",
+        base_outputs=(SearchOutput("Pokémon", 1),),
+        required_discard_other_cards=2,
+    )
+    zero_retrieval = enumerate_typed_retrieval_actions(
+        ultra_zero_profile.base_outputs, (),
+    )[0]
+    ultra_zero_state = TrainerSearchExecutionState(
+        zones=ZoneCountState.from_mapping({
+            ("ultra_ball", "hand"): 1,
+            ("sky_field", "hand"): 1,
+            ("junk", "hand"): 1,
+            ("held_target", "hand"): 1,
+        })
+    )
+    ultra_zero_candidates = (
+        DiscardCandidate("sky_field"),
+        DiscardCandidate("junk"),
+    )
+    mandatory_paid_zero_retrieval = execute_trainer_retrieval_transaction(
+        ultra_zero_state,
+        profile=ultra_zero_profile,
+        action_card_class="ultra_ball",
+        targets=(),
+        retrieval_action=zero_retrieval,
+        discard_candidates=ultra_zero_candidates,
+        discard_selection=enumerate_discard_selections(
+            ultra_zero_state.zones, ultra_zero_candidates, 2,
+        )[0],
+    )
+    assert mandatory_paid_zero_retrieval.discard_cost == 2
+    assert mandatory_paid_zero_retrieval.after.zones.count("sky_field", "discard") == 1
+    assert mandatory_paid_zero_retrieval.after.zones.count("junk", "discard") == 1
+    assert mandatory_paid_zero_retrieval.after.zones.count("held_target", "hand") == 1
+    assert mandatory_paid_zero_retrieval.after.zones.count("ultra_ball", "discard") == 1
+    assert all(
+        mandatory_paid_zero_retrieval.before.zones.total(name)
+        == mandatory_paid_zero_retrieval.after.zones.total(name)
+        for name in ("ultra_ball", "sky_field", "junk", "held_target")
+    )
+
     gh_discard_only_tx = execute_trainer_retrieval_transaction(
         gh_paid_base_state,
         profile=guzma_hala,
@@ -533,6 +584,7 @@ def main() -> None:
                 "two_arven_with_limit_two_succeeded": True,
                 "guzma_hala_conditional_branch": gh_tx.used_conditional_outputs,
                 "guzma_hala_discard_cost": gh_tx.discard_cost,
+                "mandatory_paid_zero_retrieval": mandatory_paid_zero_retrieval.discard_cost,
                 "card_totals_conserved": True,
             },
             indent=2,
