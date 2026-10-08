@@ -47,6 +47,35 @@ class PayloadTransaction:
         return after == before + 1
 
 
+def assert_stadium_projection(
+    board: BenchTeleportState, zones: ZoneCountState
+) -> None:
+    """Check exact physical Stadium class counts across coupled kernels."""
+    for name, card_class in (
+        ("Sky Field", "sky_field"),
+        ("Collapsed Stadium", "collapsed_stadium"),
+    ):
+        for physical_zone, counted_zone in (
+            ("hand", "hand"),
+            ("discard", "discard"),
+            ("in_play", "stadium_in_play"),
+        ):
+            if physical_zone == "in_play":
+                actual = int(
+                    board.stadiums.in_play is not None
+                    and board.stadiums.in_play.name == name
+                )
+            else:
+                actual = sum(
+                    card.name == name
+                    for card in getattr(board.stadiums, physical_zone)
+                )
+            if zones.count(card_class, counted_zone) != actual:
+                raise ValueError(
+                    f"Stadium projection mismatch: {card_class}/{counted_zone}"
+                )
+
+
 def _sky_hand_card(board: BenchTeleportState) -> StadiumCopy:
     cards = tuple(card for card in board.stadiums.hand if card.name == "Sky Field")
     if len(cards) != 1:
@@ -61,6 +90,7 @@ def execute_ultra_ball_for_entrant(
     discard_selection: DiscardSelection,
 ) -> PayloadTransaction:
     """Search one Basic while preserving Sky Field's physical discard identity."""
+    assert_stadium_projection(board, execution.zones)
     if board.stadiums.budget != execution.budget:
         raise ValueError("board and Trainer budgets must match")
     sky_card = _sky_hand_card(board)
@@ -117,6 +147,7 @@ def execute_ultra_ball_for_entrant(
         stadiums=replace(stadiums, budget=txn.after.budget),
         hand_pokemon=board.hand_pokemon + (searched,),
     )
+    assert_stadium_projection(after_board, txn.after.zones)
     return PayloadTransaction(txn, after_board)
 
 
@@ -126,6 +157,7 @@ def mirror_teleport_to_trainer_zones(
     zones: ZoneCountState,
 ) -> ZoneCountState:
     """Mirror one successful physical Teleport transition into counted zones."""
+    assert_stadium_projection(previous, zones)
     source = previous.stadiums.in_play
     target = following.stadiums.in_play
     if source is None:
@@ -135,6 +167,7 @@ def mirror_teleport_to_trainer_zones(
         if target.name != "Sky Field":
             raise ValueError("this witness only mirrors Sky Field placement")
         out = out.move("sky_field", "discard", "stadium_in_play")
+    assert_stadium_projection(following, out)
     return out
 
 
