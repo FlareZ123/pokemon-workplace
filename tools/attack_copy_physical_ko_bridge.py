@@ -27,6 +27,15 @@ class PhysicalBoardEventProgram:
     damage_target_id: str
     damage_context: DamageContext
     counter_placements: tuple[EffectCounterPlacement, ...] = ()
+    additional_damage: tuple[tuple[str, DamageContext], ...] = ()
+
+
+@dataclass(frozen=True)
+class PhysicalDamageRecord:
+    event: str
+    target_index: int
+    target_id: str
+    result: DamageResult
 
 
 @dataclass(frozen=True)
@@ -44,6 +53,7 @@ class AttackCopyPhysicalBoardResolution:
     event_trace: tuple[PhysicalBoardEventTrace, ...]
     knocked_out_ids: tuple[str, ...]
     damage_targets: tuple[tuple[str, str], ...] = ()
+    damage_records: tuple[PhysicalDamageRecord, ...] = ()
 
 
 def _add_counters(
@@ -129,19 +139,25 @@ def replay_copy_attack_physical_board(
     current = state
     damage_results: list[tuple[str, DamageResult]] = []
     damage_targets: list[tuple[str, str]] = []
+    damage_records: list[PhysicalDamageRecord] = []
     counter_outcomes: list[tuple[str, CounterPlacementOutcome]] = []
     trace: list[PhysicalBoardEventTrace] = []
 
     for event in resolution.state.events:
         program = event_programs.get(event)
         if program is not None:
-            current, damage_result = _apply_damage(
-                current,
-                program.damage_target_id,
-                program.damage_context,
-            )
-            damage_results.append((event, damage_result))
-            damage_targets.append((event, program.damage_target_id))
+            damage_actions = (
+                (program.damage_target_id, program.damage_context),
+            ) + program.additional_damage
+            for index, (target_id, context) in enumerate(damage_actions):
+                current, damage_result = _apply_damage(
+                    current, target_id, context,
+                )
+                damage_results.append((event, damage_result))
+                damage_targets.append((event, target_id))
+                damage_records.append(
+                    PhysicalDamageRecord(event, index, target_id, damage_result)
+                )
             for placement in program.counter_placements:
                 current, outcome = _apply_effect_counters(current, placement)
                 counter_outcomes.append((event, outcome))
@@ -166,6 +182,7 @@ def replay_copy_attack_physical_board(
         event_trace=tuple(trace),
         knocked_out_ids=_knocked_out_ids(current, hp_by_pokemon_id),
         damage_targets=tuple(damage_targets),
+        damage_records=tuple(damage_records),
     )
 
 
