@@ -6,7 +6,7 @@ The Trainer gust catalog distinguishes broadly player-selected effects such as B
 
 ## Source and abstraction
 
-Bundled `resources/cards/en/swsh12.json` Serena `swsh12-164` says the Supporter can choose a discard-and-draw mode or switch an opposing Benched Pokémon V with their Active. Boss's Orders `me1-114` or `swsh2-154` can select any opposing Benched Pokémon. Both consume a Supporter use per turn under the normal rules.
+Bundled `resources/cards/en/swsh12.json` Serena `swsh12-164` says the Supporter can choose a discard-and-draw mode or switch an opposing Benched Pokémon V with their Active. Boss's Orders `me1-114` or `swsh2-154` can select any opposing Benched Pokémon. Both consume a Supporter use per turn under the normal rules. The official Sword & Shield—Lost Origin rulebook, https://assets.pokemon.com/assets/cms2/pdf/trading-card-game/rulebook/swsh11_rulebook_en.pdf, pp. 24 and 26, explicitly includes Pokémon VSTAR and VMAX under references to Pokémon V, confirming the target-label treatment in the model.
 
 `tools/typed_gust_target_minimax.py` implements the earlier one-hit KO, static opposing board, adversarial-promotion, six-Prize minimax with two kinds of **already available** targeted-gust resources:
 
