@@ -87,6 +87,7 @@ def attempt_board_derived_retreat(
     unresolved_providers = unresolved_selected_prize_provider_ids(
         prepared,
         selected_energy_ids,
+        retreat_cost=retreat_cost,
         context=provider_context,
     )
 
