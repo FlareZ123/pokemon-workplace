@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "tools/physical_copy_damage_reaction_bridge.py"
+      - "tools/physical_damage_reaction_sources.py"
       - "tools/attack_copy_physical_ko_bridge.py"
       - "tools/damage_reaction_kernel.py"
       - "tools/cross_player_knockout_resolution.py"
