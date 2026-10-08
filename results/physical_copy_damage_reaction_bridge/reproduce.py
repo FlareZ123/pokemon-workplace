@@ -31,6 +31,7 @@ from physical_copy_damage_reaction_bridge import (
     resolve_physical_copy_damage_reactions,
 )
 from stack_knockout_conservation import StackBoardMaterialState, attach_from_hand
+from physical_damage_reaction_sources import eligible_spiky_energy_reactions
 
 HAUGHTY = "persian:haughty-order"
 TIMELESS = "dialga:timeless-gx"
@@ -121,13 +122,16 @@ def test_reflection_full_physical_batch():
     assert tuple(step.event for step in replay.event_trace) == (
         "reveal_top_10", BODY, "shuffle_revealed",
     )
+    assert replay.damage_targets == ((BODY, "b-active"),)
+    spiky = eligible_spiky_energy_reactions(
+        replay, body_event=BODY, damaged_pokemon_id="b-active",
+        from_opponents_pokemon=True,
+    )
+    assert spiky == (DamageReaction(DamageReactionKind.FIXED_COUNTERS, 2),)
 
     result = resolve_physical_copy_damage_reactions(
-        replay, a, body_event=BODY,
-        reactions=(
-            DamageReaction(DamageReactionKind.MIRROR_FINAL_DAMAGE),
-            DamageReaction(DamageReactionKind.FIXED_COUNTERS, fixed_counters=2),
-        ),
+        replay, a, body_event=BODY, damaged_pokemon_id="b-active",
+        reactions=(DamageReaction(DamageReactionKind.MIRROR_FINAL_DAMAGE),) + spiky,
         attacker_hp_by_pokemon_id={"a-active": 170, "a-bench": 100},
         defender_hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
     )
@@ -184,12 +188,16 @@ def test_prevented_damage_and_one_sided_ko():
         hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
     )
     prevented = resolve_physical_copy_damage_reactions(
-        prevented_replay, a, body_event=BODY,
+        prevented_replay, a, body_event=BODY, damaged_pokemon_id="b-active",
         reactions=(DamageReaction(DamageReactionKind.MIRROR_FINAL_DAMAGE),),
         attacker_hp_by_pokemon_id={"a-active": 10, "a-bench": 100},
         defender_hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
     )
     assert not prevented.triggered
+    assert eligible_spiky_energy_reactions(
+        prevented_replay, body_event=BODY, damaged_pokemon_id="b-active",
+        from_opponents_pokemon=True,
+    ) == ()
     assert prevented.counters_placed_on_attacker == 0
     assert prepare_reacted_physical_knockouts(prevented) == (None, None)
     assert prevented.attacker_state is a
@@ -204,17 +212,21 @@ def test_prevented_damage_and_one_sided_ko():
         hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
     )
     one_sided = resolve_physical_copy_damage_reactions(
-        unprevented_replay, a, body_event=BODY,
+        unprevented_replay, a, body_event=BODY, damaged_pokemon_id="b-active",
         reactions=(DamageReaction(DamageReactionKind.MIRROR_FINAL_DAMAGE),),
         attacker_hp_by_pokemon_id={"a-active": 160, "a-bench": 100},
         defender_hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
     )
+    assert eligible_spiky_energy_reactions(
+        unprevented_replay, body_event=BODY, damaged_pokemon_id="b-active",
+        from_opponents_pokemon=False,
+    ) == ()
     pa, pb = prepare_reacted_physical_knockouts(one_sided)
     assert pa is None and pb is not None
     assert one_sided.attacker_state.board.get("a-active").damage_counters == 15
     try:
         resolve_physical_copy_damage_reactions(
-            unprevented_replay, a, body_event="missing",
+            unprevented_replay, a, body_event="missing", damaged_pokemon_id="b-active",
             reactions=(),
             attacker_hp_by_pokemon_id={"a-active": 160, "a-bench": 100},
             defender_hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
@@ -224,10 +236,39 @@ def test_prevented_damage_and_one_sided_ko():
     else:
         raise AssertionError("unknown damage events must be rejected")
 
+    try:
+        eligible_spiky_energy_reactions(
+            unprevented_replay, body_event=BODY,
+            damaged_pokemon_id="b-bench", from_opponents_pokemon=True,
+        )
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("reaction cannot be assigned to another target")
+
+
+def test_bench_damage_does_not_trigger_active_spiky():
+    _, b = physical_player("b", AttachmentKind.ENERGY)
+    replay = replay_copy_attack_physical_board(
+        copied_timeless(), b,
+        event_programs={
+            BODY: PhysicalBoardEventProgram(
+                "b-bench", DamageContext(attack=AttackDamage(150)),
+            ),
+        },
+        hp_by_pokemon_id={"b-active": 130, "b-bench": 100},
+    )
+    assert replay.damage_targets == ((BODY, "b-bench"),)
+    assert eligible_spiky_energy_reactions(
+        replay, body_event=BODY, damaged_pokemon_id="b-bench",
+        from_opponents_pokemon=True,
+    ) == ()
+
 
 def main():
     test_reflection_full_physical_batch()
     test_prevented_damage_and_one_sided_ko()
+    test_bench_damage_does_not_trigger_active_spiky()
     print("physical copied-attack reaction/KO integration: PASS")
 
 
