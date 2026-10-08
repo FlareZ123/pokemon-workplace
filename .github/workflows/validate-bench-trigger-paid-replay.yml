@@ -1,0 +1,22 @@
+name: Validate paid support pickup replay
+
+on:
+  push:
+    paths:
+      - "tools/bench_trigger_paid_replay.py"
+      - "results/bench_trigger_paid_replay/**"
+      - ".github/workflows/validate-bench-trigger-paid-replay.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/bench_trigger_paid_replay/reproduce.py
