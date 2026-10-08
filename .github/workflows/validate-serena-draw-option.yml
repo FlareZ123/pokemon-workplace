@@ -1,0 +1,20 @@
+name: Validate Serena Draw Option
+
+on:
+  push:
+    paths:
+      - 'tools/serena_draw_option.py'
+      - 'tools/typed_gust_target_minimax.py'
+      - 'results/serena_draw_option/**'
+      - '.github/workflows/validate-serena-draw-option.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python results/serena_draw_option/reproduce.py
