@@ -24,6 +24,7 @@ jobs:
       - name: Enumerate legal payment and destination branches
         run: |
           python results/retreat_action_enumeration/reproduce.py
+          python results/retreat_action_enumeration/exhaustive.py
           python results/retreat_energy_transaction/reproduce.py
           python results/retreat_prize_provider_uncertainty/reproduce.py
           python results/board_derived_retreat/reproduce.py
