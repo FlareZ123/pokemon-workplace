@@ -1,0 +1,20 @@
+name: Validate Target Restricted Gust Minimax
+
+on:
+  push:
+    paths:
+      - 'tools/target_restricted_gust_minimax.py'
+      - 'tools/gust_prize_minimax.py'
+      - 'results/target_restricted_gust_minimax/**'
+      - '.github/workflows/validate-target-restricted-gust-minimax.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.target_restricted_gust_minimax.reproduce
