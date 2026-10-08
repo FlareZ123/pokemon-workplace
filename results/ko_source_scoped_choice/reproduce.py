@@ -136,6 +136,25 @@ def main():
     assert constrained.outcome_count == 1
     assert constrained.payoff_envelope == (0.0, 0.0)
 
+    # Ties preserve every optimal endpoint. A single representative chosen
+    # lexicographically is insufficient to describe the physical outcome
+    # uncertainty, even when the utility value is invariant across sources.
+    tied = choose_ko_outcome_by_source(
+        programs, context=context, source_ids=sources, players=players,
+        viewpoint_player="defender", opposing_player="attacker",
+        payoff=lambda destinations: 0,
+    )
+    assert tied.value_invariant
+    assert tied.payoff_envelope == (0.0, 0.0)
+    assert not tied.instance_destination_invariant
+    assert len(tied.optimal_outcome_union) == 2
+    assert all(len(choice.optimal_outcomes) == 2 for choice in tied.choices)
+    assert not result.value_invariant
+    assert aligned.value_invariant
+    assert aligned.instance_destination_invariant
+    assert constrained.value_invariant
+    assert constrained.instance_destination_invariant
+
     # Missing or inapplicable source-specific claims remain unresolved.
     mixed = choose_ko_outcome_by_source(
         programs, context=context,
