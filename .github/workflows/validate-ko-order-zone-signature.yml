@@ -1,0 +1,19 @@
+name: Validate KO destination zone signatures
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_order_zone_signature.py"
+      - "results/ko_order_zone_signature/**"
+      - ".github/workflows/validate-ko-order-zone-signature.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/ko_order_zone_signature/reproduce.py
