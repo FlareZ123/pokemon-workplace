@@ -61,11 +61,17 @@ def materialize_profiled_copy_program(
     if not live_attacker_types:
         raise ValueError("attacking Pokemon must have at least one current type")
 
-    ignore_wr = (
-        semantics.ignore_weakness_resistance
+    ignore_weakness = (
+        semantics.ignore_weakness
         if ignore_weakness_resistance is None
         else ignore_weakness_resistance
     )
+    ignore_resistance = (
+        semantics.ignore_resistance
+        if ignore_weakness_resistance is None
+        else ignore_weakness_resistance
+    )
+    ignore_wr = ignore_weakness and ignore_resistance
     ignore_effects = (
         semantics.ignore_defender_effects
         if ignore_defender_effects is None
@@ -82,8 +88,8 @@ def materialize_profiled_copy_program(
         stages = resolve_printed_type_stages(
             live_attacker_types,
             target,
-            weakness_enabled=weakness_enabled,
-            resistance_enabled=resistance_enabled,
+            weakness_enabled=weakness_enabled and not ignore_weakness,
+            resistance_enabled=resistance_enabled and not ignore_resistance,
         )
         context = DamageContext(
             attack=AttackDamage(semantics.fixed_damage or 0),
