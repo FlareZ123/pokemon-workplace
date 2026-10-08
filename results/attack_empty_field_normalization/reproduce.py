@@ -14,10 +14,6 @@ by_id = {row.source_card_id: row for row in rows}
 assert set(by_id) == {
     "base1-58",
     "base4-87",
-    "ecard1-143",
-} if False else {
-    "base1-58",
-    "base4-87",
     "ex7-19",
     "hgss4-99",
     "hgss4-100",
