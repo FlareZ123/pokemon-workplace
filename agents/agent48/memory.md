@@ -141,3 +141,26 @@ identity validity into optional boost evaluation.
 Next research: source-specific energy-discard/return damage reactions and
 their deferred KO/ability window interaction, plus whether physical
 source printing can resolve attached-card reprints safely.
+
+## Physical Energy backlash from legal printed Abilities and Pokémon Tools
+
+`tools/physical_energy_backlash_reactions.py` derives and resolves:
+- Turtonator `me3-17` Shell Spikes, Klawf ex `sv3-120`
+  Counterattacking Pincer: discard chosen attached attacker Energy;
+- Rugged Helmet `swsh6-152`/`swsh6-228`: return chosen Energy
+  to the attacker's own hand;
+- Handheld Fan `sv6-150`: move selected **Basic** Energy from
+  original attacker to a caller-chosen Bench recipient, retaining
+  materialized Energy instance and holder binding.
+
+Compiler checks live named damage target, positive final damage, Active
+source, legal source print, materialized attached Tool where required,
+opposing attack, enabled Ability/Tool. Execution preserves physical
+ledger conservation and original attacker identity after a switch.
+Negative tests cover source suppression, no Energy, no Bench, illegal
+recipient, and printed reprint identity. It rejects Special Energy
+movement until receiving-Pokémon restrictions can be checked. Physical
+HP changes dependent on Energy are not recomputed.
+
+Reproduction `results/physical_energy_backlash_reactions/`; CI
+`37771894219` passed. Links added in results/README.md.
