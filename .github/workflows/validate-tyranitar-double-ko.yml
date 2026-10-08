@@ -1,0 +1,20 @@
+name: Validate Tyranitar-GX double Knock Out
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_order_outcome_space.py"
+      - "tools/ko_order_signature_projection.py"
+      - "results/tyranitar_double_ko_ordering/**"
+      - ".github/workflows/validate-tyranitar-double-ko.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/tyranitar_double_ko_ordering/reproduce.py
