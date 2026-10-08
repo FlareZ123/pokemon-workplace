@@ -16,17 +16,17 @@ The audit finds eight outside-scope prints across three names where at least one
 | Master Ball | 5 | historical prints have no ACE SPEC deck rule; the legal Expanded targets are ACE SPEC prints |
 | Shining Celebi | 1 | legal same-name targets disagree with each other about the self-name singleton rule |
 
-This audit establishes a representation constraint. It does not decide tournament legality for unresolved historical prints.
+This audit establishes a representation constraint.
 
 ## Resolver-aware interpretation
 
-The current resolver avoids the Master Ball and Computer Search projection hazards.
+The current resolver avoids all three broad name-level projection hazards.
 
 The five historical Master Ball prints are known non-equivalent, so they have no resolver target to project from.
 
 The two historical Computer Search prints are also known non-equivalent. Current Standard and Expanded reprint policy requires all printed text to be functionally identical. The legal Expanded Computer Search target carries an ACE SPEC deck restriction that is absent from both historical prints.
 
-Shining Celebi remains a live illustration of target ambiguity. Historical `neo4-106` is still in semantic review. Its legal same-name targets include `me55c-106`, which carries the same singleton rule, and `smp-SM79`, which has different gameplay text and no singleton rule.
+Historical Shining Celebi `neo4-106` now resolves through an exact current-semantic fingerprint to `me55c-106`. Those two prints carry the same singleton rule. The unrelated legal same-name print `smp-SM79` has different gameplay text and no singleton rule, so exact target identity remains important.
 
 ## Implementation
 
@@ -36,9 +36,9 @@ The regression asserts the eight current name-level hazards and checks how the r
 
 ## Consequence for deck adjudication
 
-Deck construction should remain attached to the submitted exact print until policy evidence explicitly says which construction rules transfer across a reprint relationship.
+Deck construction remains attached to the submitted exact print until policy evidence identifies a valid reprint relationship.
 
-This is why `tools/deck_legality_proof.py` first validates the exact submitted prints and then evaluates format-legality provenance. A reprint target is evidence for legality resolution and is not a substitute physical card for deck-construction analysis.
+This is why `tools/deck_legality_proof.py` validates submitted print construction before evaluating format-legality provenance. The resolved target contributes legality evidence without replacing the physical source print in construction analysis.
 
 ## Scope
 
