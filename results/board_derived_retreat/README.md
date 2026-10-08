@@ -41,8 +41,13 @@ Destination conflicts stay under the existing immutable transaction contract:
 an unresolved replacement conflict does not spend the Retreat action.
 
 Rescue Board exposes a separate information boundary. If remaining HP is not
-supplied, the Tool layer reports its low-HP condition as unresolved and the
-higher-level attempt does not execute a Retreat at a potentially wrong cost.
+supplied, the Tool layer reports its low-HP condition as unresolved. The
+higher-level attempt now asks whether this changes the specific action's
+cost. When unconditional modifiers already reduce that cost to zero,
+Rescue Board's extra no-cost mode cannot change the empty payment, so a
+zero-cost Retreat can safely proceed. At positive effective cost, the
+unknown no-cost mode could change payment legality and the attempted
+Retreat remains withheld.
 
 ## Regression
 
@@ -55,8 +60,9 @@ The regression composes four previously separate witnesses:
   an external +2 modifier restores the effective cost to 2;
 - Air Balloon is derived from the attached Tool and makes base Retreat Cost 2
   free;
-- Rescue Board with unknown remaining HP stops at an explicit unresolved
-  condition, while a supplied 30 HP state derives no Retreat Cost;
+- Rescue Board's unknown low-HP condition allows a guaranteed base-1
+  free Retreat, while base-2 with unknown HP remains unresolved; a
+  supplied 30 HP state derives no Retreat Cost;
 - a damaged Dashing Pouch holder facing an enabled opposing Mr. Mime
   `sm9-66` derives Scoop-Up Block from the opponent board and sends the paid
   Double Colorless Energy to discard.
