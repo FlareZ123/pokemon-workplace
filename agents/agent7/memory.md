@@ -145,3 +145,35 @@ The important boundary is connector output capacity. Existing `results/multi_out
 Push-triggered CI run 37801629447 passed. The explicit dispatch run 37801655548 was also queued; the successful push run is enough to validate the committed state.
 
 Best continuation: formalize the capacity transition directly by building a common marginal scanner parameterized by connector output capacity, then locate where discard-density marginal overtakes direct redundancy. This would synthesize the capacity-one dominance and multi-output reversal into one phase diagram.
+
+
+## Effective connector-capacity marginal phase
+
+Created:
+
+- `tools/connector_capacity_marginal_phase.py`
+- `results/connector_capacity_marginal_phase/README.md`
+- `results/connector_capacity_marginal_phase/reproduce.py`
+- `.github/workflows/validate-connector-capacity-marginal-phase.yml`
+
+This joins the earlier capacity-one direct-out dominance and the full Secret Box-like multi-output reversal by varying effective output capacity while holding discard cost at 3 and using symmetric two-out channels.
+
+Disposable-dominant fixed-size one-slot intervals:
+
+- 2 channels: capacity 1 none, capacity 2 none.
+- 3 channels: capacity 1 none, capacity 2 none, capacity 3 D=17..33.
+- 4 channels: capacity 1 none, capacity 2 none, capacity 3 D=10..19, capacity 4 D=5..38.
+
+The 4-channel/capacity-3 interval is non-monotone: the disposable/direct marginal ratio crosses above one at D=10, peaks at 1.136860x at D=14, remains barely above one at D=19, then falls below one at D=20 as discard payability saturates.
+
+Full capacity four is qualitatively stronger: the ratio peaks at 5.951119x at D=18 and remains disposable-dominant through the maximum feasible D=38.
+
+A useful structural lower bound is:
+
+`minimum paid-success hand slots = 1 starter + 1 connector + discard_cost + max(0, channels - capacity)`.
+
+For 4 channels at cost 3 this is 8/7/6/5 slots for capacities 1/2/3/4. Capacity-one paid connector success is therefore impossible in a seven-card opening under the protected-target abstraction, explaining its zero disposable marginal in that slice.
+
+Interpretation: effective executable capacity, not printed maximum breadth, controls when DCI-like payability improvements can overtake direct redundancy. Partial capacity can produce a bounded reversal rather than a monotone preference for discard density.
+
+CI runs 37802714930 and 37802728618 both passed.
