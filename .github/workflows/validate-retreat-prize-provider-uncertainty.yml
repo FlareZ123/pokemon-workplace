@@ -23,6 +23,7 @@ jobs:
       - name: Verify Prize bounds and earlier dynamic providers
         run: |
           python results/retreat_prize_provider_uncertainty/reproduce.py
+          python results/retreat_prize_provider_uncertainty/exhaustive.py
           python results/retreat_dynamic_special_energy_providers/reproduce.py
           python results/board_derived_retreat/reproduce.py
           python results/retreat_environment_modifiers/reproduce.py
