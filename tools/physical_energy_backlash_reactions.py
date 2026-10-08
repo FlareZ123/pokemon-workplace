@@ -4,7 +4,7 @@ Supported printed legal sources:
 - Turtonator Shell Spikes and Klawf ex Counterattacking Pincer discard one
   Energy from the Attacking Pokémon.
 - Rugged Helmet returns one Energy from the attacker to its owner's hand.
-- Handheld Fan moves a Basic Energy from the attacker onto its owner's Bench.
+- Handheld Fan moves a compatible Energy from the attacker onto its owner's Bench.
 
 The caller supplies the opposing-Pokémon attack fact and card-selection
 policy, while source print identities and attachment/Ability eligibility
@@ -75,6 +75,9 @@ _BASIC_NAMES = frozenset({
     "Psychic Energy", "Fighting Energy", "Darkness Energy",
     "Metal Energy", "Fairy Energy",
 })
+# The printed Double Colorless Energy effect gives two Colorless Energy
+# without restricting the receiving Pokémon.
+_UNRESTRICTED_SPECIAL_NAMES = frozenset({"Double Colorless Energy"})
 
 
 def _source_card(resources: Path, print_id: str) -> dict:
@@ -187,7 +190,8 @@ def apply_physical_energy_backlash(
     A missing Energy or a missing destination Bench for movement means the
     effect cannot move a card. An invalid explicit choice is rejected.
     Special Energy move restrictions need a richer receiving-Pokémon profile,
-    so this narrow move effect accepts only Basic Energy.
+    so this narrow move effect accepts Basic Energy and verified unrestricted
+    Special Energy such as Double Colorless Energy.
     """
 
     board = base.attacker_state.board
@@ -216,7 +220,7 @@ def apply_physical_energy_backlash(
             raise ValueError("move destination must be an actual Benched Pokémon")
         if destination_pokemon_id == attacker.pokemon_id:
             raise ValueError("cannot move an Energy to its existing holder")
-        if card.name not in _BASIC_NAMES:
+        if card.name not in _BASIC_NAMES | _UNRESTRICTED_SPECIAL_NAMES:
             raise ValueError(
                 "Special Energy movement requires receiving-Pokémon restrictions"
             )
