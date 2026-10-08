@@ -12,6 +12,7 @@ from pathlib import Path
 
 from board_position_state import BoardState
 from attack_copy_physical_ko_bridge import PhysicalBoardEventProgram
+from attack_status_text_contracts import parse_exact_attack_status_text
 from simple_attack_board_semantics import (
     CompiledAttackBoardSemantics,
     compile_legal_index,
@@ -76,6 +77,12 @@ def classify_attack_text(
     elif core in _EXACT_EXTRA_TURN:
         kind = "exact_extra_turn"
         handlers = ("turn_boundary",)
+    elif (status := parse_exact_attack_status_text(core)) is not None:
+        kind = "exact_special_condition"
+        handlers = (
+            ("status_condition", "coin_flip")
+            if status[1] is not None else ("status_condition",)
+        )
     else:
         kind = "uncompiled_effect_text"
         handlers = ("source_specific_effects",)
