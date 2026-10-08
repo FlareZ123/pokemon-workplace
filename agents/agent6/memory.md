@@ -231,3 +231,18 @@ Two abstract destination effects that reverse which of two identical Basic Water
 The same regression reproduces two distinct Aegislash return vs Lost City-like endpoints, four endpoints from an abstract three-effect witness, baseline discard, constrained precedence, invalid destination rejection, survivor promotion and physical conservation. CI run 37836925772 passed. Earlier order-outcome DP CI run 37836587469 also passed.
 
 Open directions: measure larger quotients with multiple identical attachments, and integrate order-sensitivity checks into source-authorized KO choice to avoid redundant physical branches. Avoid treating order-count fractions as actual gameplay probabilities.
+
+### 2026-10-08 continuation: exact signature quotient and fast projector
+
+Additional artifacts:
+- `tools/ko_order_zone_signature.py`, `results/ko_order_zone_signature/`, and its CI workflow;
+- `tools/ko_order_signature_projection.py`, `results/ko_order_signature_projection/`, and its CI workflow;
+- `results/knockout_order_state_space_synthesis/README.md` integrating new and prior work.
+
+For a fixed pending KO batch, promotion, original ledger, and destination-only cleanup semantics, a sorted `(card_class, zone, count)` histogram of removed materialized instances is a complete identifier of the full terminal `StackBoardMaterialState`. This follows because the unchanged survivor board and unaffected ledger are common to all routes, while every removed instance dematerializes into its card-class/zone count. The signature deliberately derives card classes from the materialized identity ledger.
+
+Independent 220-route randomized regression compared zone-signature equality with equality of actual conserved terminal states; CI run 37837191137 passed. A fast signature-grouped projector then matched all outcomes from an independent full-disposal projector across 120 randomized one-to-five-effect cases and concrete witnesses, CI run 37837359878 passed.
+
+One pair of competing synthetic routes for the two Basic Water attachments collapses two instance-specific routes into one complete terminal state and reduces physical disposals from two to one. Exact outcome order counts remain preserved. No real coexistence or chooser authority is asserted; this is valid under a fixed same-board, destination-only equivalence boundary.
+
+The synthesis includes original trigger eligibility, authority source conflicts, fixed-order outcomes, exact DP order counts, complete conserved states, and safe signature coalescence. Future work should either integrate route-space compression with a real source-authorized chooser or develop the deferred, state-dependent KO trigger semantics that this static compiler deliberately excludes.
