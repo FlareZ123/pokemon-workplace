@@ -71,6 +71,17 @@ STELLAR_TRAINERS = {
     "Secret Box",
 }
 
+BOX_ITEM_OUTPUT = 1
+BOX_TOOL_OUTPUT = 2
+BOX_SUPPORTER_OUTPUT = 4
+BOX_STADIUM_OUTPUT = 8
+BOX_ALL_OUTPUTS = (
+    BOX_ITEM_OUTPUT
+    | BOX_TOOL_OUTPUT
+    | BOX_SUPPORTER_OUTPUT
+    | BOX_STADIUM_OUTPUT
+)
+
 
 @dataclass(frozen=True)
 class SwapSimulationResult:
@@ -235,8 +246,66 @@ def _raw_state(
     return hand, remaining, active, top_five
 
 
+def _apply_secret_box_outputs(
+    hand: list[int],
+    deck: list[int],
+    output_mask: int,
+) -> tuple[list[int], list[int]]:
+    """Apply the current compressed Secret Box output policy by category."""
+
+    if (
+        output_mask & BOX_ITEM_OUTPUT
+        and deck[DECK_INDEX["tag_call"]] > 0
+    ):
+        deck[DECK_INDEX["tag_call"]] -= 1
+        hand[HAND_INDEX["tag_call"]] += 1
+
+    if output_mask & BOX_TOOL_OUTPUT:
+        if (
+            hand[HAND_INDEX["tm_evolution"]] == 0
+            and deck[DECK_INDEX["tm_evolution"]] > 0
+        ):
+            deck[DECK_INDEX["tm_evolution"]] -= 1
+            hand[HAND_INDEX["tm_evolution"]] += 1
+        elif deck[DECK_INDEX["tool_other"]] > 0:
+            deck[DECK_INDEX["tool_other"]] -= 1
+            hand[HAND_INDEX["other"]] += 1
+        elif deck[DECK_INDEX["tm_evolution"]] > 0:
+            deck[DECK_INDEX["tm_evolution"]] -= 1
+            hand[HAND_INDEX["tm_evolution"]] += 1
+
+    if output_mask & BOX_SUPPORTER_OUTPUT:
+        if (
+            hand[HAND_INDEX["gnh"]] == 0
+            and deck[DECK_INDEX["gnh"]] > 0
+        ):
+            deck[DECK_INDEX["gnh"]] -= 1
+            hand[HAND_INDEX["gnh"]] += 1
+        elif deck[DECK_INDEX["supporter_other"]] > 0:
+            deck[DECK_INDEX["supporter_other"]] -= 1
+            hand[HAND_INDEX["other"]] += 1
+        elif deck[DECK_INDEX["tag_team_other"]] > 0:
+            deck[DECK_INDEX["tag_team_other"]] -= 1
+            hand[HAND_INDEX["other"]] += 1
+        elif deck[DECK_INDEX["gnh"]] > 0:
+            deck[DECK_INDEX["gnh"]] -= 1
+            hand[HAND_INDEX["gnh"]] += 1
+
+    if (
+        output_mask & BOX_STADIUM_OUTPUT
+        and deck[DECK_INDEX["artazon"]] > 0
+    ):
+        deck[DECK_INDEX["artazon"]] -= 1
+        hand[HAND_INDEX["artazon"]] += 1
+
+    return hand, deck
+
+
 @lru_cache(maxsize=None)
-def _core_possible(state) -> bool:
+def _core_possible(
+    state,
+    box_output_mask: int = BOX_ALL_OUTPUTS,
+) -> bool:
     (
         hand,
         deck,
@@ -266,7 +335,7 @@ def _core_possible(state) -> bool:
                 True,
                 fan_rotom_in_play,
             )
-        ):
+        , box_output_mask):
             return True
 
     if not fan_rotom_in_play and hand[HAND_INDEX["fan_rotom"]] > 0:
@@ -281,7 +350,7 @@ def _core_possible(state) -> bool:
                 bunnelby_in_play,
                 True,
             )
-        ):
+        , box_output_mask):
             return True
 
     if (
@@ -302,7 +371,7 @@ def _core_possible(state) -> bool:
                 bunnelby_in_play,
                 fan_rotom_in_play,
             )
-        ):
+        , box_output_mask):
             return True
 
     if (
@@ -324,7 +393,7 @@ def _core_possible(state) -> bool:
                 True,
                 fan_rotom_in_play,
             )
-        ):
+        , box_output_mask):
             return True
 
     if (
@@ -366,7 +435,7 @@ def _core_possible(state) -> bool:
                 bunnelby_in_play,
                 fan_rotom_in_play,
             )
-        ):
+        , box_output_mask):
             return True
 
     if hand[HAND_INDEX["secret_box"]] > 0:
@@ -379,42 +448,11 @@ def _core_possible(state) -> bool:
                 ]
                 next_deck = list(deck)
 
-                if next_deck[DECK_INDEX["tag_call"]] > 0:
-                    next_deck[DECK_INDEX["tag_call"]] -= 1
-                    next_hand[HAND_INDEX["tag_call"]] += 1
-
-                if (
-                    next_hand[HAND_INDEX["tm_evolution"]] == 0
-                    and next_deck[DECK_INDEX["tm_evolution"]] > 0
-                ):
-                    next_deck[DECK_INDEX["tm_evolution"]] -= 1
-                    next_hand[HAND_INDEX["tm_evolution"]] += 1
-                elif next_deck[DECK_INDEX["tool_other"]] > 0:
-                    next_deck[DECK_INDEX["tool_other"]] -= 1
-                    next_hand[HAND_INDEX["other"]] += 1
-                elif next_deck[DECK_INDEX["tm_evolution"]] > 0:
-                    next_deck[DECK_INDEX["tm_evolution"]] -= 1
-                    next_hand[HAND_INDEX["tm_evolution"]] += 1
-
-                if (
-                    next_hand[HAND_INDEX["gnh"]] == 0
-                    and next_deck[DECK_INDEX["gnh"]] > 0
-                ):
-                    next_deck[DECK_INDEX["gnh"]] -= 1
-                    next_hand[HAND_INDEX["gnh"]] += 1
-                elif next_deck[DECK_INDEX["supporter_other"]] > 0:
-                    next_deck[DECK_INDEX["supporter_other"]] -= 1
-                    next_hand[HAND_INDEX["other"]] += 1
-                elif next_deck[DECK_INDEX["tag_team_other"]] > 0:
-                    next_deck[DECK_INDEX["tag_team_other"]] -= 1
-                    next_hand[HAND_INDEX["other"]] += 1
-                elif next_deck[DECK_INDEX["gnh"]] > 0:
-                    next_deck[DECK_INDEX["gnh"]] -= 1
-                    next_hand[HAND_INDEX["gnh"]] += 1
-
-                if next_deck[DECK_INDEX["artazon"]] > 0:
-                    next_deck[DECK_INDEX["artazon"]] -= 1
-                    next_hand[HAND_INDEX["artazon"]] += 1
+                next_hand, next_deck = _apply_secret_box_outputs(
+                    next_hand,
+                    next_deck,
+                    box_output_mask,
+                )
 
                 if _core_possible(
                     (
@@ -426,7 +464,7 @@ def _core_possible(state) -> bool:
                         bunnelby_in_play,
                         fan_rotom_in_play,
                     )
-                ):
+                , box_output_mask):
                     return True
 
     if hand[HAND_INDEX["gnh"]] > 0 and not supporter_used:
@@ -447,7 +485,7 @@ def _core_possible(state) -> bool:
                 bunnelby_in_play,
                 fan_rotom_in_play,
             )
-        ):
+        , box_output_mask):
             return True
 
         if (
@@ -504,7 +542,7 @@ def _core_possible(state) -> bool:
                         bunnelby_in_play,
                         fan_rotom_in_play,
                     )
-                ):
+                , box_output_mask):
                     return True
 
     return False
