@@ -1,0 +1,23 @@
+name: Validate causal event journal
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/causal_event_journal.py"
+      - "results/causal_event_journal/**"
+      - ".github/workflows/validate-causal-event-journal.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce ordered event journal
+        run: python results/causal_event_journal/reproduce.py
