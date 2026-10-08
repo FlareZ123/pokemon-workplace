@@ -48,6 +48,7 @@ def initial_state(*, sky_in_hand:bool, barrier_shrine:bool=True)->TwoTurnState:
     stadiums=StadiumEntryState(
         budget=TurnActionBudget(),
         hand=(SKY,) if sky_in_hand else (),
+        in_play=COLLAPSED,
     )
     board=BenchTeleportState(
         stadiums=stadiums,
@@ -64,7 +65,7 @@ def initial_state(*, sky_in_hand:bool, barrier_shrine:bool=True)->TwoTurnState:
         ("rare_candy","hand"):1,
         ("entry-a","hand"):1,
         ("entry-b","hand"):1,
-        ("collapsed_stadium","opponent_hand"):1,
+        ("collapsed_stadium","stadium_in_play"):1,
     })
     trainer=TrainerSearchExecutionState(zones=count,budget=stadiums.budget)
     return TwoTurnState(board,trainer,stadium_hand_lock=barrier_shrine)
@@ -133,11 +134,8 @@ def next_turn_under_collapsed(
     stadiums=replace(
         state.board.stadiums,
         budget=budget,
-        in_play=COLLAPSED,
     )
-    zones=state.trainer.zones.move(
-        "collapsed_stadium","opponent_hand","stadium_in_play"
-    )
+    zones=state.trainer.zones
     if draw_sky:
         if zones.count("sky_field","deck")!=1:
             raise ValueError("Sky Field cannot be drawn from deck")
