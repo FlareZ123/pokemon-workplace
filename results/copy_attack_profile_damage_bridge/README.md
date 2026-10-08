@@ -89,6 +89,12 @@ Two real Expanded witnesses distinguish the semantics:
   Fighting-resistant Drowzee `sv1-82` remains **130**, whereas applying
   Resistance would yield **100**.
 
+A stronger independent-stage control uses a live `Fighting + Psychic` attacker
+against Darkrai-GX `sm3-88`, which is Fighting-weak (×2) and
+Psychic-resistant (−20). In that combined state, Weakness-only bypass
+gives **90** (110 − 20) and Resistance-only bypass gives **260**
+(130 × 2), demonstrating that the other modifier still applies.
+
 The bridge implements these one-sided bypasses when resolving printed type
 stages. An explicit `ignore_weakness_resistance=False` remains a useful
 controlled counterfactual that restores both stages, while `True` bypasses
