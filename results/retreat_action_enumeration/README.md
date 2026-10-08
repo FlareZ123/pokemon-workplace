@@ -69,6 +69,26 @@ singletons, replacement Active, and future turn preparation. The
 enumerator itself does not attach strategic utility values or estimate
 real match-up frequencies.
 
+## Independent validation
+
+`results/retreat_action_enumeration/exhaustive.py` compares the
+enumerator with a separately written brute-force caller that tries
+every possible physical Energy-card subset and every Bench promotion,
+then filters committed transactions.
+
+The finite oracle covers **1,800 exact scenarios**: fifteen Energy
+quantity multisets with zero through three attachments whose represented
+units are one or two, five printed base Retreat Costs, one or two Bench
+destinations, with/without Float Stone, three Stadium states (none,
+Galar Mine, Jamming Tower), and with/without an opposing Block Snorlax.
+Every returned action set agrees with the independent brute-force
+transaction oracle. The test also checks conservation of each physical
+Energy copy and Retreat quota usage in the explicit two-Basic-plus-DCE
+witness.
+
+Verified with GitHub Actions run
+[37839905539](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37839905539).
+
 ## Limits
 
 Card legality and the completeness of already compiled Retreat source
