@@ -45,3 +45,11 @@
 - Counterexample to raw "V prevalence" heuristic: opponent Active V2, Bench N3,N3,V2,V2,V2 (four V-family Pokemon in play, two non-V three-Prize targets). Boss2 wins in two attacks, Boss+Serena in three.
 - Same multiset N3,N3,V2: Active V2 leads Boss2=2, mixed=3; Active N3 leads both 2. Bench positioning changes value.
 - Does NOT measure Serena's alternate draw mode, actual access to Supporters, HP, prize modifiers, or matchup frequency.
+
+## Subsequent result: Serena versus Counter Catcher incomparability
+- `tools/gust_source_incomparability.py`, `results/gust_source_incomparability/README.md` and `reproduce.py`, CI `validate-gust-source-incomparability.yml` run 37772810225 passed.
+- Typed target model (N1/N2/N3, V2/V3), 1,212 boards, fixed opponent Prize count 1..5, three inventories (Boss2, Boss+Serena, Boss+Counter); 18,180 initial scenario independent Boolean-deadline checks.
+- At opponent remaining Prize 1..3, Boss+Counter beats Boss+Serena on 126 boards, ties 1,086, never loses. At opponent Prize 4..5: Counter better 114, Serena better 32, ties 1,066.
+- Opp4 Counter better witness: opponent Active N1, Bench N3,N3; Boss+Counter=2 attacks, Boss+Serena=3 (targets are both non-V).
+- Opp4 Serena better witness: opponent Active N2, Bench N1,N2,V2; Boss+Serena=3, Boss+Counter=4 (natural N2 KO closes Counter gate).
+- This is strict conditional *incomparability*, not empirical card ranking. Serena draw alternative, Item/Supporter differences, and match-specific resources omitted.
