@@ -55,12 +55,16 @@ def main():
     )
     assert large.success_by_fixed_count[1] == informed.success_by_limit[1]
     assert all(large.success_by_fixed_count[i] <= informed.success_by_limit[i] for i in range(4))
+    stationary = Fraction(comb(47, 3), comb(53, 3))
+    assert stationary == Fraction(16215, 23426)
+    assert abs(large.success_by_fixed_count[10] - stationary) < Fraction(1, 10**8)
     assert large.best_fixed_count == 1
     assert large.success_by_fixed_count[2] < large.success_by_fixed_count[1]
     assert large.success_by_fixed_count[3] < large.success_by_fixed_count[1]
     print("PASS: full labeled-card blind-transition tree equals grouped physical Markov model")
     for i, p in enumerate(large.success_by_fixed_count):
         print(f"fixed blind use count {i}: {float(p):.12%}")
+    print(f"uniform stationary success: {float(stationary):.12%}")
     print("optimal fixed blind count", large.best_fixed_count,
           f"success={float(large.best_fixed_success):.12%}")
 
