@@ -1,0 +1,20 @@
+name: Validate Mixed Boss Counter Minimax
+
+on:
+  push:
+    paths:
+      - 'tools/mixed_boss_counter_minimax.py'
+      - 'tools/counter_catcher_prize_timing.py'
+      - 'results/mixed_boss_counter_minimax/**'
+      - '.github/workflows/validate-mixed-boss-counter-minimax.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python results/mixed_boss_counter_minimax/reproduce.py
