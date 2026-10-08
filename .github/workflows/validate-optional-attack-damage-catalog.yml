@@ -1,0 +1,23 @@
+name: Validate optional attack damage catalog
+
+on:
+  push:
+    paths:
+      - "tools/optional_attack_damage_catalog.py"
+      - "results/optional_attack_damage_catalog/**"
+      - ".github/workflows/validate-optional-attack-damage-catalog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify optional attack damage catalog
+        run: python results/optional_attack_damage_catalog/reproduce.py
