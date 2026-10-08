@@ -1,0 +1,20 @@
+name: Validate KO component-local state invariance
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_component_state_invariance.py"
+      - "tools/ko_order_component_factorization.py"
+      - "results/ko_component_state_invariance/**"
+      - ".github/workflows/validate-ko-component-state-invariance.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/ko_component_state_invariance/reproduce.py
