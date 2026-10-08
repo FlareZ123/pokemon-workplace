@@ -414,3 +414,29 @@ Important new mechanism: Quick Ball's constrained deck search can provide K1 inf
 Limitations remain substantial: one reset engine only, no newly drawn Quick Ball/search follow-up, no Bench-capacity or lock state, no full Raichu/Electrode combo, and no future-resource penalty for destroying the hand.
 
 Next high-value continuation: compare visible Dedenne/Squawk reset-first actions against Quick Ball -> K1 -> best engine. Reset-first preserves Quick Ball/payment but gives up pre-reset K1; the whole-action planner should quantify that information/resource tradeoff.
+
+
+## 2026-10-08 pre-reset search dominance
+
+Created:
+
+- `tools/pre_reset_search_dominance.py`;
+- `results/pre_reset_search_dominance/README.md`;
+- `results/pre_reset_search_dominance/reproduce.py`;
+- `.github/workflows/validate-pre-reset-search-dominance.yml`.
+
+The apparent next comparison from the draw-engine result, reset first versus Quick Ball first, collapses to a conditional dominance proof under the current local projection.
+
+Rules/card-text basis:
+- current Quick Ball consumes itself plus another hand card, then performs a constrained Basic-Pokemon deck search;
+- the current deck-search rule permits choosing fewer than the specified number, including zero, for constrained searches;
+- Dedechange and Squawk and Seize discard the remaining hand and draw six;
+- Items are discarded after use.
+
+If Quick Ball and a legal payment would both be discarded by the planned reset, Quick Ball may be played first, choose zero Basic Pokemon, inspect/shuffle the deck, then resolve the reset. Using the same six-card fresh-draw witness, this ends with exactly the same unordered hand, deck, discard and Bench multisets as resetting first, while the search-first line has K1 deck-composition information.
+
+The physical-state regression covers held Dedenne-GX and already-in-play Squawkabilly ex. Push CI run 37817361133 passed.
+
+This is conditional rather than universal. Known/engineered top-deck order, Item lock, discard-timing triggers, Bench changes, source illegality, a payment that must survive until before the reset, or other intermediate-state effects can break the equivalence.
+
+Research consequence: do not spend the next Harto checkpoint estimating naive reset-first versus Quick-Ball-first inside the same projection. Quick Ball first weakly dominates there. The higher-value continuation is to quantify the exception set, especially known top-deck information and discard-trigger interactions, or to extend beyond the immediate Raichu-access endpoint where Quick Ball itself may have future opportunity cost.
