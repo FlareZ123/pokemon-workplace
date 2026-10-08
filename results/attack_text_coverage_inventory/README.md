@@ -20,6 +20,7 @@ It recognizes exact and disjoint semantic islands:
 - exact Weakness/Resistance bypass instructions;
 - exact defender-effect bypass instructions;
 - unconditional extra-turn directives, including Pokémon Checkup wording;
+- exact self-switch, opponent-forced-switch, and targeted-gust attack bodies;
 - unknown text;
 - nonfixed printed damage not yet resolved by the narrow fixed-number compiler.
 
@@ -35,18 +36,23 @@ The latest 2026-10-08 CI validation counted 19,992 effectively legal
 attack-print rows: 5,687 plain fixed/blank or GX-reminder-only,
 91 exact counter clauses, 119 exact defender-effect bypasses,
 133 exact type-modifier bypasses, 6 exact extra-turn clauses,
-**1,156 exact Special Condition clauses**, 8,936 uncompiled
-effect texts, and 3,864 variable printed-damage expressions.
+**1,156 exact Special Condition clauses**, **270 exact position-effect
+clauses**, 8,666 uncompiled effect texts, and 3,864 variable printed-damage
+expressions.
 
-Among the 8,936 uncompiled text rows, 2,523 fall under a specific
-damage/Knock Out/attack-use guard. The remaining **6,413** have
-other unmodeled effect text. The standalone status parser recognizes
+Among the 8,666 uncompiled text rows, 2,523 fall under a specific
+damage/Knock Out/attack-use guard. The remaining **6,143** have
+other unmodeled effect text. The position family reclassifies all 270
+fixed/blank-damage attack profiles already supported by the conservative
+movement compiler, so these rows now advertise `position_effect` and any
+required `coin_flip` or `optional_choice` handler instead of the generic
+`source_specific_effects` fallback. The standalone status parser recognizes
 1,143 literal full-text clauses; this inventory additionally strips
 a standard GX-rule reminder from 13 otherwise exact status texts.
 A recognized clause still requires its own typed handler. The inventory is a coverage metric rather than a guarantee
 of complete gameplay execution.
 
-CI: https://github.com/FlareZ123/pokemon-workplace/actions/runs/37772312734
+Position-handler coverage CI: https://github.com/FlareZ123/pokemon-workplace/actions/runs/37802807009
 
 ## Strict damage-only entry point
 
