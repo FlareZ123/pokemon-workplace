@@ -14,6 +14,7 @@ from board_object_kernel import BoardState
 from retreat_board_effects import active_scoop_up_block_source_ids
 from retreat_cost_semantics import RetreatCostModifier, effective_retreat_cost
 from retreat_dynamic_energy_units import RetreatEnergyProviderContext
+from retreat_environment_modifiers import derive_environment_retreat_modifiers
 from retreat_energy_normalization import (
     RetreatEnergyNormalization,
     normalize_retreat_energy_state,
@@ -45,6 +46,8 @@ def attempt_board_derived_retreat(
     provider_context: RetreatEnergyProviderContext | None = None,
     active_remaining_hp: int | None = None,
     external_modifiers: tuple[RetreatCostModifier, ...] = (),
+    stadium_print_id: str | None = None,
+    stadium_effect_enabled: bool = True,
     prism_star_energy_ids: Iterable[str] = (),
 ) -> BoardDerivedRetreatAttempt:
     """Normalize state, derive represented modifiers/effects, then Retreat."""
@@ -62,10 +65,17 @@ def attempt_board_derived_retreat(
         opponent_board,
         active_remaining_hp=active_remaining_hp,
     )
+    environmental_modifiers = derive_environment_retreat_modifiers(
+        prepared.energy.board,
+        opponent_board,
+        stadium_print_id=stadium_print_id,
+        stadium_effect_enabled=stadium_effect_enabled,
+    )
     modifiers = (
         external_modifiers
         + energy_modifiers
         + tool_derivation.modifiers
+        + environmental_modifiers
     )
     retreat_cost = effective_retreat_cost(base_retreat_cost, modifiers)
     scoop_sources = active_scoop_up_block_source_ids(opponent_board)
