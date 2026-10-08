@@ -1,0 +1,20 @@
+name: Validate Counter Catcher Prize Timing
+
+on:
+  push:
+    paths:
+      - 'tools/counter_catcher_prize_timing.py'
+      - 'tools/gust_prize_minimax.py'
+      - 'results/counter_catcher_prize_timing/**'
+      - '.github/workflows/validate-counter-catcher-prize-timing.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python results/counter_catcher_prize_timing/reproduce.py
