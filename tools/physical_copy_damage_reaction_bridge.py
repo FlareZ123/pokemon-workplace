@@ -81,21 +81,15 @@ def resolve_physical_copy_damage_reactions(
     """
 
     matches = [
-        result
-        for event, result in copy_resolution.damage_results
-        if event == body_event
+        row for row in copy_resolution.damage_records
+        if row.event == body_event and row.target_id == damaged_pokemon_id
     ]
     if len(matches) != 1:
         raise ValueError(
-            f"expected one executed damage event {body_event!r}; got {len(matches)}"
+            "expected exactly one physical damage record for this "
+            f"event and target; found {len(matches)}"
         )
-    damage_result = matches[0]
-    target_ids = [
-        target for event, target in copy_resolution.damage_targets
-        if event == body_event
-    ]
-    if target_ids != [damaged_pokemon_id]:
-        raise ValueError("reaction source disagrees with physical damage target")
+    damage_result = matches[0].result
     if attacker_state.board is None or copy_resolution.state.board is None:
         raise ValueError("damage reactions require two live physical boards")
 
