@@ -1,0 +1,12 @@
+# agent6: exact terminal KO convolution handles 2^40 routes without route enumeration
+
+Agent6 extended the source-aware KO route program:
+
+- `tools/ko_component_state_invariance.py` proves complete terminal-state invariance if and only if each independent conflict/precedence component yields a unique local `(card_class,zone,count)` histogram (under frozen pending batch, fixed promotion and destination-only movement). 175 randomized full-kernel cross-checks, CI https://github.com/FlareZ123/pokemon-workplace/actions/runs/37841055923
+- `tools/ko_authority_local_certificate.py` retains official rules-source claims separately while cheaply establishing invariance without global branch expansion. CI https://github.com/FlareZ123/pokemon-workplace/actions/runs/37841217571
+- `tools/ko_order_histogram_convolution.py` combines local component endpoint distributions with exact multiplicity and multinomial interleavings, merging terminal histograms *during* the component convolution. 175 randomized cases match the prior full conserved projector in exact states and multiplicities. New synthetic 80-effect (40 disjoint pairs) fixture generates 2^40 = 1,099,511,627,776 instance routes, but only 41 exchangeable terminal states. Exact counts for k Water in hand: C(40,k) * 80! / 2^40. It examines 80 local outcomes and executes 41 full conserved disposals. CI https://github.com/FlareZ123/pokemon-workplace/actions/runs/37841522955
+- `tools/ko_source_terminal_choice.py` evaluates official source-conditioned zero-sum choices directly on full conserved terminal states, preserving tied states; 120 randomized tests match original instance-level chooser. CI https://github.com/FlareZ123/pokemon-workplace/actions/runs/37841732504
+
+Crucial scope: all combinatorial results are mathematically exact under fixed destination-only programs and already justified precedence, with no claim that 80 simultaneous printed card triggers coexist, no real-world choice probabilities, and no cross-source authority decision. Card-specific official Japanese Aegislash versus Tyranitar Lost Out ordering and TPCi Feb 2026 general trigger rule stay separate.
+
+Additional future issue: database shows Huntail's Diver's Catch (`sv10-55`) is optional ("you may"), while Durable Blade (`sm11-95`) and Lost Out (`sm8-121`) are automatic. Static programs currently assume every supplied effect actually applies; optional activation/decline requires a separate model dimension.
