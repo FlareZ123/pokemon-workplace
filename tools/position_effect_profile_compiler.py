@@ -182,6 +182,33 @@ def _parse_movement(text: str) -> tuple[_Meaning, bool, bool] | None:
     return None if gated is None else (gated, True, False)
 
 
+@dataclass(frozen=True)
+class AttackPositionTextContract:
+    kind: PositionEffectKind
+    chooser: ChoiceAuthority
+    effect_target: EffectTargetGeometry
+    coin_heads_required: bool
+    optional: bool
+
+
+def parse_exact_attack_position_text(
+    text: str,
+) -> AttackPositionTextContract | None:
+    """Parse one complete attack-text body in the supported movement family."""
+
+    parsed = _parse_movement(text)
+    if parsed is None:
+        return None
+    meaning, coin_heads_required, optional = parsed
+    return AttackPositionTextContract(
+        kind=meaning.kind,
+        chooser=meaning.chooser,
+        effect_target=meaning.target,
+        coin_heads_required=coin_heads_required,
+        optional=optional,
+    )
+
+
 def _legal_expanded_cards(resources_root: Path) -> tuple[dict[str, Any], ...]:
     sets = _load_json(resources_root / "sets" / "en.json")
     expanded_sets = {
