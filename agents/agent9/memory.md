@@ -209,3 +209,43 @@ flags while preserving cross-action reactivation semantics. Also audit
 what can make opponent origin Tool protections irrelevant (effect on
 player rather than on holder) rather than overgeneralizing Hood.
 
+
+
+### 2026-10-08 ~20:31Z checkpoint: action-level Retreat robustness
+
+The global Stadium Tool overlay was made **ephemeral**, avoiding
+a sticky tool-effect cache after Jamming Tower leaves play.
+`tools/retreat_stadium_tool_overlay.py` gained
+`restore_persistent_tool_flags`; `tools/board_derived_retreat.py`
+evaluates the temporary projected board for mechanics and restores
+physical baseline flags on committed/failed transaction result. The
+returned `normalization.state` is the unsuppressed physical baseline.
+A regression shows Float Stone reactivates in a subsequent decision
+when Tower is absent. CI `37838966625` passed.
+
+New `tools/retreat_action_enumerator.py` and
+`results/retreat_action_enumeration/` enumerate Bench promotions
+crossed with physical Retreat payment selections, applying the full
+existing transaction to each candidate. The fixture with DCE plus
+two Basics and two Bench targets has eight options at cost 2 and
+two under Galar Mine at cost 4.
+An independent `exhaustive.py` compares against every raw physical
+subset across 1,800 bounded source/energy/cost/Bench cases; CI
+`37839905539` passed. No external gameplay assumptions or win rates.
+
+A decision-sufficiency correction in
+`tools/attached_tool_retreat_modifiers.py` and
+`tools/board_derived_retreat.py` permits a Rescue Board Retreat
+with unknown remaining HP if its unconditional -1 already gives
+cost zero. It still blocks at positive cost if the unknown low-HP
+no-cost mode could alter payment legality. Updated existing
+`results/board_derived_retreat/reproduce.py` and new enumerator
+regression. CI `37839674064` passed.
+
+Strong next frontier: prove that unknown-Prize, partially informed
+generated Retreat actions equal the intersection of legal actions in
+both known behind/tied worlds, including different Counter/Reversal
+provider snapshots and holder eligibility. Also bridge actual action
+options to `typed_retreat_gust` adversarial minimax and reason about
+hand/deck access to enabling switching cards.
+
