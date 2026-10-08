@@ -244,6 +244,53 @@ def main() -> None:
     )
     assert calculate_damage(fighting_resistant_control.damage_context).final_damage == 100
 
+    # A dual-type attacker against a defender with different Weakness
+    # and Resistance types proves the untouched modifier still applies.
+    dual_modifier_bindings = {
+        "target-active": "sm3-88",
+        "target-bench": "bw9-82",
+    }
+    dual_types = ("Fighting", "Psychic")
+    cramorant_dual = materialize_profiled_copy_program(
+        cramorant,
+        board,
+        actor_profile=profiles["swsh11-50"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=dual_modifier_bindings,
+        attacker_types=dual_types,
+    )
+    assert calculate_damage(cramorant_dual.damage_context).final_damage == 90
+    cramorant_dual_control = materialize_profiled_copy_program(
+        cramorant,
+        board,
+        actor_profile=profiles["swsh11-50"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=dual_modifier_bindings,
+        attacker_types=dual_types,
+        ignore_weakness_resistance=False,
+    )
+    assert calculate_damage(cramorant_dual_control.damage_context).final_damage == 200
+
+    landorus_dual = materialize_profiled_copy_program(
+        landorus,
+        board,
+        actor_profile=profiles["sv8-110"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=dual_modifier_bindings,
+        attacker_types=dual_types,
+    )
+    assert calculate_damage(landorus_dual.damage_context).final_damage == 260
+    landorus_dual_control = materialize_profiled_copy_program(
+        landorus,
+        board,
+        actor_profile=profiles["sv8-110"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=dual_modifier_bindings,
+        attacker_types=dual_types,
+        ignore_weakness_resistance=False,
+    )
+    assert calculate_damage(landorus_dual_control.damage_context).final_damage == 240
+
     one_sided_rows = [
         row
         for attacks in attacks_index.values()
