@@ -1261,3 +1261,14 @@ The regression proves that ordinary evolution still fails on the player's first 
 The integrated reprint resolver now records **64 known non-equivalent historical prints across 19 names**, leaving **3,994** same-name historical prints in semantic review while the positive high-confidence candidate set remains 202.
 
 **Working synthesis:** historical reprint analysis should search for distinguishing reachable states across target domain, zone destination, action availability, information, timing, and material transitions. Small wording differences are important only when they induce a semantic difference under current rules.
+
+## Harto Raichu has an exact observation-consistent Quick Ball discard rule
+
+[raichu_k0_discard_policy/](raichu_k0_discard_policy/) compares discarding a visible Gladion with discarding a conservative disposable before Quick Ball has revealed whether Alolan Raichu is in deck or Prizes. Across **1,331** modeled visible observations, a five-clause rule using only K0 information exactly matches the observation-consistent optimum.
+
+Always discarding Gladion gives 28.050472% same-turn Raichu access in the observable branch; always discarding a disposable gives 25.868810%. The optimal K0 rule reaches **32.988189%**, while a hidden-state oracle reaches **36.909665%**, leaving a **3.921476 percentage-point** information advantage.
+
+The rule preserves Gladion when Forest Seal Stone is already visible or when enough discard stock remains to pay two-card connectors after spending a disposable. It instead preserves discard stock in connector-rich low-slack hands. Although the best fixed action is Gladion discard, the optimal state-dependent policy chooses a disposable in 67.568228% of branch mass.
+
+**Working synthesis:** DCI is an observation-state policy rather than a fixed card ranking. Hidden target zone, connector availability, and residual payment stock jointly determine which visible card is cheapest to spend before a search establishes K1.
+
