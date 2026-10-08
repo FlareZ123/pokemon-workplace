@@ -24,8 +24,9 @@ def main() -> None:
     assert len(by_id) == inventory["total"] == 19992
     assert sum(inventory["counts"].values()) == inventory["total"]
     assert inventory["counts"]["exact_position_effect"] == 270
-    assert inventory["counts"]["uncompiled_effect_text"] == 8666
-    assert inventory["uncompiled_unguarded"] == 6143
+    assert inventory["counts"]["exact_self_healing"] == 293
+    assert inventory["counts"]["uncompiled_effect_text"] == 8373
+    assert inventory["uncompiled_unguarded"] == 5850
 
     witnesses = (
         ("sv6-130", "Jet Headbutt", "plain_fixed_or_gx_rule"),
@@ -35,6 +36,7 @@ def main() -> None:
         ("sm5-100", "Shred", "exact_defender_effect_bypass"),
         ("sm5-100", "Timeless-GX", "exact_extra_turn"),
         ("bw1-3", "Wrap", "exact_special_condition"),
+        ("bw1-11", "Mega Drain", "exact_self_healing"),
         ("bw1-5", "Leaf Storm", "uncompiled_effect_text"),
         ("bw1-39", "Water Pulse", "exact_special_condition"),
         ("bw1-53", "Poison Sting", "exact_special_condition"),
@@ -68,6 +70,10 @@ def main() -> None:
     assert classify_attack_text(tapu_aqua).requires_handlers == (
         "position_effect", "optional_choice",
     )
+    mega_drain = next(
+        row for row in index["bw1-11"] if row.attack_name == "Mega Drain"
+    )
+    assert classify_attack_text(mega_drain).requires_handlers == ("healing",)
 
     all_unguarded = tuple(
         source for entries in index.values() for source in entries
@@ -106,6 +112,7 @@ def main() -> None:
 
     should_refuse = (
         ("bw1-5", "Leaf Storm"),
+        ("bw1-11", "Mega Drain"),
         ("bw1-17", "Flame Charge"),
         ("bw1-37", "Aqua Ring"),
         ("bw1-81", "Collect"),
