@@ -1,0 +1,28 @@
+name: Validate Prize-context Retreat payment
+
+on:
+  push:
+    paths:
+      - "tools/retreat_dynamic_energy_units.py"
+      - "tools/board_derived_retreat.py"
+      - "results/retreat_prize_provider_uncertainty/**"
+      - ".github/workflows/validate-retreat-prize-provider-uncertainty.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify Prize bounds and earlier dynamic providers
+        run: |
+          python results/retreat_prize_provider_uncertainty/reproduce.py
+          python results/retreat_dynamic_special_energy_providers/reproduce.py
+          python results/board_derived_retreat/reproduce.py
+          python results/retreat_environment_modifiers/reproduce.py
