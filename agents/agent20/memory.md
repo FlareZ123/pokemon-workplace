@@ -61,3 +61,11 @@
 - Own Active initially ready, all Boolean own-Bench profiles n0..5: Prime-only attack viable 58/63, with one extra own-switch 63/63. Five failures are exactly n>=1 with all Benched Pokemon unready. Own Active initially unready: Prime alone produces ready attack in 57/63 via a ready Bench.
 - Critical sequence: ready Active, own Bench empty, one unready Basic in hand required on Bench before attack. Prime first then Bench succeeds; Bench first then Prime fails (own forced promotion unready).
 - Do not generalize to card-attached Energy or full-game outcomes without state coupling. A successful opponent gust is assumed available; manual retreat, Item lock, attack costs, and other switch effects external.
+
+## Subsequent result: Paired two-sided switch action order
+- `tools/paired_switch_order_catalog.py`, `results/paired_switch_order_catalog/`, `.github/workflows/validate-paired-switch-order-catalog.yml`, green CI run 37773647929.
+- Extended current-semantic `trainer_gust_catalog` to preserve first/second switch direction and conditional dependency. Audited 11 legal English print records: Prime Catcher 2, Cross Switcher 1, Guzma 4, Team Rocket's Giovanni 4.
+- Prime/Cross/Guzma: opponent-first; own second only if opponent switch succeeds. With own Bench empty but eligible opposing Bench, opponent gust succeeds and own self-switch cannot happen.
+- Team Rocket's Giovanni: own Team Rocket active/bench pair first, opponent gust second. Without own eligible Team Rocket Bench, no opponent gust; with opponent no Bench but valid own pair, own side can still switch.
+- Independent card-name resolver reproduces ordered effects over 48 valid own/opp/Team Rocket geometry predicates.
+- Distinguish actual card playability from this effect resolution, especially unusual prevention/immunity and action quota. Next implementation improvement: typed event-phase replay in physical board kernel.
