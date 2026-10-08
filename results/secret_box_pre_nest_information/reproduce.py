@@ -114,7 +114,7 @@ def main():
     winners=[]
     checked=0
     for d,ha,hg,hs,di,da,dg,ds in product(
-        (3,4,5),(0,1),(0,1),(0,1),
+        (1,2,3,4),(0,1),(0,1),(0,1),
         (0,1),(1,2),(1,2),(1,2)
     ):
         visible=counts(D=d,I=1,A=ha,G=hg,S=hs,P=1)
@@ -135,7 +135,7 @@ def main():
               "Nest-first",result.nest_first_k0,
               "improvement",gain,
               "omniscient",result.informational_upper_bound)
-    assert checked==384
+    assert checked==512
     assert winners
     print("ALL TESTS PASSED")
 
