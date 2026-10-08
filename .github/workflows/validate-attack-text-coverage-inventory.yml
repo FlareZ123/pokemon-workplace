@@ -5,6 +5,7 @@ on:
     paths:
       - "tools/attack_text_coverage_inventory.py"
       - "tools/attack_status_text_contracts.py"
+      - "tools/healing_profile_compiler.py"
       - "tools/position_effect_profile_compiler.py"
       - "tools/simple_attack_board_semantics.py"
       - "results/attack_text_coverage_inventory/**"
