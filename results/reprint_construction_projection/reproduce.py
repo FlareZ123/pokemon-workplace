@@ -38,9 +38,9 @@ for card_id in ("ex8-88", "ex11-99", "ex16-78", "ecard1-143", "gym2-116"):
     assert row.resolver_target_ids == ()
 
 celebi = by_id["neo4-106"]
-assert celebi.resolution_kind == "semantic_review"
-assert set(celebi.resolver_target_ids) == {"me55c-106", "smp-SM79"}
-assert celebi.divergent_resolver_target_ids == ("smp-SM79",)
+assert celebi.resolution_kind == "exact_fingerprint_candidate"
+assert celebi.resolver_target_ids == ("me55c-106",)
+assert celebi.divergent_resolver_target_ids == ()
 
 print("reprint construction projection regression passed")
 print("name-level hazard prints:", len(rows))
