@@ -51,3 +51,14 @@ The resulting counts should **never** be interpreted as equiprobable choices by 
 - Measuring complexity and physical executor savings on real legal decks and reachable board states rather than synthetic route maps.
 
 This synthesis makes no claim that every combination of abstract route programs occurs together in real Pokémon play. It preserves exact conditional results and identifies the rules-verified layers still needed for faithful strategic simulation.
+
+
+## Source-conditioned chooser decisions and invariance
+
+Two new layers address why an unresolved authority claim matters strategically:
+
+- [tyranitar_aegislash_authority](../tyranitar_aegislash_authority/) validates a directly sourced Japan card-specific Q&A: Aegislash's owner chooses the order of Durable Blade and Tyranitar-GX Lost Out. The physical return-first versus Lost Out-first outcomes for the full Aegislash evolution stack are verified. The source is kept separate from TPCi's February 2026 current-turn-player guidance.
+- [ko_source_scoped_choice](../ko_source_scoped_choice/) evaluates the source-conditioned optimum under an explicit zero-sum two-player utility. For a transparent utility that counts Aegislash, Doublade and Honedge returned to the defender's hand, the Japan-profile defender selects the three-card return and the TPCi-profile attacking current player selects zero-card recovery. The **[0,3]** interval is a conditional unit-count value envelope, with no assigned source probability.
+- [ko_choice_invariance](../ko_choice_invariance/) retains all tied-optimal outcomes and distinguishes invariant utility, invariant physical-instance destination vector and invariant conserved terminal state. A tied utility may leave physically distinct outcomes; two instance-level water-energy routes may differ while producing identical terminal exchangeable counts. The regressions validate 110 random cases against the full physical KO executor.
+
+These studies reinforce an evidence boundary. Source authority, caller utility and physical state equivalence are independent inputs. Reliable optimization can identify uncertainty-neutral choices without inventing which presently served official rules source governs a particular tournament.
