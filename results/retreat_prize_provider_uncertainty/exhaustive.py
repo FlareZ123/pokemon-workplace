@@ -44,9 +44,9 @@ def make_case(counter_cache: int, reversal_cache: int):
         "active", "Evolution", tags=("Stage1",), energy=cards,
     )
     pivot = make_pokemon("pivot", "Pivot")
-    classes = tuple(
+    classes = tuple(sorted(
         (card.instance_id, "class-" + card.instance_id) for card in cards
-    )
+    ))
     return RetreatEnergyTransactionState(
         unified=make_state({}, turn_budget=TurnActionBudget()),
         energy=EnergyBoardState(
