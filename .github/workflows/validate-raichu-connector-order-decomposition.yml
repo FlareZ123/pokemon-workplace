@@ -20,4 +20,4 @@ jobs:
         with:
           python-version: "3.13"
       - name: Reproduce connector order decomposition
-        run: python results/raichu_connector_order_decomposition/reproduce.py
+        run: python -u results/raichu_connector_order_decomposition/reproduce.py
