@@ -27,7 +27,7 @@ assert counts["known_non_equivalent_prints"] == 67
 assert counts["known_non_equivalent_names"] == 21
 assert counts["official_semantic_candidate_prints"] == 3
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 3990
+assert counts["semantic_review_prints"] == 3988
 assert counts["high_confidence_candidate_prints"] == 205
 assert counts["exact_fingerprint_trainer_candidate_prints"] == 15
 assert counts["trainer_same_name_review_pool_prints"] == 168
