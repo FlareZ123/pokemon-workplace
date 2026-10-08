@@ -4,7 +4,7 @@ Unlike the original P-only abstraction, preserve the number of Basic starters
 visible after the opening plus ordinary start-of-turn draw. Requiring two
 eligible free Pokémon holders is a necessary execution condition for attaching
 two distinct Tools. All 12 Basic cards are modeled as mutually Tool-eligible,
-with no earlier Tool attached. Box/G&H endpoint is still in-hand acquisition.
+with no earlier Tool attached. Box/G&H endpoint is still in-hand acquisition.\n\nThe visible-hand category vector retains already-deployed Basic starters as\ninaccessible protected P tokens to keep the original dealt-card census. They\nare not physically still in hand; because these tokens can never be used\nfor costs or searches, the representation is equivalent for this narrowly\nrestricted action model. Draw-to-hand-size effects would need a real\nseparate board/hand zone representation.
 """
 from __future__ import annotations
 
