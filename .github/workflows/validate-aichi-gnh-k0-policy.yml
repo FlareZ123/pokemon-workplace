@@ -20,4 +20,4 @@ jobs:
         with:
           python-version: "3.13"
       - name: Audit belief-constrained direct Guzma & Hala payment
-        run: python results/aichi_gnh_k0_policy/reproduce.py
+        run: PYTHONPATH=tools python results/aichi_gnh_k0_policy/reproduce.py
