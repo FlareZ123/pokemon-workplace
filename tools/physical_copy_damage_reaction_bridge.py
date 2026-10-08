@@ -28,6 +28,7 @@ class PhysicalCopyReactionResult:
     defender_state: StackBoardMaterialState
     body_event: str
     damaged_pokemon_id: str
+    attacking_pokemon_id: str
     damage_result: DamageResult
     triggered: bool
     counters_placed_on_attacker: int
@@ -70,6 +71,7 @@ def resolve_physical_copy_damage_reactions(
     *,
     body_event: str,
     damaged_pokemon_id: str,
+    attacking_pokemon_id: str,
     reactions: tuple[DamageReaction, ...],
     attacker_hp_by_pokemon_id: Mapping[str, int],
     defender_hp_by_pokemon_id: Mapping[str, int],
@@ -77,7 +79,9 @@ def resolve_physical_copy_damage_reactions(
     """Resolve one damage event's ordered reactions on the physical attacker.
 
     The caller supplies only reactions whose live source, position, timing,
-    attached-card state, and damaged target have already been verified.
+    attached-card state, and damaged target have already been verified. The
+    Pokémon that performed the attack is an explicit physical identity; it can
+    differ from the Pokémon in the Active Spot when reactions are applied.
     """
 
     matches = [
@@ -92,6 +96,10 @@ def resolve_physical_copy_damage_reactions(
     damage_result = matches[0].result
     if attacker_state.board is None or copy_resolution.state.board is None:
         raise ValueError("damage reactions require two live physical boards")
+    if attacking_pokemon_id not in {
+        pokemon.pokemon_id for pokemon in attacker_state.board.pokemon
+    }:
+        raise ValueError("the attacking Pokémon no longer has an in-play target")
 
     current = attacker_state
     placed = 0
@@ -102,10 +110,10 @@ def resolve_physical_copy_damage_reactions(
             if count:
                 board = current.board
                 assert board is not None
-                active = board.get(board.active_id)
+                attacker = board.get(attacking_pokemon_id)
                 updated = replace(
-                    active,
-                    damage_counters=active.damage_counters + count,
+                    attacker,
+                    damage_counters=attacker.damage_counters + count,
                 )
                 current = StackBoardMaterialState(
                     current.ledger,
@@ -119,6 +127,7 @@ def resolve_physical_copy_damage_reactions(
         defender_state=copy_resolution.state,
         body_event=body_event,
         damaged_pokemon_id=damaged_pokemon_id,
+        attacking_pokemon_id=attacking_pokemon_id,
         damage_result=damage_result,
         triggered=triggered,
         counters_placed_on_attacker=placed,
