@@ -39,7 +39,7 @@ def main() -> None:
         )
         for item in items
     }
-    assert actual == EXPECTED
+    print(actual, flush=True)\n    assert actual == EXPECTED
 
     deterministic = tuple(
         item for item in items if not item.conditional_search
