@@ -35,14 +35,19 @@ class EnergyDisruptionProfile:
     effect_text: str
     attack_cost: tuple[str, ...] = ()
     attack_damage: str | None = None
+    attack_index: int | None = None
 
     def __post_init__(self) -> None:
         if self.source_kind not in {"trainer", "attack"}:
             raise ValueError("unsupported source_kind")
         if self.source_kind == "attack" and not self.source_name:
             raise ValueError("attack profile requires source_name")
+        if self.source_kind == "attack" and self.attack_index is None:
+            raise ValueError("attack profile requires attack_index")
         if self.source_kind == "trainer" and self.source_name is not None:
             raise ValueError("Trainer profile cannot have source_name")
+        if self.source_kind == "trainer" and self.attack_index is not None:
+            raise ValueError("Trainer profile cannot have attack_index")
 
 
 _COIN_PREFIX = "Flip a coin. If heads, "
@@ -123,6 +128,14 @@ def _parse(text: str) -> tuple[EnergyRestriction, OpponentTargetScope, bool] | N
     return None
 
 
+def parse_exact_attack_energy_disruption_text(
+    text: str,
+) -> tuple[EnergyRestriction, OpponentTargetScope, bool] | None:
+    """Parse one complete attack body in the supported one-Energy family."""
+
+    return _parse(text)
+
+
 def _trainer_action_class(card: dict[str, Any]) -> str | None:
     subtypes = tuple(card.get("subtypes") or ())
     for candidate in ("Item", "Supporter", "Stadium", "Pokémon Tool"):
@@ -178,7 +191,7 @@ def _attack_profiles(card: dict[str, Any]) -> tuple[EnergyDisruptionProfile, ...
     if card.get("supertype") != "Pokémon":
         return ()
     rows: list[EnergyDisruptionProfile] = []
-    for attack in card.get("attacks") or ():
+    for attack_index, attack in enumerate(card.get("attacks") or ()):
         text = _normalized(attack.get("text") or "")
         parsed = _parse(text)
         if parsed is None:
@@ -196,6 +209,7 @@ def _attack_profiles(card: dict[str, Any]) -> tuple[EnergyDisruptionProfile, ...
             effect_text=text,
             attack_cost=tuple(attack.get("cost") or ()),
             attack_damage=attack.get("damage"),
+            attack_index=attack_index,
         ))
     return tuple(rows)
 
