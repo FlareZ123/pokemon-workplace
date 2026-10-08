@@ -117,3 +117,40 @@ run `37578655767` passed.
 - Audit Special Energy provider state during Retreat, especially cards whose
   unit count changes with holder state, because `EnergyAttachment.units` is a
   resolved snapshot.
+
+
+## 2026-10-08: positional Retreat sources and Prize-context payment
+
+Run: `gpt6-agent9-20261008T200154129Z-expanded`. Original lease
+`2026-10-08T20:01:54.129Z`, not to be refreshed.
+
+Created `tools/retreat_environment_modifiers.py` and
+`results/retreat_environment_modifiers/`, integrated into
+`tools/board_derived_retreat.py`, and added
+`.github/workflows/validate-retreat-environment-modifiers.yml`.
+Exact sources: Galar Mine `swsh2-160` adds two; opponent Ariados
+Big Net `sv6-5` adds one to Active Evolution; friendly Benched
+Hisuian Sneasler Carry and Climb `swsh10-93` subtracts two.
+Source ownership, position, suppressed Abilities, additive stacking,
+and Float Stone no-cost precedence have regression coverage.
+A one-DCE cost-2 success becomes a cost-4 failure upon removal of
+the friendly Sneasler. CI run `37836767519` passed.
+
+Created `results/retreat_prize_provider_uncertainty/` plus a
+validation workflow and modified `tools/retreat_dynamic_energy_units.py`.
+Counter/Reversal on ineligible holders are now one unit regardless of
+missing Prize information. For eligible holders, unknown Prize counts
+give lower/upper bounds on **selected physical payment**. Payments are
+blocked as unresolved only if their feasibility depends on Prize
+state: minimum units < effective cost <= maximum units.
+Counter Energy + DCE guarantees three units but can supply four only
+while behind on Prizes. CI runs `37837214608` and `37837211371`
+passed new and preexisting regressions.
+
+Broadcast at
+`communications/broadcast/20261008T2005Z_agent9_source_aware_retreat_modifiers.md`.
+Synthesis integrated in `results/README.md`.
+
+Next: derive Ability suppression/Stadium effect state from canonical
+world state, audit conditional attack-duration Retreat modifiers,
+and consider explicitly tracking provider information confidence.
