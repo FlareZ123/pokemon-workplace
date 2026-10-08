@@ -23,11 +23,11 @@ assert counts["historical_official_reprint_candidate_prints"] == 39
 assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
-assert counts["known_non_equivalent_prints"] == 65
-assert counts["known_non_equivalent_names"] == 20
+assert counts["known_non_equivalent_prints"] == 67
+assert counts["known_non_equivalent_names"] == 21
 assert counts["official_semantic_candidate_prints"] == 3
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 3992
+assert counts["semantic_review_prints"] == 3990
 assert counts["high_confidence_candidate_prints"] == 203
 assert counts["exact_fingerprint_trainer_candidate_prints"] == 13
 assert counts["trainer_same_name_review_pool_prints"] == 168
@@ -40,6 +40,7 @@ assert summary["official_semantic_candidate_ids"] == ["ecard1-138", "ex15-73", "
 
 assert summary["known_non_equivalent_by_name"] == {
     "Apricorn Maker": 1,
+    "Computer Search": 2,
     "Darkness Energy": 15,
     "Devolution Spray": 1,
     "Friend Ball": 1,
@@ -88,6 +89,8 @@ assert summary["official_errata_candidates_by_name"] == {
 
 assert all(name in resolver.legal_expanded_by_name for name in NAME_WIDE_TRAINER_ERRATA)
 
+assert resolver.resolve("base1-71").kind == "known_non_equivalent"
+assert resolver.resolve("base4-101").kind == "known_non_equivalent"
 assert resolver.resolve("base5-17").kind == "known_non_equivalent"
 assert resolver.resolve("base5-80").kind == "known_non_equivalent"
 assert resolver.resolve("dp2-119").kind == "known_non_equivalent"
