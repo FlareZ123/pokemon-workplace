@@ -1213,6 +1213,14 @@ This is a policy-information audit rather than a deck-level correction. Later Gu
 **Working synthesis:** a transition can contain a real information leak without that privilege affecting a particular state distribution. Payment slack can make one observation-consistent discard witness work in every hidden world that the oracle can rescue.
 
 
+## Aichi direct Guzma & Hala has visible payment slack
+
+[aichi_gnh_k0_policy/](aichi_gnh_k0_policy/) audits the direct two-card Guzma & Hala payment before full deck inspection. In 1,082 clean states from 10,000 seeded accepted starts, exact six-Prize integration finds zero oracle advantage across every sampled observation for all seven established Aichi endpoints.
+
+[discard_information_slack/](discard_information_slack/) explains the boundary. When the paid G&H branch is needed, at most four of the six remaining hand cards must be preserved for the richest endpoint, leaving two cards that can always cover the cost. The earlier Secret Box counterexample has only two safe cards for a three-card payment, forcing one of two critical candidates and creating the 10.407240 percentage-point local information gap.
+
+**Working synthesis:** belief-sensitive discard policy becomes necessary only after visible payment slack is exhausted and a genuine choice among critical candidates remains.
+
 ## Cost-before-search discard timing is a reusable Expanded card-pool surface
 
 [cost_before_search_catalog/](cost_before_search_catalog/) conservatively scans legal paper-Expanded Trainer text for an explicit hand discard before the first printed deck search. It finds 54 legal prints across 16 names and 23 gameplay fingerprints. Fourteen names have selective or typed-selective payments, while Peony and Larry's Skill discard the whole hand.
