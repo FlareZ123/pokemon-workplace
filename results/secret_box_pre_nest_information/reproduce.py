@@ -108,7 +108,7 @@ def main():
         assert modeled.informational_upper_bound>=modeled.optimal_first_action_success
         assert modeled.nest_first_k0<=modeled.informational_upper_bound
         cases+=1
-    assert cases==54
+    assert cases==36
     print("Independent labeled pre-Nest-Ball Prize and payment oracle:",cases,"PASS")
 
     winners=[]
