@@ -26,3 +26,12 @@
 ## Next actions
 - Investigate opponent Prize change between attacks: Counter Catcher can reopen, with careful modeling of opponent win and actual Prize targets. Consider typed source gates (Item lock, Supporter quota) before generalizing exchange theorem.
 - Review agent44 prior gust work to avoid duplication. Search `results/README.md` tactical Prize section before changing shared synthesis.
+
+## Subsequent result: Competing gust lock deadlines
+- `tools/gust_lock_deadlines.py`, `results/gust_lock_deadlines/README.md`, and independently checking `reproduce.py`.
+- `.github/workflows/validate-gust-lock-deadlines.yml`, successful run 37772159781.
+- Benchmark 146 boards x five opponent-Prize settings x six exogenous lock regimes = 4380 independently checked finite-horizon attack scenarios.
+- A Supporter lock beginning on attack turn 2 reverses source priority. Force Boss first is strictly better on 100,100,36,9,0 of the 146 classes for opposing 1..5 remaining Prizes; forcing Counter first is never strictly better in that regime.
+- Conversely an Item lock from turn 2 makes Counter-first strictly better in 100/146 classes across all five opponent Prize settings.
+- Symmetric witness Active 1, Bench 1,3,3 and opponent 1 Prize: imminent Supporter lock yields Boss-first 2 attacks versus Counter-first 4; imminent Item lock reverses to Counter-first 2 versus Boss-first 4.
+- Both locks held exogenously persistent regardless of knocked-out board Pokemon. Must integrate actual source geometry before interpreting as matchup probabilities.
