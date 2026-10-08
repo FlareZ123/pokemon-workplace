@@ -11,7 +11,8 @@ from dataclasses import dataclass
 from math import isfinite
 from typing import Callable, Iterable, Mapping
 
-from ko_order_outcome_space import OrderOutcome, ko_order_outcomes
+from ko_order_outcome_space import OrderOutcome
+from ko_order_component_factorization import factorized_ko_order_outcomes
 from ko_trigger_order_authority import OrderingContext
 from source_order_chooser import (
     ConcreteChooserStatus,
@@ -82,7 +83,7 @@ def choose_ko_outcome_by_source(
     if not sources:
         raise ValueError("at least one rules source required")
 
-    outcomes = ko_order_outcomes(programs, precedences=precedences)
+    outcomes = factorized_ko_order_outcomes(programs, precedences=precedences)
     scored = tuple((outcome, float(payoff(outcome.destinations))) for outcome in outcomes)
     if any(not isfinite(value) for _outcome, value in scored):
         raise ValueError("payoff must be a finite number")
