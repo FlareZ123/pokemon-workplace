@@ -2,29 +2,44 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
+from tools.board_position_state import BoardState, PokemonCard
 from tools.effect_evolution_execution import effect_evolve
 from tools.effect_evolution_timing import EvolutionEffectProfile
-from tools.board_position_state import BoardState, PokemonCard
 from tools.lock_state_kernel import PlayerChannels
 from tools.turn_action_budget import TurnAction, TurnActionBudget
+from tools.turn_attack_window import (
+    TurnExecutionWindow,
+    can_take_action,
+    consume_action,
+    fresh_turn,
+)
 
 
 @dataclass(frozen=True)
 class SourceActionContext:
     is_players_first_turn: bool
     went_first: bool
-    budget: TurnActionBudget = TurnActionBudget()
+    window: TurnExecutionWindow = field(default_factory=fresh_turn)
     channels: PlayerChannels = PlayerChannels()
     abilities_allowed: bool = True
     attacks_allowed: bool = True
+    attacker_object_id: str | None = None
+
+    @property
+    def budget(self) -> TurnActionBudget:
+        return self.window.action_budget
 
 
 @dataclass(frozen=True)
 class SourceGatedEvolution:
     board: BoardState
-    budget: TurnActionBudget
+    window: TurnExecutionWindow
+
+    @property
+    def budget(self) -> TurnActionBudget:
+        return self.window.action_budget
 
 
 def _first_turn_source_open(
@@ -42,12 +57,23 @@ def source_action_available(
 ) -> bool:
     """Check generic source permissions without resolving card-specific costs."""
 
-    if context.budget.turn_ended or not _first_turn_source_open(profile, context):
+    if context.window.attack_phase.turn_ended or not _first_turn_source_open(profile, context):
         return False
 
     channel = profile.source_channel
     if channel == "attack":
-        return context.attacks_allowed and context.budget.can(TurnAction.ATTACK)
+        return (
+            context.attacks_allowed
+            and context.attacker_object_id is not None
+            and can_take_action(
+                context.window,
+                TurnAction.ATTACK,
+                attacker_object_id=context.attacker_object_id,
+            )
+        )
+
+    if not context.window.attack_phase.ordinary_actions_open:
+        return False
     if channel == "ability":
         return context.abilities_allowed
     if channel == "item":
@@ -55,12 +81,12 @@ def source_action_available(
     if channel == "supporter":
         return (
             context.channels.supporter_play
-            and context.budget.can(TurnAction.SUPPORTER)
+            and can_take_action(context.window, TurnAction.SUPPORTER)
         )
     if channel == "stadium":
         return (
             context.channels.stadium_play
-            and context.budget.can(TurnAction.STADIUM_PLAY)
+            and can_take_action(context.window, TurnAction.STADIUM_PLAY)
         )
     return False
 
@@ -68,20 +94,25 @@ def source_action_available(
 def consume_source_action(
     profile: EvolutionEffectProfile,
     context: SourceActionContext,
-) -> TurnActionBudget | None:
-    """Consume only the generic quota owned by the represented source channel."""
+) -> TurnExecutionWindow | None:
+    """Consume only the generic action owned by the represented source channel."""
 
     if not source_action_available(profile, context):
         return None
 
     channel = profile.source_channel
     if channel == "attack":
-        return context.budget.consume(TurnAction.ATTACK)
+        assert context.attacker_object_id is not None
+        return consume_action(
+            context.window,
+            TurnAction.ATTACK,
+            attacker_object_id=context.attacker_object_id,
+        )
     if channel == "supporter":
-        return context.budget.consume(TurnAction.SUPPORTER)
+        return consume_action(context.window, TurnAction.SUPPORTER)
     if channel == "stadium":
-        return context.budget.consume(TurnAction.STADIUM_PLAY)
-    return context.budget
+        return consume_action(context.window, TurnAction.STADIUM_PLAY)
+    return context.window
 
 
 def execute_source_gated_evolution(
@@ -95,8 +126,8 @@ def execute_source_gated_evolution(
 ) -> SourceGatedEvolution | None:
     """Atomically compose the generic source gate with C-12 board evolution."""
 
-    next_budget = consume_source_action(profile, context)
-    if next_budget is None:
+    next_window = consume_source_action(profile, context)
+    if next_window is None:
         return None
 
     transition = effect_evolve(
@@ -111,4 +142,4 @@ def execute_source_gated_evolution(
     if transition is None:
         return None
 
-    return SourceGatedEvolution(transition.state, next_budget)
+    return SourceGatedEvolution(transition.state, next_window)
