@@ -60,21 +60,6 @@ UNDERGROUND_EXPEDITION_LEGACY = frozenset(
     }
 )
 
-LUCKY_EGG_CURRENT_ATTACH = (
-    "Attach a Pokémon Tool to 1 of your Pokémon that doesn't already have a Pokémon Tool attached."
-)
-LUCKY_EGG_LEGACY_ATTACH = (
-    "Attach Lucky Egg to 1 of your Pokémon that doesn't already have a Pokémon Tool attached to it. "
-    "If that Pokémon is Knocked Out, discard this card."
-)
-LUCKY_EGG_CURRENT_EFFECT = (
-    "If the Pokémon this card is attached to is Knocked Out by damage from an opponent's attack, "
-    "draw cards until you have 7 cards in your hand."
-)
-LUCKY_EGG_LEGACY_EFFECT = (
-    "When the Pokémon this card is attached to is Knocked Out by damage from an opponent's attack, "
-    "draw cards until you have 7 cards in your hand."
-)
 
 RULE_EVIDENCE = {
     "fisherman_number_shortage": "resources/advanced-players-rulebook.md II-A",
@@ -89,8 +74,6 @@ RULE_EVIDENCE = {
     "bills_maintenance_dependency": "resources/advanced-players-rulebook.md E-20",
     "underground_expedition_number_shortage": "resources/advanced-players-rulebook.md II-A",
     "underground_expedition_choice": "resources/advanced-players-rulebook.md D-04",
-    "lucky_egg_tool_attachment": "resources/advanced-players-rulebook.md B-02",
-    "lucky_egg_knockout_wording": "resources/advanced-players-rulebook.md E-04",
 }
 
 
@@ -130,15 +113,6 @@ def normalize_rule_grounded_trainer_semantics(card: dict[str, Any]) -> dict[str,
     elif normalized.get("name") == "Underground Expedition":
         rules = [
             UNDERGROUND_EXPEDITION_CURRENT if rule in UNDERGROUND_EXPEDITION_LEGACY else rule
-            for rule in rules
-        ]
-    elif normalized.get("name") == "Lucky Egg":
-        rules = [
-            LUCKY_EGG_CURRENT_ATTACH
-            if rule == LUCKY_EGG_LEGACY_ATTACH
-            else LUCKY_EGG_CURRENT_EFFECT
-            if rule == LUCKY_EGG_LEGACY_EFFECT
-            else rule
             for rule in rules
         ]
 
