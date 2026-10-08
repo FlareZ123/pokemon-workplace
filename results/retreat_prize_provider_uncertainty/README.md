@@ -65,3 +65,10 @@ The bound check does not estimate strategic probabilities across hidden
 states. It does not expand conditional type semantics for attacks.
 
 Run `python results/retreat_prize_provider_uncertainty/reproduce.py`.
+`results/retreat_prize_provider_uncertainty/exhaustive.py` independently
+enumerates 576 small physical-payment cases (four cached Counter/Reversal
+snapshots, 16 subsets of four attached physical Energy cards, nine costs).
+It compares unknown-context results against both known Prize regimes,
+and requires every unknown-context accepted Retreat to be legal in both
+worlds. This is an exhaustive check of the bounded four-card fixture,
+not of all possible decks.
