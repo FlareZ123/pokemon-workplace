@@ -1,0 +1,30 @@
+name: Validate effect evolution execution
+
+on:
+  push:
+    paths:
+      - "tools/effect_evolution_execution.py"
+      - "tools/effect_evolution_timing.py"
+      - "tools/board_position_state.py"
+      - "tools/identity_materialization.py"
+      - "results/effect_evolution_execution/**"
+      - ".github/workflows/validate-effect-evolution-execution.yml"
+  pull_request:
+    paths:
+      - "tools/effect_evolution_execution.py"
+      - "tools/effect_evolution_timing.py"
+      - "tools/board_position_state.py"
+      - "tools/identity_materialization.py"
+      - "results/effect_evolution_execution/**"
+      - ".github/workflows/validate-effect-evolution-execution.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/effect_evolution_execution/reproduce.py
