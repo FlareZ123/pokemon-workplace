@@ -23,11 +23,11 @@ assert counts["historical_official_reprint_candidate_prints"] == 39
 assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
-assert counts["known_non_equivalent_prints"] == 64
-assert counts["known_non_equivalent_names"] == 19
+assert counts["known_non_equivalent_prints"] == 65
+assert counts["known_non_equivalent_names"] == 20
 assert counts["official_semantic_candidate_prints"] == 3
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 3993
+assert counts["semantic_review_prints"] == 3992
 assert counts["high_confidence_candidate_prints"] == 203
 assert counts["exact_fingerprint_trainer_candidate_prints"] == 13
 assert counts["trainer_same_name_review_pool_prints"] == 168
@@ -42,6 +42,7 @@ assert summary["known_non_equivalent_by_name"] == {
     "Apricorn Maker": 1,
     "Darkness Energy": 15,
     "Devolution Spray": 1,
+    "Friend Ball": 1,
     "Life Herb": 2,
     "Magnetic Storm": 1,
     "Master Ball": 5,
@@ -104,6 +105,7 @@ assert resolver.resolve("ex1-88").kind == "known_non_equivalent"
 assert resolver.resolve("hgss1-96").kind == "known_non_equivalent"
 assert resolver.resolve("dp2-110").kind == "known_non_equivalent"
 assert resolver.resolve("ecard3-121").kind == "known_non_equivalent"
+assert resolver.resolve("ecard3-126").kind == "known_non_equivalent"
 assert resolver.resolve("ecard2-130").kind == "known_non_equivalent"
 assert resolver.resolve("base1-90").kind == "known_non_equivalent"
 assert resolver.resolve("ex15-82").kind == "known_non_equivalent"
