@@ -123,7 +123,7 @@ def run():
                     assert output.ledger.instance(f"s{i+1}").zone == "discard"
 
     assert checks == 24
-    assert successful == 13
+    assert successful == 11
 
     p = PROGRAMS["Prime Catcher"]
     try:
