@@ -1,0 +1,19 @@
+name: Validate Prime Catcher Order Geometry
+
+on:
+  push:
+    paths:
+      - 'tools/prime_catcher_order_geometry.py'
+      - 'results/prime_catcher_order_geometry/**'
+      - '.github/workflows/validate-prime-catcher-order-geometry.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.prime_catcher_order_geometry.reproduce
