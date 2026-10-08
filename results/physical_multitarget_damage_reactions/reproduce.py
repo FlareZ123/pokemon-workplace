@@ -246,7 +246,8 @@ def test_multiple_same_target_records_need_disambiguation():
         ),
         lambda: resolve_physical_copy_damage_reactions(
             replay, attacker, body_event=BODY,
-            damaged_pokemon_id="b-active", reactions=(),
+            damaged_pokemon_id="b-active", attacking_pokemon_id="a-active",
+            reactions=(),
             attacker_hp_by_pokemon_id={"a-active": 100, "a-bench": 100},
             defender_hp_by_pokemon_id={"b-active": 120, "b-bench": 40},
         ),
