@@ -149,3 +149,7 @@ The parser deliberately excludes replacement effects such as Thorton because occ
 ## Updated next action
 
 Build a small typed Bench-occupancy state kernel that consumes capacity on support entry, carries support residency across actions/turns, and permits release only through typed Item/Supporter/Ability/attack transitions. Quantify the minimum action-window cost of fitting multiple transactional support activations beside a core board.
+
+## October 8, 2026: two-support Bench access
+
+Implemented `tools/bench_double_trigger_access.py` and `results/bench_double_trigger_release/` with exact two-singleton setup, Prize, one-use search, and coin-pickup access probabilities. The 60-card conditional benchmark gives 20.867773% nominal versus 2.454142% realized. Small-deck exhaustive oracle agrees on 8,880 paths; CI run 37836891826 passed. Next: enforce actual support-Ability hand effects, real search discard payments, and trigger ordering.
