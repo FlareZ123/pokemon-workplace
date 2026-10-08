@@ -24,7 +24,7 @@ from turn_action_budget import TurnAction, TurnActionBudget
 
 def check_card_text() -> None:
     cards = {}
-    for set_name in ("xy3", "xy6", "swsh9", "sv7"):
+    for set_name in ("xy3", "xy6", "swsh9", "sv7", "sm2"):
         rows = json.loads(
             (ROOT / "resources" / "cards" / "en" / f"{set_name}.json")
             .read_text(encoding="utf-8")
@@ -38,7 +38,13 @@ def check_card_text() -> None:
     assert "8 Pokémon" in " ".join(cards["xy6-89"]["rules"])
     assert "more than 4 Benched" in " ".join(cards["swsh9-137"]["rules"])
     assert "Tera Pokémon in play" in " ".join(cards["sv7-131"]["rules"])
-    print("PASS: card text matches all four grounded effects")
+    roadblock = next(
+        ability for ability in cards["sm2-66"]["abilities"]
+        if ability["name"] == "Roadblock"
+    )
+    assert "more than 4 Benched" in roadblock["text"]
+    assert "use the smaller number" in roadblock["text"]
+    print("PASS: card text matches all five grounded effects")
 
 
 def main() -> None:
@@ -151,6 +157,50 @@ def main() -> None:
     assert all(len(s.bench) == 4 and bench_capacity(s) == 4 for s in contracted)
     assert all(len(s.stadiums.teleport_room_sources) == 1 for s in contracted)
     print("PASS: Stadium contraction enumerates all 15 own-Bench discard choices")
+
+    # A simultaneous opponent Roadblock cap remains binding even when
+    # Teleport successfully places an eight-slot Sky Field.
+    roadblock_state = sample_state(
+        discarded_stadiums=(sky,),
+        hand_pokemon=(first,),
+        opponent_roadblock_live=True,
+    )
+    roadblock_after = teleport_room(roadblock_state, "goth-1")
+    assert len(roadblock_after) == 1
+    assert roadblock_after[0].stadiums.in_play == sky
+    assert bench_capacity(roadblock_after[0]) == 4
+    assert bench_from_hand(roadblock_after[0], first.copy_id) is None
+    roadblock_removed = replace(roadblock_after[0], opponent_roadblock_live=False)
+    assert bench_capacity(roadblock_removed) == 8
+    assert bench_from_hand(roadblock_removed, first.copy_id) is not None
+    assert bench_capacity(teleport_room(
+        sample_state(opponent_roadblock_live=True), "goth-1"
+    )[0]) == 4
+    print("PASS: Roadblock overrides Sky Field and removal-only restoration")
+
+    # A Benched Gothitelle is itself a contractible physical occupant.
+    source_benched_base = sample_state(
+        discarded_stadiums=(sky,),
+        hand_stadiums=(another_collapsed,),
+        hand_pokemon=(first, second),
+    )
+    goth_in_bench = replace(
+        source_benched_base,
+        active=BenchPokemon("attacker-1"),
+        bench=(source_benched_base.active,) + source_benched_base.bench[:3],
+    )
+    after_sky = teleport_room(goth_in_bench, "goth-1")[0]
+    with_one = bench_from_hand(after_sky, first.copy_id)
+    assert with_one is not None
+    with_two = bench_from_hand(with_one, second.copy_id)
+    assert with_two is not None
+    shortened = play_stadium(with_two, another_collapsed.copy_id)
+    assert len(shortened) == 15
+    kept = [row for row in shortened if "goth-1" in row.stadiums.teleport_room_sources]
+    lost = [row for row in shortened if not row.stadiums.teleport_room_sources]
+    assert len(kept) == 10 and len(lost) == 5
+    assert all(row.stadiums.teleport_room_used == frozenset() for row in lost)
+    print("PASS: physical contraction preserves source in 10 choices, loses it in 5")
 
     # An Ability lock or ended turn removes the Ability channel.
     locked = sample_state(ability_locked=True)
