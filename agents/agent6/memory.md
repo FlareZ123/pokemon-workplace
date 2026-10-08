@@ -258,3 +258,18 @@ The regression uses existing Aegislash pre-KO materialized board and compiled SE
 Also created the separate printed-card pair fixture `results/huntail_lost_out_conflict/`, with real Tyranitar-GX (sm8-121) Dusty Ruckus 130 vs Lapras (bw4-25, Water Basic HP100) and Bench Huntail (sv10-55) Diver's Catch; two conditional orders route the two Basic Water Energy either to hand or Lost Zone. CI run 37837767633 passed. Actual order-choice authority for that exact pairing remains unresolved; avoid borrowing the Aegislash answer as universal law.
 
 Next valuable study: official February 2026 deferred-trigger-before-initial-effect-completion rule, which can affect the current static destination compiler if prior effects add triggers or mutate eligibility.
+
+
+### 2026-10-08: Source-conditioned strategic value and three invariances
+
+New `tools/ko_source_scoped_choice.py`, `results/ko_source_scoped_choice/`, and CI. It compares each selected rules source independently by assigning a concrete authorized chooser, then minimizing or maximizing a **caller-provided** zero-sum utility over exact permitted order endpoints. It never assigns probabilities to uncertain source policies. For the real Aegislash / Lost Out pair, under synthetic defender utility equal to Aegislash evolution-stack cards returned, Japan owner chooser selects three-card return and TPCi current-turn attacking chooser selects Lost Zone, resulting in source-conditioned interval [0,3]. This is a card-zone count, not an empirical win-rate. Original CI 37838496428 and tied-outcome CI 37838655217 passed.
+
+Improved source-choice solver to preserve `optimal_outcomes` for every tied-optimal order state and `optimal_outcome_union` across resolved sources. One representative lexicographically minimal witness remains for interoperability; uncertainty is now properly retained.
+
+New `tools/ko_choice_invariance.py`, `results/ko_choice_invariance/`, CI run 37838805655 passed. Distinguishes three invariance levels:
+- same utility across source-conditioned optimal actions;
+- same materialized physical-instance destination vector among all tied optima;
+- same full post-KO conserved terminal state under fixed pending batch/promotion, tested by canonical card-class-zone histogram.
+Examples show value invariant with distinct physical states (constant utility) and instance routes different but final exchangeable state identical (two Basic Water card copies). Unresolved authority sources yield explicit `None` certificates, and source-ID list of unresolved profiles. Regression checks 110 randomized state-space cases against independent full KO disposal outcomes.
+
+Updated `results/knockout_order_state_space_synthesis/README.md` to incorporate source-conditioned decision and invariance results. Remaining gap: current source-choice model assumes two-player zero-sum utility and fixed destination-only triggering; no tournament policy resolution, no utility calibration, and no dynamic trigger discovery.
