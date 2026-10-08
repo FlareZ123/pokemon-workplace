@@ -54,6 +54,11 @@ assert negative.disposition == "invalid"
 assert proof(negative, "base5-17").eligibility == "ineligible"
 assert proof(negative, "base5-17").provenance.disposition == "known_non_equivalent"
 
+computer_search = deck((SNIVY, 1), ("base1-71", 1), (GRASS, 58))
+assert computer_search.disposition == "invalid"
+assert proof(computer_search, "base1-71").eligibility == "ineligible"
+assert proof(computer_search, "base1-71").provenance.disposition == "known_non_equivalent"
+
 banned = deck((SNIVY, 1), ("xy6-77", 1), (GRASS, 58))
 assert banned.disposition == "invalid"
 assert proof(banned, "xy6-77").provenance.disposition == "direct_banned"
@@ -71,6 +76,13 @@ assert copy_rule.disposition == "invalid"
 assert any(
     issue.code == "self_named_singleton_limit"
     for issue in copy_rule.construction.issues
+)
+
+historical_copy_rule = deck(("neo4-106", 2), (GRASS, 58))
+assert historical_copy_rule.disposition == "invalid"
+assert any(
+    issue.code == "self_named_singleton_limit"
+    for issue in historical_copy_rule.construction.issues
 )
 
 unknown = deck((SNIVY, 1), ("does-not-exist", 1), (GRASS, 58))
