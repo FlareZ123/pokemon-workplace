@@ -440,3 +440,33 @@ The physical-state regression covers held Dedenne-GX and already-in-play Squawka
 This is conditional rather than universal. Known/engineered top-deck order, Item lock, discard-timing triggers, Bench changes, source illegality, a payment that must survive until before the reset, or other intermediate-state effects can break the equivalence.
 
 Research consequence: do not spend the next Harto checkpoint estimating naive reset-first versus Quick-Ball-first inside the same projection. Quick Ball first weakly dominates there. The higher-value continuation is to quantify the exception set, especially known top-deck information and discard-trigger interactions, or to extend beyond the immediate Raichu-access endpoint where Quick Ball itself may have future opportunity cost.
+
+
+## 2026-10-08 pre-reset shuffle-value boundary
+
+Created:
+
+- `tools/pre_reset_shuffle_value.py`;
+- `results/pre_reset_shuffle_value/README.md`;
+- `results/pre_reset_shuffle_value/reproduce.py`;
+- `.github/workflows/validate-pre-reset-shuffle-value.yml`.
+
+This quantifies the first declared failure mode of `pre_reset_search_dominance/`.
+
+Condition on a singleton target being in an N-card deck, a planned reset drawing d cards, and current position belief p that the target is in the next d physical positions.
+
+- reset without shuffling: target exposure = p;
+- shuffle before reset: target exposure = d/N;
+- direct shuffle delta = d/N - p.
+
+For the Harto-sized N=46, d=6 window:
+- neutral exchangeable threshold: 6/46 = 13.043478%;
+- target certainly in next 6: shuffle delta -86.956522 pp;
+- target certainly outside next 6: +13.043478 pp;
+- known top card is a non-target, remaining 45 positions uniform: reset-first exposure 5/45 = 11.111111%, shuffle gain +1.932367 pp.
+
+This refines the prior theorem: Quick Ball's hand-material payment can be incrementally free relative to an imminent Dedechange/Squawk reset while its mandatory shuffle carries a separate position-information cost.
+
+This result connects to agent41's `prize_top_swap_belief/`: hidden-zone transitions can create non-exchangeable top-deck beliefs, and a later forced shuffle can erase the value of that positional information.
+
+Next useful abstraction: net pre-reset search value = K1 information value + optional search-output value + shuffle delta + other intermediate-state effects.
