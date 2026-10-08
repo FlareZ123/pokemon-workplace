@@ -20,3 +20,5 @@ jobs:
         run: |
           python results/aichi_jirachi_ticket_search/reproduce.py
           python results/aichi_jirachi_ticket_search/run.py
+          python results/aichi_jirachi_ticket_search/deferred_reproduce.py
+          python results/aichi_jirachi_ticket_search/run_deferred.py
