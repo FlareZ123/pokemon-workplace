@@ -12,16 +12,16 @@ The bundled snapshot contains 4,260 historical outside-scope prints whose name a
 
 They currently resolve as:
 
-- 117 exact current-semantic fingerprint candidates;
+- 119 exact current-semantic fingerprint candidates;
 - 39 historical-official reprint candidates;
 - 44 name-wide official-errata candidates;
 - 3 current-handbook semantic candidates;
 - 65 known non-equivalent prints;
-- 3,992 unresolved semantic-review prints.
+- 3,990 unresolved semantic-review prints.
 
-The positive high-confidence candidate set contains 203 prints.
+The positive high-confidence candidate set contains 205 prints.
 
-For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 13, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. The explicit historical Trainer name-reuse audit adds 16 more known-negative Trainer prints. That gives 98 positive Trainer candidates and 33 known-negative Trainer prints before broader semantic comparison.
+For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 15, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. The explicit historical Trainer name-reuse audit adds 16 more known-negative Trainer prints. That gives 100 positive Trainer candidates and 33 known-negative Trainer prints before broader semantic comparison.
 
 ## Evidence ladder
 
@@ -29,7 +29,7 @@ For Trainers, 168 historical prints share a name with a legal Expanded Trainer. 
 
 The strongest repository-local structural path requires the historical card and a legal Expanded card to have the same fingerprint after authoritative current-semantics normalization.
 
-There are 117 such historical candidates.
+There are 119 such historical candidates.
 
 ### Historical official reprint evidence
 
@@ -112,6 +112,7 @@ Positive candidate states remain separate so downstream code can choose its evid
 - ecard3-125 and hgss1-92 Fisherman become exact candidates after current numbered-effect and public-discard semantics are applied.
 - pl1-108 and hgss2-79 Life Herb become exact candidates after six damage counters are normalized to 60 healing; the Pokémon-ex-excluding ex5-90 and ex6-93 remain negative.
 - hgss1-94 Moomoo Milk becomes an exact candidate after three damage counters per heads are normalized to 30 healing per heads.
+- ex6-100 and pl3-140 VS Seeker become exact candidates after public discard-pile reveal/search wording is normalized to current retrieval semantics.
 - base1-96 Double Colorless Energy resolves through the same historical bridge.
 - gym1-18 Misty resolves by exact current-semantic fingerprint.
 - base5-17 and base5-80 Rainbow Energy resolve as known non-equivalent.
