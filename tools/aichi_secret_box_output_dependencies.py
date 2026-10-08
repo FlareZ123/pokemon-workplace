@@ -56,6 +56,8 @@ class OutputDependencyResult:
     indispensable_category_counts: tuple[int, ...]
     singleton_signature_counts: tuple[int, ...]
     singleton_route_count_counts: tuple[int, ...]
+    item_failure_tag_call_deck_counts: tuple[int, ...]
+    supporter_failure_gnh_deck_counts: tuple[int, ...]
     monotonicity_violations: int
 
     def mask_label(self, mask: int) -> str:
@@ -113,6 +115,8 @@ def analyze_output_dependencies(
     indispensable = [0] * len(OUTPUTS)
     singleton_signatures = [0] * 16
     singleton_route_counts = [0] * 5
+    item_failure_tag_call_counts = [0] * 5
+    supporter_failure_gnh_counts = [0] * 5
     monotonicity_violations = 0
 
     for _ in range(trials):
@@ -173,6 +177,11 @@ def analyze_output_dependencies(
         singleton_signatures[singleton_signature] += 1
         singleton_route_counts[singleton_signature.bit_count()] += 1
 
+        if not outcomes[BOX_ITEM_OUTPUT]:
+            item_failure_tag_call_counts[remaining["Tag Call"]] += 1
+        if not outcomes[BOX_SUPPORTER_OUTPUT]:
+            supporter_failure_gnh_counts[remaining["Guzma & Hala"]] += 1
+
         for mask, success in enumerate(outcomes):
             if not success:
                 continue
@@ -193,6 +202,12 @@ def analyze_output_dependencies(
         indispensable_category_counts=tuple(indispensable),
         singleton_signature_counts=tuple(singleton_signatures),
         singleton_route_count_counts=tuple(singleton_route_counts),
+        item_failure_tag_call_deck_counts=tuple(
+            item_failure_tag_call_counts
+        ),
+        supporter_failure_gnh_deck_counts=tuple(
+            supporter_failure_gnh_counts
+        ),
         monotonicity_violations=monotonicity_violations,
     )
 
