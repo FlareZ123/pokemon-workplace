@@ -1,0 +1,20 @@
+name: Validate K0 Prize Gust Information
+
+on:
+  push:
+    paths:
+      - 'tools/k0_prize_gust_information.py'
+      - 'tools/prize_refill_gust.py'
+      - 'results/k0_prize_gust_information/**'
+      - '.github/workflows/validate-k0-prize-gust-information.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python results/k0_prize_gust_information/reproduce.py
