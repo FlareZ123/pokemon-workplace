@@ -1,0 +1,32 @@
+name: Validate effect evolution source gate
+
+on:
+  push:
+    paths:
+      - "tools/effect_evolution_source_gate.py"
+      - "tools/effect_evolution_execution.py"
+      - "tools/effect_evolution_timing.py"
+      - "tools/turn_action_budget.py"
+      - "tools/lock_state_kernel.py"
+      - "results/effect_evolution_source_gate/**"
+      - ".github/workflows/validate-effect-evolution-source-gate.yml"
+  pull_request:
+    paths:
+      - "tools/effect_evolution_source_gate.py"
+      - "tools/effect_evolution_execution.py"
+      - "tools/effect_evolution_timing.py"
+      - "tools/turn_action_budget.py"
+      - "tools/lock_state_kernel.py"
+      - "results/effect_evolution_source_gate/**"
+      - ".github/workflows/validate-effect-evolution-source-gate.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/effect_evolution_source_gate/reproduce.py
