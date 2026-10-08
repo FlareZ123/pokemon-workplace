@@ -1420,3 +1420,12 @@ The earlier hidden-state oracle reaches **36.909665%**, so the legal direct-firs
 The model also exposes a smaller information-only continuation: Quick Ball's deck inspection can establish K1 even when Crobat V is unavailable or strategically unused, allowing an already-visible Gladion or connector to finish the local endpoint. The result is explicitly simulation-based, preserves a seeded 5-million-state raw output and CI regression, and does not value the future cost of discarding the hand to Dedechange or Squawk and Seize.
 
 **Working synthesis:** connector identity matters through its downstream state transition. Quick Ball reaching Crobat V, Dedenne-GX and Squawkabilly ex is not one generic "draw engine" edge. The large Dedenne contribution also makes visible reset-first sequencing the next important whole-action comparison.
+
+
+## Search-before-reset can be materially free when the reset will destroy the same hand
+
+[pre_reset_search_dominance/](pre_reset_search_dominance/) formalizes a sequencing boundary exposed by the Harto Dedenne/Squawk continuation. Current constrained deck-search rules allow Quick Ball to inspect the deck and take zero Basic Pokémon. If a legal payment and Quick Ball would both be discarded by an immediately planned Dedechange or Squawk and Seize anyway, then playing Quick Ball first, taking zero targets and resolving the reset can finish with the same unordered hand, deck, discard and Bench multisets as resetting first while adding deck-composition knowledge.
+
+The proof harness checks held Dedenne-GX and an already-in-play Squawkabilly ex with identical fresh-draw witnesses. This weak dominance is conditional on the projection: known top-deck order, discard-timing triggers, lock changes, Bench constraints, or other intermediate-state effects can break the material equivalence.
+
+**Working synthesis:** downstream destruction can make an upstream payment incrementally free. Search costs and DCI should therefore be evaluated against the already-planned zone transition, not as isolated card losses.
