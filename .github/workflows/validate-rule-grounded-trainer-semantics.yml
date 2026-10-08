@@ -1,0 +1,30 @@
+name: validate rule-grounded Trainer semantics
+
+on:
+  push:
+    paths:
+      - "tools/trainer_rule_semantics.py"
+      - "tools/current_card_semantics.py"
+      - "tools/reprint_errata_resolution.py"
+      - "results/rule_grounded_trainer_semantics/**"
+      - "results/reprint_errata_resolution/**"
+      - ".github/workflows/validate-rule-grounded-trainer-semantics.yml"
+  pull_request:
+    paths:
+      - "tools/trainer_rule_semantics.py"
+      - "tools/current_card_semantics.py"
+      - "tools/reprint_errata_resolution.py"
+      - "results/rule_grounded_trainer_semantics/**"
+      - "results/reprint_errata_resolution/**"
+      - ".github/workflows/validate-rule-grounded-trainer-semantics.yml"
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.rule_grounded_trainer_semantics.reproduce
+      - run: python -m results.reprint_errata_resolution.reproduce
