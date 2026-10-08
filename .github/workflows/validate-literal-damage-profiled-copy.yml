@@ -1,0 +1,25 @@
+name: Validate literal profiled copy damage
+
+on:
+  push:
+    paths:
+      - "tools/literal_damage_profiled_copy_bridge.py"
+      - "tools/attack_damage_target_geometry.py"
+      - "tools/attack_copy_physical_ko_bridge.py"
+      - "results/literal_damage_profiled_copy_bridge/**"
+      - ".github/workflows/validate-literal-damage-profiled-copy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check card-grounded physical copied spread damage
+        run: python results/literal_damage_profiled_copy_bridge/reproduce.py
