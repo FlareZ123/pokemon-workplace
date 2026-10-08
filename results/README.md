@@ -1323,3 +1323,9 @@ If Alolan Raichu is in deck, the stronger connector searches it directly. If Rai
 The earlier hidden-state oracle reaches **36.909665%**, so the legal direct-first policy exceeds it by **11.573936 points**. This is coherent because that oracle was constrained to Quick Ball as the first connector.
 
 **Working synthesis:** optimize the visible action family before optimizing hidden-information policy inside one preselected action. A hidden-state oracle over a dominated connector can be weaker than a legal observation-consistent policy that chooses a stronger connector first.
+
+## Physical copied-attack reactions preserve two conserved boards through simultaneous Knock Outs
+
+[physical_copy_damage_reaction_bridge/](physical_copy_damage_reaction_bridge/) connects copied-attack damage on the stack-bearing physical board to the existing damaged-by-attack counter-reaction families. A Haughty Order -> Timeless-GX witness deals 150 to a 130-HP defender; Strong Bash-like reflection and a Spiky Energy-like trigger put 17 counters on the 170-HP attacker. Both Pokémon then enter pending physical Knock Out batches with their Tool and Energy still attached. The existing cross-player batch resolver orders promotions and conserves every physical card class. Prevented damage and one-sided Knock Out controls prevent accidental overgeneralization.
+
+**Working synthesis:** the post-damage reaction barrier can preserve one physical authority for both players. Reaction-source eligibility is still supplied as input; real activation conditions, non-counter reaction bodies, Prize awards, and terminal checks belong to upstream or downstream layers.
