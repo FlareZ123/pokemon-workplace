@@ -1,0 +1,25 @@
+name: Validate physical copied attack status sources
+
+on:
+  push:
+    paths:
+      - "tools/physical_attack_status_source_bridge.py"
+      - "tools/attack_status_text_contracts.py"
+      - "tools/attack_copy_physical_ko_bridge.py"
+      - "results/physical_attack_status_source_bridge/**"
+      - ".github/workflows/validate-physical-attack-status-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Apply printed status attacks on physical copied attack boards
+        run: python results/physical_attack_status_source_bridge/reproduce.py
