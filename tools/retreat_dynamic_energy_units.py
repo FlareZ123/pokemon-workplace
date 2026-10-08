@@ -209,19 +209,24 @@ def unresolved_selected_prize_provider_ids(
     state: RetreatEnergyTransactionState,
     selected_energy_ids: Iterable[str],
     *,
+    retreat_cost: int,
     context: RetreatEnergyProviderContext | None = None,
 ) -> tuple[str, ...]:
-    """Identify selected payment cards whose unit count needs Prize counts.
+    """Report selected Prize-dependent cards only when legality is ambiguous.
 
-    Ineligible holders have an unconditional one-unit provider, so they
-    cannot create a Prize-information dependency.
+    For Retreat, eligible Counter/Reversal Energy always supply at least one
+    unit. If the selected physical cards already pay the cost at their lower
+    bound, a Retreat is safe without knowing the Prize counts.
     """
-    if context is not None and context.prize_counts_known:
+    if retreat_cost <= 0 or (context is not None and context.prize_counts_known):
         return ()
 
     active = state.energy.board.get(state.energy.board.active_id)
     selected = frozenset(selected_energy_ids)
-    unresolved: list[str] = []
+    lower_units = 0
+    upper_units = 0
+    uncertain: list[str] = []
+
     for energy in active.energy:
         if energy.instance_id not in selected:
             continue
@@ -231,16 +236,24 @@ def unresolved_selected_prize_provider_ids(
             and not holder_is_pokemon_gx(active.tags)
             and not holder_is_pokemon_ex(active.tags)
         ):
-            unresolved.append(energy.instance_id)
+            lower, upper = 1, 2
+            uncertain.append(energy.instance_id)
         elif (
             energy.card_name == "Reversal Energy"
             and energy.print_id in REVERSAL_ENERGY_PRINT_IDS
             and holder_is_evolution(active.tags)
             and not holder_has_rule_box(active.tags)
         ):
-            unresolved.append(energy.instance_id)
+            lower, upper = 1, 3
+            uncertain.append(energy.instance_id)
+        else:
+            lower = upper = len(energy.units)
+        lower_units += lower
+        upper_units += upper
 
-    return tuple(sorted(unresolved))
+    if lower_units < retreat_cost <= upper_units:
+        return tuple(sorted(uncertain))
+    return ()
 
 
 def refresh_active_retreat_energy_units(
@@ -305,14 +318,17 @@ def retreat_with_dynamic_energy_units(
     """Refresh supported providers, then execute the conserved Retreat."""
 
     selected = tuple(discard_energy_ids)
-    if unresolved_selected_prize_provider_ids(
-        state, selected, context=provider_context,
-    ):
-        return None
     refreshed = refresh_active_retreat_energy_units(
         state,
         context=provider_context,
     )
+    if unresolved_selected_prize_provider_ids(
+        refreshed,
+        selected,
+        retreat_cost=retreat_cost,
+        context=provider_context,
+    ):
+        return None
     return retreat_with_energy_destinations(
         refreshed,
         bench_object_id,
