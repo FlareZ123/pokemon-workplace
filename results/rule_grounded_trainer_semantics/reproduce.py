@@ -42,6 +42,12 @@ for source_id in ("ecard1-137", "ex14-71", "ex6-87", "pop5-6"):
     )
     assert resolver.resolve(source_id).kind == "exact_fingerprint_candidate"
 
+for source_id in ("ecard3-140", "pl2-97"):
+    assert current_semantic_fingerprint(resolver.cards_by_id[source_id]) == current_semantic_fingerprint(
+        resolver.cards_by_id["sm7-150"]
+    )
+    assert resolver.resolve(source_id).kind == "exact_fingerprint_candidate"
+
 assert current_semantic_fingerprint(resolver.cards_by_id["ex5-90"]) != current_semantic_fingerprint(
     resolver.cards_by_id["sm7-136"]
 )
