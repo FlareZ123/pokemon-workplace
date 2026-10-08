@@ -54,6 +54,8 @@ class OutputDependencyResult:
     minimal_mask_witness_counts: tuple[int, ...]
     unique_minimal_mask_counts: tuple[int, ...]
     indispensable_category_counts: tuple[int, ...]
+    singleton_signature_counts: tuple[int, ...]
+    singleton_route_count_counts: tuple[int, ...]
     monotonicity_violations: int
 
     def mask_label(self, mask: int) -> str:
@@ -109,6 +111,8 @@ def analyze_output_dependencies(
     minimal_mask_witness_counts = [0] * 16
     unique_minimal_mask_counts = [0] * 16
     indispensable = [0] * len(OUTPUTS)
+    singleton_signatures = [0] * 16
+    singleton_route_counts = [0] * 5
     monotonicity_violations = 0
 
     for _ in range(trials):
@@ -160,9 +164,14 @@ def analyze_output_dependencies(
         if len(minimal_masks) == 1:
             unique_minimal_mask_counts[minimal_masks[0]] += 1
 
+        singleton_signature = 0
         for index, (bit, _name) in enumerate(OUTPUTS):
+            if outcomes[bit]:
+                singleton_signature |= bit
             if not outcomes[BOX_ALL_OUTPUTS ^ bit]:
                 indispensable[index] += 1
+        singleton_signatures[singleton_signature] += 1
+        singleton_route_counts[singleton_signature.bit_count()] += 1
 
         for mask, success in enumerate(outcomes):
             if not success:
@@ -182,6 +191,8 @@ def analyze_output_dependencies(
         minimal_mask_witness_counts=tuple(minimal_mask_witness_counts),
         unique_minimal_mask_counts=tuple(unique_minimal_mask_counts),
         indispensable_category_counts=tuple(indispensable),
+        singleton_signature_counts=tuple(singleton_signatures),
+        singleton_route_count_counts=tuple(singleton_route_counts),
         monotonicity_violations=monotonicity_violations,
     )
 
