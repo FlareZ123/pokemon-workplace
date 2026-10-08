@@ -1429,3 +1429,12 @@ The model also exposes a smaller information-only continuation: Quick Ball's dec
 The proof harness checks held Dedenne-GX and an already-in-play Squawkabilly ex with identical fresh-draw witnesses. This weak dominance is conditional on the projection: known top-deck order, discard-timing triggers, lock changes, Bench constraints, or other intermediate-state effects can break the material equivalence.
 
 **Working synthesis:** downstream destruction can make an upstream payment incrementally free. Search costs and DCI should therefore be evaluated against the already-planned zone transition, not as isolated card losses.
+
+
+## Deck-order belief determines whether a pre-reset shuffle helps or hurts
+
+[pre_reset_shuffle_value/](pre_reset_shuffle_value/) gives the exact first boundary condition for the search-before-reset theorem. For a singleton target known to be in an N-card deck and a planned d-card reset draw, let p be the current belief that the target lies inside those next d physical positions. Resetting without a shuffle hits with probability p; a full-deck shuffle changes that to d/N. The direct shuffle value is therefore exactly `d/N - p`.
+
+For the Harto-sized 46-card, six-draw window, the neutral threshold is 13.043478%. A target certainly inside the next six makes the shuffle cost 86.956522 percentage points of direct exposure, while a target certainly outside that window makes the shuffle gain 13.043478 points. Knowing only that the top card is a non-target gives 5/45 = 11.111111% no-shuffle exposure, so shuffling improves the singleton hit rate by 1.932367 points.
+
+**Working synthesis:** the material cost of Quick Ball can be incrementally free before a full-hand reset while the mandatory shuffle still has a separate deck-order information cost. Composition belief and position belief must remain distinct when prior effects make the top of deck non-exchangeable.
