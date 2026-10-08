@@ -112,6 +112,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [bench_teleport_capacity_bridge/](bench_teleport_capacity_bridge/) composes the physical Gothitelle Teleport Room discard-to-Stadium channel with Bench limits and ordinary Stadium-play quota. From a full four-of-four Collapsed Stadium board, a live Active Gothitelle can remove the Stadium to reopen one slot even without a discard-pile replacement; Sky Field from discard expands to eight, while Area Zero requires Tera-first entry. Teleport preserves spent Stadium-play bandwidth, and the CI regression verifies mandatory replacement, timing/lock gates, and all 15 four-of-six contraction choices.
 
+[teleport_discard_payload_line/](teleport_discard_payload_line/) composes an exact Ultra Ball two-card discard/search with physical Stadium entry. With Stadium quota already exhausted and Sky Field initially in hand, discarding Sky Field through Ultra Ball before using a live Teleport Room opens eight Bench slots and admits two required entrants; discarding two other cards or spending Teleport first permits only one. The counted Trainer and physical Stadium zone copies are synchronized, and the CI regression verifies class-total conservation and Item-lock/Roadblock negative branches.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
