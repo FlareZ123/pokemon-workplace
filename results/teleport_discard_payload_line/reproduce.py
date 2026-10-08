@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -129,8 +130,10 @@ def main():
     # Using Teleport Room too early spends its source-specific Ability window.
     early = teleport_room(base, "goth-1")[0]
     assert early.stadiums.in_play is None
+    early_counted = mirror_teleport_to_trainer_zones(base, early, physical.zones)
+    early_execution = replace(physical, zones=early_counted)
     delayed_payload = execute_ultra_ball_for_entrant(
-        early, physical, discard_selection=DiscardSelection((1, 1, 0))
+        early, early_execution, discard_selection=DiscardSelection((1, 1, 0))
     )
     assert delayed_payload.sky_discarded
     assert teleport_room(delayed_payload.board_after_search, "goth-1") == ()
