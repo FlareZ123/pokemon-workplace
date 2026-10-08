@@ -255,6 +255,8 @@ Other timing and attack-structure work includes [copied_attack_partial_resolutio
 
 [physical_attack_healing_source_bridge/](physical_attack_healing_source_bridge/) resolves exact copied self-healing bodies onto the physical Pokémon that actually executes the copied attack. A Haughty Order -> Maractus Mega Drain regression starts the copying attacker at four damage counters, heals it to two during the attack-effect step, then lets the defender's Spiky Energy reaction restore two counters in the later damaged-by-attack window. Elgyem Calm Mind verifies that an effect-only copied attack can heal the actor even with no damage record. The shared whole-attack coverage inventory now types all 293 exact self-healing rows and all 270 exact position-effect rows instead of leaving them under the generic source-specific fallback.
 
+[physical_attack_energy_disruption_source_bridge/](physical_attack_energy_disruption_source_bridge/) adds exact copied one-Energy discard to the same physical phase model. Haughty Order -> Duraludon Hyper Beam demonstrates a step-5/step-6 dependency: discarding the defending Active's Spiky Energy suppresses its later damaged-by-attack backlash, while discarding another Energy leaves Spiky attached and places two counters on the original attacker. This matches the rulebook's analogous Gastro Acid timing example, where an effect removed during step 5 is absent when step-6 reactions are evaluated. The whole-attack inventory now types 191 exact Energy-disruption attack rows as well.
+
 ## 7. Setup is an information process as well as a legality process
 
 The setup research models opening acceptance, optional starters, mulligans, and the public information revealed before the first normal turn.
