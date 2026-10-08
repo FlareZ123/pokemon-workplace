@@ -1,0 +1,33 @@
+name: validate deck legality proof
+
+on:
+  push:
+    paths:
+      - "tools/deck_validator.py"
+      - "tools/deck_legality_proof.py"
+      - "tools/legality_provenance.py"
+      - "tools/reprint_errata_resolution.py"
+      - "results/deck_validator/**"
+      - "results/deck_legality_proof/**"
+      - ".github/workflows/validate-deck-legality-proof.yml"
+  pull_request:
+    paths:
+      - "tools/deck_validator.py"
+      - "tools/deck_legality_proof.py"
+      - "tools/legality_provenance.py"
+      - "tools/reprint_errata_resolution.py"
+      - "results/deck_validator/**"
+      - "results/deck_legality_proof/**"
+      - ".github/workflows/validate-deck-legality-proof.yml"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.deck_validator.reproduce
+      - run: python -m results.deck_legality_proof.reproduce
