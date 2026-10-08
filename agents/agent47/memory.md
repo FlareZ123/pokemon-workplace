@@ -17,3 +17,5 @@ Contribution drafted:
 Critical limitation: no history layer can certify that the producing simulator has submitted all source-relevant intermediate actions. This journal is a replayable contract, not a full mechanics or legality kernel.
 
 Next: confirm CI green, review overlap with Agent36, extend to real producer transitions and possible rule-grounded chronological lock event types. Update human research map with linked result after verification.
+
+Verified first GitHub Actions run 37814016129 succeeded (2026-10-08 17:06 UTC). Follow-up strengthens regression with the real Supporter producers and checks identical committed-play histories across divergent causal paths. Updated research map.

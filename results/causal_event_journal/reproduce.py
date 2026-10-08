@@ -12,8 +12,16 @@ from ability_lock_dependency_graph import AbilityLockSourceRef
 from board_object_kernel import ToolAttachment, make_board, make_pokemon
 from causal_event_journal import append_boundary, begin_journal, replay_journal
 from committed_play_event import (
-    CommittedPlayEvent, PlayChannel, PlayKind, has_play_history,
+    PlayKind, from_forced_supporter, from_supporter_execution, has_play_history,
 )
+from forced_supporter_execution import (
+    ForcedSupporterState, SupporterInstance, begin_hand_control,
+)
+from supporter_play_event_history import (
+    SupporterExecutionState, SupporterIdentity,
+    copy_supporter_effect_as_attack, play_supporter_from_hand,
+)
+from turn_action_budget import TurnActionBudget
 
 
 def add(journal, event_id, description, player, opponent, event=None):
@@ -48,10 +56,16 @@ def main() -> None:
     j = begin_journal(player, opponent, first_player_owner="player")
     assert j.lock_state.basis == "setup_first_player"
 
-    normal = CommittedPlayEvent(
-        PlayKind.SUPPORTER, PlayChannel.ORDINARY, "A", "A", "A",
-        "supp-1", "Team Rocket's Ariana", True,
-    )
+    supporter = SupporterIdentity("supp-1", "Team Rocket's Ariana")
+    support_base = SupporterExecutionState()
+    support_played = play_supporter_from_hand(support_base, supporter)
+    assert support_played is not None
+    normal = from_supporter_execution(support_base, support_played, player="A")
+    assert normal is not None and normal.consumed_ordinary_quota
+    copied = copy_supporter_effect_as_attack(support_base, supporter)
+    assert copied is not None
+    assert from_supporter_execution(support_base, copied, player="A") is None
+
     j = add(j, "normal-play", "normal Supporter play", player, opponent, normal)
     assert j.lock_state.basis == "setup_first_player"
     assert has_play_history(
@@ -59,10 +73,17 @@ def main() -> None:
         name_contains="Team Rocket",
     )
 
-    forced = CommittedPlayEvent(
-        PlayKind.SUPPORTER, PlayChannel.FORCED, "A", "B", "A",
-        "supp-2", "Team Rocket's Ariana", False,
+    forced_card = SupporterInstance("supp-2", "Team Rocket's Ariana")
+    forced_base = ForcedSupporterState(
+        current_player="A", other_player="B",
+        current_budget=TurnActionBudget(), other_budget=TurnActionBudget(),
+        other_hand=(forced_card,),
     )
+    forced_state = begin_hand_control(forced_base, forced_card.copy_id)
+    assert forced_state is not None
+    forced = from_forced_supporter(forced_state)
+    assert forced is not None
+
     j = add(j, "forced-play", "out-of-turn forced Supporter", player, opponent, forced)
     assert j.committed_plays == (normal, forced)
     assert forced.out_of_turn and not forced.consumed_ordinary_quota
@@ -87,6 +108,7 @@ def main() -> None:
     assert restored.lock_state.resolution.active_sources is None
     assert restored.boundaries[-1].opponent_board == direct.boundaries[-1].opponent_board
     assert direct.lock_state != restored.lock_state
+    assert direct.committed_plays == restored.committed_plays
     assert replay_journal(restored) == restored
 
     fails(
