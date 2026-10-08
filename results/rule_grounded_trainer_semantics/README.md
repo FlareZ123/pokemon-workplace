@@ -6,7 +6,7 @@ Can current rules resolve any of the four remaining semantic-review rows in the 
 
 ## Result
 
-Yes. Five wording families can be normalized from explicit current rules while preserving the benchmark's known negative boundaries.
+Yes. Six wording families can be normalized from explicit current rules while preserving the benchmark's known negative boundaries.
 
 ### Fisherman
 
@@ -51,6 +51,14 @@ Advanced Player's Rulebook B-03 prevents a Supporter from being played when carr
 
 The normalizer maps only the exact historical Bill's Maintenance effect string to the current effect string.
 
+### Underground Expedition
+
+Historical Underground Expedition `ecard3-140` and `pl2-97` and current `sm7-150` all inspect the bottom four cards of the deck, move two of those cards into the hand when two are available, and return the remaining inspected cards to the bottom in any order.
+
+The wording differences are covered by current numbered-choice semantics. Advanced Player's Rulebook II-A applies the closest possible number when fewer objects exist, and D-04 explains that a required choice can be implicit in effect wording. No version exposes a different card set or destination.
+
+The normalizer maps only the two exact historical Underground Expedition effect strings to the current effect string.
+
 ## Benchmark consequence
 
 After composing this normalizer into `current_card_semantics.py`:
@@ -61,7 +69,7 @@ After composing this normalizer into `current_card_semantics.py`:
 - both remaining rows are the older Pokédex wordings with "up to 5 cards";
 - the two Pokémon-ex-excluding Life Herb prints stay `known_non_equivalent`.
 
-The broader archive also resolves the same exact no-exclusion Life Herb wording on `hgss2-79`, the same public-discard Fisherman wording on `hgss1-92`, historical Moomoo Milk `hgss1-94`, historical VS Seeker `ex6-100` and `pl3-140`, and four historical Bill's Maintenance prints.
+The broader archive also resolves the same exact no-exclusion Life Herb wording on `hgss2-79`, the same public-discard Fisherman wording on `hgss1-92`, historical Moomoo Milk `hgss1-94`, historical VS Seeker `ex6-100` and `pl3-140`, four historical Bill's Maintenance prints, and historical Underground Expedition `ecard3-140` and `pl2-97`.
 
 ## Why Pokédex remains unresolved
 
