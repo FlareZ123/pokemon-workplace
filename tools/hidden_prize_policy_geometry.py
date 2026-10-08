@@ -23,6 +23,7 @@ class PolicyGeometry:
     best_actions: tuple[Hashable,...]
     nondominated_actions: tuple[Hashable,...]
     minimum_union_cover: int
+    union_cover_witness: tuple[Hashable,...]
     action_count: int
     world_count: int
 
@@ -82,18 +83,22 @@ def evaluate_binary_policy_events(
             continue
         nondominated.append((action,bits))
     non_actions=tuple(a for a,_ in nondominated)
-    masks=tuple(bits for _,bits in nondominated)
 
     if all_mask==0:
         min_cover=0
+        cover_witness=()
     else:
         min_cover=len(masks)
+        cover_witness=non_actions
         for k in range(1,len(masks)+1):
-            if any(
-                _combine(select)==all_mask
-                for select in combinations(masks,k)
-            ):
+            first=next(
+                (selected for selected in combinations(nondominated,k)
+                 if _combine(tuple(bits for _,bits in selected))==all_mask),
+                None
+            )
+            if first is not None:
                 min_cover=k
+                cover_witness=tuple(action for action,_ in first)
                 break
 
     return PolicyGeometry(
@@ -102,6 +107,7 @@ def evaluate_binary_policy_events(
         best_actions=best,
         nondominated_actions=non_actions,
         minimum_union_cover=min_cover,
+        union_cover_witness=cover_witness,
         action_count=len(entries),
         world_count=len(weights),
     )
