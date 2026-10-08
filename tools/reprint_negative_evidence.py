@@ -8,6 +8,7 @@ from tools.build_expanded_legality_baseline import classify_effective_legality, 
 from tools.current_card_semantics import current_semantic_fingerprint
 from tools.trainer_name_reuse_divergence import collect_proven_name_reuse_non_equivalent_ids
 from tools.trainer_optionality_divergence import collect_proven_optionality_non_equivalent_ids
+from tools.trainer_semantic_divergence import collect_proven_trainer_semantic_non_equivalent_ids
 
 TOURNAMENT_HANDBOOK_NEGATIVE_SOURCE = "Tournament Handbook reprint example: Rainbow Energy"
 CONTEXTUAL_DIVERGENCE_SOURCE = (
@@ -96,6 +97,7 @@ def collect_known_non_equivalent_ids(resources_root: Path) -> dict[str, str]:
     for collector in (
         collect_proven_name_reuse_non_equivalent_ids,
         collect_proven_optionality_non_equivalent_ids,
+        collect_proven_trainer_semantic_non_equivalent_ids,
     ):
         for card_id, reason in collector(resources_root).items():
             if card_id in result and result[card_id] != reason:
