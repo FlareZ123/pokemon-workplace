@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import json
 import sys
 from pathlib import Path
 
@@ -130,6 +131,14 @@ def attack_reaction(
         "a", ("Persian",), attacker_conditions=attacker_conditions,
     )
     initial_b, b = make_player("b", source_stack)
+    set_id = source_print_id.split("-")[0]
+    set_cards = json.loads(
+        (ROOT / "resources" / "cards" / "en" / f"{set_id}.json")
+        .read_text(encoding="utf-8")
+    )
+    source_hp = int(next(
+        card["hp"] for card in set_cards if card["id"] == source_print_id
+    ))
     replay = replay_copy_attack_physical_board(
         copied_timeless(), b,
         event_programs={
@@ -138,7 +147,7 @@ def attack_reaction(
                 DamageContext(attack=AttackDamage(150)),
             ),
         },
-        hp_by_pokemon_id={"b-active": 200, "b-bench": 100},
+        hp_by_pokemon_id={"b-active": source_hp, "b-bench": 100},
     )
     conditions = eligible_printed_condition_reactions(
         replay, resources=ROOT / "resources",
@@ -151,7 +160,7 @@ def attack_reaction(
         replay, a, body_event=BODY, damaged_pokemon_id="b-active",
         attacking_pokemon_id="a-active", reactions=(),
         attacker_hp_by_pokemon_id={"a-active": 120, "a-bench": 100},
-        defender_hp_by_pokemon_id={"b-active": 200, "b-bench": 100},
+        defender_hp_by_pokemon_id={"b-active": source_hp, "b-bench": 100},
     )
     enhanced, applied = apply_physical_condition_reactions(base, conditions)
     assert_conserved(initial_a, enhanced.attacker_state.ledger)
