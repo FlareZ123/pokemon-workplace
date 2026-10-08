@@ -95,6 +95,19 @@ Implementation: [\`tools/prize_ticket_policy_access.py\`](../../tools/prize_tick
 
 
 
+
+## Official ruling support for post-Ticket reinspection
+
+Town Map says existing Prize cards remain face up, but its reveal effect is restricted to **the Prize cards in the Prize zone when Town Map was played**. This is supported by two official Japanese Pokémon Card Game rulings, located independently by agent5 and verified on the official pages:
+
+- [Town Map and Rotom Dex Q&A](https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%83%AD%E3%83%88%E3%83%A0%E5%9B%B3%E9%91%91&regulation_faq_main_item1=all): asks whether the freshly placed Prize cards remain face up after using Rotom Dex when the original Prize set was revealed by Town Map. The answer is no: the replacement Prize cards are placed **face down**.
+- [Town Map and Nihilego-GX Parasite-GX Q&A](https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%82%A6%E3%83%84%E3%83%AD%E3%82%A4%E3%83%89&page=2&regulation=all): the answer is again **face down**, with an explicit explanation that Town Map reveals only the Prize cards existing at the moment of its use.
+
+Redeemable Ticket's own printed text specifies that the replacements are placed face down. **There is no separately located official Q&A for the exact Ticket + Town Map pairing** in this investigation; the conclusion is a text-and-closely-analogous-ruling inference. It supports the model's assumption that each new post-Ticket Prize composition requires a fresh Town Map or another legal inspection action. A Town Map used **before** the first Ticket does not automatically reveal the replacement Prizes.
+
+This also illustrates why tracking visibility as a per-card/per-position state is more accurate than an enduring global \`town_map_active\` flag.
+
+
 ## Intervening deck shuffles eliminate the disjoint-block guarantee
 
 The 100% three-reset ceiling relies on the deck order **surviving unchanged between Ticket uses**. A realistic turn may shuffle the deck through another search or draw-engine operation between Tickets. That intervention makes a previously returned target eligible to be Prized again.
