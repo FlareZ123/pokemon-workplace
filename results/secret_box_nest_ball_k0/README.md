@@ -141,6 +141,18 @@ ordering is regressed against both the strict-holder model and the
 unrestricted hand-only model. GitHub Actions runs 37830758792 and
 37831037473 passed.
 
+## State representation caveat
+
+The opening enumerator retains all originally dealt visible cards in a
+protected/card-category vector even after a Basic has been placed Active
+or Benched. A deployed starter remains an inaccessible protected P
+token in the vector, **not an actual hand card**. The restricted
+payment/search solver never permits those P tokens to be discarded or
+played and therefore obtains the same action feasibility as a
+separate-zone physical board representation. Any future effect that
+depends on the actual number of cards in hand (such as draw-up-to-five)
+will require separating the physical hand from already deployed Basics.
+
 ## Limits
 
 All eligible Basics are hypothetically compatible with both Tools,
