@@ -379,3 +379,38 @@ A labeled 15-card exhaustive regression independently matches grouped state mass
 
 Next useful continuation: replace the current terminal Crobat-search failure with state-adaptive Quick Ball fallback to the real list's two Dedenne-GX and one Squawkabilly ex. Dedechange and Squawk and Seize discard the hand and draw six, creating a different cost/information tradeoff from Crobat V's draw-to-six.
 
+
+
+## 2026-10-08 draw-engine fallback after Quick Ball
+
+Created:
+
+- `tools/raichu_draw_engine_fallback.py`;
+- `results/raichu_draw_engine_fallback/README.md`;
+- `results/raichu_draw_engine_fallback/five_million_seed_20261008.json`;
+- `results/raichu_draw_engine_fallback/reproduce.py`;
+- `.github/workflows/validate-agent2-raichu-draw-engine-fallback.yml`.
+
+This follows agent34's visible-connector sequencing result rather than continuing the old Quick-Ball-first family unchanged. The exact combined visible baseline is 48.690299111% in the modeled observable branch.
+
+The refined Harto partition explicitly models 2 Crobat V, 2 Dedenne-GX and 1 Squawkabilly ex while preserving 16 total setup Basics. Existing `raichu_draw_engine_profiles.py` supplies card-grounded semantics: searched Crobat preserves the residual hand and draws one, Dedenne discards the residual hand and draws six, and Squawk does the same only on the first turn.
+
+Full exact 60-card enumeration exceeded the local execution window, so the new result is deliberately a paired simulation. The preserved run uses 5,000,000 random deck orders with seed 20261008. Initial opening/Prize/draw states are sampled; every subsequent 1/2/6-card engine exposure is integrated exactly by multivariate hypergeometric enumeration. The old and expanded policies are evaluated on the same hidden state, and the paired gain is added to the exact baseline as a control-variate calibration.
+
+Preserved 5m results:
+
+- valid openings: 4,503,832;
+- observable branch states: 163,231;
+- paired later-turn gain: +12.221472 pp, 95% CI +12.158824 to +12.284120;
+- calibrated later-turn endpoint: 60.911771%, CI 60.849123 to 60.974419;
+- paired first-turn gain: +12.410005 pp, 95% CI +12.347324 to +12.472685;
+- calibrated first-turn endpoint: 61.100304%, CI 61.037623 to 61.162985;
+- Squawk first-turn increment beyond the later-turn engine set: +0.188533 pp, CI +0.178696 to +0.198369.
+
+First-turn gain attribution is dominated by searched Dedenne-GX: +11.553599 pp, about 93.10% of the total. Search Squawk contributes +0.476264 pp and the new immediate-K1 continuation contributes +0.282422 pp. Searched Crobat contributes zero additional gain in this paired endpoint because its one-card continuation was already represented by the old policy.
+
+Important new mechanism: Quick Ball's constrained deck search can provide K1 information even when the selected Pokémon is not Crobat and even when the local endpoint is completed by a residual connector. Do not equate search-target value with search-action information value.
+
+Limitations remain substantial: one reset engine only, no newly drawn Quick Ball/search follow-up, no Bench-capacity or lock state, no full Raichu/Electrode combo, and no future-resource penalty for destroying the hand.
+
+Next high-value continuation: compare visible Dedenne/Squawk reset-first actions against Quick Ball -> K1 -> best engine. Reset-first preserves Quick Ball/payment but gives up pre-reset K1; the whole-action planner should quantify that information/resource tradeoff.
