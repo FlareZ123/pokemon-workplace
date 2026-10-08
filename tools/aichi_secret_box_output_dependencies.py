@@ -177,6 +177,7 @@ def analyze_output_dependencies(
         singleton_signatures[singleton_signature] += 1
         singleton_route_counts[singleton_signature.bit_count()] += 1
 
+        remaining = secret_state[1]
         if not outcomes[BOX_ITEM_OUTPUT]:
             item_failure_tag_call_counts[remaining["Tag Call"]] += 1
         if not outcomes[BOX_SUPPORTER_OUTPUT]:
