@@ -177,3 +177,36 @@ For 4 channels at cost 3 this is 8/7/6/5 slots for capacities 1/2/3/4. Capacity-
 Interpretation: effective executable capacity, not printed maximum breadth, controls when DCI-like payability improvements can overtake direct redundancy. Partial capacity can produce a bounded reversal rather than a monotone preference for discard density.
 
 CI runs 37802714930 and 37802728618 both passed.
+
+
+## 2026-10-08 concrete Secret Box effective-capacity audit
+
+Created and validated:
+
+- `tools/aichi_secret_box_output_dependencies.py`
+- `results/aichi_secret_box_output_dependencies/README.md`
+- fast and full reproducers under that result directory
+- `.github/workflows/validate-aichi-secret-box-output-dependencies.yml`
+- `.github/workflows/full-aichi-secret-box-output-dependencies.yml`
+
+Also parameterized `tools/aichi_vileplume_secret_box.py` with a backward-compatible Secret Box output mask. The existing all-output 500k regression stayed green.
+
+Full 500k seed 20261007 reproduced 353,262 Grand Tree successes, 374,047 full Secret Box successes, and 20,785 incremental successes.
+
+Key result: every incremental state has a successful one-category Secret Box witness. Item-only retains 20,783/20,785 = 99.990378% of incremental states; Supporter-only 20,703 = 99.605485%; Tool-only 2,313 = 11.128217%; Stadium-only 623 = 2.997354%.
+
+The two Item-only failures have zero Tag Call left in deck. Prior paired work shows no incremental state begins with Tag Call in hand, so all four Tag Call copies are Prized in those two states. Direct Supporter output rescues them. Full-output ablation therefore makes Supporter indispensable in exactly two states and every other output category indispensable in zero.
+
+Supporter-only fails in 82 states, but raw deck Guzma & Hala counts there are 2 copies in 5 states, 3 in 24, and 4 in 53. So Supporter-only failure is not G&H Prize depletion. It reflects downstream payment/routing differences.
+
+Singleton route-count distribution: exactly 1 working category in 44 states, 2 in 17,849, 3 in 2,888, 4 in 4. Singleton signatures: Item only 42; Supporter only 2; Item+Tool 40; Item+Supporter 17,809; Item+Tool+Supporter 2,269; Item+Supporter+Stadium 619; all four 4.
+
+The dominant concrete mechanism is `Secret Box -> Item -> Tag Call -> Guzma & Hala`, so printed four-category breadth greatly overstates immediate category usage for this endpoint, while counting Secret Box as capacity one also misses the downstream fan-out.
+
+Full pinned regression run 37805240852 passed.
+
+Created `results/composed_connector_fanout/` to formalize the mechanism with the temporal resource solver. The Item chain `Box -> Tag Call -> G&H -> Artazon` satisfies Bunnelby + TM Evolution + Jet demand from four abstract payment units because Tag Call replenishes one unit before G&H. Direct Supporter route requires five. Removing Tag Call's second-card production also raises the Item route threshold from four to five. Supporter-window zero makes the chain fail. CI runs 37805002503 and 37805018267 passed.
+
+Important modeling consequence: distinguish printed output count, immediate category use, and state-valid terminal fan-out. Compile connector chains into terminal profiles carrying payment, action-window, and ordering costs before mapping a real card into an abstract capacity regime.
+
+Potential next action: use all 16 subset success counts to compute redundancy-aware output attribution (e.g. Shapley values). Full counts already imply approximate access credit Item 46.92%, Supporter 46.77%, Tool 4.53%, Stadium 1.78%.
