@@ -30,6 +30,12 @@ assert current_semantic_fingerprint(resolver.cards_by_id["hgss1-94"]) == current
 )
 assert resolver.resolve("hgss1-94").kind == "exact_fingerprint_candidate"
 
+for source_id in ("ex6-100", "pl3-140"):
+    assert current_semantic_fingerprint(resolver.cards_by_id[source_id]) == current_semantic_fingerprint(
+        resolver.cards_by_id["xy4-109"]
+    )
+    assert resolver.resolve(source_id).kind == "exact_fingerprint_candidate"
+
 assert current_semantic_fingerprint(resolver.cards_by_id["ex5-90"]) != current_semantic_fingerprint(
     resolver.cards_by_id["sm7-136"]
 )
