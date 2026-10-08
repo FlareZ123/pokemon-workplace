@@ -123,7 +123,19 @@ def main() -> None:
         opponent_board=blank_opponent(),
     )
     assert len(attempt.unresolved_tool_conditions) == 1
-    assert attempt.transaction is None
+    assert attempt.tool_action_sufficient
+    assert attempt.transaction is not None and attempt.transaction.committed
+
+    ambiguous = attempt_board_derived_retreat(
+        actor((), tool=rescue),
+        "pivot",
+        base_retreat_cost=2,
+        discard_energy_ids=(),
+        opponent_board=blank_opponent(),
+    )
+    assert len(ambiguous.unresolved_tool_conditions) == 1
+    assert not ambiguous.tool_action_sufficient
+    assert ambiguous.transaction is None
 
     attempt = attempt_board_derived_retreat(
         actor((), tool=rescue),
