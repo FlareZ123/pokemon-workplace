@@ -1,0 +1,23 @@
+name: Validate Gothitelle natural setup window
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_natural_setup_window.py"
+      - "results/gothitelle_natural_setup_window/**"
+      - ".github/workflows/validate-gothitelle-natural-setup-window.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate turn-two unassisted setup
+        run: python results/gothitelle_natural_setup_window/reproduce.py
