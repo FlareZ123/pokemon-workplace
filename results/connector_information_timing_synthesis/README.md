@@ -236,6 +236,18 @@ An executable line should preserve action chronology:
 The arrows should not imply every search grants a free deck inspection
 before payment. Cards with different orderings may genuinely differ.
 
+## Physical-zone representation boundary
+
+The exact opening enumeration retains originally dealt starters as
+inaccessible protected P tokens even after they enter the Active/Bench
+zone. That keeps the dealt-card combinatorics and the constrained
+discard eligibility correct because P can never pay a cost. It must
+not be misread as the deployed Pokémon literally remaining in hand.
+Any planner that uses hand-size-dependent draw effects, returns cards
+from play, counts Benched Basics, or evaluates damage needs separate
+physical hand/board zones rather than this compact protected-token
+representation.
+
 ## Open research and reproducibility
 
 Every cited exact numerical study includes source, tests and usually
