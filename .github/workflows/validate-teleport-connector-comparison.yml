@@ -1,0 +1,24 @@
+name: Validate Teleport connector comparison
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/teleport_connector_comparison.py"
+      - "tools/teleport_discard_payload_line.py"
+      - "results/teleport_connector_comparison/**"
+      - ".github/workflows/validate-teleport-connector-comparison.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate Quick Ball versus Ultra Ball
+        run: python results/teleport_connector_comparison/reproduce.py
