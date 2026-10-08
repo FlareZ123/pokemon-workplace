@@ -32,7 +32,7 @@ GX budget, and nested copy text requiring cycle-safe execution.
 
 ## Live source-pool counts
 
-[GitHub Actions validation 37771737035](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37771737035)
+[GitHub Actions validation 37772319343](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37772319343)
 found **537** effectively legal Dragon Pokémon card prints, carrying
 **950** printed attacks that collapse to **500** distinct lexical
 attack-body signatures.
@@ -43,7 +43,8 @@ attack-body signatures.
 | Exact damage counters | 5 | 1 |
 | Exact defender-effect bypass | 49 | 14 |
 | Exact extra turn | 3 | 1 |
-| Uncompiled effect text | 514 | 279 |
+| Exact Special Condition | 26 | 18 |
+| Uncompiled effect text | 488 | 261 |
 | Variable printed damage | 151 | 94 |
 | **Total** | **950** | **500** |
 
