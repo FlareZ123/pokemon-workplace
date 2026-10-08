@@ -16,7 +16,7 @@ from paired_switch_physical_transaction import execute_paired_switch
 from trainer_effect_gust_protection import (
     PROFILES, TrainerEffectOrigin, evaluate_bench_gust_protection,
 )
-from turn_action_budget import TurnActionBudget
+from tools.turn_action_budget import TurnActionBudget
 
 
 ITEM = TrainerEffectOrigin(PlayKind.ITEM, True)
