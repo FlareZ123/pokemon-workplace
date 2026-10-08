@@ -1,0 +1,20 @@
+name: Validate KO order conflict-component factorization
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_order_component_factorization.py"
+      - "tools/ko_order_outcome_space.py"
+      - "results/ko_order_component_factorization/**"
+      - ".github/workflows/validate-ko-order-component-factorization.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/ko_order_component_factorization/reproduce.py
