@@ -1,0 +1,23 @@
+name: Validate physical damage condition reactions
+
+on:
+  push:
+    paths:
+      - "tools/physical_damage_condition_reactions.py"
+      - "results/physical_damage_condition_reactions/**"
+      - ".github/workflows/validate-physical-damage-condition-reactions.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify printed ability status backlash
+        run: python results/physical_damage_condition_reactions/reproduce.py
