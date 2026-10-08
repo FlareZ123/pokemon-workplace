@@ -30,6 +30,7 @@ class DiscardSearchItem:
     discard_cost: int
     payment_kind: str
     conditional_search: bool
+    ace_spec: bool
     text: str
 
 
@@ -78,6 +79,10 @@ def scan_discard_search_items(root: Path) -> tuple[DiscardSearchItem, ...]:
                 discard_cost=cost,
                 payment_kind=kind,
                 conditional_search="Flip a coin" in text,
+                ace_spec=(
+                    "ACE SPEC" in (card.get("subtypes") or [])
+                    or "ACE SPEC:" in text
+                ),
                 text=text,
             )
             previous = latest.get(item.name)
@@ -104,6 +109,7 @@ def distinct_name_payment_pairs(
         for payment in pool
         for played in pool
         if payment.name != played.name
+        and not (payment.ace_spec and played.ace_spec)
         and played.payment_kind in {"any", "item"}
     )
 
@@ -118,6 +124,7 @@ if __name__ == "__main__":
             item.discard_cost,
             item.payment_kind,
             "conditional" if item.conditional_search else "deterministic",
+            "ACE_SPEC" if item.ace_spec else "",
         )
     print(
         "deterministic distinct-name payment pairs",
