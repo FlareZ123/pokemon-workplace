@@ -1,0 +1,34 @@
+name: validate reprint deck rule divergence
+
+on:
+  push:
+    paths:
+      - "tools/reprint_deck_rule_divergence.py"
+      - "tools/reprint_negative_evidence.py"
+      - "tools/reprint_errata_resolution.py"
+      - "results/reprint_deck_rule_divergence/**"
+      - "results/reprint_negative_evidence/**"
+      - "results/reprint_errata_resolution/**"
+      - ".github/workflows/validate-reprint-deck-rule-divergence.yml"
+  pull_request:
+    paths:
+      - "tools/reprint_deck_rule_divergence.py"
+      - "tools/reprint_negative_evidence.py"
+      - "tools/reprint_errata_resolution.py"
+      - "results/reprint_deck_rule_divergence/**"
+      - "results/reprint_negative_evidence/**"
+      - "results/reprint_errata_resolution/**"
+      - ".github/workflows/validate-reprint-deck-rule-divergence.yml"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.reprint_deck_rule_divergence.reproduce
+      - run: python -m results.reprint_negative_evidence.reproduce
+      - run: python -m results.reprint_errata_resolution.reproduce
