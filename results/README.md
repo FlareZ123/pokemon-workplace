@@ -1295,3 +1295,12 @@ Historical VS Seeker also converges under the same evidence standard. Its old re
 Empty optional attack fields add eight separate exact Pokémon matches by canonicalizing database schema noise only. That work is documented in [attack_empty_field_normalization/](attack_empty_field_normalization/).
 
 **Working synthesis:** terminology changes should be normalized only when current rules give an explicit semantic bridge. This is stronger evidence than edit-distance similarity and can produce positive equivalence candidates without weakening known-negative boundaries.
+
+
+## Hosted Forest Seal can convert part of Harto Raichu's oracle gap into a legal K1 line
+
+[raichu_presearch_forest_seal/](raichu_presearch_forest_seal/) re-evaluates the exact Harto Quick Ball branch when Forest Seal Stone and a visible Crobat V host are already available before the discard payment. Star Alchemy can search deck-resident Alolan Raichu directly; if Raichu is Prized, the full-deck inspection establishes K1 and the branch's already-visible Gladion can retrieve it.
+
+This observable line appears in **244 of 1,331** visible observations and **1.822834%** of branch probability mass. The baseline K0 policy succeeds in **85.487944%** of that hosted subbranch; Forest Seal first reaches the local endpoint in **100%** of those modeled worlds. Overall branch success rises from **32.988189%** to **33.252720%**, a **+0.264531 percentage-point** gain that recovers **6.745692%** of the prior hidden-state oracle gap. CI run `37762608113` passed.
+
+**Working synthesis:** an oracle gap should be partitioned into truly unavailable information and value recoverable through legal sequencing. Search actions can carry information value and direct endpoint value simultaneously, so a planner should test pre-decision information-acquisition lines before treating K0/K1 loss as irreducible.
