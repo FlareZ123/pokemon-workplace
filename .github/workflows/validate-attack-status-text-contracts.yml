@@ -1,0 +1,24 @@
+name: Validate attack status source contracts
+
+on:
+  push:
+    paths:
+      - "tools/attack_status_text_contracts.py"
+      - "tools/simple_attack_board_semantics.py"
+      - "results/attack_status_text_contracts/**"
+      - ".github/workflows/validate-attack-status-text-contracts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify exact attack-inflicted Special Conditions
+        run: python results/attack_status_text_contracts/reproduce.py
