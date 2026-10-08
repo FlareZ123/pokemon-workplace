@@ -43,17 +43,32 @@ class AttackStatusSourceContract:
         return f"{self.print_id}:attack:{self.attack_index}"
 
 
+def parse_exact_attack_status_text(
+    text: str,
+) -> tuple[str, str | None] | None:
+    """Return condition and coin branch for a full recognized status clause."""
+    normalized = re.sub(r"\s+", " ", text).strip()
+    ordinary = _PLAIN.fullmatch(normalized)
+    coin = _COIN.fullmatch(normalized)
+    if ordinary is None and coin is None:
+        return None
+    match = ordinary if ordinary is not None else coin
+    assert match is not None
+    return (
+        match.group("status").capitalize(),
+        coin.group("result").lower() if coin is not None else None,
+    )
+
+
 def compile_attack_status_source(
     card: dict, attack_index: int,
 ) -> AttackStatusSourceContract | None:
     attack = (card.get("attacks") or ())[attack_index]
     text = re.sub(r"\s+", " ", attack.get("text") or "").strip()
-    ordinary = _PLAIN.fullmatch(text)
-    coin = _COIN.fullmatch(text)
-    if ordinary is None and coin is None:
+    parsed = parse_exact_attack_status_text(text)
+    if parsed is None:
         return None
-    match = ordinary if ordinary is not None else coin
-    assert match is not None
+    condition, coin_result = parsed
     return AttackStatusSourceContract(
         print_id=card["id"],
         card_name=card["name"],
@@ -61,10 +76,8 @@ def compile_attack_status_source(
         attack_index=attack_index,
         raw_damage=attack.get("damage") or "",
         raw_text=text,
-        special_condition=match.group("status").capitalize(),
-        requires_coin_result=(
-            coin.group("result").lower() if coin is not None else None
-        ),
+        special_condition=condition,
+        requires_coin_result=coin_result,
     )
 
 
