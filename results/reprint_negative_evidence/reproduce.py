@@ -14,13 +14,14 @@ RESOURCES = ROOT / "resources"
 summary = summarize_negative_reprint_evidence(RESOURCES)
 
 assert summary["counts"] == {
-    "known_non_equivalent_prints": 64,
-    "names": 19,
+    "known_non_equivalent_prints": 65,
+    "names": 20,
 }
 assert summary["prints_by_name"] == {
     "Apricorn Maker": 1,
     "Darkness Energy": 15,
     "Devolution Spray": 1,
+    "Friend Ball": 1,
     "Life Herb": 2,
     "Magnetic Storm": 1,
     "Master Ball": 5,
@@ -38,7 +39,7 @@ assert summary["prints_by_name"] == {
     "Revive": 1,
     "Dusk Ball": 2,
 }
-assert len(collect_known_non_equivalent_ids(RESOURCES)) == 64
+assert len(collect_known_non_equivalent_ids(RESOURCES)) == 65
 
 resolver = build_reprint_resolver(RESOURCES)
 for card_id in summary["card_ids"]:
@@ -51,6 +52,7 @@ assert resolver.resolve("dp2-120").kind == "known_non_equivalent"
 assert resolver.resolve("ex5-90").kind == "known_non_equivalent"
 assert resolver.resolve("ex6-93").kind == "known_non_equivalent"
 assert resolver.resolve("ecard3-121").kind == "known_non_equivalent"
+assert resolver.resolve("ecard3-126").kind == "known_non_equivalent"
 assert resolver.resolve("ecard2-130").kind == "known_non_equivalent"
 assert resolver.resolve("base1-90").kind == "known_non_equivalent"
 assert resolver.resolve("ex15-82").kind == "known_non_equivalent"
