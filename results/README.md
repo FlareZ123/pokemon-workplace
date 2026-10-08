@@ -116,6 +116,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [teleport_discard_access_bound/](teleport_discard_access_bound/) gives exact K0/K1 hypergeometric bounds for the discard-fed Teleport channel. In an illustrative 46-card unseen pool with six random Prizes, five cards subsequently seen, four Ultra Ball, two Sky Field, 16 approved other discard cards and one required searchable singleton, the conditioned board-state line is accessible in 4.171035% of draws; an access-only count that skips the additional discard requirement claims 5.325892%. A fully enumerated small-population regression independently verifies the symbolic formula. These probabilities exclude Gothitelle setup cost and alternative winning lines.
 
+[teleport_discard_goal_closure/](teleport_discard_goal_closure/) corrects the searched-target-only metric to count the same goal when the singleton Pokémon is naturally drawn. In the 46-card unseen-pool K0 example, the additional hand-target branch raises the bounded goal access from 4.171035% to 4.474518%; under K1 with all required groups unprized, from 6.793838% to 7.309334%. Physical reproduction uncovered and repaired a canonical Trainer validator that rejected an otherwise legal zero-result restricted search even when mandatory two-card discard had changed state; general Trainer and goal-specific CI pass.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
