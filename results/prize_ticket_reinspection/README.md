@@ -70,6 +70,30 @@ These are exact enumeration results, not Monte Carlo estimates. They show how an
 The calculation exploits an exchangeability identity. Conditional on all three designated non-starter singletons being excluded from the opening, one being Prized, and the other two surviving in the deck after the later draw, the ordinary opening and later draw are distributed as an accepted 7-card hand plus a random card from the remaining **57 non-target cards**. Their Item composition can be enumerated without explicitly enumerating the middle six-Prize subset. The companion [\`access_reproduce.py\`](access_reproduce.py) confirms this identity against an independent, exhaustive 10-card enumeration of hand, Prize, and later draw zones.
 
 
+
+## Composing Prize-reset policy with naturally accessible Items
+
+The resource ceiling and Item-access layers can be combined exactly when the original deck-order randomness is independent of the Item-count observation after conditioning on the K1 witness. This independence holds in the specified uniform-shuffle, physical-identity setup and is independently checked on an exhaustive small deck.
+
+Let \`S_j\` be successful searchability by reset \`j\` **if the needed Items are guaranteed**, with \`S_0=0\` in the witness. Let \`A_j\` be the nested event that at least \`j\` Tickets and \`j-1\` Town Maps appear naturally in the early hand and draw. Then the achievable first-turn success under a ceiling of \`k\` adaptive resets and free initial K1 observation is:
+
+\`V_k = S_0 + Σ_{j=1..k} P(A_j | witness) * (S_j - S_{j-1})\`.
+
+Exact results for the 47-card three-singleton witness and illustrative four-Ticket/four-Town-Map, 14-starter 60-card access composition:
+
+| Policy Item ceiling | Searchability conditional on K1 witness and random Item access | Joint witness + successful searchability, among valid openings |
+| --- | ---: | ---: |
+| 1 Ticket | 34.144135410% | 2.105471301% |
+| 2 Tickets + 1 Map | 34.776045889% | 2.144437564% |
+| 3 Tickets + 2 Maps | 34.776669333% | 2.144476008% |
+
+The **second** reset-and-inspection capability adds **0.631910479 percentage points within the witness**, or **0.038966264 percentage points** on the accepted-opening denominator. The **third** adds only **0.000623444 percentage points within the witness**, or **0.000038444 percentage points** on the accepted-opening denominator. These are narrowly scoped searchability gains: there is no credit for alternate card uses, attacks, or lock handling.
+
+The adaptive first-turn stopping policy spends an exact expected **0.457456035 Tickets per witness state**, including the many witness states in which no Ticket is naturally accessible. Its expectation is below one because natural initial access is the main bottleneck.
+
+Implementation: [\`tools/prize_ticket_policy_access.py\`](../../tools/prize_ticket_policy_access.py). Independent end-to-end physical-card enumeration: [\`policy_reproduce.py\`](policy_reproduce.py). The full small-game enumerator samples hand, original Prizes, ordinary draw, and remaining deck **order**. It agrees exactly with the factorized policy values and Ticket consumption.
+
+
 ## Assumptions and practical limitations
 
 - The model starts *after* an initial Prize-identifying observation and conditions on a particular known physical-zone composition. It does not estimate how often that state is reached from shuffled openings.
