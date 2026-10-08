@@ -13,7 +13,10 @@ from attached_tool_retreat_modifiers import (
 from board_object_kernel import BoardState
 from retreat_board_effects import active_scoop_up_block_source_ids
 from retreat_cost_semantics import RetreatCostModifier, effective_retreat_cost
-from retreat_dynamic_energy_units import RetreatEnergyProviderContext
+from retreat_dynamic_energy_units import (
+    RetreatEnergyProviderContext,
+    unresolved_selected_prize_provider_ids,
+)
 from retreat_environment_modifiers import derive_environment_retreat_modifiers
 from retreat_energy_normalization import (
     RetreatEnergyNormalization,
@@ -33,6 +36,7 @@ class BoardDerivedRetreatAttempt:
     applied_modifiers: tuple[RetreatCostModifier, ...]
     scoop_up_block_source_ids: tuple[str, ...]
     unresolved_tool_conditions: tuple[UnresolvedToolRetreatCondition, ...]
+    unresolved_selected_provider_ids: tuple[str, ...]
     transaction: RetreatEnergyTransactionResult | None
 
 
@@ -52,6 +56,7 @@ def attempt_board_derived_retreat(
 ) -> BoardDerivedRetreatAttempt:
     """Normalize state, derive represented modifiers/effects, then Retreat."""
 
+    selected_energy_ids = tuple(discard_energy_ids)
     normalization = normalize_retreat_energy_state(
         state,
         provider_context=provider_context,
@@ -79,14 +84,19 @@ def attempt_board_derived_retreat(
     )
     retreat_cost = effective_retreat_cost(base_retreat_cost, modifiers)
     scoop_sources = active_scoop_up_block_source_ids(opponent_board)
+    unresolved_providers = unresolved_selected_prize_provider_ids(
+        prepared,
+        selected_energy_ids,
+        context=provider_context,
+    )
 
     transaction = None
-    if tool_derivation.exact:
+    if tool_derivation.exact and not unresolved_providers:
         transaction = retreat_with_energy_destinations(
             prepared,
             bench_object_id,
             retreat_cost=retreat_cost,
-            discard_energy_ids=discard_energy_ids,
+            discard_energy_ids=selected_energy_ids,
             opposing_scoop_up_block_active=bool(scoop_sources),
             prism_star_energy_ids=prism_star_energy_ids,
         )
@@ -97,5 +107,6 @@ def attempt_board_derived_retreat(
         applied_modifiers=modifiers,
         scoop_up_block_source_ids=scoop_sources,
         unresolved_tool_conditions=tool_derivation.unresolved_conditions,
+        unresolved_selected_provider_ids=unresolved_providers,
         transaction=transaction,
     )
