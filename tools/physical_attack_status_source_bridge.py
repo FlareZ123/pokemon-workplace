@@ -24,6 +24,7 @@ from stack_knockout_conservation import StackBoardMaterialState
 @dataclass(frozen=True)
 class PhysicalAttackStatusApplication:
     state: StackBoardMaterialState
+    updated_copy_resolution: AttackCopyPhysicalBoardResolution
     typed_active_conditions: SpecialConditionState
     target_id: str
     condition: ConditionKind
@@ -92,6 +93,7 @@ def apply_physical_attack_source_status(
 
     return PhysicalAttackStatusApplication(
         state=state,
+        updated_copy_resolution=replace(replay, state=state),
         typed_active_conditions=next_typed,
         target_id=board.active_id,
         condition=kind,
