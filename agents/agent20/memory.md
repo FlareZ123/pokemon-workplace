@@ -53,3 +53,11 @@
 - Opp4 Counter better witness: opponent Active N1, Bench N3,N3; Boss+Counter=2 attacks, Boss+Serena=3 (targets are both non-V).
 - Opp4 Serena better witness: opponent Active N2, Bench N1,N2,V2; Boss+Serena=3, Boss+Counter=4 (natural N2 KO closes Counter gate).
 - This is strict conditional *incomparability*, not empirical card ranking. Serena draw alternative, Item/Supporter differences, and match-specific resources omitted.
+
+## Subsequent result: Prime Catcher same-turn own-switch geometry
+- `tools/prime_catcher_order_geometry.py`, `results/prime_catcher_order_geometry/{README.md,reproduce.py}`, `.github/workflows/validate-prime-catcher-order-geometry.yml`, green CI run **37773300398**.
+- Source: current Prime Catcher text TEF #157; bundled Advanced Rulebook II-A, C-03, E-20. First switch chooses opponent Bench, then own Active must switch if own Bench present; if own Bench is empty, second clause cannot apply while opponent gust can still succeed.
+- Exact BFS action search with mandatory own-switch, optional Bench hand placement, one independent own-switch token; independent recursive DFS crosschecks 376 scenarios.
+- Own Active initially ready, all Boolean own-Bench profiles n0..5: Prime-only attack viable 58/63, with one extra own-switch 63/63. Five failures are exactly n>=1 with all Benched Pokemon unready. Own Active initially unready: Prime alone produces ready attack in 57/63 via a ready Bench.
+- Critical sequence: ready Active, own Bench empty, one unready Basic in hand required on Bench before attack. Prime first then Bench succeeds; Bench first then Prime fails (own forced promotion unready).
+- Do not generalize to card-attached Energy or full-game outcomes without state coupling. A successful opponent gust is assumed available; manual retreat, Item lock, attack costs, and other switch effects external.
