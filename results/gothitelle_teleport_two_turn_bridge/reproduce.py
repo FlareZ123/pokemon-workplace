@@ -21,7 +21,7 @@ from gothitelle_teleport_two_turn_bridge import (
 def cards_text()->None:
     needed={
         "xy3":("xy3-39","xy3-41"),
-        "xy5":("xy5-21",),
+        "xy5":("xy5-20","xy5-21"),
         "xy6":("xy6-89",),
         "swsh1":("swsh1-179",),
         "swsh9":("swsh9-137",),
@@ -34,19 +34,21 @@ def cards_text()->None:
             .read_text(encoding="utf-8")
         )
         cards.update({card["id"]:card for card in rows if card["id"] in ids})
-    assert len(cards)==7
+    assert len(cards)==8
     assert all(classify_effective_legality(c)[0]=="Legal" for c in cards.values())
     assert cards["xy3-39"]["name"]=="Gothita"
     assert cards["xy3-41"]["name"]=="Gothitelle"
     assert "Stage 2" in cards["xy3-41"]["subtypes"]
     assert "Teleport Room" in {a["name"] for a in cards["xy3-41"]["abilities"]}
+    assert cards["xy5-20"]["name"]=="Vulpix"
+    assert "Basic" in cards["xy5-20"]["subtypes"]
     shrine=next(a for a in cards["xy5-21"]["abilities"] if a["name"]=="Barrier Shrine")
     assert "can't play any Stadium cards from his or her hand" in shrine["text"]
     assert "discard another card from your hand" in " ".join(cards["swsh1-179"]["rules"])
     assert "Basic Pokémon" in " ".join(cards["swsh1-179"]["rules"])
     assert "skipping the Stage 1" in " ".join(cards["sv1-191"]["rules"])
     assert "Basic Pokémon that was put into play this turn" in " ".join(cards["sv1-191"]["rules"])
-    print("PASS: seven legal prints and timing/lock card text verified")
+    print("PASS: eight legal prints and opponent evolution timing/lock grounded")
 
 
 def conserved(initial,following)->None:
@@ -59,12 +61,12 @@ def conserved(initial,following)->None:
 
 
 def positive()->None:
-    opening=initial_state(sky_in_hand=True,barrier_shrine=True)
+    opening=initial_state(sky_in_hand=True)
     assert opening.turn==1
     assert opening.board.stadiums.in_play==COLLAPSED
     assert len(opening.board.bench)==3
     assert bench_capacity(opening.board)==4
-    assert play_sky_from_hand(opening) is None
+    assert play_sky_from_hand(opening) is not None  # Opponent Ninetales cannot evolve on its first turn
 
     q=first_turn_quick_gothita(opening,pay_sky=True)
     assert q.trainer.zones.count("quick_ball","discard")==1
@@ -110,7 +112,7 @@ def positive()->None:
 
 
 def negative_late_sky()->None:
-    opening=initial_state(sky_in_hand=False,barrier_shrine=True)
+    opening=initial_state(sky_in_hand=False)
     quick=first_turn_quick_gothita(opening,pay_sky=False)
     assert quick.trainer.zones.count("junk","discard")==1
     assert not quick.board.stadiums.discard
@@ -143,9 +145,9 @@ def negative_wrong_payment()->None:
 
 
 def alternative_unlocked()->None:
-    opening=initial_state(sky_in_hand=True,barrier_shrine=False)
+    opening=initial_state(sky_in_hand=True)
     q=first_turn_quick_gothita(opening,pay_sky=False)
-    t2=next_turn_under_collapsed(q)
+    t2=next_turn_under_collapsed(q,opponent_establishes_shrine=False)
     evolved=evolve_on_turn_two(t2)
     direct=play_sky_from_hand(evolved)
     assert direct is not None
