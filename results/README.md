@@ -130,6 +130,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [gothitelle_quick_ball_first_turn/](gothitelle_quick_ball_first_turn/) extends exact turn-two Gothitelle/Rare Candy timing to one first-turn Quick Ball search for missing Gothita, with mandatory other-card discard and random-Prize searchability. In an illustrative 60-card list (Gothita 3, Gothitelle 2, Rare Candy 4, other Basics 8, Quick Ball 4, approved discard cards 12), turn-two readiness conditional on a legal opener rises from 4.694346% natural-only to 6.547707% with the targeted search, a 1.853361-percentage-point gain. Independent labeled enumeration and a Prize-sensitive negative test passed CI.
 
+[gothitelle_teleport_two_turn_bridge/](gothitelle_teleport_two_turn_bridge/) tests a two-turn physical setup: first-turn Quick Ball discards Sky Field while searching Gothita, then the established Gothita evolves into Gothitelle through Rare Candy on turn two, and Teleport Room places that same Sky Field from discard into play. With Collapsed Stadium already in play and Ninetales's Barrier Shrine preventing hand-played Stadiums, two extra Basics enter after Teleport; paying junk for Quick instead leaves only one slot. The model conserves all tracked cards, respects the evolution window and tests the unlocked direct-play alternative; CI passed.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
