@@ -501,3 +501,42 @@ First turn, allowing Dedenne plus held/in-play Squawk:
 Mechanism: information value through action cancellation. Quick Ball can preserve the committed-reset material equivalence when reset is still best, then skip the hand-destroying effect when K1 exposes a deterministic residual line.
 
 Next synthesis should combine three distinct pre-reset terms: doomed-resource material cost, deck-order shuffle value, and information-driven cancellation/redirect option value.
+
+
+## 2026-10-08 full-hand reset generalization and typed profiles
+
+Created:
+
+- `tools/catalog_full_hand_resets.py`;
+- `results/full_hand_reset_catalog/README.md`;
+- `results/full_hand_reset_catalog/reproduce.py`;
+- `.github/workflows/validate-full-hand-reset-catalog.yml`;
+- `tools/compile_reset_transition_profiles.py`;
+- `results/reset_transition_profiles/README.md`;
+- `results/reset_transition_profiles/reproduce.py`;
+- `.github/workflows/validate-reset-transition-profiles.yml`;
+- `results/pre_reset_sequencing_synthesis/README.md`.
+
+The legality-grounded catalog finds 80 current paper-Expanded prints across 15 canonical literal `Discard your hand and draw N` families:
+Professor Juniper, Professor Sycamore, Professor's Research, Carmine, Ingo & Emmet, Dedenne-GX, Hisuian Zoroark VSTAR, Rayquaza VMAX, Squawkabilly ex, Zamazenta V, Zebstrika, Raging Bolt ex, Rayquaza-GX, Talonflame V, Tapu Koko.
+
+Catalog source split: 5 Trainer/Supporter, 6 Ability, 4 attack.
+
+The typed compiler adds source gate, Bench requirement, Supporter cost, GX/VSTAR once-per-game budget, first-turn rule, turn termination, same-turn fresh-hand actionability, draw position source and position sensitivity.
+
+Current profile distribution:
+- ends turn: 5;
+- fresh hand actionable same turn: 10;
+- Supporter cost: 5;
+- VSTAR cost: 1;
+- GX cost: 1;
+- first-turn-only: 1;
+- going-first first-turn exception: 3;
+- hand-to-Bench / Bench slot required: 1;
+- position-sensitive top/bottom reset: 1 (Ingo & Emmet).
+
+`pre_reset_sequencing_synthesis/` unifies material doomed-resource cost, K0/K1 composition information, deck-order belief, and reset commitment. This is now the preferred conceptual representation for extending the Harto work or analyzing other reset engines.
+
+Full-hand catalog CI run 37818843699 passed. Reset-profile workflow was queued at the time of this checkpoint; verify before relying on it.
+
+Next high-value direction: expand from literal discard-all resets to all full-hand replacement destinations, especially shuffle-into-deck and bottom-deck redraw effects, then normalize with a `hand_destination` field.
