@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "tools/prize_ticket_reinspection.py"
+      - "tools/prize_ticket_natural_access.py"
       - "results/prize_ticket_reinspection/**"
       - ".github/workflows/validate-agent4-prize-ticket-reinspection.yml"
   workflow_dispatch:
@@ -17,4 +18,6 @@ jobs:
         with:
           python-version: "3.12"
       - name: Run exact Ticket stopping-policy regressions
-        run: python results/prize_ticket_reinspection/reproduce.py
+        run: |
+          python results/prize_ticket_reinspection/reproduce.py
+          python results/prize_ticket_reinspection/access_reproduce.py
