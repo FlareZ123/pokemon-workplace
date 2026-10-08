@@ -205,7 +205,12 @@ def test_discard_ability_before_ko():
         source_print_id="me3-17", source_instance_id=None,
         ability_is_enabled=False, from_opponents_pokemon=True,
     ) == ()
-    assert compiled(replay, card="sv3-120", enabled=True).kind is EnergyReactionKind.DISCARD if False else True
+    _, _, klawf_replay, _ = ready_reaction(
+        "Klawf ex", defender_hp=220,
+    )
+    assert compiled(
+        klawf_replay, card="sv3-120",
+    ).kind is EnergyReactionKind.DISCARD
 
 
 def test_return_to_owners_hand_and_source_tool_binding():
