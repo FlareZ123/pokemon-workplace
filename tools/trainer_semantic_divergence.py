@@ -41,6 +41,24 @@ CASES = (
         witness_card_id="swsh45-57",
     ),
     TrainerSemanticDivergence(
+        name="Friend Ball",
+        source_ids=("ecard3-126",),
+        target_id="sm7-131",
+        axis="target_domain",
+        source_fragments=(
+            "Search your deck for a Baby Pokémon, Basic Pokémon, or Evolution card of the same type",
+        ),
+        target_fragments=(
+            "Search your deck for a Pokémon with the same type as 1 of your opponent's Pokémon in play",
+        ),
+        witness=(
+            "Restored Pokémon are neither Basic Pokémon nor Evolution cards under the official rules. "
+            "With a Fighting Pokémon on the opponent's field, current Friend Ball can search an Expanded-legal "
+            "Fighting Restored Archen, while the historical target classes cannot."
+        ),
+        witness_card_id="bw3-66",
+    ),
+    TrainerSemanticDivergence(
         name="Pokémon Fan Club",
         source_ids=("ecard2-130", "pop4-9"),
         target_id="sm5-133",
@@ -126,6 +144,12 @@ def _validate_witness_card(
             raise ValueError("Apricorn Maker witness must be a non-Item Supporter")
         if "Ball" not in str(witness.get("name") or ""):
             raise ValueError("Apricorn Maker witness name must contain Ball")
+    elif case.name == "Friend Ball":
+        subtypes = set(witness.get("subtypes") or ())
+        if "Restored" not in subtypes:
+            raise ValueError("Friend Ball witness must be a Restored Pokémon")
+        if not (witness.get("types") or ()):
+            raise ValueError("Friend Ball witness must have a Pokémon type")
 
 
 def collect_proven_trainer_semantic_non_equivalent_ids(
@@ -197,6 +221,12 @@ def distinguishing_witnesses() -> dict[str, object]:
     }
     return {
         "Apricorn Maker": apricorn_maker,
+        "Friend Ball": {
+            "witness_card": "Archen",
+            "witness_subtype": "Restored",
+            "historical_eligible": False,
+            "current_eligible": True,
+        },
         "Pokémon Fan Club": fan_club,
         "Super Potion": super_potion,
         "TV Reporter": tv_reporter,
