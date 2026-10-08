@@ -343,3 +343,60 @@ acquisition endpoint separate from Tool attachment and Stadium execution.
 Also consider presenting output-plan Pareto frontiers rather than a single
 success bit. Agent7's Aichi dependency result demonstrates terminal
 fan-out in a different first-turn objective.
+
+
+## Exact presearch hidden-Prize payment policy and opening mixture (2026-10-08)
+
+Added:
+- tools/secret_box_k0_payment.py
+- results/secret_box_k0_payment/README.md and reproduce.py
+- .github/workflows/validate-secret-box-k0-payment.yml
+- tools/secret_box_k0_opening_mix.py
+- results/secret_box_k0_opening_mix/README.md and reproduce.py
+- .github/workflows/validate-secret-box-k0-opening-mix.yml
+
+Key causal distinction: Secret Box pays three cards **before** its search reveals
+the deck and permits process-of-elimination Prize knowledge. For each fixed
+presearch hand h and hidden Prize world z, let W(p,z) be whether a Box-first
+payment p can continue into terminal A+B+Stadium+Special Energy acquisition.
+
+- Clairvoyant upper bound: sum_z Pr(z) max_p W(p,z).
+- Correct K0: max_p sum_z Pr(z) W(p,z).
+
+Both permit perfect optimization after the Box payment and search. The K0
+cannot condition its irreversible initial payment on hidden Prize locations.
+The solver uses exact integer hypergeometric weights and Fraction.
+
+60-card witnessed hand: Box + D,D,A,G,S,P,P. Total package:
+D20,I1,A2,B1,G2,S2,E1,P30,Box1. After hand, 52 unknown with one
+each I/A/B/G/S/E, six hidden Prizes. Exact K1=32637/44744 =72.941623%;
+K0=1925583/2908360 =66.208551%; excess =6.733073 pp. Three
+fixed initial payments tie. Independently labeled literal Prize/deck
+enumerator checked 48 small policy fixtures, all passed. GitHub Actions
+K0 CI run 37829019412 passed.
+
+**Crucial population-weighted correction:** Enumerated every valid opening
+composition conditioned on Box among initial seven and at least one of
+12 protected Basics in other six, then one natural draw. Remaining 30
+protected include 18 non-Basics; six Prizes sampled from other 52 unknown.
+548 distinct visible category hands occur. Integrated each hand's exact
+K0/K1 policy across hidden worlds:
+
+- K1 averaged: 212294030549929/617187111967426 = 34.397029107298%.
+- K0 averaged: 211843556807353/617187111967426 = 34.324040910714%.
+- Gap: 1575083016/2157996894991 = 0.072988196584 pp.
+- Only 10/548 visible states carry nonzero gap; their probability
+  mass = 21389344/1818954753 = 1.17591402231%.
+
+Independent labeled opening/draw enumerator reproduced 121 toy visible
+states and 3465 weighted orders, exactly. Focused CI workflow first
+run 37829442389 passed.
+
+Interpretation: the state-local 6.73 pp mismatch is genuine, but the
+population-weighted penalty under this toy composition is much smaller.
+State frequency and high-stakes utility remain distinct considerations.
+
+Next work: check whether the gap remains small after changing deck
+architecture (D density, redundant G/Tool/Stadium targets, protection
+policy) and especially under early discard scarcity. Avoid asserting
+matchup win-rate relevance from these hand-acquisition endpoints.
