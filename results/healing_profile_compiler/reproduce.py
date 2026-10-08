@@ -103,6 +103,7 @@ attack = HealingProfile(
     target=HealingTarget.SOURCE_POKEMON,
     heal_damage=30,
     effect_text="Heal 30 damage from this Pokémon.",
+    attack_index=0,
 )
 same = apply_healing_profile(
     attack,
