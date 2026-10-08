@@ -114,6 +114,8 @@ Related work includes [bench_capacity_effects/](bench_capacity_effects/), [bench
 
 [teleport_discard_payload_line/](teleport_discard_payload_line/) composes an exact Ultra Ball two-card discard/search with physical Stadium entry. With Stadium quota already exhausted and Sky Field initially in hand, discarding Sky Field through Ultra Ball before using a live Teleport Room opens eight Bench slots and admits two required entrants; discarding two other cards or spending Teleport first permits only one. The counted Trainer and physical Stadium zone copies are synchronized, and the CI regression verifies class-total conservation and Item-lock/Roadblock negative branches.
 
+[teleport_discard_access_bound/](teleport_discard_access_bound/) gives exact K0/K1 hypergeometric bounds for the discard-fed Teleport channel. In an illustrative 46-card unseen pool with six random Prizes, five cards subsequently seen, four Ultra Ball, two Sky Field, 16 approved other discard cards and one required searchable singleton, the conditioned board-state line is accessible in 4.171035% of draws; an access-only count that skips the additional discard requirement claims 5.325892%. A fully enumerated small-population regression independently verifies the symbolic formula. These probabilities exclude Gothitelle setup cost and alternative winning lines.
+
 ## 4. Energy readiness requires typed supply and action bandwidth
 
 Energy access is another area where raw card counts collapse important distinctions.
