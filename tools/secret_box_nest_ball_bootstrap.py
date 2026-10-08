@@ -35,6 +35,8 @@ def nest_ball_tool_bootstrap(
     separate deck category which the Nest Ball can put directly on Bench.
     No Prize uncertainty, Item lock, Bench fullness or attached Tools.
     """
+    if required_holders != 2:
+        raise ValueError("this bounded model supports exactly two Tool holders")
     if len(hand) != len(KINDS) or len(deck) != len(KINDS):
         raise ValueError("invalid typed card vector")
     if min(hand + deck) < 0 or min(initial_holders,searchable_basics,required_holders)<0:
@@ -58,7 +60,9 @@ def continuation_after_box_payment(
     searchable_basics: int, required_holders: int = 2,
     supporter_available: bool = True,
 ) -> bool:
-    """Optimize postpayment Box + Nest Ball + G&H with a known searchable deck."""
+    """Optimize postpayment Box + one Nest Ball play + G&H with known deck."""
+    if required_holders != 2:
+        raise ValueError("this bounded model supports exactly two Tool holders")
     for box_picks in _box_choices(deck):
         box_hand, rest = _fetch(hand, deck, box_picks)
 
