@@ -33,3 +33,21 @@ in this adapter. Consult the committed CI workflow for executable validation.
   previous-turn attack effects.
 - Compose physical KO batches with Prize awards and the E-31 window.
 - Expand beyond counter reactions to Energy and Special Condition effects.
+
+## Source-eligibility follow-up, 2026-10-08
+
+- `tools/attack_copy_physical_ko_bridge.py` now records actual damaged
+  Pokémon IDs alongside completed named damage results.
+- `tools/physical_copy_damage_reaction_bridge.py` requires those IDs to
+  match the caller's damaged source target before applying reflections.
+- `tools/physical_damage_reaction_sources.py` derives Spiky Energy reactions
+  from its physical attachment on the damaged Active, a positive damage
+  result, and the opposing-Pokémon attack condition.
+- Regression covers damage prevention, an Active-only Spiky source when the
+  attack damages a Bench target, absence of the opposing-attack condition,
+  and source/target misidentification.
+
+The source card `sv9-159` specifies these conditions explicitly. Prior-turn
+Strong Bash effects and suppressed Ability sources still need an activation
+history model. Future work should preserve event target identity for multiple
+damage sites and distinguish simultaneous damage from sequential events.
