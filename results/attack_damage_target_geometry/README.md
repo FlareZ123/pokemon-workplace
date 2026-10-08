@@ -68,6 +68,29 @@ The corpus regression deliberately rejects Dragapult ex's Phantom Dive,
 whose additional counters are an **attack effect** rather than damage,
 and the conditional Puffy Smashers-GX text.
 
+## Pure target-allocation planner
+
+`plan_literal_damage_targets()` uses the exact text geometry plus the
+opponent's live Active/Bench board to produce one target-specific instruction
+per eligible damage recipient. Each instruction records target object ID,
+amount, source (printed or attack text), and whether the target is Benched
+and normally ignores Weakness/Resistance.
+
+For fixed target counts, the selection must contain exactly the required
+number of distinct eligible Pokémon, or all available if fewer exist.
+For `each` clauses, all eligible targets are automatically included. For
+Basic/Evolution/ex restrictions, live membership tags must be explicitly
+supplied for every candidate object.
+
+A synthetic three-Pokémon board regression exercises **all 471** recognized
+source contracts, including missing-tag failures, incorrect counts, duplicate
+and ineligible targets, full-board spread, and the one-eligible-Bench case.
+[Validation passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37770091342).
+
+The planner performs no damage arithmetic, prevention, Knock Out, or reaction
+execution. Later layers can use these target-specific contracts to extend
+the physical copied-attack event model.
+
 ## Implications
 
 The correct runtime representation will eventually need one body event with
