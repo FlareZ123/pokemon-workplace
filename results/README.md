@@ -1234,3 +1234,13 @@ The source action remains a separate gate. Eevee's Energy Evolution can have a s
 
 **Working synthesis:** evolution transitions should preserve their origin. Ordinary evolution uses A-05 timing. Effect-based evolution uses C-12 plus card-text overrides, then composes with the source action's own timing and resource gates. A global first-turn evolution boolean loses legal lines and can also invent illegal source-action access.
 
+## Full-state Raichu backup rescue exposes latent redundancy
+
+[raichu_backup_rescue_full_state/](raichu_backup_rescue_full_state/) reconnects the clean post-search backup-Gladion connector race to Harto Miki's full opening, Prize, residual-hand, and one-card Dark Asset distribution. The fixed K0 policy discards a visible Gladion to Quick Ball before the Crobat V search establishes that Alolan Raichu is Prized.
+
+Conditional on that branch, the second Gladion is physically available in hand or deck in **90.649372%** of states. Same-turn recovery reaches **16.054113%** before Dark Asset and **20.482909%** after Dark Asset, leaving **70.166462 percentage points** of topological availability stranded beyond the modeled deadline. Forest Seal Stone is stronger than Computer Search in this narrow rescue role because searched Crobat V supplies the Tool host while Computer Search still requires two conservative disposable cards.
+
+A new continuation mechanism also appears: Dark Asset can rescue the line by drawing an ordinary disposable card that turns an already-held Computer Search from unpayable into payable.
+
+**Working synthesis:** copy redundancy, zone survival, timed exposure, connector readiness, and connector payment are separate layers. Random draw can improve access by changing a connector's cost state even when it does not reveal the target or connector itself.
+
