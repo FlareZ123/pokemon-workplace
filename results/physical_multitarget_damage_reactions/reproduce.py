@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -16,7 +17,7 @@ from attack_copy_physical_ko_bridge import (
     PhysicalBoardEventProgram, replay_copy_attack_physical_board,
 )
 from board_position_state import (
-    AttachmentKind, BoardPokemon, PokemonCard, make_state,
+    AttachmentKind, BoardPokemon, PokemonCard, clear_for_bench, make_state,
 )
 from cross_player_knockout_resolution import (
     CrossPlayerKnockOutContext, choose_promotion, promotion_order,
@@ -260,9 +261,68 @@ def test_multiple_same_target_records_need_disambiguation():
             raise AssertionError("ambiguous repeated damage target was accepted")
 
 
+
+def test_moved_attacker_keeps_reflection_target_identity():
+    initial_a, attacker = make_physical_player("a", two_spiky=False)
+    _, defender = make_physical_player("b", two_spiky=True)
+    replay = replay_copy_attack_physical_board(
+        copied_dual_bolt(), defender,
+        event_programs={
+            BODY: PhysicalBoardEventProgram(
+                "b-active", DamageContext(attack=AttackDamage(50)),
+            ),
+        },
+        hp_by_pokemon_id={"b-active": 120, "b-bench": 40},
+    )
+    reactions = eligible_spiky_energy_reactions(
+        replay, body_event=BODY, damaged_pokemon_id="b-active",
+        from_opponents_pokemon=True,
+    )
+    assert len(reactions) == 1
+
+    # An upstream attack effect has switched the attacking Pokémon to the
+    # Bench after damage; its identity persists through the reaction step.
+    assert attacker.board is not None
+    board = replace(
+        attacker.board,
+        active_id="a-bench",
+        pokemon=(
+            clear_for_bench(attacker.board.get("a-active")),
+            attacker.board.get("a-bench"),
+        ),
+    )
+    moved = StackBoardMaterialState(attacker.ledger, board)
+    result = resolve_physical_copy_damage_reactions(
+        replay, moved, body_event=BODY, damaged_pokemon_id="b-active",
+        attacking_pokemon_id="a-active", reactions=reactions,
+        attacker_hp_by_pokemon_id={"a-active": 100, "a-bench": 100},
+        defender_hp_by_pokemon_id={"b-active": 120, "b-bench": 40},
+    )
+    assert result.attacker_knocked_out_ids == ("a-active",)
+    assert result.attacker_state.board.active_id == "a-bench"
+    assert result.attacker_state.board.get("a-active").damage_counters == 10
+    assert result.attacker_state.board.get("a-bench").damage_counters == 0
+    assert_conserved(initial_a, result.attacker_state.ledger)
+
+    try:
+        resolve_physical_copy_damage_reactions(
+            replay, moved, body_event=BODY,
+            damaged_pokemon_id="b-active",
+            attacking_pokemon_id="missing",
+            reactions=reactions,
+            attacker_hp_by_pokemon_id={"a-active": 100, "a-bench": 100},
+            defender_hp_by_pokemon_id={"b-active": 120, "b-bench": 40},
+        )
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("a missing attacking Pokémon identity was accepted")
+
+
 def main():
     test_target_specific_reactions_and_conservation()
     test_multiple_same_target_records_need_disambiguation()
+    test_moved_attacker_keeps_reflection_target_identity()
     print("physical multi-target damage reaction regression: PASS")
 
 
