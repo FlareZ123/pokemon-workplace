@@ -1,0 +1,23 @@
+name: Validate agent2 Raichu draw engine profiles
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/raichu_draw_engine_profiles.py"
+      - "results/raichu_draw_engine_profiles/**"
+      - ".github/workflows/validate-agent2-raichu-draw-engine-profiles.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate Raichu draw engine profiles
+        run: python results/raichu_draw_engine_profiles/reproduce.py
