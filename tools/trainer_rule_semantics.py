@@ -26,11 +26,20 @@ LIFE_HERB_LEGACY_NO_EXCLUSION = (
     "6 damage counters from that Pokémon (all if there are less than 6)."
 )
 
+MOOMOO_MILK_CURRENT = (
+    "Choose 1 of your Pokémon, and then flip 2 coins. For each heads, heal 30 damage from that Pokémon."
+)
+MOOMOO_MILK_LEGACY = (
+    "Choose 1 of your Pokémon. Flip 2 coins. For each heads, remove 3 damage counters from that Pokémon."
+)
+
 RULE_EVIDENCE = {
     "fisherman_number_shortage": "resources/advanced-players-rulebook.md II-A",
     "fisherman_public_discard": "https://www.pokemon.com/us/play-pokemon/about/pokemon-tcg-glossary",
     "life_herb_heal": "resources/advanced-players-rulebook.md C-06",
     "life_herb_damage_counter": "resources/advanced-players-rulebook.md C-07",
+    "moomoo_milk_heal": "resources/advanced-players-rulebook.md C-06",
+    "moomoo_milk_damage_counter": "resources/advanced-players-rulebook.md C-07",
 }
 
 
@@ -50,6 +59,11 @@ def normalize_rule_grounded_trainer_semantics(card: dict[str, Any]) -> dict[str,
     elif normalized.get("name") == "Life Herb":
         rules = [
             LIFE_HERB_CURRENT if rule == LIFE_HERB_LEGACY_NO_EXCLUSION else rule
+            for rule in rules
+        ]
+    elif normalized.get("name") == "Moomoo Milk":
+        rules = [
+            MOOMOO_MILK_CURRENT if rule == MOOMOO_MILK_LEGACY else rule
             for rule in rules
         ]
 
