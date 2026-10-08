@@ -80,3 +80,41 @@ damage sites and distinguish simultaneous damage from sequential events.
 Next: generalize attack damage provenance to multiple simultaneous damage
 targets, and evaluate counterattacks from Benched Pokémon where eligibility
 differs from Active-only Spiky Energy.
+
+## Multi-target and attacker-object identity checkpoints
+
+- `AttackCopyPhysicalBoardResolution.damage_records` captures typed
+  (body event, target ordinal, target ID, six-step DamageResult).
+- A `PhysicalBoardEventProgram` can now carry additional damage targets
+  with their own `DamageContext`, leaving effect counters separate.
+- `physical_copy_damage_reaction_bridge` matches event plus exact target
+  and requires explicit `attacking_pokemon_id` for counter placement.
+  This preserves the original actor when attack effects move it to the Bench.
+  Unknown or missing actor identity is rejected.
+- `results/physical_multitarget_damage_reactions/` validates copied
+  Electivire ex Dual Bolt, two targets, Active-only Spiky Energy gate,
+  simultaneous Benched/attacker KO, materialized attachment conservation,
+  ambiguous repeated-target rejection, and switched attacker identity.
+  CI `37770404046` and follow-up `37770404046` passed.
+
+## Fixed optional boost risk census
+
+- `tools/optional_boost_reflection_frontier.py` layers actual Weakness,
+  Resistance, and attacker's printed HP onto the existing 61 eligible
+  fixed-bonus print rows and enumerates ten-damage aligned preattack
+  damage states versus Zamazenta `sv10-146`.
+- Exactly 2 distinct signatures across 4 eligible prints have a
+  lower-branch already KO while boosting causes attacker self-KO.
+  Cetitan ex Crushing Press: HP300, 140/280 final, starting damage
+  20..150 step10 (14 states). M Houndoom-EX Inferno Fang:
+  HP210 Fire versus Zamazenta Weakness, 160/320 final, starting damage
+  0..40 step10 (5 states).
+- CI run `37770738809` passed.
+- Feasibility caution: Strong Bash itself attacks for 70. Full-HP
+  Houndoom frontier requires having avoided that initial attack or
+  recovering beforehand; the census enumerates board states rather
+  than claiming common executable game lines.
+
+Next: review phase order and effects involving moving the original attacking
+Pokémon, consider side-aware damage record geometry, and propagate source
+identity validity into optional boost evaluation.
