@@ -28,6 +28,17 @@ _FIRST_TURN_BLOCK_RE = re.compile(
     r"(?:can't|cannot)[^.]*?(?:during (?:your|their) first turn|first turn)",
     re.IGNORECASE,
 )
+_ENTRY_TURN_BLOCK_RE = re.compile(
+    r"(?:can't|cannot)[^.]*?(?:"
+    r"on (?:a )?(?:basic )?pokémon that was put into play this turn"
+    r"|(?:on )?the turn this pokémon was put into play"
+    r")",
+    re.IGNORECASE,
+)
+_GRAND_TREE_ENTRY_BLOCK_RE = re.compile(
+    r"players can't evolve[^.]*?pokémon that was put into play this turn",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -40,6 +51,7 @@ class EvolutionEffectProfile:
     source_name: str
     source_channel: SourceChannel
     timing_policy: TimingPolicy
+    entry_turn_policy: TimingPolicy
     intrinsic_source_window: FirstTurnWindow
     structural_first_turn_window: FirstTurnWindow
     text: str
@@ -89,6 +101,24 @@ def timing_policy(text: str) -> TimingPolicy:
     if any(marker in lower for marker in explicit_markers):
         return "explicit_permitted"
     if "if you go first, you can use this attack" in lower and "first turn" in lower:
+        return "explicit_permitted"
+
+    return "c12_default_permitted"
+
+
+def entry_turn_policy(text: str) -> TimingPolicy:
+    normalized = normalize_text(text)
+    lower = normalized.lower()
+
+    if _ENTRY_TURN_BLOCK_RE.search(normalized) or _GRAND_TREE_ENTRY_BLOCK_RE.search(normalized):
+        return "blocked"
+
+    explicit_markers = (
+        "you can use this card during your first turn or on a pokémon that was put into play this turn",
+        "you can use this ability during your first turn or on a pokémon that was put into play this turn",
+        "you can use this card on a pokémon you put down when you were setting up to play or on a pokémon that was put into play this turn",
+    )
+    if any(marker in lower for marker in explicit_markers):
         return "explicit_permitted"
 
     return "c12_default_permitted"
@@ -147,6 +177,7 @@ def build_profiles(resources_root: Path) -> list[EvolutionEffectProfile]:
                     continue
                 channel = source_channel(card, kind)
                 policy = timing_policy(text)
+                entry_policy = entry_turn_policy(text)
                 source_window = intrinsic_source_window(channel, text)
                 profiles.append(
                     EvolutionEffectProfile(
@@ -158,6 +189,7 @@ def build_profiles(resources_root: Path) -> list[EvolutionEffectProfile]:
                         source_name=name,
                         source_channel=channel,
                         timing_policy=policy,
+                        entry_turn_policy=entry_policy,
                         intrinsic_source_window=source_window,
                         structural_first_turn_window=structural_window(policy, source_window),
                         text=text,
@@ -172,6 +204,9 @@ def summarize(profiles: list[EvolutionEffectProfile]) -> dict[str, Any]:
         "print_level_profiles": len(profiles),
         "unique_card_names": len({p.card_name for p in profiles}),
         "by_timing_policy": dict(sorted(Counter(p.timing_policy for p in profiles).items())),
+        "by_entry_turn_policy": dict(
+            sorted(Counter(p.entry_turn_policy for p in profiles).items())
+        ),
         "by_source_channel": dict(sorted(Counter(p.source_channel for p in profiles).items())),
         "by_structural_first_turn_window": dict(
             sorted(Counter(p.structural_first_turn_window for p in profiles).items())
