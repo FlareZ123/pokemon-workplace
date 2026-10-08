@@ -3,6 +3,9 @@
 Bounded deterministic legality witness with a single cross-turn Stadium payload.
 The state preserves the exact Sky Field copy across hand/discard/play and
 tracks the Stage 2 card separately from its existing Basic Bench stack.
+The opponent's first turn establishes Collapsed Stadium and a Vulpix;
+its following turn may evolve Vulpix into Ninetales, activating a
+Stadium-from-hand lock before the player's second turn.
 """
 from __future__ import annotations
 
@@ -44,7 +47,7 @@ class TwoTurnState:
         assert_stadium_projection(self.board,self.trainer.zones)
 
 
-def initial_state(*, sky_in_hand:bool, barrier_shrine:bool=True)->TwoTurnState:
+def initial_state(*, sky_in_hand:bool)->TwoTurnState:
     stadiums=StadiumEntryState(
         budget=TurnActionBudget(),
         hand=(SKY,) if sky_in_hand else (),
@@ -68,7 +71,7 @@ def initial_state(*, sky_in_hand:bool, barrier_shrine:bool=True)->TwoTurnState:
         ("collapsed_stadium","stadium_in_play"):1,
     })
     trainer=TrainerSearchExecutionState(zones=count,budget=stadiums.budget)
-    return TwoTurnState(board,trainer,stadium_hand_lock=barrier_shrine)
+    return TwoTurnState(board,trainer,stadium_hand_lock=False)
 
 
 def first_turn_quick_gothita(state:TwoTurnState,*,pay_sky:bool)->TwoTurnState:
@@ -123,7 +126,8 @@ def first_turn_quick_gothita(state:TwoTurnState,*,pay_sky:bool)->TwoTurnState:
 
 
 def next_turn_under_collapsed(
-    state:TwoTurnState,*,draw_sky:bool=False
+    state:TwoTurnState,*,draw_sky:bool=False,
+    opponent_establishes_shrine:bool=True,
 )->TwoTurnState:
     if state.turn!=1 or state.gothita_entered_turn!=1:
         raise ValueError("missing first-turn established Gothita")
@@ -143,7 +147,10 @@ def next_turn_under_collapsed(
         stadiums=replace(stadiums,hand=stadiums.hand+(SKY,))
     board=replace(state.board,stadiums=stadiums)
     trainer=replace(state.trainer,zones=zones,budget=budget)
-    return replace(state,turn=2,board=board,trainer=trainer)
+    return replace(
+        state,turn=2,board=board,trainer=trainer,
+        stadium_hand_lock=opponent_establishes_shrine,
+    )
 
 
 def evolve_on_turn_two(state:TwoTurnState)->TwoTurnState:
