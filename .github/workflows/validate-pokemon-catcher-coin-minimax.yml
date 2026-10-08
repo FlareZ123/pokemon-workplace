@@ -1,0 +1,20 @@
+name: Validate Pokemon Catcher Coin Minimax
+
+on:
+  push:
+    paths:
+      - 'tools/pokemon_catcher_coin_minimax.py'
+      - 'tools/gust_prize_minimax.py'
+      - 'results/pokemon_catcher_coin_minimax/**'
+      - '.github/workflows/validate-pokemon-catcher-coin-minimax.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python results/pokemon_catcher_coin_minimax/reproduce.py
