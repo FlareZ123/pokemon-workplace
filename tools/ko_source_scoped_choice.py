@@ -26,6 +26,7 @@ class SourceChoice:
     authority_status: ConcreteChooserStatus
     chooser: str | None
     best_outcome: OrderOutcome | None
+    optimal_outcomes: tuple[OrderOutcome, ...]
     viewpoint_payoff: float | None
 
 
@@ -35,6 +36,20 @@ class SourceChoiceResult:
     outcome_count: int
     # For a zero-sum two-player game under all included resolved sources.
     payoff_envelope: tuple[float, float] | None
+    optimal_outcome_union: tuple[OrderOutcome, ...]
+
+    @property
+    def value_invariant(self) -> bool:
+        """All resolved source policies agree on the optimal utility value."""
+        return (
+            self.payoff_envelope is not None
+            and self.payoff_envelope[0] == self.payoff_envelope[1]
+        )
+
+    @property
+    def instance_destination_invariant(self) -> bool:
+        """All resolved source-optimal destination choices coincide physically."""
+        return len(self.optimal_outcome_union) == 1
 
 
 def choose_ko_outcome_by_source(
@@ -78,7 +93,7 @@ def choose_ko_outcome_by_source(
         assessment = assess_concrete_ordering_player(context, (source_id,), players)
         if assessment.status != ConcreteChooserStatus.RESOLVED:
             choices.append(
-                SourceChoice(source_id, assessment.status, None, None, None)
+                SourceChoice(source_id, assessment.status, None, None, (), None)
             )
             continue
 
@@ -92,22 +107,31 @@ def choose_ko_outcome_by_source(
             if chooser == viewpoint_player
             else min(value for _outcome, value in scored)
         )
-        optimal = min(
+        optimal_outcomes = tuple(sorted(
             (outcome for outcome, value in scored if value == score),
             key=lambda row: (row.witness_order, row.destinations),
-        )
+        ))
+        optimal = optimal_outcomes[0]
         choices.append(
             SourceChoice(
                 source_id, ConcreteChooserStatus.RESOLVED,
-                chooser, optimal, score
+                chooser, optimal, optimal_outcomes, score
             )
         )
         utilities.append(score)
 
+    union = {
+        outcome.destinations: outcome
+        for choice in choices
+        for outcome in choice.optimal_outcomes
+    }
     return SourceChoiceResult(
         choices=tuple(choices),
         outcome_count=len(outcomes),
         payoff_envelope=(
             (min(utilities), max(utilities)) if utilities else None
+        ),
+        optimal_outcome_union=tuple(
+            union[destinations] for destinations in sorted(union)
         ),
     )
