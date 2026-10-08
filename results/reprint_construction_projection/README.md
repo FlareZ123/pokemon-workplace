@@ -20,22 +20,17 @@ This audit establishes a representation constraint. It does not decide tournamen
 
 ## Resolver-aware interpretation
 
-The current resolver already avoids two of the broad hazards.
+The current resolver avoids the Master Ball and Computer Search projection hazards.
 
 The five historical Master Ball prints are known non-equivalent, so they have no resolver target to project from.
 
-The historical Shining Celebi `neo4-106` is an exact current-semantic candidate for `me55c-106`. Those two exact prints carry the same singleton rule. The other legal same-name Shining Celebi print has different gameplay text and no singleton rule. Target identity therefore matters.
+The two historical Computer Search prints are also known non-equivalent. Current Standard and Expanded reprint policy requires all printed text to be functionally identical. The legal Expanded Computer Search target carries an ACE SPEC deck restriction that is absent from both historical prints.
 
-The remaining direct witness is old Computer Search. Both `base1-71` and `base4-101` remain in semantic review. Their same-name Expanded target `bw7-137` carries the ACE SPEC deck-wide restriction while the historical prints do not.
-
-A future equivalence ruling for Computer Search would therefore need an explicit policy decision about deck-construction semantics. Effect equivalence alone cannot safely determine the legal copy count.
+Shining Celebi remains a live illustration of target ambiguity. Historical `neo4-106` is still in semantic review. Its legal same-name targets include `me55c-106`, which carries the same singleton rule, and `smp-SM79`, which has different gameplay text and no singleton rule.
 
 ## Implementation
 
-`tools/reprint_construction_projection.py` compares exact source-print copy-limit rules with:
-
-1. every legal Expanded same-name target;
-2. the target prints selected by the current reprint resolver.
+`tools/reprint_construction_projection.py` compares exact source-print copy-limit rules with every legal Expanded same-name target and with the target prints selected by the current reprint resolver.
 
 The regression asserts the eight current name-level hazards and checks how the resolver narrows them.
 
@@ -43,7 +38,7 @@ The regression asserts the eight current name-level hazards and checks how the r
 
 Deck construction should remain attached to the submitted exact print until policy evidence explicitly says which construction rules transfer across a reprint relationship.
 
-This is why `tools/deck_legality_proof.py` first validates the exact submitted prints and then evaluates format-legality provenance. A reprint target is evidence for legality resolution. It is not a substitute physical card for deck-construction analysis.
+This is why `tools/deck_legality_proof.py` first validates the exact submitted prints and then evaluates format-legality provenance. A reprint target is evidence for legality resolution and is not a substitute physical card for deck-construction analysis.
 
 ## Scope
 
