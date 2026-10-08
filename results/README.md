@@ -1304,3 +1304,14 @@ Empty optional attack fields add eight separate exact Pokémon matches by canoni
 This observable line appears in **244 of 1,331** visible observations and **1.822834%** of branch probability mass. The baseline K0 policy succeeds in **85.487944%** of that hosted subbranch; Forest Seal first reaches the local endpoint in **100%** of those modeled worlds. Overall branch success rises from **32.988189%** to **33.252720%**, a **+0.264531 percentage-point** gain that recovers **6.745692%** of the prior hidden-state oracle gap. CI run `37762608113` passed.
 
 **Working synthesis:** an oracle gap should be partitioned into truly unavailable information and value recoverable through legal sequencing. Search actions can carry information value and direct endpoint value simultaneously, so a planner should test pre-decision information-acquisition lines before treating K0/K1 loss as irreducible.
+
+
+## Visible connector sequencing beats Harto Raichu's Quick-Ball-first oracle
+
+[raichu_visible_connector_sequencing/](raichu_visible_connector_sequencing/) broadens the exact Harto branch from "Quick Ball first, optimize its payment" to other connectors already visible in the same observation. Because the branch already contains Quick Ball, Gladion, and a conservative disposable, a visible Ultra Ball or Computer Search has the fixed legal payment `Quick Ball + disposable`, preserving Gladion.
+
+If Alolan Raichu is in deck, the stronger connector searches it directly. If Raichu is Prized, the full-deck inspection establishes K1 and the preserved Gladion retrieves it. Visible Ultra Ball or Computer Search occurs in **847 of 1,331** observations and **32.562616%** of branch mass. Replacing Quick-Ball-first with this visible direct-connector line where available raises same-turn Raichu access from **32.988189%** to **48.483601%**, a **+15.495412 percentage-point** gain. Combining the prior hosted Forest Seal line reaches **48.690299%**. CI run `37763645757` passed.
+
+The earlier hidden-state oracle reaches **36.909665%**, so the legal direct-first policy exceeds it by **11.573936 points**. This is coherent because that oracle was constrained to Quick Ball as the first connector.
+
+**Working synthesis:** optimize the visible action family before optimizing hidden-information policy inside one preselected action. A hidden-state oracle over a dominated connector can be weaker than a legal observation-consistent policy that chooses a stronger connector first.
