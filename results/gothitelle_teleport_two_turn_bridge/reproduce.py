@@ -132,7 +132,7 @@ def negative_late_sky()->None:
 
 
 def negative_wrong_payment()->None:
-    opening=initial_state(sky_in_hand=True,barrier_shrine=True)
+    opening=initial_state(sky_in_hand=True)
     q=first_turn_quick_gothita(opening,pay_sky=False)
     t2=next_turn_under_collapsed(q)
     evolved=evolve_on_turn_two(t2)
