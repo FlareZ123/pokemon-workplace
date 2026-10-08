@@ -1,0 +1,23 @@
+name: Validate Teleport Room Bench capacity bridge
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/bench_teleport_capacity_bridge.py"
+      - "results/bench_teleport_capacity_bridge/**"
+      - ".github/workflows/validate-bench-teleport-capacity-bridge.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run Teleport Room Bench capacity regression
+        run: python results/bench_teleport_capacity_bridge/reproduce.py
