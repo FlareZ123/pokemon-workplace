@@ -7,6 +7,7 @@ already tracked on that Pokemon by the board-object kernel.
 from __future__ import annotations
 
 from board_object_kernel import BoardState
+from garbotoxin_suppression import stealthy_hood_protects_from_opponent
 
 _ACTIVE_SOURCE_PRINTS = frozenset({
     ("bw8-101", "Snorlax"),       # Block
@@ -33,6 +34,9 @@ def opposing_retreat_denial_source_ids(
     Active positions and Special Conditions.
     """
     own_active = own_board.get(own_board.active_id)
+    if stealthy_hood_protects_from_opponent(own_active):
+        return ()
+
     conditions = own_active.special_conditions
     blocking_sources: list[str] = []
 
