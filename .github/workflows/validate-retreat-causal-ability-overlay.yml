@@ -1,0 +1,30 @@
+name: Validate causal Ability overlay for Retreat
+
+on:
+  push:
+    paths:
+      - "tools/retreat_ability_lock_bridge.py"
+      - "tools/board_derived_retreat.py"
+      - "tools/retreat_ability_denial.py"
+      - "results/retreat_causal_ability_overlay/**"
+      - ".github/workflows/validate-retreat-causal-ability-overlay.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify causal Ability locks and Retreat integration
+        run: |
+          python results/retreat_causal_ability_overlay/reproduce.py
+          python results/retreat_ability_denial/reproduce.py
+          python results/board_derived_retreat/reproduce.py
+          python results/ability_lock_causal_state/reproduce.py
+          python results/retreat_environment_modifiers/reproduce.py
