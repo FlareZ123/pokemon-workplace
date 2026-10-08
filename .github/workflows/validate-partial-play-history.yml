@@ -1,0 +1,24 @@
+name: Validate partial physical play history
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/causal_event_journal.py"
+      - "tools/paired_switch_event_bridge.py"
+      - "results/partial_play_history/**"
+      - ".github/workflows/validate-partial-play-history.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify tri-valued history semantics
+        run: python results/partial_play_history/reproduce.py

@@ -31,7 +31,8 @@ def record_paired_switch(
 
     The successful physical transaction is supplied by execute_paired_switch.
     The optional supporter event is produced by a committed-play adapter.
-    An Item has no CommittedPlayEvent producer in the current narrow schema.
+    Item source identities are optional when the upstream transaction has not
+    materialized its source cards. That boundary is marked partially observed.
     """
     if not action_id:
         raise ValueError("action_id must be nonempty")
@@ -100,6 +101,10 @@ def record_paired_switch(
             committed_plays=(
                 ((committed_supporter,) if committed_supporter is not None else committed_items)
                 if index == 1 else ()
+            ),
+            play_record_complete=(
+                bool(committed_items) if index == 1 and program.name in ITEMS
+                else True
             ),
         )
 

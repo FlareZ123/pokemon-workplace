@@ -15,7 +15,7 @@ from ability_lock_causal_state import (
     initialize_snapshot_lock_state,
 )
 from board_object_kernel import BoardState
-from committed_play_event import CommittedPlayEvent
+from committed_play_event import CommittedPlayEvent, PlayKind, has_play_history
 
 
 @dataclass(frozen=True)
@@ -28,6 +28,7 @@ class JournalBoundary:
     stadium_name: str | None
     play_batch: tuple[CommittedPlayEvent, ...]
     lock_state: AbilityLockCausalState
+    play_record_complete: bool = True
 
     @property
     def committed_play(self) -> CommittedPlayEvent | None:
@@ -58,6 +59,26 @@ class CausalEventJournal:
             for boundary in self.boundaries
             for event in boundary.play_batch
         )
+
+    @property
+    def play_history_complete(self) -> bool:
+        """True only when every boundary had complete play-event capture."""
+        return all(boundary.play_record_complete for boundary in self.boundaries)
+
+    def queried_play(
+        self,
+        *,
+        player: str,
+        kind: PlayKind,
+        name_contains: str | None = None,
+    ) -> bool | None:
+        """True if witnessed, False if ruled out, None if coverage is incomplete."""
+        if has_play_history(
+            self.committed_plays, player=player, kind=kind,
+            name_contains=name_contains,
+        ):
+            return True
+        return False if self.play_history_complete else None
 
 
 def begin_journal(
@@ -96,6 +117,7 @@ def append_boundary(
     stadium_name: str | None = None,
     committed_play: CommittedPlayEvent | None = None,
     committed_plays: tuple[CommittedPlayEvent, ...] = (),
+    play_record_complete: bool = True,
 ) -> CausalEventJournal:
     """Fold exactly one ordered boundary, rejecting stale/duplicate submissions.
 
@@ -104,6 +126,8 @@ def append_boundary(
     """
     if journal.revision != expected_revision:
         raise ValueError("stale journal revision")
+    if not play_record_complete and (committed_play is not None or committed_plays):
+        raise ValueError("partial play capture cannot claim committed cards")
     if committed_play is not None and committed_plays:
         raise ValueError("choose a single play or a play batch")
     batch = (committed_play,) if committed_play is not None else committed_plays
@@ -120,7 +144,7 @@ def append_boundary(
     )
     step = JournalBoundary(
         journal.revision + 1, event_id, description, player_board, opponent_board,
-        stadium_name, batch, lock,
+        stadium_name, batch, lock, play_record_complete,
     )
     from dataclasses import replace
     return replace(journal, boundaries=journal.boundaries + (step,))
@@ -141,6 +165,7 @@ def replay_journal(journal: CausalEventJournal) -> CausalEventJournal:
             description=step.description, player_board=step.player_board,
             opponent_board=step.opponent_board, stadium_name=step.stadium_name,
             committed_plays=step.play_batch,
+            play_record_complete=step.play_record_complete,
         )
         if replayed.boundaries[-1] != step:
             raise AssertionError(f"lock or play event divergence at {step.event_id}")
