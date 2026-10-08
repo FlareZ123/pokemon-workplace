@@ -19,7 +19,9 @@ from trainer_search_transaction import (
     TrainerSearchExecutionState,
     TrainerSearchTransaction,
     execute_trainer_search_transaction,
+    execute_trainer_retrieval_transaction,
 )
+from typed_search_retrieval import TypedRetrievalAction
 from typed_search_target_allocator import (
     BASIC_POKEMON,
     TargetGroup,
@@ -146,6 +148,68 @@ def execute_ultra_ball_for_entrant(
         board,
         stadiums=replace(stadiums, budget=txn.after.budget),
         hand_pokemon=board.hand_pokemon + (searched,),
+    )
+    assert_stadium_projection(after_board, txn.after.zones)
+    return PayloadTransaction(txn, after_board)
+
+
+
+def execute_ultra_ball_with_held_entrant(
+    board: BenchTeleportState,
+    execution: TrainerSearchExecutionState,
+    *,
+    discard_selection: DiscardSelection,
+) -> PayloadTransaction:
+    """Discard Sky Field with Ultra Ball when target is already in hand.
+
+    Ultra Ball's deck search is a restricted search. Under the Advanced
+    Rulebook's deck-search rule the player may choose no Pokémon; the played
+    Item and its exact two-card payment still change the physical game state.
+    """
+    assert_stadium_projection(board, execution.zones)
+    if board.stadiums.budget != execution.budget:
+        raise ValueError("board and Trainer budgets must match")
+    sky_card = _sky_hand_card(board)
+    if execution.zones.count("sky_field", "hand") != 1:
+        raise ValueError("Trainer and physical Sky Field hand count disagree")
+    if execution.zones.count("searched_basic", "hand") != 1:
+        raise ValueError("this branch requires the target already in hand")
+    if not any(mon.copy_id == "searched_basic" for mon in board.hand_pokemon):
+        raise ValueError("physical held target missing")
+
+    txn = execute_trainer_retrieval_transaction(
+        execution,
+        profile=ULTRA_BALL_PROFILE,
+        action_card_class="ultra_ball",
+        targets=(),
+        retrieval_action=TypedRetrievalAction(
+            target_cost=(),
+            axis_usage=(0,),
+        ),
+        discard_candidates=CANDIDATES,
+        discard_selection=discard_selection,
+    )
+    if txn.discard_cost != 2:
+        raise AssertionError("Ultra Ball must pay exactly two other cards")
+    sky_delta = (
+        txn.after.zones.count("sky_field", "discard")
+        - txn.before.zones.count("sky_field", "discard")
+    )
+    if sky_delta not in (0, 1):
+        raise AssertionError("nonphysical Sky Field discard delta")
+
+    stadiums = board.stadiums
+    if sky_delta:
+        stadiums = replace(
+            stadiums,
+            hand=tuple(
+                card for card in stadiums.hand if card.copy_id != sky_card.copy_id
+            ),
+            discard=stadiums.discard + (sky_card,),
+        )
+    after_board = replace(
+        board,
+        stadiums=replace(stadiums, budget=txn.after.budget),
     )
     assert_stadium_projection(after_board, txn.after.zones)
     return PayloadTransaction(txn, after_board)
