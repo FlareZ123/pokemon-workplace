@@ -20,6 +20,14 @@ A defender can react **even if it is Knocked Out**. Both the defending
 Pokémon's physical cards and the attacking Pokémon must remain in play
 through that reaction.
 
+The physical copied-attack replay also retains the actual damage target
+for every body event. The reaction adapter rejects a mismatched target claim.
+A source-specific adapter (`tools/physical_damage_reaction_sources.py`)
+derives Spiky Energy's two-counter reaction from the attached Energy identity,
+its holder's Active position, positive final attack damage, and the caller's
+opposing-Pokémon attack evidence. An attack on a Benched Pokémon cannot trigger
+Spiky Energy attached to the defender's Active.
+
 The adapter accepts the completed physical replay's unique named damage
 result. It applies the existing `DamageReaction` counter families (fixed,
 mirrored final damage, and live-count scaled) to the attacking Active on its
@@ -34,7 +42,8 @@ The copied-attack trace is:
 `Haughty Order -> Timeless-GX -> outer shuffle`
 
 The 150-damage body hits a 130-HP defender carrying Spiky Energy. The
-regression supplies two eligible post-damage reactions:
+regression derives Spiky Energy's eligible reaction from the physical card
+and supplies the prior-turn Strong Bash effect explicitly:
 
 - Strong Bash-like reflection: 15 damage counters on the attacker.
 - Spiky Energy-like reflection: 2 more damage counters.
@@ -59,9 +68,10 @@ terminal checks, and promotion.
 
 ## Limits
 
-Reaction eligibility is an explicit input. This adapter does not infer
-the prior-turn Strong Bash status, Spiky Energy attachment eligibility, target
-position, protection effects, or other card-specific gates. It currently
+Strong Bash's prior-turn effect remains an explicit input. Spiky Energy
+now uses attached-card, damaged Active, and final-damage gates, with the
+opposing-Pokémon source supplied by its caller. Other source effects and
+protection semantics remain outside this narrow source compiler. It currently
 supports the three existing damage-counter reaction families; additional
 bodies (Energy movement, Special Conditions, hand effects) require separate
 effect handlers. The present test does not execute Prize-taking or terminal
