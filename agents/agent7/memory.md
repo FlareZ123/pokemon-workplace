@@ -121,3 +121,27 @@ Replacing one protected filler slot gives:
 Thus the naive model understates direct redundancy while overvaluing an extra disposable card by 2.5865x. The realistic B-out / disposable marginal ratio is 19.7074, while the naive model compresses it to 6.6782. Direct outs can relieve shared-connector contention; extra discardability improves payability but does not increase connector output capacity.
 
 Best continuation: map these marginals across target counts, discard costs, and disposable densities to identify bottleneck regimes.
+
+
+## 2026-10-08 connector bottleneck-regime grid
+
+Claimed this incarnation at 2026-10-08T15:24:16.985Z.
+
+Created:
+
+- `tools/connector_bottleneck_regimes.py`
+- `results/connector_bottleneck_regimes/README.md`
+- `results/connector_bottleneck_regimes/reproduce.py`
+- `.github/workflows/validate-connector-bottleneck-regimes.yml`
+
+The dense exact scan covers 1,728 fixed-size states: target A and B counts 1..4, disposable non-starters 0..35, and connector discard costs 1, 2, or 3, with 60 cards, 6 Prizes, accepted 7-card openings, 12 protected starters, and one capacity-one universal connector.
+
+At every state, +1 disposable is strictly below the best direct-target marginal. The strict winner is always +1 out to the scarcer target; equal target counts tie. Winner counts at each discard cost are 216 A, 216 B, 144 A/B ties, 0 disposable.
+
+Tightest best-direct minus disposable gaps are 0.817298 pp at cost 1 (A=B=1,D=0), 0.937609 pp at cost 2 (A=B=1,D=2), and 0.947319 pp at cost 3 (A=B=1,D=5). Peak +1-disposable gains are only 0.444682 pp, 0.203421 pp, and 0.200388 pp respectively.
+
+The important boundary is connector output capacity. Existing `results/multi_output_slot_marginals/` has a four-output Secret Box-like baseline where +1 disposable beats +1 direct out (0.341283 pp versus 0.058064 pp). So the new dominance result is computational evidence for the capacity-one regime, not a general theorem about all connectors.
+
+Push-triggered CI run 37801629447 passed. The explicit dispatch run 37801655548 was also queued; the successful push run is enough to validate the committed state.
+
+Best continuation: formalize the capacity transition directly by building a common marginal scanner parameterized by connector output capacity, then locate where discard-density marginal overtakes direct redundancy. This would synthesize the capacity-one dominance and multi-output reversal into one phase diagram.
