@@ -21,23 +21,19 @@ def eligible_spiky_energy_reactions(
     Pokémon, as required by the specific Energy card's printed condition.
     """
 
-    target_ids = [
-        target for event, target in copy_resolution.damage_targets
-        if event == body_event
+    records = [
+        row for row in copy_resolution.damage_records
+        if row.event == body_event and row.target_id == damaged_pokemon_id
     ]
-    results = [
-        damage for event, damage in copy_resolution.damage_results
-        if event == body_event
-    ]
-    if target_ids != [damaged_pokemon_id] or len(results) != 1:
-        raise ValueError("Spiky Energy needs one matching damage event")
+    if len(records) != 1:
+        raise ValueError("Spiky Energy needs one exact matching damage record")
 
     board = copy_resolution.state.board
     if board is None:
         raise ValueError("Spiky Energy requires a physical board")
 
     if (
-        results[0].final_damage <= 0
+        records[0].result.final_damage <= 0
         or not from_opponents_pokemon
         or board.active_id != damaged_pokemon_id
     ):
