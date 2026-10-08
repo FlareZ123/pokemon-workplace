@@ -11,6 +11,15 @@ from tools.legality_provenance import CardLegalityProvenance, LegalityProvenance
 
 PrintEligibility = Literal["eligible", "ineligible", "unresolved"]
 DeckDisposition = Literal["eligible_snapshot", "invalid", "unresolved"]
+ReprintEvidencePolicy = Literal["conservative", "current_semantic_evidence"]
+
+CURRENT_SEMANTIC_REPRINT_KINDS = frozenset(
+    {
+        "exact_fingerprint_candidate",
+        "official_errata_candidate",
+        "official_semantic_candidate",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -30,14 +39,32 @@ class DeckLegalityProof:
     disposition: DeckDisposition
     construction: ValidationReport
     print_proofs: tuple[PrintLegalityProof, ...]
+    reprint_evidence_policy: ReprintEvidencePolicy = "conservative"
     semantic_source: str = "bundled_en_snapshot"
     regional_legality_scope: str = "not_evaluated"
+
+
+def _has_available_reprint_target(
+    provenance: CardLegalityProvenance,
+    *,
+    snapshot_reference_date: date,
+) -> bool:
+    for target in provenance.target_evidence:
+        if target.timing_status == "audited_release_eligible":
+            return True
+        if (
+            target.timing_status == "post_release_not_audited"
+            and provenance.as_of >= snapshot_reference_date
+        ):
+            return True
+    return False
 
 
 def _classify_print(
     provenance: CardLegalityProvenance,
     *,
     snapshot_reference_date: date,
+    reprint_evidence_policy: ReprintEvidencePolicy,
 ) -> tuple[PrintEligibility, str]:
     disposition = provenance.disposition
 
@@ -70,9 +97,21 @@ def _classify_print(
         return "ineligible", "The print was still inside an audited tournament release waiting period."
 
     if disposition == "high_confidence_reprint_candidate":
+        if (
+            reprint_evidence_policy == "current_semantic_evidence"
+            and provenance.reprint_kind in CURRENT_SEMANTIC_REPRINT_KINDS
+            and _has_available_reprint_target(
+                provenance,
+                snapshot_reference_date=snapshot_reference_date,
+            )
+        ):
+            return (
+                "eligible",
+                "Current semantic or errata evidence supports functional equivalence to an available legal Expanded target.",
+            )
         return (
             "unresolved",
-            "Strong repository reprint evidence exists, but it is preserved as candidate evidence rather than an automatic tournament ruling.",
+            "Strong repository reprint evidence exists, but the selected evidence policy does not promote it to current legality.",
         )
 
     if disposition == "semantic_review":
@@ -101,6 +140,7 @@ def adjudicate_deck(
     *,
     as_of: date,
     deck_size: int = 60,
+    reprint_evidence_policy: ReprintEvidencePolicy = "conservative",
 ) -> DeckLegalityProof:
     entries = tuple(entries)
     construction = validate_deck_construction(
@@ -145,6 +185,7 @@ def adjudicate_deck(
         eligibility, reason = _classify_print(
             provenance,
             snapshot_reference_date=snapshot_reference_date,
+            reprint_evidence_policy=reprint_evidence_policy,
         )
         proofs.append(
             PrintLegalityProof(
@@ -173,4 +214,5 @@ def adjudicate_deck(
         disposition=disposition,
         construction=construction,
         print_proofs=tuple(proofs),
+        reprint_evidence_policy=reprint_evidence_policy,
     )
