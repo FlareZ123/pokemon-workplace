@@ -1,0 +1,22 @@
+name: Validate Aichi late Stellar Wish Ticket search
+
+on:
+  push:
+    paths:
+      - "tools/aichi_jirachi_ticket_search.py"
+      - "results/aichi_jirachi_ticket_search/**"
+      - ".github/workflows/validate-agent4-aichi-stellar-ticket.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test Jirachi search and simulate paired states
+        run: |
+          python results/aichi_jirachi_ticket_search/reproduce.py
+          python results/aichi_jirachi_ticket_search/run.py
