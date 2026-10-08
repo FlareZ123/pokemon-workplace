@@ -12,6 +12,7 @@ from trainer_play_attempt_budget import QuotaTrainerKind, TrainerAttemptState
 
 
 class PlayKind(str, Enum):
+    ITEM = "item"
     SUPPORTER = "supporter"
     STADIUM = "stadium"
 

@@ -26,8 +26,12 @@ class JournalBoundary:
     player_board: BoardState
     opponent_board: BoardState
     stadium_name: str | None
-    committed_play: CommittedPlayEvent | None
+    play_batch: tuple[CommittedPlayEvent, ...]
     lock_state: AbilityLockCausalState
+
+    @property
+    def committed_play(self) -> CommittedPlayEvent | None:
+        return self.play_batch[0] if len(self.play_batch) == 1 else None
 
 
 @dataclass(frozen=True)
@@ -50,9 +54,9 @@ class CausalEventJournal:
     @property
     def committed_plays(self) -> tuple[CommittedPlayEvent, ...]:
         return tuple(
-            boundary.committed_play
+            event
             for boundary in self.boundaries
-            if boundary.committed_play is not None
+            for event in boundary.play_batch
         )
 
 
@@ -91,6 +95,7 @@ def append_boundary(
     opponent_board: BoardState,
     stadium_name: str | None = None,
     committed_play: CommittedPlayEvent | None = None,
+    committed_plays: tuple[CommittedPlayEvent, ...] = (),
 ) -> CausalEventJournal:
     """Fold exactly one ordered boundary, rejecting stale/duplicate submissions.
 
@@ -99,6 +104,11 @@ def append_boundary(
     """
     if journal.revision != expected_revision:
         raise ValueError("stale journal revision")
+    if committed_play is not None and committed_plays:
+        raise ValueError("choose a single play or a play batch")
+    batch = (committed_play,) if committed_play is not None else committed_plays
+    if len({event.copy_id for event in batch}) != len(batch):
+        raise ValueError("duplicate physical card in play batch")
     if not event_id or not description:
         raise ValueError("event_id and description must be nonempty")
     if any(step.event_id == event_id for step in journal.boundaries):
@@ -110,7 +120,7 @@ def append_boundary(
     )
     step = JournalBoundary(
         journal.revision + 1, event_id, description, player_board, opponent_board,
-        stadium_name, committed_play, lock,
+        stadium_name, batch, lock,
     )
     from dataclasses import replace
     return replace(journal, boundaries=journal.boundaries + (step,))
@@ -130,7 +140,7 @@ def replay_journal(journal: CausalEventJournal) -> CausalEventJournal:
             replayed, expected_revision=replayed.revision, event_id=step.event_id,
             description=step.description, player_board=step.player_board,
             opponent_board=step.opponent_board, stadium_name=step.stadium_name,
-            committed_play=step.committed_play,
+            committed_plays=step.play_batch,
         )
         if replayed.boundaries[-1] != step:
             raise AssertionError(f"lock or play event divergence at {step.event_id}")

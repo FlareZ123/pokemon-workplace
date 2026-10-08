@@ -1,0 +1,26 @@
+name: Validate paired switch Item play batches
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/committed_play_event.py"
+      - "tools/causal_event_journal.py"
+      - "tools/paired_switch_event_bridge.py"
+      - "tools/paired_switch_item_play_batch.py"
+      - "results/paired_switch_item_play_batch/**"
+      - ".github/workflows/validate-paired-switch-item-play-batch.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce exact Item play batches
+        run: python results/paired_switch_item_play_batch/reproduce.py

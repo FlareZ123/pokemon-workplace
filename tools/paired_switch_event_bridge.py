@@ -25,6 +25,7 @@ def record_paired_switch(
     opponent_promote_id: str | None,
     own_promote_id: str | None,
     committed_supporter: CommittedPlayEvent | None = None,
+    committed_items: tuple[CommittedPlayEvent, ...] = (),
 ) -> CausalEventJournal:
     """Fold a complete validated transaction at its individual switch boundaries.
 
@@ -51,10 +52,25 @@ def record_paired_switch(
             or committed_supporter.card_name != program.name
             or not committed_supporter.consumed_ordinary_quota
             or committed_supporter.out_of_turn
+            or committed_items
         ):
             raise ValueError("successful ordinary Supporter requires matching play event")
-    elif committed_supporter is not None:
-        raise ValueError("Item cannot masquerade as a Supporter play")
+    else:
+        if committed_supporter is not None:
+            raise ValueError("Item cannot masquerade as a Supporter play")
+        if committed_items and (
+            len(committed_items) != program.copies_together
+            or len({event.copy_id for event in committed_items}) != len(committed_items)
+            or any(
+                event.kind is not PlayKind.ITEM
+                or event.channel is not PlayChannel.ORDINARY
+                or event.card_name != program.name
+                or event.consumed_ordinary_quota
+                or event.out_of_turn
+                for event in committed_items
+            )
+        ):
+            raise ValueError("Item batch must match physical source copy count")
 
     last = journal.boundaries[-1] if journal.boundaries else None
     player = last.player_board if last is not None else journal.initial_player_board
@@ -81,7 +97,10 @@ def record_paired_switch(
             player_board=player,
             opponent_board=opponent,
             stadium_name=stadium_name,
-            committed_play=committed_supporter if index == 1 else None,
+            committed_plays=(
+                ((committed_supporter,) if committed_supporter is not None else committed_items)
+                if index == 1 else ()
+            ),
         )
 
     if (
