@@ -1,0 +1,30 @@
+name: Validate Stadium Tool overlay in Retreat
+
+on:
+  push:
+    paths:
+      - "tools/retreat_stadium_tool_overlay.py"
+      - "tools/retreat_ability_denial.py"
+      - "tools/board_derived_retreat.py"
+      - "results/retreat_stadium_tool_overlay/**"
+      - ".github/workflows/validate-retreat-stadium-tool-overlay.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate Tool protection and destination behavior
+        run: |
+          python results/retreat_stadium_tool_overlay/reproduce.py
+          python results/retreat_causal_ability_overlay/reproduce.py
+          python results/retreat_ability_denial/reproduce.py
+          python results/attached_tool_retreat_modifiers/reproduce.py
+          python results/board_derived_retreat/reproduce.py
