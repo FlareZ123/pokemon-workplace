@@ -488,6 +488,8 @@ The regression materializes a Bulbasaur/Ivysaur evolution stack, Muscle Band, an
 
 **Continuous Retreat denial:** [retreat_ability_denial/](retreat_ability_denial/) extends the board-derived Retreat transaction to exact-print opponent Abilities whose source position or target Special Condition forbids normal Retreat. Five print sources require opposing Active residency; Cradily and two Dragalge prints have conditional passive coverage. In a reproducible Float Stone witness, an effective cost of zero still cannot bypass an applicable continuous prohibition, although a separate effect-based switch remains available. Eight prints and source-suppression cases are validated in CI; coverage is deliberately narrower than the full legality corpus.
 
+**Causal Ability-lock composition:** [retreat_causal_ability_overlay/](retreat_causal_ability_overlay/) projects the repository's verified Ability-lock dependency state into immutable Retreat source boards. A Benched Alolan Muk suppresses Active Snorlax's Block, turning an otherwise forbidden Float Stone Retreat into a legal one; Garbotoxin suppresses Cradily's Special Condition-dependent restriction; opposing Neutralizing Gas disables friendly Sneasler's cost reduction, making a physical Double Colorless Energy payment necessary. A reciprocal Wobbuffet/Weezing cycle without verified precedence stops the transaction. The integration preserves unmodified physical board objects and reports unresolved lock status explicitly.
+
 ## 21. Simultaneous Knock Outs require a pre-discard batch state
 
 [simultaneous_knockout_conservation/](simultaneous_knockout_conservation/) adds an explicit pending Knock Out batch before physical disposal.
