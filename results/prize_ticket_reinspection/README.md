@@ -94,6 +94,26 @@ The adaptive first-turn stopping policy spends an exact expected **0.457456035 T
 Implementation: [\`tools/prize_ticket_policy_access.py\`](../../tools/prize_ticket_policy_access.py). Independent end-to-end physical-card enumeration: [\`policy_reproduce.py\`](policy_reproduce.py). The full small-game enumerator samples hand, original Prizes, ordinary draw, and remaining deck **order**. It agrees exactly with the factorized policy values and Ticket consumption.
 
 
+
+## Intervening deck shuffles eliminate the disjoint-block guarantee
+
+The 100% three-reset ceiling relies on the deck order **surviving unchanged between Ticket uses**. A realistic turn may shuffle the deck through another search or draw-engine operation between Tickets. That intervention makes a previously returned target eligible to be Prized again.
+
+A second exact kernel, [\`tools/prize_ticket_shuffle_intervention.py\`](../../tools/prize_ticket_shuffle_intervention.py), considers a perfectly randomized **full deck shuffle between each consecutive Ticket**, keeping every other assumption of the original singleton witness unchanged. For this regime, the pair \`(target counts in deck, target counts in Prizes)\` becomes a sufficient state. Every Ticket selects a multivariate-hypergeometric replacement set from the current deck, returns all old Prizes to the deck, and the policy reinspects then stops upon success.
+
+| Reset ceiling, assuming reinspection | No shuffle between Tickets | Full deck shuffle between Tickets |
+| --- | ---: | ---: |
+| 1 Ticket | 75.855689177% | 75.855689177% |
+| 2 Tickets | 96.669750231% | 94.328409043% |
+| 3 Tickets | 100.000000000% | 98.666563217% |
+
+The two-reset loss from an intervening shuffle is **2.341341188 percentage points**. The three-reset no-shuffle guarantee disappears, with **1.333436783%** residual failure even after three resets under the reshuffled model. Expected Ticket consumption rises from **1.274745606** to **1.298159018** under a three-reset ceiling, because a reshuffle causes some repaired targets to reenter the Prize zone.
+
+This is a **conditional comparison between two idealized sequencing regimes**. A shuffle can also provide valuable new search access or affect non-target outcomes, and these benefits are deliberately unvalued here. Under a concrete first-turn ALS, the correct decision compares the shuffle's access improvement against the changed Prize risk.
+
+[\`shuffle_reproduce.py\`](shuffle_reproduce.py) validates the grouped rational Markov model against an independent exhaustive labeled-card transition enumerator on a six-card toy deck. All first-through-third reset probabilities and Ticket-use expectations agree exactly. These regressions run alongside the earlier tests in the shared GitHub Actions workflow.
+
+
 ## Assumptions and practical limitations
 
 - The model starts *after* an initial Prize-identifying observation and conditions on a particular known physical-zone composition. It does not estimate how often that state is reached from shuffled openings.
