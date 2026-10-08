@@ -184,6 +184,76 @@ def main() -> None:
     )
     assert calculate_damage(mind_with_weakness.damage_context).final_damage == 140
 
+    # Cramorant ignores Weakness, while Landorus independently ignores
+    # Resistance. These dimensions cannot share a single global flag.
+    cramorant = next(
+        row for row in attacks_index["swsh11-50"]
+        if row.attack_name == "Spit Innocently"
+    )
+    assert cramorant.ignore_weakness
+    assert not cramorant.ignore_resistance
+    assert not cramorant.ignore_weakness_resistance
+    water_weak_bindings = {
+        "target-active": "sv1-30",
+        "target-bench": "bw9-82",
+    }
+    water_weak_program = materialize_profiled_copy_program(
+        cramorant,
+        board,
+        actor_profile=profiles["swsh11-50"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=water_weak_bindings,
+    )
+    assert calculate_damage(water_weak_program.damage_context).final_damage == 110
+    water_weak_control = materialize_profiled_copy_program(
+        cramorant,
+        board,
+        actor_profile=profiles["swsh11-50"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=water_weak_bindings,
+        ignore_weakness_resistance=False,
+    )
+    assert calculate_damage(water_weak_control.damage_context).final_damage == 220
+
+    landorus = next(
+        row for row in attacks_index["sv8-110"]
+        if row.attack_name == "Buster Swing"
+    )
+    assert not landorus.ignore_weakness
+    assert landorus.ignore_resistance
+    assert not landorus.ignore_weakness_resistance
+    fighting_resistant_bindings = {
+        "target-active": "sv1-82",
+        "target-bench": "bw9-82",
+    }
+    fighting_resistant_program = materialize_profiled_copy_program(
+        landorus,
+        board,
+        actor_profile=profiles["sv8-110"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=fighting_resistant_bindings,
+    )
+    assert calculate_damage(fighting_resistant_program.damage_context).final_damage == 130
+    fighting_resistant_control = materialize_profiled_copy_program(
+        landorus,
+        board,
+        actor_profile=profiles["sv8-110"],
+        profiles=profiles,
+        current_print_id_by_pokemon_id=fighting_resistant_bindings,
+        ignore_weakness_resistance=False,
+    )
+    assert calculate_damage(fighting_resistant_control.damage_context).final_damage == 100
+
+    one_sided_rows = [
+        row
+        for attacks in attacks_index.values()
+        for row in attacks
+        if row.fixed_damage is not None
+        and row.ignore_weakness != row.ignore_resistance
+    ]
+    assert any(row.attack_id == cramorant.attack_id for row in one_sided_rows)
+    assert any(row.attack_id == landorus.attack_id for row in one_sided_rows)
+
     shred = next(
         row for row in attacks_index["sm5-100"]
         if row.attack_name == "Shred"
@@ -212,6 +282,9 @@ def main() -> None:
             "actor_typed_damage": actor_damage.final_damage,
             "source_typed_damage": source_damage.final_damage,
             "physical_replay_kos": replay.knocked_out_ids,
+            "one_sided_modifier_bypass_fixed_rows": len(one_sided_rows),
+            "weakness_only_damage": 110,
+            "resistance_only_damage": 130,
         }
     )
 
