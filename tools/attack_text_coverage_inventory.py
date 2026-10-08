@@ -13,6 +13,7 @@ from pathlib import Path
 from board_position_state import BoardState
 from attack_copy_physical_ko_bridge import PhysicalBoardEventProgram
 from attack_status_text_contracts import parse_exact_attack_status_text
+from healing_profile_compiler import parse_exact_attack_healing_text
 from position_effect_profile_compiler import parse_exact_attack_position_text
 from simple_attack_board_semantics import (
     CompiledAttackBoardSemantics,
@@ -91,6 +92,9 @@ def classify_attack_text(
             handlers += ("coin_flip",)
         if position.optional:
             handlers += ("optional_choice",)
+    elif parse_exact_attack_healing_text(core) is not None:
+        kind = "exact_self_healing"
+        handlers = ("healing",)
     else:
         kind = "uncompiled_effect_text"
         handlers = ("source_specific_effects",)
