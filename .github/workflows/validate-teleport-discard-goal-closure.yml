@@ -6,6 +6,7 @@ on:
     paths:
       - "tools/teleport_discard_goal_closure.py"
       - "tools/teleport_discard_payload_line.py"
+      - "tools/trainer_search_transaction.py"
       - "results/teleport_discard_goal_closure/**"
       - ".github/workflows/validate-teleport-discard-goal-closure.yml"
 
