@@ -6,6 +6,7 @@ from typing import Any
 
 from tools.build_expanded_legality_baseline import classify_effective_legality, load_json
 from tools.current_card_semantics import current_semantic_fingerprint
+from tools.reprint_deck_rule_divergence import collect_proven_deck_rule_non_equivalent_ids
 from tools.trainer_name_reuse_divergence import collect_proven_name_reuse_non_equivalent_ids
 from tools.trainer_optionality_divergence import collect_proven_optionality_non_equivalent_ids
 from tools.trainer_semantic_divergence import collect_proven_trainer_semantic_non_equivalent_ids
@@ -95,6 +96,7 @@ def collect_known_non_equivalent_ids(resources_root: Path) -> dict[str, str]:
         result[card_id] = CONTEXTUAL_DIVERGENCE_SOURCE
 
     for collector in (
+        collect_proven_deck_rule_non_equivalent_ids,
         collect_proven_name_reuse_non_equivalent_ids,
         collect_proven_optionality_non_equivalent_ids,
         collect_proven_trainer_semantic_non_equivalent_ids,
