@@ -51,6 +51,7 @@ class CompiledAttackBoardSemantics:
     counter_effect: CounterEffectContract | None
     has_uncompiled_damage_text: bool
     has_uncompiled_knockout_text: bool
+    has_uncompiled_attack_gate: bool
     take_another_turn: bool
     skip_pokemon_checkup: bool
     is_gx_attack: bool
@@ -202,6 +203,16 @@ def compile_attack(
         is not None
     )
 
+    has_uncompiled_attack_gate = (
+        re.search(
+            r"\b(?:this attack (?:does nothing|doesn't happen|can't be used|cannot be used)"
+            r"|you (?:can't|cannot) use this attack)\b",
+            raw_text,
+            re.IGNORECASE,
+        )
+        is not None
+    )
+
     lowered_text = raw_text.casefold()
     ignore_both = (
         "damage isn't affected by weakness or resistance" in lowered_text
@@ -232,6 +243,7 @@ def compile_attack(
         counter_effect=counter_effect,
         has_uncompiled_damage_text=has_uncompiled_damage_text,
         has_uncompiled_knockout_text=has_uncompiled_knockout_text,
+        has_uncompiled_attack_gate=has_uncompiled_attack_gate,
         take_another_turn=extra_turn,
         skip_pokemon_checkup=skip_checkup,
         is_gx_attack=(attack.get("name") or "").endswith("-GX"),
@@ -334,6 +346,8 @@ def materialize_opponent_board_program(
         raise ValueError("attack has uncompiled damage text")
     if semantics.has_uncompiled_knockout_text:
         raise ValueError("attack has uncompiled Knock Out text")
+    if semantics.has_uncompiled_attack_gate:
+        raise ValueError("attack has an uncompiled attack-use gate")
 
     allocation = tuple(counter_allocation)
     placements: tuple[EffectCounterPlacement, ...] = ()
