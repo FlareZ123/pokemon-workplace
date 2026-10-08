@@ -35,7 +35,7 @@ class PaidReplayState:
 
 
 @lru_cache(maxsize=None)
-def _optimal(state: PaidReplayState, free_slots: int) -> Fraction:
+def _optimal(state: PaidReplayState, free_slots: int, allow_backup_nest: bool, allow_target_nest: bool) -> Fraction:
     """Maximize probability over legal sequential actions and coin outcomes."""
     s = state
     # A is in hand and there is capacity for a genuine hand-entry play.
@@ -50,23 +50,23 @@ def _optimal(state: PaidReplayState, free_slots: int) -> Fraction:
                 s.a_zone, s.other_in_hand - 1, s.other_in_deck,
                 s.other_on_bench + 1, s.quick_balls, s.nest_balls,
                 s.discard_fuel, s.sure_pickups, s.coin_pickups,
-            ), free_slots))
-        if s.nest_balls and s.other_in_deck:
+            ), free_slots, allow_backup_nest, allow_target_nest))
+        if allow_backup_nest and s.nest_balls and s.other_in_deck:
             best = max(best, _optimal(PaidReplayState(
                 s.a_zone, s.other_in_hand, s.other_in_deck - 1,
                 s.other_on_bench + 1, s.quick_balls, s.nest_balls - 1,
                 s.discard_fuel, s.sure_pickups, s.coin_pickups,
-            ), free_slots))
+            ), free_slots, allow_backup_nest, allow_target_nest))
 
     # Nest Ball may place A from deck directly onto Bench. This entry
     # does not trigger; the later pickup-and-hand-play transition can.
-    if (s.a_zone == DECK and s.nest_balls
+    if (allow_target_nest and s.a_zone == DECK and s.nest_balls
             and s.other_on_bench < free_slots):
         best = max(best, _optimal(PaidReplayState(
             PRETRIGGER_BENCH, s.other_in_hand, s.other_in_deck,
             s.other_on_bench, s.quick_balls, s.nest_balls - 1,
             s.discard_fuel, s.sure_pickups, s.coin_pickups,
-        ), free_slots))
+        ), free_slots, allow_backup_nest, allow_target_nest))
 
     # Quick Ball searches exactly one useful Basic into hand after the
     # one-other-card payment. Every payment type is a separate action.
@@ -114,7 +114,7 @@ def _optimal(state: PaidReplayState, free_slots: int) -> Fraction:
                 best = max(best, _optimal(PaidReplayState(
                     zone, other_hand, fetched_other_deck, s.other_on_bench,
                     q, d, fuel, sure, coin,
-                ), free_slots))
+                ), free_slots, allow_backup_nest, allow_target_nest))
 
     # Scoop A from Active after the backup O occupies Bench, and promote O.
     # If A is on Bench from Nest Ball, scoop it with the original O Active.
@@ -129,7 +129,7 @@ def _optimal(state: PaidReplayState, free_slots: int) -> Fraction:
                 HAND, s.other_in_hand, s.other_in_deck, promoted_bench,
                 s.quick_balls, s.nest_balls, s.discard_fuel,
                 s.sure_pickups - 1, s.coin_pickups,
-            ), free_slots))
+            ), free_slots, allow_backup_nest, allow_target_nest))
         if s.coin_pickups:
             success = PaidReplayState(
                 HAND, s.other_in_hand, s.other_in_deck, promoted_bench,
@@ -142,8 +142,8 @@ def _optimal(state: PaidReplayState, free_slots: int) -> Fraction:
                 s.discard_fuel, s.sure_pickups, s.coin_pickups - 1,
             )
             best = max(best, (
-                _optimal(success, free_slots) +
-                _optimal(failure, free_slots)
+                _optimal(success, free_slots, allow_backup_nest, allow_target_nest) +
+                _optimal(failure, free_slots, allow_backup_nest, allow_target_nest)
             ) / 2)
 
     return best
@@ -153,7 +153,9 @@ def optimal_paid_replay(*, a_zone: int, other_in_hand: int,
                         other_in_deck: int, quick_balls: int,
                         nest_balls: int, discard_fuel: int,
                         sure_pickups: int, coin_pickups: int,
-                        free_slots: int = 1) -> Fraction:
+                        free_slots: int = 1,
+                        allow_backup_nest: bool = True,
+                        allow_target_nest: bool = True) -> Fraction:
     """Exact best-order chance for a supplied visible state."""
     if a_zone not in (UNAVAILABLE, HAND, DECK, ACTIVE):
         raise ValueError("invalid initial target zone")
@@ -165,7 +167,7 @@ def optimal_paid_replay(*, a_zone: int, other_in_hand: int,
     return _optimal(PaidReplayState(
         a_zone, other_in_hand, other_in_deck, 0, quick_balls,
         nest_balls, discard_fuel, sure_pickups, coin_pickups,
-    ), free_slots)
+    ), free_slots, allow_backup_nest, allow_target_nest)
 
 
 def analyze_paid_replay(*, deck_size: int = 60,
@@ -178,7 +180,9 @@ def analyze_paid_replay(*, deck_size: int = 60,
                         expendable: int = 0,
                         sure_pickups: int = 0,
                         coin_pickups: int = 4,
-                        free_slots: int = 1) -> Fraction:
+                        free_slots: int = 1,
+                        allow_backup_nest: bool = True,
+                        allow_target_nest: bool = True) -> Fraction:
     """Exact accepted-opening-conditional access with realistic QB payment."""
     classes = (1, other_basics, quick_balls, nest_balls,
                expendable, sure_pickups, coin_pickups)
@@ -235,6 +239,8 @@ def analyze_paid_replay(*, deck_size: int = 60,
                         sure_pickups=opening[5] + drawn[5],
                         coin_pickups=opening[6] + drawn[6],
                         free_slots=free_slots,
+                        allow_backup_nest=allow_backup_nest,
+                        allow_target_nest=allow_target_nest,
                     )
                     weighted_success += weight * success
 
