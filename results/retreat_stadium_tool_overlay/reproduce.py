@@ -67,6 +67,13 @@ def main():
         assert cancelled.normalization.state.energy.board.get(
             "active"
         ).pokemon_state.tool_effect_enabled
+        restored = attempt(
+            cancelled.normalization.state,
+            empty_opponent,
+            cost=2,
+        )
+        assert restored.effective_retreat_cost == 0
+        assert restored.transaction is not None and restored.transaction.committed
 
         ineffective = attempt(
             free, empty_opponent, cost=2,
