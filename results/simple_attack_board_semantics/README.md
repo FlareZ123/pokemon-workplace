@@ -55,6 +55,18 @@ The regression rejects the first two with an explicit `ValueError` and
 executes Phantom Dive normally. This guard covers a meaningful family of
 omissions, without claiming to recognize all unmodeled attack effects.
 
+An additional fail-closed rule covers attack text that references Knock Outs.
+Blank-damage attacks can Knock Out a Pokémon directly through their effects,
+without applying damage counters. Inteleon `me1-41` Bring Down and Mega Absol
+ex `me1-86` Terminal Period demonstrate this. Both now raise explicit
+`ValueError` exceptions instead of materializing as zero-damage attacks.
+
+The live database has **192** effectively legal rows with supported
+numeric-or-blank printed damage and some Knock Out wording, including **113**
+blank-damage rows. This is a conservative scope count, which also includes
+conditional or future-turn Knock Out references. Those require execution
+semantics before they can be materialized as complete board programs.
+
 ### Exact damage-counter templates
 
 Seven full-text templates are recognized. Full-text matching is intentional:
