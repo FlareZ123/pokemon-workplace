@@ -50,6 +50,7 @@ class CompiledAttackBoardSemantics:
     fixed_damage: int | None
     counter_effect: CounterEffectContract | None
     has_uncompiled_damage_text: bool
+    has_uncompiled_knockout_text: bool
     take_another_turn: bool
     skip_pokemon_checkup: bool
     is_gx_attack: bool
@@ -196,6 +197,11 @@ def compile_attack(
         and _UNCOMPILED_DAMAGE_PHRASE.search(raw_text) is not None
     )
 
+    has_uncompiled_knockout_text = (
+        re.search(r"\bknock(?:ed)?[\s-]+out\b", raw_text, re.IGNORECASE)
+        is not None
+    )
+
     lowered_text = raw_text.casefold()
     ignore_both = (
         "damage isn't affected by weakness or resistance" in lowered_text
@@ -225,6 +231,7 @@ def compile_attack(
         fixed_damage=fixed_damage,
         counter_effect=counter_effect,
         has_uncompiled_damage_text=has_uncompiled_damage_text,
+        has_uncompiled_knockout_text=has_uncompiled_knockout_text,
         take_another_turn=extra_turn,
         skip_pokemon_checkup=skip_checkup,
         is_gx_attack=(attack.get("name") or "").endswith("-GX"),
@@ -325,6 +332,8 @@ def materialize_opponent_board_program(
         raise ValueError("attack does not have supported fixed numeric damage")
     if semantics.has_uncompiled_damage_text:
         raise ValueError("attack has uncompiled damage text")
+    if semantics.has_uncompiled_knockout_text:
+        raise ValueError("attack has uncompiled Knock Out text")
 
     allocation = tuple(counter_allocation)
     placements: tuple[EffectCounterPlacement, ...] = ()
