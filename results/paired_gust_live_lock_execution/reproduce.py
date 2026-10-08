@@ -43,6 +43,7 @@ def boards(extra_vileplume=False, opponent_bench=True):
 def ledger():
     return IdentityLedger(ZoneCountState(), (
         CardInstance("guzma", "Guzma", "Guzma", "hand"),
+        CardInstance("guzma2", "Guzma", "Guzma", "hand"),
         CardInstance("prime", "Prime Catcher", "Prime Catcher", "hand"),
     ))
 
@@ -122,7 +123,7 @@ def main():
         second.lock_state,
         gu,
         action_cards["Guzma"],
-        profiles=profiles, source_instance_ids=("guzma",),
+        profiles=profiles, source_instance_ids=("guzma2",),
         own_promote_id="b", opponent_promote_id="ob"
     )
     assert third is None
