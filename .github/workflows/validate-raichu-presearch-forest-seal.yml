@@ -1,0 +1,23 @@
+name: Validate Harto pre-search Forest Seal
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/raichu_presearch_forest_seal.py"
+      - "results/raichu_presearch_forest_seal/**"
+      - ".github/workflows/validate-raichu-presearch-forest-seal.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Harto pre-search Forest Seal result
+        run: python results/raichu_presearch_forest_seal/reproduce.py
