@@ -6,7 +6,7 @@ Can current rules resolve any of the four remaining semantic-review rows in the 
 
 ## Result
 
-Yes. Seven wording families can be normalized from explicit current rules while preserving the benchmark's known negative boundaries.
+Yes. Six wording families can be normalized from explicit current rules while preserving the benchmark's known negative boundaries.
 
 ### Fisherman
 
@@ -59,14 +59,6 @@ The wording differences are covered by current numbered-choice semantics. Advanc
 
 The normalizer maps only the two exact historical Underground Expedition effect strings to the current effect string.
 
-### Lucky Egg
-
-Historical Lucky Egg `pl4-88` contains the old Tool reminder telling the player to attach Lucky Egg only to a Pokémon without another Tool and to discard Lucky Egg when that Pokémon is Knocked Out. Current `swsh1-167` uses the modern generic Tool attachment reminder. Advanced Player's Rulebook B-02 now supplies those attachment, one-Tool-per-Pokémon, persistence, and Knock Out discard semantics as category rules.
-
-The historical effect begins with “When the Pokémon ... is Knocked Out,” while the current print begins with “If the Pokémon ... is Knocked Out.” Advanced Player's Rulebook E-04 explicitly says these wordings use the same Knock Out trigger rules.
-
-After those two exact, name-scoped normalizations, both prints have the same current semantic fingerprint.
-
 ## Benchmark consequence
 
 After composing this normalizer into `current_card_semantics.py`:
@@ -77,7 +69,11 @@ After composing this normalizer into `current_card_semantics.py`:
 - both remaining rows are the older Pokédex wordings with "up to 5 cards";
 - the two Pokémon-ex-excluding Life Herb prints stay `known_non_equivalent`.
 
-The broader archive also resolves the same exact no-exclusion Life Herb wording on `hgss2-79`, the same public-discard Fisherman wording on `hgss1-92`, historical Moomoo Milk `hgss1-94`, historical VS Seeker `ex6-100` and `pl3-140`, four historical Bill's Maintenance prints, historical Underground Expedition `ecard3-140` and `pl2-97`, and historical Lucky Egg `pl4-88`.
+The broader archive also resolves the same exact no-exclusion Life Herb wording on `hgss2-79`, the same public-discard Fisherman wording on `hgss1-92`, historical Moomoo Milk `hgss1-94`, historical VS Seeker `ex6-100` and `pl3-140`, four historical Bill's Maintenance prints, historical Underground Expedition `ecard3-140` and `pl2-97`.
+
+### Lucky Egg remains unresolved
+
+A proposed Lucky Egg equivalence was rejected during CI review. Official print-specific errata changes historical `pl4-88` so its draw condition additionally requires the Knocked Out Pokémon to be put into the discard pile. The legal `swsh1-167` wording lacks that condition. The ordinary Tool reminder and “When”/“If” wording are individually normalizable, but the official destination condition is material enough that this result leaves `pl4-88` in `semantic_review`.
 
 ## Why Pokédex remains unresolved
 
