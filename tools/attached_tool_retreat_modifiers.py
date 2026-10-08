@@ -50,6 +50,30 @@ class ToolRetreatDerivation:
         return not self.unresolved_conditions
 
 
+
+def tool_retreat_cost_decision_sufficient(
+    derivation: ToolRetreatDerivation,
+    effective_cost_without_conditions: int,
+) -> bool:
+    """Decide if an unknown Rescue Board threshold changes Retreat cost.
+
+    The only currently compiled conditional Tool effect is Rescue Board's
+    extra no-Retreat-Cost mode at 30 HP or less. If the unconditional
+    modifiers already produce cost zero, that unknown mode cannot change
+    the numeric cost or the legal physical payment (the empty set).
+    """
+    if derivation.exact:
+        return True
+    return (
+        effective_cost_without_conditions == 0
+        and all(
+            row.card_name == "Rescue Board"
+            and row.condition == "holder remaining HP <= 30"
+            for row in derivation.unresolved_conditions
+        )
+    )
+
+
 def _active_tool_enabled(pokemon: BoardPokemon) -> bool:
     return (
         pokemon.tool is not None
