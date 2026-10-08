@@ -1258,7 +1258,7 @@ The regression proves that ordinary evolution still fails on the player's first 
 
 [trainer_semantic_divergence/](trainer_semantic_divergence/) proves four additional same-name Trainer families non-equivalent across eight historical prints. The witnesses are deliberately state-semantic rather than text-similarity based: Apricorn Maker's historical Trainer-card target domain can reach Ball Guy while the current card is Item-only; Pokémon Fan Club sends the searched Basic to Bench instead of hand; historical Super Potion heals at most 40 damage where the current print heals 60; and historical TV Reporter remains able to change state in an empty-deck window where the current print is explicitly unplayable.
 
-The integrated reprint resolver now records **64 known non-equivalent historical prints across 19 names**, leaving **3,994** same-name historical prints in semantic review while the positive high-confidence candidate set remains 202.
+The integrated reprint resolver now records **64 known non-equivalent historical prints across 19 names**, leaving **3,993** same-name historical prints in semantic review. The positive high-confidence candidate set is now **203** after a separate rules-grounded Moomoo Milk normalization.
 
 **Working synthesis:** historical reprint analysis should search for distinguishing reachable states across target domain, zone destination, action availability, information, timing, and material transitions. Small wording differences are important only when they induce a semantic difference under current rules.
 
@@ -1272,3 +1272,12 @@ The rule preserves Gladion when Forest Seal Stone is already visible or when eno
 
 **Working synthesis:** DCI is an observation-state policy rather than a fixed card ranking. Hidden target zone, connector availability, and residual payment stock jointly determine which visible card is cheapest to spend before a search establishes K1.
 
+
+
+## Historical Moomoo Milk is a rules-grounded exact semantic candidate
+
+[rule_grounded_trainer_semantics/](rule_grounded_trainer_semantics/) now also normalizes historical Moomoo Milk `hgss1-94`. Its older effect removes three damage counters for each heads, while current `sm8-185` heals 30 damage for each heads. Under current rules, one damage counter represents 10 damage and healing removes damage counters, so the two phrasings induce the same damage-state transition.
+
+The resolver therefore promotes `hgss1-94` from semantic review to `exact_fingerprint_candidate`. This raises exact current-semantic candidates to **117**, positive high-confidence historical candidates to **203**, and Trainer high-confidence candidates to **98/168**.
+
+**Working synthesis:** terminology changes should be normalized only when current rules give an explicit semantic bridge. This is stronger evidence than edit-distance similarity and can produce positive equivalence candidates without weakening known-negative boundaries.
