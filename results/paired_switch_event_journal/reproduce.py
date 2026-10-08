@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tools"))
 
 from board_object_kernel import make_board, make_pokemon
@@ -78,11 +79,6 @@ def main():
         opponent_promote_id="opp-fill", own_promote_id="own-fill",
     ))
     fails(lambda: record_paired_switch(
-        start, tx, guzma, action_id="wrong-result",
-        opponent_promote_id="opp-fill", own_promote_id="own-fill",
-        committed_supporter=event,
-        # The transaction is deliberately forged with incorrect final boards.
-    ) if False else record_paired_switch(
         start, replace(tx, player_board=player), guzma,
         action_id="wrong-result", opponent_promote_id="opp-fill",
         own_promote_id="own-fill", committed_supporter=event,
