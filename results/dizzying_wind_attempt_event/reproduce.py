@@ -15,11 +15,11 @@ from committed_play_event import PlayKind
 from dizzying_wind_attempt_event import (
     failed_trainer_attempt_event, resolve_dizzying_wind_supporter,
 )
-from tools.trainer_play_attempt_budget import (
+from trainer_play_attempt_budget import (
     QuotaTrainerKind, TrainerAttemptState, TrainerCard,
     begin_trainer_attempt, fail_quaking_fist_gate,
 )
-from tools.turn_action_budget import TurnAction, TurnActionBudget
+from turn_action_budget import TurnAction, TurnActionBudget
 
 
 def fails(fn):
