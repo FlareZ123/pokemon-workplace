@@ -1,0 +1,21 @@
+name: Validate source-scoped KO choice
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/ko_source_scoped_choice.py"
+      - "tools/ko_trigger_order_authority.py"
+      - "tools/ko_order_outcome_space.py"
+      - "results/ko_source_scoped_choice/**"
+      - ".github/workflows/validate-ko-source-scoped-choice.yml"
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python results/ko_source_scoped_choice/reproduce.py
