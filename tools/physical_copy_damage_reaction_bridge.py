@@ -27,6 +27,7 @@ class PhysicalCopyReactionResult:
     attacker_state: StackBoardMaterialState
     defender_state: StackBoardMaterialState
     body_event: str
+    damaged_pokemon_id: str
     damage_result: DamageResult
     triggered: bool
     counters_placed_on_attacker: int
@@ -68,6 +69,7 @@ def resolve_physical_copy_damage_reactions(
     attacker_state: StackBoardMaterialState,
     *,
     body_event: str,
+    damaged_pokemon_id: str,
     reactions: tuple[DamageReaction, ...],
     attacker_hp_by_pokemon_id: Mapping[str, int],
     defender_hp_by_pokemon_id: Mapping[str, int],
@@ -88,6 +90,12 @@ def resolve_physical_copy_damage_reactions(
             f"expected one executed damage event {body_event!r}; got {len(matches)}"
         )
     damage_result = matches[0]
+    target_ids = [
+        target for event, target in copy_resolution.damage_targets
+        if event == body_event
+    ]
+    if target_ids != [damaged_pokemon_id]:
+        raise ValueError("reaction source disagrees with physical damage target")
     if attacker_state.board is None or copy_resolution.state.board is None:
         raise ValueError("damage reactions require two live physical boards")
 
@@ -116,6 +124,7 @@ def resolve_physical_copy_damage_reactions(
         attacker_state=current,
         defender_state=copy_resolution.state,
         body_event=body_event,
+        damaged_pokemon_id=damaged_pokemon_id,
         damage_result=damage_result,
         triggered=triggered,
         counters_placed_on_attacker=placed,
