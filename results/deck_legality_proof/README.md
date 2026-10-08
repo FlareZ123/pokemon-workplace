@@ -8,11 +8,19 @@ Can a concrete paper Expanded deck be evaluated without conflating exact-print d
 
 `tools/deck_legality_proof.py` composes the existing deck-construction validator with `LegalityProvenanceIndex` and returns a three-way deck disposition:
 
-- `eligible_snapshot`: every exact print passes construction rules and has direct current-snapshot or audited release support;
+- `eligible_snapshot`: every exact print passes construction rules and has enough evidence for the selected policy;
 - `invalid`: a construction rule fails or at least one print has affirmative evidence that it is unavailable for the evaluated boundary;
-- `unresolved`: no hard failure is known, but at least one print still depends on incomplete historical timing or functional-reprint policy evidence.
+- `unresolved`: at least one print still depends on incomplete historical timing or functional-reprint evidence.
 
-The important methodological change is that strong reprint evidence does not silently become a tournament legality ruling.
+The default `conservative` policy preserves high-confidence reprint candidates as unresolved.
+
+An optional `current_semantic_evidence` policy accepts three current evidence classes when an Expanded target is already available:
+
+- exact current-semantic fingerprint candidates;
+- current official errata candidates;
+- current Tournament Handbook semantic candidates.
+
+Historical-only official reprint evidence remains unresolved under this profile. Semantic-review prints also remain unresolved.
 
 ## Exact-print construction remains separate
 
@@ -20,15 +28,15 @@ The existing validator previously loaded only Black & White-onward Expanded-set 
 
 The original `validate_deck()` behavior remains the format-specific path.
 
-This separation matters because construction rules can be print-specific. The 30th Celebration Classic Collection Shining Celebi carries a one-copy self-name rule, so exact print text must remain visible even when legality is resolved through a separate evidence layer.
+This separation matters because construction rules can be print-specific. The 30th Celebration Classic Collection Shining Celebi carries a one-copy self-name rule, so exact print text remains visible during separate legality resolution.
 
 ## Current-state versus historical-date evidence
 
 The bundled legality snapshot is current evidence, while only some historical boundaries have explicit dates.
 
-The proof therefore treats direct `post_release_not_audited` prints as eligible only when the query date is at least the snapshot reference date, defined conservatively as the latest set release present in the bundled snapshot. For this snapshot that date is 2026-09-16.
+The proof treats direct `post_release_not_audited` prints as eligible only when the query date is at least the snapshot reference date. The boundary is derived from the latest Expanded-set release present in the bundled snapshot. For this snapshot that date is 2026-09-16.
 
-For earlier historical queries, a direct print whose product timing was never reconstructed becomes `unresolved` rather than being backdated from current status.
+Earlier historical queries leave unaudited release timing unresolved.
 
 The same principle applies to current database bans that lack an effective date. Dated official overlays remain decisive at their explicit boundaries.
 
@@ -36,32 +44,18 @@ The same principle applies to current database bans that lack an effective date.
 
 The legality provenance layer distinguishes exact current-semantic matches, historical official evidence, official errata, explicit handbook semantic evidence, known non-equivalence, and unresolved semantic review.
 
-This deck proof uses those categories conservatively:
+Under `current_semantic_evidence`, old Copycat `ex7-83` becomes eligible through the explicit Tournament Handbook equivalence example. Exact-fingerprint Fisherman `ecard3-125` and official-errata Leftovers `dp4-99` also become eligible.
 
-- high-confidence reprint candidates remain `unresolved`;
-- semantic-review prints remain `unresolved`;
-- known non-equivalent outside-scope prints are `invalid`;
-- outside-scope prints with no Expanded counterpart are `invalid`.
+Historical Double Colorless Energy `base1-96` remains unresolved because its evidence is a historical official reprint source rather than one of the accepted current semantic classes.
 
-This preserves the repository's distinction between evidence quality and final tournament policy.
+Old Computer Search remains invalid because the legal Expanded target carries an ACE SPEC deck rule that is absent from the historical prints.
 
 ## Regression witnesses
 
-`results/deck_legality_proof/reproduce.py` checks:
-
-- an ordinary current Expanded deck reaches `eligible_snapshot`;
-- a 30th Celebration print on 2026-09-29 is invalid because the audited release wait ends on 2026-09-30;
-- old Copycat `ex7-83` remains unresolved despite official-semantic candidate evidence;
-- old Pokédex `base1-87` remains unresolved under semantic review;
-- old Rainbow Energy `base5-17` is invalid because the handbook-backed evidence marks the wording non-equivalent;
-- old Computer Search `base1-71` is invalid because its ACE SPEC target has a deck rule absent from the historical print;
-- a current banned print is invalid;
-- a historical query predating the snapshot reference does not inherit unaudited current timing as certainty;
-- exact-print Shining Celebi construction limits remain enforced on both the current Classic Collection print and historical `neo4-106`;
-- unknown print IDs fail explicitly.
+`results/deck_legality_proof/reproduce.py` checks the direct current path, audited release waiting periods, both reprint evidence policies, current semantic promotion, historical-only evidence, semantic review, known non-equivalence, current bans, historical timing uncertainty, print-specific Shining Celebi limits, and unknown print IDs.
 
 ## Scope
 
-The result is an auditable research adjudicator for the bundled English snapshot. It does not claim universal regional legality. The returned proof therefore retains `semantic_source = bundled_en_snapshot` and `regional_legality_scope = not_evaluated`.
+The result is an auditable research adjudicator for the bundled English snapshot. It does not claim universal regional legality. The returned proof retains `semantic_source = bundled_en_snapshot` and `regional_legality_scope = not_evaluated`.
 
-A later regional layer can compose with this proof without changing its exact-print and reprint-evidence distinctions.
+A later regional layer can compose with this proof while preserving its exact-print and reprint-evidence distinctions.
