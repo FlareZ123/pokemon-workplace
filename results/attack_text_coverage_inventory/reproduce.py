@@ -25,8 +25,9 @@ def main() -> None:
     assert sum(inventory["counts"].values()) == inventory["total"]
     assert inventory["counts"]["exact_position_effect"] == 270
     assert inventory["counts"]["exact_self_healing"] == 293
-    assert inventory["counts"]["uncompiled_effect_text"] == 8373
-    assert inventory["uncompiled_unguarded"] == 5850
+    assert inventory["counts"]["exact_energy_disruption"] == 191
+    assert inventory["counts"]["uncompiled_effect_text"] == 8182
+    assert inventory["uncompiled_unguarded"] == 5659
 
     witnesses = (
         ("sv6-130", "Jet Headbutt", "plain_fixed_or_gx_rule"),
@@ -37,6 +38,8 @@ def main() -> None:
         ("sm5-100", "Timeless-GX", "exact_extra_turn"),
         ("bw1-3", "Wrap", "exact_special_condition"),
         ("bw1-11", "Mega Drain", "exact_self_healing"),
+        ("bw2-46", "Deleting Glare", "exact_energy_disruption"),
+        ("me2-74", "Hyper Beam", "exact_energy_disruption"),
         ("bw1-5", "Leaf Storm", "uncompiled_effect_text"),
         ("bw1-39", "Water Pulse", "exact_special_condition"),
         ("bw1-53", "Poison Sting", "exact_special_condition"),
@@ -74,6 +77,19 @@ def main() -> None:
         row for row in index["bw1-11"] if row.attack_name == "Mega Drain"
     )
     assert classify_attack_text(mega_drain).requires_handlers == ("healing",)
+
+    deleting_glare = next(
+        row for row in index["bw2-46"] if row.attack_name == "Deleting Glare"
+    )
+    hyper_beam = next(
+        row for row in index["me2-74"] if row.attack_name == "Hyper Beam"
+    )
+    assert classify_attack_text(deleting_glare).requires_handlers == (
+        "energy_disruption", "coin_flip",
+    )
+    assert classify_attack_text(hyper_beam).requires_handlers == (
+        "energy_disruption",
+    )
 
     all_unguarded = tuple(
         source for entries in index.values() for source in entries
@@ -113,6 +129,8 @@ def main() -> None:
     should_refuse = (
         ("bw1-5", "Leaf Storm"),
         ("bw1-11", "Mega Drain"),
+        ("bw2-46", "Deleting Glare"),
+        ("me2-74", "Hyper Beam"),
         ("bw1-17", "Flame Charge"),
         ("bw1-37", "Aqua Ring"),
         ("bw1-81", "Collect"),
