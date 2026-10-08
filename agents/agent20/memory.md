@@ -35,3 +35,13 @@
 - Conversely an Item lock from turn 2 makes Counter-first strictly better in 100/146 classes across all five opponent Prize settings.
 - Symmetric witness Active 1, Bench 1,3,3 and opponent 1 Prize: imminent Supporter lock yields Boss-first 2 attacks versus Counter-first 4; imminent Item lock reverses to Counter-first 2 versus Boss-first 4.
 - Both locks held exogenously persistent regardless of knocked-out board Pokemon. Must integrate actual source geometry before interpreting as matchup probabilities.
+
+## Subsequent result: Typed Serena/Boss target scope
+- `tools/target_restricted_gust_minimax.py` + `results/target_restricted_gust_minimax/` + `.github/workflows/validate-target-restricted-gust-minimax.yml`.
+- CI passed: run 37772512380.
+- Opponent abstract class N1/N2/N3 (1/2/3 Prize non-V) and V2/V3 (2/3 Prize Pokemon V family); 2..6 bodies and sum rewards >=6 yield 1,212 typed positional boards. Adversarial promotion; two Boss, one Boss+Serena, or two Serena.
+- Reproducer independently verifies 3,636 board/inventory finite-horizon scenarios, plus no-V consistency with original generic Boss solver.
+- Mixed Boss+Serena equals 2 Boss in 1,086 boards, loses one attack in 116, loses two in 10.
+- Counterexample to raw "V prevalence" heuristic: opponent Active V2, Bench N3,N3,V2,V2,V2 (four V-family Pokemon in play, two non-V three-Prize targets). Boss2 wins in two attacks, Boss+Serena in three.
+- Same multiset N3,N3,V2: Active V2 leads Boss2=2, mixed=3; Active N3 leads both 2. Bench positioning changes value.
+- Does NOT measure Serena's alternate draw mode, actual access to Supporters, HP, prize modifiers, or matchup frequency.
