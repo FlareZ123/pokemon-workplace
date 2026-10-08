@@ -31,8 +31,11 @@ def main() -> None:
         ("sm8-94", "Mind Shock", "exact_type_modifier_bypass"),
         ("sm5-100", "Shred", "exact_defender_effect_bypass"),
         ("sm5-100", "Timeless-GX", "exact_extra_turn"),
-        ("bw1-3", "Wrap", "uncompiled_effect_text"),
+        ("bw1-3", "Wrap", "exact_special_condition"),
         ("bw1-5", "Leaf Storm", "uncompiled_effect_text"),
+        ("bw1-39", "Water Pulse", "exact_special_condition"),
+        ("bw1-53", "Poison Sting", "exact_special_condition"),
+        ("bw1-24", "Singe", "exact_special_condition"),
         ("bw1-17", "Flame Charge", "uncompiled_effect_text"),
         ("bw1-37", "Aqua Ring", "uncompiled_effect_text"),
         ("bw1-81", "Collect", "uncompiled_effect_text"),
@@ -83,7 +86,6 @@ def main() -> None:
     assert counter_program.counter_placements[0].count == 6
 
     should_refuse = (
-        ("bw1-3", "Wrap"),
         ("bw1-5", "Leaf Storm"),
         ("bw1-17", "Flame Charge"),
         ("bw1-37", "Aqua Ring"),
