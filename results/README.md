@@ -1228,7 +1228,7 @@ This is a policy-information audit rather than a deck-level correction. Later Gu
 
 ## Effect-based evolution has separate first-turn timing
 
-[effect_evolution_timing/](effect_evolution_timing/) separates ordinary A-05 evolution timing from C-12 effect-based evolution timing. A conservative literal scan finds **115 print-level direct-evolution profiles across 53 card names**. Seventy-six profiles rely on C-12's default permission to evolve during the player's first turn or on the turn the target entered play, nine state an explicit first-turn permission, and 30 explicitly block that window.
+[effect_evolution_timing/](effect_evolution_timing/) separates ordinary A-05 evolution timing from C-12 effect-based evolution timing. A conservative literal scan finds **115 print-level direct-evolution profiles across 53 card names**. On the player's first-turn axis, 76 profiles rely on C-12's default permission, nine state an explicit permission, and 30 block the window. On the target-entry-turn axis, the split is 76 default, 10 explicit, and 29 blocked. Phantump's Spiteful Evolution is a concrete asymmetric case: it blocks first-turn Ability use while retaining C-12's default entry-turn permission on later turns.
 
 The source action remains a separate gate. Eevee's Energy Evolution can have a structural first-turn window for either player, Salvatore's Supporter source ordinarily narrows the window to the player going second, Technical Machine: Evolution inherits attack timing, and Precocious Evolution explicitly opens the attack window even when going first.
 
@@ -1243,4 +1243,12 @@ Conditional on that branch, the second Gladion is physically available in hand o
 A new continuation mechanism also appears: Dark Asset can rescue the line by drawing an ordinary disposable card that turns an already-held Computer Search from unpayable into payable.
 
 **Working synthesis:** copy redundancy, zone survival, timed exposure, connector readiness, and connector payment are separate layers. Random draw can improve access by changing a connector's cost state even when it does not reveal the target or connector itself.
+
+## C-12 timing now reaches conserved physical evolution stacks
+
+[effect_evolution_execution/](effect_evolution_execution/) carries the timing compiler into the existing board-position and physical identity layers. The executor keeps the player's first-turn gate, the target's entry-turn gate, the source action's availability, and the physical evolution-chain match as separate checks.
+
+The regression proves that ordinary evolution still fails on the player's first turn, Eevee Energy Evolution can bypass that ordinary gate through C-12, Salvatore remains blocked when its Supporter source is unavailable, Phantump can be blocked on the first-turn axis while open on the entry-turn axis, and Rare Candy remains blocked on both axes. A materialized Eevee -> Vaporeon transition preserves the persistent Pokémon object, binds both physical cards to the same evolution stack, and conserves card-class totals.
+
+**Working synthesis:** effect-based evolution should be compiled as a timing policy and executed against canonical physical state. C-12 can relax evolution timing without granting permission to the source action, and the two ordinary timing gates cannot safely be collapsed into one boolean.
 
