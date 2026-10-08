@@ -1,0 +1,23 @@
+name: Validate Teleport same-pool policy
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/teleport_same_pool_policy.py"
+      - "results/teleport_same_pool_policy/**"
+      - ".github/workflows/validate-teleport-same-pool-policy.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate union access and payment substitution
+        run: python results/teleport_same_pool_policy/reproduce.py
