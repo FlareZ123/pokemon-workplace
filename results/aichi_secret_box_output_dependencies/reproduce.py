@@ -36,6 +36,32 @@ def main() -> None:
     if result.monotonicity_violations != 0:
         raise AssertionError(result.monotonicity_violations)
 
+    expected = {
+        "baseline_successes": 70_709,
+        "full_output_successes": 74_884,
+        "minimum_category_counts": (0, 4_175, 0, 0, 0),
+        "indispensable_category_counts": (0, 0, 0, 0),
+        "singleton_route_count_counts": (0, 8, 3_572, 593, 2),
+        "item_failure_tag_call_deck_counts": (0, 0, 0, 0, 0),
+        "supporter_failure_gnh_deck_counts": (0, 0, 1, 4, 11),
+        "mask_success_counts": (
+            0, 4_175, 470, 4_175,
+            4_159, 4_175, 4_175, 4_175,
+            135, 4_175, 978, 4_175,
+            4_168, 4_175, 4_175, 4_175,
+        ),
+        "singleton_signature_counts": (
+            0, 8, 0, 8,
+            0, 3_564, 0, 460,
+            0, 0, 0, 0,
+            0, 133, 0, 2,
+        ),
+    }
+    for field, value in expected.items():
+        actual = getattr(result, field)
+        if actual != value:
+            raise AssertionError(f"{field}: {actual!r} != {value!r}")
+
     print(f"baseline_successes={result.baseline_successes}")
     print(f"full_output_successes={result.full_output_successes}")
     print(f"incremental_successes={result.incremental_successes}")
