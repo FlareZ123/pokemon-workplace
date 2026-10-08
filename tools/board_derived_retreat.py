@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Iterable
 
 from attached_energy_retreat_modifiers import attached_energy_retreat_modifiers
@@ -12,6 +12,7 @@ from attached_tool_retreat_modifiers import (
 )
 from ability_lock_causal_state import AbilityLockCausalState
 from board_object_kernel import BoardState
+from energy_board_conservation import EnergyBoardState
 from retreat_ability_denial import opposing_retreat_denial_source_ids
 from retreat_ability_lock_bridge import project_retreat_ability_state
 from retreat_board_effects import active_scoop_up_block_source_ids
@@ -21,6 +22,7 @@ from retreat_dynamic_energy_units import (
     unresolved_selected_prize_provider_ids,
 )
 from retreat_environment_modifiers import derive_environment_retreat_modifiers
+from retreat_stadium_tool_overlay import project_stadium_tool_state
 from retreat_energy_normalization import (
     RetreatEnergyNormalization,
     normalize_retreat_energy_state,
@@ -42,6 +44,8 @@ class BoardDerivedRetreatAttempt:
     unresolved_ability_lock: bool
     suppressed_own_ability_ids: tuple[str, ...]
     suppressed_opponent_ability_ids: tuple[str, ...]
+    suppressed_own_tool_ids: tuple[str, ...]
+    suppressed_opponent_tool_ids: tuple[str, ...]
     unresolved_tool_conditions: tuple[UnresolvedToolRetreatCondition, ...]
     unresolved_selected_provider_ids: tuple[str, ...]
     transaction: RetreatEnergyTransactionResult | None
@@ -70,9 +74,26 @@ def attempt_board_derived_retreat(
         provider_context=provider_context,
     )
     prepared = normalization.state
+    tool_projection = project_stadium_tool_state(
+        prepared.energy.board,
+        opponent_board,
+        stadium_print_id=stadium_print_id,
+        stadium_effect_enabled=stadium_effect_enabled,
+    )
+    if tool_projection.own_board is not prepared.energy.board:
+        prepared = RetreatEnergyTransactionState(
+            unified=prepared.unified,
+            energy=EnergyBoardState(
+                zones=prepared.energy.zones,
+                board=tool_projection.own_board,
+                instance_classes=prepared.energy.instance_classes,
+            ),
+        )
+        normalization = replace(normalization, state=prepared)
     active = prepared.energy.board.get(prepared.energy.board.active_id)
     ability_projection = project_retreat_ability_state(
-        prepared.energy.board, opponent_board,
+        prepared.energy.board,
+        tool_projection.opponent_board,
         lock_state=ability_lock_state,
     )
     own_sources = ability_projection.own_board
@@ -133,6 +154,8 @@ def attempt_board_derived_retreat(
         unresolved_ability_lock=not ability_projection.resolved,
         suppressed_own_ability_ids=ability_projection.suppressed_own_ids,
         suppressed_opponent_ability_ids=ability_projection.suppressed_opponent_ids,
+        suppressed_own_tool_ids=tool_projection.suppressed_own_tool_ids,
+        suppressed_opponent_tool_ids=tool_projection.suppressed_opponent_tool_ids,
         unresolved_tool_conditions=tool_derivation.unresolved_conditions,
         unresolved_selected_provider_ids=unresolved_providers,
         transaction=transaction,
