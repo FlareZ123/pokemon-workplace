@@ -18,7 +18,7 @@ print("resolver counts before assertions:", counts)
 print("historical candidates by name before assertions:", summary["historical_official_candidates_by_name"])
 
 assert counts["same_name_review_pool_prints"] == 4260
-assert counts["exact_fingerprint_candidate_prints"] == 117
+assert counts["exact_fingerprint_candidate_prints"] == 119
 assert counts["historical_official_reprint_candidate_prints"] == 39
 assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
@@ -28,11 +28,11 @@ assert counts["known_non_equivalent_names"] == 21
 assert counts["official_semantic_candidate_prints"] == 3
 assert counts["official_semantic_candidate_names"] == 1
 assert counts["semantic_review_prints"] == 3990
-assert counts["high_confidence_candidate_prints"] == 203
-assert counts["exact_fingerprint_trainer_candidate_prints"] == 13
+assert counts["high_confidence_candidate_prints"] == 205
+assert counts["exact_fingerprint_trainer_candidate_prints"] == 15
 assert counts["trainer_same_name_review_pool_prints"] == 168
 assert counts["historical_official_trainer_candidate_prints"] == 38
-assert counts["high_confidence_trainer_candidate_prints"] == 98
+assert counts["high_confidence_trainer_candidate_prints"] == 100
 assert counts["name_wide_trainer_errata_names"] == 15
 
 assert summary["official_semantic_candidates_by_name"] == {"Copycat": 3}
@@ -124,6 +124,8 @@ assert resolver.resolve("hgss1-92").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("pl1-108").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("hgss2-79").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("hgss1-94").kind == "exact_fingerprint_candidate"
+assert resolver.resolve("ex6-100").kind == "exact_fingerprint_candidate"
+assert resolver.resolve("pl3-140").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("dp1-110").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("ex7-83").kind == "official_semantic_candidate"
 assert resolver.resolve("ex15-73").kind == "official_semantic_candidate"
