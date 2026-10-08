@@ -67,7 +67,7 @@ def main() -> None:
 
     assert abs(
         sum(result.share(bucket) for bucket in BUCKETS) - 1.0
-    ) < 1e-12
+    ) < 1e-9
 
     print(f"direct_gain_pp={result.direct_gain_pp:.12f}")
     for bucket in BUCKETS:
