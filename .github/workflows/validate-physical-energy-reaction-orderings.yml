@@ -1,0 +1,24 @@
+name: Validate physical Energy reaction ordering
+
+on:
+  push:
+    paths:
+      - "tools/physical_energy_reaction_orderings.py"
+      - "tools/physical_energy_backlash_reactions.py"
+      - "results/physical_energy_reaction_orderings/**"
+      - ".github/workflows/validate-physical-energy-reaction-orderings.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify owner-chosen Energy reaction order
+        run: python results/physical_energy_reaction_orderings/reproduce.py
