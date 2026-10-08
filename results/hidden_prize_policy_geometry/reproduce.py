@@ -29,6 +29,7 @@ def synthetic_examples():
     assert test.best_actions==("pay-b",)
     assert test.nondominated_actions==("pay-a","pay-b")
     assert test.minimum_union_cover==2
+    assert test.union_cover_witness==("pay-a","pay-b")
     assert test.action_count==3
     assert test.world_count==3
 
@@ -37,6 +38,7 @@ def synthetic_examples():
     )
     assert all_dead.uninformed_success==all_dead.clairvoyant_success==0
     assert all_dead.minimum_union_cover==0
+    assert all_dead.union_cover_witness==()
     print("Synthetic nondominance and cover fixtures: PASS")
 
 
@@ -75,6 +77,7 @@ def secret_box_witness():
     print("Payment alternatives:",geometry.action_count)
     print("Distinct nondominated success events:",len(geometry.nondominated_actions))
     print("Minimum action-family cover:",geometry.minimum_union_cover)
+    print("Covering payment classes:",geometry.union_cover_witness)
     print("K0:",geometry.uninformed_success,float(geometry.uninformed_success))
     print("K1:",geometry.clairvoyant_success,float(geometry.clairvoyant_success))
     print("Information gap:",geometry.information_gap,float(geometry.information_gap))
