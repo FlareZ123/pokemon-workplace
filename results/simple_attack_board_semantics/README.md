@@ -67,6 +67,28 @@ blank-damage rows. This is a conservative scope count, which also includes
 conditional or future-turn Knock Out references. Those require execution
 semantics before they can be materialized as complete board programs.
 
+### Unresolved attack-use gates
+
+Fixed printed damage can also be unusable or result in no attack damage
+because of conditions stated in the attack text. The Advanced Player's
+Rulebook distinguishes an attack that *does nothing* from one that cannot
+be announced, and neither is equivalent to unconditionally applying the
+printed damage.
+
+The materializer now conservatively rejects unresolved
+`this attack does nothing`, `doesn't happen`, `can't be used`,
+and `you can't use this attack` text. The current live index contains
+**314** numeric-or-blank damage rows flagged by this detector.
+
+The regression covers three different reasons for conditional failure:
+Munna `bw1-48` Dream Eater requires an Asleep defender, Zorua
+`bw1-70` Lunge has a coin-flip failure branch, and Hoopa
+`swsh3-111` Assault Gate checks whether the Pokémon moved from
+the Bench to the Active Spot this turn.
+
+The guard is an explicit incompleteness boundary. It does not yet evaluate
+these gates or infer all equivalent wording in the Expanded card pool.
+
 ### Exact damage-counter templates
 
 Seven full-text templates are recognized. Full-text matching is intentional:
