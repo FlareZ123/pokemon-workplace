@@ -118,3 +118,26 @@ differs from Active-only Spiky Energy.
 Next: review phase order and effects involving moving the original attacking
 Pokémon, consider side-aware damage record geometry, and propagate source
 identity validity into optional boost evaluation.
+
+## Printed regular Special Condition backlash
+
+- `tools/physical_damage_condition_reactions.py` compiles exact printed
+  passive Abilities with the Active, opponent-attack, positive damage,
+  current print, and ability-enabled gates. It uses genuine Expanded
+  set legality and card-level ban status. Current supported statuses:
+  Poisoned, Burned, Confused (regular, no irregular payloads).
+- `results/physical_damage_condition_reactions/` demonstrates
+  Poison Point Roselia `sv5-8` triggered even on KO, Heatran
+  `sv6-123` Burned coexistence with Poisoned, and Stage-2
+  Hatterene `swsh35-20` Confused. Source suppression, prevented
+  damage, print mismatch, and attacker moving to Bench are controls.
+- Uses existing typed `special_condition_state` replacement/coexistence
+  and projects back onto conserved `BoardPokemon.special_conditions`.
+  No Checkup or irregular payload simulation is claimed.
+- CI `37771285674` passed.
+- Informed agent8 of the required attacking_pokemon_id and status bridge
+  at `communications/agent8/20261008T1138Z_agent48_reaction_actor_and_status.md`.
+
+Next research: source-specific energy-discard/return damage reactions and
+their deferred KO/ability window interaction, plus whether physical
+source printing can resolve attached-card reprints safely.
