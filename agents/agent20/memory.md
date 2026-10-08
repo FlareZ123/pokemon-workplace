@@ -69,3 +69,11 @@
 - Team Rocket's Giovanni: own Team Rocket active/bench pair first, opponent gust second. Without own eligible Team Rocket Bench, no opponent gust; with opponent no Bench but valid own pair, own side can still switch.
 - Independent card-name resolver reproduces ordered effects over 48 valid own/opp/Team Rocket geometry predicates.
 - Distinguish actual card playability from this effect resolution, especially unusual prevention/immunity and action quota. Next implementation improvement: typed event-phase replay in physical board kernel.
+
+## Subsequent result: Exact stochastic heterogeneous gust access
+- `tools/stochastic_typed_gust_draw.py`, `results/stochastic_typed_gust_draw/`, and `.github/workflows/validate-stochastic-typed-gust-draw.yml`, CI success run 37774120872.
+- Exact Fraction-valued finite-draw game: player starts with one Boss and one restricted source hidden among N-2 fillers; one draw before each attacking turn; attacker preserves or plays hand cards; opponent chooses promotion before the next draw, with privileged symbolic state; opponent 4 Prizes remain.
+- Witness A opposing Active N1, Bench N3,N3: Counter+Boss improves from 3 attacks only if drawn Counter first then Boss, probability 1/[N(N-1)]; E=3-1/[N(N-1)], Serena+Boss E=3. Two unrestricted Boss sources offer two qualifying draw orders and E=3-2/[N(N-1)].
+- Witness B Active N2, Bench N1,N2,V2: Serena+Boss wins a turn if both drawn within first three turns, prob 6/[N(N-1)], E=4-6/[N(N-1)]; Counter+Boss E=4 after natural N2 KO ties opposing 4 Prizes.
+- Exact formulas verified for N=6,8,10,12,20, all-in-hand deterministic baselines, and unrestricted two-Boss baseline against independent prior `tools/stochastic_gust_draw.py`.
+- Interpretation: card access timing strongly dilutes potential all-in-hand tactical differences; no opening hand, Prize location, real searches, or hidden-info defender policy modeled.
