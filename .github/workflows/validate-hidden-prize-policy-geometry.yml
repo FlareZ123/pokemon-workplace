@@ -1,0 +1,20 @@
+name: Validate hidden Prize policy geometry
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/hidden_prize_policy_geometry.py"
+      - "tools/secret_box_k0_payment.py"
+      - "results/hidden_prize_policy_geometry/**"
+      - ".github/workflows/validate-hidden-prize-policy-geometry.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/hidden_prize_policy_geometry/reproduce.py
