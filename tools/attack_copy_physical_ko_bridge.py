@@ -43,6 +43,7 @@ class AttackCopyPhysicalBoardResolution:
     counter_outcomes: tuple[tuple[str, CounterPlacementOutcome], ...]
     event_trace: tuple[PhysicalBoardEventTrace, ...]
     knocked_out_ids: tuple[str, ...]
+    damage_targets: tuple[tuple[str, str], ...] = ()
 
 
 def _add_counters(
@@ -127,6 +128,7 @@ def replay_copy_attack_physical_board(
 
     current = state
     damage_results: list[tuple[str, DamageResult]] = []
+    damage_targets: list[tuple[str, str]] = []
     counter_outcomes: list[tuple[str, CounterPlacementOutcome]] = []
     trace: list[PhysicalBoardEventTrace] = []
 
@@ -139,6 +141,7 @@ def replay_copy_attack_physical_board(
                 program.damage_context,
             )
             damage_results.append((event, damage_result))
+            damage_targets.append((event, program.damage_target_id))
             for placement in program.counter_placements:
                 current, outcome = _apply_effect_counters(current, placement)
                 counter_outcomes.append((event, outcome))
@@ -162,6 +165,7 @@ def replay_copy_attack_physical_board(
         counter_outcomes=tuple(counter_outcomes),
         event_trace=tuple(trace),
         knocked_out_ids=_knocked_out_ids(current, hp_by_pokemon_id),
+        damage_targets=tuple(damage_targets),
     )
 
 
