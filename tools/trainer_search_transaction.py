@@ -218,9 +218,22 @@ def _validated_retrieval_branch(
     )
     base_valid = base_action in base
 
+    # A restricted deck search may choose zero cards. If the Trainer has an
+    # independent mandatory discard payment, that payment changes the game
+    # state even when no searched target is taken.
+    branch_discard_cost = (
+        profile.required_discard_other_cards
+        + (profile.optional_discard_other_cards if optional_paid else 0)
+    )
+    if (
+        not any(action.target_cost)
+        and branch_discard_cost == 0
+        and not profile.discards_entire_hand
+    ):
+        raise ValueError("free zero-retrieval search has no represented effect")
+
+    # zero-selection allowed when its required discard changes the state
     if not optional_paid:
-        if not any(action.target_cost) and not profile.discards_entire_hand:
-            raise ValueError("free zero-retrieval search has no represented effect")
         if base_valid:
             return (
                 profile.required_discard_other_cards,
