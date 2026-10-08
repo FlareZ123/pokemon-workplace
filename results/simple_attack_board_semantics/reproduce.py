@@ -175,10 +175,47 @@ def main() -> None:
     assert cursed_drop.counter_effect is not None
     assert cursed_drop.counter_effect.scope == "opponent_any"
 
+    # Blank printed damage may still deal direct effect-text damage.
+    # Numeric printed damage can also be followed by additional Bench damage.
+    # Until these clauses have executable semantics, full board programs
+    # must fail closed rather than silently dropping them.
+    sharpshooting = next(
+        row for row in index["bw10-19"]
+        if row.attack_name == "Sharpshooting"
+    )
+    night_spear = next(
+        row for row in index["bw5-63"]
+        if row.attack_name == "Night Spear"
+    )
+    assert sharpshooting.fixed_damage == 0
+    assert sharpshooting.has_uncompiled_damage_text
+    assert night_spear.fixed_damage == 90
+    assert night_spear.has_uncompiled_damage_text
+    assert not phantom.has_uncompiled_damage_text
+    assert not cursed_drop.has_uncompiled_damage_text
+    for incomplete in (sharpshooting, night_spear):
+        try:
+            materialize_opponent_board_program(incomplete, board)
+        except ValueError as error:
+            assert "uncompiled damage text" in str(error)
+        else:
+            raise AssertionError(f"silently materialized {incomplete.attack_id}")
+
+    uncompiled_damage_rows = sum(
+        row.has_uncompiled_damage_text for row in semantics
+        if row.fixed_damage is not None
+    )
+    uncompiled_blank_damage_rows = sum(
+        row.has_uncompiled_damage_text and row.raw_damage == ""
+        for row in semantics
+    )
+
     print(
         {
             "legal_attack_rows": len(semantics),
             "supported_fixed_or_effect_only_damage": supported_damage_rows,
+            "uncompiled_damage_text_rows_with_numeric_or_blank_field": uncompiled_damage_rows,
+            "uncompiled_blank_damage_rows": uncompiled_blank_damage_rows,
             "extra_turn_rows": extra_turn_rows,
             "exact_counter_rows": len(counter_rows),
             "counter_shapes": dict(sorted(counter_shapes.items())),
