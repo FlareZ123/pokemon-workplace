@@ -165,6 +165,23 @@ def output(summary: Summary) -> str:
             f"{100*p:.5f} ± {ci:.5f} | "
             f"{100*lock/n:.5f} | {100*second/n:.5f}"
         )
+    lines.append("")
+    lines.append("all endpoints: endpoint | baseline% | one Ticket lift (pp) | "
+                 "two Tickets without Map (pp) | two Tickets + Map (pp) | "
+                 "two Tickets + two Maps (pp) | three Tickets + Map (pp)")
+    for endpoint in ENDPOINTS:
+        lifts = tuple(
+            100 * summary.rescue[(name, endpoint)] / summary.accepted
+            for name in (
+                "one_ticket", "two_tickets_no_map",
+                "two_tickets_one_map", "two_tickets_two_maps",
+                "three_tickets_one_map",
+            )
+        )
+        lines.append(
+            f"{endpoint} | {100*summary.baseline[endpoint]/summary.accepted:.5f}% | "
+            + " | ".join(f"{v:.5f}" for v in lifts)
+        )
     return "\n".join(lines)
 
 
