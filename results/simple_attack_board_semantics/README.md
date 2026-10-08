@@ -25,6 +25,36 @@ Variable `+`, `-`, and `×` expressions remain unsupported by this layer.
 In the current effectively legal Expanded snapshot, this covers **16,128 of
 19,992** attack-print rows.
 
+### Materialization safety for uncompiled damage text
+
+The base-damage inventory above is a syntactic measurement. A blank printed
+damage field can still carry effect-text damage, and a numeric printed field
+may have an additional damage instruction. Such cases require additional
+interpretation before building a complete opponent-board event program.
+
+The executable materializer now rejects detected uncompiled damage-bearing or
+damage-modifying text. Its conservative detector checks `do/does/deal/deals/`
+`take/takes ... damage` and `put/place/move ... damage counters`, except
+for exact counter templates already understood.
+
+In the current live database, **2,077** effectively legal attack-print rows
+with numeric or blank printed damage fields are flagged, including **840**
+with blank damage fields. Some are conservative flags for future effects,
+such as damage reduction. The counts measure the guard's detection surface.
+
+Concrete examples:
+
+- Octillery `bw10-19` Sharpshooting has a blank damage field yet deals
+  30 damage through attack text.
+- Darkrai-EX `bw5-63` Night Spear deals 90 printed damage plus another
+  30 to a Benched target.
+- Dragapult ex `sv6-130` Phantom Dive remains executable because both its
+  200 base damage and six Bench counters are recognized.
+
+The regression rejects the first two with an explicit `ValueError` and
+executes Phantom Dive normally. This guard covers a meaningful family of
+omissions, without claiming to recognize all unmodeled attack effects.
+
 ### Exact damage-counter templates
 
 Seven full-text templates are recognized. Full-text matching is intentional:
