@@ -5,6 +5,7 @@ on:
     paths:
       - "tools/apex_dragon_payload_coverage.py"
       - "tools/attack_text_coverage_inventory.py"
+      - "tools/attack_status_text_contracts.py"
       - "tools/simple_attack_board_semantics.py"
       - "results/apex_dragon_payload_coverage/**"
       - ".github/workflows/validate-apex-dragon-payload-coverage.yml"
