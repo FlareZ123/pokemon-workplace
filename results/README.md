@@ -1531,3 +1531,8 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 ## Stochastic opponent Prize tempo
 
 [stochastic_opponent_prize_tempo/](stochastic_opponent_prize_tempo/) gives an exact rational study of Counter Catcher under random and opponent-selected Prize-taking. Across 13,140 scenarios, 24 and 7 structural boards show non-monotonic success under increased opponent scoring. An independently checked example has win probability 1 - (1-p)p². These conditional simulations are not empirical matchup win rates.
+
+
+## Beheeyem self-shuffle as a physically conserved deck-return transition
+
+[beheeyem_physical_self_shuffle/](beheeyem_physical_self_shuffle/) introduces `tools/active_self_shuffle_conservation.py` to model the full evolved Pokémon stack and attachments returning to the deck, distinct from Knock Out disposal to the discard pile. The exact identity-ledger regression constructs Elgyem -> Beheeyem with Triple Acceleration Energy Active, a Benched complete Stoutland evolution stack wearing Float Stone, and another Elgyem on the Bench. On Mysterious Noise's board-removal step, both attacker Pokémon cards and TAE become exchangeable deck copies while Stoutland is promoted Active, its Tool stays attached, and the second Elgyem remains Benched; all per-class physical counts are conserved. The transition also handles the lone-Active terminal case without inventing a Knock Out or Prize award. Item-lock temporal effect ownership remains a distinct layer. CI run 37904199241 passed.
