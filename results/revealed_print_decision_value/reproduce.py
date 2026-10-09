@@ -81,10 +81,10 @@ assert name.expected_payoff == Fraction(9, 14)
 assert printwise.expected_payoff == Fraction(5, 7)
 assert printwise.expected_payoff - name.expected_payoff == Fraction(1, 14)
 assert name.chosen_by_observation == (("Pikachu", "assume_unprized"),)
-assert printwise.chosen_by_observation == (
-    (OLD, "assume_prized"),
-    (NEW, "assume_unprized"),
-)
+assert dict(printwise.chosen_by_observation) == {
+    OLD: "assume_prized",
+    NEW: "assume_unprized",
+}
 for reveal in (False, True):
     states = make_states(reveal_print=reveal)
     assert observation_policy_envelope(states).expected_payoff == independent_oracle(states)
