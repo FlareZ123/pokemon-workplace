@@ -177,6 +177,15 @@ and retaining unrestricted Boss preserves every later same-target use.
 A fixed opponent count is therefore not needed for this *conditional*
 exchange theorem. Source restrictions and action costs still matter.
 
+A further [stochastic Prize-tempo study](../stochastic_opponent_prize_tempo/)
+shows that the opponent's scoring rate can create a non-monotone Counter
+Catcher payoff. In an Active-3, Bench-1/1/3 case with two Catchers, the
+optimal win probability under independent two-Prize opposing replies is
+1 - (1-p)p². At selected intermediate rates, the opponent's deliberately
+withheld Prize can deny an otherwise winning Counter line. The bounded
+model treats opponent scoring opportunities as exogenous, so this is a
+mechanistic hypothesis to investigate with real two-sided boards.
+
 
 ### A future Supporter lock reverses that source order
 
