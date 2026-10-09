@@ -1,0 +1,22 @@
+name: Validate optional Aichi Tag Call information preview
+
+on:
+  push:
+    paths:
+      - "tools/aichi_tagcall_information_preview.py"
+      - "results/aichi_tagcall_information_preview/**"
+      - ".github/workflows/validate-agent4-aichi-tagcall-preview.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test Tag Call and run 80k paired first-window preview
+        run: |
+          python results/aichi_tagcall_information_preview/reproduce.py
+          python results/aichi_tagcall_information_preview/run.py
