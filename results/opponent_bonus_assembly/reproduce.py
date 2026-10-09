@@ -22,16 +22,21 @@ from tools.setup_hand_value_policy import (  # noqa: E402
 
 
 def exhaustive_small(
-    n: int, h: int, prizes: int, starters: int, groups: tuple[int, ...], draws: int
+    n: int, h: int, prizes: int, starters: int, groups: tuple[int, ...],
+    draws: int, overlaps: tuple[int, ...] = ()
 ) -> Fraction:
     """Enumerate accepted hands, Prize subsets, and later bonus subsets."""
     cards = set(range(n))
     starter_set = set(range(starters))
     required = []
-    start = starters
-    for count in groups:
-        required.append(set(range(start, start + count)))
-        start += count
+    basic_cursor = 0
+    nonbasic_cursor = starters
+    for count, shared in zip(groups, overlaps or (0,) * len(groups)):
+        chosen = set(range(basic_cursor, basic_cursor + shared))
+        chosen.update(range(nonbasic_cursor, nonbasic_cursor + count - shared))
+        required.append(chosen)
+        basic_cursor += shared
+        nonbasic_cursor += count - shared
 
     good = total = 0
     for opening in combinations(range(n), h):
@@ -50,15 +55,21 @@ def exhaustive_small(
 
 def test_small_enumeration() -> None:
     examples = [
-        (9, 2, 1, 2, (1, 1), 0),
-        (9, 2, 1, 2, (1, 1), 2),
-        (9, 2, 1, 2, (2, 1), 1),
-        (10, 3, 2, 2, (1, 2), 2),
+        (9, 2, 1, 2, (1, 1), 0, (0, 0)),
+        (9, 2, 1, 2, (1, 1), 2, (0, 0)),
+        (9, 2, 1, 2, (2, 1), 1, (0, 0)),
+        (10, 3, 2, 2, (1, 2), 2, (0, 0)),
+        (9, 2, 1, 2, (2, 1), 1, (1, 0)),
+        (10, 3, 2, 3, (2, 2), 2, (1, 1)),
     ]
-    for n, h, prizes, starters, groups, draws in examples:
-        model = OpponentBonusAssembly(n, h, prizes, starters, groups)
+    for n, h, prizes, starters, groups, draws, overlaps in examples:
+        model = OpponentBonusAssembly(
+            n, h, prizes, starters, groups, overlaps
+        )
         exact = model.assembly_probability(draws)
-        enumerated = exhaustive_small(n, h, prizes, starters, groups, draws)
+        enumerated = exhaustive_small(
+            n, h, prizes, starters, groups, draws, overlaps
+        )
         assert exact == enumerated, (examples, exact, enumerated)
 
 
@@ -77,6 +88,25 @@ def test_benchmark() -> None:
     assert increments.index(max(increments)) == 4
     assert increments[0] < increments[1] < increments[2]
     assert increments[4] > increments[5] > increments[6]
+
+    one_basic_target = OpponentBonusAssembly(9, 2, 1, 2, (2,), (2,))
+    assert one_basic_target.assembly_probability(0) == 1
+    assert one_basic_target.assembly_probability(3) == 1
+
+    # The same required components can have different marginal draw value
+    # when some of their copies are eligible starting Basics.
+    one_basic_group = OpponentBonusAssembly(60, 7, 6, 12, (4, 4), (4, 0))
+    two_basic_groups = OpponentBonusAssembly(60, 7, 6, 12, (4, 4), (4, 4))
+    overlap_1 = [float(one_basic_group.assembly_probability(m)) for m in range(13)]
+    overlap_2 = [float(two_basic_groups.assembly_probability(m)) for m in range(13)]
+    assert abs(overlap_1[0] - 0.17965662) < 1e-7
+    assert overlap_1[0] == overlap_2[0]
+    assert overlap_1[0] > points[0]
+    gains_1 = [b - a for a, b in zip(overlap_1, overlap_1[1:])]
+    gains_2 = [b - a for a, b in zip(overlap_2, overlap_2[1:])]
+    assert gains_1.index(max(gains_1)) == 3
+    assert gains_2.index(max(gains_2)) == 0
+    assert gains_2[0] > increments[0]
 
     policy = optimize_setup_against_bonus(
         opponent,
@@ -174,6 +204,8 @@ def test_benchmark() -> None:
     print(f"Optimal expected mulligans: {expected_mulligans:.9f}")
     print(f"Optimal expected opponent assembly: {expected_opponent_assembly:.9%}")
 
+    print("When both target groups are all Basic starters, the marginal")
+    print("bonus-draw assembly gain peaks at the first draw.")
     print("Opponent P(two groups) at bonus draws 0,1,4,12:")
     print(*(f"{i}: {points[i]:.9%}" for i in (0, 1, 4, 12)))
     print("Marginal assembly gains (percentage points), first 7 draws:")

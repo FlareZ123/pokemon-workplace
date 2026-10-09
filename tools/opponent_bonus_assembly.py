@@ -1,7 +1,7 @@
 """Exact opponent bonus-draw assembly probabilities after a valid opening.
 
-All tracked target groups are disjoint from the ordinary Basic starter group
-and from each other. Prize placement is uniform; drawn cards are exchangeable
+All tracked target groups are mutually disjoint. Each may include a specified
+subset of ordinary Basic starters. Prize placement is uniform; drawn cards are exchangeable
 over the non-opening portion of the deck after marginalizing hidden Prizes.
 """
 
@@ -32,6 +32,7 @@ class OpponentBonusAssembly:
     prize_count: int
     basic_starters: int
     required_groups: tuple[int, ...]
+    basic_overlap_groups: tuple[int, ...] = ()
 
     def __post_init__(self) -> None:
         if self.deck_size <= 0 or not 0 < self.opening_size < self.deck_size:
@@ -42,14 +43,36 @@ class OpponentBonusAssembly:
             raise ValueError("a positive starter count and target groups are required")
         if any(group <= 0 for group in self.required_groups):
             raise ValueError("target-group sizes must be positive")
-        if self.basic_starters + sum(self.required_groups) > self.deck_size:
-            raise ValueError("starter and target groups must be disjoint and fit")
+        if self.basic_overlap_groups and (
+            len(self.basic_overlap_groups) != len(self.required_groups)
+        ):
+            raise ValueError("starter-overlap counts must match target groups")
+        overlaps = self.overlaps
+        if any(
+            overlap < 0 or overlap > size
+            for size, overlap in zip(self.required_groups, overlaps)
+        ):
+            raise ValueError("starter overlaps must fit within each target group")
+        if sum(overlaps) > self.basic_starters:
+            raise ValueError("overlapping targets exceed Basic starter count")
+        if (
+            self.basic_starters + sum(self.required_groups) - sum(overlaps)
+            > self.deck_size
+        ):
+            raise ValueError("target and starter union exceeds deck size")
+
+    @property
+    def overlaps(self) -> tuple[int, ...]:
+        return self.basic_overlap_groups or (0,) * len(self.required_groups)
 
     @property
     def maximum_bonus_draws(self) -> int:
         return self.deck_size - self.opening_size - self.prize_count
 
-    def probability_none(self, missing_target_cards: int, bonus_draws: int) -> Fraction:
+    def probability_none(
+        self, missing_target_cards: int, bonus_draws: int,
+        *, starter_overlap: int = 0
+    ) -> Fraction:
         """P(no tracked cards in opener or bonus), conditioned on a Basic opener.
 
         Prize positions are marginalized. If no tracked card was in the opening
@@ -58,6 +81,10 @@ class OpponentBonusAssembly:
         """
         if not 0 <= missing_target_cards <= sum(self.required_groups):
             raise ValueError("invalid target count")
+        if not 0 <= starter_overlap <= min(
+            missing_target_cards, self.basic_starters
+        ):
+            raise ValueError("starter overlap must be within both groups")
         if not 0 <= bonus_draws <= self.maximum_bonus_draws:
             raise ValueError("bonus draws exceed the post-Prize deck")
         n, h, b, k = (
@@ -67,7 +94,7 @@ class OpponentBonusAssembly:
             missing_target_cards,
         )
         accepted = comb(n, h) - comb(n - b, h)
-        no_target_accepted = comb(n - k, h) - comb(n - b - k, h)
+        no_target_accepted = _choose(n - k, h) - _choose(n - b - k + starter_overlap, h)
         return (
             Fraction(no_target_accepted, accepted)
             * Fraction(_choose(n - h - k, bonus_draws), comb(n - h, bonus_draws))
@@ -80,8 +107,9 @@ class OpponentBonusAssembly:
         for length in range(len(self.required_groups) + 1):
             for chosen in combinations(indices, length):
                 absent_cards = sum(self.required_groups[index] for index in chosen)
+                shared_basics = sum(self.overlaps[index] for index in chosen)
                 total += (-1) ** length * self.probability_none(
-                    absent_cards, bonus_draws
+                    absent_cards, bonus_draws, starter_overlap=shared_basics
                 )
         return total
 

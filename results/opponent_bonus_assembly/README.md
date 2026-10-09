@@ -22,15 +22,16 @@ selected after the normal opening and six Prize cards are established.
 Assume the opponent has an N-card deck with B ordinary Basic Pokémon, an
 accepted H-card opening containing at least one of those Basics, P uniformly
 selected Prize cards, and r distinct required target groups of sizes
-(k1, ..., kr). All groups are mutually disjoint and are disjoint from the
-Basic group. The opponent is assumed to draw all allowed bonus cards up to a
+(k1, ..., kr). Target groups are mutually disjoint; a subset of each group may also be
+an ordinary Basic starter. The opponent is assumed to draw all allowed bonus cards up to a
 specified cap, with no other actions or future draws.
 
-For a union of target groups containing K cards, the probability of seeing
+For a union of target groups containing K cards, of which T are ordinary
+Basic starters, the probability of seeing
 none in the opener and none in m bonus draws, conditional on a legal Basic
 opener, is
 
-    q(K,m) = [C(N-K,H) - C(N-B-K,H)] / [C(N,H) - C(N-B,H)]
+    q(K,T,m) = [C(N-K,H) - C(N-B-K+T,H)] / [C(N,H) - C(N-B,H)]
              * C(N-H-K,m) / C(N-H,m).
 
 The second factor is valid after marginalizing hidden Prize positions: a
@@ -39,7 +40,7 @@ sample from the N-H cards excluded from the accepted opening. The probability
 of holding at least one card from **every** required group follows by
 inclusion-exclusion:
 
-    A(m) = sum over S subset {1,...,r} (-1)^|S| q(sum(k_i for i in S),m).
+    A(m) = sum over S subset {1,...,r} (-1)^|S| q(sum(k_i for i in S),sum(t_i for i in S),m).
 
 With opponent assembly utility L, the incremental external cost of the
 (m+1)-th own mulligan is:
@@ -95,6 +96,34 @@ The exact discounted-by-increment objective at m=0 is approximately
 L=6 is a stress-test parameter, with no claim that it is a calibrated
 competitive matchup value. Large mulligan counts are also rare.
 
+## A crucial distinction: required components can be Basic starters
+
+The event of opening at least one ordinary Basic is correlated with target
+group possession when some target cards are themselves eligible Basics.
+The generalized formula includes T, the number of Basic-starter cards in
+the excluded target-group union. Ignoring this overlap can substantially
+misestimate the marginal value of opponent bonus draws.
+
+For the same N60/H7/P6/B12 and two four-copy required groups:
+
+| Overlap with ordinary Basics (first, second target) | Both present at m=0 | First bonus gain | Peak marginal gain |
+| --- | ---: | ---: | --- |
+| (0,0) | 12.964829% | +3.788621 pp | Fifth draw, +4.256516 pp |
+| (4,0) | 17.965662% | +3.886300 pp | Fourth draw, +4.123062 pp |
+| (4,4) | 17.965662% | +4.738821 pp | First draw, +4.738821 pp |
+
+The identical m=0 probability for the last two rows is structural: when
+either fully required group consists of ordinary Basics, satisfying both
+required groups already guarantees a valid Basic opener. Conditioning on
+starter eligibility therefore divides the same unconditioned joint
+assembly probability by the same valid-opening probability.
+
+**Strategic implication:** whether a combo piece can serve as the opening
+Active Pokémon changes the shape of the mulligan externality, even at
+identical printed family counts. The initial increasing marginal-benefit
+pattern can disappear. Exact small-deck enumeration validates overlapping
+Basic/target roles separately from the disjoint benchmark.
+
 ## How often the middle window matters
 
 Mixing the exact optimal policy over its accepted-opening-count distribution
@@ -128,8 +157,8 @@ mathematical existence result; its advantage is small in this benchmark.
 The bonus policy is hypothetical and capped; an opponent is allowed to
 choose fewer bonus cards. The model ignores deck-out risk, the opponent's own
 mulligan decisions, extra Basic bench placements, search effects, lock
-states, and the strategic quality of the rest of both hands. Required
-families are disjoint from ordinary Basic starters. The probability measures
+states, and the strategic quality of the rest of both hands. Required families may include explicitly counted Basic starters, provided
+target families are mutually disjoint. The probability measures
 hand possession, not execution of a legal attack or complete board line.
 
 A stronger next step would value a concrete Expanded archetype-line-specific
