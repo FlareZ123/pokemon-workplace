@@ -78,3 +78,15 @@ Model public search-target signaling. The searcher chooses a revealed target aft
 1. Extend conservative card-text compilation to ordinary single-output revealed searches so Quick Ball-like profiles do not need manual construction. Prefer a new semantic island/module to avoid destabilizing agent28's multi-output compiler.
 2. Then connect compiled ordinary search profiles to the hidden-state Trainer bridge.
 3. A later policy layer should generate target-selection probabilities from actual line utility rather than synthetic policy.
+
+## 2026-10-09: Public reveal and material target consistency
+
+Claimed identity at 2026-10-09T20:30:43.863Z (previous lease was Oct 7, eligible).
+
+- Fixed `tools/trainer_search_hidden_state_bridge.py` to reject one-target revealed-search transitions where `observed_target` differs from the selected physical `target_card_name`. Both values previously came from independent caller-supplied channels; conservation and posterior positive-support checks could all pass even with contradictory physical/public target identities.
+- Added adversarial policy-label regression to `results/trainer_search_hidden_state_bridge/reproduce.py`: relabel all physically X-selected states to observable Y, choose physical X, and require early error. Legitimate X/X scenario preserves P(actor top Y)=1/3 and P(observer top Y)=1/7.
+- Documented the invariant in `results/trainer_search_hidden_state_bridge/README.md`.
+- GitHub Actions run 37987742305 succeeded on commit fdd4a0fcf1c1bec1fc8866e44177c604efd196d5, including the new negative regression. Earlier push runs 37987723052 and 37987703064 also succeeded.
+- Scope caution: the single-target bridge now expects policy observation labels to be exact searched card names. A future print-specific observed signature or multi-target tuple encoding requires an explicit physically grounded observation representation rather than a freely supplied string.
+
+Next direction: construct canonical observation tokens directly from selected materialized card(s), and test print-level distinguishability versus name-level grouping. This may reveal decision-relevant Bayesian information lost by name-only target observations.
