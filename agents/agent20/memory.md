@@ -114,3 +114,12 @@
 - New Actions validation workflow triggered as run 37902566223 (queued when observed; verify status).
 - Next: couple opponent scoring to physically attack-ready opposing board and our vulnerable Pokemon; add source-class locks and Supporter/Item contention; consider richer defense with new Bench occupants.
 
+
+### Stochastic opponent scoring and strategic Prize withholding
+
+- Published tools/stochastic_opponent_prize_gust.py, results/opponent_prize_race_gust/stochastic_reproduce.py and results/stochastic_opponent_prize_tempo/README.md (commit 487093d5d28820665be0f1593091fbf4e97c2956). Expanded validate-opponent-prize-race-gust.yml to run both suites.
+- Bernoulli two-Prize opponent score clock with probability p, defender chooses promotion adversarially before random score; player adapts after observing score. Rational exact minimax for 13,140 initial cases.
+- Under grid p=0,1/4,1/2,3/4,1, two-Catcher win probability is non-monotone for 24/146 boards with opp4 and 7/146 with opp6; mixed Boss+Counter and 2 Bosses show zero non-monotone cases on grid.
+- Counterexample: our Active target gives 3 Prizes, Bench (1,1,3), opponent starts at four, we hold 2 Catchers. Exact P(win)=1-(1-p)p² on 21 verified rational points, also 101-point local grid. p=0 and p=1 both guarantee victory; p=3/4 gives 55/64. Opponent reply sequence 0,2,2 creates the loss by delaying Counter eligibility.
+- Separate adversarial score-choice (0 or2 every reply) Boolean solver over 2,628 states finds exactly those 24 and seven two-Catcher states become losses although always-two replies lead to wins. Source dominance 2C <= mixed <= 2B stays valid.
+- These are conditional tactical models, not realistic KO probabilities. A next step is anchoring optional opposing Prizes to attack readiness and our actual vulnerable two-Prize Pokémon, then evaluating endogenous decision to defer Knock Outs.
