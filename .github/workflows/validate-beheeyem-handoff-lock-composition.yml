@@ -1,0 +1,19 @@
+name: Validate Beheeyem handoff lock composition
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/beheeyem_handoff_lock_composition/**"
+      - ".github/workflows/validate-beheeyem-handoff-lock-composition.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce temporal and Active-sourced lock composition
+        run: python3 results/beheeyem_handoff_lock_composition/reproduce.py
