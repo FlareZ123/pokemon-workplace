@@ -1,0 +1,21 @@
+name: Validate joint named Ability Bench capacity
+
+on:
+  push:
+    paths:
+      - tools/bench_joint_named_guard_capacity.py
+      - .github/workflows/validate-bench-joint-named-guard-capacity.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify joint guards and capacity census
+        run: python tools/bench_joint_named_guard_capacity.py --self-test
+      - name: Print full pairing histogram
+        run: python tools/bench_joint_named_guard_capacity.py
