@@ -13,6 +13,7 @@ from board_derived_action_permissions import (
 )
 from board_object_kernel import BoardState
 from card_action_metadata import CardActionMetadata
+from next_turn_attachment_window import NextTurnAttachmentWindow
 from energy_hand_attachment_events import (
     AttachmentChannel,
     EnergyAttachmentState,
@@ -44,8 +45,9 @@ def execute_lock_gated_manual_energy_attachment(
     opponent_id: str = "opponent",
     attack_windows: Sequence[AttackRestrictionWindow] = (),
     target_bound_attack_windows: Sequence[TargetBoundAttackRestrictionWindow] = (),
+    manual_window: NextTurnAttachmentWindow | None = None,
 ) -> LockGatedEnergyAttachmentResult:
-    """Attempt one normal once-per-turn Energy attachment from hand."""
+    """Attempt one physical manual attachment, including attack-granted permission."""
 
     if action_metadata.card_kind not in {"basic_energy", "special_energy"}:
         raise ValueError("action metadata must describe an Energy card")
@@ -78,5 +80,6 @@ def execute_lock_gated_manual_energy_attachment(
         ((copy_id, target_object_id),),
         player=actor,
         channel=AttachmentChannel.MANUAL,
+        manual_window=manual_window,
     )
     return LockGatedEnergyAttachmentResult(permission, next_state)
