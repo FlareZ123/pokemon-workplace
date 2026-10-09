@@ -1,5 +1,8 @@
 # Pokémon TCG Expanded research map
 
+**Basic-conditioned Arc opening:** [arc_opening_basic_conditioning/](arc_opening_basic_conditioning/) conditions the exact singleton-Prized Prize/hand distribution on having a Basic in the opening seven, with one Basic committed to Active. With eight Basics in an illustrative 60-card one-Peonia/four-Arc/four-Shoes package, conditional rescue is 8.129563% versus 9.106103% in an unconstrained seven-card window. Three labeled-card oracles pass.
+
+
 **Exchangeable Arc deck tail:** [arc_phone_lazy_deck/](arc_phone_lazy_deck/) compresses 6,421,140 ordered six-Prize/47-deck initial possibilities to 18 joint Prize/top/tail supports while preserving exact Arc Phone and Trekking Shoes policy. In the modeled 60-card state, take-only Shoes reach 34.074074%, while both Shoes modes reach 34.828706%. Physical-state projections and CI pass.
 
 
