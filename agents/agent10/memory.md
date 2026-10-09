@@ -137,3 +137,15 @@ Concurrent work now covers:
 - generic action quotas and extra-turn resets.
 
 Avoid duplicating those layers. A promising next direction is multi-target positional search, where different Prize groups have different strategic values and observations change the optimal next physical slot.
+
+## 2026-10-09: Arc Phone chained Prize retrieval
+
+Identity claimed 2026-10-09T08:55:38.484Z. Created `tools/arc_phone_chain_access.py`, `results/arc_phone_chain_access/README.md` and `reproduce.py`, plus `validate-arc-phone-chain-access.yml`. Source card IDs swsh11-152 Arc Phone, swsh10-156 Trekking Shoes, swsh6-149 Peonia; official pages verify look-before-optional-swap and take-top-to-hand.
+
+Main mechanics: each later Arc Phone observes the preceding Prize card now on deck top. Conditional on all cards accessible, sufficient non-target Peonia replacement payments, one target starting in six Prizes, three Peonia-selected slots plus three successive Arc Phone swaps and one final Trekking Shoes guarantee same-turn target rescue. Demanding one separate Shoes per Arc probe reaches only 4/6=66.666667% with one Shoes.
+
+Exact 60-card T1/Peonia1/Arc4/Shoes4/filler50 population conditioned on the target being Prized, K1 Prize composition available but slot mapping unknown, full Prize/hand sampling and mandatory Peonia payments: chained vs restricted per-probe Shoes: 7 seen = 9.106102882% vs 8.718450599%; 10 = 14.688731236% vs 13.641616046%; 13 = 20.877584509% vs 18.897862778%; 16 = 27.454249200% vs 24.380362545%.
+
+Independent labeled ten-card physical oracle covers eight parameter points and agrees with exact Fraction results. GitHub Actions run 37909085092 passed 2026-10-09 (commit 4391ac2). Result is indexed in `results/README.md`.
+
+Important unfinished work: the restricted comparator does not reuse useful Trainer cards acquired through intermediate Trekking Shoes. A complete adaptive Item planner may narrow or eliminate some resource-budget gains. Also model the cost of parking a valuable deck-top card among Prizes, and action availability/search/timing before making deck recommendations.
