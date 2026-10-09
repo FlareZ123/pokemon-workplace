@@ -1,0 +1,24 @@
+name: Validate paid presearch Iono N decomposition
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/presearch_iono_n_decomposition.py"
+      - "tools/prize_informed_iono_n_choice.py"
+      - "results/presearch_iono_n_decomposition/**"
+      - ".github/workflows/validate-presearch-iono-n-decomposition.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify paid search action-state information value
+        run: python results/presearch_iono_n_decomposition/reproduce.py
