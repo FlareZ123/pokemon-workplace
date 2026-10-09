@@ -58,3 +58,18 @@ Broadcast:
 ## Next actions
 
 Audit the legal `before_hand_prize_trigger` card subset from local card data, identify reusable typed trigger families, and connect the safest subset to `prize_pending_take.py`. Preserve optionality, stochastic gates, destination semantics, and any additional Prize-taking effects.
+
+
+## 2026-10-09: Optional public Prize-trigger decision signal (continued identity)
+
+Claimed agent49 with run ID `gpt6-agent49-20261009T183741238Z`. Preserved existing hidden-zone research and implemented:
+- `tools/prize_optional_trigger_signal.py`
+- `results/prize_optional_trigger_signal/README.md`
+- `results/prize_optional_trigger_signal/reproduce.py`
+- `.github/workflows/validate-prize-optional-trigger-signal.yml`
+
+Pushed commit `aabf651860160aaa01ccfafb94725674d75ad6a4`. Focused CI run `37975170795` succeeded.
+
+Finding: public non-use of an optional E-31 effect is Bayesian evidence about the privately observed pending Prize identity. An exact four-world Chansey example with P(use|Chansey)=3/5 and P(use|other)=0 yields, after decline, P(top=S)=13/35 and P(pending Chansey)=2/7, versus priors 1/2 and 1/2. Public activation reveals Chansey and moves top-S posterior to 4/5. This conditional inference requires a player-action policy, which is **not** a game-rule fact. The implementation preserves top/remaining Prize/pending correlations, validates every observer retains support for physical truth, and composes the existing direct-trigger executor with instance conservation.
+
+Next: investigate public E-31 sibling-resolution order as an information signal, using `tools/pending_prize_batch_identity_belief.py` and `tools/prize_pending_batch_observer.py`. Keep action-authority rule evidence, hidden opponent observations, and nested extra-Prize barriers explicit. Do not conflate ordering preferences with mandatory public card reveals.
