@@ -1,0 +1,19 @@
+name: Validate mutual gust Bench liability
+
+on:
+  push:
+    paths:
+      - tools/two_sided_mutual_gust.py
+      - results/mutual_gust_bench_liability/**
+      - .github/workflows/validate-mutual-gust-bench-liability.yml
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.mutual_gust_bench_liability.reproduce
