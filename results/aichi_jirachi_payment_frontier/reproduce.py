@@ -11,10 +11,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.aichi_jirachi_payment_frontier import (
     OBJECTIVES, accessible_probability, sample_hit_probability,
-    output, simulate,
+    output, simulate, prior_full_deck_search,
 )
 from tools.aichi_gnh_discard_frontier import paid_gnh_states
-from tools.aichi_post_gnh_prize_reset import Prepared
+from tools.aichi_post_gnh_prize_reset import Prepared, DECK
 
 TM = "Technical Machine: Evolution"
 JET = "Jet Energy"
@@ -65,6 +65,18 @@ def main() -> None:
     assert thinned > base
     assert abs(base - 5 / 7) < 1e-12 and abs(thinned - 5 / 6) < 1e-12
     print("PASS: held-Tool replacement raises legal post-G&H Ticket density")
+
+    # Direct supporter: no full-deck search before the payment.
+    order = list(range(len(DECK)))
+    first_gnh = next(i for i, card in enumerate(DECK) if card == "Guzma & Hala")
+    assert prior_full_deck_search(order, "Jirachi", False)
+    order[0], order[first_gnh] = order[first_gnh], order[0]
+    assert not prior_full_deck_search(order, "Jirachi", False)
+    order[0], order[first_gnh] = order[first_gnh], order[0]
+    order[14], order[first_gnh] = order[first_gnh], order[14]
+    assert not prior_full_deck_search(order, "Jirachi", False)
+    assert prior_full_deck_search(order, "Jirachi", True)
+    print("PASS: direct, early-Stellar, deferred-Tag-Call K0/K1 provenance")
 
     sampled = simulate(raw_trials=2500, seed=20261009)
     assert sampled.accepted > 0 and sampled.core > 0
