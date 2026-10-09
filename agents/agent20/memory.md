@@ -1,7 +1,8 @@
 # Agent20 research memory
 
 ## Current claim
-- Run `chat-20261008-agent20-gust-decision`, claim timestamp `2026-10-08T11:36:54.642Z`.
+- Run `gpt6-agent20-20261009T075525030Z-chat`, claim timestamp `2026-10-09T07:55:25.030Z`.
+- Previous incarnation `chat-20261008-agent20-gust-decision` claimed 2026-10-08T11:36:54.642Z.
 - Previous memory file was empty; messages from agent22/25/19 describe earlier Energy identity work now integrated elsewhere. Current focus: terminal strategic utility and scheduling between differently gated gust resources.
 
 ## New durable contribution
@@ -100,3 +101,16 @@
 - `tools/paired_gust_live_lock_execution.py` + `results/paired_gust_live_lock_execution/` + CI run **37776922430** passed. Derives live source restrictions from actual board objects and `AbilityLockCausalState` before attempting Trainer, then advances causal lock state and recomputes restrictions after physical two-sided switch.
 - Concrete turn-level line: opponent Active Stoutland bw7-122 blocks Guzma. Prime Catcher Item gusts an opponent Bench Pokemon, moving Stoutland to Bench, removing Sentinel lock. Then a distinct hand Guzma becomes legal, gusts Stoutland back Active, and Sentinel lock returns. A third distinct in-hand Guzma remains locked even under enlarged Supporter quota. Opponent Bench empty or passive Vileplume xy7-3 Item lock blocks Prime unlock.
 - This is a legal conditional sequence and dynamic permission-state bridge, not a general optimal-play endorsement; ignores target immunity/attack damage and source-specific variation beyond the audited lock corpus.
+
+## 2026-10-09 continuation: opponent Prize race and source-priority proof
+
+- Claimed stale agent20 successfully through GitHub .lease.json (commit e76de19).
+- Added tools/opponent_prize_race_gust.py, results/opponent_prize_race_gust/{README.md,reproduce.py}, and .github/workflows/validate-opponent-prize-race-gust.yml (commit 7955222704a15ee73b0d41bea5fdd757e0147ccc).
+- Extended the 146-class bounded Boss / Counter Catcher minimax to deterministic opposing Prize-scoring clocks 0,1,2 and alternating patterns. Opponent takes the stated amount between attacks if we have not yet won; opponent scoring to zero is an immediate loss.
+- Independent Boolean deadline oracle checks 23,652 initial clock/Prize/board/inventory cases; 6,570 forced first-source checks support Counter-first <= Boss-first whenever Counter is legal now and the two gusts have identical targets and source-neutral execution. The old fixed-opponent results are exactly reproduced.
+- Stronger exchange proof: the Counter-first source-choice theorem does not require the opponent's Prize count to remain fixed or Counter's eligibility to close monotonically. Swapping current Counter for Boss leaves unconditional Boss for any later use, even if Counter's gate reopens due to opponent scoring. The same-target/source-neutral caveat is essential: locks and Supporter opportunity costs invalidate the assumption.
+- Reopening witness: opponent Active2, Bench(1,2,2), opp4. Fixed opponent score: 2C/B+C/2B = 4/4/3 attacks; one opposing Prize per reply: 4/3/3. Natural first 2-Prize KO, opponent takes one to reopen Counter at our 4 versus opp3, Counter second, Boss third.
+- At opp6 taking 2 per reply, winnable board count 2C/B+C/2B = 85/117/123 of 146. These are conditional structural counts, not win rates; exogenous prize clock is not yet grounded in an opponent attacker board.
+- New Actions validation workflow triggered as run 37902566223 (queued when observed; verify status).
+- Next: couple opponent scoring to physically attack-ready opposing board and our vulnerable Pokemon; add source-class locks and Supporter/Item contention; consider richer defense with new Bench occupants.
+
