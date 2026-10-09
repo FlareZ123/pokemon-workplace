@@ -1,0 +1,26 @@
+name: Validate Gothitelle paid adaptive search Items
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_paid_adaptive_items.py"
+      - "tools/gothitelle_two_quick_joint_board.py"
+      - "results/gothitelle_paid_adaptive_items/**"
+      - ".github/workflows/validate-gothitelle-paid-adaptive-items.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify paid Quick and free Item joint setup probabilities
+        run: python results/gothitelle_paid_adaptive_items/reproduce.py
+      - name: Check underlying Prize search regression
+        run: python results/gothitelle_two_quick_joint_board/reproduce.py
