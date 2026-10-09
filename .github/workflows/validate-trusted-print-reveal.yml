@@ -1,0 +1,28 @@
+name: Validate source-backed exact print reveals
+
+on:
+  push:
+    paths:
+      - "tools/trusted_print_reveal.py"
+      - "tools/revealed_target_identity.py"
+      - "tools/trainer_search_hidden_state_bridge.py"
+      - "tools/revealed_search_coarse_physical_bridge.py"
+      - "tools/card_identity.py"
+      - "results/trusted_print_reveal/**"
+      - "results/revealed_search_coarse_physical_bridge/reproduce.py"
+      - ".github/workflows/validate-trusted-print-reveal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify printed source names and effective Expanded legality
+        run: python results/trusted_print_reveal/reproduce.py
