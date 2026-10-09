@@ -601,3 +601,17 @@ Important coupled-hand witness: Iono acting on an empty-hand player still draws 
 This resolves the effect after legal activation. Source action legality, triggers, matchups, and subsequent information beliefs remain external.
 
 Next: state-dependent evaluation of the extra opponent draws induced by using a bottom-hand Supporter, plus comparing deck-position beliefs before/after randomized bottoming when current top deck is known.
+
+### 2026-10-09 exact Iono versus N destination comparison
+
+Created `tools/iono_n_access_comparison.py`, `results/iono_n_access_comparison/{README.md,reproduce.py}` and `.github/workflows/validate-iono-n-access-comparison.yml`. Commit `8fd232e8f11821e10e5fccb73b22c54155534c60`; GitHub Actions run `37977846786` passed.
+
+The exact one-step comparison accounts for:
+- N (bw3-92) shuffling hands into decks then each drawing own remaining Prize count regardless of both hands' emptiness.
+- Iono (sv2-185) putting hands on deck bottoms and then each drawing own remaining Prize count only if either player bottomed at least one card.
+- Drawing into the bottomed hand if preexisting deck is shorter than requested draw.
+- Distinguishing deck-native useful outs from hand-held useful outs.
+
+At D46 original deck, H5 old hand, d6 Prize-draw, Q2 opponent-hand, T8 total interchangeable outs: with all eight initially in deck, Iono immediate hit chance 70.527017% vs N 66.148602% (+4.378415 pp); if seven in deck and one in hand, Iono 65.168292% vs N 66.148602% (-0.980309 pp). This demonstrates sign reversal driven by hand/deck out allocation. With R1 retained-hand out, Iono crosses to >=N at K9 original-deck outs when d=3..6, K10 at d=1..2. Exhaustive independent labeled combinations and exact rational checks passed CI.
+
+No complete-game win-rate claim; Supporter contention, actual card utility and opponent effects remain unmodeled. Future work: integrate K1 conditional deck search information and planned source choice; compare opponent utility as part of an optimal action policy.
