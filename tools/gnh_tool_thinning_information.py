@@ -17,6 +17,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from fractions import Fraction
 from itertools import combinations
+from math import comb
 
 
 @dataclass(frozen=True)
