@@ -1,0 +1,19 @@
+name: Validate two-sided gust race
+
+on:
+  push:
+    paths:
+      - tools/two_sided_gust_race.py
+      - results/two_sided_gust_race/**
+      - .github/workflows/validate-two-sided-gust-race.yml
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.two_sided_gust_race.reproduce
