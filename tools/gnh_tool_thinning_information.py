@@ -203,6 +203,42 @@ def multiple_summary(unseen: int = 52, prizes: int = 6,
     return "\n".join(lines)
 
 
+
+def phase_diagram(
+    prizes: int = 6, stellar_cards: int = 5,
+    minimum_unseen: int = 12, maximum_unseen: int = 60,
+    backups: tuple[int, ...] = (1, 2, 3, 4),
+) -> str:
+    """K0 joint-objective blind-thinning phases as unseen-pool size changes."""
+    lines = [
+        f"P={prizes}, s={stellar_cards}, U in {minimum_unseen}..{maximum_unseen}",
+        "backups | blind-better U | tie U | keep-better U",
+    ]
+    for b in backups:
+        better, tie, worse = [], [], []
+        for u in range(minimum_unseen, maximum_unseen + 1):
+            if u < prizes + stellar_cards + 1 or b >= u:
+                continue
+            score = exact_multiple(u, prizes, stellar_cards, b)
+            delta = score.blindly_replace_joint - score.keep_joint
+            if delta > 0:
+                better.append(u)
+            elif delta < 0:
+                worse.append(u)
+            else:
+                tie.append(u)
+        def compact(values: list[int]) -> str:
+            if not values:
+                return "(none)"
+            if len(values) >= 2 and all(y == x + 1 for x, y in zip(values, values[1:])):
+                return f"{values[0]}..{values[-1]}"
+            return ",".join(map(str, values))
+        lines.append(
+            f"{b} | {compact(better)} | {compact(tie)} | {compact(worse)}"
+        )
+    return "\n".join(lines)
+
+
 def describe(unseen: int = 52, prizes: int = 6, stellar_cards: int = 5) -> str:
     x = exact(unseen, prizes, stellar_cards)
     pairs = (
@@ -221,3 +257,4 @@ def describe(unseen: int = 52, prizes: int = 6, stellar_cards: int = 5) -> str:
 if __name__ == "__main__":
     print(describe())
     print(multiple_summary())
+    print(phase_diagram())
