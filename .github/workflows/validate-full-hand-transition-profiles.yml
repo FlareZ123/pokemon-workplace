@@ -1,0 +1,26 @@
+name: Validate unified full hand profiles
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/compile_full_hand_transition_profiles.py"
+      - "tools/catalog_full_hand_replacements.py"
+      - "tools/catalog_full_hand_resets.py"
+      - "tools/compile_reset_transition_profiles.py"
+      - "results/full_hand_transition_profiles/**"
+      - ".github/workflows/validate-full-hand-transition-profiles.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check unified transition types and source gates
+        run: python results/full_hand_transition_profiles/reproduce.py
