@@ -1,0 +1,26 @@
+name: Validate turn-end source inventory
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/turn_end_source_catalog.py"
+      - "tools/direct_action_turn_end.py"
+      - "results/turn_end_source_inventory/**"
+      - ".github/workflows/validate-turn-end-source-inventory.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Audit 164 legal turn-ending print rows
+        run: python results/turn_end_source_inventory/reproduce.py
+      - name: Reproduce direct closure channels and Stadium activation
+        run: python results/turn_end_source_inventory/reproduce_direct.py
