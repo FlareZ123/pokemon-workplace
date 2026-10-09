@@ -1,0 +1,26 @@
+name: Validate Gothitelle adaptive Item mix
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_adaptive_item_mix.py"
+      - "tools/gothitelle_two_quick_joint_board.py"
+      - "results/gothitelle_adaptive_item_mix/**"
+      - ".github/workflows/validate-gothitelle-adaptive-item-mix.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate same-deck adaptive Item synergy
+        run: python results/gothitelle_adaptive_item_mix/reproduce.py
+      - name: Recheck shared joint prize search
+        run: python results/gothitelle_two_quick_joint_board/reproduce.py
