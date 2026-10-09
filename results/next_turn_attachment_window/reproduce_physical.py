@@ -49,7 +49,8 @@ def main() -> None:
         profile
         for profile in profiles
         if profile.restriction.card_id == "xyp-XY75"
-        and "Cross Slicer" in profile.restriction.text
+        and ("Cross Slicer" in profile.restriction.source
+             or "Cross Slicer" in profile.restriction.text)
     ]
     assert len(cross) == 1
     restriction = materialize_attack_restriction(cross[0])
