@@ -1,5 +1,7 @@
 # Opponent bonus draws give a non-monotone cost of mulliganing
 
+Related extensions: [multi-role](multi_role_notes.md), [one-use](flexible_capacity_notes.md), [matching](matching_notes.md), [printed cards](card_text_examples.md), [safe-discard gate](payment_notes.md).
+
 ## Question and scope
 
 A player can sometimes choose whether to keep an otherwise invalid opening
