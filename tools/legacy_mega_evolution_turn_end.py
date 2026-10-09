@@ -26,6 +26,10 @@ _LEGACY_MEGA_RULE = (
     "Mega Evolution rule: When 1 of your Pokémon becomes a Mega Evolution "
     "Pokémon, your turn ends."
 )
+_REPRINT_UNLABELED_MEGA_RULE = (
+    "When 1 of your Pokémon becomes a Mega Evolution Pokémon, "
+    "your turn ends."
+)
 
 
 def _print(resources: Path, print_id: str) -> dict:
@@ -88,7 +92,7 @@ def resolve_evolution_turn_boundary(
 
     legacy_rule: str | None = None
     rules = card.get("rules") or ()
-    if _LEGACY_MEGA_RULE in rules:
+    if _LEGACY_MEGA_RULE in rules or _REPRINT_UNLABELED_MEGA_RULE in rules:
         legacy_rule = "mega_evolution"
     elif (
         f"Primal Reversion rule: When 1 of your Pokémon becomes "
