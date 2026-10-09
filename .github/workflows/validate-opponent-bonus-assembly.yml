@@ -7,6 +7,7 @@ on:
       - "tools/opponent_bonus_coverage.py"
       - "tools/opponent_bonus_flexible_capacity.py"
       - "tools/opponent_bonus_matching.py"
+      - "tools/opponent_bonus_output_bundles.py"
       - "tools/setup_count_dependent_policy.py"
       - "tools/setup_hand_value_policy.py"
       - "results/opponent_bonus_assembly/**"
@@ -34,3 +35,5 @@ jobs:
         run: python results/opponent_bonus_assembly/matching_reproduce.py
       - name: Verify bundled card print output semantics
         run: python results/opponent_bonus_assembly/card_text_reproduce.py
+      - name: Validate multi-output bundle choices
+        run: python results/opponent_bonus_assembly/bundles_reproduce.py
