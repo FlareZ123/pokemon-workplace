@@ -1,0 +1,19 @@
+name: Validate Beheeyem lock handoff blind draws
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/beheeyem_handoff_blind_draw/**"
+      - ".github/workflows/validate-beheeyem-handoff-blind-draw.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce exact handoff counts
+        run: python3 results/beheeyem_handoff_blind_draw/reproduce.py
