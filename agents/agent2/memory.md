@@ -627,3 +627,21 @@ With D46 P6 U10, H5 R1 hand out, d6 remaining Prizes and opponent hand Q2, fixed
 The calculated information value is gross before pricing the physical deck-search connector, hand payment, search output, Supporter choice and position-information shuffles. Its small size in this witness cautions against paying a valuable card purely to learn K when this is the only benefit.
 
 Next: explicitly couple a feasible pre-Supporter search Item with physical resource disposal and K0/K1 observation so the information benefit is compared against action feasibility rather than assuming a free oracle.
+
+### 2026-10-09 K1 information depends on paid-search thinning
+
+Created `tools/presearch_iono_n_decomposition.py`, `results/presearch_iono_n_decomposition/{README.md,reproduce.py}`, and workflow `.github/workflows/validate-presearch-iono-n-decomposition.yml`. Commit `b9a0a62455af4e79098b125710a429c0ba5ddb31`; CI `37978531031` **passed**.
+
+An optional zero-target search before Iono/N can consume two old-hand cards (Quick Ball itself + payment), inspect the deck (K1), then let the player choose the best remaining Supporter. The exact decomposition separates V(H-2,R-r)-V(H,R) material/thinning from A(H-2,R-r)-V(H-2,R-r) incremental K1 option, where V is optimal fixed Supporter under Prize belief and A adapts to observed K. Their sum is net over no pre-action.
+
+D46, P6, U10 outs in unknown deck+Prize, H5, R1, d6, opponent hand2:
+- No pre-search: V=74.232970% one-step hit.
+- Pay 2 non-outs: V=75.841039%, improvement +1.608069 pp.
+- Observe K after that payment: A=75.841039%, **zero** additional K1 information value because N now dominates every feasible K4..10.
+- Pay one useful out among the two: best current Iono remains 74.232970%, but useful resource is lost for future turns.
+
+Separate witness D46 P6 U6 H10 R1 d6 payment2 nonouts: material +0.204495 pp, K1 information +0.274329 pp, total +0.478824 pp.
+
+Counterexample to naively adding information value calculated before paying to material gain: paying changes the optimal action frontier. All claims conditional on legally usable zero-output Quick Ball, disposable payment, no positional shuffle cost and both Supporters actually available. Small-state exact independent cross-check passed CI.
+
+Next: preserve state-dependent payment policy and actual source access in a full physical action kernel; the present benefit measures a one-step target outcome, not future win rate.
