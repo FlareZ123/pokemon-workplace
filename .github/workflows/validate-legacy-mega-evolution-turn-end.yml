@@ -1,0 +1,23 @@
+name: Validate legacy Mega evolution turn boundary
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/legacy_mega_evolution_turn_end.py"
+      - "results/legacy_mega_evolution_turn_end/**"
+      - ".github/workflows/validate-legacy-mega-evolution-turn-end.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Mega/Primal and Spirit Link turn boundaries
+        run: python results/legacy_mega_evolution_turn_end/reproduce.py
