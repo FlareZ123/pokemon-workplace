@@ -1,0 +1,20 @@
+name: Validate Aichi late-Wish payment frontier
+
+on:
+  push:
+    paths:
+      - "tools/aichi_jirachi_payment_frontier.py"
+      - "results/aichi_jirachi_payment_frontier/**"
+      - ".github/workflows/validate-agent4-aichi-jirachi-payment.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Exact top-five, payment fixtures, and paired sample
+        run: python results/aichi_jirachi_payment_frontier/reproduce.py
