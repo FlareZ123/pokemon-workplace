@@ -1,0 +1,23 @@
+name: Validate Prize-acquired hand reveal
+
+on:
+  push:
+    paths:
+      - "tools/prize_acquired_hand_reveal.py"
+      - "results/prize_acquired_hand_reveal/**"
+      - ".github/workflows/validate-prize-acquired-hand-reveal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate hidden-Prize hand evidence and physical conservation
+        run: python results/prize_acquired_hand_reveal/reproduce.py
