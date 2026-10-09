@@ -1686,3 +1686,12 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 ## Coarsened revealed searches preserve uncertainty about the selected printing
 
 [revealed_target_coarsening/](revealed_target_coarsening/) extends the print-level reveal study to an intentionally name-only opponent observation. A hidden exact print choice must remain a **latent variable** when both `xy1-42` and `swsh7-49` project to "Pikachu": in the exact six-card witness, a name-only observer assigns P(selected print old/new)=1/2 each, **P(A Prized)=5/14**, and **P(next top=A)=3/14**. Later conditioning on the selected print recovers the two exact-print posteriors 4/7 and 1/7 for A Prized, without incorrectly removing the actor's known print from every observer world. The implementation reuses the existing latent private-target belief machinery, independently matches 84 fully enumerated physical branches, and passed CI run 37988824180.
+
+
+## Exact decision value of print-level public information
+
+[revealed_print_decision_value/](revealed_print_decision_value/) combines the 84-branch Pikachu print-reveal witness with the repository's exact observation-policy optimizer. For two abstract responses that reward correctly predicting whether singleton A is Prized, the best name-only response succeeds **9/14** of the time; print-specific responses succeed **5/7**, a gain of **1/14 (7.142857 pp)**. A lower payoff for acting on Prized A makes the extra print information worthless to that particular decision, even though its Shannon information remains positive. At twice the payoff for the Prized prediction, the exact decision gain becomes **2/7**. These are toy decision values, not metagame win rates. CI run 37989342012 passed.
+
+## Physical search with observer-coarsened print identity
+
+[revealed_search_coarse_physical_bridge/](revealed_search_coarse_physical_bridge/) composes exact Quick Ball action and discard payment, typed Basic selection, materialized exact-print target, and sampled post-shuffle top with an opponent who intentionally retains only the shared card name. The actor materializes `xy1-42` in hand and `swsh7-49` as deck top; the name-only observer retains a joint latent selected-print mixture, P(old/new)=1/2 each, P(A Prized)=5/14. The adapter checks that every observer assigns positive probability to the exact physical world and rejects mismatched public labels. CI run 37989316792 passed.
