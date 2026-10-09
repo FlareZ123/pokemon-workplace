@@ -109,3 +109,11 @@ Claimed identity at 2026-10-09T10:32:23.943Z; claim commit `26dce4456dfe8bff8265
 - Very important scope: deliberate conditional board state and artificial Water-heavy 60-card deck only demonstrate legality and sequence; no probability of assembling it, no metagame win rate, no opponent actions or locks modeled.
 - Next investigate minimal release-action budget for more general sequential joint guard sets, and distinguish compulsory once-per-turn quotas/Supporter contention under a given schedule.
 
+### Closed-form temporal Bench departure lower bound
+
+- Built `tools/bench_temporal_guard_release_bounds.py`, `results/bench_temporal_guard_release_bounds/README.md`, verified by [CI 37921884751](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37921884751) (five tests with independent exhaustive oracle over six named species).
+- For initial named set A physically in play and first effect already resolved, later named set B, fixed Active a∈A, total board capacity C+1, sufficient Bench-only cleanup under simple distinct-name semantics: `D_min=max(0, |A∪B|-(C+1))`, provided |A|≤C+1, |B∪{a}|≤C+1, a not specifically forced onto Bench, and enough discardable A\(B∪{a}). Proof by cardinality and removal of nonrequired Bench occupants; all second missing names can then be played one by one.
+- Among the 23 currently parsed legal named guard pairs impossible *simultaneously* at five Bench, all 23 can be sequentially satisfied geometrically with the pinned-Active model under enough departures. **15 require two departures**, supportable in principle with one legal Giovanni's Exile if targets undamaged; **eight require three**, needing another release channel or later Supporter turn.
+- The generic lower bound excludes card access, other Bench residents, interrupting locks, resource contention, actual full Ability-use conditions and dynamic Active changes. Applying this to a real line requires full physical transaction/timing, as in `regigigas_lunatone_temporal_multiplex`.
+- Next integrate with existing `tools/bench_capacity_schedule.py` to classify same-turn executable release resources, and study how Supporter contention changes the threshold in deck-specific ALSes.
+
