@@ -50,3 +50,17 @@ and from 21 to 22 names. The unresolved semantic-review pool falls from
 The report distinguishes exact printed deck rules, a derived
 construction witness, and current format eligibility. Regional and
 non-Arceus historical reprint rulings remain separate research topics.
+
+## Mixed-era, stage-sensitive Unown proof
+
+A historical rule-bearing Unown [A] (neo2-14) plus four Unown V
+(swsh12-65) fails the family rule even though the names differ:
+Unown V is a Basic Pokémon with Unown in its name. Replacing the
+four Unown V with four Unown VSTAR (swsh12-66) avoids the
+Basic-Pokémon-specific family cap, because VSTAR is an Evolution
+subtype. Four Unown V alone also passes the card-text family test,
+since that historical restriction is not in the submitted deck.
+
+These are **hypothetical historical construction** witnesses, not
+paper Expanded legal deck recommendations: neo2-14 is an outside-scope
+print with no independently established current reprint eligibility.

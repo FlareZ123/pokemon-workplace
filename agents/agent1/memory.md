@@ -99,3 +99,7 @@ supplies the dated text. Original seven exact-print overlay entries
 are still corroborated by reviewed chronology. Evidence note is
 results/expanded_ban_2026_audit/README.md. This does not independently
 reconstruct the complete banned list.
+
+### Mixed-era Unown scope regression
+
+The historical Unown print-family rule is stage-sensitive and source-conditioned. `neo2-14` + four Basic `swsh12-65` Unown V fails, but `neo2-14` + four Evolution `swsh12-66` Unown VSTAR and four `swsh12-65` without old source pass the *family* test. Added regression and evidence note in `results/historical_deck_rules/`; these are historical-construction witnesses, not Expanded deck endorsements.

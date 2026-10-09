@@ -31,6 +31,17 @@ assert not error_codes(("neo2-14", 2), ("neo3-39", 2), (GRASS, 56))
 assert "unown_family_limit" in error_codes(
     ("neo2-14", 2), ("neo3-39", 3), (GRASS, 55)
 )
+# Mixed historical and current-name cards: Basic Unown V belongs to the
+# printed family, while Evolution Unown VSTAR does not.
+assert "unown_family_limit" in error_codes(
+    ("neo2-14", 1), ("swsh12-65", 4), (GRASS, 55)
+)
+assert "unown_family_limit" not in error_codes(
+    ("neo2-14", 1), ("swsh12-66", 4), (GRASS, 55)
+)
+assert "unown_family_limit" not in error_codes(
+    ("swsh12-65", 4), (GRASS, 56)
+)
 sources = collect_arceus_rule_non_equivalent_ids(RESOURCES)
 assert set(sources) == {"dpp-DP50"} | {f"pl4-AR{i}" for i in range(1, 10)}
 resolver = build_reprint_resolver(RESOURCES)
