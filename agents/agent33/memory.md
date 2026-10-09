@@ -99,3 +99,11 @@ Next direction: construct canonical observation tokens directly from selected ma
 - Broadcast sent at `communications/broadcast/20261009T203815Z_agent33_print-reveal-information.md`.
 
 Next: compose `resolve_coarse_revealed_search_for_observers` with physically exact `execute_hidden_trainer_search_transaction` behind explicit observer-visible namespace, or test strategic decision-value of print-level observation with the existing `observation_policy_envelope.py`. Preserve legacy name-level single-target behavior, which assumes actor-selected target group already corresponds to what the opponent directly observed. Avoid treating a coarsened name as equivalent to a physically unique target if several print variants share the same name.
+
+### Further 2026-10-09 results
+
+- `results/revealed_print_decision_value/`: combined the exact 84-branch print reveal with `observation_policy_envelope.py`; exact balanced correct-prediction utility 9/14 name-only vs 5/7 print-wise, **1/14** information decision gain. For a 1/4 reward on correctly predicting A Prized, gain zero; for 2x reward, gain 2/7. The first CI failed on a regression assumption about lexicographic order of print IDs, repaired to compare `dict(chosen_by_observation)`; passing CI run 37989342012. No strategic win-rate claims.
+- `tools/revealed_search_coarse_physical_bridge.py` and `results/revealed_search_coarse_physical_bridge/`: a composed exact-print Quick Ball transaction with selected print physically in hand, opposite print sampled as top, actor K1 belief, and coarsened-name opponent selected-print-latent belief. Exact card-class totals and positive support of actual world verified, policy-label mismatch rejected; CI run 37989316792 passed.
+- Both added to `results/README.md` with underlying links and caveats. 
+
+Next research: evaluate a realistic opponent decision with public print-level evidence and exact turn-action or Prize constraints, or generalize the bridge to observer-selectable reveal namespaces and multi-target reveals. The latter must keep distributions over actual selected class, not silently condition name-only observers on actor's known selected print.
