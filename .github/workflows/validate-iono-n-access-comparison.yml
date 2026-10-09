@@ -1,0 +1,24 @@
+name: Validate Iono versus N access
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/iono_n_access_comparison.py"
+      - "tools/hand_return_payment_frontier.py"
+      - "results/iono_n_access_comparison/**"
+      - ".github/workflows/validate-iono-n-access-comparison.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact Iono N access comparisons
+        run: python results/iono_n_access_comparison/reproduce.py
