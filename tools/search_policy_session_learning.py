@@ -83,6 +83,55 @@ class PolicyLearningPosterior:
         )
 
 
+    def update_deferred_prize_status(
+        self,
+        previously_observed: SearchObservation,
+        newly_known_prized: bool,
+        worlds_by_policy: Mapping[str, PolicySearchPosterior],
+    ) -> "PolicyLearningPosterior":
+        """Upgrade the *same* search event without recounting its print reveal.
+
+        Call after update(previously_observed) when its critical_prized is None.
+        Multiply each policy by P(Prize status | already observed print, policy)
+        rather than by a second copy of the full print-plus-Prize likelihood.
+        """
+        if previously_observed.critical_prized is not None:
+            raise ValueError("previous observation already included Prize status")
+        if set(worlds_by_policy) != {name for name, _ in self.weights}:
+            raise ValueError("hypothesis likelihoods must cover all known policies")
+
+        numerators = []
+        for name, prior in self.weights:
+            possible = worlds_by_policy[name].probability(
+                lambda world: (
+                    world.selected_print_id
+                    == previously_observed.selected_print_id
+                )
+            )
+            if possible == 0:
+                if prior != 0:
+                    raise ValueError("current policy posterior contradicts print event")
+                numerators.append((name, Fraction()))
+                continue
+            joint = worlds_by_policy[name].probability(
+                lambda world: (
+                    world.selected_print_id
+                    == previously_observed.selected_print_id
+                    and (
+                        previously_observed.critical_card_id
+                        in world.ordered_prize_ids
+                    ) == newly_known_prized
+                )
+            )
+            numerators.append((name, prior * joint / possible))
+        normalizer = sum((value for _, value in numerators), Fraction())
+        if normalizer == 0:
+            raise ValueError("new Prize-status observation has zero likelihood")
+        return PolicyLearningPosterior(
+            tuple((name, value / normalizer) for name, value in numerators)
+        )
+
+
 def policy_search_likelihoods(
     cards: Sequence[SearchCard],
     prize_count: int,
