@@ -186,6 +186,15 @@ withheld Prize can deny an otherwise winning Counter line. The bounded
 model treats opponent scoring opportunities as exogenous, so this is a
 mechanistic hypothesis to investigate with real two-sided boards.
 
+The [two-sided gust race](../two_sided_gust_race/) now gives both players
+explicit Prize-valued board geometry and lets the opponent decide whether to
+Knock Out our Active. Its 24,528-state census reproduces the all-two-Prize
+clock experiment and uncovers a new mixed-package deferral hazard: with our
+Active worth one Prize and Bench (1,3), four of 146 opposing board classes
+at six opposing Prizes lose a forced-winning Boss + Counter line when the
+opponent may decline its KO. Actual Energy, HP and attack-readiness remain
+outside this bounded model.
+
 
 ### A future Supporter lock reverses that source order
 
