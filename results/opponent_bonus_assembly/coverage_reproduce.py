@@ -112,6 +112,35 @@ def test_dual_roles() -> None:
     assert abs(first[0] - 0.12964829164733382) < 1e-12
     assert abs(first[1] - 0.18249957) < 1e-7
     assert abs(first[2] - 0.24156036) < 1e-7
+
+    from tools.setup_count_dependent_policy import (
+        optimize_count_dependent_mulligan_penalty,
+    )
+    from tools.setup_hand_value_policy import SetupHandState
+
+    def own_quality(state: SetupHandState) -> float:
+        return float(state.feature_counts[0] > 0)
+
+    # Preserve each group's four effective outs while substituting flexible
+    # classes. With payoff 6 and twelve optional bonus draws, the previously
+    # non-monotone own setup policy becomes fully selective once there is at
+    # least one dual-role opponent card in the toy model.
+    kept_weak_at = []
+    for dual in range(3):
+        model = scenario(dual)
+        optimizer = optimize_count_dependent_mulligan_penalty(
+            60, 4, (4,), (4,), own_quality,
+            prefix_marginal_penalties=model.marginal_values(6.0, 12),
+            tail_marginal_penalty=0.0,
+        )
+        weak_counts = [
+            index
+            for index, step in enumerate(optimizer.prefix_steps)
+            if any(own_quality(state) == 0 for state in step.optional_keep_states)
+        ]
+        kept_weak_at.append(weak_counts)
+    assert kept_weak_at == [[2, 3, 4, 5], [], []], kept_weak_at
+    print("Mulligan counts allowing weak optional hands by dual copies:", kept_weak_at)
     print("Opening joint assembly (0,1,2 dual cards):", first)
     print("Peak marginal bonus draw indices:", peaks)
 
