@@ -37,9 +37,17 @@ An integer such as 999 is **not** a faithful encoding of the printed "any number
 
 ## Regression
 
-Run `python results/next_turn_attachment_window/reproduce.py` from the repository root.
+Run `python results/next_turn_attachment_window/reproduce.py` and `python results/next_turn_attachment_window/reproduce_physical.py` from the repository root.
 
 The regression verifies exact card text and baseline legality, normal attachment exhaustion, a delayed Dragon's Wish across an opponent's extra turn, three manual attachments under the standard limit of one, turn closure, Pokémon Ranger-style removal, rearming, and the separation from Emboar's Ability-based acceleration.
+
+### Physical attachment and opposing lock interaction
+
+A second reproducer, `reproduce_physical.py`, composes the permission overlay with `energy_hand_attachment_events.attach_from_hand` and the board-derived typed restriction gate in `lock_gated_energy_attachment`. The integration uses an optional `manual_window` parameter; existing callers preserve the former one-attachment behavior.
+
+The regression uses three separately identified Fire Energy copies and an actual source-scoped Palkia Cross Slicer window. **Dragon's Wish cannot override Cross Slicer:** an attempted attachment to the affected Defending Pokémon is rejected before any quota or physical-card movement. Attachments to a different legal Pokémon can occur three times, recording three hand-origin events and leaving the standard integer manual limit at one. Cancelling the attack-granted permission then prevents a fourth manual attachment because the turn's ordinary allowance has already been spent. Attaching two cards through an independent effect leaves manual quota unchanged.
+
+Validated by GitHub Actions run [37909057714](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37909057714), following correction of an initially over-specific test fixture lookup.
 
 ## Boundaries and unresolved questions
 
