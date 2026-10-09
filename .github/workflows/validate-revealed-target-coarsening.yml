@@ -1,0 +1,27 @@
+name: Validate coarsened revealed-target hidden-state beliefs
+
+on:
+  push:
+    paths:
+      - "tools/revealed_target_coarsening.py"
+      - "tools/revealed_print_information.py"
+      - "tools/private_search_latent_target_belief.py"
+      - "tools/deck_search_target_signal.py"
+      - "tools/deck_search_shuffle_belief.py"
+      - "results/revealed_target_coarsening/**"
+      - ".github/workflows/validate-revealed-target-coarsening.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate latent selected-print posterior
+        run: python results/revealed_target_coarsening/reproduce.py
