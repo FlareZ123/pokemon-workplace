@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.gnh_tool_thinning_information import (
     exact, brute_force, describe, exact_multiple,
     brute_force_multiple, multiple_summary,
-    minimum_ticket_to_setup_value_ratio,
+    minimum_ticket_to_setup_value_ratio, phase_diagram,
 )
 
 
@@ -72,8 +72,22 @@ def main() -> None:
                         assert delta > 0
                         assert delta * threshold == loss
     print("PASS: exact Pareto break-even weights match all 164 original cases and extended grid")
+    # For two backups and six Prizes, the sign change solves
+    # (U-1)(U-2) - 6*5*(U-6) = (U-7)(U-26).
+    p = 6
+    b = 2
+    for unseen in range(12, 61):
+        expr = (unseen - 7) * (unseen - 26)
+        delta = (exact_multiple(unseen, p, 5, b).blindly_replace_joint
+                 - exact_multiple(unseen, p, 5, b).keep_joint)
+        assert (delta > 0) == (expr > 0)
+        assert (delta < 0) == (expr < 0)
+        assert (delta == 0) == (expr == 0)
+    assert "2 | 27..60 | 26 | 12..25" in phase_diagram()
+    print("PASS: U=26 exact crossover and 49-point unseen-pool phase sweep")
     print(describe(52, 6, 5))
     print(multiple_summary(52, 6, 5, 4))
+    print(phase_diagram())
 
 
 if __name__ == "__main__":
