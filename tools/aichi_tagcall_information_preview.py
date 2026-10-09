@@ -10,7 +10,8 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass, field
-from math import sqrt
+from math import comb, sqrt
+from fractions import Fraction
 import random
 
 from tools.aichi_gnh_discard_frontier import paid_gnh_states
@@ -21,7 +22,7 @@ from tools.aichi_jirachi_ticket_search import (
     prepare_with_deferred_stellar, stellar_available,
 )
 from tools.aichi_post_gnh_prize_reset import (
-    DECK, TECH_SLOTS, endpoint_success, protect_gnh_outputs,
+    BASICS, DECK, TECH_SLOTS, endpoint_success, protect_gnh_outputs,
 )
 from tools.aichi_tagcall_payment_reachability import additional_tag_call
 from tools.aichi_repeated_ticket_access import PACKAGES
@@ -31,6 +32,49 @@ SAFE_OUTPUTS = frozenset((
     "Technical Machine: Evolution", "Jet Energy", "Artazon",
 ))
 OBJECTIVES = ("dual_stage2", "item_lock", "item_plus_pidgeot")
+
+
+def exact_natural_triplet_probability(
+    deck_size: int, opening_size: int, starter_count: int,
+    gnh_count: int, tagcall_count: int,
+) -> Fraction:
+    """P(Jirachi opener and G&H+TagCall in opener+draw | valid opener).
+
+    Assumes one Jirachi singleton, which is among starter_count Basics,
+    and separate non-Basic groups of gnh_count G&H and tagcall_count Tag Call.
+    """
+    n, h, s, g, t = (
+        deck_size, opening_size, starter_count, gnh_count, tagcall_count
+    )
+    if not (0 < h < n and 1 <= s <= n
+            and 0 <= g and 0 <= t and 1 + g + t <= n):
+        raise ValueError("Invalid deck composition or opening count")
+
+    def binom(top: int, count: int) -> int:
+        return comb(top, count) if top >= count >= 0 else 0
+
+    denominator = comb(n, h)
+    accepted = Fraction(denominator - binom(n - s, h), denominator)
+    other_seen = h  # h-1 remaining opener plus the first normal draw.
+    bound = n - 1
+    total = comb(bound, other_seen)
+    includes_both = Fraction(
+        total - binom(bound - g, other_seen)
+        - binom(bound - t, other_seen)
+        + binom(bound - g - t, other_seen), total
+    )
+    event = Fraction(h, n) * includes_both
+    return event / accepted
+
+
+def natural_triplet(order: list[int]) -> bool:
+    opener = tuple(DECK[i] for i in order[:7])
+    visible = tuple(DECK[i] for i in order[:8] if i is not None)
+    return (
+        "Jirachi" in opener and "Guzma & Hala" in visible
+        and "Tag Call" in visible
+    )
+
 PACKAGES_OF_INTEREST = (
     "one_ticket", "two_tickets_one_map", "three_tickets_one_map",
 )
@@ -57,6 +101,7 @@ class Summary:
     accepted: int = 0
     core: int = 0
     eligible: int = 0
+    natural_triplet_accepted: int = 0
     pre_k1_eligible: int = 0
     optional_preview_available: int = 0
     affected_endpoint: Counter[str] = field(default_factory=Counter)
@@ -82,6 +127,7 @@ def simulate(raw_trials: int = 100_000, seed: int = 20261009) -> Summary:
         if state is None:
             continue
         out.accepted += 1
+        out.natural_triplet_accepted += int(natural_triplet(order))
         if protect_gnh_outputs(state) is None:
             continue
         out.core += 1
@@ -131,7 +177,12 @@ def output(s: Summary) -> str:
     lines = [
         f"raw={s.raw} accepted={s.accepted} core={s.core} "
         f"eligible_late={s.eligible} pre_K1_late={s.pre_k1_eligible} "
-        f"optional_TagCall_K1_preview={s.optional_preview_available}",
+        f"optional_TagCall_K1_preview={s.optional_preview_available} "
+        f"natural_Jirachi_GH_TagCall={s.natural_triplet_accepted} "
+        f"exact_natural_conditional="
+        f"{100*float(exact_natural_triplet_probability(len(DECK), 7, "
+        f"sum(c in BASICS for c in DECK), DECK.count('Guzma & Hala'), "
+        f"DECK.count('Tag Call'))):.8f}%",
         "endpoint | applicable endpoint-preserving states",
     ]
     for ep in OBJECTIVES:
