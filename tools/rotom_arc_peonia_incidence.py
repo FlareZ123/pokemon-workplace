@@ -1,4 +1,6 @@
 """Exact union of Arc/Peonia raw topdeck and top-five-Item repacking."""
+import json
+from pathlib import Path
 from fractions import Fraction
 from itertools import combinations, permutations
 from math import comb
@@ -92,7 +94,32 @@ def labeled_oracle(starters=2, arcs=1, peonias=1, rotoms=1,
     return Fraction(numerator,denominator)
 
 
+
+def assert_card_text():
+    """Pin the precise print text supporting the modeled source transitions."""
+    root = Path(__file__).resolve().parent.parent / "resources" / "cards" / "en"
+    specs = (
+        ("swsh35", "swsh35-64", "Rotom Phone", "Item",
+         "Look at the top 5 cards of your deck, choose 1 of them"),
+        ("xy12", "xy12-82", "Pokédex", "Item",
+         "Look at the top 5 cards of your deck and put them back in any order."),
+        ("swsh11", "swsh11-152", "Arc Phone", "Item",
+         "You may switch that card with 1 of your face-down Prize cards."),
+        ("swsh6", "swsh6-149", "Peonia", "Supporter",
+         "Put up to 3 Prize cards into your hand."),
+    )
+    for set_id, card_id, name, subtype, passage in specs:
+        records = json.loads((root / (set_id + ".json")).read_text(encoding="utf-8"))
+        card = next(x for x in records if x["id"] == card_id)
+        assert card["name"] == name
+        assert subtype in card["subtypes"]
+        assert card["legalities"]["expanded"] == "Legal"
+        assert passage in card["rules"][0]
+
+
+
 def run():
+    assert_card_text()
     values = (
         Fraction(345378629,215366137272),
         Fraction(20123651,8973589053),
