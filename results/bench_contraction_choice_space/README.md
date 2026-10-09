@@ -35,6 +35,23 @@ These counts are small enough for exhaustive branching. This is especially impor
 
 Each successor preserves the Active Pokémon and all surviving Bench objects, including their attachments, damage, and identity. Removed objects are returned separately, retaining their identities for later zone-conservation steps.
 
+## Sequential branching and final-state factorization
+
+For monotonically decreasing limits `n -> a -> b` with `b <= a <= n`, assume the affected player can choose any required discards and there are no intervening board changes.
+
+The number of **sequences of choices** is `C(n,a) * C(a,b)`, while the number of **distinct final survivor sets** is `C(n,b)`. Each final set has exactly `C(n-b,a-b)` different predecessors, because the first-stage survivors can include any `a-b` of the `n-b` cards missing from the final board. Therefore:
+
+`C(n,a) * C(a,b) = C(n,b) * C(n-b,a-b)`.
+
+Physical enumerations verify:
+
+| Contractions | Two-step discard paths | Distinct final sets | Paths per final set |
+| --- | ---: | ---: | ---: |
+| 5 -> 4 -> 3 | 20 | 10 | 2 |
+| 8 -> 5 -> 3 | 560 | 56 | 10 |
+
+**Implication for simulators:** When the final contraction is certain, there is no intervening payoff or information, and player choices are unrestricted, optimizing final survivors can collapse the entire two-step branch space into direct final-set optimization. Intervening draw, Ability use, information revelation, or uncertainty about a second contraction invalidates that shortcut because earlier survivor states can have distinct strategic consequences.
+
 ## Physical witness: joint survival differs from additive cleanup
 
 Five Benched objects are assigned illustrative continuation values:
@@ -57,13 +74,15 @@ From that survivor set, a later 4-to-3 contraction can keep `E,A,B` with utility
 
 ## Tests
 
-Run `python tools/bench_contraction_choice_space.py --self-test` for five regressions:
+Run `python tools/bench_contraction_choice_space.py --self-test` for seven regressions:
 
 1. 5-to-4 and 5-to-3 successor counts;
 2. contrast with the additive default transition;
 3. physically consistent sequential contraction and nonnested optimal survivor sets;
 4. exact counts and object-ID conservation across capacities 0 through 8;
-5. explicit full-Pokémon return for a discarded object without treating it as a Knock Out.
+5. explicit full-Pokémon return for a discarded object without treating it as a Knock Out;
+6. fractional retention-score preservation without rounding;
+7. exact two-stage contraction path multiplicities and the final-state combinatorial identity.
 
 Run without flags to print a compact JSON summary of the additive and joint-utility first-stage choices.
 
