@@ -1,5 +1,8 @@
 # Pokémon TCG Expanded research map
 
+**Optional Arc Phone exchange:** [arc_phone_optional_swap_policy/](arc_phone_optional_swap_policy/) proves that the look-before-optional-swap action can rescue a singleton in two unknown Prize slots with certainty using two Arc Phones and one Shoes, while an incorrectly forced-swap-only execution model achieves 1/2 in the same state. Four-copy-limited toy sweeps over 164/251/305 states with 2/3/4 Prizes show optional gains in 29/101/156 cases. Exact physical-world oracle and CI validate the result; the comparator isolates a mechanical fidelity defect rather than deck win rate.
+
+
 **Finite-deck Arc Phone policy:** [arc_phone_deck_order_policy/](arc_phone_deck_order_policy/) replaces the neutral-filler-after-Shoes shortcut with exact physical deck order and both Trekking Shoes modes. A controlled three-Prize T/A/filler and three-deck-card A/S/filler state, holding one Arc and two Shoes, yields 1/2 target retrieval with take-only Shoes and 5/9 when discard-then-draw is permitted. Ten independent exhaustive physical-world checks and CI validate the Bellman solver. The distinction is information and action timing, not a match-win estimate.
 
 
