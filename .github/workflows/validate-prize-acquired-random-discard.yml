@@ -1,0 +1,23 @@
+name: Validate random hand discard origin inference
+
+on:
+  push:
+    paths:
+      - "tools/prize_acquired_random_discard.py"
+      - "results/prize_acquired_random_discard/**"
+      - ".github/workflows/validate-prize-acquired-random-discard.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Test public random-hand discard provenance inference
+        run: python results/prize_acquired_random_discard/reproduce.py
