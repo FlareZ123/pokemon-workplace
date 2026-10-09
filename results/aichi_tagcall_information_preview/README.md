@@ -62,3 +62,41 @@ The incremental first-reset access gain in this specific package is small relati
 - Ticket/Map tech assignments replace four specific Supporter slots, whose competitive value outside this first-turn window is not included.
 
 An exact K0 policy over visible observations could strengthen this experiment by choosing one payment for all hidden Prize worlds and measuring whether prior Tag Call actually changes that choice. The independent [Tool-thinning information theorem](../gnh_tool_thinning_information/) proves why this constraint matters.
+
+
+## Independent opening-access ceiling
+
+The optional K1 route is rare partly because the player must simultaneously
+start Jirachi in the opening seven and naturally access **both** G&H and
+Tag Call among the opening seven plus the first normal draw.
+
+With one Jirachi singleton, four G&H, four Tag Calls, 14 ordinary Basic
+starters and a 60-card deck, the exact accepted-opening probability of
+this visible triplet is
+
+\[
+\frac{\frac{7}{60}\big[
+1-2{\binom{55}{7}}/{\binom{59}{7}}
++{\binom{51}{7}}/{\binom{59}{7}}\big]}
+{1-{\binom{46}{7}}/{\binom{60}{7}}}
+=\mathbf{2.02745267\%}.
+\]
+
+Given Jirachi occupies one of the seven opener slots, the six other opener
+cards plus the first draw are a seven-card without-replacement sample from
+the other 59 cards. Inclusion–exclusion gives the chance that sample
+contains both a natural G&H and a natural Tag Call. The final denominator
+conditions on a valid Basic-containing opening hand.
+
+In the same 80,000 raw shuffled-start sample, **1,414** accepted starts
+contained this natural triplet, compared with **1,409** offered extra
+TagCall routes after the model's further G&H-core, late Wish and
+remaining-copy conditions. These are *different event definitions* and
+should not be equated per state; their close aggregate counts support
+the rarity scale.
+
+The exact expression was independently checked on **96** complete
+labeled opening-and-draw populations across smaller deck sizes.
+[CI run 37978493373](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37978493373)
+passed the count regression and reproduced the main 80,000-start
+material-versus-guard-relaxation decomposition.
