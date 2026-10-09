@@ -1,0 +1,23 @@
+name: Validate Gothitelle core-board joint access
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_core_board_joint_access.py"
+      - "results/gothitelle_core_board_joint_access/**"
+      - ".github/workflows/validate-gothitelle-core-board-joint-access.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify endogenized first-turn four-core Bench access
+        run: python results/gothitelle_core_board_joint_access/reproduce.py
