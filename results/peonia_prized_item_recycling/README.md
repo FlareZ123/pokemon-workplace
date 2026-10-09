@@ -57,6 +57,22 @@ The recovery benefit is conditional on Peonia being able to preserve the Item pa
 
 The extra copy in the Prizes is valuable only if the hand has enough replaceable cards to keep it **along with** the held Arc/Shoes needed to exploit it. When Peonia selects an Arc and two fillers, having one spare filler permits returning three filler cards to the Prizes, retaining two Arc and one Shoes; without the spare filler, at least one useful card must be returned. Thus the 15- and 20-percentage-point gains vanish when the spare payment resource is removed. This is a concrete complementarity between state-dependent discardability and recovered Item action capacity. The exact optimizer also considers selecting fewer than three Prizes and trading other cards back, so the zero-filler results are optimized rather than a restricted forced-payment policy.
 
+## Closed-form value of one Prized Arc Phone
+
+For a target `T` and exactly one additional `A` among `n` face-down Prize positions, suppose Peonia first inspects `k` positions, one Arc and one Shoes are initially held, a spare filler can pay the Prize replacement, and all deck cards are inert. Assume `n-k >= 2`.
+
+The base case without a second Arc reaches the target with probability `(k+1)/n`: `k` positions are inspected by Peonia and one new position can be probed with Arc/Shoes.
+
+With the Prized Arc, failure after Peonia depends on whether that Arc was part of the inspected set. If it was recovered, two later physical slots can be probed. The exact probability is
+
+`P(T acquired) = (k+1)/n + k/[n(n-1)]`.
+
+Hence the **marginal value of the Prized Arc** is exactly `k/[n(n-1)]` under these assumptions: `3/20 = 15` percentage points for `(n,k)=(5,3)`, and `3/30 = 10` percentage points for `(n,k)=(6,3)`. The same Prized Arc has **zero** marginal value in these cases when the spare replacement filler is absent.
+
+The two-extra-Item result also admits a small conditional decomposition. For six Prizes and three Peonia positions, conditional on missing T, the `A,S` selection categories have probabilities `3/10` (both retrieved), `3/10` (A only), `3/10` (S only), and `1/10` (neither). Their continuation success probabilities are respectively `2/3`, `2/3`, `1/2`, and `1/3`. Thus `P=1/2+(1/2)[(3/10)(2/3)+(3/10)(2/3)+(3/10)(1/2)+(1/10)(1/3)]=19/24`, agreeing with the exact optimizer. With five Prizes and three inspected positions, whenever Peonia misses T the two unknown slots contain T and at most one other card; the retrieved or swapped A/S resources guarantee that both possibilities can be resolved.
+
+These are mathematical derivations **for the stated initial Peonia-first policy**, while the unrestricted timing comparison is separately established for the finite tested fixtures by the Bellman solver.
+
 ## Evidence and limits
 
 Implementation: `tools/peonia_timing_policy.py`; exact Fraction reproduction and analytic event checks: `results/peonia_prized_item_recycling/reproduce.py`. The code also checks that Peonia is playable with an empty deck, exposing a previously detected early-termination bug.
