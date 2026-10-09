@@ -1,0 +1,25 @@
+name: Validate opponent bonus assembly
+
+on:
+  push:
+    paths:
+      - "tools/opponent_bonus_assembly.py"
+      - "tools/setup_count_dependent_policy.py"
+      - "tools/setup_hand_value_policy.py"
+      - "results/opponent_bonus_assembly/**"
+      - ".github/workflows/validate-opponent-bonus-assembly.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate exact opponent assembly and setup policy
+        run: python results/opponent_bonus_assembly/reproduce.py
