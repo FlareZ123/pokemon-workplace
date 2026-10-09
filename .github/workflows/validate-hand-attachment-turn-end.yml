@@ -1,0 +1,25 @@
+name: Validate hand attachment turn-end reactions
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/hand_attachment_turn_end.py"
+      - "results/hand_attachment_turn_end/**"
+      - "tools/next_turn_attachment_window.py"
+      - "tools/energy_hand_attachment_events.py"
+      - ".github/workflows/validate-hand-attachment-turn-end.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce printed attachment turn endings
+        run: python results/hand_attachment_turn_end/reproduce.py
