@@ -28,6 +28,7 @@ from gothitelle_two_quick_joint_board import prize_conditioned_basic_search
 class DynamicPaymentOdds:
     approved_only: Fraction
     safe_surplus_increment: Fraction
+    k0_critical_increment: Fraction
     k1_critical_increment: Fraction
 
     @property
@@ -35,23 +36,31 @@ class DynamicPaymentOdds:
         return self.approved_only + self.safe_surplus_increment
 
     @property
+    def k0_committed_total(self) -> Fraction:
+        return self.safe_surplus_total + self.k0_critical_increment
+
+    @property
     def k1_optimal_total(self) -> Fraction:
         return self.safe_surplus_total + self.k1_critical_increment
 
+    @property
+    def information_gain(self) -> Fraction:
+        return self.k1_critical_increment - self.k0_critical_increment
 
-def k1_critical_discard_chance(
+
+def critical_discard_chances(
     remaining: tuple[int, ...],
     *,
     prizes: int,
     need_gothita: int,
     need_core: int,
-) -> Fraction:
-    """Optimally discard one critical T or C after observing Prize counts.
+) -> tuple[Fraction, Fraction]:
+    """Return optimal commitment before search and optimal choice at K1.
 
-    Both types are currently held; after discarding the last retained
-    copy of one of them, the next natural draw must replace that type.
-    The choice is made after searching the deck, using the larger
-    count of unprized Stage2 or Candy copies available in the deck.
+    In both policies the first Quick has already paid Sky. The counterfactual
+    K0 policy chooses whether to discard the sole retained Stage2 or Candy
+    before seeing exact Prize composition. K1 chooses after deck inspection.
+    The difference isolates the value of deck-search information.
     """
     unknown = sum(remaining)
     g,t,c,o = remaining[:4]
@@ -59,9 +68,11 @@ def k1_critical_discard_chance(
     number_searched = need_gothita+need_core
     after_search = unknown-prizes-number_searched
     if after_search <= 0:
-        return Fraction(0)
+        return Fraction(0),Fraction(0)
     denominator = choose(unknown,prizes)
-    total = Fraction(0)
+    always_stage = Fraction(0)
+    always_candy = Fraction(0)
+    k1_best = Fraction(0)
     for g_prized in range(min(g,prizes)+1):
         for o_prized in range(min(o,prizes-g_prized)+1):
             for t_prized in range(min(t,prizes-g_prized-o_prized)+1):
@@ -85,14 +96,13 @@ def k1_critical_discard_chance(
                         or o-o_prized < need_core
                     ):
                         continue
-                    best_replacement = max(
-                        t-t_prized,c-c_prized
-                    )
-                    total += (
-                        Fraction(ways,denominator)
-                        * Fraction(best_replacement,after_search)
-                    )
-    return total
+                    weighted = Fraction(ways,denominator*after_search)
+                    stage_outs = t-t_prized
+                    candy_outs = c-c_prized
+                    always_stage += weighted*stage_outs
+                    always_candy += weighted*candy_outs
+                    k1_best += weighted*max(stage_outs,candy_outs)
+    return max(always_stage,always_candy),k1_best
 
 
 def exact_dynamic_payment(case: PaidAdaptiveSetup) -> DynamicPaymentOdds:
@@ -114,7 +124,8 @@ def exact_dynamic_payment(case: PaidAdaptiveSetup) -> DynamicPaymentOdds:
     n,h = case.total,case.opening
     denominator = choose(n,h)*(n-h)
     safe_increment = Fraction(0)
-    critical_increment = Fraction(0)
+    k0_critical_increment = Fraction(0)
+    k1_critical_increment = Fraction(0)
 
     for observed_counts in product(
         *(range(min(size,h)+1) for size in sizes[:9])
@@ -179,16 +190,18 @@ def exact_dynamic_payment(case: PaidAdaptiveSetup) -> DynamicPaymentOdds:
                 extra_safe == additional_q-1
                 and seen[1]>=1 and seen[2]>=1
             ):
-                continuation = k1_critical_discard_chance(
+                k0_chance,k1_chance = critical_discard_chances(
                     tuple(after_first),
                     prizes=case.prizes,
                     need_gothita=missing_g,
                     need_core=missing_o,
                 )
-                critical_increment += weight*continuation
+                k0_critical_increment += weight*k0_chance
+                k1_critical_increment += weight*k1_chance
 
     return DynamicPaymentOdds(
         approved_only=baseline,
         safe_surplus_increment=safe_increment,
-        k1_critical_increment=critical_increment,
+        k0_critical_increment=k0_critical_increment,
+        k1_critical_increment=k1_critical_increment,
     )
