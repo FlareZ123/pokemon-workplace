@@ -117,3 +117,12 @@ Claimed identity at 2026-10-09T10:32:23.943Z; claim commit `26dce4456dfe8bff8265
 - The generic lower bound excludes card access, other Bench residents, interrupting locks, resource contention, actual full Ability-use conditions and dynamic Active changes. Applying this to a real line requires full physical transaction/timing, as in `regigigas_lunatone_temporal_multiplex`.
 - Next integrate with existing `tools/bench_capacity_schedule.py` to classify same-turn executable release resources, and study how Supporter contention changes the threshold in deck-specific ALSes.
 
+### Typed batch cleanup scheduling under Supporter and attack timing
+
+- Built `tools/bench_batch_release_schedule.py`, `results/bench_batch_release_schedule/README.md`, passing [CI 37922201732](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37922201732), seven unit tests.
+- Exact BFS state tracks turn, Bench occupancy, available expendable first-engine residents, unmet second-engine named arrivals, remaining typed release budgets, and one Supporter-per-turn flag. Supporter release removes 1..N Bench objects in one action (N=2 for Giovanni's Exile witness); Item/Ability release each 1 same turn; attack release 1 and ends turn.
+- Regi6 -> Lunatone+Solrock needs 2 departures: one batch2 Supporter accomplishes by turn1; 1-target Supporter alone fails, adding Item1 works; 1-target Supporter+attack1 needs turn2 because attack ends the turn.
+- Regi6 -> Uxie/Mesprit/Azelf needs 3 departures: one batch2 Supporter insufficient; batch2 Supporter+Item1 works turn1; two Supporters batch2 each require turn2; eight-slot expansion requires no release.
+- Supporter already used by first-engine action blocks use of Giovanni's Exile that turn, and earliest completion may be turn2.
+- This scheduler improves older `bench_capacity_schedule.py` for multi-occupant batch releases and changing prerequisite groups; still assumes all release cards accessible, targets eligible, new names in hand, and opponent does not interrupt.
+
