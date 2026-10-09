@@ -55,7 +55,7 @@ class AdaptiveItemSetup:
         if (
             min(self.categories) < 0 or self.opening < 1
             or self.prizes < 0
-            or self.total - self.opening - self.prizes - 5 <= 0
+            or self.total - self.opening - self.prizes - 2 < 0
             or self.other_basics == 0
         ):
             raise ValueError("invalid adaptive Item search population")
