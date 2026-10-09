@@ -1,4 +1,4 @@
-"""Exact union of Arc/Peonia raw topdeck and Rotom Phone-assisted repacking."""
+"""Exact union of Arc/Peonia raw topdeck and top-five-Item repacking."""
 from fractions import Fraction
 from itertools import combinations, permutations
 from math import comb
@@ -10,19 +10,22 @@ def choose(n, k):
     return comb(n, k) if 0 <= k <= n else 0
 
 
-def with_rotom(starters=12, arcs=4, peonias=2, rotoms=4,
+def with_top_five(starters=12, arcs=4, peonias=2, arrangers=4,
                disposable=None, total=60, opening=7, prizes=6):
     """P(A/P/F hand and T on top OR R hand and T among next five)."""
+    # R denotes top-five arranging Items, up to four Rotom Phone plus
+    # four Pokédex. Their later deck-tail effects differ; this narrow
+    # event only needs them to put an observed target T on top.
     if disposable is None:
-        disposable = total - starters - arcs - peonias - rotoms - 1
-    protected = total-starters-arcs-peonias-rotoms-1-disposable
-    if min(starters, arcs, peonias, rotoms, disposable, protected) < 0:
+        disposable = total - starters - arcs - peonias - arrangers - 1
+    protected = total-starters-arcs-peonias-arrangers-1-disposable
+    if min(starters, arcs, peonias, arrangers, disposable, protected) < 0:
         raise ValueError("Invalid category counts")
     if total-opening-prizes-1 < 1:
         raise ValueError("No deck card remains after turn draw")
 
     base = exact_event(starters,arcs,peonias,disposable,total,opening)
-    if not rotoms:
+    if not arrangers:
         return base
 
     valid = Fraction(choose(total,opening)-choose(total-starters,opening),
@@ -32,13 +35,13 @@ def with_rotom(starters=12, arcs=4, peonias=2, rotoms=4,
     for b in range(1,min(starters,seen)+1):
         for a in range(1,min(arcs,seen-b)+1):
             for p in range(1,min(peonias,seen-b-a)+1):
-                for r in range(1,min(rotoms,seen-b-a-p)+1):
+                for r in range(1,min(arrangers,seen-b-a-p)+1):
                     for f in range(1,min(disposable,seen-b-a-p-r)+1):
                         o = seen-b-a-p-r-f
                         if not 0 <= o <= protected:
                             continue
                         ways = (choose(starters,b)*choose(arcs,a)
-                                *choose(peonias,p)*choose(rotoms,r)
+                                *choose(peonias,p)*choose(arrangers,r)
                                 *choose(disposable,f)*choose(protected,o))
                         opener_factor = Fraction(opening,seen) if b == 1 else 1
                         exposure_with_rotom += (
@@ -50,6 +53,13 @@ def with_rotom(starters=12, arcs=4, peonias=2, rotoms=4,
     extra_positions = min(5,total-opening-prizes-1)-1
     return (base + exposure_with_rotom/valid
             * Fraction(extra_positions,total-opening-1))
+
+
+def with_rotom(starters=12, arcs=4, peonias=2, rotoms=4,
+               disposable=None, total=60, opening=7, prizes=6):
+    """Convenience name when all top-five Items are Rotom Phone."""
+    return with_top_five(starters,arcs,peonias,rotoms,
+                         disposable,total,opening,prizes)
 
 
 def labeled_oracle(starters=2, arcs=1, peonias=1, rotoms=1,
@@ -94,6 +104,10 @@ def run():
         actual = with_rotom(rotoms=copies)
         assert actual == expected,(copies,actual,expected)
         print(f"Rotom={copies}: {actual} = {float(actual):.9%}")
+    # Two different legally named Items each allow four copies, so a
+    # top-five selector family can contain 4 Rotom Phone + 4 Pokédex.
+    assert with_top_five(arrangers=8) == Fraction(105799951,19578739752)
+    print(f"4 Rotom + 4 Pokédex = {float(with_top_five(arrangers=8)):.9%}")
     for f,expected in (
         (4,Fraction(7,150)),
         (5,Fraction(305,8568)),
