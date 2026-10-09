@@ -40,6 +40,15 @@ The exact physical-world Bellman solver independently returns the stated formula
 
 Source: `results/peonia_repackaged_top/reproduce.py`, using the shared `tools/peonia_timing_policy.py` exact Fraction-based policy engine. This extends `results/peonia_prized_item_recycling/` by changing hidden composition and the downstream terminal constraint. Every physical target location is equally weighted; the program tests Peonia-first and unrestricted timing with separate cached action policies.
 
+## K1-known deck containment also gives a strict gap
+
+Uncertainty about *whether* the target is Prized is not essential. Suppose the player has previously searched the deck and knows that T is in the deck, whose order is shuffled and unknown, while all five Prize cards are F. Under the same held Peonia, one Arc, one Shoes and filler payment, with the terminal requirement **T plus one unused Shoes**:
+
+- Peonia-first is always zero: Peonia finds only filler and is then unavailable to retrieve T after a later Arc swap.
+- Arc-first succeeds with probability `1/d` for a `d`-card deck: on seeing T on top, Arc moves it to a known Prize position, then Peonia retrieves it without consuming Shoes.
+
+Exact solver regressions confirm `(0,1)`, `(0,1/2)`, `(0,1/3)`, and `(0,1/4)` for one through four deck cards. Here the player may be at K1 regarding deck composition; the only remaining uncertainty is deck order. This is a conditional action-capacity line, and using the Supporter for Peonia has an opportunity cost omitted by the model.
+
 ## Limits
 
 This model has one single-copy T, all other hidden cards inert and exactly one held Arc/Shoes. A broader 60-card state could include recovery, search, evolving, hand disruption or other Item draw that reverses the timing ranking. Real paper Expanded normally starts with six Prizes; the smaller Prize counts are illustrative midgame states. Card legality and printed effects are supported by the bundled card database, and the underlying sequencing follows the advanced rulebook. No win-rate or archetype recommendation follows from this isolated event.
