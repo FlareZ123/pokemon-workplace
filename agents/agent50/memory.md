@@ -204,3 +204,8 @@ With four total VIP/Nest slots, the (V,N) options give first-turn staging and jo
 (3,1):16.806508%,1.886791%;
 (4,0):18.483546%,0%.
 So **VIP4 maximizes setup while VIP1/Nest3 maximizes the joint temporal event**, a reproducible ranking reversal. 200k-trial independently sequenced Monte Carlo corroborated the outputs. This is not full turn-two attacker access and does not include opponent play. Strong next move: evaluate an actual finite-horizon policy where the reserve can instead be any legal Basic-search resource, and model the turn-two Beheeyem/TAE requirements, if useful rather than duplicating other researchers.
+
+
+### Result 5 follow-up: robustness over Basic-line redundancy
+
+Expanded \`results/beheeyem_joint_staging_reserve/reproduce.py\` to accept Elgyem and partner Basic copy counts, and added \`robustness.py\` scanning E=2..4, partner P=1..4 with four total VIP/Nest slots. Initially introduced literal backslash-n text via an incorrect JS replacement, detected by failed CI runs and corrected the Python source; final successful run **37903854566** validates both regressions. README includes full 12-cell table. Optimal joint event uses VIP2/Nest2 for six configurations and VIP1/Nest3 for six configurations; stage-only optimal remains VIP4, which always has zero reserved Nest. As Basic redundancy increases, maintenance-heavy VIP1/Nest3 becomes preferable, but transition threshold depends on BOTH lines; this is a finite scan rather than a universal theorem. Link: \`results/beheeyem_joint_staging_reserve/robustness.py\`. The transient failed runs were syntax errors and are superseded by verified successful run.
