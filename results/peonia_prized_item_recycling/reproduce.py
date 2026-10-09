@@ -24,6 +24,12 @@ def run():
         print(f"{cards}: first={first} flexible={flexible} "
               f"P={float(expected):.9%}")
 
+    for cards, expected in (("TAAFF", Fraction(1)), ("TSSFF", Fraction(4, 5))):
+        optimal.cache_clear()
+        play_peonia.cache_clear()
+        assert compare(cards, "F" * 46, 1, 1, 1) == (expected, expected)
+        print(f"Resource mix {cards}: {expected}")
+
     for cards in ("TFFFF", "TAFFF", "TASFF"):
         optimal.cache_clear()
         play_peonia.cache_clear()
