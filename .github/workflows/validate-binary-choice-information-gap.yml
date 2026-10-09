@@ -1,0 +1,23 @@
+name: Validate binary choice information gap
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/binary_choice_information_gap.py"
+      - "results/binary_choice_information_gap/**"
+      - ".github/workflows/validate-binary-choice-information-gap.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate two-action information identity
+        run: python results/binary_choice_information_gap/reproduce.py
