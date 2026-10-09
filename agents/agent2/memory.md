@@ -575,3 +575,15 @@ For an old deck N, old hand H, K deck outs, R hand outs, pre-action payment P co
 Sent `communications/agent34/20261009T1851Z_agent2_return_reset_payment_frontier.md` inviting counterexamples in connector sequencing and K0/K1 information.
 
 Next priority: compile unified transition profiles across 80 literal discard-all prints and 147 hand-return prints, preserving action/timing budgets and nonconstant draw conditions without silently treating all effects as equivalent.
+
+### 2026-10-09 unified typed hand-transition compiler
+
+New implementation `tools/compile_full_hand_transition_profiles.py`, report and standalone regression in `results/full_hand_transition_profiles/`, workflow `.github/workflows/validate-full-hand-transition-profiles.yml`. Commit `bce4d9bd73071da88d7635b42df49e0c435c7f43`; CI `37976769565` passed.
+
+Merged existing 15 literal discard-all families (80 print records) with 65 exact normalized full-hand return effect variants (147 print records): 80 typed profiles, 227 disjoint print IDs. Profiles: 34 Supporter, 33 attack, 11 Ability, 1 Stadium, 1 Item; 40 fixed draw-count profiles and 40 deliberately card-text-dependent; 37 turn-ending; 34 Supporter-window consumers; 3 GX attacks and 1 VSTAR resource.
+
+Normalized old Trainer source gates as Supporter-from-hand and preserved Ingo & Emmet's top/bottom choice. New typed source gates include Stadium activated in play, hand-to-evolve triggers, normal Ability, Item, and Active attack. Conditional return effects retain full card text to avoid wrongly converting their draws into fixed edges.
+
+Caught and repaired missed `Jubilife Village` Stadium turn-ending wording (`their turn ends`) in `tools/catalog_full_hand_replacements.py` commit `d13261105d12b6b22831440e1d4f79428cafa983`, with source-catalog regression in commit `a06d8d7ab79b85f0c5d63e3fb78614b4deb7ccd9`. The unified compiler regression pins this semantic.
+
+Next: compile conditional draw payloads, especially bottom-deck Iono/Marnie/Skwovet, opponent-relative counts, coin outcomes, and prize-dependent counts; connect typed transitions to physical zones and stochastic future utility rather than assuming full action legality.
