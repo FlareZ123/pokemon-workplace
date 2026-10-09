@@ -52,6 +52,15 @@ def run():
                 Fraction(3, n + d), Fraction(4, n + d)
             ), (n, d, first, flexible)
     print("T-only no-Shoes endpoint: 12 exact strict Arc-first timing tests passed.")
+    for n, d in ((5, 2), (6, 2), (4, 3)):
+        belief = uniform_target(n, d)
+        hand = (0, 1, 0, 0)  # No spare Peonia replacement card.
+        play_peonia.cache_clear()
+        optimal.cache_clear()
+        assert play_peonia(belief, hand) == Fraction(3, n + d)
+        assert optimal(belief, hand, True) == Fraction(3, n + d)
+    print("No-spare-card ablation: Arc-first timing gain disappears.")
+
 
     # Independent counting: Peonia-first can reach 3 random Prize positions.
     # Arc-first additionally relocates deck top T to a known Prize slot.
