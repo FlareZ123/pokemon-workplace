@@ -6,6 +6,7 @@ on:
       - "tools/revealed_search_coarse_physical_bridge.py"
       - "tools/revealed_target_coarsening.py"
       - "tools/revealed_target_identity.py"
+      - "tools/trusted_print_reveal.py"
       - "tools/trainer_search_hidden_state_bridge.py"
       - "tools/private_search_latent_target_belief.py"
       - "results/revealed_search_coarse_physical_bridge/**"
