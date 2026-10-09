@@ -97,6 +97,13 @@ def historical(*entries):
     )
 
 
+assert "self_named_singleton_limit" in codes(
+    historical(("neo4-16", 2), (SNIVY, 1), (GRASS, 57))
+)
+assert "unrecognized_deck_constraint" not in warnings(
+    historical(("neo4-16", 2), (SNIVY, 1), (GRASS, 57))
+)
+assert historical(("neo4-16", 1), (SNIVY, 1), (GRASS, 58)).valid
 assert historical(("pl4-AR1", 5), (GRASS, 55)).valid
 assert historical(("pl4-94", 5), (SNIVY, 1), (GRASS, 54)).valid
 assert "name_copy_limit" in codes(historical(("xyp-XY83", 5), (GRASS, 55)))

@@ -108,7 +108,7 @@ def _has_prism_rule(record: CardRecord) -> bool:
 
 def _has_self_singleton_rule(record: CardRecord) -> bool:
     target = f"You can't have more than 1 {record.name} in your deck."
-    return target in record.rules
+    return any(rule == target or rule.startswith(target + " ") for rule in record.rules)
 
 
 def _has_unlimited_self_rule(record: CardRecord) -> bool:
@@ -122,7 +122,8 @@ def _recognized_copy_constraint(record: CardRecord, rule: str) -> bool:
         return True
     if PRISM_RULE_FRAGMENT in rule:
         return True
-    return rule == f"You can't have more than 1 {record.name} in your deck."
+    self_rule = f"You can't have more than 1 {record.name} in your deck."
+    return rule == self_rule or rule.startswith(self_rule + " ")
 
 
 def _validate_with_records(

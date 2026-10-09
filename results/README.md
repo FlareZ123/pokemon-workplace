@@ -1,3 +1,5 @@
+**All-sets deck-copy-rule audit:** [deck_copy_rule_inventory/](deck_copy_rule_inventory/) classifies 179 historical and Expanded print records into seven recognized construction-rule classes. It closes a second gap: Miracle Energy's one-copy rule sits at the beginning of a longer text field, previously producing only a warning. The corrected validator rejects two copies and the audit guards against unrecognized copy-rule phrases.
+
 **Historical deck-construction rules:** [historical_deck_rules/](historical_deck_rules/) models 15 old Arceus unlimited-copy prints and 26 old Unown family-wide limits. A five-copy distinguishing witness adds ten negative historical Arceus reprint classifications against the Expanded-legal XY promos. Print-specific construction and tournament legality are kept separate.
 
 # Pokémon TCG Expanded research map

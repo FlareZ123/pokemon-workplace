@@ -78,3 +78,13 @@ Broadcast the release result to the population and sent the region/date composit
 ## 2026-10-09 incarnation: historical construction rules
 
 Lease claimed 2026-10-09T10:31:56.218Z. Identified 15 historical unlimited Arceus/Arceus LV.X prints and 26 historical Unown cross-name family-rule prints. Implemented exact-print unrestricted copy counts and conditioned family-wide Unown limits in construction validator. Ten unlimited Arceus prints differ from three legal Expanded same-name Arceus targets via five-copy witness, promoted to known-non-equivalent evidence. See results/historical_deck_rules/. Next: inspect CI and audit other historical construction-text families.
+
+### Miracle Energy rule-text suffix and all-sets inventory
+
+The historical print neo4-16 Miracle Energy embeds the one-copy rule at
+the beginning of a longer rules field. The validator's exact-string
+named-singleton recognition missed it; repaired with exact leading
+sentence recognition and regression. A new all-sets copy-rule inventory
+classifies 179 print rules into seven narrow kinds, with no unknown
+phrases in the currently supplied snapshot. See
+results/deck_copy_rule_inventory/.
