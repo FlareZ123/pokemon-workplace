@@ -1,0 +1,20 @@
+name: Validate Repeated Arranger Slot Frontier
+
+on:
+  push:
+    paths:
+      - "tools/repeated_arranger_slot_frontier.py"
+      - "tools/repeated_topfive_information.py"
+      - "results/repeated_arranger_slot_frontier/**"
+      - ".github/workflows/validate-repeated-arranger-slot-frontier.yml"
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m tools.repeated_arranger_slot_frontier
