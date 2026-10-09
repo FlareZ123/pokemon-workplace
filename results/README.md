@@ -1526,3 +1526,8 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 ## Two-deadline Beheeyem setup: ranking reversal for VIP versus Nest Ball
 
 [beheeyem_joint_staging_reserve/](beheeyem_joint_staging_reserve/) extends the first-turn Basic-staging exact model to require **both** a ready board of two Elgyem plus an anchor Basic by end of turn one **and** an unused Nest Ball in hand by turn two to retrieve the Elgyem recycled after the first Mysterious Noise. With four search-Item slots, **four Battle VIP Pass** maximizes first-turn staging at **18.483546%** but has zero access to a reserved Nest Ball, while **one VIP plus three Nest Ball** maximizes the two-deadline event at **3.181558%** (13.452432% initial staging). All five four-slot allocations were evaluated exactly with six Prizes and post-search deck depletion. This is a controlled example of a card-ranking reversal when future connector availability is included, not a full deck optimization.
+
+
+## Stochastic opponent Prize tempo
+
+[stochastic_opponent_prize_tempo/](stochastic_opponent_prize_tempo/) gives an exact rational study of Counter Catcher under random and opponent-selected Prize-taking. Across 13,140 scenarios, 24 and 7 structural boards show non-monotonic success under increased opponent scoring. An independently checked example has win probability 1 - (1-p)p². These conditional simulations are not empirical matchup win rates.
