@@ -1,0 +1,19 @@
+name: Validate Beheeyem joint staging and reserve
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/beheeyem_joint_staging_reserve/**"
+      - ".github/workflows/validate-beheeyem-joint-staging-reserve.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce first-turn and retained-Nest joint probabilities
+        run: python3 results/beheeyem_joint_staging_reserve/reproduce.py
