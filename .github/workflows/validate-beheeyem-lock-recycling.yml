@@ -1,0 +1,19 @@
+name: Validate Beheeyem lock recycling
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/beheeyem_lock_recycling/**"
+      - ".github/workflows/validate-beheeyem-lock-recycling.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce recycling and initial Prize-collapse witnesses
+        run: python3 results/beheeyem_lock_recycling/reproduce.py
