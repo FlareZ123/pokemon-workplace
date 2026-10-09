@@ -8,7 +8,7 @@ from math import comb, lcm
 import json
 
 
-def joint_access(vip: int, nest: int) -> tuple[Fraction, Fraction]:
+def joint_access(\n    vip: int, nest: int, *, elgyem_copies: int = 4, partner_copies: int = 4\n) -> tuple[Fraction, Fraction]:
     """Return (ready first turn, ready and unused Nest in hand by turn two)."""
     if not 0 <= vip <= 4 or not 0 <= nest <= 4:
         raise ValueError("Each Item name has at most four copies")
