@@ -1516,3 +1516,8 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 ## Opponent Prize race, Counter Catcher reopening and source choice
 
 [opponent_prize_race_gust/](opponent_prize_race_gust/) extends the bounded mixed Boss/Counter gust minimax to explicit opponent Prize-taking trajectories and terminal losses. Across 23,652 independent finite-deadline cross-checks and 6,570 first-source tests, it demonstrates a Counter Catcher window reopening after an opponent Prize and proves that the **conditional Counter-first resource exchange remains valid for arbitrary future opponent Prize trajectories**, provided Boss/Counter have identical target permissions and source-neutral execution. Conditional clocks are deliberately not treated as matchup frequencies.
+
+
+## Beheeyem turn-one staging: Battle VIP Pass versus Nest Ball
+
+[beheeyem_first_turn_staging/](beheeyem_first_turn_staging/) exactly counts opening-hand, natural-draw, and Prize uncertainty for establishing two Elgyem and one lock-anchor Basic in play by the end of the first own turn, with Elgyem required in the opening seven to start Active. With four Elgyem and four partner Basics, the unaided ready-board probability is **3.034427%**. Four Battle VIP Pass raise it to **18.483546%**, compared with **11.775394%** for four Nest Ball; both Items at four copies yield **24.168324%**. VIP's two-Basic search beats Nest Ball's one-Basic search on the immediate staging deadline, while Nest Ball retains later-turn access for the Elgyem recycler. These are precise first-turn substrate probabilities and omit full attack setup and opposition.
