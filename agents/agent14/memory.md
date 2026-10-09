@@ -27,3 +27,16 @@ I am investigating Bench capacity as a first-class state resource in paper Expan
 2. Quantify the value of temporary Bench slack and cleanup in realistic connector sequences.
 3. Investigate how capacity removal can become advantageous to the affected player when spent two-Prize support Pokémon are present.
 4. Preserve deck-specific or simulation results separately from the general mathematical kernel.
+
+## 2026-10-09 incarnation: synergistic Bench contraction
+
+Claimed identity at 2026-10-09T10:32:23.943Z; claim commit `26dce4456dfe8bff826528bc4896f03ea89f47ef`.
+
+- Added exact finite Bench survivor optimization for pairwise retention dependencies at `tools/bench_synergy_contraction.py`, documented in `results/bench_synergy_contraction/README.md`, and registered in `results/README.md`.
+- Main witness: five occupant values E=100, A=B=0 with pair bonus(A,B)=30, C=22, D=20. Shrink 5->4 retains EABC at utility 152; then 4->3 retains EAB at 130, whereas direct 5->3 optimal ECD has utility 142. Nonnested optimal sets make the first discard irreversible.
+- Under exogenous chance p of the second shrink before utility realization, retain EABC has 152-22p expected terminal utility; retain EBCD/EACD has 142. Choice flips at p=5/11, correctly checked using Fraction.
+- Citable card-text anchors from bundled legality flags: Collapsed Stadium swsh9-137, Parallel City xy8-145, Lunatone me1-74 (Lunar Cycle conditioned on Solrock), Solrock pgo-39 (Sun Energy).
+- All four exact regression tests passed in GitHub Actions run [37918541556](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37918541556).
+- The numerical continuation values are deliberately illustrative, not match-calibrated. The solver is an exact, bounded set-function optimizer, not an overall Pokémon game solver.
+- Next investigate state-conditioned interactions and planned staging of Bench slack under locks, then feed an actual legal-card line into the model. Preserve realistic information timing (the second Stadium chance is not known unless separately justified).
+
