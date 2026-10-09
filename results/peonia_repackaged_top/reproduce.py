@@ -38,6 +38,21 @@ def compare(n, d):
 
 
 def run():
+    # Stronger pure-retrieval version: no Trekking Shoes is held, so
+    # Arc-first can stage a deck-top T for Peonia; Peonia-first cannot.
+    for n in (4, 5, 6):
+        for d in (1, 2, 3, 4):
+            belief = uniform_target(n, d)
+            hand = (0, 1, 0, 1)
+            play_peonia.cache_clear()
+            optimal.cache_clear()
+            first = play_peonia(belief, hand)
+            flexible = optimal(belief, hand, True)
+            assert (first, flexible) == (
+                Fraction(3, n + d), Fraction(4, n + d)
+            ), (n, d, first, flexible)
+    print("T-only no-Shoes endpoint: 12 exact strict Arc-first timing tests passed.")
+
     # Independent counting: Peonia-first can reach 3 random Prize positions.
     # Arc-first additionally relocates deck top T to a known Prize slot.
     for n in (4, 5, 6):
