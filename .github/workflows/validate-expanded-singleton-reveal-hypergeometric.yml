@@ -1,0 +1,23 @@
+name: Validate singleton print-reveal hypergeometric model
+
+on:
+  push:
+    paths:
+      - "tools/expanded_singleton_reveal_hypergeometric.py"
+      - "results/expanded_singleton_reveal_hypergeometric/**"
+      - ".github/workflows/validate-expanded-singleton-reveal-hypergeometric.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check exact Prize-size scaling identities
+        run: python results/expanded_singleton_reveal_hypergeometric/reproduce.py
