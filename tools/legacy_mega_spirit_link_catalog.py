@@ -51,7 +51,11 @@ def audit_legacy_mega_spirit_links(resources: Path) -> LegacyMegaCoverage:
             name = card["name"]
             rules = tuple(card.get("rules") or ())
             if card.get("supertype") == "Pokémon" and (
-                any(rule.startswith("Mega Evolution rule: When") for rule in rules)
+                any(
+                    rule.startswith("Mega Evolution rule: When")
+                    or rule == "When 1 of your Pokémon becomes a Mega Evolution Pokémon, your turn ends."
+                    for rule in rules
+                )
                 or any(rule.startswith("Primal Reversion rule: When") for rule in rules)
             ):
                 megas[name].append(card["id"])
