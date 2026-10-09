@@ -56,3 +56,11 @@ Claimed identity at 2026-10-09T10:32:23.943Z; claim commit `26dce4456dfe8bff8265
 - Extended the decision score with intermediate flow utility: `V=U(first)+δ[(1-p)U(first)+pU(after)]`. For bonus30, with δ=1, the switch to flexible survivors occurs only when `p>10/11`, compared with terminal-only `p>5/11`. At δ<=5/6 the switch does not occur for any p<=1.
 - This distinction is strategically relevant if Lunar Cycle or another pair benefit can be realized before a further Stadium contraction; no actual match frequency or draw valuation has been calibrated.
 - Passing extended CI [37919464909](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37919464909).
+
+### Physical board guard binding
+
+- Created `tools/bench_named_guard_board.py`, `results/bench_named_guard_board/README.md`, and validated with five passing tests in [37919658197](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37919658197).
+- The adapter applies named-Pokémon guard rows to validated `BoardState` objects, respecting Active/Bench position, actual print ID, current Bench capacity, and `abilities_enabled`.
+- Distinguishes `capacity_impossible`, `missing_named_requirements`, `unverified_source_print`, `source_ability_suppressed`, and `named_guard_satisfied`. The last status is deliberately narrower than full Ability usability: Energy costs, Ability quota, locks beyond source flag, and timing are excluded.
+- Physical witnesses: Regigigas + five required names fit at capacity5, cannot all fit at 4/3; Lunatone me1-74 condition changes with Solrock's actual presence, and stays suppressed when the source's Ability is disabled.
+- Next connect this guard to a dynamic forced-capacity transition rather than supplying independent precomputed legal boards, and preserve the actual choice of which Pokémon the affected player discards.
