@@ -1,0 +1,19 @@
+name: Validate Beheeyem recycle search packet
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/beheeyem_recycle_access_packet/**"
+      - ".github/workflows/validate-beheeyem-recycle-access-packet.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce packet and discard-cost probabilities
+        run: python3 results/beheeyem_recycle_access_packet/reproduce.py
