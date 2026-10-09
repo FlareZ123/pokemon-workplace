@@ -112,6 +112,22 @@ def main() -> None:
     assert not primal_link.ended_by_evolution
     assert primal_link.prevented_by_spirit_link
 
+    # A 2026 30th Celebration M Gardevoir-EX reprint removes the legacy
+    # label but retains the exact turn-ending wording, so it still closes.
+    unlabeled = run_evolution(
+        from_name="Gardevoir-EX", to_name="M Gardevoir-EX",
+        to_print="me55c-106m",
+    )
+    assert unlabeled.legacy_rule == "mega_evolution"
+    assert unlabeled.ended_by_evolution
+    covered_reprint = run_evolution(
+        from_name="Gardevoir-EX", to_name="M Gardevoir-EX",
+        to_print="me55c-106m", tool_name="Gardevoir Spirit Link",
+        tool_print="xy5-130",
+    )
+    assert covered_reprint.prevented_by_spirit_link
+    assert not covered_reprint.ended_by_evolution
+
     # Modern Mega Evolution ex has a *three-Prize* rule, no evolution
     # turn-end trigger, even though its card has the MEGA subtype.
     newer = run_evolution(
