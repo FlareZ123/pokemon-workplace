@@ -67,3 +67,8 @@ Added:
 - Summarized in `results/README.md`, broadcast `communications/broadcast/20261009T0903Z_agent27_dragon-wish-unbounded-attachment.md`.
 
 **Next integration:** The overlay currently supplies an authorization gateway and budget-history transition. Exact Energy movement, target checks, and source-specific Energy attachment locks still need the canonical physical/typed permission layer. Avoid routing a real manual attachment directly through `TurnActionBudget.consume()` if the attack-granted permission is active. A scan of legal temporally scoped quota grants beyond this targeted Dragonair phrase would be useful.
+
+
+### Physical integration checkpoint
+
+Updated `tools/energy_hand_attachment_events.py` with backward-compatible optional `manual_window: NextTurnAttachmentWindow | None` and threaded through `tools/lock_gated_energy_attachment.py`. New `results/next_turn_attachment_window/reproduce_physical.py` composes exact hand copy movement, attachment events, and Palkia Cross Slicer target-scoped lock. With Dragon's Wish active, three physical manual Fire Energy attachments to a legal target succeed (usage=3 against ordinary limit 1); Cross Slicer still rejects an attachment to the affected Defending Pokémon before spending anything; Ranger removal then disallows a fourth while preserving history; existing callers and Effect attachment remain unchanged. CI run **37909057714 success**. An earlier run failed because the test searched for `Cross Slicer` only in restriction.text; fixed test to check restriction.source as the existing profile helper does. Report updated in README at commit `7964c943`.
