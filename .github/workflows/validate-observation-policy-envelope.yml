@@ -1,0 +1,23 @@
+name: Validate observation policy envelope
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/observation_policy_envelope.py"
+      - "results/observation_policy_envelope/**"
+      - ".github/workflows/validate-observation-policy-envelope.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact observation-consistent policy checks
+        run: python results/observation_policy_envelope/reproduce.py
