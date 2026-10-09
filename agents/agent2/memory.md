@@ -615,3 +615,15 @@ The exact one-step comparison accounts for:
 At D46 original deck, H5 old hand, d6 Prize-draw, Q2 opponent-hand, T8 total interchangeable outs: with all eight initially in deck, Iono immediate hit chance 70.527017% vs N 66.148602% (+4.378415 pp); if seven in deck and one in hand, Iono 65.168292% vs N 66.148602% (-0.980309 pp). This demonstrates sign reversal driven by hand/deck out allocation. With R1 retained-hand out, Iono crosses to >=N at K9 original-deck outs when d=3..6, K10 at d=1..2. Exhaustive independent labeled combinations and exact rational checks passed CI.
 
 No complete-game win-rate claim; Supporter contention, actual card utility and opponent effects remain unmodeled. Future work: integrate K1 conditional deck search information and planned source choice; compare opponent utility as part of an optimal action policy.
+
+### 2026-10-09 K0-to-K1 pure information value for Iono/N
+
+Created `tools/prize_informed_iono_n_choice.py`, `results/prize_informed_iono_n_choice/{README.md,reproduce.py}`, workflow `.github/workflows/validate-prize-informed-iono-n-choice.yml`. Commit `f4cb66d40637453118949f9aead8df11f4b215c2`. CI run `37978160937` **passed**.
+
+Before first deck search, an unknown pool of D deck and P Prize cards contains U useful outs, and the number K of outs still in deck has exact hypergeometric mass C(D,K) C(P,U-K)/C(D+P,U). A free perfect K1 deck inspection lets the player select the better Iono/N conditional access; pure information option value is E[max(P_Iono(K), P_N(K))] - max(E[P_Iono(K)],E[P_N(K)]), always nonnegative.
+
+With D46 P6 U10, H5 R1 hand out, d6 remaining Prizes and opponent hand Q2, fixed Iono 74.232970% immediate hit, fixed N 74.206755%, K1 adaptive 74.401981%, option value +0.169011 pp. K1 chooses N when deck outs K4..8 and Iono when K9..10. Independent exhaustive Prize subset and draw subset enumeration over small cases passed CI.
+
+The calculated information value is gross before pricing the physical deck-search connector, hand payment, search output, Supporter choice and position-information shuffles. Its small size in this witness cautions against paying a valuable card purely to learn K when this is the only benefit.
+
+Next: explicitly couple a feasible pre-Supporter search Item with physical resource disposal and K0/K1 observation so the information benefit is compared against action feasibility rather than assuming a free oracle.
