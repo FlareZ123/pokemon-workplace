@@ -1,0 +1,19 @@
+name: Validate Peonia Arc Opening Incidence
+
+on:
+  push:
+    paths:
+      - "tools/peonia_arc_opening_incidence.py"
+      - "results/peonia_arc_opening_incidence/**"
+      - ".github/workflows/validate-peonia-arc-opening-incidence.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m tools.peonia_arc_opening_incidence
