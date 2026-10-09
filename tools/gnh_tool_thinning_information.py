@@ -204,6 +204,62 @@ def multiple_summary(unseen: int = 52, prizes: int = 6,
 
 
 
+
+@dataclass(frozen=True)
+class InformationUtility:
+    keep_value: Fraction
+    blind_value: Fraction
+    k0_best_value: Fraction
+    k1_value: Fraction
+    perfect_information_value: Fraction
+
+
+def exact_information_utility(
+    unseen: int, prizes: int, stellar_cards: int, backup_copies: int,
+    setup_value: Fraction = Fraction(1),
+    ticket_bonus: Fraction = Fraction(1),
+) -> InformationUtility:
+    """Expected utility of optional prepayment Prize inspection.
+
+    Values use alpha*P(setup) + beta*P(setup AND Ticket). Information itself
+    has no card/time cost. The K1 decision is contingent on Prize identity.
+    """
+    if setup_value < 0 or ticket_bonus < 0:
+        raise ValueError("Nonnegative utility weights required")
+    p = exact_multiple(unseen, prizes, stellar_cards, backup_copies)
+    keep = setup_value + ticket_bonus * p.keep_joint
+    blind = (setup_value * p.blindly_replace_setup
+             + ticket_bonus * p.blindly_replace_joint)
+    k0 = max(keep, blind)
+    informed = setup_value + ticket_bonus * p.k1_adaptive_joint
+    assert informed >= k0
+    return InformationUtility(keep, blind, k0, informed, informed - k0)
+
+
+def information_utility_summary(
+    unseen: int = 52, prizes: int = 6, stellar_cards: int = 5,
+    setup_value: Fraction = Fraction(1),
+    ticket_bonus: Fraction = Fraction(1),
+    max_backups: int = 4,
+) -> str:
+    lines = [
+        f"U={unseen} P={prizes} s={stellar_cards} "
+        f"alpha={setup_value} beta={ticket_bonus}",
+        "backups | best K0 action | EVPI in 100*normalized utility units",
+    ]
+    for backups in range(1, max_backups + 1):
+        a = exact_information_utility(
+            unseen, prizes, stellar_cards, backups,
+            setup_value, ticket_bonus
+        )
+        action = "keep" if a.keep_value >= a.blind_value else "replace"
+        lines.append(
+            f"{backups} | {action} | "
+            f"{100 * float(a.perfect_information_value):.9f}"
+        )
+    return "\n".join(lines)
+
+
 def phase_diagram(
     prizes: int = 6, stellar_cards: int = 5,
     minimum_unseen: int = 12, maximum_unseen: int = 60,
@@ -258,3 +314,4 @@ if __name__ == "__main__":
     print(describe())
     print(multiple_summary())
     print(phase_diagram())
+    print(information_utility_summary())
