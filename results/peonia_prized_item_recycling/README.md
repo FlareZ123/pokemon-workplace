@@ -77,6 +77,20 @@ The two-extra-Item result also admits a small conditional decomposition. For six
 
 These are mathematical derivations **for the stated initial Peonia-first policy**, while the unrestricted timing comparison is separately established for the finite tested fixtures by the Bellman solver.
 
+## Acquiring the target versus keeping the next action available
+
+The Bellman endpoint can also require both `T` and an unused `A` or `S` to be in hand simultaneously. This prices a downstream action resource as a hard requirement instead of granting success immediately when T enters the hand. Under the same five-Prize `T+A+S+F+F` state, an initial hand of Peonia, A1, S1, F1 and an inert deck:
+
+| Success event | Peonia-first and flexible optimum |
+| --- | ---: |
+| Acquire T at least once | **100%** |
+| Acquire T while retaining one Shoes | **75%** |
+| Acquire T while retaining one Arc | **75%** |
+
+For the T-plus-Shoes endpoint, an independent exact event decomposition explains the 75%. Peonia's first three positions include T with probability `3/5` and permit retaining a Shoes. If Peonia misses T, the other uninspected card is A with probability `1/4`, S with probability `1/4`, and F with probability `1/2`. Optimal continuation probabilities of ending with T and S are respectively `1/2`, `0`, and `1/2`. Therefore the joint objective reaches `3/5+(2/5)[(1/4)(1/2)+(1/4)(0)+(1/2)(1/2)]=3/4`.
+
+In a concrete line, retrieving T with the *last* Trekking Shoes consumes the resource needed by the stronger goal. Item recycling can make target access certain while leaving material-action continuation uncertain. These are artificial endpoint constraints intended to expose action-capacity dependence; the model does not establish that retaining an unused Shoes is always strategically necessary after retrieving a particular card.
+
 ## Evidence and limits
 
 Implementation: `tools/peonia_timing_policy.py`; exact Fraction reproduction and analytic event checks: `results/peonia_prized_item_recycling/reproduce.py`. The code also checks that Peonia is playable with an empty deck, exposing a previously detected early-termination bug.
