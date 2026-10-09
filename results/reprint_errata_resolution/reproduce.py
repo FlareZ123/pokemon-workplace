@@ -23,11 +23,11 @@ assert counts["historical_official_reprint_candidate_prints"] == 39
 assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
-assert counts["known_non_equivalent_prints"] == 67
-assert counts["known_non_equivalent_names"] == 21
+assert counts["known_non_equivalent_prints"] == 77
+assert counts["known_non_equivalent_names"] == 22
 assert counts["official_semantic_candidate_prints"] == 3
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 3974
+assert counts["semantic_review_prints"] == 3964
 assert counts["high_confidence_candidate_prints"] == 219
 assert counts["exact_fingerprint_trainer_candidate_prints"] == 21
 assert counts["trainer_same_name_review_pool_prints"] == 168
@@ -40,6 +40,7 @@ assert summary["official_semantic_candidate_ids"] == ["ecard1-138", "ex15-73", "
 
 assert summary["known_non_equivalent_by_name"] == {
     "Apricorn Maker": 1,
+    "Arceus": 10,
     "Computer Search": 2,
     "Darkness Energy": 15,
     "Devolution Spray": 1,

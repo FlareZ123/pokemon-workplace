@@ -13,6 +13,8 @@ ACE_SPEC_RULE = "You can't have more than 1 ACE SPEC card in your deck."
 RADIANT_RULE = "Radiant Pokémon Rule: You can't have more than 1 Radiant Pokémon in your deck."
 POKEMON_STAR_RULE = "You can't have more than 1 Pokémon Star in your deck."
 PRISM_RULE_FRAGMENT = "(Prism Star) Rule: You can't have more than 1 ◇ card with the same name in your deck."
+UNLIMITED_SELF_RULE = "You may have as many of this card in your deck as you like."
+UNOWN_FAMILY_RULE = "You may have up to 4 Basic Pokémon cards in your deck with Unown in their names."
 
 
 @dataclass(frozen=True)
@@ -107,6 +109,10 @@ def _has_prism_rule(record: CardRecord) -> bool:
 def _has_self_singleton_rule(record: CardRecord) -> bool:
     target = f"You can't have more than 1 {record.name} in your deck."
     return target in record.rules
+
+
+def _has_unlimited_self_rule(record: CardRecord) -> bool:
+    return UNLIMITED_SELF_RULE in record.rules
 
 
 def _recognized_copy_constraint(record: CardRecord, rule: str) -> bool:
@@ -204,7 +210,7 @@ def _validate_with_records(
             continue
         name_counts[record.name] += quantity
         ids_by_name[record.name].append(card_id)
-        if not record.is_basic_energy:
+        if not record.is_basic_energy and not _has_unlimited_self_rule(record):
             limited_name_counts[record.name] += quantity
 
     for name, quantity in sorted(limited_name_counts.items()):
@@ -214,6 +220,20 @@ def _validate_with_records(
                 "name_copy_limit",
                 f"{name} appears {quantity} times; non-Basic-Energy cards are limited to 4 cards with the same name.",
                 tuple(sorted(ids_by_name[name])),
+            ))
+
+    if any(UNOWN_FAMILY_RULE in record.rules for record in known.values()):
+        unown_ids = [
+            card_id for card_id, record in known.items()
+            if record.is_basic_pokemon and "Unown" in record.name
+        ]
+        unown_count = sum(quantities[card_id] for card_id in unown_ids)
+        if unown_count > 4:
+            issues.append(ValidationIssue(
+                "error",
+                "unown_family_limit",
+                f"Deck contains {unown_count} Basic Pokémon with Unown in their names; the historical family limit is 4.",
+                tuple(sorted(unown_ids)),
             ))
 
     ace_spec_ids = [

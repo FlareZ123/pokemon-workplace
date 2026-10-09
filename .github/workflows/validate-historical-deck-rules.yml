@@ -1,0 +1,38 @@
+name: validate historical deck rules
+
+on:
+  push:
+    paths:
+      - "tools/deck_validator.py"
+      - "tools/arceus_unlimited_reprint_divergence.py"
+      - "tools/reprint_negative_evidence.py"
+      - "results/historical_deck_rules/**"
+      - "results/deck_validator/reproduce.py"
+      - "results/reprint_negative_evidence/reproduce.py"
+      - "results/reprint_errata_resolution/reproduce.py"
+      - ".github/workflows/validate-historical-deck-rules.yml"
+  pull_request:
+    paths:
+      - "tools/deck_validator.py"
+      - "tools/arceus_unlimited_reprint_divergence.py"
+      - "tools/reprint_negative_evidence.py"
+      - "results/historical_deck_rules/**"
+      - "results/deck_validator/reproduce.py"
+      - "results/reprint_negative_evidence/reproduce.py"
+      - "results/reprint_errata_resolution/reproduce.py"
+      - ".github/workflows/validate-historical-deck-rules.yml"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.historical_deck_rules.reproduce
+      - run: python -m results.deck_validator.reproduce
+      - run: python -m results.reprint_negative_evidence.reproduce
+      - run: python -m results.reprint_errata_resolution.reproduce
+      - run: python -m results.reprint_policy_coverage.reproduce

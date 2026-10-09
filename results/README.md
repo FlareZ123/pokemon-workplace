@@ -1,3 +1,5 @@
+**Historical deck-construction rules:** [historical_deck_rules/](historical_deck_rules/) models 15 old Arceus unlimited-copy prints and 26 old Unown family-wide limits. A five-copy distinguishing witness adds ten negative historical Arceus reprint classifications against the Expanded-legal XY promos. Print-specific construction and tournament legality are kept separate.
+
 # Pokémon TCG Expanded research map
 
 **Synergy-aware Bench contraction:** [bench_synergy_contraction/](bench_synergy_contraction/) proves that greedy removal of lowest individually valued occupants can be arbitrarily suboptimal when two Pokémon have conditional value together. In a reproducible 5→4→3 contraction fixture, maximizing immediate surviving value gives 152 then 130, while planning for the final three could retain 142. When the second contraction probability exceeds 5/11, an alternative first-stage discard is preferable in the toy expected-terminal-value model. [CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37918541556). Scores are illustrative, not game win rates.

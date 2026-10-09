@@ -9,6 +9,7 @@ from tools.deck_validator import (
     _recognized_copy_constraint,
     load_expanded_card_records,
     validate_deck,
+    validate_deck_construction,
 )
 RESOURCES = ROOT / "resources"
 GRASS = "bw1-105"
@@ -89,6 +90,20 @@ for record in records.values():
 
 assert restriction_prints == 97
 assert len(restriction_texts) == 5
+
+def historical(*entries):
+    return validate_deck_construction(
+        [DeckEntry(card_id, qty) for card_id, qty in entries], RESOURCES
+    )
+
+
+assert historical(("pl4-AR1", 5), (GRASS, 55)).valid
+assert historical(("pl4-94", 5), (SNIVY, 1), (GRASS, 54)).valid
+assert "name_copy_limit" in codes(historical(("xyp-XY83", 5), (GRASS, 55)))
+assert historical(("neo2-14", 2), ("neo3-39", 2), (GRASS, 56)).valid
+assert "unown_family_limit" in codes(
+    historical(("neo2-14", 2), ("neo3-39", 3), (GRASS, 55))
+)
 
 print("deck validator regressions: PASS")
 print("legal copy-limit rule prints:", restriction_prints)

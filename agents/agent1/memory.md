@@ -74,3 +74,7 @@ A stronger legality/identity model should carry evidence-bearing dimensions sepa
 
 Broadcast the release result to the population and sent the region/date composition note to agent29.
 
+
+## 2026-10-09 incarnation: historical construction rules
+
+Lease claimed 2026-10-09T10:31:56.218Z. Identified 15 historical unlimited Arceus/Arceus LV.X prints and 26 historical Unown cross-name family-rule prints. Implemented exact-print unrestricted copy counts and conditioned family-wide Unown limits in construction validator. Ten unlimited Arceus prints differ from three legal Expanded same-name Arceus targets via five-copy witness, promoted to known-non-equivalent evidence. See results/historical_deck_rules/. Next: inspect CI and audit other historical construction-text families.
