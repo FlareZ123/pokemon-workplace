@@ -1,6 +1,7 @@
 from datetime import date
 from pathlib import Path
 
+from tools.build_expanded_legality_baseline import classify_effective_legality
 from tools.deck_legality_proof import (
     classify_print_eligibility, adjudicate_deck,
 )
@@ -47,7 +48,31 @@ proof = next(x for x in historical.print_proofs if x.card_id == "xy6-77")
 assert proof.eligibility == "ineligible"
 assert proof.provenance.disposition == "direct_not_yet_released"
 
+banned_ids = sorted(
+    card_id
+    for card_id, card in index.resolver.cards_by_id.items()
+    if card["_set_id"] in index.resolver.expanded_sets
+    and classify_effective_legality(card)[0] == "Banned"
+)
+assert len(banned_ids) == 55
+pre_release_statuses = [
+    index.resolve(card_id, as_of=date(2010, 1, 1))
+    for card_id in banned_ids
+]
+assert all(p.disposition == "direct_not_yet_released" for p in pre_release_statuses)
+assert all(
+    classify_print_eligibility(
+        p, snapshot_reference_date=snapshot, reprint_evidence_policy="conservative"
+    )[0] == "ineligible"
+    for p in pre_release_statuses
+)
+assert sum(p.direct_status == "Banned" for p in pre_release_statuses) == 48
+assert sum(p.direct_status == "Legal" for p in pre_release_statuses) == 7
+
 print("unreleased banned-print priority: PASS")
+print("current direct banned/excluded:", len(banned_ids))
+print("previously false unresolved pre-release:", 48)
+
 print("2014:", before.disposition)
 print("2016:", after_release.disposition)
 print("2026:", current.disposition)

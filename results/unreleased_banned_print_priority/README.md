@@ -45,3 +45,21 @@ than a claim that Shaymin-EX was actually legal in 2016.
 
 The evaluation remains bounded by English snapshot and the
 repository's documented date-aware Expanded policy.
+
+## Exhaustive snapshot regression
+
+The corrected release-first priority was checked against all 55
+direct Expanded-scope prints currently banned or excluded by
+tournament text, queried January 1, 2010, before every
+Expanded-set release. All 55 now yield decisive pre-release
+ineligibility.
+
+Forty-eight would previously have yielded direct_banned plus an
+historically unresolved disposition: 41 database ban flags with
+unknown effective dates, and seven explicit tournament-text
+exclusions. The remaining seven Flapple and Medicham V exact
+prints are official dated ban overlays, so their pre-2025 direct
+status is Legal even though the prints are unreleased in 2010.
+
+The new regression checks the entire card set as a corpus
+property, with a selected Shaymin-EX three-date case retained.

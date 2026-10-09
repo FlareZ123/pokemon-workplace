@@ -107,3 +107,5 @@ The historical Unown print-family rule is stage-sensitive and source-conditioned
 ### Temporal priority in direct legality
 
 Corrected an existing condition-order bug: a current database banned print with unknown historical ban date was marked unresolved even when queried before its set release. The release-first ordering makes xy6-77 on January 1, 2014 decisively ineligible; January 2016 remains unresolved under the repository's undated historical-ban evidence policy. See results/unreleased_banned_print_priority/.
+
+The pre-release banned-print priority regression now exhaustively checks 55 direct current banned/excluded Expanded prints on 2010-01-01, with 48 previously incorrectly unresolved due undated bans (41 database, seven tournament-rule exclusions) and seven future overlay entries. See results/unreleased_banned_print_priority/reproduce.py.
