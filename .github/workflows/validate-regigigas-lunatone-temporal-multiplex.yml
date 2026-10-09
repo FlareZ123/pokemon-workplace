@@ -1,0 +1,21 @@
+name: Validate Regigigas Lunatone temporal multiplex
+
+on:
+  push:
+    paths:
+      - tools/regigigas_lunatone_temporal_multiplex.py
+      - .github/workflows/validate-regigigas-lunatone-temporal-multiplex.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate conserved temporal two-engine sequence
+        run: python tools/regigigas_lunatone_temporal_multiplex.py --self-test
+      - name: Print five-slot sequence comparison
+        run: python tools/regigigas_lunatone_temporal_multiplex.py
