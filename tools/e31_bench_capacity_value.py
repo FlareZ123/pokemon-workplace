@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from fractions import Fraction
+from functools import cache
 from itertools import product
 
 from board_position_state import BoardPokemon, PokemonCard
@@ -30,6 +31,11 @@ from top_prize_physical_bridge import TopPrizePhysicalState
 
 GREEDY = "Greedy Dice"
 DREAM = "Dream Ball"
+
+
+@cache
+def dependencies():
+    return profiles_and_target()
 
 
 @dataclass(frozen=True)
@@ -107,7 +113,7 @@ def physical_branch(*, open_slots, order, known_positions,
         initial, pending, board, open_slots=open_slots,
     )
     selection = jirachi_position if known_positions else 0
-    greedy, dream, target, action = profiles_and_target()
+    greedy, dream, target, action = dependencies()
     unresolved = PendingPrizeBatchOrder.from_staged(pending)
 
     for card in order:
@@ -214,7 +220,7 @@ def main() -> None:
                 f"Greedy-first={early}; Dream-first={late}"
             )
 
-    print("Bench-capacity E-31 nonmonotonic order value: 48 physical coin/layout branches passed")
+    print("Bench-capacity E-31 nonmonotonic order value: 56 physical coin/layout branches passed")
 
 
 if __name__ == "__main__":
