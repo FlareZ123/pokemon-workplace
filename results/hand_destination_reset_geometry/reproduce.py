@@ -81,6 +81,7 @@ def check_catalog(resources_root: Path) -> None:
         assert card_id in ids, card_id
     for card_id in ("swsh6-132", "xy12-79", "sm11-206", "sv2-179"):
         assert card_id not in ids, card_id
+    assert next(row.ends_turn for row in catalog if row.name == "Jubilife Village")
     print("Card catalog: 147 current-snapshot candidate prints / 65 text variants passed")
     print(f"Destination split: {dict(counts)}")
 
