@@ -166,6 +166,18 @@ are identical, and Boss remains unconditionally usable later, spending
 the more fragile Counter before Boss weakly preserves options. This
 exchange argument does not imply that a gust should be played eagerly.
 
+
+The [opponent Prize race extension](../opponent_prize_race_gust/) removes the
+fixed-opponent-Prize assumption. A one-Prize opponent reply can reopen a
+Counter Catcher window after our own Prize-taking tied the counts. Its
+independent deadline oracle validates 23,652 clock/board/inventory scenarios.
+The source-choice exchange argument remains correct even if the opponent's
+Prize count changes unpredictably: using an eligible restricted Counter now
+and retaining unrestricted Boss preserves every later same-target use.
+A fixed opponent count is therefore not needed for this *conditional*
+exchange theorem. Source restrictions and action costs still matter.
+
+
 ### A future Supporter lock reverses that source order
 
 [gust_lock_deadlines/](../gust_lock_deadlines/) adds persistent,
