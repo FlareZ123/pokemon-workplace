@@ -58,3 +58,27 @@ An independent 200,000-trial Monte Carlo replay of complete decks, Prize placeme
 Run \`python results/beheeyem_joint_staging_reserve/reproduce.py\` to regenerate all values and sample-space conservation assertions.
 
 The next meaningful study should introduce actual multi-turn retrieval paths and score whether they satisfy **both** the first-turn staging constraint and the turn-three recycled-Basic requirement without exhausting Supporter windows or discardable hand resources. This model demonstrates why multi-deadline evaluation can reverse the ranking of card-slot substitutions.
+
+
+## Robustness across Basic-line redundancy
+
+\`robustness.py\` reuses the exact enumerator while varying Elgyem copies from 2 to 4 and partner Basic copies from 1 to 4, keeping exactly four VIP/Nest slots and preserving all timing, Prize, and search-depletion rules. Across the 12 hypothetical decks, first-turn staging alone still favors VIP4, while the joint staging-plus-Nest objective selects either VIP2/Nest2 or VIP1/Nest3:
+
+| Elgyem copies | Partner Basic copies | Joint-optimal VIP / Nest | Joint access |
+| ---: | ---: | ---: | ---: |
+| 2 | 1 | 2 / 2 | 0.995117% |
+| 2 | 2 | 2 / 2 | 1.144803% |
+| 2 | 3 | 2 / 2 | 1.197393% |
+| 2 | 4 | 1 / 3 | 1.253028% |
+| 3 | 1 | 2 / 2 | 1.647258% |
+| 3 | 2 | 2 / 2 | 1.915877% |
+| 3 | 3 | 1 / 3 | 2.053444% |
+| 3 | 4 | 1 / 3 | 2.227114% |
+| 4 | 1 | 2 / 2 | 2.200721% |
+| 4 | 2 | 1 / 3 | 2.598778% |
+| 4 | 3 | 1 / 3 | 2.910521% |
+| 4 | 4 | 1 / 3 | 3.181558% |
+
+**Interpretation:** When Elgyem or the partner Basic is less redundant, two VIP copies more often justify their initial staging capacity, even at the cost of a later Nest slot. With more Basic copies, the extra redundancy reduces setup fragility, increasing the relative value of three Nest copies for future access. The switching threshold depends jointly on both Basic counts: no single VIP/Nest allocation wins all scanned decks.
+
+This is a finite 12-case sensitivity result within the stipulated uniform-draw model, rather than a universal monotonicity theorem. Reproduce with \`python results/beheeyem_joint_staging_reserve/robustness.py\`.
