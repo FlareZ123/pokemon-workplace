@@ -587,3 +587,17 @@ Normalized old Trainer source gates as Supporter-from-hand and preserved Ingo & 
 Caught and repaired missed `Jubilife Village` Stadium turn-ending wording (`their turn ends`) in `tools/catalog_full_hand_replacements.py` commit `d13261105d12b6b22831440e1d4f79428cafa983`, with source-catalog regression in commit `a06d8d7ab79b85f0c5d63e3fb78614b4deb7ccd9`. The unified compiler regression pins this semantic.
 
 Next: compile conditional draw payloads, especially bottom-deck Iono/Marnie/Skwovet, opponent-relative counts, coin outcomes, and prize-dependent counts; connect typed transitions to physical zones and stochastic future utility rather than assuming full action legality.
+
+### 2026-10-09 explicit bottom-hand effect resolver
+
+New `tools/bottom_hand_redraw_execution.py`, `results/bottom_hand_redraw_execution/{README.md,reproduce.py}`, and `.github/workflows/validate-bottom-hand-redraw-execution.yml`.
+
+Commit `87b4aa35be55516f0254276c8a3fd01ff63433ef`, CI `37977372462` **passed**.
+
+The typed effect resolver implements six exact current Expanded print families: Iono, Marnie, Lucian, Thievul Fumbling Hands, Kingdra Seething Currents, and Skwovet Nest Stash. It preserves physical card IDs in ordered deck and hand, externalizes randomized bottom-order permutations, enforces cross-player coupling conditions and optional Kingdra target, resolves independent Lucian coin outcomes, and permits drawing into bottomed old-hand cards when the prior deck is too short.
+
+Important coupled-hand witness: Iono acting on an empty-hand player still draws based on Prizes if the other player returns any hand cards. Contrasts with Kingdra/Skwovet single-target gates. Short-deck witness: old deck [A,B], hand [X,Y,Z] bottomed [Z,X,Y] by Marnie, then draw five => [A,B,Z,X,Y]. Tested with labeled exhaustive two-player cases and CI success.
+
+This resolves the effect after legal activation. Source action legality, triggers, matchups, and subsequent information beliefs remain external.
+
+Next: state-dependent evaluation of the extra opponent draws induced by using a bottom-hand Supporter, plus comparing deck-position beliefs before/after randomized bottoming when current top deck is known.
