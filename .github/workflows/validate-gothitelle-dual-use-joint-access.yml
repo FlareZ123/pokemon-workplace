@@ -1,0 +1,23 @@
+name: Validate Gothitelle dual-use joint access
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_dual_use_joint_access.py"
+      - "results/gothitelle_dual_use_joint_access/**"
+      - ".github/workflows/validate-gothitelle-dual-use-joint-access.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify joint two-turn probability and print grounding
+        run: python results/gothitelle_dual_use_joint_access/reproduce.py
