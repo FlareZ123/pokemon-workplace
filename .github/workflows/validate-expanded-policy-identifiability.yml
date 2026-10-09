@@ -1,0 +1,24 @@
+name: Validate scaled search-policy print identifiability
+
+on:
+  push:
+    paths:
+      - "tools/expanded_policy_identifiability.py"
+      - "tools/expanded_singleton_reveal_hypergeometric.py"
+      - "results/expanded_policy_identifiability/**"
+      - ".github/workflows/validate-expanded-policy-identifiability.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check scaled print-specific behavioral updates
+        run: python results/expanded_policy_identifiability/reproduce.py
