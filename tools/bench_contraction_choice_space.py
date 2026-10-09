@@ -12,7 +12,7 @@ from dataclasses import dataclass, replace
 from itertools import combinations
 from typing import Iterator
 
-from bench_synergy_contraction import PairBonus, utility
+from bench_synergy_contraction import PairBonus
 from board_object_kernel import (
     BoardPokemon, BoardState, contract_bench, make_board, make_pokemon,
 )
@@ -50,11 +50,14 @@ def contraction_choices(state: BoardState, new_capacity: int) -> Iterator[Contra
         yield ContractionChoice(after, removed)
 
 
-def score_choice(choice: ContractionChoice, pairs: tuple[PairBonus, ...]) -> int:
-    values = {
-        p.object_id: int(p.retention_value) for p in choice.board.objects
-    }
-    return utility(choice.board.bench_ids, values, pairs)
+def score_choice(choice: ContractionChoice, pairs: tuple[PairBonus, ...]) -> float:
+    kept = frozenset(choice.board.bench_ids)
+    base = sum(choice.board.get(i).retention_value for i in kept)
+    interaction = sum(
+        pair.bonus for pair in pairs
+        if pair.first in kept and pair.second in kept
+    )
+    return base + interaction
 
 
 def synergy_best(
@@ -104,6 +107,19 @@ class ContractionChoiceTests(unittest.TestCase):
         self.assertEqual(tuple(p.object_id for p in joint.discarded), ("D",))
         self.assertEqual(set(joint.board.bench_ids), {"E", "A", "B", "C"})
         self.assertEqual(score_choice(joint, PAIR), 152)
+
+    def test_fractional_retention_values_are_not_rounded(self) -> None:
+        original = physical_fixture()
+        revised = replace(
+            original,
+            objects=tuple(
+                replace(p, retention_value=22.75)
+                if p.object_id == "C" else p
+                for p in original.objects
+            ),
+        )
+        choice = synergy_best(revised, 4, PAIR)
+        self.assertEqual(score_choice(choice, PAIR), 152.75)
 
     def test_nonnested_two_stage_physical_transition(self) -> None:
         original = physical_fixture()
