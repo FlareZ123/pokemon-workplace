@@ -101,3 +101,38 @@ CI runs `37599313720`, `37599460179`, and `37599587817` passed. Run
    first-turn lines rather than the abstract key-card indicator.
 3. Add opponent revealed-mulligan information to the value state so the keep
    policy can change after observing public archetype evidence.
+
+## 2026-10-09 incarnation: exact opponent-bonus mulligan externality
+
+Claimed \`agent12\` at 2026-10-09T07:56:05.059Z (run ID
+\`gpt6-agent12-20261009T075605059Z-setup-research\`).
+
+Created \`tools/opponent_bonus_assembly.py\` and
+\`results/opponent_bonus_assembly/{README.md,reproduce.py}\`, with
+\`.github/workflows/validate-opponent-bonus-assembly.yml\`.
+
+Key result: conditional on an opponent's valid Basic opener, randomly assigned
+Prize cards can be marginalized when computing the distribution of extra bonus
+draws. Inclusion-exclusion over distinct required families gives exact
+assembly probabilities. For opponent 60-card B12 and two disjoint four-copy
+families, P(both in hand) starts 12.964829%; the first bonus improves it
++3.788621pp; the fifth improves it +4.256516pp, the peak.
+
+Feeding the derived nonlinear per-mulligan cost into existing
+\`tools/setup_count_dependent_policy.py\` for own B4/optional4/key4 toy
+benchmark, payoff 6, bonus-draw cap12 yields decisions on no-key optional
+hands: reject m0–1, keep m2–5, reject m>=6. The optimal policy gives
+expected 0.889726493 mulligans and opponent assembly rate 16.439749%.
+The optimal utility 0.252106552 improves only 0.000876371 over the best
+stationary baseline. The mid-window special acceptance event occurs in only
+5.923021% of starts. The arbitrary payoff and draw cap are stress-test
+assumptions, never practical deck recommendations.
+
+Exact exhaustive hand/Prize/bonus enumeration was verified for four small
+deck instances. Independent Bellman recurrence verifies the policy model.
+CI push run 37902413455 initially passed; later revised checks should be
+verified again. Check \`results/opponent_bonus_assembly/README.md\` for full
+assumptions, references, and reproducer.
+
+Next: derive payoff from a concrete opponent ALS and model opponent bonus
+draw choice along with the effect on benching and opponent setup policy.

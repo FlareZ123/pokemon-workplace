@@ -95,6 +95,21 @@ The exact discounted-by-increment objective at m=0 is approximately
 L=6 is a stress-test parameter, with no claim that it is a calibrated
 competitive matchup value. Large mulligan counts are also rare.
 
+## How often the middle window matters
+
+Mixing the exact optimal policy over its accepted-opening-count distribution
+gives 0.889726493 expected own mulligans, 46.060173% expected own key-hand
+quality, and a 16.439749% probability that the opponent has both target
+groups after the awarded bonus draws. The chance that the policy actually
+accepts an optional-only, no-key hand at mulligan count 2–5 is 5.923021%.
+The resulting incremental net objective is 0.252106552.
+
+With the identical payoff and bonus cap, *always rejecting* optional-only
+no-key hands has objective 0.251230181; *always accepting* them has 0.249479258.
+The exact count-adaptive improvement over the better stationary alternative
+is therefore only about 0.000876371 utility. The policy reversal is a
+mathematical existence result; its advantage is small in this benchmark.
+
 ## Verification
 
 - [tools/opponent_bonus_assembly.py](../../tools/opponent_bonus_assembly.py)

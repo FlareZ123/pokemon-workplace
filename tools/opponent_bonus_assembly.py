@@ -13,6 +13,11 @@ from itertools import combinations
 from math import comb
 from collections.abc import Sequence
 
+def _choose(n: int, k: int) -> int:
+    """Combinations with zero out-of-range witnesses."""
+    return comb(n, k) if 0 <= k <= n else 0
+
+
 from tools.setup_count_dependent_policy import (
     CountDependentPolicy,
     optimize_count_dependent_mulligan_penalty,
@@ -65,7 +70,7 @@ class OpponentBonusAssembly:
         no_target_accepted = comb(n - k, h) - comb(n - b - k, h)
         return (
             Fraction(no_target_accepted, accepted)
-            * Fraction(comb(n - h - k, bonus_draws), comb(n - h, bonus_draws))
+            * Fraction(_choose(n - h - k, bonus_draws), comb(n - h, bonus_draws))
         )
 
     def assembly_probability(self, bonus_draws: int) -> Fraction:

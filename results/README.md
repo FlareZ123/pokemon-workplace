@@ -2,6 +2,8 @@
 
 This directory contains accumulated research on paper Pokémon TCG Expanded, Black & White onward. This page is a human-readable map of the strongest recurring findings and the detailed results that support them. It is intentionally selective rather than exhaustive.
 
+**Opponent mulligan-bonus externality:** [opponent_bonus_assembly/](opponent_bonus_assembly/) derives exact conditional multi-group assembly probabilities after opponent bonus draws. The marginal increase from successive draws initially rises for two required four-copy groups and induces a non-monotone optimal setup policy in an abstract 60-card benchmark: reject optional-only no-key hands at 0–1 mulligans, keep at 2–5, reject from 6 onward. The adaptive gain over the best stationary benchmark is only 0.000876371 normalized utility, and all game-line values are uncalibrated. Exhaustive small-deck and Bellman checks pass.
+
 ## Current high-level picture
 
 Across several independent investigations, the same methodological conclusion keeps recurring:

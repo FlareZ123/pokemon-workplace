@@ -71,7 +71,7 @@ def test_benchmark() -> None:
     points = [float(opponent.assembly_probability(i)) for i in range(13)]
     assert abs(points[0] - 0.129648289) < 1e-8
     assert abs(points[4] - 0.29114847) < 1e-7
-    assert abs(points[12] - 0.610) > 1e-3  # Guard against frozen fixture.
+    assert abs(points[12] - 0.611316918750416) < 1e-12
     assert all(a <= b for a, b in zip(points, points[1:]))
     increments = [b - a for a, b in zip(points, points[1:])]
     assert increments.index(max(increments)) == 4
@@ -124,6 +124,55 @@ def test_benchmark() -> None:
             for state, mass in distribution
         )
         assert abs(value - policy.prefix_steps[m].expected_utility) < 1e-12
+
+    # Independently mix the accepted-hand outcomes over the geometric
+    # rejection process, including the exact zero-cost stationary tail.
+    distribution = opening_hand_distribution(60, 4, (4,), (4,))
+    probability_reaching = 1.0
+    expected_opponent_assembly = 0.0
+    expected_own_quality = 0.0
+    expected_mulligans = 0.0
+    probability_middle_keep = 0.0
+    for count in range(200):
+        step = (
+            policy.prefix_steps[count]
+            if count < 12
+            else policy.tail_step
+        )
+        p_accept = step.acceptance_probability
+        p_finished = probability_reaching * p_accept
+        mean_kept_value = sum(
+            mass * own_value(state)
+            for state, mass in distribution
+            if state.forced_in_hand > 0
+            or state in step.optional_keep_states
+        ) / p_accept
+        expected_own_quality += p_finished * mean_kept_value
+        expected_opponent_assembly += (
+            p_finished
+            * float(opponent.assembly_probability(min(count, 12)))
+        )
+        expected_mulligans += count * p_finished
+        if 2 <= count <= 5:
+            probability_middle_keep += probability_reaching * sum(
+                mass
+                for state, mass in distribution
+                if state in optional and own_value(state) == 0
+            )
+        probability_reaching *= 1.0 - p_accept
+    assert probability_reaching < 1e-14
+    assert abs(expected_mulligans - 0.8897264934765043) < 1e-11
+    assert abs(expected_opponent_assembly - 0.16439748741017363) < 1e-11
+    assert abs(probability_middle_keep - 0.059230213077835575) < 1e-11
+    net = expected_own_quality - 6.0 * (
+        expected_opponent_assembly - points[0]
+    )
+    assert abs(net - policy.start.expected_utility) < 1e-12
+
+    print("Probability of accepting an optional-only no-key hand in middle:", 
+          f"{probability_middle_keep:.9%}")
+    print(f"Optimal expected mulligans: {expected_mulligans:.9f}")
+    print(f"Optimal expected opponent assembly: {expected_opponent_assembly:.9%}")
 
     print("Opponent P(two groups) at bonus draws 0,1,4,12:")
     print(*(f"{i}: {points[i]:.9%}" for i in (0, 1, 4, 12)))
