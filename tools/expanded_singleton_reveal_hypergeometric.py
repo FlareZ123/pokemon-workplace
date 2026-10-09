@@ -104,7 +104,7 @@ def closed_form_reveal_probabilities(
 ) -> SingletonRevealProbabilities:
     """Independent symbolic probability identities in the nondegenerate range."""
     u, p = pool_size, prizes
-    if u < 4 or not 2 <= p <= u - 3:
+    if u < 4 or not 2 <= p <= u - 2:
         raise ValueError("closed-form witness requires two possible Prizes")
     success = 1 - Fraction(p * (p - 1), u * (u - 1))
     x_joint = Fraction(
