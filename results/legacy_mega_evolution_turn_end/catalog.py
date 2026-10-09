@@ -23,7 +23,7 @@ UNCOVERED = (
 
 def main() -> None:
     coverage = audit_legacy_mega_spirit_links(ROOT / "resources")
-    assert coverage.total_legacy_prints == 91
+    assert coverage.total_legacy_prints == 92
     assert len(coverage.legacy_prints_by_name) == 41
     assert coverage.total_link_prints == 35
     assert len(coverage.spirit_link_prints_by_target) == 34
@@ -31,6 +31,7 @@ def main() -> None:
     links = dict(coverage.spirit_link_prints_by_target)
     assert "xy12-75" in links["M Charizard-EX"]
     assert "xy5-132" in links["Primal Kyogre-EX"]
+    assert "me55c-106m" in dict(coverage.legacy_prints_by_name)["M Gardevoir-EX"]
     assert "me1-3" not in {
         print_id for _, ids in coverage.legacy_prints_by_name
         for print_id in ids
