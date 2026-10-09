@@ -7,7 +7,7 @@ are held. Success requires T and an unused Shoes simultaneously in hand.
 """
 from fractions import Fraction
 
-from tools.peonia_timing_policy import normalize, play_peonia, optimal
+from tools.peonia_timing_policy import initial, normalize, play_peonia, optimal
 
 
 def uniform_target(n, d):
@@ -47,6 +47,16 @@ def run():
             assert (first, flexible) == expected, (n, d, first, flexible)
             print(f"Prizes={n} deck={d}: first={first} flexible={flexible} "
                   f"gain={flexible-first}")
+
+    # K1-known deck containment is sufficient for a strict timing gain.
+    for d in (1, 2, 3, 4):
+        belief = initial(tuple("FFFFF"), tuple("T" + "F" * (d - 1)))
+        hand = (0, 1, 1, 1)
+        play_peonia.cache_clear()
+        optimal.cache_clear()
+        assert play_peonia(belief, hand, "S") == 0
+        assert optimal(belief, hand, True, "S") == Fraction(1, d)
+        print(f"K1 T known in deck of {d}: Arc-first={Fraction(1, d)}")
 
     assert compare(5, 2) == (Fraction(3, 7), Fraction(4, 7))
     print("12 exact belief-state tests passed; Arc-first relocation adds 1/(n+d).")
