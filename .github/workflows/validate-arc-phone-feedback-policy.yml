@@ -1,0 +1,20 @@
+name: Validate Arc Phone feedback policy
+
+on:
+  push:
+    paths:
+      - tools/arc_phone_feedback_policy.py
+      - results/arc_phone_feedback_policy/**
+      - .github/workflows/validate-arc-phone-feedback-policy.yml
+  workflow_dispatch:
+
+jobs:
+  arc-phone-feedback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test adaptive belief policy against labeled-world oracle
+        run: python -m results.arc_phone_feedback_policy.reproduce
