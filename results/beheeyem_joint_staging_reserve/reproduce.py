@@ -8,12 +8,19 @@ from math import comb, lcm
 import json
 
 
-def joint_access(\n    vip: int, nest: int, *, elgyem_copies: int = 4, partner_copies: int = 4\n) -> tuple[Fraction, Fraction]:
+def joint_access(
+    vip: int, nest: int, *, elgyem_copies: int = 4, partner_copies: int = 4
+) -> tuple[Fraction, Fraction]:
     """Return (ready first turn, ready and unused Nest in hand by turn two)."""
     if not 0 <= vip <= 4 or not 0 <= nest <= 4:
         raise ValueError("Each Item name has at most four copies")
+    if not 2 <= elgyem_copies <= 4 or not 1 <= partner_copies <= 4:
+        raise ValueError("Expected 2-4 Elgyem and 1-4 partner Basics")
     # Disjoint categories: Elgyem, partner Basic, VIP, Nest, other.
-    copies = (4, 4, vip, nest, 52 - vip - nest)
+    copies = (
+        elgyem_copies, partner_copies, vip, nest,
+        60 - elgyem_copies - partner_copies - vip - nest,
+    )
     sample_space = comb(60, 7) * 53 * comb(52, 6)
     continuation_denominator = lcm(44, 45, 46)
     normalized = ready = reserved_nest = 0
