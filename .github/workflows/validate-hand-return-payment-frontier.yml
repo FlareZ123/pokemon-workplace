@@ -1,0 +1,23 @@
+name: Validate hand return payment frontier
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/hand_return_payment_frontier.py"
+      - "results/hand_return_payment_frontier/**"
+      - ".github/workflows/validate-hand-return-payment-frontier.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate multi-out payment frontier
+        run: python results/hand_return_payment_frontier/reproduce.py
