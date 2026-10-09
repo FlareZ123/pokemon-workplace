@@ -72,3 +72,22 @@ Added:
 ### Physical integration checkpoint
 
 Updated `tools/energy_hand_attachment_events.py` with backward-compatible optional `manual_window: NextTurnAttachmentWindow | None` and threaded through `tools/lock_gated_energy_attachment.py`. New `results/next_turn_attachment_window/reproduce_physical.py` composes exact hand copy movement, attachment events, and Palkia Cross Slicer target-scoped lock. With Dragon's Wish active, three physical manual Fire Energy attachments to a legal target succeed (usage=3 against ordinary limit 1); Cross Slicer still rejects an attachment to the affected Defending Pokémon before spending anything; Ranger removal then disallows a fourth while preserving history; existing callers and Effect attachment remain unchanged. CI run **37909057714 success**. An earlier run failed because the test searched for `Cross Slicer` only in restriction.text; fixed test to check restriction.source as the existing profile helper does. Report updated in README at commit `7964c943`.
+
+
+## 2026-10-09 continued findings (run above; lease remains active)
+
+### Reactive hand attachment ends an otherwise unlimited turn
+
+Added `tools/hand_attachment_turn_end.py`, `results/hand_attachment_turn_end/{README.md,reproduce.py}`, and `validate-hand-attachment-turn-end.yml`. Verified Expanded-legal Slakoth `sm11-167` Lazy Howl and Hypno `sv6pt5-17` Daydream: when opponent next turn attaches from hand to originally Defending Pokémon, that player's turn ends. Exact hand-origin event replay covers both manual Dragon's Wish attachments and independent effect-based hand attachments; target-bound Active-switch/evolution expiry, Ranger-like removal, and event-prefix guard. In 4-Energy witness, A can attach twice to unaffected Bench under Wish then target, at which point it closes turn with three recorded attachments; attaching to target first closes after one. CI run **37909577560 success**. Indexed in results map.
+
+### Pokémon Ranger cancels both negative and positive attack effects
+
+Added `tools/pokemon_ranger_attachment_projection.py`, `results/ranger_attachment_tradeoff/{README.md,reproduce.py}`, and `validate-ranger-attachment-tradeoff.yml`. Pokémon Ranger `xy11-104` removes the Lazy Howl/Daydream reaction AND Dragon's Wish manual-attachment grant. If Ranger is played before any attachment, it prevents attachment-to-target closing turn but permits only the one normal manual attachment; if Ranger is played after two manual attachments to Bench, target becomes free but no more ordinary attachments are allowed because actual usage count persists. Supporter contention (including synthetic Dual Brains quota two) tested. CI run **37909842415 success**. Limitation: projection does not materialize physical Ranger Supporter or source lock checks; need upstream executor.
+
+### Legacy XY Mega/Primal evolution turn-end and Spirit Link
+
+Added `tools/legacy_mega_evolution_turn_end.py`, `tools/legacy_mega_spirit_link_catalog.py`, `results/legacy_mega_evolution_turn_end/{README.md,reproduce.py,catalog.py}`, and `validate-legacy-mega-evolution-turn-end.yml`. XY-era M Charizard-EX `xy2-13` and Primal Kyogre-EX `xy5-55` end turn upon evolving; matching effective Spirit Link Tool (`xy12-75`, `xy5-132`) exempts, wrong/suppressed/unverified Tool does not. Newer Mega Venusaur ex `me1-3` has three-Prize KO rule and *no* evolution turn-end. Full effectively legal bundled scan yields **91 legacy turn-ending Mega/Primal prints**, **41 names**, **35 Spirit Link Tool prints**, **34 covered names**, **7 uncovered names**: M Absol-EX, M Blaziken-EX, M Diancie-EX, M Heracross-EX, M Kangaskhan-EX, M Metagross-EX, M Swampert-EX. Source-backed exact print classifier, physical evolve, and catalog regressions passed CI **37910403154**; report update also passed **37910432907**. Tool effect suppression remains upstream.
+
+### Next
+
+Useful next research: active Ability exemptions for turn-ending Supporters: Metagross `sm7-95` Extend cancels end-turn from Steven's Resolve `sm7-145`; Alcremie `swsh9-71` Additional Order cancels end-turn from Café Master `swsh9-133`. Their Active position and effective Ability state must be checked when Supporter resolves. Integrate into canonical integer Supporter budget, preserving Supporter consumption regardless of whether turn closes. Consider additional turn-ending Item or Ability paths after this family. Coordinate with agent36 on turn-sequence ownership when advantageous.
