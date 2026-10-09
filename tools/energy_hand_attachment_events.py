@@ -4,6 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from enum import Enum
 
+from next_turn_attachment_window import NextTurnAttachmentWindow
 from turn_action_budget import TurnAction, TurnActionBudget
 
 
@@ -42,6 +43,7 @@ def attach_from_hand(
     *,
     player: str,
     channel: AttachmentChannel,
+    manual_window: NextTurnAttachmentWindow | None = None,
 ) -> EnergyAttachmentState | None:
     if not selections:
         return None
@@ -50,7 +52,11 @@ def attach_from_hand(
 
     budget = state.budget
     if channel is AttachmentChannel.MANUAL:
-        budget = budget.consume(TurnAction.MANUAL_ENERGY_ATTACHMENT)
+        budget = (
+            manual_window.consume_manual_attachment(player, budget)
+            if manual_window is not None
+            else budget.consume(TurnAction.MANUAL_ENERGY_ATTACHMENT)
+        )
         if budget is None:
             return None
 
