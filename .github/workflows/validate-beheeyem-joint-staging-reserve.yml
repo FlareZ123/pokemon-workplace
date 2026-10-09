@@ -17,3 +17,5 @@ jobs:
       - uses: actions/checkout@v7
       - name: Reproduce first-turn and retained-Nest joint probabilities
         run: python3 results/beheeyem_joint_staging_reserve/reproduce.py
+      - name: Reproduce Basic-count robustness scan
+        run: python3 results/beheeyem_joint_staging_reserve/robustness.py
