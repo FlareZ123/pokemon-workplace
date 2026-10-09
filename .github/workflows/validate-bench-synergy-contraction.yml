@@ -1,0 +1,21 @@
+name: Validate Bench synergy contraction
+
+on:
+  push:
+    paths:
+      - tools/bench_synergy_contraction.py
+      - .github/workflows/validate-bench-synergy-contraction.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Exact contraction and policy regressions
+        run: python tools/bench_synergy_contraction.py --self-test
+      - name: Print reproducible example
+        run: python tools/bench_synergy_contraction.py
