@@ -4,7 +4,9 @@ on:
   push:
     paths:
       - tools/opponent_prize_race_gust.py
+      - tools/stochastic_opponent_prize_gust.py
       - results/opponent_prize_race_gust/**
+      - results/stochastic_opponent_prize_tempo/**
       - .github/workflows/validate-opponent-prize-race-gust.yml
   workflow_dispatch:
 
@@ -17,3 +19,4 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m results.opponent_prize_race_gust.reproduce
+      - run: python -m results.opponent_prize_race_gust.stochastic_reproduce
