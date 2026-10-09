@@ -52,7 +52,7 @@ For **zero or at least two free slots**, neither processing order has any additi
 
 ### Why zero slots still averages 2.50 Prizes
 
-Even with a full Bench, Greedy Dice can still take one additional Prize on heads. The fourth Prize requires Jirachi to enter the Bench and trigger Wish Upon a Star. That follow-up cannot occur when the Bench is full, so the total Prize expectation is the original two plus the `1/2) chance of one Greedy bonus Prize.
+Even with a full Bench, Greedy Dice can still take one additional Prize on heads. The fourth Prize requires Jirachi to enter the Bench and trigger Wish Upon a Star. That follow-up cannot occur when the Bench is full, so the total Prize expectation is the original two plus the `1/2` chance of one Greedy bonus Prize.
 
 ### Why two slots remove the conflict
 
