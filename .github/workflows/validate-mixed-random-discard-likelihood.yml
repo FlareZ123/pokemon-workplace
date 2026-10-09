@@ -1,0 +1,22 @@
+name: Validate mixed random discard theorem
+
+on:
+  push:
+    paths:
+      - 'tools/mixed_random_discard_likelihood.py'
+      - 'results/mixed_random_discard_likelihood/**'
+      - '.github/workflows/validate-mixed-random-discard-likelihood.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: python results/mixed_random_discard_likelihood/reproduce.py
