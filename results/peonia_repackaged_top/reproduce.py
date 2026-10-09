@@ -52,6 +52,18 @@ def run():
                 Fraction(3, n + d), Fraction(4, n + d)
             ), (n, d, first, flexible)
     print("T-only no-Shoes endpoint: 12 exact strict Arc-first timing tests passed.")
+    # Near-opening scale: 6 Prizes + 46 unknown deck cards, 52 target positions.
+    # The 52 physical target positions form an exact discrete uniform belief;
+    # no Monte Carlo sampling or deck-tail permutation enumeration is used.
+    large = uniform_target(6, 46)
+    hand = (0, 1, 0, 1)
+    play_peonia.cache_clear()
+    optimal.cache_clear()
+    first = play_peonia(large, hand)
+    flexible = optimal(large, hand, True)
+    assert (first, flexible) == (Fraction(3, 52), Fraction(4, 52))
+    print(f"Six-Prize 46-card deck: Peonia-first={first} Arc-first={flexible}")
+
     for n, d in ((5, 2), (6, 2), (4, 3)):
         belief = uniform_target(n, d)
         hand = (0, 1, 0, 0)  # No spare Peonia replacement card.
