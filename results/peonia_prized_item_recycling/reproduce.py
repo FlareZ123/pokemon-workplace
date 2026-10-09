@@ -24,6 +24,13 @@ def run():
         print(f"{cards}: first={first} flexible={flexible} "
               f"P={float(expected):.9%}")
 
+    for cards in ("TFFFF", "TAFFF", "TASFF"):
+        optimal.cache_clear()
+        play_peonia.cache_clear()
+        first, flexible = compare(cards, "F" * 46, 1, 1, 0)
+        assert (first, flexible) == (Fraction(4, 5),) * 2
+        print(f"{cards} without spare filler: {first}")
+
     # Peonia remains usable even with an empty deck; Items do not.
     optimal.cache_clear()
     play_peonia.cache_clear()
