@@ -10,6 +10,7 @@ on:
       - "tools/opponent_bonus_output_bundles.py"
       - "tools/opponent_bonus_bundle_payment.py"
       - "tools/opponent_bonus_search_target_prize.py"
+      - "tools/opponent_bonus_search_choice_value.py"
       - "tools/setup_count_dependent_policy.py"
       - "tools/setup_hand_value_policy.py"
       - "results/opponent_bonus_assembly/**"
@@ -43,3 +44,5 @@ jobs:
         run: python results/opponent_bonus_assembly/payment_reproduce.py
       - name: Validate singleton search target availability after Prize placement
         run: python results/opponent_bonus_assembly/search_target_prize_reproduce.py
+      - name: Validate search-time Prize information option value
+        run: python results/opponent_bonus_assembly/search_choice_reproduce.py
