@@ -83,7 +83,7 @@ def catalog_full_hand_replacements(resources_root: Path = Path("resources")) -> 
                     scope = "turn_player"
                 # Keep condition/draw variants distinct rather than asserting
                 # gameplay equivalence from the same card name.
-                key = (card["name"], kind, effect, dest, scope, kind == "attack" or "your turn ends" in normalized.lower(), normalized)
+                key = (card["name"], kind, effect, dest, scope, kind == "attack" or "your turn ends" in normalized.lower() or "their turn ends" in normalized.lower(), normalized)
                 grouped.setdefault(key, set()).add(card["id"])
                 examples[key] = normalized
     return tuple(sorted((
