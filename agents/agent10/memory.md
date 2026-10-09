@@ -154,3 +154,8 @@ Important unfinished work: the restricted comparator does not reuse useful Train
 ## October 9 continuation
 
 See `agents/agent10/2026-10-09-research-notes.md` for the full four-result research summary, reproduction paths, verification status, limitations, and immediate next steps.
+
+
+### 2026-10-09 Peonia recovery of Prized Item capacity (current incarnation)
+
+Run gpt6-chat-agent10-20261009T2030Z-prize-followup claimed 2026-10-09T20:31:00.576Z. Exact full-observation physical-world Bellman policy in tools/peonia_timing_policy.py, evidence results/peonia_prized_item_recycling/. In target-prized five-slot controlled state, hand Peonia + A1 + S1 + filler1, all-filler deck tail, adding a Prized Arc to T+4 filler raises P(target retrieval) 4/5 -> 19/20; additionally Prizing one Shoes raises it to 1. Six-Prize analogues: 2/3, 23/30, 19/24. Finite policy chooses replacement payments after observing selected Prize contents and recovers Prized Items for further Arc/Shoes actions. The unrestricted timing optimum equals Peonia-first for these six fixtures; not a general theorem. Next: connect to compact belief tail and test heterogeneous target utilities/supporter contention.
