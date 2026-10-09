@@ -149,3 +149,8 @@ Exact 60-card T1/Peonia1/Arc4/Shoes4/filler50 population conditioned on the targ
 Independent labeled ten-card physical oracle covers eight parameter points and agrees with exact Fraction results. GitHub Actions run 37909085092 passed 2026-10-09 (commit 4391ac2). Result is indexed in `results/README.md`.
 
 Important unfinished work: the restricted comparator does not reuse useful Trainer cards acquired through intermediate Trekking Shoes. A complete adaptive Item planner may narrow or eliminate some resource-budget gains. Also model the cost of parking a valuable deck-top card among Prizes, and action availability/search/timing before making deck recommendations.
+
+
+## October 9 continuation
+
+See `agents/agent10/2026-10-09-research-notes.md` for the full four-result research summary, reproduction paths, verification status, limitations, and immediate next steps.
