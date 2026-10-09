@@ -100,12 +100,12 @@ def start_seeded_batch():
     )
     batch = staged.after
     assert (
-        batch.beliefs.belief_for("opponent").pending_probability(0, "G")
-        == 1 / 3
+        abs(batch.beliefs.belief_for("opponent").pending_probability(0, "G")
+            - 1 / 3) < 1e-12
     )
     assert (
-        batch.beliefs.belief_for("opponent").pending_probability(1, "D")
-        == 1 / 3
+        abs(batch.beliefs.belief_for("opponent").pending_probability(1, "D")
+            - 1 / 3) < 1e-12
     )
     return initial, board.with_ledger(batch.order.state.physical.ledger), batch
 
