@@ -1,0 +1,20 @@
+name: Validate Arc Phone chain access
+
+on:
+  push:
+    paths:
+      - tools/arc_phone_chain_access.py
+      - results/arc_phone_chain_access/**
+      - .github/workflows/validate-arc-phone-chain-access.yml
+  workflow_dispatch:
+
+jobs:
+  arc-phone-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Exact hand-Prize and labeled physical oracle
+        run: python -m results.arc_phone_chain_access.reproduce
