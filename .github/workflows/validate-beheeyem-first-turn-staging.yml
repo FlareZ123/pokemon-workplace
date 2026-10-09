@@ -1,0 +1,19 @@
+name: Validate Beheeyem first-turn staging
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/beheeyem_first_turn_staging/**"
+      - ".github/workflows/validate-beheeyem-first-turn-staging.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce first-turn Basic staging and Prize checks
+        run: python3 results/beheeyem_first_turn_staging/reproduce.py
