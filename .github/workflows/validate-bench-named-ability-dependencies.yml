@@ -1,0 +1,19 @@
+name: Validate named Ability Bench dependencies
+
+on:
+  push:
+    paths:
+      - tools/bench_named_ability_dependencies.py
+      - .github/workflows/validate-bench-named-ability-dependencies.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate exact name guards and capacity lower bounds
+        run: python tools/bench_named_ability_dependencies.py --self-test
