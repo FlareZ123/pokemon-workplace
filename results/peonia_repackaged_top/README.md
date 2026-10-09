@@ -59,6 +59,10 @@ Uncertainty about *whether* the target is Prized is not essential. Suppose the p
 
 Exact solver regressions confirm `(0,1)`, `(0,1/2)`, `(0,1/3)`, and `(0,1/4)` for one through four deck cards. Here the player may be at K1 regarding deck composition; the only remaining uncertainty is deck order. This is a conditional action-capacity line, and using the Supporter for Peonia has an opportunity cost omitted by the model.
 
+## Larger hidden-deck tail
+
+The same full physical-position Bellman implementation was also tested with **six Prizes and 46 unknown deck cards** (52 equally likely locations of the singleton), retaining the pure target-acquisition endpoint and a Peonia+Arc+spare-filler hand with no Shoes. It computes Peonia-first `3/52 = 5.769231%`, unrestricted Arc-before-Peonia `4/52 = 7.692308%`, an exact difference of `1/52 = 1.923077` percentage points. The model tracks all 52 possible physical target positions directly, without Monte Carlo sampling. This verifies the formula at an early-game-sized unknown-zone count, while the assumption that all other cards are strategically inert remains a restrictive experimental control.
+
 ## Limits
 
 This model has one single-copy T, all other hidden cards inert and exactly one held Arc/Shoes. A broader 60-card state could include recovery, search, evolving, hand disruption or other Item draw that reverses the timing ranking. Real paper Expanded normally starts with six Prizes; the smaller Prize counts are illustrative midgame states. Card legality and printed effects are supported by the bundled card database, and the underlying sequencing follows the advanced rulebook. No win-rate or archetype recommendation follows from this isolated event.
