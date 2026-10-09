@@ -172,3 +172,31 @@ validate-opponent-bonus-assembly.yml includes all three reproduction suites.
 
 Next: generalize one-output competition to 3+ independent requirements using
 max-flow/bipartite matching, with Basic starter and Prize overlap as necessary.
+
+### Exact multi-demand Hall matching (2026-10-09)
+
+Added tools/opponent_bonus_matching.py and
+results/opponent_bonus_assembly/{matching_notes.md,matching_reproduce.py}.
+The grouped sample posterior conditions on an ordinary Basic opening:
+a union of s=H+m seen cards has uniform-sample hypergeometric mass
+multiplied by [C(s,H)-C(s-b,H)]/C(s,H), then divided by the unconditional
+Basic-opener probability. Hidden Prize placements marginalize exactly.
+
+Every physical card class can cover several goals but has capacity one.
+Hall's marriage condition over every goal subset tests whether a matching
+can assign distinct observed cards to every goal. Fraction arithmetic
+sums the weighted grouped-count vectors. Physical small-deck brute force,
+an independent recursive matching oracle, exact reduction to the two-demand
+closed form, and equivalence to the simultaneous inclusion-exclusion
+model have all passed the expanded CI workflow.
+
+In a 60-card H7/B12/P6 example with three independent goals, two exclusive
+copies per goal and two flexible one-use copies eligible for all three,
+simultaneous untyped coverage is 21.438835% in a valid opening versus
+2.451991% for actual one-use physical matching: +18.986843pp false
+completion. This concerns in-hand abstract resources, not a complete
+executable Expanded turn. More complex multi-output cards require resource
+bundles and payment/temporal constraints.
+
+Next: independent 4-goal/flexible-Basic enumeration, improve performance for
+many card classes, and derive a practical specific-ALS application.
