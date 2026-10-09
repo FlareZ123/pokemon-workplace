@@ -21,7 +21,7 @@ The bundled database already marks 41 historical banned prints. It still marks t
 | Flapple with Apple Drop | `swsh2-22`, `swsh45sv-SV013`, `swsh10tg-TG02`, `swshp-SWSH022` | 2025-10-10 | Mega Evolution Banned List and Rule Changes Announcement |
 | Medicham V with Yoga Loop | `swsh7-83`, `swsh7-185`, `swsh7-186` | 2026-04-10 | Mega Evolution Perfect Order Banned List and Rule Changes Announcement |
 
-The Chaos Rising announcement reported no further Expanded ban changes. The current Play! Pokémon Rules & Resources page, checked 2026-10-06, lists the Pitch Black rule changes announcement as the latest set-specific rules update. The generated overlay intentionally contains only the specific missing bans directly identified from official announcements.
+The Chaos Rising announcement reported no further Expanded ban changes. The Pitch Black rules announcement, effective July 31, 2026, also reported no changes to Expanded bans. This final announcement is independently available on the official Brazilian Pokémon site, and the Play! Pokémon Rules & Resources page lists Pitch Black as the latest linked set-specific rule update as of October 9, 2026. The generated overlay intentionally contains only the specific missing bans directly identified from official announcements. See the [dated primary-source audit](../expanded_ban_2026_audit/).
 
 A separate audit of the 198 records that previously used set-level fallback found seven false positives. Each of these records has no card-level Expanded field, has `unlimited: Banned`, and contains the explicit rules text `(This card cannot be used at official tournaments.)`:
 
@@ -44,6 +44,7 @@ Sources:
 - https://www.pokemon.com/uk/play-pokemon/about/mega-evolution/mega-evolution-perfect-order-banned-list-and-rule-changes-announcement
 - https://www.pokemon.com/us/play-pokemon/about/mega-evolution/mega-evolution-chaos-rising-rule-changes-announcement
 - https://www.pokemon.com/us/play-pokemon/about/card-dex/
+- https://www.pokemon.com/br/play-pokemon/sobre/megaevolucao/anuncio-de-mudancas-de-regras-em-megaevolucao-escuridao-absoluta
 
 ## Method
 

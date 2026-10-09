@@ -88,3 +88,14 @@ sentence recognition and regression. A new all-sets copy-rule inventory
 classifies 179 print rules into seven narrow kinds, with no unknown
 phrases in the currently supplied snapshot. See
 results/deck_copy_rule_inventory/.
+
+### October 2026 official Expanded ban announcement check
+
+Official Perfect Order announcement bans Medicham V effective April 10;
+Chaos Rising June 5 and Pitch Black July 31 announcements explicitly
+say no new Expanded banned-list changes. English Pitch Black page
+unreadable due to iframe, but official Brazilian Pokémon localization
+supplies the dated text. Original seven exact-print overlay entries
+are still corroborated by reviewed chronology. Evidence note is
+results/expanded_ban_2026_audit/README.md. This does not independently
+reconstruct the complete banned list.
