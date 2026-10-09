@@ -47,6 +47,20 @@ Because the Tool persists through evolution, its own effect can prevent the turn
 
 The regression also rejects a transition with incorrect printed evolution ancestry and proves a closed turn cannot subsequently attack.
 
+## Full bundled Expanded legacy-Tool coverage
+
+The companion audit `tools/legacy_mega_spirit_link_catalog.py` scans all set-in-scope effectively legal print records and matches exact printed legacy Mega Evolution/Primal Reversion turn-end rules against Spirit Link text naming the evolved Pokémon. The bundled corpus contains **91 effectively legal legacy Mega/Primal print records spanning 41 Pokémon names** and **35 matching Spirit Link Tool prints covering 34 named evolutions**. Seven legacy Mega Evolution names have **no matching Spirit Link print in this corpus**:
+
+- M Absol-EX
+- M Blaziken-EX
+- M Diancie-EX
+- M Heracross-EX
+- M Kangaskhan-EX
+- M Metagross-EX
+- M Swampert-EX
+
+That is an exact print-coverage observation. It does not by itself prove that no other card effect can manipulate a turn-ending consequence. Modern Mega Evolution ex prints are excluded because their different Rule Box text does not describe an evolution turn-end action. The independent reproducible `catalog.py` confirms the counts and seven-name coverage gap.
+
 ## Scope and limitations
 
 This is an exact-print *turn-end bridge*, not a complete evolution rule executor. Upstream still must validate the game turn, restrictions on evolution, hand card provenance, and any conditions specific to how the Pokémon was evolved. The physical board kernel is responsible for keeping the Tool and Energy identities attached; this bridge verifies the before/after conservation boundary relevant to the turn-end decision.
