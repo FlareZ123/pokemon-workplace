@@ -645,3 +645,15 @@ Separate witness D46 P6 U6 H10 R1 d6 payment2 nonouts: material +0.204495 pp, K1
 Counterexample to naively adding information value calculated before paying to material gain: paying changes the optimal action frontier. All claims conditional on legally usable zero-output Quick Ball, disposable payment, no positional shuffle cost and both Supporters actually available. Small-state exact independent cross-check passed CI.
 
 Next: preserve state-dependent payment policy and actual source access in a full physical action kernel; the present benefit measures a one-step target outcome, not future win rate.
+
+### 2026-10-09 exact binary choice-information disagreement identity
+
+New `tools/binary_choice_information_gap.py`, `results/binary_choice_information_gap/{README.md,reproduce.py}`, CI workflow `.github/workflows/validate-binary-choice-information-gap.yml`. Commit `2fd0f9c83cdcf0df176dbf1091bf52f9f3e65771`; Actions run `37978859119` **passed**.
+
+The general two-action observation-value identity:
+E[max(A,B)]-max(E[A],E[B]) = [E|A-B| - |E(A-B)|]/2.
+It provides an exact belief-state reward representation from mean signed advantage and mean absolute disagreement. Nonnegativity follows Jensen and vanishes whenever one action pointwise dominates across all live belief states (within this objective). The helper uses exact Fraction and validates normalized masses. 5,120 independent enumerated two-state rational payoff configurations verified identity.
+
+In Iono/N free-observation example: E(Iono-N)=+0.026215 pp and E|Iono-N|=0.364237 pp, giving +0.169011 pp K1 choice value. After paid nonout thinning H5 -> H3, N dominates in all feasible K states, expected absolute and absolute expected difference equal, information gain exactly zero.
+
+Next methodological extension could derive similar policy-envelope upper bounds for more than two actions, preserving the changed action set after payment, or use this exact gap as a diagnostic in prize/connector simulators.
