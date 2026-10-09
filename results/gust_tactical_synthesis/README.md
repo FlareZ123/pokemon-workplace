@@ -20,6 +20,15 @@ additions; allowing one opposing Boss produces 4,914. These are
 uniform structural counts from a one-hit-KO abstraction and do not
 price the extra Pokemon's draw, attack, or evolution contributions.
 
+The [opponent Counter source-window extension](../opposing_counter_bench_window/)
+shows how strongly this exposure depends on the opponent's gust card
+class. Across 105,120 controlled Bench additions, an opposing Counter
+creates 1,831 harmful extra-Bench scenarios compared with 4,914 for one
+unrestricted Boss. One extreme state family has the opponent at three
+Prizes and us at six with a three-Prize Benched liability: Counter is
+not available on the opponent's first reply even after our first
+three-Prize KO, while Boss can immediately gust that target to win.
+
 The combined research supports a concrete evaluation hierarchy:
 
 1. **Current card semantics:** What action does this print actually permit
