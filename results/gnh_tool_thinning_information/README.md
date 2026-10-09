@@ -202,3 +202,50 @@ show the source of the crossover under controlled assumptions.
 
 The 49-integer-point phase sweep and exact U=26 factorization
 passed [CI run 37978143391](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37978143391).
+
+
+## How much can Prize information itself be worth?
+
+The preceding probability and utility models can isolate the **expected value of perfect prepayment Prize information** (EVPI) under an explicitly supplied preference:
+
+\[
+\text{EVPI}_{\alpha,\beta}
+=
+\alpha+\beta P_{\rm K1,joint}
+-
+\max\Big(
+\alpha+\beta P_{\rm keep,joint},
+\ \alpha P_{\rm blind,setup}+\beta P_{\rm blind,joint}
+\Big).
+\]
+
+This compares the best single K0 decision against a K1 player who can inspect
+the Prize membership of the backups and Ticket before deciding whether to
+discard the held Tool. The prior search itself is assumed free, so this
+is an **upper bound on the benefit of buying information** with a real
+search card like Tag Call, which has both costs and material effects.
+
+At U=52/P=6/s=5 and utility weights alpha=1 for successful setup and
+beta=1 as an additional bonus for Ticket access:
+
+| Unseen backup copies | Best K0 choice | Exact EVPI (utility ×100) |
+| ---: | --- | ---: |
+| 1 | Keep Tool | 0.188537 |
+| 2 | Keep Tool | **0.211161** |
+| 3 | Blindly replace | 0.099732 |
+| 4 | Blindly replace | 0.006118 |
+
+The information benefit is nonmonotone in backup redundancy under this
+utility: a second backup increases the available safe-thinning option,
+while larger redundancy eventually makes K0 replacement almost safe already.
+For b=2, information has greater expected value than with only b=1 in
+this toy model. By b=4 it adds almost nothing after an already-robust
+K0 policy.
+
+This is a deliberately limited decision-theoretic statement about two
+abstract resources. Real cards' immediate effects, future setup risk,
+Supporter contention, opponent lock and search opportunity costs require
+additional state variables before assigning competitive value to a
+prepayment Tag Call. Exact utilities were independently validated across
+the small physical Prize populations and passed
+[CI run 37978703963](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37978703963).
