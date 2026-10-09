@@ -1,0 +1,23 @@
+name: Validate bottom hand redraw execution
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/bottom_hand_redraw_execution.py"
+      - "results/bottom_hand_redraw_execution/**"
+      - ".github/workflows/validate-bottom-hand-redraw-execution.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exhaustive bottom hand redraw tests
+        run: python results/bottom_hand_redraw_execution/reproduce.py
