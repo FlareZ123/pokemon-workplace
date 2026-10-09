@@ -47,6 +47,25 @@ def main() -> None:
     assert any(p.hand["TechSlot1"] == 0 for p in payments)
     print("PASS: optional discard payment permits preserving and sacrificing held Ticket")
 
+    # Concrete thinning witness: discard an already-held TM and re-search
+    # another copy, preserving the attack output and removing an extra
+    # non-Ticket from the deck before late Stellar Wish.
+    thinning = Prepared(
+        Counter({TM: 1, "Faba": 1, "Gladion": 1, "Pidgey": 1}),
+        Counter({TM: 1, JET: 1, "Artazon": 1, "TechSlot1": 1, "Other": 5}),
+        "Jirachi", (), True,
+    )
+    by_payment = {p.paid_with: p for p in paid_gnh_states(thinning)}
+    keep_tm = by_payment[("Faba", "Gladion")]
+    replace_tm = by_payment[("Faba", TM)]
+    assignment = ("T",)
+    base = accessible_probability(keep_tm.hand, keep_tm.remaining, assignment, True, "first")
+    thinned = accessible_probability(replace_tm.hand, replace_tm.remaining, assignment, True, "first")
+    assert keep_tm.hand[TM] == replace_tm.hand[TM] == 1
+    assert thinned > base
+    assert abs(base - 5 / 7) < 1e-12 and abs(thinned - 5 / 6) < 1e-12
+    print("PASS: held-Tool replacement raises legal post-G&H Ticket density")
+
     sampled = simulate(raw_trials=2500, seed=20261009)
     assert sampled.accepted > 0 and sampled.core > 0
     for ep in OBJECTIVES:
