@@ -79,6 +79,32 @@ def expected_terminal_utility(option: dict[str, object], later_chance: Fraction)
     )
 
 
+def expected_two_period_utility(
+    option: dict[str, object],
+    later_chance: Fraction,
+    future_weight: Fraction,
+) -> Fraction:
+    """Immediate flow payoff plus discounted expected payoff at the later checkpoint."""
+    return (
+        int(option["first_utility"])
+        + future_weight * expected_terminal_utility(option, later_chance)
+    )
+
+
+def preferred_two_period_option(
+    options: list[dict[str, object]],
+    later_chance: Fraction,
+    future_weight: Fraction,
+) -> dict[str, object]:
+    return max(
+        options,
+        key=lambda option: (
+            expected_two_period_utility(option, later_chance, future_weight),
+            tuple(option["first_survivors"]),
+        ),
+    )
+
+
 def preferred_option(options: list[dict[str, object]], later_chance: Fraction) -> dict[str, object]:
     return max(
         options,
@@ -124,6 +150,20 @@ def example() -> dict[str, object]:
         "irreversible_path_loss": direct_three_value - myopic_three_value,
         "switch_probability": str(threshold),
         "synergy_regimes": [synergy_regime(b) for b in (0, 20, 21, 22, 23, 30, 41, 42, 50)],
+        "two_period": {
+            "future_weight": "1",
+            "switch_probability": "10/11",
+            "immediate_flow_plus_future_expected_at_one_half_myopic": str(
+                expected_two_period_utility(
+                    preferred_option(options, Fraction(0)), Fraction(1, 2), Fraction(1)
+                )
+            ),
+            "immediate_flow_plus_future_expected_at_one_half_robust": str(
+                expected_two_period_utility(
+                    preferred_option(options, Fraction(1)), Fraction(1, 2), Fraction(1)
+                )
+            ),
+        },
         "at_one_half": {
             "optimal_first_choice": half["first_survivors"],
             "optimal_terminal_expectation": str(expected_terminal_utility(half, Fraction(1, 2))),
@@ -189,6 +229,27 @@ class BenchSynergyTests(unittest.TestCase):
         self.assertEqual(
             expected_terminal_utility(early, Fraction(5, 11)),
             expected_terminal_utility(late, Fraction(5, 11)),
+        )
+
+    def test_early_flow_reward_changes_contraction_threshold(self) -> None:
+        options = first_stage_options(self.members, 4, 3, self.values, self.pairs)
+        myopic = preferred_option(options, Fraction(0))
+        robust = preferred_option(options, Fraction(1))
+        self.assertEqual(
+            expected_two_period_utility(myopic, Fraction(10, 11), Fraction(1)),
+            expected_two_period_utility(robust, Fraction(10, 11), Fraction(1)),
+        )
+        self.assertEqual(
+            preferred_two_period_option(options, Fraction(1, 2), Fraction(1))["first_utility"],
+            152,
+        )
+        self.assertEqual(
+            preferred_two_period_option(options, Fraction(1), Fraction(1))["first_utility"],
+            142,
+        )
+        self.assertEqual(
+            preferred_two_period_option(options, Fraction(1), Fraction(1, 2))["first_utility"],
+            152,
         )
 
     def test_context_dependent_synergy_regime(self) -> None:
