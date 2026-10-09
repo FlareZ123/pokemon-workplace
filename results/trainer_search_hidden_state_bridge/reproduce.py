@@ -7,6 +7,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
+from card_class_namespace import CardClassNamespace
 from deck_search_shuffle_topology import SearchableDeckPhysicalState
 from discard_cost_witness import (
     DiscardCandidate,
@@ -305,8 +306,116 @@ except ValueError:
 else:
     raise AssertionError("Item lock must reject the atomic Quick Ball transaction")
 
+# The exact-print namespace can describe a public reveal more precisely
+# than the card's deck-building name. Both legal prints here say Pikachu,
+# while the Bayesian signal must identify which printing was actually shown.
+OLD_PRINT = "xy1-42"
+NEW_PRINT = "swsh7-49"
+PRINT_X = f"exact_print:{OLD_PRINT}"
+PRINT_Y = f"exact_print:{NEW_PRINT}"
+print_classes = {X: PRINT_X, Y: PRINT_Y}
+print_zones = ZoneCountState.from_mapping({
+    (print_classes.get(card_class, card_class), zone): count
+    for card_class, zone, count in physical.ledger.exchangeable.counts
+})
+print_physical = SearchableDeckPhysicalState(
+    IdentityLedger(print_zones, physical.ledger.instances),
+    physical.prize_instance_ids,
+    physical.face_up,
+)
+print_targets = (
+    SearchZoneTarget(PRINT_X, targets[0].group),
+    SearchZoneTarget(PRINT_Y, targets[1].group),
+)
+print_signal_policy = {
+    composition: {
+        {"X": OLD_PRINT, "Y": NEW_PRINT, "PASS": "PASS"}[
+            chosen_target(composition)
+        ]: 1.0
+    }
+    for composition in supported_compositions
+}
+printed = execute_hidden_trainer_search_transaction(
+    print_physical,
+    TrainerSearchExecutionState(zones=print_physical.ledger.exchangeable),
+    (("actor", prior), ("observer", prior)),
+    actor_id="actor",
+    profile=quick_ball,
+    action_card_class=QUICK_BALL,
+    demands=demands,
+    targets=print_targets,
+    search_action=search_x,
+    target_probability_by_composition=print_signal_policy,
+    observed_target=OLD_PRINT,
+    observation_namespace=CardClassNamespace.EXACT_PRINT,
+    group_by_card_class={A: "A", PRINT_X: "X", PRINT_Y: "Y"},
+    target_card_name="Pikachu",
+    target_instance_id="searched-print-x",
+    sampled_top_card_class=PRINT_Y,
+    sampled_top_card_name="Pikachu",
+    sampled_top_instance_id="sampled-print-y",
+    discard_candidates=discard_candidates,
+    discard_selection=discard_selection,
+    play_condition_met=True,
+)
+selected_print = printed.physical_after.ledger.instance("searched-print-x")
+assert selected_print.card_class == PRINT_X
+assert selected_print.card_name == "Pikachu"
+assert selected_print.zone == "hand"
+assert printed.physical_after.ledger.instance("sampled-print-y").card_class == PRINT_Y
+assert isclose(
+    printed.beliefs_after.belief_for("actor").top_probability("Y"),
+    1.0 / 3.0,
+    abs_tol=1e-12,
+)
+assert isclose(
+    printed.beliefs_after.belief_for("observer").top_probability("Y"),
+    1.0 / 7.0,
+    abs_tol=1e-12,
+)
+assert print_physical.ledger.totals() == printed.physical_after.ledger.totals()
+
+# Renaming the policy's X observation to the other print makes a coherent
+# numeric posterior, but contradicts the physically materialized Pikachu.
+false_print_policy = {
+    composition: {
+        (NEW_PRINT if chosen_target(composition) == "X" else "OTHER"): 1.0
+    }
+    for composition in supported_compositions
+}
+try:
+    execute_hidden_trainer_search_transaction(
+        print_physical,
+        TrainerSearchExecutionState(zones=print_physical.ledger.exchangeable),
+        (("actor", prior), ("observer", prior)),
+        actor_id="actor",
+        profile=quick_ball,
+        action_card_class=QUICK_BALL,
+        demands=demands,
+        targets=print_targets,
+        search_action=search_x,
+        target_probability_by_composition=false_print_policy,
+        observed_target=NEW_PRINT,
+        observation_namespace=CardClassNamespace.EXACT_PRINT,
+        group_by_card_class={A: "A", PRINT_X: "X", PRINT_Y: "Y"},
+        target_card_name="Pikachu",
+        target_instance_id="mismatched-print-x",
+        sampled_top_card_class=PRINT_Y,
+        sampled_top_card_name="Pikachu",
+        sampled_top_instance_id="mismatched-print-top",
+        discard_candidates=discard_candidates,
+        discard_selection=discard_selection,
+        play_condition_met=True,
+    )
+except ValueError as exc:
+    assert "materialized card identity" in str(exc)
+else:
+    raise AssertionError("revealed print must equal the selected material print")
+
+
 print("hidden Trainer search bridge regressions passed")
-print("mismatched public target signal rejected before belief update")
+print("contradictory name and print-level signals both rejected")
+print("exact-print Pikachu search preserves both hidden-state posteriors")
 print("Quick Ball and one exact fodder copy enter discard")
 print("searched X is public/materialized in hand; exact shuffled top is Y")
 print("actor top Y=1/3; opponent top Y=1/7")
