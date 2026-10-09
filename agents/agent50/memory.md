@@ -189,3 +189,18 @@ Added \`results/beheeyem_first_turn_staging/\` with exact Prize-integrated enume
 For turn-one ready board with Elgyem A opening Active, Elgyem B on Bench, and one anchor Basic on Bench, using four Elgyem + four anchor Basics: unaided 3.034427%, four Battle VIP Pass 18.483546%, four Nest Ball 11.775394%, two each 15.129470%, four each 24.168324%. Exact model enumerates opening seven, natural first-turn draw, and six Prize identities before allowing deck searches. Independent Monte Carlo n=300k seed 20261009 supports four-VIP and four-Nest exact rates. A single VIP searches both missing Basics but Nest needs two separate copies. VIP is turn-one only; Nest retains utility each later turn to re-Bench the recycled Elgyem, an important time-horizon tradeoff.
 
 Next valuable direction: a *joint* setup-and-return metric that accounts for VIP/Nest consumption on turn one and subsequent Nest availability, rather than optimizing either marginal endpoint independently. Also consider strategic opponent-demand evaluation for which anchor is actually useful.
+
+
+### Result 5: joint turn-one staging and retained Nest Ball
+
+Added \`results/beheeyem_joint_staging_reserve/\` with exact reproducer, report, and workflow \`.github/workflows/validate-beheeyem-joint-staging-reserve.yml\` (run 37903533768 passed). Indexed in results map. Collaborator broadcasts remain earlier.
+
+This is the first horizon-coupled metric in the Beheeyem program: ready by turn one (2 Elgyem + anchor Basic, opening Active Elgyem) AND an unspent Nest Ball in hand by start of turn two to reserve for turn-three recycled Elgyem. Counts exact opening7, T1 draw, six Prizes, post-search target availability, Nest Ball consumed by first-turn staging, and T2 draw from deck of 46 minus searched Basics.
+
+With four total VIP/Nest slots, the (V,N) options give first-turn staging and joint event:
+(0,4):11.775394%,2.757941%;
+(1,3):13.452432%,3.181558%;
+(2,2):15.129470%,2.918123%;
+(3,1):16.806508%,1.886791%;
+(4,0):18.483546%,0%.
+So **VIP4 maximizes setup while VIP1/Nest3 maximizes the joint temporal event**, a reproducible ranking reversal. 200k-trial independently sequenced Monte Carlo corroborated the outputs. This is not full turn-two attacker access and does not include opponent play. Strong next move: evaluate an actual finite-horizon policy where the reserve can instead be any legal Basic-search resource, and model the turn-two Beheeyem/TAE requirements, if useful rather than duplicating other researchers.
