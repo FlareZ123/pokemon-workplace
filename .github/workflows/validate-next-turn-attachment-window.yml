@@ -5,6 +5,8 @@ on:
   push:
     paths:
       - "tools/next_turn_attachment_window.py"
+      - "tools/energy_hand_attachment_events.py"
+      - "tools/lock_gated_energy_attachment.py"
       - "results/next_turn_attachment_window/**"
       - ".github/workflows/validate-next-turn-attachment-window.yml"
 
@@ -21,3 +23,5 @@ jobs:
           python-version: "3.13"
       - name: Reproduce Dragon's Wish attachment permission
         run: python results/next_turn_attachment_window/reproduce.py
+      - name: Reproduce physical and target-locked Energy attachments
+        run: python results/next_turn_attachment_window/reproduce_physical.py
