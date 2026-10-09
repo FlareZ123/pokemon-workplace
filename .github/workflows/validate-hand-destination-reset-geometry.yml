@@ -1,0 +1,25 @@
+name: Validate hand destination reset geometry
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/catalog_full_hand_replacements.py"
+      - "tools/hand_destination_reset_geometry.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/hand_destination_reset_geometry/**"
+      - ".github/workflows/validate-hand-destination-reset-geometry.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate exact hand destination reset geometry
+        run: python results/hand_destination_reset_geometry/reproduce.py
