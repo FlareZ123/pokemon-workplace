@@ -12,6 +12,9 @@ For 60 cards, 12 unrelated ordinary Basics, and two required families of four ef
 
 Replacing exclusive copies with flexible copies decreases the count of distinct target cards while raising the joint-opening success probability. The increase in the bonus-draw marginal gains disappears when two dual-purpose cards are present in this example.
 
+
+**Capacity qualification:** This coverage-class calculation treats a card bearing two role labels as able to satisfy both requirements during the same use. For cards that can only choose one output, use the exact [one-use capacity correction](flexible_capacity_notes.md). Two flexible single-output cards produce a 13.168805 percentage-point overstatement in the illustrated 60-card opening.
+
 ## Single-family theorem
 
 For one required target family of K physical cards, set M=N-H, where N is deck size and H opening-hand size. Let alpha be the probability that a legal Basic opening misses the target. The probability of still missing after m bonus draws is
