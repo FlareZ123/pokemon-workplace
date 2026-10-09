@@ -40,6 +40,17 @@ def run():
     # single-Prized-Arc cases:
     assert Fraction(3, 5) + Fraction(2, 5) * Fraction(1, 2) == Fraction(4, 5)
     assert 1 - Fraction(1, 10) * Fraction(1, 2) == Fraction(19, 20)
+    for n, predicted in ((5, Fraction(19, 20)), (6, Fraction(23, 30))):
+        # Closed-form Peonia-first value of one additionally Prized Arc.
+        assert Fraction(4, n) + Fraction(3, n * (n - 1)) == predicted
+    # Six-Prize categories, conditional on T not being in Peonia's three.
+    two_items = Fraction(1, 2) + Fraction(1, 2) * (
+        Fraction(3, 10) * Fraction(2, 3)
+        + Fraction(3, 10) * Fraction(2, 3)
+        + Fraction(3, 10) * Fraction(1, 2)
+        + Fraction(1, 10) * Fraction(1, 3)
+    )
+    assert two_items == Fraction(19, 24)
     print("All six full-belief witnesses and independent simple-event checks passed.")
 
 
