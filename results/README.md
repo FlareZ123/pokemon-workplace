@@ -1541,3 +1541,8 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 ## Two-sided gust race and opponent Knock Out deferral
 
 [two_sided_gust_race/](two_sided_gust_race/) couples the Counter Catcher Prize gate to explicit Prize-valued boards on both sides. A separate finite-horizon oracle agrees on 24,528 scenarios, with 3,504 checks against the prior exogenous-score kernels. It finds four opponent boards where a mixed Boss + Counter package is a forced win against compulsory opposing KOs but loses the guarantee when the opponent may legally decline an attack. The work gives a state-based bridge from scoring clocks to actual KO choices, with energy/attack readiness still abstracted.
+
+
+## Reciprocal gust and exposed Bench Prize liability
+
+[mutual_gust_bench_liability/](mutual_gust_bench_liability/) extends the two-sided Prize race so the opponent may spend Boss's Orders on our Bench. Across 315,360 controlled Bench-addition comparisons, extra Bench Pokemon never reduce our forced-win feasibility without opposing gust, but with one opponent Boss they do so in 4,914 of 105,120 comparisons. An independent finite-deadline oracle agrees on 26,280 cases and the earlier kernel on 13,140. These are abstract structural counts rather than realistic deployment or metagame frequencies.
