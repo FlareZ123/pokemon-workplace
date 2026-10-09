@@ -1,0 +1,20 @@
+name: Validate active self-shuffle physical conservation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/active_self_shuffle_conservation.py"
+      - "results/beheeyem_physical_self_shuffle/**"
+      - ".github/workflows/validate-active-self-shuffle-conservation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce Beheeyem full-stack self-shuffle and promotion
+        run: python3 results/beheeyem_physical_self_shuffle/reproduce.py
