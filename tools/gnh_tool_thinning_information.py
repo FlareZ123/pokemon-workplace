@@ -161,23 +161,44 @@ def brute_force_multiple(
     return MultipleBackupValues(keep, setup, blind, informed, r, max(keep, blind))
 
 
+
+def minimum_ticket_to_setup_value_ratio(
+    unseen: int, prizes: int, stellar_cards: int, backup_copies: int,
+) -> Fraction | None:
+    """Threshold beta/alpha for U=alpha*P(setup)+beta*P(setup AND Ticket).
+
+    For positive setup utility alpha, blind replacement is beneficial only
+    when beta/alpha is strictly greater than this rational threshold. None
+    means replacement is never strictly preferable for nonnegative values.
+    A zero threshold means any positive beta suffices because no setup is lost.
+    """
+    v = exact_multiple(unseen, prizes, stellar_cards, backup_copies)
+    joint_gain = v.blindly_replace_joint - v.keep_joint
+    if joint_gain <= 0:
+        return None
+    loss_setup = Fraction(1) - v.blindly_replace_setup
+    return loss_setup / joint_gain
+
+
 def multiple_summary(unseen: int = 52, prizes: int = 6,
                      stellar_cards: int = 5, max_backups: int = 4) -> str:
     lines = [
         f"U={unseen} P={prizes} s={stellar_cards} backups=1..{max_backups}",
         "backups | keep_joint% | blind_joint% | K1_joint% | "
-        "blind_setup% | K0 optimal policy",
+        "blind_setup% | K0 joint-optimal | beta/alpha break-even",
     ]
     for b in range(1, max_backups + 1):
         x = exact_multiple(unseen, prizes, stellar_cards, b)
         policy = "replace" if x.blindly_replace_joint > x.keep_joint else (
             "keep" if x.blindly_replace_joint < x.keep_joint else "tie"
         )
+        threshold = minimum_ticket_to_setup_value_ratio(unseen, prizes, stellar_cards, b)
+        label = "never" if threshold is None else f"{float(threshold):.9f}"
         lines.append(
             f"{b} | {100 * float(x.keep_joint):.9f} | "
             f"{100 * float(x.blindly_replace_joint):.9f} | "
             f"{100 * float(x.k1_adaptive_joint):.9f} | "
-            f"{100 * float(x.blindly_replace_setup):.9f} | {policy}"
+            f"{100 * float(x.blindly_replace_setup):.9f} | {policy} | {label}"
         )
     return "\n".join(lines)
 
