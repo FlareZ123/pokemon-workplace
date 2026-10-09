@@ -1,0 +1,21 @@
+name: Validate Regigigas Bench capacity timing
+
+on:
+  push:
+    paths:
+      - tools/regigigas_capacity_window.py
+      - .github/workflows/validate-regigigas-capacity-window.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check Ancient Wisdom sequencing and conservation
+        run: python tools/regigigas_capacity_window.py --self-test
+      - name: Emit order-sensitive witness
+        run: python tools/regigigas_capacity_window.py
