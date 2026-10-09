@@ -169,3 +169,14 @@ With singleton Beheeyem and singleton TAE, the initial probability of at least o
 ### Next research
 
 Replace ideal oracle access with feasible card search and sequencing: search three recycled identities per turn, pay discard costs without sacrificing protected resources, and maintain two Elgyem plus a pre-evolved anchor. Account for Prize-recovery channels and opponent response. A second possibility is actual pairwise lock-action coverage compared by matchup-specific demand, not merely number of blocked dimensions.
+
+
+### Result 3: one real retrieval packet and DCI-sensitive payment
+
+Added \`results/beheeyem_recycle_access_packet/\`, reproducible script, and \`.github/workflows/validate-beheeyem-recycle-access-packet.yml\` (CI run 37902521091 passed); indexed in results map.
+
+A literal return-trip line uses Nest Ball to Bench returned Elgyem A, Evolution Incense to search Beheeyem for already-matured B, and Guzma & Hala to search Triple Acceleration Energy, costing two disposable other cards. A Float Stone-equipped anchor retreats to the fresh attacker after the search/evolution/attachment actions. The packet consumes three distinct Trainer resources plus two cards of discard payment per later turn. With four copies of each connector, at most four such cycles occur without recovering the Trainers or finding different routes.
+
+A synthetic uniform 60-card hand sensitivity experiment with four Nest Ball, four Evolution Incense, four Guzma & Hala, and F independent disposable cards: seven-card exact-packet probability rises from 0.492420% for F=8 to 3.939161% for F=32. Conditional on one of each connector already in hand, odds of two more disposable cards in the other four slots rise from 9.048379% to 78.165110%. This is a controlled DCI/AMR illustration, not a simulated turn-three hand conditioned on an actual developed board.
+
+High-value extension: evaluate real turnover of the three consumed Trainers and Supporter budget across multi-turn play with a physically conserved zone ledger; integrate precise counts of extra draw/search and discard overlap rather than assuming uniform refill of a 60-card deck.
