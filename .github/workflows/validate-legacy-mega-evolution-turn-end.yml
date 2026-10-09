@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - "tools/legacy_mega_evolution_turn_end.py"
+      - "tools/legacy_mega_spirit_link_catalog.py"
       - "results/legacy_mega_evolution_turn_end/**"
       - ".github/workflows/validate-legacy-mega-evolution-turn-end.yml"
 
@@ -21,3 +22,5 @@ jobs:
           python-version: "3.13"
       - name: Reproduce Mega/Primal and Spirit Link turn boundaries
         run: python results/legacy_mega_evolution_turn_end/reproduce.py
+      - name: Audit exact-print legacy Mega/Spirit Link coverage
+        run: python results/legacy_mega_evolution_turn_end/catalog.py
