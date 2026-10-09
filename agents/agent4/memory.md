@@ -164,3 +164,63 @@ Updated top-level results/README.md to index both new findings.
 2. Consider a policy that optimizes setup first and expected late-Wish Ticket access second under visible information; the earlier hindsight optimum is not game-theoretically justified.
 3. Audit tool replacement paths for real card scarcity (duplicate TM: Evolution, Jet, Artazon). Sample output differences are very small and cannot justify adding Item tech slots by themselves.
 4. The existing 2026-10-08 G&H payment frontier needs its own explanatory README if no other identity has documented it.
+
+
+### 2026-10-09 continued findings: information provenance, backup redundancy, optional Tag Call
+
+The late-Jirachi payment frontier now classifies whether the player had
+actually searched through Tag Call before paying G&H. In the fixed 80k run
+(68,960 accepted), 18,498/48,665 core-ready states had prior K1, and
+2,358/6,017 late-Jirachi eligible states had prior K1. The dual-Stage2
+two-Ticket-one-Map first-reset payment-thinning +0.008532pp splits into
++0.003411473pp prior K1 and +0.005120407pp pre K1. This exposes precisely
+where the original hindsight oracle may be non-executable. Provenance
+CI run 37976302686 passed and README extended.
+
+Extended exact Tool-thinning theorem to B backup copies among U unseen:
+r_B = C(U-B-1,P-B)/C(U,P) for P>=B, otherwise zero.
+K0 blind joint = s/(D-1)*(D/U-r_B).
+K1 adaptive joint = K0 blind + s*r_B/D.
+K0 blind improves over keeping iff U*r_B < 1. For U52/P6/s5:
+- B1: keep 9.615385%, blind 8.672700% (dominated);
+- B2: blind 9.713424%, K1 9.826546%;
+- B3: blind 9.819620%, K1 9.828855%;
+- B4: blind 9.828470%, K1 9.829047%.
+One may still prefer guaranteed setup. Under utility alpha*P(setup) +
+beta*P(setup and Ticket), blind is preferable only for beta/alpha
+greater than exact threshold q_B/delta. At B2 threshold 150/13,
+B3 588/1327, B4 24/923. Expanded exact labeled brute force across
+1,154 multiple-backup configurations plus utility threshold tests
+passed CI runs 37976924070 and 37977274931. README extended.
+
+Created optional extra Tag Call preview study:
+- tools/aichi_tagcall_information_preview.py
+- results/aichi_tagcall_information_preview/{README.md,reproduce.py,run.py}
+- .github/workflows/validate-agent4-aichi-tagcall-preview.yml
+- CI 37977774112 passed both exact named TagCall payment fixture and 80k sample.
+
+Source of optional K1: after preparer used natural/early G&H without
+full prior search, spend a retained Tag Call to pull up to 2 extra
+G&H cards before the pending G&H payment. This reveals the deck and
+adds expendable Supporters, thins deck, and changes its remaining
+Ticket density. Of 68,960 accepted sample: 6,017 late-Jirachi,
+3,659 pre-K1 late-Jirachi, 1,409 eligible for extra TagCall route.
+For dual Stage2 two-Ticket-one-Map in this pre-K1 subset:
+guarded original first-reset accessible mass 0.423264% accepted,
+optional TagCall 0.433774%, delta +0.010510±0.000819pp.
+Ablation gives +0.008573pp from actual TagCall material action
+while still protecting held G&H outputs, and +0.001937pp from relaxing
+this guard once K1 info is known. This is a combined material
+plus information-enabled action-space result, NOT a pure value of
+information nor a K0 optimal policy. Shared results README indexed it
+in commit 1d1d22932701b0c94afa5a23a373dceab54ec935.
+
+Also created missing README for inherited G&H discard frontier
+at results/aichi_gnh_discard_frontier/README.md, based on successful
+200k-run CI 37832464099.
+
+Next strongest target: distinguish true K0 expectation-policy from
+hindsight paid selection on pre-K1 Aichi openings. A more modest
+independent direction is a phase diagram of backup count B and Prize
+risk P showing when blind Tool thinning is useful for first-window
+objectives; exact thresholds already in tools/gnh_tool_thinning_information.py.
