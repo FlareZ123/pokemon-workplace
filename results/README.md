@@ -1695,3 +1695,8 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 ## Physical search with observer-coarsened print identity
 
 [revealed_search_coarse_physical_bridge/](revealed_search_coarse_physical_bridge/) composes exact Quick Ball action and discard payment, typed Basic selection, materialized exact-print target, and sampled post-shuffle top with an opponent who intentionally retains only the shared card name. The actor materializes `xy1-42` in hand and `swsh7-49` as deck top; the name-only observer retains a joint latent selected-print mixture, P(old/new)=1/2 each, P(A Prized)=5/14. The adapter checks that every observer assigns positive probability to the exact physical world and rejects mismatched public labels. CI run 37989316792 passed.
+
+
+## Unknown opponent search policies and latent signal complementarity
+
+[latent_search_policy_information/](latent_search_policy_information/) tests a six-card Pikachu print reveal under two equally plausible, opposite K1 target-selection policies. With policy identity unknown, either physical Pikachu printing alone yields exactly **P(A Prized)=5/14**, the same as the common name: marginal print evidence has *zero* information about Prize status. Yet the print makes hidden Prize placement correlated with hidden policy identity. Learning the policy later recovers a conditional 4/7 versus 1/7 Prize posterior, and the two disclosures jointly improve a controlled binary response by **1/14**, whereas each disclosure alone has zero decision value. A 168-branch exact rational model passed CI run 37989680240. No claim is made that players use either synthetic policy at equal frequency.
