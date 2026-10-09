@@ -1,0 +1,21 @@
+name: Validate temporal Ability guard release bounds
+
+on:
+  push:
+    paths:
+      - tools/bench_temporal_guard_release_bounds.py
+      - .github/workflows/validate-bench-temporal-guard-release.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Exhaustive six-species release-bound oracle
+        run: python tools/bench_temporal_guard_release_bounds.py --self-test
+      - name: Print catalog-level release histogram
+        run: python tools/bench_temporal_guard_release_bounds.py
