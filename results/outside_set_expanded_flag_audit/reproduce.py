@@ -17,3 +17,8 @@ print("negative conflicts:", len(negative_ids))
 for row in report["known_negative_conflicts"]:
     print(" conflict", row["id"], row["name"], row["kind"])
 print("unresolved:", len(report["still_unresolved"]))
+print("semantic-review queue:")
+for row in report["still_unresolved"]:
+    if row["kind"] == "semantic_review":
+        print(" review", row["id"], row["name"], row["set_id"])
+
