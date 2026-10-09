@@ -105,6 +105,16 @@ The regression verifies:
 
 It then reruns the same action with `item_play=False`. The existing Trainer transaction rejects the action, so the hidden-state bridge cannot bypass Item lock.
 
+## Physical binding of public observation
+
+A single-output *revealed* search exposes the selected card's name. A target-selection policy uses that public name as its observation. The physical transaction must therefore bind `observed_target` to the name carried by the materialized searched instance (`target_card_name`).
+
+Before this invariant, a caller could select and materialize physical X while reporting Y to the Bayesian observer, provided it supplied a synthetic policy that assigned label Y to the same Prize states that normally select X. The resulting beliefs could retain positive support on the exact physical world and the transaction could preserve all card totals, despite the public observation contradicting the revealed card.
+
+The regression now supplies that formerly admissible counterexample and requires an early `ValueError`. The legitimate X-observed/X-materialized transaction remains unchanged, including actor top-Y probability 1/3 and opponent top-Y probability 1/7. This is a consistency check on supplied policy labels rather than an inference that the policy is strategically correct.
+
+The restriction applies to this bridge's one-card reveal-to-hand family. Generic multi-target signal policies may use encodings of sets or ordered tuples, and should bind those encodings to their entire selected physical target set under their own contract.
+
 ## Strategic interpretation
 
 This is a small end-to-end example of the repository's broader modeling direction.
