@@ -1,0 +1,20 @@
+name: Validate Rotom Arc Peonia Incidence
+
+on:
+  push:
+    paths:
+      - "tools/rotom_arc_peonia_incidence.py"
+      - "tools/peonia_arc_opening_incidence.py"
+      - "results/rotom_arc_peonia_incidence/**"
+      - ".github/workflows/validate-rotom-arc-peonia-incidence.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m tools.rotom_arc_peonia_incidence
