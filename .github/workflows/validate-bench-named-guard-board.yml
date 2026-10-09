@@ -1,0 +1,22 @@
+name: Validate named Ability board guard bridge
+
+on:
+  push:
+    paths:
+      - tools/bench_named_guard_board.py
+      - tools/bench_named_ability_dependencies.py
+      - .github/workflows/validate-bench-named-guard-board.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate physical named guards
+        run: python tools/bench_named_guard_board.py --self-test
+      - name: Demonstrate capacity obstruction
+        run: python tools/bench_named_guard_board.py
