@@ -115,6 +115,14 @@ The regression now supplies that formerly admissible counterexample and requires
 
 The restriction applies to this bridge's one-card reveal-to-hand family. Generic multi-target signal policies may use encodings of sets or ordered tuples, and should bind those encodings to their entire selected physical target set under their own contract.
 
+### Exact-print observation extension
+
+The optional `observation_namespace` argument now selects the declared identity projected from the **materialized searched instance**. The default `CardClassNamespace.DECK_NAME` retains the original name-based behavior. `CardClassNamespace.EXACT_PRINT` requires an `exact_print:<card ID>` card class, then derives that print ID as the observed target. Conservative variant and official-reprint class projections are also available through the namespaced identity helper when those classes have been established.
+
+The regression creates a second exact physical Quick Ball transaction with `exact_print:xy1-42` searched and `exact_print:swsh7-49` retained as sampled post-shuffle top. Both cards are materialized with the displayed name Pikachu. Observing `xy1-42` preserves the expected actor and observer top-Y probabilities (1/3 and 1/7), and a policy that pretends the other printing was shown is rejected. The bridge does not consult card records to validate a caller-supplied print/class/name association; source-backed print identity remains the caller's responsibility.
+
+The tool now validates the public observation after materializing the physical searched card and before constructing updated observer beliefs. A name-only observation over an uncertain choice among multiple exact prints needs an additional latent selected-print mixture; the current single-target bridge supplies the selected exact group to its Bayesian kernel and does not model that lossy projection as a complete information channel.
+
 ## Strategic interpretation
 
 This is a small end-to-end example of the repository's broader modeling direction.
