@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass, field
-from math import comb
+from math import comb, sqrt
 import random
 
 from tools.aichi_gnh_discard_frontier import paid_gnh_states
@@ -71,6 +71,8 @@ class Summary:
     paid_endpoint: Counter[str] = field(default_factory=Counter)
     total: Counter[tuple[str, str, str, str]] = field(default_factory=Counter)
     larger_paid_late: Counter[tuple[str, str, str]] = field(default_factory=Counter)
+    smaller_paid_late: Counter[tuple[str, str, str]] = field(default_factory=Counter)
+    paired_difference_squares: Counter[tuple[str, str, str]] = field(default_factory=Counter)
 
 
 def simulate(raw_trials: int = 30_000, seed: int = 20261009,
@@ -118,8 +120,12 @@ def simulate(raw_trials: int = 30_000, seed: int = 20261009,
                     s.total[(*key, "nominal_late")] += nominal_late
                     s.total[(*key, "paid_natural")] += paid_natural
                     s.total[(*key, "paid_late")] += paid_late
-                    if paid_late > nominal_late + 1e-12:
+                    diff = paid_late - nominal_late
+                    s.paired_difference_squares[key] += diff * diff
+                    if diff > 1e-12:
                         s.larger_paid_late[key] += 1
+                    elif diff < -1e-12:
+                        s.smaller_paid_late[key] += 1
                     assert paid_natural <= nominal_natural + 1e-12
                     assert paid_late + 1e-12 >= paid_natural
     return s
@@ -134,8 +140,8 @@ def output(s: Summary) -> str:
         lines.append(f"{ep} | {s.offered[ep]} | {s.paid_endpoint[ep]}")
     lines.append(
         "endpoint | package | reset | nominal natural | paid natural | "
-        "nominal late | paid late | states paid-late > nominal-late "
-        "(all percentages of accepted openings)"
+        "nominal late | paid late | paired late delta +/- 95% CI half-width | "
+        "help / hurt states (all percentages of accepted openings)"
     )
     for ep in OBJECTIVES:
         for package in PACKAGES:
@@ -143,10 +149,15 @@ def output(s: Summary) -> str:
                 key = (ep, package, window)
                 vals = [100 * s.total[(*key, label)] / s.accepted for label in
                         ("nominal_natural", "paid_natural", "nominal_late", "paid_late")]
+                mean = (s.total[(*key, "paid_late")] -
+                        s.total[(*key, "nominal_late")]) / s.accepted
+                ex2 = s.paired_difference_squares[key] / s.accepted
+                ci = 100 * 1.96 * sqrt(max(0.0, (ex2 - mean * mean) / (s.accepted - 1)))
                 if package != "baseline":
                     lines.append(f"{ep} | {package} | {window} | " +
                                  " | ".join(f"{v:.6f}%" for v in vals) +
-                                 f" | {s.larger_paid_late[key]}")
+                                 f" | {100*mean:+.6f} +/- {ci:.6f} pp" +
+                                 f" | {s.larger_paid_late[key]}/{s.smaller_paid_late[key]}")
     return "\n".join(lines)
 
 
