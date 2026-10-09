@@ -1494,3 +1494,8 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 [reset_transition_profiles/](reset_transition_profiles/) compiles those families into a typed state-transition layer. Five families end the turn, ten leave the fresh hand actionable in the same turn, five consume the Supporter window, one consumes VSTAR Power, one consumes the GX attack, one requires a hand-to-Bench entry, and one is explicitly top/bottom-deck position-sensitive.
 
 [pre_reset_sequencing_synthesis/](pre_reset_sequencing_synthesis/) integrates the Harto draw-engine, doomed-resource, shuffle-value and reset-cancellation results. Its core state recommendation is to keep material zones, deck/Prize composition belief, deck-position belief, action budgets and reset commitment separate rather than collapsing them into a scalar draw or connector value.
+
+
+## Beheeyem self-vacating Item-lock handoff: blind-draw baseline
+
+[beheeyem_handoff_blind_draw/](beheeyem_handoff_blind_draw/) supplies an exact, independently reproducible finite-population model for turn-two Beheeyem `Mysterious Noise` followed by a second Active-dependent lock. In an unassisted nine-card access window, with four copies of each required component, the Stage 1 Honchkrow-GX or Galarian Weezing handoff has **0.940606%** access under the specified opening/Bench constraints; Stoutland plus Rare Candy has **0.281798%**. These are raw-draw benchmarks, not competitive consistency or win-rate estimates. The result identifies search and evolution bandwidth as important AMR costs for an otherwise mechanically legal multi-lock package.
