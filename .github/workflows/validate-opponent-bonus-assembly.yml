@@ -32,3 +32,5 @@ jobs:
         run: python results/opponent_bonus_assembly/flexible_capacity_reproduce.py
       - name: Validate Hall-matching capacity
         run: python results/opponent_bonus_assembly/matching_reproduce.py
+      - name: Verify bundled card print output semantics
+        run: python results/opponent_bonus_assembly/card_text_reproduce.py
