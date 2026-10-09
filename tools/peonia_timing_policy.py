@@ -94,7 +94,7 @@ def remove_hand(hand, cards):
 
 
 @lru_cache(None)
-def play_peonia(belief, hand):
+def play_peonia(belief, hand, required=None):
     size = len(belief[0][0][0])
     best = Fraction()
     for quantity in range(1, min(3, size) + 1):
@@ -107,7 +107,7 @@ def play_peonia(belief, hand):
                     remaining = remove_hand(acquired, returned)
                     if remaining is None:
                         continue
-                    if remaining[0]:
+                    if remaining[0] and (required is None or remaining[KINDS.index(required)]):
                         score = Fraction(1)
                     else:
                         def replace(world):
@@ -118,7 +118,7 @@ def play_peonia(belief, hand):
                             return (tuple(new_slots), deck)
 
                         updated = transform(conditioned, replace)
-                        score = optimal(updated, remaining, False)
+                        score = optimal(updated, remaining, False, required)
                     possibilities.append(score)
                 expectation += chance * max(possibilities)
             best = max(best, expectation)
@@ -126,9 +126,9 @@ def play_peonia(belief, hand):
 
 
 @lru_cache(None)
-def optimal(belief, hand, peonia_available):
+def optimal(belief, hand, peonia_available, required=None):
     """Bellman optimum for the exact player-observable belief state."""
-    if hand[0]:
+    if hand[0] and (required is None or hand[KINDS.index(required)]):
         return Fraction(1)
     deck_available = bool(belief[0][0][1])
     if not peonia_available and (not deck_available or (not hand[1] and not hand[2])):
@@ -136,13 +136,13 @@ def optimal(belief, hand, peonia_available):
 
     actions = [Fraction()]
     if peonia_available:
-        actions.append(play_peonia(belief, hand))
+        actions.append(play_peonia(belief, hand, required))
 
     if hand[1] and deck_available:
         after = remove_hand(hand, "A")
         expected = Fraction()
         for _top, chance, conditioned in observe(belief, 0):
-            choices = [optimal(conditioned, after, peonia_available)]
+            choices = [optimal(conditioned, after, peonia_available, required)]
             for slot in range(len(conditioned[0][0][0])):
                 def exchange(world):
                     prizes, deck = world
@@ -151,7 +151,7 @@ def optimal(belief, hand, peonia_available):
                     return (tuple(new_prizes), (prizes[slot],) + deck[1:])
 
                 exchanged = transform(conditioned, exchange)
-                choices.append(optimal(exchanged, after, peonia_available))
+                choices.append(optimal(exchanged, after, peonia_available, required))
             expected += chance * max(choices)
         actions.append(expected)
 
@@ -159,9 +159,9 @@ def optimal(belief, hand, peonia_available):
         after = remove_hand(hand, "S")
         expected = Fraction()
         for top, chance, conditioned in observe(belief, 0):
-            taken = Fraction(1) if top == "T" else optimal(
+            taken = optimal(
                 transform(conditioned, lambda world: (world[0], world[1][1:])),
-                add_hand(after, top), peonia_available,
+                add_hand(after, top), peonia_available, required,
             )
             discarded = Fraction()
             if len(conditioned[0][0][1]) >= 2:
@@ -170,9 +170,9 @@ def optimal(belief, hand, peonia_available):
                 )
                 for next_card, draw_chance, seen in observe(without_top, 0):
                     discarded += draw_chance * (
-                        Fraction(1) if next_card == "T" else optimal(
+                        optimal(
                             transform(seen, lambda world: (world[0], world[1][1:])),
-                            add_hand(after, next_card), peonia_available,
+                            add_hand(after, next_card), peonia_available, required,
                         )
                     )
             expected += chance * max(taken, discarded)
@@ -181,8 +181,8 @@ def optimal(belief, hand, peonia_available):
     return max(actions)
 
 
-def compare(prizes, deck, arcs, shoes, filler_in_hand):
-    """Return (Peonia-first optimum, unrestricted-timing optimum)."""
+def compare(prizes, deck, arcs, shoes, filler_in_hand, required=None):
+    """Return (Peonia-first, flexible) P(T and optional required A/S in hand)."""
     belief = initial(tuple(prizes), tuple(deck))
     hand = (0, arcs, shoes, filler_in_hand)
-    return play_peonia(belief, hand), optimal(belief, hand, True)
+    return play_peonia(belief, hand, required), optimal(belief, hand, True, required)
