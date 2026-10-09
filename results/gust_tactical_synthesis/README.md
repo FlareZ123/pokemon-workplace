@@ -11,6 +11,15 @@ legally move, the sequence in which player-side effects must resolve, the
 opportunity to execute it before an action window closes, and the defender's
 ability to respond.
 
+The [reciprocal gust Bench study](../mutual_gust_bench_liability/)
+adds a two-sided terminal-Prize liability: placing an otherwise
+free Benched Pokemon can expose a KO that an opponent's Boss's Orders
+converts immediately into victory. In 105,120 state comparisons per
+opponent-Boss allowance, no-gust opponents have zero harmful Bench
+additions; allowing one opposing Boss produces 4,914. These are
+uniform structural counts from a one-hit-KO abstraction and do not
+price the extra Pokemon's draw, attack, or evolution contributions.
+
 The combined research supports a concrete evaluation hierarchy:
 
 1. **Current card semantics:** What action does this print actually permit
