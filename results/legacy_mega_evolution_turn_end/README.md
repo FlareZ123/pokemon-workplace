@@ -49,7 +49,7 @@ The regression also rejects a transition with incorrect printed evolution ancest
 
 ## Full bundled Expanded legacy-Tool coverage
 
-The companion audit `tools/legacy_mega_spirit_link_catalog.py` scans all set-in-scope effectively legal print records and matches exact printed legacy Mega Evolution/Primal Reversion turn-end rules against Spirit Link text naming the evolved Pokémon. The bundled corpus contains **91 effectively legal legacy Mega/Primal print records spanning 41 Pokémon names** and **35 matching Spirit Link Tool prints covering 34 named evolutions**. Seven legacy Mega Evolution names have **no matching Spirit Link print in this corpus**:
+The companion audit `tools/legacy_mega_spirit_link_catalog.py` scans all set-in-scope effectively legal print records and matches exact printed legacy Mega Evolution/Primal Reversion turn-end rules against Spirit Link text naming the evolved Pokémon. The bundled corpus contains **92 effectively legal legacy Mega/Primal print records spanning 41 Pokémon names** and **35 matching Spirit Link Tool prints covering 34 named evolutions**. Seven legacy Mega Evolution names have **no matching Spirit Link print in this corpus**:
 
 - M Absol-EX
 - M Blaziken-EX
@@ -58,6 +58,8 @@ The companion audit `tools/legacy_mega_spirit_link_catalog.py` scans all set-in-
 - M Kangaskhan-EX
 - M Metagross-EX
 - M Swampert-EX
+
+The newest included print, **M Gardevoir-EX `me55c-106m`**, retains the old Mega Evolution turn-ending rule *without the historical `Mega Evolution rule:` prefix*. The compiler and catalog therefore recognize the exact effect wording as well as prefixed XY text. This reprint is covered by Gardevoir Spirit Link and increases the legal print count by one, without changing the 41 distinct names or seven uncovered names. A prefix-only audit would incorrectly omit this 2026 print.
 
 That is an exact print-coverage observation. It does not by itself prove that no other card effect can manipulate a turn-ending consequence. Modern Mega Evolution ex prints are excluded because their different Rule Box text does not describe an evolution turn-end action. The independent reproducible `catalog.py` confirms the counts and seven-name coverage gap.
 
