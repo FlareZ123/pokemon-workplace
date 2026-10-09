@@ -46,6 +46,10 @@ def main() -> None:
     for key, value in sample.benefit.items():
         assert value >= -1e-12
         assert sample.preview[key] >= sample.guard[key] - 1e-12
+        assert abs(sample.benefit[key] - sample.material_benefit[key]
+                   - sample.guard_relaxation_benefit[key]) < 1e-10
+        assert sample.material_only[key] >= sample.guard[key] - 1e-12
+        assert sample.preview[key] >= sample.material_only[key] - 1e-12
     print("PASS: paired 2,500-start optional-K1-preview monotonicity regression")
     print(output(sample))
 
