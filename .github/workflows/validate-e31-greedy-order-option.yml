@@ -10,6 +10,7 @@ on:
       - 'tools/e31_nested_terminal_gate.py'
       - 'tools/e31_peonia_packet_availability.py'
       - 'tools/e31_natural_prize_burst.py'
+      - 'tools/e31_bench_capacity_value.py'
       - 'results/e31_greedy_order_option/**'
       - '.github/workflows/validate-e31-greedy-order-option.yml'
   workflow_dispatch:
@@ -32,3 +33,4 @@ jobs:
           python tools/e31_nested_terminal_gate.py
           python tools/e31_peonia_packet_availability.py
           python tools/e31_natural_prize_burst.py
+          python tools/e31_bench_capacity_value.py
