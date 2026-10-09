@@ -1,0 +1,26 @@
+name: Validate Gothitelle K1-aware discard choices
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_k1_discard_choices.py"
+      - "tools/gothitelle_paid_adaptive_items.py"
+      - "results/gothitelle_k1_discard_choices/**"
+      - ".github/workflows/validate-gothitelle-k1-discard-choices.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Independently verify K0-K1 choice and all payment bands
+        run: python results/gothitelle_k1_discard_choices/reproduce.py
+      - name: Recheck approved-discard baseline
+        run: python results/gothitelle_paid_adaptive_items/reproduce.py
