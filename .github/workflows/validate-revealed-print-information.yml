@@ -1,0 +1,23 @@
+name: Validate print-specific revealed search information
+
+on:
+  push:
+    paths:
+      - "tools/revealed_print_information.py"
+      - "results/revealed_print_information/**"
+      - ".github/workflows/validate-revealed-print-information.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check print versus name posterior information
+        run: python results/revealed_print_information/reproduce.py
