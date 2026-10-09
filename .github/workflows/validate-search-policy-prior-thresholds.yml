@@ -1,0 +1,25 @@
+name: Validate search-policy prior decision thresholds
+
+on:
+  push:
+    paths:
+      - "tools/latent_search_policy_belief.py"
+      - "tools/observation_policy_envelope.py"
+      - "tools/revealed_print_information.py"
+      - "results/search_policy_prior_thresholds/**"
+      - ".github/workflows/validate-search-policy-prior-thresholds.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Test exact policy-prior threshold plateau
+        run: python results/search_policy_prior_thresholds/reproduce.py
