@@ -1,0 +1,22 @@
+name: Validate Bench contraction choice space
+
+on:
+  push:
+    paths:
+      - tools/bench_contraction_choice_space.py
+      - tools/bench_synergy_contraction.py
+      - .github/workflows/validate-bench-contraction-choice-space.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate full physical contraction choice space
+        run: python tools/bench_contraction_choice_space.py --self-test
+      - name: Demonstrate strategy-dependent physical discard
+        run: python tools/bench_contraction_choice_space.py
