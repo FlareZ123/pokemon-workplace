@@ -53,3 +53,63 @@ The independent brute-force enumerator loops over labeled Prize subsets and aver
 An endpoint-preserving payment chosen with full knowledge of simulated Prize composition is an upper bound on a pre-search decision. For the specific Tool-thinning play, this gap can reverse the direction of the decision. K1 information can make a safe local density improvement actionable; K0 uncertainty makes blindly sacrificing a guaranteed setup resource much worse under the modeled joint objective.
 
 The next integration challenge is to classify actual Aichi G&H payment states by whether an earlier Tag Call, Fan Rotom or other full-deck search has already established K1. Only then should a full-game policy use an observed backup to authorize deliberate Tool replacement.
+
+
+## Extension: how many backup copies reverse the K0 decision?
+
+The one-backup result is sensitive to redundancy. Define **b** physically
+distinct backup Tools among the U unseen cards, with one separate Ticket target.
+If at least one backup is searchable, blindly discarding the held Tool can
+replace it and remove one non-target from the remaining deck. If every backup
+is Prized, that path loses setup. Let
+
+\[
+r_b = P(\text{all }b\text{ backups Prized, Ticket searchable})
+=\begin{cases}
+\binom{U-b-1}{P-b}/\binom{U}{P}, & P\ge b,\\
+0,&P<b.
+\end{cases}
+\]
+
+The exact joint setup-and-Ticket probabilities are
+
+\[
+P_\mathrm{keep}=\frac{s}{U},\qquad
+P_\mathrm{blind}=\frac{s}{D-1}\left(\frac{D}{U}-r_b\right),\qquad
+P_\mathrm{K1} = P_\mathrm{blind}+\frac{s\,r_b}{D}.
+\]
+
+The probability that *all backups* are Prized is
+\(\binom{U-b}{P-b}/\binom{U}{P}\) for \(P\ge b\), and zero otherwise.
+
+A particularly simple, exact threshold follows:
+
+\[
+P_\mathrm{blind}>P_\mathrm{keep}
+\quad\Longleftrightarrow\quad U r_b<1.
+\]
+
+Thus a sufficiently redundant Tool family can make blind thinning positive
+**for the specified joint objective** even when Prize cards are unknown.
+The condition is independent of the number s of Stellar Wish cards inspected,
+provided both deck sizes accommodate s. This does not make the play desirable
+when guaranteed setup has lexicographic value.
+
+At U=52, P=6 and s=5:
+
+| Other searchable backup copies before Prizing | Keep joint | Blind replacement joint | K1-adaptive joint | Blind setup survives |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 9.615385% | 8.672700% | 9.803922% | 88.461538% |
+| 2 | 9.615385% | **9.713424%** | 9.826546% | 98.868778% |
+| 3 | 9.615385% | **9.819620%** | 9.828855% | 99.909502% |
+| 4 | 9.615385% | **9.828470%** | 9.829047% | 99.994459% |
+
+These b=2+ rows are **illustrative counterfactual backup families**.
+The Aichi TM: Evolution and Jet Energy resource pairs each have only two
+total copies. Holding one leaves only b=1 unseen backup in that original list.
+Other roles with more copies may behave differently, but only after checking
+card text, access routes, real discard costs and the objective's priority.
+
+The expanded reproducer independently enumerates **1,154** labeled
+Prize-population cases across different b, U, P and s, matching every rational
+formula exactly. [Extended passing CI 37976924070](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37976924070).
