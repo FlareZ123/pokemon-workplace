@@ -70,6 +70,25 @@ Consider three occupants `A`, `B`, `F` and capacity two. Let `v_A=v_B=0`, `v_F=1
 
 Discarding the lowest-singleton-value occupant drops `A` or `B` and gives retained utility `1`. Exact joint optimization retains `A,B` with utility `M`. The regret `M-1` can be arbitrarily large in the abstract model. Positive pairwise synergy alone suffices to falsify singleton-based discard choice.
 
+## Extension: payoff timing changes the threshold
+
+The previous `5/11` threshold assumes only utility at the final checkpoint matters. A different timing model rewards the first retained Bench **before** any possible second contraction and also rewards the later board, weighted by `δ`. That can represent a conditional Ability that is actually usable during the intervening turn, with its realized benefit counted separately from later board flexibility.
+
+Define the two-period abstract score as
+
+`V(S_first) = U(S_first) + δ * [(1-p) U(S_first) + p max_{S_final subset S_first, |S_final|=3} U(S_final)]`.
+
+Under the original bonus-30 witness:
+
+- Preserve the Lunatone/Solrock pair at the first contraction: `V_pair = 152 + δ(152 - 22p)`.
+- Discard one partner and preserve both attackers: `V_flexible = 142 + 142δ`.
+
+For `δ=1`, the forward-looking choice flips only when `p > 10/11`. At `p=1/2`, preserving the pair scores **293** compared with **284** for the flexible choice, reversing the earlier terminal-only ranking at the same probability. At `p=1`, the pair scores **282** and the flexible choice **284**.
+
+In general, for positive `δ`, the threshold is `p > 5(1+δ)/(11δ)`. If `δ <= 5/6`, this threshold is at least one, so the example's immediate pair-preservation strategy remains optimal for every admissible second-contraction probability.
+
+This isolates a crucial methodological choice: **has the synergy already delivered value by the time a later Bench restriction arrives?** A static utility of the surviving board cannot answer that. The actual Pokémon game must supply turn order, first-stage Ability usability, and the timing of any Stadium change.
+
 ## Validation
 
 Run `python tools/bench_synergy_contraction.py --self-test` to verify:
