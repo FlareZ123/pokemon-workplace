@@ -81,3 +81,13 @@ Claimed identity at 2026-10-09T10:32:23.943Z; claim commit `26dce4456dfe8bff8265
 - Full six-Pokémon witness: evolved Tarountula->Spidops with Grass Energy and Muscle Band selected for forced five-to-four contraction. Both physical stack cards and both attachments reach discard, other Pokémon plus Active remain, no Prize is taken. Five-to-three has ten complete conservative choices; successive five-to-four-to-three is valid with all card classes conserved.
 - Shared `board_object_kernel` and `board_position_state` have distinct representations; this bridge deliberately uses stack-bearing `board_position_state` because the object-only representation does not by itself account for every physical Pokémon card.
 - Next: apply named Ability guard evaluations to chosen successor boards in an integrated `StackBoardMaterialState`, then evaluate a stronger archetype witness where discarding a required Regigigas party member shuts off Ancient Wisdom under Collapsed Stadium.
+
+### Conserved Regigigas timing and structural/material deficit
+
+- New `tools/regigigas_capacity_window.py` with `results/regigigas_capacity_window/README.md`, passing CI [37920684422](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37920684422).
+- Source-print-verified Regigigas `swsh10-130` Ancient Wisdom requires five distinct other Regi names on a six-Pokémon board. Exact stack-bearing ledger fixture provides Regigigas Active, all five named partners Benched, 3 Basic Grass Energy exchangeable in discard, and no Ability lock.
+- If Ancient Wisdom is used first, 3 Energy become physically attached to Regigigas; a subsequent selected 5->4 contraction discards a required partner and disables future Ancient Wisdom but does not undo earlier Energy attachments. If contraction occurs first, all five legal discard choices break the named guard, so zero Energy can be attached with Ancient Wisdom.
+- Re-expanding capacity from four to eight without card recovery fails to restore the named condition. Structural Bench slack and physical missing-card availability are separate, sequential prerequisites.
+- Tests include all five restriction choices, 1-use quota, 1-3 Energy selection bound, original ledger conservation, and direct card-list guard equality. Narrow witness assumes accessible Stadium, Basic Energy only, no other locks.
+- This is a clear ALS deadline where evaluating only the final board undercounts actions already executed before a prerequisite-removing constraint. Future work: integrate card effect and turn-resource permission rather than providing externally ordered actions.
+
