@@ -22,6 +22,16 @@ After the draw the hand must have at least one A, P and expendable F. Success oc
 
 At four Rotom copies the success-event incidence increases by a factor of approximately **2.4**, after accounting for the extra Item's inclusion in the same limited opening hand and the fact that Rotom replaces disposable F.
 
+## Eight total top-five Items across two different names
+
+The paper Expanded card pool also includes **Pokédex** `xy12-82`, an Expanded-legal Item that looks at the top five cards and puts them back in any order. For the immediate goal of placing a target `T` among those five onto deck top, Pokédex provides the same reachable top-card outcome as Rotom Phone. Their treatment of the other four cards differs, so this equivalence is restricted to the target-staging event.
+
+A 60-card construction can include **four Rotom Phone and four Pokédex** because they have different names and each respects its four-copy limit. Replacing eight F with this combined top-five arranging family gives the exact raw opening incidence
+
+`105799951/19578739752 = 0.540382%`
+
+per accepted Basic opener, compared with `0.385550%` for four Rotom alone and `0.160368%` for zero top-five arrangers. This is a **3.37-fold increase** over the no-arranger benchmark under the same optimistic filler assumptions, while still a small absolute raw event rate. The general function `with_top_five(arrangers=8)` treats the two different card names as one action-equivalent class for this endpoint; the narrower `with_rotom(rotoms=4)` remains available.
+
 ## Exact probability calculation
 
 The baseline contribution is the no-Rotom top-one event computed using the original grouped model, now treating Rotom as another protected/discrete class when considering F payment. The additional event requires one Rotom in hand as well as A, P, B and F, with target T absent from the eight cards seen before using Items. Group counts have multivariate-hypergeometric mass conditioned on the Basic being present in the **first seven**. The extra chance T occupies one of the next four deck positions beyond the immediate top is exactly `4/52`, conditional on the observed hand. Add this contribution to the baseline's `1/52` next-card event without double-counting.
