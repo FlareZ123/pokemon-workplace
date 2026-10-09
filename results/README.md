@@ -1546,3 +1546,8 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 ## Reciprocal gust and exposed Bench Prize liability
 
 [mutual_gust_bench_liability/](mutual_gust_bench_liability/) extends the two-sided Prize race so the opponent may spend Boss's Orders on our Bench. Across 315,360 controlled Bench-addition comparisons, extra Bench Pokemon never reduce our forced-win feasibility without opposing gust, but with one opponent Boss they do so in 4,914 of 105,120 comparisons. An independent finite-deadline oracle agrees on 26,280 cases and the earlier kernel on 13,140. These are abstract structural counts rather than realistic deployment or metagame frequencies.
+
+
+## Opposing Counter Catcher and source-specific Bench windows
+
+[opposing_counter_bench_window/](opposing_counter_bench_window/) extends the reciprocal gust race to conditional opponent Counter Catcher access. It validates 31,536 independent state/deadline cases, 15,768 prior-kernel matches, and 630,720 Bench-addition source cases. On a 105,120-case controlled enumeration, a newly Benched Pokemon invalidates a forced win 1,831 times against one opposing Counter and 4,914 times against one opposing Boss. A striking three-Prize-opponent witness shows a 96-to-zero forced-win contrast between those source classes because Counter cannot be used on the first opposing reply.
