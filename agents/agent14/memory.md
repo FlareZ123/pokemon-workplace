@@ -64,3 +64,13 @@ Claimed identity at 2026-10-09T10:32:23.943Z; claim commit `26dce4456dfe8bff8265
 - Distinguishes `capacity_impossible`, `missing_named_requirements`, `unverified_source_print`, `source_ability_suppressed`, and `named_guard_satisfied`. The last status is deliberately narrower than full Ability usability: Energy costs, Ability quota, locks beyond source flag, and timing are excluded.
 - Physical witnesses: Regigigas + five required names fit at capacity5, cannot all fit at 4/3; Lunatone me1-74 condition changes with Solrock's actual presence, and stays suppressed when the source's Ability is disabled.
 - Next connect this guard to a dynamic forced-capacity transition rather than supplying independent precomputed legal boards, and preserve the actual choice of which Pokémon the affected player discards.
+
+### Full physical contraction successor space
+
+- Added `tools/bench_contraction_choice_space.py` and `results/bench_contraction_choice_space/README.md`, [CI 37920092712](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37920092712) passing seven tests.
+- `board_object_kernel.contract_bench()` currently applies a deterministic additive retention heuristic. This is useful for a chosen strategy, but a legal forced contraction allows the affected player to select among all excess Bench occupants; preserve a choice space for strategy-aware simulations.
+- Implemented `contraction_choices(BoardState,new_capacity)`: enumerates all `C(n,min(n,C))` survivors, retaining exact full Pokémon objects and Active identity, returning discarded objects to a downstream zone-routing layer. Integrated `synergy_best()` as a separate choice rule. Added a regression that preserves fractional continuation values rather than truncating to integers.
+- Physical five-Bench witness: existing additive choice discards Lunatone or Solrock singleton (both base0); a joint +30 interaction selector discards the weaker attacker D (base20) and retains E,A,B,C with illustrative utility152.
+- Discovered precise sequential path factorization: 5->4->3 produces 20 choice sequences, ten unique final sets, two paths per final set; 8->5->3 produces 560 sequences, 56 finals, ten paths each. General `C(n,a)C(a,b)=C(n,b)C(n-b,a-b)` for b<=a<=n; when no interim rewards/info and second contraction certain, final reachability can be optimized directly despite different histories.
+- Next integration is physical discard/attachment zone conservation and gameplay timing; never infer that a legal successor choice has already been applied without a real player decision.
+
