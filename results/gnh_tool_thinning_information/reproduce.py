@@ -9,6 +9,7 @@ from tools.gnh_tool_thinning_information import (
     exact, brute_force, describe, exact_multiple,
     brute_force_multiple, multiple_summary,
     minimum_ticket_to_setup_value_ratio, phase_diagram,
+    exact_information_utility, information_utility_summary,
 )
 
 
@@ -85,9 +86,37 @@ def main() -> None:
         assert (delta == 0) == (expr == 0)
     assert "2 | 27..60 | 26 | 12..25" in phase_diagram()
     print("PASS: U=26 exact crossover and 49-point unseen-pool phase sweep")
+    # Verify the K1 decision value against the independently enumerated
+    # physical Prize policy values, across several utility orientations.
+    for unseen in range(3, 11):
+        for prize_count in range(0, unseen - 1):
+            for sample_count in range(1, unseen - prize_count):
+                for backups in range(1, unseen):
+                    physical = brute_force_multiple(unseen, prize_count, sample_count, backups)
+                    for beta in (Fraction(0), Fraction(1), Fraction(20)):
+                        utility = exact_information_utility(
+                            unseen, prize_count, sample_count, backups,
+                            Fraction(1), beta,
+                        )
+                        assert utility.keep_value == 1 + beta * physical.keep_joint
+                        assert utility.blind_value == (
+                            physical.blindly_replace_setup
+                            + beta * physical.blindly_replace_joint
+                        )
+                        assert utility.k1_value == 1 + beta * physical.k1_adaptive_joint
+                        assert utility.perfect_information_value >= 0
+    expected = (Fraction(5, 2652), Fraction(7, 3315),
+                Fraction(54, 54145), Fraction(53, 866320))
+    actual = tuple(
+        exact_information_utility(52, 6, 5, b).perfect_information_value
+        for b in range(1, 5)
+    )
+    assert actual == expected, (actual, expected)
+    print("PASS: exact K0/K1 additive-utility EVPI and independent world checks")
     print(describe(52, 6, 5))
     print(multiple_summary(52, 6, 5, 4))
     print(phase_diagram())
+    print(information_utility_summary())
 
 
 if __name__ == "__main__":
