@@ -1,0 +1,25 @@
+name: Validate unknown search-policy information
+
+on:
+  push:
+    paths:
+      - "tools/latent_search_policy_belief.py"
+      - "tools/revealed_print_information.py"
+      - "tools/observation_policy_envelope.py"
+      - "results/latent_search_policy_information/**"
+      - ".github/workflows/validate-latent-search-policy-information.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check latent search-policy and print-information interaction
+        run: python results/latent_search_policy_information/reproduce.py
