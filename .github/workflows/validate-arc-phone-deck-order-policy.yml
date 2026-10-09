@@ -18,3 +18,5 @@ jobs:
           python-version: "3.12"
       - name: Exact physical deck and Prize oracle
         run: python -m results.arc_phone_deck_order_policy.reproduce
+      - name: Exact sweep
+        run: python -m results.arc_phone_deck_order_policy.sweep
