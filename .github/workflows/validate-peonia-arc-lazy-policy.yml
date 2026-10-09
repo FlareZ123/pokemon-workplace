@@ -1,0 +1,19 @@
+name: Validate Peonia and lazy Arc Phone position policy
+
+on:
+  push:
+    paths:
+      - tools/peonia_arc_lazy_policy.py
+      - results/peonia_arc_lazy_policy/**
+      - .github/workflows/validate-peonia-arc-lazy-policy.yml
+  workflow_dispatch:
+
+jobs:
+  peonia-arc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m results.peonia_arc_lazy_policy.reproduce
