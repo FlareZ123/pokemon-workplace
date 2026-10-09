@@ -176,6 +176,45 @@ discard_selection = enumerate_discard_selections(
     1,
 )[0]
 
+# An alternative policy can assign the literal observation "Y" to exactly
+# the same Prize states that would choose physical X. Without binding the
+# public observation to the materialized card, this contradiction survives
+# both posterior-support and conservation checks.
+renamed_policy = {
+    composition: {
+        ("Y" if chosen_target(composition) == "X" else "OTHER"): 1.0
+    }
+    for composition in supported_compositions
+}
+try:
+    execute_hidden_trainer_search_transaction(
+        physical,
+        execution_state,
+        (("actor", prior), ("observer", prior)),
+        actor_id="actor",
+        profile=quick_ball,
+        action_card_class=QUICK_BALL,
+        demands=demands,
+        targets=targets,
+        search_action=search_x,
+        target_probability_by_composition=renamed_policy,
+        observed_target="Y",
+        group_by_card_class={A: "A", X: "X", Y: "Y"},
+        target_card_name="X",
+        target_instance_id="incorrect-reveal-x",
+        sampled_top_card_class=Y,
+        sampled_top_card_name="Y",
+        sampled_top_instance_id="incorrect-reveal-top",
+        discard_candidates=discard_candidates,
+        discard_selection=discard_selection,
+        play_condition_met=True,
+    )
+except ValueError as exc:
+    assert "public revealed target" in str(exc)
+else:
+    raise AssertionError("public observation Y cannot describe physically searched X")
+
+
 transition = execute_hidden_trainer_search_transaction(
     physical,
     execution_state,
@@ -267,6 +306,7 @@ else:
     raise AssertionError("Item lock must reject the atomic Quick Ball transaction")
 
 print("hidden Trainer search bridge regressions passed")
+print("mismatched public target signal rejected before belief update")
 print("Quick Ball and one exact fodder copy enter discard")
 print("searched X is public/materialized in hand; exact shuffled top is Y")
 print("actor top Y=1/3; opponent top Y=1/7")
