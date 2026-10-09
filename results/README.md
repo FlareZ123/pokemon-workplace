@@ -1536,3 +1536,8 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 ## Beheeyem self-shuffle as a physically conserved deck-return transition
 
 [beheeyem_physical_self_shuffle/](beheeyem_physical_self_shuffle/) introduces `tools/active_self_shuffle_conservation.py` to model the full evolved Pokémon stack and attachments returning to the deck, distinct from Knock Out disposal to the discard pile. The exact identity-ledger regression constructs Elgyem -> Beheeyem with Triple Acceleration Energy Active, a Benched complete Stoutland evolution stack wearing Float Stone, and another Elgyem on the Bench. On Mysterious Noise's board-removal step, both attacker Pokémon cards and TAE become exchangeable deck copies while Stoutland is promoted Active, its Tool stays attached, and the second Elgyem remains Benched; all per-class physical counts are conserved. The transition also handles the lone-Active terminal case without inventing a Knock Out or Prize award. Item-lock temporal effect ownership remains a distinct layer. CI run 37904199241 passed.
+
+
+## Two-sided gust race and opponent Knock Out deferral
+
+[two_sided_gust_race/](two_sided_gust_race/) couples the Counter Catcher Prize gate to explicit Prize-valued boards on both sides. A separate finite-horizon oracle agrees on 24,528 scenarios, with 3,504 checks against the prior exogenous-score kernels. It finds four opponent boards where a mixed Boss + Counter package is a forced win against compulsory opposing KOs but loses the guarantee when the opponent may legally decline an attack. The work gives a state-based bridge from scoring clocks to actual KO choices, with energy/attack readiness still abstracted.
