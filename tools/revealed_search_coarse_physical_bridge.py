@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from card_class_namespace import CardClassNamespace
 from deck_search_shuffle_physical_belief import (
@@ -33,6 +34,9 @@ from trainer_search_hidden_state_bridge import (
 from trainer_search_profile_compiler import CompiledTrainerSearchProfile
 from trainer_search_transaction import TrainerSearchExecutionState
 from typed_search_target_allocator import DemandChannel, TypedTargetAction
+
+if TYPE_CHECKING:
+    from card_identity import IdentityIndex
 
 
 @dataclass(frozen=True)
@@ -67,6 +71,7 @@ def execute_coarse_revealed_trainer_search(
     discard_selection: DiscardSelection | None = None,
     play_condition_met: bool | None = None,
     pay_optional_discard: bool | None = None,
+    print_identity_index: IdentityIndex | None = None,
 ) -> CoarseRevealedPhysicalSearchTransition:
     """One exact-print Trainer search, with observer-specific coarse beliefs."""
     if not prizes_by_observer:
@@ -126,6 +131,7 @@ def execute_coarse_revealed_trainer_search(
         play_condition_met=play_condition_met,
         pay_optional_discard=pay_optional_discard,
         observation_namespace=CardClassNamespace.EXACT_PRINT,
+        print_identity_index=print_identity_index,
     )
 
     actual_target = exact.physical_after.ledger.instance(target_instance_id)
