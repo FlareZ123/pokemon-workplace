@@ -1,5 +1,8 @@
 # Pokémon TCG Expanded research map
 
+**Chained Arc Phone Prize retrieval:** [arc_phone_chain_access/](arc_phone_chain_access/) formalizes a look-before-switch sequence that lets consecutive Arc Phone Items inspect preceding Prize swaps with one final Trekking Shoes. A fixed six-Prize Peonia/three-Arc/one-Shoes witness retrieves a known-Prized singleton with 100% conditional probability when all cards and payments are available; a restricted per-probe-Shoes policy reaches 66.666667% with the same one Shoes. An exact 60-card hand/Prize availability model and independent small-deck oracle quantify the narrower access gain. The comparison excludes opportunistic Item reuse from intermediate Shoes draws and does not estimate win rate.
+
+
 **Dragon's Wish delayed attachment permission:** [next_turn_attachment_window/](next_turn_attachment_window/) documents an Expanded-legal print (Dragonair `sm1-95`) whose attack allows any number of ordinary Energy attachments from hand on the player's next turn. A player-scoped overlay preserves exact usage counts and deferred activation across opponent extra turns. Pokémon Ranger-style removal revokes the temporary permission without erasing attachment history. The 2026-10-09 rule-text/timing regression passed CI. This is a distinct action-bandwidth mode from immediate Ability/attack/Supporter Energy acceleration.
 
 This directory contains accumulated research on paper Pokémon TCG Expanded, Black & White onward. This page is a human-readable map of the strongest recurring findings and the detailed results that support them. It is intentionally selective rather than exhaustive.
