@@ -6,7 +6,7 @@ If one two-Prize award reveals **Greedy Dice** and **Dream Ball** together, and 
 
 **Yes in a controlled four-Prize case.** Greedy Dice first preserves the option to let a recursively taken Jirachi enter the last Bench slot. Dream Ball first fills that slot. Taking Jirachi later still takes a Prize, but Jirachi's Wish Upon a Star cannot enter play to take the fourth.
 
-Executable enumeration: [tools/e31_greedy_order_option.py](../../tools/e31_greedy_order_option.py). Independent closed-form identities are checked by [reproduce.py](reproduce.py).
+Executable enumeration: [tools/e31_greedy_order_option.py](../../tools/e31_greedy_order_option.py). Independent closed-form identities are checked by [reproduce.py](reproduce.py). Physical integration: [tools/e31_greedy_order_physical.py](../../tools/e31_greedy_order_physical.py).
 
 ## Card/rules anchors
 
@@ -66,12 +66,14 @@ This isolates an information-dependent tactical option without asserting that ev
 
 ## Validation
 
-The self-contained Python implementation enumerates all four equally weighted physical worlds with `fractions.Fraction`, resolves the pending queue recursively, and checks that each Prize instance is awarded once. It checks the exact three outcome distributions, the closed-form utility identities at six values of `v`, and the replication of Dream-first outcomes by early-Greedy with Jirachi declined.
+The self-contained Python implementation enumerates all four equally weighted worlds with `fractions.Fraction`, resolves the pending queue recursively, and checks that each Prize instance is awarded once. It checks the exact three outcome distributions, the closed-form utility identities at six values of `v`, and the replication of Dream-first outcomes by early-Greedy with Jirachi declined.
 
-Run `python tools/e31_greedy_order_option.py` or `python results/e31_greedy_order_option/reproduce.py` from the repository root.
+The physical E-31 crosscheck passed **32 exhaustive branches** spanning two sibling orders, two hidden Prize layouts, two coin results, two Jirachi choices, and both positional-information policies. Each branch executes the repository's materialized Prize queue, `PendingPrizeBatchOrder`, typed Dream Ball target allocation, Greedy Dice's resolving Item state, and `use_wish_upon_a_star`; an independently coded abstract branch agrees, and card-class totals remain conserved. [GitHub Actions run 37975518702](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37975518702) passed after repairing a printed-name binding mismatch for `Jirachi ◇`.
+
+Run `python tools/e31_greedy_order_option.py`, `python results/e31_greedy_order_option/reproduce.py`, or `python tools/e31_greedy_order_physical.py` from the repository root.
 
 ## Scope and next work
 
-This is a compact exact game fragment. It does not execute the repository's physical `IdentityLedger` or observer-belief kernels, simulate real opening-hand probabilities, score the quality of actual Dream Ball targets, or prove a direct Greedy Dice + Dream Ball official ordering ruling.
+This is a compact exact game fragment. The physical ledger and queue transitions have now been exercised, but an observer-belief update is still supplied exogenously through known/unknown position policies. It does not simulate real opening-hand probabilities, score actual Dream Ball target quality, or prove a direct Greedy Dice + Dream Ball official ordering ruling.
 
-A useful extension is an end-to-end conserved implementation with `PendingPrizeBatchOrder`, `before_hand_prize_executor`, `use_wish_upon_a_star`, and observer-aware staging, including the exact extra-Prize position policy and the terminal-state check.
+A useful extension is to compose observer-aware additional-Prize staging with the physical branches and a final terminal-state check. The position-known branch should receive a concrete legal source for private position knowledge, such as a verified Peonia placement line, rather than being interpreted as ordinary K1 deck-search knowledge.
