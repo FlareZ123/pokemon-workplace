@@ -8,8 +8,10 @@ from __future__ import annotations
 import argparse
 import json
 import unittest
+from collections import Counter
 from dataclasses import dataclass, replace
 from itertools import combinations
+from math import comb
 from typing import Iterator
 
 from bench_synergy_contraction import PairBonus
@@ -70,6 +72,17 @@ def synergy_best(
             option.board.bench_ids,
         ),
     )
+
+
+def sequential_path_multiplicities(
+    state: BoardState, first_capacity: int, later_capacity: int
+) -> Counter[tuple[str, ...]]:
+    """Count first-then-second discard paths reaching each final survivor set."""
+    final_paths: Counter[tuple[str, ...]] = Counter()
+    for first in contraction_choices(state, first_capacity):
+        for second in contraction_choices(first.board, later_capacity):
+            final_paths[tuple(sorted(second.board.bench_ids))] += 1
+    return final_paths
 
 
 def physical_fixture() -> BoardState:
@@ -143,6 +156,29 @@ class ContractionChoiceTests(unittest.TestCase):
                 self.assertEqual(held_ids | gone_ids, all_ids)
                 self.assertFalse(held_ids & gone_ids)
 
+    def test_sequential_paths_factorize_by_final_subset(self) -> None:
+        for original_size, first_limit, second_limit in ((5, 4, 3), (8, 5, 3)):
+            if original_size == 5:
+                state = physical_fixture()
+            else:
+                state = make_board(
+                    make_pokemon("active", "Bidoof"),
+                    tuple(make_pokemon(f"p{i}", "Bench Pokémon") for i in range(8)),
+                    bench_capacity=8,
+                )
+            multiplicities = sequential_path_multiplicities(
+                state, first_limit, second_limit
+            )
+            self.assertEqual(len(multiplicities), comb(original_size, second_limit))
+            self.assertEqual(
+                sum(multiplicities.values()),
+                comb(original_size, first_limit) * comb(first_limit, second_limit),
+            )
+            self.assertEqual(
+                set(multiplicities.values()),
+                {comb(original_size - second_limit, first_limit - second_limit)},
+            )
+
     def test_does_not_trigger_prize_or_knock_out(self) -> None:
         original = physical_fixture()
         alternative = next(
@@ -171,6 +207,13 @@ def main() -> None:
             "joint_discards": [p.object_id for p in joint.discarded],
             "joint_keeping": list(joint.board.bench_ids),
             "joint_utility": score_choice(joint, PAIR),
+            "sequential_5_to_4_to_3": {
+                "paths": sum(sequential_path_multiplicities(starting, 4, 3).values()),
+                "unique_final_sets": len(sequential_path_multiplicities(starting, 4, 3)),
+                "multiplicity_per_final_set": sorted(set(
+                    sequential_path_multiplicities(starting, 4, 3).values()
+                )),
+            },
         }, indent=2))
 
 
