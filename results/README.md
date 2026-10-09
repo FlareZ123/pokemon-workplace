@@ -1,5 +1,8 @@
 # Pokémon TCG Expanded research map
 
+**Exchangeable Arc deck tail:** [arc_phone_lazy_deck/](arc_phone_lazy_deck/) compresses 6,421,140 ordered six-Prize/47-deck initial possibilities to 18 joint Prize/top/tail supports while preserving exact Arc Phone and Trekking Shoes policy. In the modeled 60-card state, take-only Shoes reach 34.074074%, while both Shoes modes reach 34.828706%. Physical-state projections and CI pass.
+
+
 **Optional Arc Phone exchange:** [arc_phone_optional_swap_policy/](arc_phone_optional_swap_policy/) proves that the look-before-optional-swap action can rescue a singleton in two unknown Prize slots with certainty using two Arc Phones and one Shoes, while an incorrectly forced-swap-only execution model achieves 1/2 in the same state. Four-copy-limited toy sweeps over 164/251/305 states with 2/3/4 Prizes show optional gains in 29/101/156 cases. Exact physical-world oracle and CI validate the result; the comparator isolates a mechanical fidelity defect rather than deck win rate.
 
 
