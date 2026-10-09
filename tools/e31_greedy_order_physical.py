@@ -49,9 +49,9 @@ def make_state(jirachi_first: bool):
         CardInstance("dream", "swsh7-146", DREAM, "prize"),
     ]
     last = (
-        (("jirachi", "sm7-97", JIRACHI), ("filler", "FILLER", FILLER))
+        (("jirachi", "sm7-97", "Jirachi ◇"), ("filler", "FILLER", FILLER))
         if jirachi_first else
-        (("filler", "FILLER", FILLER), ("jirachi", "sm7-97", JIRACHI))
+        (("filler", "FILLER", FILLER), ("jirachi", "sm7-97", "Jirachi ◇"))
     )
     for instance_id, card_class, name in last:
         instances.append(CardInstance(instance_id, card_class, name, "prize"))
