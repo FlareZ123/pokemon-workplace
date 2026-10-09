@@ -180,3 +180,12 @@ A literal return-trip line uses Nest Ball to Bench returned Elgyem A, Evolution 
 A synthetic uniform 60-card hand sensitivity experiment with four Nest Ball, four Evolution Incense, four Guzma & Hala, and F independent disposable cards: seven-card exact-packet probability rises from 0.492420% for F=8 to 3.939161% for F=32. Conditional on one of each connector already in hand, odds of two more disposable cards in the other four slots rise from 9.048379% to 78.165110%. This is a controlled DCI/AMR illustration, not a simulated turn-three hand conditioned on an actual developed board.
 
 High-value extension: evaluate real turnover of the three consumed Trainers and Supporter budget across multi-turn play with a physically conserved zone ledger; integrate precise counts of extra draw/search and discard overlap rather than assuming uniform refill of a 60-card deck.
+
+
+### Result 4: first-turn VIP versus Nest staging
+
+Added \`results/beheeyem_first_turn_staging/\` with exact Prize-integrated enumerator, README, and workflow \`.github/workflows/validate-beheeyem-first-turn-staging.yml\` (run 37902973575 passed). Indexed in results map.
+
+For turn-one ready board with Elgyem A opening Active, Elgyem B on Bench, and one anchor Basic on Bench, using four Elgyem + four anchor Basics: unaided 3.034427%, four Battle VIP Pass 18.483546%, four Nest Ball 11.775394%, two each 15.129470%, four each 24.168324%. Exact model enumerates opening seven, natural first-turn draw, and six Prize identities before allowing deck searches. Independent Monte Carlo n=300k seed 20261009 supports four-VIP and four-Nest exact rates. A single VIP searches both missing Basics but Nest needs two separate copies. VIP is turn-one only; Nest retains utility each later turn to re-Bench the recycled Elgyem, an important time-horizon tradeoff.
+
+Next valuable direction: a *joint* setup-and-return metric that accounts for VIP/Nest consumption on turn one and subsequent Nest availability, rather than optimizing either marginal endpoint independently. Also consider strategic opponent-demand evaluation for which anchor is actually useful.
