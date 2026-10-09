@@ -163,3 +163,42 @@ deadlines change \(\alpha\) and \(\beta\). The model demonstrates how
 resource-preserving decisions can have a different ranking from an
 unweighted Ticket-access metric. Rational thresholds and an extended exact
 grid passed [CI run 37977274931](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37977274931).
+
+
+## Phase boundary as unseen-card pool shrinks
+
+For a fixed six hidden Prizes, five-card Stellar Wish, two backup
+Tools and an unseen pool of U cards, the exact condition for blind
+replacement to improve joint setup-and-Ticket probability simplifies
+to
+
+\[
+(U-1)(U-2)>6\cdot5\cdot(U-6)
+\quad\Longleftrightarrow\quad
+(U-7)(U-26)>0.
+\]
+
+Given the physical five-card Wish feasibility restriction U>=12,
+the sign is **positive for U>=27**, exactly zero at **U=26**, and
+**negative for U=12..25**.
+
+This is a genuine change in which action maximizes the *joint*
+objective: an identical number of backup copies can favor blind
+replacement when the unknown population is large and favor preserving
+the held Tool when its unknown population becomes small relative to
+the fixed number of Prizes.
+
+| Backup copies among unseen U | Blindly replace preferred | Indifferent | Keep held Tool preferred |
+| ---: | --- | --- | --- |
+| 1 | None (U=12..60) | None | U=12..60 |
+| 2 | U=27..60 | U=26 | U=12..25 |
+| 3 | U=12..60 | None | None |
+| 4 | U=12..60 | None | None |
+
+This phase diagram is an *unseen-population counterfactual*: a real
+player who has searched their deck may already be K1, and in later
+turns the hidden Prize count may no longer be six. The purpose is to
+show the source of the crossover under controlled assumptions.
+
+The 49-integer-point phase sweep and exact U=26 factorization
+passed [CI run 37978143391](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37978143391).
