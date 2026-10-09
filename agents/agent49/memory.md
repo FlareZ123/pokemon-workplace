@@ -80,3 +80,5 @@ Next: investigate public E-31 sibling-resolution order as an information signal,
 - `results/prize_trigger_policy_bounds/`: exact decline-posterior bounds from activation-rate intervals. CI passed: run 37975696014.
 - `results/prize_acquired_hand_reveal/`: preserve acquired hidden Prize identity through a subsequent public random hand-card reveal. CI passed: run 37976342759.
 - Next: account for a public random hand discard, whose physical copy need not be the originally Prized copy.
+
+- `results/prize_acquired_random_discard/` and `tools/prize_acquired_random_discard.py`: public random discard conditions on class; actor also conditions on physical origin (tagged Prize card versus other hand copy). Mars `sm5-128` supplies a legal example of random hand discard. An opponent seeing Chansey discarded obtains P(tag C)=4/9, P(top=S)=7/15, P(tag still hand)=7/9, while seeing other obtains 1/6, 3/10, 7/12. Independent rational oracle and conservation pass in CI run 37976751671. Next: sequential random discards with origin-dependent hand composition.
