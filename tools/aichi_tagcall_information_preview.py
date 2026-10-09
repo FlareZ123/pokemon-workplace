@@ -174,15 +174,16 @@ def simulate(raw_trials: int = 100_000, seed: int = 20261009) -> Summary:
 
 
 def output(s: Summary) -> str:
+    p_exact = exact_natural_triplet_probability(
+        len(DECK), 7, sum(card in BASICS for card in DECK),
+        DECK.count("Guzma & Hala"), DECK.count("Tag Call"),
+    )
     lines = [
         f"raw={s.raw} accepted={s.accepted} core={s.core} "
         f"eligible_late={s.eligible} pre_K1_late={s.pre_k1_eligible} "
         f"optional_TagCall_K1_preview={s.optional_preview_available} "
         f"natural_Jirachi_GH_TagCall={s.natural_triplet_accepted} "
-        f"exact_natural_conditional="
-        f"{100*float(exact_natural_triplet_probability(len(DECK), 7, "
-        f"sum(c in BASICS for c in DECK), DECK.count('Guzma & Hala'), "
-        f"DECK.count('Tag Call'))):.8f}%",
+        f"exact_natural_conditional={100*float(p_exact):.8f}%",
         "endpoint | applicable endpoint-preserving states",
     ]
     for ep in OBJECTIVES:
