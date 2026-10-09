@@ -136,6 +136,12 @@ def execute_hidden_trainer_search_transaction(
         targets,
         search_action,
     )
+    # This bridge represents a publicly revealed single card. Its observation
+    # is the card's identity, not an independent, freely chosen policy label.
+    if observed_target != target_card_name:
+        raise ValueError(
+            "public revealed target must match the searched card name"
+        )
 
     if not prizes_by_observer:
         raise ValueError("at least one observer is required")
