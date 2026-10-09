@@ -8,6 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.gnh_tool_thinning_information import (
     exact, brute_force, describe, exact_multiple,
     brute_force_multiple, multiple_summary,
+    minimum_ticket_to_setup_value_ratio,
 )
 
 
@@ -48,6 +49,29 @@ def main() -> None:
     assert exact_multiple(52, 6, 5, 2).blindly_replace_joint > small.keep_joint
     print(f"PASS: {multiple} multiple-backup cases match exhaustive physical Prize enumeration")
     print("PASS: one-backup model conserved; two backups reverse the optimal K0 direction")
+    # Additive goal scoring: alpha*setup + beta*(setup AND Ticket).
+    # Exact ratios are computed without floating-point approximation.
+    from fractions import Fraction
+    assert minimum_ticket_to_setup_value_ratio(52, 6, 5, 1) is None
+    assert minimum_ticket_to_setup_value_ratio(52, 6, 5, 2) == Fraction(150, 13)
+    assert minimum_ticket_to_setup_value_ratio(52, 6, 5, 3) == Fraction(588, 1327)
+    assert minimum_ticket_to_setup_value_ratio(52, 6, 5, 4) == Fraction(24, 923)
+    for unseen in range(3, 10):
+        for prize_count in range(0, unseen - 1):
+            for sample_count in range(1, unseen - prize_count):
+                for backups in range(1, unseen):
+                    v = exact_multiple(unseen, prize_count, sample_count, backups)
+                    threshold = minimum_ticket_to_setup_value_ratio(
+                        unseen, prize_count, sample_count, backups
+                    )
+                    delta = v.blindly_replace_joint - v.keep_joint
+                    loss = 1 - v.blindly_replace_setup
+                    if threshold is None:
+                        assert delta <= 0
+                    else:
+                        assert delta > 0
+                        assert delta * threshold == loss
+    print("PASS: exact Pareto break-even weights match all 164 original cases and extended grid")
     print(describe(52, 6, 5))
     print(multiple_summary(52, 6, 5, 4))
 
