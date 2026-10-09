@@ -1,0 +1,27 @@
+name: Validate physically exact coarse revealed search
+
+on:
+  push:
+    paths:
+      - "tools/revealed_search_coarse_physical_bridge.py"
+      - "tools/revealed_target_coarsening.py"
+      - "tools/revealed_target_identity.py"
+      - "tools/trainer_search_hidden_state_bridge.py"
+      - "tools/private_search_latent_target_belief.py"
+      - "results/revealed_search_coarse_physical_bridge/**"
+      - ".github/workflows/validate-revealed-search-coarse-physical-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check coarsened print belief and physical Quick Ball
+        run: python results/revealed_search_coarse_physical_bridge/reproduce.py
