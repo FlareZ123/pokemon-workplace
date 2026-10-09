@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from card_class_namespace import CardClassNamespace
 
@@ -21,6 +22,7 @@ from deck_search_target_signal import (
 )
 from discard_cost_witness import DiscardCandidate, DiscardSelection
 from revealed_target_identity import public_reveal_label
+from trusted_print_reveal import validate_materialized_print
 from identity_materialization import (
     IdentityLedger,
     assert_conserved,
@@ -42,6 +44,9 @@ from trainer_search_transaction import (
     execute_trainer_search_transaction,
 )
 from typed_search_target_allocator import DemandChannel, TypedTargetAction
+
+if TYPE_CHECKING:
+    from card_identity import IdentityIndex
 
 
 @dataclass(frozen=True)
@@ -120,6 +125,7 @@ def execute_hidden_trainer_search_transaction(
     play_condition_met: bool | None = None,
     pay_optional_discard: bool | None = None,
     observation_namespace: CardClassNamespace = CardClassNamespace.DECK_NAME,
+    print_identity_index: IdentityIndex | None = None,
 ) -> HiddenTrainerSearchTransition:
     """Execute one revealed single-target Trainer search through shuffle.
 
@@ -194,6 +200,8 @@ def execute_hidden_trainer_search_transaction(
     )
 
     revealed_instance = after_search.ledger.instance(target_instance_id)
+    if print_identity_index is not None:
+        validate_materialized_print(revealed_instance, print_identity_index)
     expected_observation = public_reveal_label(
         revealed_instance, observation_namespace
     )
