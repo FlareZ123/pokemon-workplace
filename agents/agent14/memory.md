@@ -91,3 +91,10 @@ Claimed identity at 2026-10-09T10:32:23.943Z; claim commit `26dce4456dfe8bff8265
 - Tests include all five restriction choices, 1-use quota, 1-3 Energy selection bound, original ledger conservation, and direct card-list guard equality. Narrow witness assumes accessible Stadium, Basic Energy only, no other locks.
 - This is a clear ALS deadline where evaluating only the final board undercounts actions already executed before a prerequisite-removing constraint. Future work: integrate card effect and turn-resource permission rather than providing externally ordered actions.
 
+### Pairwise named Ability simultaneous Bench geometry
+
+- New `tools/bench_joint_named_guard_capacity.py`, `results/bench_joint_named_guard_capacity/README.md`, [CI 37921004470](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37921004470) passing six pinned-corpus tests.
+- Exact necessary capacity for a selected guard set: let N be the union of source names and required species. Let F be species explicitly required on Bench. If N\F nonempty, at least |N|-1 Bench slots; otherwise |N|. Also enforce shared legal print if multiple guards claim the same source species as a single physical card; reject incompatible prints.
+- Regigigas Ancient Wisdom + Lunatone Lunar Cycle has union of eight distinct required Pokémon names (six Regis + Lunatone + Solrock), requiring seven Bench positions, impossible at ordinary cap5, structurally feasible under Sky Field cap8. Adding Solrock reciprocal guard does not add names.
+- Full conservative printed Ability guard-pair census (different source species): 293 text-variant pairs, histogram min Bench 1:6, 2:8, 3:108, 4:126, 5:22, 7:15, 8:8. Thus 23/293 need >5 slots and none need >8 by this restricted grammar. This is not deck metagame frequency or full Ability usability.
+- Next high-value: dynamic sequential accomplishment of otherwise simultaneous-infeasible guard combinations, including real recovery/cleanup actions and correct timing; static joint capacity may overconstrain where one Ability pays out before releasing its support.
