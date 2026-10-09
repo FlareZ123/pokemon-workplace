@@ -200,3 +200,18 @@ bundles and payment/temporal constraints.
 
 Next: independent 4-goal/flexible-Basic enumeration, improve performance for
 many card classes, and derive a practical specific-ALS application.
+
+### Pinned paper Expanded card-text witness (2026-10-09)
+
+Added results/opponent_bonus_assembly/{card_text_reproduce.py,
+card_text_examples.md}, CI card print text assertions for 6 concrete prints:
+Computer Search bw7-137 (pay 2, search exactly one), Ultra Ball
+swsh9-150 (pay 2, search one Pokemon), Serena swsh12-164 (choose draw
+or gust mode), Guzma & Hala sm12-193 (Stadium plus conditionally Tool
+and Special Energy for two additional discards), Secret Box sv6-163
+(pay 3, four typed outputs), Tag Call sm12-206 (up to two TAG TEAM).
+This grounds distinction between one-shot OR suppliers, simultaneous
+typed multiple-output bundles, and optional modes. The current Hall
+model is still limited to single-output physical cards; to model Box
+or Guzma & Hala properly, add typed output-bundle action profiles and
+separate discard/Supporter checks. CI passed following addition.
