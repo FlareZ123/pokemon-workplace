@@ -1,0 +1,24 @@
+name: Validate revealed-print decision value
+
+on:
+  push:
+    paths:
+      - "tools/observation_policy_envelope.py"
+      - "tools/revealed_print_information.py"
+      - "results/revealed_print_decision_value/**"
+      - ".github/workflows/validate-revealed-print-decision-value.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check observation policies and utility payoffs
+        run: python results/revealed_print_decision_value/reproduce.py
