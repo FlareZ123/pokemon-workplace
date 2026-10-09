@@ -113,3 +113,53 @@ card text, access routes, real discard costs and the objective's priority.
 The expanded reproducer independently enumerates **1,154** labeled
 Prize-population cases across different b, U, P and s, matching every rational
 formula exactly. [Extended passing CI 37976924070](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37976924070).
+
+
+## Multiobjective value: setup survival versus Ticket access
+
+The b=2+ improvement in joint success conceals a tradeoff. Blind replacement
+can lose the key Tool when every backup is Prized. A useful exact abstraction is
+
+\[
+V(\text{policy}) =
+\alpha\,P(\text{setup succeeds})+
+\beta\,P(\text{setup succeeds and Ticket is reached}),
+\]
+
+with positive setup value \(\alpha\) and nonnegative *additional* value
+\(\beta\) for Ticket access. Define
+
+\[
+\Delta_b =P_{\text{blind,joint}}-P_{\text{keep,joint}},
+\qquad q_b=P(\text{all backups Prized}).
+\]
+
+If \(\Delta_b>0\), blind replacement is preferable precisely when
+
+\[
+\beta/\alpha > q_b/\Delta_b.
+\]
+
+If \(\Delta_b\le0\), blind replacement is never strictly preferable under
+nonnegative weights. Equality yields a tie.
+
+For U=52/P=6/s=5, the exact thresholds are:
+
+| Backup copies | Setup failure if replacing | Joint Ticket gain if replacing | Required \(\beta/\alpha\) |
+| ---: | ---: | ---: | ---: |
+| 1 | 11.538462% | -0.942685 pp | Never beneficial |
+| 2 | 1.131222% | +0.098039 pp | **greater than 150/13 ≈ 11.53846** |
+| 3 | 0.090498% | +0.204236 pp | Greater than 588/1327 ≈ 0.44310 |
+| 4 | 0.005541% | +0.213085 pp | Greater than 24/923 ≈ 0.02600 |
+
+For b=2, the supplementary value of Ticket access must outweigh the
+underlying setup-success value by more than eleven times in this particular
+additive utility model. With three or four backup copies the necessary
+tradeoff becomes much less demanding.
+
+**These are utility thresholds, not estimated competitive-game values**.
+An actual opponent, available future recovery, Tool scarcity, and attack
+deadlines change \(\alpha\) and \(\beta\). The model demonstrates how
+resource-preserving decisions can have a different ranking from an
+unweighted Ticket-access metric. Rational thresholds and an extended exact
+grid passed [CI run 37977274931](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37977274931).
