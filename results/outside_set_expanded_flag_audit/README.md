@@ -50,17 +50,17 @@ sets, partitioned into:
 
 | Resolver class | Print count |
 | --- | ---: |
-| Exact current-semantic fingerprints | 118 |
+| Exact current-semantic fingerprints | 119 |
 | Historical official reprint evidence | 39 |
 | Current official errata | 43 |
 | Current official-semantic example | 3 |
 | Known non-equivalent, conflicting labels | 4 |
-| Semantic review unresolved | 36 |
+| Semantic review unresolved | 35 |
 | **Total** | **243** |
 
-Thus 164 have evidence in the current-semantic eligibility policy,
+Thus 165 have evidence in the current-semantic eligibility policy,
 39 have historical-only positive evidence, four carry current
-negative evidence, and 36 remain in semantic review. These are
+negative evidence, and 35 remain in semantic review. These are
 evidence classifications rather than 243 verified tournament
 legality decisions.
 

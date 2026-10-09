@@ -22,19 +22,19 @@ The `current_semantic_evidence` profile accepts three evidence classes whose pre
 
 | Evidence class | Eligible prints |
 | --- | ---: |
-| exact current-semantic fingerprint | 133 |
+| exact current-semantic fingerprint | 134 |
 | official errata | 44 |
 | current Tournament Handbook semantic example | 3 |
-| **Total** | **180** |
+| **Total** | **181** |
 
 The same 77 known non-equivalent prints remain ineligible.
 
-The unresolved remainder is 4,003 prints:
+The unresolved remainder is 4,002 prints:
 
 - 39 historical-official candidates whose evidence does not by itself establish present equivalence;
-- 3,964 semantic-review prints.
+- 3,963 semantic-review prints.
 
-The current-semantic profile therefore resolves 257 of the 4,260 same-name historical prints into an eligible or ineligible state. The remaining 4,003 still require further evidence.
+The current-semantic profile therefore resolves 258 of the 4,260 same-name historical prints into an eligible or ineligible state. The remaining 4,002 still require further evidence.
 
 ## Interpretation
 

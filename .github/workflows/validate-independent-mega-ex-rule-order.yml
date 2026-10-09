@@ -1,0 +1,29 @@
+name: validate independent Mega EX rule order
+on:
+  push:
+    paths:
+      - "tools/independent_mega_ex_rule_order.py"
+      - "tools/current_card_semantics.py"
+      - "results/independent_mega_ex_rule_order/**"
+      - "results/reprint_errata_resolution/reproduce.py"
+      - ".github/workflows/validate-independent-mega-ex-rule-order.yml"
+  pull_request:
+    paths:
+      - "tools/independent_mega_ex_rule_order.py"
+      - "tools/current_card_semantics.py"
+      - "results/independent_mega_ex_rule_order/**"
+      - "results/reprint_errata_resolution/reproduce.py"
+      - ".github/workflows/validate-independent-mega-ex-rule-order.yml"
+  workflow_dispatch:
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.independent_mega_ex_rule_order.reproduce
+      - run: python -m results.reprint_errata_resolution.reproduce
+      - run: python -m results.reprint_policy_coverage.reproduce
+      - run: python -m results.outside_set_expanded_flag_audit.reproduce

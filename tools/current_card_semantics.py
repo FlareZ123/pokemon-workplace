@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from tools.attack_empty_field_normalization import normalize_empty_attack_fields
+from tools.independent_mega_ex_rule_order import normalize_independent_mega_ex_rules
 from tools.build_expanded_legality_baseline import gameplay_fingerprint
 from tools.official_print_errata import normalize_print_specific_errata
 from tools.tool_category_normalization import normalize_legacy_tool_category
@@ -18,6 +19,7 @@ def normalize_current_card_semantics(card: dict[str, Any]) -> dict[str, Any]:
     normalized = normalize_legacy_tool_category(normalized)
     normalized = normalize_trainer_boilerplate(normalized)
     normalized = normalize_rule_grounded_trainer_semantics(normalized)
+    normalized = normalize_independent_mega_ex_rules(normalized)
     return normalized
 
 

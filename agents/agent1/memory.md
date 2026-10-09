@@ -117,3 +117,7 @@ The pre-release banned-print priority regression now exhaustively checks 55 dire
 ### Outside-scope source release gate
 
 The resolver's outside-set path had no pre-release source-print check. All 25 Celebrations Classic Collection physical prints were unavailable before 2021-10-08 regardless of an older reprint target. Added outside_not_yet_released, preserving current reprint class and timing state; deck proof marks ineligible. Result tests in results/outside_source_release_gate/. Outside-set expanded-flag audit CI found 243 flags across 46 sets, partition 118 exact, 39 historical, 43 errata, 3 official-semantic, 4 proven negative, 36 semantic-review.
+
+### 2021 Celebrations M Rayquaza-EX rule-order normalization
+
+Found cel25c-76_A and legal XY original xy6-76 identical across all gameplay fields except the order of two independent XY Mega Evolution and Pokémon-EX rules. Across the 2026 English corpus, 85 prints carry canonical rule order, only the Celebrations source reverses them. Added narrowly scoped, idempotent rule pair normalization in tools/independent_mega_ex_rule_order.py composed into current_card_semantics. Moves one record from semantic_review into exact fingerprint (133->134; 3964->3963), leaves all other rule arrays untouched. Full regression and explanatory result in results/independent_mega_ex_rule_order/.

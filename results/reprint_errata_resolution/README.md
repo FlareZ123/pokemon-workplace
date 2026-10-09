@@ -12,14 +12,14 @@ The bundled snapshot contains 4,260 historical outside-scope prints whose name a
 
 They currently resolve as:
 
-- 133 exact current-semantic fingerprint candidates;
+- 134 exact current-semantic fingerprint candidates;
 - 39 historical-official reprint candidates;
 - 44 name-wide official-errata candidates;
 - 3 current-handbook semantic candidates;
 - 77 known non-equivalent prints;
-- 3,964 unresolved semantic-review prints.
+- 3,963 unresolved semantic-review prints.
 
-The positive high-confidence candidate set contains 219 prints.
+The positive high-confidence candidate set contains 220 prints.
 
 For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 21, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. The explicit historical Trainer name-reuse audit adds 16 more known-negative Trainer prints. That gives 106 positive Trainer candidates and 35 known-negative Trainer prints before broader semantic comparison.
 
@@ -29,7 +29,7 @@ For Trainers, 168 historical prints share a name with a legal Expanded Trainer. 
 
 The strongest repository-local structural path requires the historical card and a legal Expanded card to have the same fingerprint after authoritative current-semantics normalization.
 
-There are 133 such historical candidates.
+There are 134 such historical candidates. The added Celebrations Classic Collection M Rayquaza-EX matches its XY Roaring Skies original after narrowly canonicalizing two independent Pokémon rule statements whose stored order is reversed. See [../independent_mega_ex_rule_order/](../independent_mega_ex_rule_order/).
 
 ### Historical official reprint evidence
 
@@ -163,7 +163,7 @@ Related regressions:
 
 ## Limitations
 
-The remaining 3,964 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
+The remaining 3,963 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
 
 Historical reprint evidence is intentionally restricted to no-reference entries with a Black & White-onward bridge already present by the source date. Reference-required entries need separate current-semantics analysis.
 
