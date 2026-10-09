@@ -93,8 +93,9 @@ def expectation(
 ) -> tuple[Fraction, dict[tuple[int, str], Fraction]]:
     """Enumerate both Prize layouts and both coin faces, exactly 1/4 each.
 
-    K0: chose physical position 0 before seeing the remaining Prize layout.
-    K1: choose the known physical position occupied by Jirachi.
+    Composition-only: card identities are known, but slots are exchangeable.
+    Position-known: the exact face-down slot of Jirachi is known beforehand.
+    Ordinary first deck search alone does not establish positional knowledge.
     """
     scores = Fraction(0)
     distribution: dict[tuple[int, str], Fraction] = defaultdict(Fraction)
@@ -168,8 +169,8 @@ def exact_regressions() -> None:
                                    target_value=Fraction(0), use_jirachi=True)
         assert early_decline == late_play
 
-    print("Exact E-31 order / K0-K1 regressions passed")
-    for k1, label in ((False, "K0"), (True, "K1")):
+    print("Exact E-31 order / positional-information regressions passed")
+    for k1, label in ((False, "composition-only"), (True, "position-known")):
         value, dist = expectation(order=early, known_positions=k1,
                                   target_value=Fraction(0), use_jirachi=True)
         terminal = sum(p for (n, _), p in dist.items() if n == 4)
