@@ -57,6 +57,10 @@ The recovery benefit is conditional on Peonia being able to preserve the Item pa
 
 The extra copy in the Prizes is valuable only if the hand has enough replaceable cards to keep it **along with** the held Arc/Shoes needed to exploit it. When Peonia selects an Arc and two fillers, having one spare filler permits returning three filler cards to the Prizes, retaining two Arc and one Shoes; without the spare filler, at least one useful card must be returned. Thus the 15- and 20-percentage-point gains vanish when the spare payment resource is removed. This is a concrete complementarity between state-dependent discardability and recovered Item action capacity. The exact optimizer also considers selecting fewer than three Prizes and trading other cards back, so the zero-filler results are optimized rather than a restricted forced-payment policy.
 
+## Action-channel bottleneck
+
+An additional controlled five-Prize comparison isolates the *type* of recovered Item. With one spare replacement filler, one Arc and one Shoes initially held, and an inert deck, placing two extra Arc Phone copies among the Prizes (`T+A+A+F+F`) guarantees target access (100%). Replacing those two Prized Arcs with two Trekking Shoes (`T+S+S+F+F`) provides only **80%**, the same as no additional Prized Items. Extra Shoes cannot retrieve an unexposed Prize target without an Arc swap or another way to move it to deck top. This is a concrete joint-capacity bottleneck: a resource's utility depends on available complementary actions and the ability to keep it after Peonia's payment.
+
 ## Closed-form value of one Prized Arc Phone
 
 For a target `T` and exactly one additional `A` among `n` face-down Prize positions, suppose Peonia first inspects `k` positions, one Arc and one Shoes are initially held, a spare filler can pay the Prize replacement, and all deck cards are inert. Assume `n-k >= 2`.
