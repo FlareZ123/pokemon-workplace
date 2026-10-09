@@ -84,8 +84,8 @@ class TwoQuickOdds:
         return self.per_attempt / self.legal_opener
 
 
-def _after_basic_searches(
-    case: TwoQuickSetup,
+def prize_conditioned_basic_search(
+    prizes: int,
     remaining: tuple[int, ...],
     *,
     need_gothita: int,
@@ -102,16 +102,16 @@ def _after_basic_searches(
         return Fraction(0)
     if not gothitelle_seen and not candy_seen:
         return Fraction(0)
-    post_search_deck = total_unknown - case.prizes - searches
+    post_search_deck = total_unknown - prizes - searches
     if post_search_deck <= 0:
         return Fraction(0)
     probability = Fraction(0)
-    denominator = choose(total_unknown, case.prizes)
-    for g_prized in range(min(g, case.prizes) + 1):
-        for o_prized in range(min(o, case.prizes - g_prized) + 1):
+    denominator = choose(total_unknown, prizes)
+    for g_prized in range(min(g, prizes) + 1):
+        for o_prized in range(min(o, prizes - g_prized) + 1):
             if g - g_prized < need_gothita or o - o_prized < need_core:
                 continue
-            other_prized = case.prizes - g_prized - o_prized
+            other_prized = prizes - g_prized - o_prized
             ways = (
                 choose(g, g_prized)
                 * choose(o, o_prized)
@@ -186,8 +186,8 @@ def exact_two_quick_board(case: TwoQuickSetup) -> TwoQuickOdds:
                     )
                 branch = 0
             else:
-                chance = _after_basic_searches(
-                    case, tuple(remaining),
+                chance = prize_conditioned_basic_search(
+                    case.prizes, tuple(remaining),
                     need_gothita=need_g, need_core=need_o,
                     gothitelle_seen=t_seen, candy_seen=c_seen,
                 )
