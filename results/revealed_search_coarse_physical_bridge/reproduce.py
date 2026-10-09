@@ -121,7 +121,7 @@ payment = enumerate_discard_selections(
 )[0]
 
 
-def run(observed: str):
+def run(observed: str, *, print_identity_index=None, material_name="Pikachu"):
     return execute_coarse_revealed_trainer_search(
         physical,
         TrainerSearchExecutionState(zones=physical.ledger.exchangeable),
@@ -136,7 +136,7 @@ def run(observed: str):
         public_label_by_target=public,
         observed_public_label=observed,
         group_by_card_class={P_A: "A", P_OLD: OLD, P_NEW: NEW},
-        target_card_name="Pikachu",
+        target_card_name=material_name,
         target_instance_id="searched-old-print",
         sampled_top_card_class=P_NEW,
         sampled_top_card_name="Pikachu",
@@ -144,6 +144,7 @@ def run(observed: str):
         discard_candidates=candidates,
         discard_selection=payment,
         play_condition_met=True,
+        print_identity_index=print_identity_index,
     )
 
 
