@@ -48,3 +48,36 @@ This measures **Item access**, not Prize reset success or win probability. Most 
 The model assumes a uniform shuffled deck after G&H, a maximum of one Item acquisition via unused Stellar Wish, a specific natural-or-deferred early Jirachi policy, and no later opponent interaction or Item lock. It excludes longer-term DCI, displaced tech-slot value, Bench contention after setup, and subsequent turns.
 
 The regression exhaustively validates the hypergeometric top-five formula on labeled decks of size 1 through 10, validates both reset gates, and checks a physical named Tool-replacement witness. CI output and all package comparisons are available in the linked CI logs.
+
+
+## Payment-time Prize information partition
+
+The subsequent provenance audit distinguishes **represented** routes that
+actually consumed Tag Call to obtain G&H, thereby searching the deck before
+the optional G&H payment, from routes with G&H naturally held or obtained
+by an early Jirachi top-five observation. The latter routes do not establish
+complete deck/Prize knowledge until G&H searches, after its payment.
+
+Within the same 80,000-start sample, **18,498** of the **48,665**
+core-ready states had a prior Tag Call full-deck search. Of **6,017**
+late-Stellar-eligible states, **2,358** had a prior full-deck search.
+
+The dual Stage-2, two-Ticket/one-Map package's **+0.008532 pp**
+first-reset difference decomposes on the accepted-opening denominator into:
+
+- **+0.003411473 pp** from prior-K1 states (474 positive states);
+- **+0.005120407 pp** from pre-K1 states (751 positive states).
+
+For its second-reset gate, the split is **+0.000060038 pp prior-K1**
+and **+0.000088141 pp pre-K1**.
+
+This partition does **not** turn the hindsight oracle into an observation-valid
+strategy. The pre-K1 improvement may disappear or reverse when the
+payment must be chosen without knowing whether a backup Tool is Prized.
+The exact reversal in
+[the K0/K1 Tool-thinning theorem](../gnh_tool_thinning_information/)
+shows how this can happen. Optional extra prepayment Tag Call use when
+G&H is already held is outside the represented preparer.
+
+Regression and 80,000-start provenance audit both passed
+[CI run 37976302686](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37976302686).
