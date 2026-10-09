@@ -158,12 +158,17 @@ class JointGuardTests(unittest.TestCase):
     def test_default_capacity_pairwise_census_is_deterministic(self) -> None:
         census = pairwise_catalog(Path("resources"))
         self.assertEqual(census["guard_variants"], 25)
-        self.assertGreater(census["different_source_pairs"], 0)
+        self.assertEqual(census["different_source_pairs"], 293)
+        self.assertEqual(
+            census["minimum_bench_histogram"],
+            {1: 6, 2: 8, 3: 108, 4: 126, 5: 22, 7: 15, 8: 8},
+        )
         self.assertEqual(
             sum(census["minimum_bench_histogram"].values()),
             census["different_source_pairs"],
         )
-        self.assertGreater(census["pairs_impossible_at_default_five"], 0)
+        self.assertEqual(census["pairs_impossible_at_default_five"], 23)
+        self.assertEqual(census["pairs_impossible_at_eight"], 0)
 
 
 def main() -> None:
