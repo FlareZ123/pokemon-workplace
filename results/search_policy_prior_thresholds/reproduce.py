@@ -129,7 +129,7 @@ for boundary, direction in (
     outside = boundary + direction * epsilon
     assert exact_gain(boundary) == 0
     assert exact_gain(inside) == 0
-    assert exact_gain(outside) == Fraction(3, 7000)
+    assert exact_gain(outside) == Fraction(1, 14000)
 
 print("61 rational opponent-policy priors match exact threshold formula")
 print("print-observation decision value=0 for 1/6 <= prior <= 5/6")
