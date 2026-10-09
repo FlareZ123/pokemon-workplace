@@ -24,6 +24,23 @@ OBJECTIVES = ("dual_stage2", "item_lock", "item_plus_pidgeot")
 WINDOWS = ("first", "second")
 
 
+def prior_full_deck_search(order: list[int], active: str, deferred: bool) -> bool:
+    """Did the represented route use Tag Call to get G&H before G&H payment?
+
+    All core-ready routes here have G&H either in the natural eight cards,
+    from a Jirachi top-five selection, or from a spent Tag Call. The first
+    two are not full-deck searches. Other optional prepayment searches are
+    excluded by this preparer's action set.
+    """
+    natural_gnh = any(DECK[i] == "Guzma & Hala" for i in order[:7] + [order[13]])
+    early_gnh = (
+        active == "Jirachi"
+        and any(DECK[i] == "Guzma & Hala" for i in order[14:19])
+        and not deferred
+    )
+    return not (natural_gnh or early_gnh)
+
+
 def sample_hit_probability(deck_size: int, targets: int, sample_size: int = 5) -> float:
     """Hypergeometric probability of at least one sought Trainer in the top 5."""
     assert 0 <= targets <= deck_size
@@ -67,12 +84,16 @@ class Summary:
     accepted: int = 0
     core: int = 0
     eligible: int = 0
+    k1_core: int = 0
+    k1_late_eligible: int = 0
     offered: Counter[str] = field(default_factory=Counter)
     paid_endpoint: Counter[str] = field(default_factory=Counter)
     total: Counter[tuple[str, str, str, str]] = field(default_factory=Counter)
     larger_paid_late: Counter[tuple[str, str, str]] = field(default_factory=Counter)
     smaller_paid_late: Counter[tuple[str, str, str]] = field(default_factory=Counter)
     paired_difference_squares: Counter[tuple[str, str, str]] = field(default_factory=Counter)
+    prior_partition_delta: Counter[tuple[str, str, str, str]] = field(default_factory=Counter)
+    prior_partition_helps: Counter[tuple[str, str, str, str]] = field(default_factory=Counter)
 
 
 def simulate(raw_trials: int = 30_000, seed: int = 20261009,
@@ -94,6 +115,9 @@ def simulate(raw_trials: int = 30_000, seed: int = 20261009,
         s.core += 1
         eligible = deferred or stellar_available(order, state.active)
         s.eligible += int(eligible)
+        prior_k1 = prior_full_deck_search(order, state.active, deferred)
+        s.k1_core += int(prior_k1)
+        s.k1_late_eligible += int(prior_k1 and eligible)
         before_hand, before_deck = protected
         paid = paid_gnh_states(state)
         for objective in OBJECTIVES:
@@ -122,6 +146,9 @@ def simulate(raw_trials: int = 30_000, seed: int = 20261009,
                     s.total[(*key, "paid_late")] += paid_late
                     diff = paid_late - nominal_late
                     s.paired_difference_squares[key] += diff * diff
+                    group = 'prior_K1' if prior_k1 else 'pre_K1'
+                    s.prior_partition_delta[(*key, group)] += diff
+                    s.prior_partition_helps[(*key, group)] += int(diff > 1e-12)
                     if diff > 1e-12:
                         s.larger_paid_late[key] += 1
                     elif diff < -1e-12:
@@ -133,7 +160,8 @@ def simulate(raw_trials: int = 30_000, seed: int = 20261009,
 
 def output(s: Summary) -> str:
     lines = [
-        f"raw={s.raw} accepted={s.accepted} core={s.core} eligible_late={s.eligible}",
+        f"raw={s.raw} accepted={s.accepted} core={s.core} eligible_late={s.eligible} "
+        f"prior_K1_core={s.k1_core} prior_K1_late_eligible={s.k1_late_eligible}",
         "endpoint | optimistic ready | feasible after payment",
     ]
     for ep in OBJECTIVES:
@@ -158,6 +186,20 @@ def output(s: Summary) -> str:
                                  " | ".join(f"{v:.6f}%" for v in vals) +
                                  f" | {100*mean:+.6f} +/- {ci:.6f} pp" +
                                  f" | {s.larger_paid_late[key]}/{s.smaller_paid_late[key]}")
+    lines.append("prepayment information partition; paired delta pp on accepted denominator:")
+    for ep, package, window in (("dual_stage2", "two_tickets_one_map", "first"),
+                                ("dual_stage2", "two_tickets_one_map", "second"),
+                                ("item_lock", "three_tickets_one_map", "second")):
+        key = (ep, package, window)
+        k1 = s.prior_partition_delta[(*key, "prior_K1")]
+        pre = s.prior_partition_delta[(*key, "pre_K1")]
+        combined = s.total[(*key, "paid_late")] - s.total[(*key, "nominal_late")]
+        assert abs(k1 + pre - combined) < 1e-7
+        lines.append(f"{ep} | {package} | {window} | "
+                     f"prior_K1={100*k1/s.accepted:+.9f}pp "
+                     f"pre_K1={100*pre/s.accepted:+.9f}pp | "
+                     f"positive states {s.prior_partition_helps[(*key, 'prior_K1')]}/"
+                     f"{s.prior_partition_helps[(*key, 'pre_K1')]}")
     return "\n".join(lines)
 
 
