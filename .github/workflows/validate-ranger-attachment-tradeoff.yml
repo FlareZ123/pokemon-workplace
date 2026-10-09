@@ -1,0 +1,25 @@
+name: Validate Ranger attachment tradeoff
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/pokemon_ranger_attachment_projection.py"
+      - "tools/next_turn_attachment_window.py"
+      - "tools/hand_attachment_turn_end.py"
+      - "results/ranger_attachment_tradeoff/**"
+      - ".github/workflows/validate-ranger-attachment-tradeoff.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Ranger dual-cancellation and Supporter contention
+        run: python results/ranger_attachment_tradeoff/reproduce.py
