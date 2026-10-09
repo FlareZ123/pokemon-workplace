@@ -1,0 +1,20 @@
+name: Validate G&H Tool-thinning information value
+
+on:
+  push:
+    paths:
+      - "tools/gnh_tool_thinning_information.py"
+      - "results/gnh_tool_thinning_information/**"
+      - ".github/workflows/validate-gnh-tool-thinning-information.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Exhaustively verify K0/K1 Prize information model
+        run: python results/gnh_tool_thinning_information/reproduce.py
