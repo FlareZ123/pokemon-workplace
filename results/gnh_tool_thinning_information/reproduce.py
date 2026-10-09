@@ -5,7 +5,10 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from tools.gnh_tool_thinning_information import exact, brute_force, describe
+from tools.gnh_tool_thinning_information import (
+    exact, brute_force, describe, exact_multiple,
+    brute_force_multiple, multiple_summary,
+)
 
 
 def main() -> None:
@@ -27,7 +30,26 @@ def main() -> None:
                 cases += 1
     print(f"PASS: {cases} distinct exact parameter cases match independently enumerated Prizes")
     print("PASS: K0 replacement reverses with 2+ Prizes and K1 premium is positive")
+    multiple = 0
+    for unseen in range(3, 11):
+        for prize_count in range(0, unseen - 1):
+            for sample_count in range(1, unseen - prize_count):
+                for backups in range(1, unseen):
+                    got = exact_multiple(unseen, prize_count, sample_count, backups)
+                    oracle = brute_force_multiple(unseen, prize_count, sample_count, backups)
+                    assert got == oracle, (unseen, prize_count, sample_count, backups)
+                    assert got.k1_adaptive_joint >= got.k0_best_joint
+                    multiple += 1
+    small = exact_multiple(52, 6, 5, 1)
+    original = exact(52, 6, 5)
+    assert small.keep_joint == original.k0_keep_joint
+    assert small.blindly_replace_joint == original.k0_replace_joint
+    assert small.k1_adaptive_joint == original.k1_oracle_joint
+    assert exact_multiple(52, 6, 5, 2).blindly_replace_joint > small.keep_joint
+    print(f"PASS: {multiple} multiple-backup cases match exhaustive physical Prize enumeration")
+    print("PASS: one-backup model conserved; two backups reverse the optimal K0 direction")
     print(describe(52, 6, 5))
+    print(multiple_summary(52, 6, 5, 4))
 
 
 if __name__ == "__main__":
