@@ -85,6 +85,102 @@ def brute_force(unseen: int, prizes: int, stellar_cards: int) -> Values:
     return Values(*result, result[5] - result[2])
 
 
+
+@dataclass(frozen=True)
+class MultipleBackupValues:
+    keep_joint: Fraction
+    blindly_replace_setup: Fraction
+    blindly_replace_joint: Fraction
+    k1_adaptive_joint: Fraction
+    backup_failure_and_target_available: Fraction
+    k0_best_joint: Fraction
+
+
+def exact_multiple(
+    unseen: int, prizes: int, stellar_cards: int, backup_copies: int,
+) -> MultipleBackupValues:
+    """Exact Prize risk and hit probability with B exchangeable backup Tools.
+
+    A held necessary Tool is safe. Blind replacement searches one of B backups.
+    A target must remain in the deck to be hit by a subsequent Stellar Wish.
+    """
+    if not (2 <= unseen and 1 <= backup_copies <= unseen - 1
+            and 0 <= prizes <= unseen - 2):
+        raise ValueError("Invalid hidden-card or backup counts")
+    d = unseen - prizes
+    if not 1 <= stellar_cards <= d - 1:
+        raise ValueError("Wish sample must fit the thinned deck")
+
+    def probability_all_backups_prized(*, ticket_searchable: bool) -> Fraction:
+        b = backup_copies
+        if prizes < b:
+            return Fraction(0)
+        if ticket_searchable:
+            return Fraction(comb(unseen - b - 1, prizes - b), comb(unseen, prizes))
+        return Fraction(comb(unseen - b, prizes - b), comb(unseen, prizes))
+
+    p_all = probability_all_backups_prized(ticket_searchable=False)
+    r = probability_all_backups_prized(ticket_searchable=True)
+    hit_kept = Fraction(stellar_cards, unseen)
+    hit_replaced = Fraction(stellar_cards, d - 1) * (Fraction(d, unseen) - r)
+    hit_informed = hit_replaced + Fraction(stellar_cards, d) * r
+    return MultipleBackupValues(
+        keep_joint=hit_kept,
+        blindly_replace_setup=Fraction(1) - p_all,
+        blindly_replace_joint=hit_replaced,
+        k1_adaptive_joint=hit_informed,
+        backup_failure_and_target_available=r,
+        k0_best_joint=max(hit_kept, hit_replaced),
+    )
+
+
+def brute_force_multiple(
+    unseen: int, prizes: int, stellar_cards: int, backup_copies: int,
+) -> MultipleBackupValues:
+    """Independent physical Prize-set enumeration for multiple backups."""
+    d = unseen - prizes
+    sums = [Fraction(0)] * 5
+    worlds = 0
+    for selected in combinations(range(unseen), prizes):
+        ps = set(selected)
+        available_backups = sum(i not in ps for i in range(backup_copies))
+        target_available = int(backup_copies not in ps)
+        all_prized_and_target = int(not available_backups and target_available)
+        keep_hit = Fraction(stellar_cards, d) * target_available
+        replace_hit = (
+            Fraction(stellar_cards, d - 1)
+            if available_backups > 0 and target_available else Fraction(0)
+        )
+        informed_hit = replace_hit if available_backups else keep_hit
+        v = (keep_hit, Fraction(int(available_backups > 0)), replace_hit,
+             informed_hit, Fraction(all_prized_and_target))
+        sums = [a + b for a, b in zip(sums, v)]
+        worlds += 1
+    keep, setup, blind, informed, r = (value / worlds for value in sums)
+    return MultipleBackupValues(keep, setup, blind, informed, r, max(keep, blind))
+
+
+def multiple_summary(unseen: int = 52, prizes: int = 6,
+                     stellar_cards: int = 5, max_backups: int = 4) -> str:
+    lines = [
+        f"U={unseen} P={prizes} s={stellar_cards} backups=1..{max_backups}",
+        "backups | keep_joint% | blind_joint% | K1_joint% | "
+        "blind_setup% | K0 optimal policy",
+    ]
+    for b in range(1, max_backups + 1):
+        x = exact_multiple(unseen, prizes, stellar_cards, b)
+        policy = "replace" if x.blindly_replace_joint > x.keep_joint else (
+            "keep" if x.blindly_replace_joint < x.keep_joint else "tie"
+        )
+        lines.append(
+            f"{b} | {100 * float(x.keep_joint):.9f} | "
+            f"{100 * float(x.blindly_replace_joint):.9f} | "
+            f"{100 * float(x.k1_adaptive_joint):.9f} | "
+            f"{100 * float(x.blindly_replace_setup):.9f} | {policy}"
+        )
+    return "\n".join(lines)
+
+
 def describe(unseen: int = 52, prizes: int = 6, stellar_cards: int = 5) -> str:
     x = exact(unseen, prizes, stellar_cards)
     pairs = (
@@ -102,3 +198,4 @@ def describe(unseen: int = 52, prizes: int = 6, stellar_cards: int = 5) -> str:
 
 if __name__ == "__main__":
     print(describe())
+    print(multiple_summary())
