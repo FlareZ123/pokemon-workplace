@@ -37,6 +37,27 @@ def run():
         assert (first, flexible) == (Fraction(4, 5),) * 2
         print(f"{cards} without spare filler: {first}")
 
+    # Downstream material requirements can reverse a retrieval-only guarantee.
+    for cards, retained, expected in (
+        ("TASFF", "S", Fraction(3, 4)),
+        ("TASFF", "A", Fraction(3, 4)),
+        ("TAFFF", "S", Fraction(3, 5)),
+        ("TAFFF", "A", Fraction(3, 4)),
+    ):
+        optimal.cache_clear()
+        play_peonia.cache_clear()
+        first, flexible = compare(cards, "F" * 46, 1, 1, 1, required=retained)
+        assert (first, flexible) == (expected, expected)
+        print(f"Joint goal {cards}, target plus {retained}: {expected}")
+    # Peonia finds T in 3/5. On a miss, the second uninspected
+    # slot is A, S, or F, weighted 1/4, 1/4, 1/2. Under the T+S goal,
+    # the corresponding continuation successes are 1/2, 0, 1/2.
+    assert Fraction(3, 5) + Fraction(2, 5) * (
+        Fraction(1, 4) * Fraction(1, 2)
+        + Fraction(1, 4) * 0
+        + Fraction(1, 2) * Fraction(1, 2)
+    ) == Fraction(3, 4)
+
     # Peonia remains usable even with an empty deck; Items do not.
     optimal.cache_clear()
     play_peonia.cache_clear()
