@@ -32,6 +32,7 @@ Disposition = Literal[
     "semantic_review",
     "no_expanded_counterpart",
     "outside_disallowed",
+    "outside_not_yet_released",
 ]
 
 HIGH_CONFIDENCE_REPRINT_KINDS = frozenset(
@@ -188,7 +189,10 @@ class LegalityProvenanceIndex:
                 target_evidence=(),
             )
 
-        if resolution.kind in HIGH_CONFIDENCE_REPRINT_KINDS:
+        source_unreleased = as_of < self.set_release_dates[set_id]
+        if source_unreleased:
+            disposition = "outside_not_yet_released"
+        elif resolution.kind in HIGH_CONFIDENCE_REPRINT_KINDS:
             disposition = "high_confidence_reprint_candidate"
         elif resolution.kind == "known_non_equivalent":
             disposition = "known_non_equivalent"
@@ -209,7 +213,7 @@ class LegalityProvenanceIndex:
             disposition=disposition,
             direct_status=None,
             direct_status_source=None,
-            timing_status=None,
+            timing_status="before_set_release" if source_unreleased else None,
             ordinary_legal_date=None,
             reprint_kind=resolution.kind,
             target_evidence=self.target_evidence(

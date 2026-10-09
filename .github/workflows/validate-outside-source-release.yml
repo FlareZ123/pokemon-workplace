@@ -1,0 +1,27 @@
+name: validate outside-source release gate
+on:
+  push:
+    paths:
+      - "tools/legality_provenance.py"
+      - "tools/deck_legality_proof.py"
+      - "results/outside_source_release_gate/**"
+      - ".github/workflows/validate-outside-source-release.yml"
+  pull_request:
+    paths:
+      - "tools/legality_provenance.py"
+      - "tools/deck_legality_proof.py"
+      - "results/outside_source_release_gate/**"
+      - ".github/workflows/validate-outside-source-release.yml"
+  workflow_dispatch:
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.outside_source_release_gate.reproduce
+      - run: python -m results.legality_provenance.reproduce
+      - run: python -m results.deck_legality_proof.reproduce
+      - run: python -m results.outside_set_expanded_flag_audit.reproduce

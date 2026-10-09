@@ -63,3 +63,7 @@ A later regional layer can compose with this proof while preserving its exact-pr
 ## Pre-release current banned prints
 
 The [unreleased print priority result](../unreleased_banned_print_priority/) prevents a current banned flag from masking definitive historical pre-release unavailability. Shaymin-EX xy6-77 queried in 2014 is invalid because its set had yet to release; 2016 ban timing remains unaudited.
+
+## Reprint source date boundary
+
+The [outside-set source-release gate](../outside_source_release_gate/) now correctly makes a 2021 Celebrations Classic Collection print ineligible in a 2012 deck query. A reprint's semantic equivalence to an earlier legal target does not make a future physical copy historically available.

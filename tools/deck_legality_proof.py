@@ -114,6 +114,12 @@ def classify_print_eligibility(
             "Strong repository reprint evidence exists, but the selected evidence policy does not promote it to current legality.",
         )
 
+    if disposition == "outside_not_yet_released":
+        return (
+            "ineligible",
+            "The submitted outside-set physical print had not yet been released on the requested date.",
+        )
+
     if disposition == "semantic_review":
         return "unresolved", "The older print still requires semantic reprint review."
 

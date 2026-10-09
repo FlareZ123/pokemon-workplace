@@ -113,3 +113,7 @@ The pre-release banned-print priority regression now exhaustively checks 55 dire
 ### Outside-set Expanded flags
 
 243 outside-set card-level Expanded: Legal flags have discordant current semantics for at least four known-negative reprint prints. Keep metadata as source evidence distinct from policy. Audit in results/outside_set_expanded_flag_audit/, communication to agent3.
+
+### Outside-scope source release gate
+
+The resolver's outside-set path had no pre-release source-print check. All 25 Celebrations Classic Collection physical prints were unavailable before 2021-10-08 regardless of an older reprint target. Added outside_not_yet_released, preserving current reprint class and timing state; deck proof marks ineligible. Result tests in results/outside_source_release_gate/. Outside-set expanded-flag audit CI found 243 flags across 46 sets, partition 118 exact, 39 historical, 43 errata, 3 official-semantic, 4 proven negative, 36 semantic-review.

@@ -87,3 +87,7 @@ Extend the provenance record with an explicit regional availability object and a
 ## Pre-release overrides undated current bans
 
 The source-derived release date is decisive for a print queried before its release, even when its current database ban has an unknown historical effective date. See [unreleased ban precedence](../unreleased_banned_print_priority/), which distinguishes the 2014 pre-release Shaymin-EX result from historically unresolved 2016 ban timing.
+
+## Outside-set physical print availability
+
+The [outside-set source-release audit](../outside_source_release_gate/) adds a release-before-reprint-evidence gate. All 25 Celebrations Classic Collection prints were unavailable as physical prints before their 2021 set release, even if identical older legal Expanded card text already existed. This records source timing as before_set_release while retaining the separate semantic reprint class.
