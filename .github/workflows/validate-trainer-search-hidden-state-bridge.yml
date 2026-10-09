@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "tools/trainer_search_hidden_state_bridge.py"
+      - "tools/revealed_target_identity.py"
+      - "tools/card_class_namespace.py"
       - "tools/trainer_search_transaction.py"
       - "tools/deck_search_target_signal.py"
       - "tools/deck_search_shuffle_physical_belief.py"
