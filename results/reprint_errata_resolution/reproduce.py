@@ -18,8 +18,8 @@ print("resolver counts before assertions:", counts)
 print("historical candidates by name before assertions:", summary["historical_official_candidates_by_name"])
 
 assert counts["same_name_review_pool_prints"] == 4260
-assert counts["exact_fingerprint_candidate_prints"] == 134
-assert counts["historical_official_reprint_candidate_prints"] == 39
+assert counts["exact_fingerprint_candidate_prints"] == 149
+assert counts["historical_official_reprint_candidate_prints"] == 26
 assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
@@ -27,12 +27,12 @@ assert counts["known_non_equivalent_prints"] == 77
 assert counts["known_non_equivalent_names"] == 22
 assert counts["official_semantic_candidate_prints"] == 3
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 3963
-assert counts["high_confidence_candidate_prints"] == 220
-assert counts["exact_fingerprint_trainer_candidate_prints"] == 21
+assert counts["semantic_review_prints"] == 3961
+assert counts["high_confidence_candidate_prints"] == 222
+assert counts["exact_fingerprint_trainer_candidate_prints"] == 36
 assert counts["trainer_same_name_review_pool_prints"] == 168
-assert counts["historical_official_trainer_candidate_prints"] == 38
-assert counts["high_confidence_trainer_candidate_prints"] == 106
+assert counts["historical_official_trainer_candidate_prints"] == 25
+assert counts["high_confidence_trainer_candidate_prints"] == 108
 assert counts["name_wide_trainer_errata_names"] == 15
 
 assert summary["official_semantic_candidates_by_name"] == {"Copycat": 3}
@@ -66,12 +66,12 @@ assert summary["known_non_equivalent_by_name"] == {
 assert summary["historical_official_candidates_by_name"] == {
     "Double Colorless Energy": 1,
     "Energy Search": 7,
-    "Energy Switch": 7,
+    "Energy Switch": 1,
     "Full Heal": 1,
     "Poké Ball": 6,
     "Recycle": 1,
     "Super Scoop Up": 6,
-    "Switch": 10,
+    "Switch": 3,
 }
 
 assert summary["official_errata_candidates_by_name"] == {
@@ -114,6 +114,8 @@ assert resolver.resolve("ecard2-130").kind == "known_non_equivalent"
 assert resolver.resolve("base1-90").kind == "known_non_equivalent"
 assert resolver.resolve("ex15-82").kind == "known_non_equivalent"
 assert resolver.resolve("base1-95").kind == "historical_official_reprint_candidate"
+assert resolver.resolve("hgss1-102").kind == "exact_fingerprint_candidate"
+assert resolver.resolve("hgss1-91").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("base1-96").kind == "historical_official_reprint_candidate"
 assert resolver.resolve("dp4-99").kind == "official_errata_candidate"
 assert resolver.resolve("ex2-88").kind == "official_errata_candidate"

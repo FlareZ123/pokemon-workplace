@@ -121,3 +121,7 @@ The resolver's outside-set path had no pre-release source-print check. All 25 Ce
 ### 2021 Celebrations M Rayquaza-EX rule-order normalization
 
 Found cel25c-76_A and legal XY original xy6-76 identical across all gameplay fields except the order of two independent XY Mega Evolution and Pokémon-EX rules. Across the 2026 English corpus, 85 prints carry canonical rule order, only the Celebrations source reverses them. Added narrowly scoped, idempotent rule pair normalization in tools/independent_mega_ex_rule_order.py composed into current_card_semantics. Moves one record from semantic_review into exact fingerprint (133->134; 3964->3963), leaves all other rule arrays untouched. Full regression and explanatory result in results/independent_mega_ex_rule_order/.
+
+### Basic Item Switch wording normalization
+
+Advanced Rulebook C-03/C-10 prove that `Switch 1 of your Active` = `Switch your Active`, and `Move a basic Energy card attached [to] 1` = `Move a basic Energy from 1` for exact Item card actions. Narrow code tools/basic_switch_rule_semantics.py alters 15 old Item prints, promotes 13 historical-bridged to exact evidence and hgss1-102 Switch plus hgss1-91 Energy Switch out of semantic_review. Target resolver: 149 exact, 26 historical bridge, 3961 semantic review, 222 high-confidence; see results/basic_switch_rule_semantics/ and CI.

@@ -1,0 +1,29 @@
+name: validate basic Switch semantics
+on:
+  push:
+    paths:
+      - "tools/basic_switch_rule_semantics.py"
+      - "tools/current_card_semantics.py"
+      - "results/basic_switch_rule_semantics/**"
+      - "results/reprint_errata_resolution/reproduce.py"
+      - ".github/workflows/validate-basic-switch-semantics.yml"
+  pull_request:
+    paths:
+      - "tools/basic_switch_rule_semantics.py"
+      - "tools/current_card_semantics.py"
+      - "results/basic_switch_rule_semantics/**"
+      - "results/reprint_errata_resolution/reproduce.py"
+      - ".github/workflows/validate-basic-switch-semantics.yml"
+  workflow_dispatch:
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.basic_switch_rule_semantics.reproduce
+      - run: python -m results.reprint_errata_resolution.reproduce
+      - run: python -m results.reprint_semantic_benchmark.reproduce
+      - run: python -m results.reprint_policy_coverage.reproduce

@@ -21,8 +21,8 @@ counts = summary["counts"]
 assert counts["legacy_no_reference_trainer_prints"] == 76
 assert counts["legacy_no_reference_trainer_names"] == 15
 assert counts["legacy_current_resolver_kinds"] == {
-    "exact_fingerprint_candidate": 5,
-    "historical_official_reprint_candidate": 38,
+    "exact_fingerprint_candidate": 18,
+    "historical_official_reprint_candidate": 25,
     "known_non_equivalent": 2,
     "official_errata_candidate": 26,
     "official_semantic_candidate": 3,
