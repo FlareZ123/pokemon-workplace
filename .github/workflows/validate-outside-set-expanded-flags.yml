@@ -1,0 +1,23 @@
+name: validate outside-set Expanded flag audit
+on:
+  push:
+    paths:
+      - "tools/outside_set_expanded_flag_audit.py"
+      - "results/outside_set_expanded_flag_audit/**"
+      - ".github/workflows/validate-outside-set-expanded-flags.yml"
+  pull_request:
+    paths:
+      - "tools/outside_set_expanded_flag_audit.py"
+      - "results/outside_set_expanded_flag_audit/**"
+      - ".github/workflows/validate-outside-set-expanded-flags.yml"
+  workflow_dispatch:
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.outside_set_expanded_flag_audit.reproduce
+      - run: python -m results.reprint_errata_resolution.reproduce

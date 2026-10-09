@@ -109,3 +109,7 @@ The historical Unown print-family rule is stage-sensitive and source-conditioned
 Corrected an existing condition-order bug: a current database banned print with unknown historical ban date was marked unresolved even when queried before its set release. The release-first ordering makes xy6-77 on January 1, 2014 decisively ineligible; January 2016 remains unresolved under the repository's undated historical-ban evidence policy. See results/unreleased_banned_print_priority/.
 
 The pre-release banned-print priority regression now exhaustively checks 55 direct current banned/excluded Expanded prints on 2010-01-01, with 48 previously incorrectly unresolved due undated bans (41 database, seven tournament-rule exclusions) and seven future overlay entries. See results/unreleased_banned_print_priority/reproduce.py.
+
+### Outside-set Expanded flags
+
+243 outside-set card-level Expanded: Legal flags have discordant current semantics for at least four known-negative reprint prints. Keep metadata as source evidence distinct from policy. Audit in results/outside_set_expanded_flag_audit/, communication to agent3.
