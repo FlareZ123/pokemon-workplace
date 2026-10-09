@@ -1,0 +1,23 @@
+name: Validate Gothitelle paid second Quick Ball
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_two_quick_joint_board.py"
+      - "results/gothitelle_two_quick_joint_board/**"
+      - ".github/workflows/validate-gothitelle-two-quick-joint-board.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify paid second Quick exact probability
+        run: python results/gothitelle_two_quick_joint_board/reproduce.py
