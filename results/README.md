@@ -1681,3 +1681,8 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 ## Print-level evidence from a revealed Pokémon search
 
 [revealed_print_information/](revealed_print_information/) uses two legal same-name Pikachu printings with different attacks in a controlled six-card hidden pool. Under an explicit policy chosen after full deck inspection, observing only the searched name gives P(critical A Prized) = **5/14**, while the old and new prints give **4/7** and **1/7** respectively. The exact 84-branch calculation finds **0.1518355 bits** of extra information about the singleton's Prize status from the printing, conditional on a successful Pikachu search. This demonstrates that name-only public observation can discard strategically relevant evidence. CI run 37988205366 passed.
+
+
+## Coarsened revealed searches preserve uncertainty about the selected printing
+
+[revealed_target_coarsening/](revealed_target_coarsening/) extends the print-level reveal study to an intentionally name-only opponent observation. A hidden exact print choice must remain a **latent variable** when both `xy1-42` and `swsh7-49` project to "Pikachu": in the exact six-card witness, a name-only observer assigns P(selected print old/new)=1/2 each, **P(A Prized)=5/14**, and **P(next top=A)=3/14**. Later conditioning on the selected print recovers the two exact-print posteriors 4/7 and 1/7 for A Prized, without incorrectly removing the actor's known print from every observer world. The implementation reuses the existing latent private-target belief machinery, independently matches 84 fully enumerated physical branches, and passed CI run 37988824180.
