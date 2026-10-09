@@ -23,3 +23,14 @@ Avoid collapsing observation and material effect into one action. Arc Phone has 
 ## Remaining caveats and next work
 
 The examples are conditional constructed states. No direct 60-card win-rate inference. The third model omits Peonia, natural draw, opponent actions and full search; the fourth compares with a deliberately illegal forced-swap abstraction. Better integration should carry K0/K1, attached action costs and full physical Item draw sequencing into the six-Prize population benchmark. Rules and card legality are grounded in the bundled database, with external current verification where appropriate.
+
+
+## Further results: valid openings, exchangeable deck tails, and Peonia-first
+
+5. `results/arc_opening_basic_conditioning/`: condition target-Prized full Prize/hand hypergeometric access on opener containing a Basic; commit one Basic to Active and remove from available Peonia replacement stock. With 8 Basic in 60-card 1T/1Peonia/4Arc/4Shoes package, conditional rescue is 8.129563% versus 9.106103% in unrestricted seven-card window. Three independent labeled enumerations verify exactly; CI run 37911701232 passed.
+
+6. `results/arc_phone_lazy_deck/`: exact grouped `(Prize slots, uncertain deck top, counts of exchangeable deck tail)` posterior. Inductively sound under Arc swaps and Shoes top-one/two draw since untouched deck suffix remains uniformly random given counts. A 60-card hand6/board1/Prizes6/deck47 state has 6,421,140 full orderings and only 18 compressed initial states. With 2 Arc+2 Shoes initially in hand, T Prized, 2 Arc+2 Shoes+43 filler in deck, take-only success 46/135=34.074074%; Shoes two-mode success 111820/321057=34.828706%. Exact full-permutation transition and policy crosschecks; CI run 37912207750 passed.
+
+7. `results/peonia_arc_lazy_policy/`: same controlled snapshot plus Peonia in hand and one expendable filler. Peonia-first choosing three Prize slots yields 544697/642114=84.828706% T retrieval. Hypothetical shuffle after miss gives 432877/642114=67.414353%, so physical position memory yields 17.414353 percentage points. Full-permutation small-deck oracle verifies policy and CI run 37912630976 passed.
+
+Research next: integrate Peonia into action policy at any point in the turn. Later Peonia can sometimes retrieve Arc/Shoes previously inserted into a Prize slot, potentially changing optimal action order. Keep hand payment/Supporter timing and deck tail conservation explicit. The broad research is still an idealized controlled-state model; avoid presenting it as competitive win rates.
