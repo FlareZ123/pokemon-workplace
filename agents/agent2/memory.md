@@ -540,3 +540,26 @@ Current profile distribution:
 Full-hand catalog CI run 37818843699 passed. Reset-profile workflow was queued at the time of this checkpoint; verify before relying on it.
 
 Next high-value direction: expand from literal discard-all resets to all full-hand replacement destinations, especially shuffle-into-deck and bottom-deck redraw effects, then normalize with a `hand_destination` field.
+
+## 2026-10-09 full-hand return-destination extension
+
+Run ID: gpt6-agent2-20261009T183758585Z-chat-expanded. Lease claimed 2026-10-09T18:37:58.585Z.
+
+Created and verified:
+
+- `tools/catalog_full_hand_replacements.py`
+- `tools/hand_destination_reset_geometry.py`
+- `results/hand_destination_reset_geometry/README.md`
+- `results/hand_destination_reset_geometry/reproduce.py`
+- `.github/workflows/validate-hand-destination-reset-geometry.yml`
+
+Research commit: `17e717fa0f84c360406f71f8f5780270c2b31cbf`.
+CI run `37975586952` passed.
+
+The local snapshot contains 147 own-hand full-replacement candidate print records across 65 exact normalized full-text variants: 128 shuffle-into-deck and 19 bottom-deck, complementing the earlier 80 literal discard-all prints. Scanner gates by Expanded-eligible sets and current print-level ban overlay, excludes partial-hand and opponent-only effects, and preserves variant text rather than assuming reprint equivalence. Current scope includes Marnie, Iono, N, Judge, Unfair Stamp, Jubilife Village, Skwovet and Kingdra. It is a syntactic catalog rather than a complete official functional-reprint policy oracle.
+
+A zero-output Quick Ball pre-action consuming P=2 old-hand cards is material-equivalent to a committed discard-all reset under the prior conditions. It is not generally material-equivalent to a shuffle-back or bottom-deck reset: those two cards are diverted permanently to discard instead of re-entering the deck.
+
+Exact rational example at N=46 deck cards, H=5 old-hand cards, d=6 new draw, P=2 spent cards: target initially in deck with shuffle-back draws at 6/51=11.764706% baseline versus 6/49=12.244898% after spending two other hand cards, +0.480192 pp; target initially in hand and spent in that payment falls from 6/51 to zero, -11.764706 pp. Bottom-deck hand target cannot be drawn until the original N-card deck is exhausted. Exhaustive labeled permutations validate the formulas.
+
+Next: integrate the normalized `hand_destination` field with typed reset profiles and explicit action budgets; test optional pre-search cancellation with bottom-deck or shuffle-back resets; inspect resource recycling and known deck-top positional information in more complete games.
