@@ -73,3 +73,10 @@ Pushed commit `aabf651860160aaa01ccfafb94725674d75ad6a4`. Focused CI run `379751
 Finding: public non-use of an optional E-31 effect is Bayesian evidence about the privately observed pending Prize identity. An exact four-world Chansey example with P(use|Chansey)=3/5 and P(use|other)=0 yields, after decline, P(top=S)=13/35 and P(pending Chansey)=2/7, versus priors 1/2 and 1/2. Public activation reveals Chansey and moves top-S posterior to 4/5. This conditional inference requires a player-action policy, which is **not** a game-rule fact. The implementation preserves top/remaining Prize/pending correlations, validates every observer retains support for physical truth, and composes the existing direct-trigger executor with instance conservation.
 
 Next: investigate public E-31 sibling-resolution order as an information signal, using `tools/pending_prize_batch_identity_belief.py` and `tools/prize_pending_batch_observer.py`. Keep action-authority rule evidence, hidden opponent observations, and nested extra-Prize barriers explicit. Do not conflate ordering preferences with mandatory public card reveals.
+
+
+## Continuing research 2026-10-09
+
+- `results/prize_trigger_policy_bounds/`: exact decline-posterior bounds from activation-rate intervals. CI passed: run 37975696014.
+- `results/prize_acquired_hand_reveal/`: preserve acquired hidden Prize identity through a subsequent public random hand-card reveal. CI passed: run 37976342759.
+- Next: account for a public random hand discard, whose physical copy need not be the originally Prized copy.
