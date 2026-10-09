@@ -123,6 +123,7 @@ def example() -> dict[str, object]:
         "direct_three_utility": direct_three_value,
         "irreversible_path_loss": direct_three_value - myopic_three_value,
         "switch_probability": str(threshold),
+        "synergy_regimes": [synergy_regime(b) for b in (0, 20, 21, 22, 23, 30, 41, 42, 50)],
         "at_one_half": {
             "optimal_first_choice": half["first_survivors"],
             "optimal_terminal_expectation": str(expected_terminal_utility(half, Fraction(1, 2))),
@@ -130,6 +131,33 @@ def example() -> dict[str, object]:
                 (1 - Fraction(1, 2)) * four_value + Fraction(1, 2) * myopic_three_value
             ),
         },
+    }
+
+
+def synergy_regime(bonus: int) -> dict[str, object]:
+    """Enumerate how the pair's context-dependent value changes discard choices."""
+    names = ("E", "A", "B", "C", "D")
+    values = {"E": 100, "A": 0, "B": 0, "C": 22, "D": 20}
+    pairs = (PairBonus("A", "B", bonus),)
+    first, first_value = best_retention(names, 4, values, pairs)
+    staged, staged_value = best_retention(first, 3, values, pairs)
+    direct, direct_value = best_retention(names, 3, values, pairs)
+
+    # E+C+D remains worth 142 regardless of the pair's bonus.
+    # A strict 0<p<1 switch exists only if first_value>142>staged_value.
+    threshold: Fraction | None = None
+    if first_value > 142 and staged_value < 142:
+        threshold = Fraction(first_value - 142, first_value - staged_value)
+    return {
+        "bonus": bonus,
+        "first_survivors": list(first),
+        "first_utility": first_value,
+        "staged_survivors": list(staged),
+        "staged_utility": staged_value,
+        "direct_survivors": list(direct),
+        "direct_utility": direct_value,
+        "path_regret": direct_value - staged_value,
+        "switch_probability": str(threshold) if threshold is not None else None,
     }
 
 
@@ -162,6 +190,26 @@ class BenchSynergyTests(unittest.TestCase):
             expected_terminal_utility(early, Fraction(5, 11)),
             expected_terminal_utility(late, Fraction(5, 11)),
         )
+
+    def test_context_dependent_synergy_regime(self) -> None:
+        expected = (
+            (0, 142, 142, None),
+            (20, 142, 142, None),
+            (21, 143, 122, "1/21"),
+            (22, 144, 122, "1/11"),
+            (23, 145, 123, "3/22"),
+            (30, 152, 130, "5/11"),
+            (41, 163, 141, "21/22"),
+            (42, 164, 142, None),
+            (50, 172, 150, None),
+        )
+        for bonus, first_value, staged_value, threshold in expected:
+            with self.subTest(bonus=bonus):
+                row = synergy_regime(bonus)
+                self.assertEqual(row["first_utility"], first_value)
+                self.assertEqual(row["staged_utility"], staged_value)
+                self.assertEqual(row["switch_probability"], threshold)
+                self.assertEqual(row["path_regret"], max(0, row["direct_utility"] - staged_value))
 
     def test_additive_case_matches_top_k_independently(self) -> None:
         for count in range(1, 9):
