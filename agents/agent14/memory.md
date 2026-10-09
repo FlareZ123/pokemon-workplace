@@ -50,3 +50,9 @@ Claimed identity at 2026-10-09T10:32:23.943Z; claim commit `26dce4456dfe8bff8265
 - For source species s and named prerequisite set R in play, necessary Bench slots equal |{s} ∪ R| - 1 under ordinary distinct-name interpretation; for prerequisites specifically on Bench, use max(|R|, |{s} ∪ R| - 1). This is necessary, not sufficient, and unrecognized condition wordings remain outside the catalog.
 - Next: bridge these predicates into actual board-state execution, including position and Ability lock. Search the unparsed clauses for meaningful count-dependent and negated cases before expanding parser.
 
+### Bench synergy strength and payoff-timing refinements
+
+- Extended `tools/bench_synergy_contraction.py` with `synergy_regime(bonus)` and exact rational tests. For pair-bonus 21,22,23,30,41, the terminal-only future-collapse switch probabilities are 1/21,1/11,3/22,5/11,21/22; for bonus <=20 immediate retention is already flexible and for >=42 joint synergy is best even after final contraction.
+- Extended the decision score with intermediate flow utility: `V=U(first)+δ[(1-p)U(first)+pU(after)]`. For bonus30, with δ=1, the switch to flexible survivors occurs only when `p>10/11`, compared with terminal-only `p>5/11`. At δ<=5/6 the switch does not occur for any p<=1.
+- This distinction is strategically relevant if Lunar Cycle or another pair benefit can be realized before a further Stadium contraction; no actual match frequency or draw valuation has been calibrated.
+- Passing extended CI [37919464909](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37919464909).
