@@ -62,6 +62,11 @@ class Summary:
     affected_endpoint: Counter[str] = field(default_factory=Counter)
     guard: Counter[tuple[str,str]] = field(default_factory=Counter)
     preview: Counter[tuple[str,str]] = field(default_factory=Counter)
+    material_only: Counter[tuple[str,str]] = field(default_factory=Counter)
+    material_benefit: Counter[tuple[str,str]] = field(default_factory=Counter)
+    guard_relaxation_benefit: Counter[tuple[str,str]] = field(default_factory=Counter)
+    material_helped: Counter[tuple[str,str]] = field(default_factory=Counter)
+    relaxation_helped: Counter[tuple[str,str]] = field(default_factory=Counter)
     benefit: Counter[tuple[str,str]] = field(default_factory=Counter)
     benefit_squares: Counter[tuple[str,str]] = field(default_factory=Counter)
     positive: Counter[tuple[str,str]] = field(default_factory=Counter)
@@ -97,14 +102,22 @@ def simulate(raw_trials: int = 100_000, seed: int = 20261009) -> Summary:
                 continue
             out.affected_endpoint[objective] += 1
             after = paths_for_endpoint(boosted, objective)
+            after_guarded = paths_for_endpoint(boosted, objective, SAFE_OUTPUTS)
             for package in PACKAGES_OF_INTEREST:
                 assignment = PACKAGES[package]
                 conservative = best_access(regular, assignment, eligible=late)
+                guarded_material = best_access(after_guarded, assignment, eligible=late)
+                material = max(conservative, guarded_material)
                 optional = best_access(after, assignment, eligible=late)
-                improved = max(conservative, optional)
+                improved = max(material, optional)
                 key = (objective, package)
                 out.guard[key] += conservative
+                out.material_only[key] += material
                 out.preview[key] += improved
+                out.material_benefit[key] += material - conservative
+                out.guard_relaxation_benefit[key] += improved - material
+                out.material_helped[key] += int(material > conservative + 1e-12)
+                out.relaxation_helped[key] += int(improved > material + 1e-12)
                 diff = improved - conservative
                 out.benefit[key] += diff
                 out.benefit_squares[key] += diff * diff
@@ -126,7 +139,8 @@ def output(s: Summary) -> str:
     lines.append(
         "endpoint | package | safety-guarded first-reset% | optional "
         "TagCall preview first-reset% | benefit +/- paired 95% CI (pp) | "
-        "helped states | forced-TagCall harmed states"
+        "material / guard-relaxation benefit pp | "
+        "material / guard-relaxation helped states | forced-TagCall harmed states"
     )
     for ep in OBJECTIVES:
         for package in PACKAGES_OF_INTEREST:
@@ -139,7 +153,10 @@ def output(s: Summary) -> str:
                 f"{ep} | {package} | {100*s.guard[key]/n:.9f}% | "
                 f"{100*s.preview[key]/n:.9f}% | "
                 f"{100*mean:+.9f} +/- {ci:.9f} | "
-                f"{s.positive[key]} | {s.harm_if_forced[key]}"
+                f"{100*s.material_benefit[key]/n:+.9f}/"
+                f"{100*s.guard_relaxation_benefit[key]/n:+.9f} | "
+                f"{s.material_helped[key]}/{s.relaxation_helped[key]} | "
+                f"{s.harm_if_forced[key]}"
             )
     return "\n".join(lines)
 
