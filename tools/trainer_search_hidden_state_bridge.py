@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
+from card_class_namespace import CardClassNamespace
+
 from deck_search_shuffle_physical_belief import (
     actual_prize_group_counts,
     deck_prize_pool_profile,
@@ -18,6 +20,7 @@ from deck_search_target_signal import (
     resolve_revealed_search_target_shuffle,
 )
 from discard_cost_witness import DiscardCandidate, DiscardSelection
+from revealed_target_identity import public_reveal_label
 from identity_materialization import (
     IdentityLedger,
     assert_conserved,
@@ -116,6 +119,7 @@ def execute_hidden_trainer_search_transaction(
     discard_selection: DiscardSelection | None = None,
     play_condition_met: bool | None = None,
     pay_optional_discard: bool | None = None,
+    observation_namespace: CardClassNamespace = CardClassNamespace.DECK_NAME,
 ) -> HiddenTrainerSearchTransition:
     """Execute one revealed single-target Trainer search through shuffle.
 
@@ -136,13 +140,6 @@ def execute_hidden_trainer_search_transaction(
         targets,
         search_action,
     )
-    # This bridge represents a publicly revealed single card. Its observation
-    # is the card's identity, not an independent, freely chosen policy label.
-    if observed_target != target_card_name:
-        raise ValueError(
-            "public revealed target must match the searched card name"
-        )
-
     if not prizes_by_observer:
         raise ValueError("at least one observer is required")
     groups = prizes_by_observer[0][1].positions.groups
@@ -165,17 +162,6 @@ def execute_hidden_trainer_search_transaction(
         groups,
     )
     target_group = group_by_card_class.get(selected_target.card_class)
-
-    beliefs = resolve_revealed_search_target_shuffle(
-        prizes_by_observer,
-        actor_id=actor_id,
-        actor_exact_prize_counts=exact_counts,
-        target_probability_by_composition=target_probability_by_composition,
-        observed_target=observed_target,
-        observed_target_group=target_group,
-        pre_search_group_pool_counts=pre_pool_counts,
-        pre_search_pool_size=pre_pool_size,
-    )
 
     trainer_transaction = execute_trainer_search_transaction(
         execution_state,
@@ -206,6 +192,27 @@ def execute_hidden_trainer_search_transaction(
         physical.prize_instance_ids,
         physical.face_up,
     )
+
+    revealed_instance = after_search.ledger.instance(target_instance_id)
+    expected_observation = public_reveal_label(
+        revealed_instance, observation_namespace
+    )
+    if observed_target != expected_observation:
+        raise ValueError(
+            "public revealed target disagrees with materialized card identity"
+        )
+
+    beliefs = resolve_revealed_search_target_shuffle(
+        prizes_by_observer,
+        actor_id=actor_id,
+        actor_exact_prize_counts=exact_counts,
+        target_probability_by_composition=target_probability_by_composition,
+        observed_target=observed_target,
+        observed_target_group=target_group,
+        pre_search_group_pool_counts=pre_pool_counts,
+        pre_search_pool_size=pre_pool_size,
+    )
+
 
     after_counts, after_size = deck_prize_pool_profile(
         after_search,
