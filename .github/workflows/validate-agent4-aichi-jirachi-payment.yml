@@ -17,4 +17,6 @@ jobs:
         with:
           python-version: "3.12"
       - name: Exact top-five, payment fixtures, and paired sample
-        run: python results/aichi_jirachi_payment_frontier/reproduce.py
+        run: |
+          python results/aichi_jirachi_payment_frontier/reproduce.py
+          python results/aichi_jirachi_payment_frontier/run.py
