@@ -148,3 +148,27 @@ probability and marginal bonus gain peak at the first extra draw (+4.738821pp).
 With no target overlap the peak occurs on the fifth extra draw. Added two
 exhaustive overlapping physical-card enumerations and an all-starters
 guaranteed-assembly case. See the same README and CI for evidence.
+
+### Single-use flexible output capacity extension (2026-10-09)
+
+Created tools/opponent_bonus_flexible_capacity.py and
+results/opponent_bonus_assembly/{flexible_capacity_notes.md,
+flexible_capacity_reproduce.py}, with the CI suite extended.
+
+For non-Basic disjoint A-only (a), B-only (b), and F flexible (f) cards,
+ideal simultaneous joint coverage is 1-q(a+f)-q(b+f)+q(a+b+f).
+If each F card can instead satisfy only one requirement, exact false-coverage
+probability is f*[q(a+b+f-1)-q(a+b+f)]. It is exactly the event that the
+observed hand+bonus contains one F and no A/B. Exhaustive physical-card
+enumeration checks three small decks and a 60-card stress benchmark.
+With twelve unrelated Basics and 4 effective outs per requirement,
+f=2 gives ideal opening completion 24.156036% but one-use completion
+10.987230%, an overstatement of 13.168805 percentage points.
+This can reverse the apparent advantage of replacing exclusive outs
+with flexible one-shot cards. Distinguish multi-axis simultaneous AND
+suppliers from one-output OR suppliers; actual search payment/target
+availability creates additional gating. CI latest workflow
+validate-opponent-bonus-assembly.yml includes all three reproduction suites.
+
+Next: generalize one-output competition to 3+ independent requirements using
+max-flow/bipartite matching, with Basic starter and Prize overlap as necessary.
