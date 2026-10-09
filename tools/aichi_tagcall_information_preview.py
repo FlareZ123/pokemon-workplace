@@ -69,7 +69,7 @@ def exact_natural_triplet_probability(
 
 def natural_triplet(order: list[int]) -> bool:
     opener = tuple(DECK[i] for i in order[:7])
-    visible = tuple(DECK[i] for i in order[:8] if i is not None)
+    visible = tuple(DECK[i] for i in order[:8])
     return (
         "Jirachi" in opener and "Guzma & Hala" in visible
         and "Tag Call" in visible
