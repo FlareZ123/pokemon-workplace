@@ -14,6 +14,16 @@ If Arc Phone sees T on deck top, the player switches that T into a **chosen, now
 
 If the top is F, Arc can decline the exchange. Peonia then examines up to three Prize positions normally. The player's information is used at the correct time; the model never reveals unseen Prize identities.
 
+## Stronger counterexample: target retrieval alone, with no Shoes
+
+The same strict timing gap appears without imposing a secondary resource-retention objective. Suppose there is **no Trekking Shoes in hand**: the player holds Peonia, one Arc Phone and one expendable filler, wants only to acquire T, and T is uniformly located among the Prize and deck slots.
+
+Playing Peonia first can retrieve T only when one of its three checked Prize slots contains T. Playing Arc Phone first adds another success case: T is on deck top, so Arc places it in a known Prize slot and Peonia retrieves it. There is no Shoes to draw T from the deck after Peonia has already been used.
+
+Therefore the exact same `3/(n+d)` versus `4/(n+d)` advantage applies to **pure target retrieval**, independently verified for twelve `n,d` combinations by the Bellman solver. At `n=5,d=2`, the probabilities again are `3/7` and `4/7`.
+
+There is a hard hand-payment gate. With **no expendable filler in hand**, the player can retain T when Peonia is played first by returning the still-held Arc as a Prize. After playing Arc first, that Arc is discarded: if Peonia then takes T, there is no other hand card to replace it and T must be returned as a Prize. The Arc-first gain consequently disappears. Exact ablations at `(n,d)=(5,2),(6,2),(4,3)` return the baseline `3/(n+d)` for both policies. This is a state-dependent action-realism issue, not an intrinsic property of Arc Phone or Peonia.
+
 ## Exact small-state witness
 
 A single target `T` is uniformly distributed among five unknown face-down Prize positions and the two unknown deck positions. All six other cards in those zones are inert `F`. Hand contains Peonia, Arc Phone, Trekking Shoes and one expendable filler. No other effects intervene. Success means **T and an unused Shoes are both in hand at once**. This is a synthetic seven-position K0-like uncertainty model in a very late-game deck state, not an estimate of a frequent competitive situation.
