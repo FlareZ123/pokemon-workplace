@@ -6,6 +6,7 @@ on:
       - "tools/opponent_bonus_assembly.py"
       - "tools/opponent_bonus_coverage.py"
       - "tools/opponent_bonus_flexible_capacity.py"
+      - "tools/opponent_bonus_matching.py"
       - "tools/setup_count_dependent_policy.py"
       - "tools/setup_hand_value_policy.py"
       - "results/opponent_bonus_assembly/**"
@@ -29,3 +30,5 @@ jobs:
         run: python results/opponent_bonus_assembly/coverage_reproduce.py
       - name: Validate one-use flexible card capacity
         run: python results/opponent_bonus_assembly/flexible_capacity_reproduce.py
+      - name: Validate Hall-matching capacity
+        run: python results/opponent_bonus_assembly/matching_reproduce.py
