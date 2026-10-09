@@ -1,0 +1,24 @@
+name: Validate Prize-informed Iono N choice
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/prize_informed_iono_n_choice.py"
+      - "tools/iono_n_access_comparison.py"
+      - "results/prize_informed_iono_n_choice/**"
+      - ".github/workflows/validate-prize-informed-iono-n-choice.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact K0 K1 policy validation
+        run: python results/prize_informed_iono_n_choice/reproduce.py
