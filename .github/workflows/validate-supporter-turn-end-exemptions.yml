@@ -1,0 +1,23 @@
+name: Validate Supporter turn-end exemptions
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/supporter_turn_end_exemptions.py"
+      - "results/supporter_turn_end_exemptions/**"
+      - ".github/workflows/validate-supporter-turn-end-exemptions.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce source-backed Supporter turn-end exceptions
+        run: python results/supporter_turn_end_exemptions/reproduce.py
