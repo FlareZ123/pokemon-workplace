@@ -108,7 +108,7 @@ Pokémon can also change which other hand cards remain safe to pay;
 the model conservatively requires dedicated fodder, preventing
 those cross-resource payment interactions.
 
-The result provides an exact **lower-cost feasibility scenario** for
+The result provides an exact **restricted feasibility scenario** for
 a strictly specified payment policy and demonstrates how apparently
 available connectors can fail at two independent physical layers.
 It is not a first-turn attack probability or an optimized decklist.
