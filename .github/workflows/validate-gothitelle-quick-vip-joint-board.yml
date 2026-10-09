@@ -1,0 +1,26 @@
+name: Validate Gothitelle Quick VIP first-turn access
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_quick_vip_joint_board.py"
+      - "tools/gothitelle_two_quick_joint_board.py"
+      - "results/gothitelle_quick_vip_joint_board/**"
+      - ".github/workflows/validate-gothitelle-quick-vip-joint-board.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify exact VIP first-turn search policy
+        run: python results/gothitelle_quick_vip_joint_board/reproduce.py
+      - name: Recheck shared Prize-conditioned basic search
+        run: python results/gothitelle_two_quick_joint_board/reproduce.py
