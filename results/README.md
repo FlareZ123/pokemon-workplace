@@ -1674,3 +1674,8 @@ In the same 5,000,000-state Harto sample, held Dedenne remains reset-capable aft
 ## Opposing Counter Catcher and source-specific Bench windows
 
 [opposing_counter_bench_window/](opposing_counter_bench_window/) extends the reciprocal gust race to conditional opponent Counter Catcher access. It validates 31,536 independent state/deadline cases, 15,768 prior-kernel matches, and 630,720 Bench-addition source cases. On a 105,120-case controlled enumeration, a newly Benched Pokemon invalidates a forced win 1,831 times against one opposing Counter and 4,914 times against one opposing Boss. A striking three-Prize-opponent witness shows a 96-to-zero forced-win contrast between those source classes because Counter cannot be used on the first opposing reply.
+
+
+## Print-level evidence from a revealed Pokémon search
+
+[revealed_print_information/](revealed_print_information/) uses two legal same-name Pikachu printings with different attacks in a controlled six-card hidden pool. Under an explicit policy chosen after full deck inspection, observing only the searched name gives P(critical A Prized) = **5/14**, while the old and new prints give **4/7** and **1/7** respectively. The exact 84-branch calculation finds **0.1518355 bits** of extra information about the singleton's Prize status from the printing, conditional on a successful Pikachu search. This demonstrates that name-only public observation can discard strategically relevant evidence. CI run 37988205366 passed.
