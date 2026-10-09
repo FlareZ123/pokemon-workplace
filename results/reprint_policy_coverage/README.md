@@ -8,13 +8,13 @@ How much of the historical same-name print pool can the current deck-legality pr
 
 The audit uses the 4,260 outside-scope prints whose names also have at least one legal Expanded target in the bundled English snapshot.
 
-It evaluates the pool as of 2026-10-08.
+It evaluates the pool as of 2026-10-09.
 
 ## Conservative policy
 
 The conservative profile promotes no historical reprint candidate automatically.
 
-At this checkpoint it classifies 67 prints as ineligible from explicit non-equivalence evidence and leaves 4,193 unresolved.
+At this checkpoint it classifies 77 prints as ineligible from explicit non-equivalence evidence and leaves 4,183 unresolved.
 
 ## Current semantic evidence policy
 
@@ -27,14 +27,14 @@ The `current_semantic_evidence` profile accepts three evidence classes whose pre
 | current Tournament Handbook semantic example | 3 |
 | **Total** | **180** |
 
-The same 67 known non-equivalent prints remain ineligible.
+The same 77 known non-equivalent prints remain ineligible.
 
-The unresolved remainder is 4,013 prints:
+The unresolved remainder is 4,003 prints:
 
 - 39 historical-official candidates whose evidence does not by itself establish present equivalence;
-- 3,974 semantic-review prints.
+- 3,964 semantic-review prints.
 
-The current-semantic profile therefore resolves 247 of the 4,260 same-name historical prints into an eligible or ineligible state. It leaves 94.20188% unresolved.
+The current-semantic profile therefore resolves 257 of the 4,260 same-name historical prints into an eligible or ineligible state. The remaining 4,003 still require further evidence.
 
 ## Interpretation
 

@@ -2,7 +2,7 @@
 
 The reprint resolver preserves explicit negative evidence alongside positive candidates.
 
-The current known-negative set contains **56 historical prints across 15 names**.
+The current known-negative set contains **77 historical prints across 22 names**.
 
 ## Official and structural energy evidence
 
@@ -35,13 +35,23 @@ These cases use explicit state witnesses rather than text-distance heuristics.
 
 [../trainer_optionality_divergence/](../trainer_optionality_divergence/) adds six historical prints across PokéNav, Pokégear 3.0, and Dusk Ball. Their historical text requires choosing an eligible card from the inspected window, while current text uses `You may`. Under current rules, an eligible historical choice is mandatory and the current action is optional, creating a direct material-transition difference.
 
+## Additional source-derived negative evidence
+
+A rules-grounded Trainer audit added eight historical prints across Apricorn Maker, Pokémon Fan Club, Super Potion, and TV Reporter. Friend Ball has a current Restored Pokémon target that historical text cannot search. Historical Computer Search differs from the ACE SPEC copy restriction on its legal Expanded target.
+
+The [historical deck-construction audit](../historical_deck_rules/) adds ten Arceus prints. The older cards allow unlimited copies of that print, while every legal Expanded same-name Arceus print has the ordinary four-copy ceiling. A five-copy deck is a direct rule-category witness.
+
 ## Current counts
 
-The 56 known-negative prints are:
+The 77 known-negative prints are:
 
+- Apricorn Maker: 1
+- Arceus: 10
+- Computer Search: 2
 - Darkness Energy: 15
 - Devolution Spray: 1
 - Dusk Ball: 2
+- Friend Ball: 1
 - Life Herb: 2
 - Magnetic Storm: 1
 - Master Ball: 5
@@ -49,13 +59,16 @@ The 56 known-negative prints are:
 - Metal Energy: 15
 - Pokémon Breeder: 3
 - Pokémon Center: 3
+- Pokémon Fan Club: 2
 - PokéNav: 3
 - Pokégear 3.0: 1
 - Power Plant: 1
 - Rainbow Energy: 2
+- Super Potion: 2
+- TV Reporter: 3
 - Revive: 1
 
-In the current resolver partition, this leaves **4,002** same-name historical prints in `semantic_review`. The positive high-confidence candidate set remains **202** prints.
+In the current resolver partition, this leaves **3,964** same-name historical prints in `semantic_review`. The positive high-confidence candidate set is **219** prints.
 
 ## Evidence policy
 

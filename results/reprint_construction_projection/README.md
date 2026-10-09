@@ -43,3 +43,7 @@ This is why `tools/deck_legality_proof.py` validates submitted print constructio
 ## Scope
 
 The detector currently audits explicit card text containing `can't have more than ... in your deck`. Future card families could encode construction restrictions through another wording or metadata category, so this is a conservative audit of the rule forms present in the current snapshot.
+
+## Complementary positive-rule exceptions
+
+The [historical deck-rules audit](../historical_deck_rules/) extends this study to ten Arceus prints whose unlimited-copy source rule is absent from every legal Expanded same-name Arceus target. This is the reverse direction of a stricter target rule. Its detection requires recognizing a positive permission and demonstrates that scanning only printed prohibitions is incomplete.

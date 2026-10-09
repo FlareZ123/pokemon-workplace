@@ -16,8 +16,8 @@ They currently resolve as:
 - 39 historical-official reprint candidates;
 - 44 name-wide official-errata candidates;
 - 3 current-handbook semantic candidates;
-- 67 known non-equivalent prints;
-- 3,974 unresolved semantic-review prints.
+- 77 known non-equivalent prints;
+- 3,964 unresolved semantic-review prints.
 
 The positive high-confidence candidate set contains 219 prints.
 
@@ -75,7 +75,7 @@ The Tournament Handbook explicitly says Team Rocket Rainbow Energy number 17 is 
 
 Two historical Life Herb printings add a fourth negative name. Their printed text excludes Pokémon-ex targets, while current Life Herb does not, and current Expanded contains a directly legal Pokémon-ex witness. The predicate derivation lives in [../reprint_divergence_predicates/](../reprint_divergence_predicates/).
 
-The dedicated Trainer name-reuse audit adds 16 more source prints across Master Ball, Pokémon Breeder, Pokémon Center, Max Revive, Revive, Devolution Spray, Power Plant, and Magnetic Storm. Each family has a direct distinguishing game-state witness. A further optionality audit proves six old PokéNav, Pokégear 3.0, and Dusk Ball prints non-equivalent because their mandatory `choose` wording differs from current optional `you may` semantics. A separate semantic-review audit adds eight more prints across Apricorn Maker, Pokémon Fan Club, Super Potion, and TV Reporter using explicit target-domain, destination-zone, healing-amount, and empty-deck playability witnesses. Friend Ball adds one further target-domain negative: official Restored Pokémon rules make Expanded-legal Restored Archen searchable by the current generic Pokémon wording but outside the historical Baby/Basic/Evolution target classes. Computer Search contributes two further rule-category negatives because the legal Expanded print is an ACE SPEC with a one-ACE-SPEC deck rule while the historical prints lack that rule. This yields 67 known non-equivalent historical prints across 21 names.
+The dedicated Trainer name-reuse audit adds 16 more source prints across Master Ball, Pokémon Breeder, Pokémon Center, Max Revive, Revive, Devolution Spray, Power Plant, and Magnetic Storm. Each family has a direct distinguishing game-state witness. A further optionality audit proves six old PokéNav, Pokégear 3.0, and Dusk Ball prints non-equivalent because their mandatory `choose` wording differs from current optional `you may` semantics. A separate semantic-review audit adds eight more prints across Apricorn Maker, Pokémon Fan Club, Super Potion, and TV Reporter using explicit target-domain, destination-zone, healing-amount, and empty-deck playability witnesses. Friend Ball adds one further target-domain negative: official Restored Pokémon rules make Expanded-legal Restored Archen searchable by the current generic Pokémon wording but outside the historical Baby/Basic/Evolution target classes. Computer Search contributes two further rule-category negatives because the legal Expanded print is an ACE SPEC with a one-ACE-SPEC deck rule while the historical prints lack that rule. The historical Arceus copy-limit witness adds ten more known negatives, for 77 historical prints across 22 names. See [../historical_deck_rules/](../historical_deck_rules/).
 
 ## Current-semantics normalization
 
@@ -163,7 +163,7 @@ Related regressions:
 
 ## Limitations
 
-The remaining 3,974 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
+The remaining 3,964 semantic-review prints are unresolved. Same-name Pokémon dominate that pool and usually represent genuinely different cards rather than reprints.
 
 Historical reprint evidence is intentionally restricted to no-reference entries with a Black & White-onward bridge already present by the source date. Reference-required entries need separate current-semantics analysis.
 
