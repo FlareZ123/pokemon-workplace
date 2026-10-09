@@ -27,3 +27,22 @@ The ratio never exceeds one for K at least one and equals one when K is one. The
 ## Reproduction
 
 [coverage_reproduce.py](coverage_reproduce.py) checks the exact formula against independent physical-card enumeration of opening hands, Prize subsets, and bonus selections for two small decks with overlapping strategic roles. It also checks equality to the existing Basic-overlap model and the four-effective-copies benchmark. GitHub Actions runs both reproduction suites.
+
+## Consequence for the optimal setup decision
+
+Using the existing count-dependent setup optimizer with own deck classes
+4 ordinary Basics, 4 optional starters, 4 key cards and 48 filler,
+binary own key-hand value, matchup payoff 6 and a 12-draw opponent cap,
+the weak optional-only opening is kept on these prior-mulligan counts:
+
+| Flexible opponent cards | Mulligan counts where weak optional opening is kept |
+| ---: | --- |
+| 0 | 2, 3, 4, 5 |
+| 1 | None |
+| 2 | None |
+
+The exact code test now composes the new coverage model with the previously
+validated count-dependent setup solver. Under equal *effective* four-copy
+coverage for each required group, one dual-purpose opponent card is already
+sufficient to eliminate the policy reversal at the illustrative payoff.
+This is a property of the model, rather than a matchup calibration.
