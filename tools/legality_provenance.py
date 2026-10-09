@@ -163,10 +163,10 @@ class LegalityProvenanceIndex:
                 as_of=as_of,
             )
 
-            if status == "Banned":
-                disposition: Disposition = "direct_banned"
-            elif timing_status == "before_set_release":
-                disposition = "direct_not_yet_released"
+            if timing_status == "before_set_release":
+                disposition: Disposition = "direct_not_yet_released"
+            elif status == "Banned":
+                disposition = "direct_banned"
             elif timing_status == "audited_waiting_period":
                 disposition = "direct_release_waiting"
             elif timing_status == "audited_release_eligible":

@@ -103,3 +103,7 @@ reconstruct the complete banned list.
 ### Mixed-era Unown scope regression
 
 The historical Unown print-family rule is stage-sensitive and source-conditioned. `neo2-14` + four Basic `swsh12-65` Unown V fails, but `neo2-14` + four Evolution `swsh12-66` Unown VSTAR and four `swsh12-65` without old source pass the *family* test. Added regression and evidence note in `results/historical_deck_rules/`; these are historical-construction witnesses, not Expanded deck endorsements.
+
+### Temporal priority in direct legality
+
+Corrected an existing condition-order bug: a current database banned print with unknown historical ban date was marked unresolved even when queried before its set release. The release-first ordering makes xy6-77 on January 1, 2014 decisively ineligible; January 2016 remains unresolved under the repository's undated historical-ban evidence policy. See results/unreleased_banned_print_priority/.

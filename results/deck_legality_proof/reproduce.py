@@ -151,3 +151,9 @@ assert proof(unknown, "does-not-exist").eligibility == "ineligible"
 assert any(issue.code == "unknown_print" for issue in unknown.construction.issues)
 
 print("deck legality proof regression passed")
+
+early_banned = deck(
+    (SNIVY, 1), ("xy6-77", 1), (GRASS, 58), as_of=date(2014, 1, 1)
+)
+assert early_banned.disposition == "invalid"
+assert proof(early_banned, "xy6-77").provenance.disposition == "direct_not_yet_released"

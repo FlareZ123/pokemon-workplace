@@ -1,0 +1,26 @@
+name: validate unreleased banned print priority
+
+on:
+  push:
+    paths:
+      - "tools/legality_provenance.py"
+      - "results/unreleased_banned_print_priority/**"
+      - ".github/workflows/validate-unreleased-banned-print-priority.yml"
+  pull_request:
+    paths:
+      - "tools/legality_provenance.py"
+      - "results/unreleased_banned_print_priority/**"
+      - ".github/workflows/validate-unreleased-banned-print-priority.yml"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.unreleased_banned_print_priority.reproduce
+      - run: python -m results.legality_provenance.reproduce
+      - run: python -m results.deck_legality_proof.reproduce

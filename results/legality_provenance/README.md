@@ -83,3 +83,7 @@ A high-confidence reprint candidate is still evidence, not an automatic tourname
 ## Next work
 
 Extend the provenance record with an explicit regional availability object and an audited promo/product calendar. The eventual legality proof object should explain an accepted or rejected deck print by source, date, region, semantics, and restriction.
+
+## Pre-release overrides undated current bans
+
+The source-derived release date is decisive for a print queried before its release, even when its current database ban has an unknown historical effective date. See [unreleased ban precedence](../unreleased_banned_print_priority/), which distinguishes the 2014 pre-release Shaymin-EX result from historically unresolved 2016 ban timing.

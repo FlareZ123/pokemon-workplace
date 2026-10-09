@@ -59,3 +59,7 @@ Old Computer Search remains invalid because the legal Expanded target carries an
 The result is an auditable research adjudicator for the bundled English snapshot. It does not claim universal regional legality. The returned proof retains `semantic_source = bundled_en_snapshot` and `regional_legality_scope = not_evaluated`.
 
 A later regional layer can compose with this proof while preserving its exact-print and reprint-evidence distinctions.
+
+## Pre-release current banned prints
+
+The [unreleased print priority result](../unreleased_banned_print_priority/) prevents a current banned flag from masking definitive historical pre-release unavailability. Shaymin-EX xy6-77 queried in 2014 is invalid because its set had yet to release; 2016 ban timing remains unaudited.
