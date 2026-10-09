@@ -40,3 +40,13 @@ Claimed identity at 2026-10-09T10:32:23.943Z; claim commit `26dce4456dfe8bff8265
 - The numerical continuation values are deliberately illustrative, not match-calibrated. The solver is an exact, bounded set-function optimizer, not an overall Pokémon game solver.
 - Next investigate state-conditioned interactions and planned staging of Bench slack under locks, then feed an actual legal-card line into the model. Preserve realistic information timing (the second Stadium chance is not known unless separately justified).
 
+### Named Ability co-presence corpus / hard capacity feasibility
+
+- Added `tools/bench_named_ability_dependencies.py`, `results/bench_named_ability_dependencies/README.md`, and dedicated passing CI [37919161458](https://github.com/FlareZ123/pokemon-workplace/actions/runs/37919161458).
+- Positive exact-text scan of Expanded-legal Pokémon Ability guards including the repository's official-ban overlay and legal-set fallback finds 38 matching print occurrences, 25 unique normalized text variants, and 21 source names. Extracts explicit multi-name conjunctions and retains unmatched guard phrases for audit.
+- Strong hard-feasibility witness: Regigigas `swsh10-130` Ancient Wisdom requires five distinct named Regi prerequisites plus Regigigas itself. Necessary board size six, so at least five Bench slots. Capacity four Collapsed Stadium and capacity three Parallel City make the prerequisite impossible while restricting the player.
+- Reciprocals: Lunatone/Solrock, Lunala/Solgaleo, Karrablast/Shelmet; higher-order: Uxie/Mesprit/Azelf, Regigigas's five, Simisage/Simisear/Simipour, and the newer bird trio.
+- Important source hygiene: `me55-4` Illumise is an example of a print without `legalities.expanded`, included via legal-set fallback. Avoid filtering only cards explicitly marked Legal.
+- For source species s and named prerequisite set R in play, necessary Bench slots equal |{s} ∪ R| - 1 under ordinary distinct-name interpretation; for prerequisites specifically on Bench, use max(|R|, |{s} ∪ R| - 1). This is necessary, not sufficient, and unrecognized condition wordings remain outside the catalog.
+- Next: bridge these predicates into actual board-state execution, including position and Ability lock. Search the unparsed clauses for meaningful count-dependent and negated cases before expanding parser.
+
