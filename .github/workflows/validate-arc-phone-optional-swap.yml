@@ -1,0 +1,19 @@
+name: Validate optional Arc Phone exchange
+
+on:
+  push:
+    paths:
+      - tools/arc_phone_optional_swap_policy.py
+      - results/arc_phone_optional_swap_policy/**
+      - .github/workflows/validate-arc-phone-optional-swap.yml
+  workflow_dispatch:
+
+jobs:
+  oracle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m results.arc_phone_optional_swap_policy.reproduce
