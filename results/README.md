@@ -1,5 +1,8 @@
 # Pokémon TCG Expanded research map
 
+**Peonia-first with full deck-order policy:** [peonia_arc_lazy_policy/](peonia_arc_lazy_policy/) joins Peonia's exact three-slot position exclusions to the full 47-card exchangeable-tail Arc/Shoes planner. In a physically conserving 60-card snapshot with T Prized, one Peonia, two Arc and two Shoes initially held, conditional target retrieval is 84.828706%. A hypothetical Prize shuffle after Peonia's miss lowers it to 67.414353%, demonstrating a 17.414353-point positional-information effect. An independent full-permutation oracle validates small cases and CI passes.
+
+
 **Basic-conditioned Arc opening:** [arc_opening_basic_conditioning/](arc_opening_basic_conditioning/) conditions the exact singleton-Prized Prize/hand distribution on having a Basic in the opening seven, with one Basic committed to Active. With eight Basics in an illustrative 60-card one-Peonia/four-Arc/four-Shoes package, conditional rescue is 8.129563% versus 9.106103% in an unconstrained seven-card window. Three labeled-card oracles pass.
 
 
