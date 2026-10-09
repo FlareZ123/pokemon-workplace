@@ -9,11 +9,11 @@ When the first deck search has established which cards are Prized but the physic
 ## Source text and controlled model
 
 The bundled English card database identifies:
-- Peonia \`swsh6-149\`: put up to three Prize cards into hand; then put one hand card face down as a Prize for each card taken.
-- Arc Phone \`swsh11-152\`: look at deck top, optionally switch it with one face-down Prize.
-- Trekking Shoes \`swsh10-156\`: inspect deck top; take it or discard it and draw the next card.
+- Peonia `swsh6-149`: put up to three Prize cards into hand; then put one hand card face down as a Prize for each card taken.
+- Arc Phone `swsh11-152`: look at deck top, optionally switch it with one face-down Prize.
+- Trekking Shoes `swsh10-156`: inspect deck top; take it or discard it and draw the next card.
 
-The model uses exactly those distinct observation and material-transition phases. Only the one-target retrieval objective is scored. Prize positions are exchangeable at the start; the entire Prize *composition* is already known (K1). The rest of the unknown deck is an inert \`F\` group. Hand initially contains Peonia, one Arc Phone (\`A\`), one Trekking Shoes (\`S\`) and one expendable \`F\`. Peonia is unused. A target singleton \`T\` lies in the hidden Prizes. Five Prizes means an illustrative midgame snapshot; six Prizes is separately checked. The other card zones can be padded with inert cards to 60 physical cards, without changing the restricted model.
+The model uses exactly those distinct observation and material-transition phases. Only the one-target retrieval objective is scored. Prize positions are exchangeable at the start; the entire Prize *composition* is already known (K1). The rest of the unknown deck is an inert `F` group. Hand initially contains Peonia, one Arc Phone (`A`), one Trekking Shoes (`S`) and one expendable `F`. Peonia is unused. A target singleton `T` lies in the hidden Prizes. Five Prizes means an illustrative midgame snapshot; six Prizes is separately checked. The other card zones can be padded with inert cards to 60 physical cards, without changing the restricted model.
 
 The exact Bellman model allows Peonia first or at any later time, selecting one to three physical Prize slots and deciding *after observing the selected cards* which hand cards to replace them with. It enumerates replacement assignment, optional Arc swaps, Shoes take/discard-and-draw, and Items retrieved through those effects. Every branch conditions on what the player actually observes. No player is given the hidden identity of an uninspected Prize slot.
 
@@ -39,17 +39,17 @@ Replacing inert Prized cards with live Items improves the conditional target-ret
 
 ## Short independent explanation of the five-slot results
 
-**No additional Prized Item.** Peonia initially checks three of five physical slots. It finds T with probability 3/5; if it misses, the one available Arc and Shoes can inspect and rescue T from one of the other two equally likely positions. Thus \`3/5 + (2/5)(1/2) = 4/5\`.
+**No additional Prized Item.** Peonia initially checks three of five physical slots. It finds T with probability 3/5; if it misses, the one available Arc and Shoes can inspect and rescue T from one of the other two equally likely positions. Thus `3/5 + (2/5)(1/2) = 4/5`.
 
-**One additional Prized Arc.** Failure now requires both T and A to occupy the two uninspected slots, which has probability 1/10. When this happens, the one held Arc can probe one of those two; it finds T with probability 1/2. If Peonia recovers A, the second Arc can probe the other slot. Failure probability is \`(1/10)(1/2) = 1/20\`, giving \`19/20\`.
+**One additional Prized Arc.** Failure now requires both T and A to occupy the two uninspected slots, which has probability 1/10. When this happens, the one held Arc can probe one of those two; it finds T with probability 1/2. If Peonia recovers A, the second Arc can probe the other slot. Failure probability is `(1/10)(1/2) = 1/20`, giving `19/20`.
 
 **One Prized Arc and one Prized Shoes.** If Peonia misses T, its two uninspected slots must contain T and one of A, S or F. If an Item is among those two, the initially held Arc can exchange that Item onto deck top; a Shoes draw recovers it, giving the needed additional action. If the other card is F, Peonia has already recovered both A and S, allowing two Arc probes. Accordingly every hidden allocation admits a successful adaptive line, giving 100%.
 
 ## Evidence and limits
 
-Implementation: \`tools/peonia_timing_policy.py\`; exact Fraction reproduction and analytic event checks: \`results/peonia_prized_item_recycling/reproduce.py\`. The code also checks that Peonia is playable with an empty deck, exposing a previously detected early-termination bug.
+Implementation: `tools/peonia_timing_policy.py`; exact Fraction reproduction and analytic event checks: `results/peonia_prized_item_recycling/reproduce.py`. The code also checks that Peonia is playable with an empty deck, exposing a previously detected early-termination bug.
 
-The unrestricted-timing solver equals Peonia-first on **these six fixtures**; this is not a general Peonia-first dominance theorem. These are idealized conditional access probabilities, not estimates of deck quality, matchup success, win rate, or standard opening consistency. The model does not include opponent effects, Stadium and Supporter competition, conventional deck search, or strategic value of the other cards returned as Prize payments. The \`F\` group abstracts distinct inert physical cards; it is not a claim that 46 identical non-Energy cards form a legal 60-card deck.
+The unrestricted-timing solver equals Peonia-first on **these six fixtures**; this is not a general Peonia-first dominance theorem. These are idealized conditional access probabilities, not estimates of deck quality, matchup success, win rate, or standard opening consistency. The model does not include opponent effects, Stadium and Supporter competition, conventional deck search, or strategic value of the other cards returned as Prize payments. The `F` group abstracts distinct inert physical cards; it is not a claim that 46 identical non-Energy cards form a legal 60-card deck.
 
 ## Future work
 
