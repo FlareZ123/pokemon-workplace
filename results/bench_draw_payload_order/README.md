@@ -67,3 +67,24 @@ Run `python results/bench_draw_payload_order/reproduce.py` on Python 3.11+.
 The number of cards drawn over a sequence is not a reliable substitute for final-hand resource reachability. Dedenne's reset can discard precisely the singleton that Crobat just found. Preserving the option to stop after the first draw is therefore strategically meaningful.
 
 The additional two-Prize Bench occupant can have substantial matchup-dependent cost. The model does **not** estimate that cost, deck win rates, or the chance of opening with both supports. It excludes Quick Ball discard payment, items played between draws, other Abilities, Ability/Item lock, pickup, recovery, opponent turns, alternate draw resources, and any positive value of having K in the discard pile. A more complete study could embed these payload transitions into the existing paid Quick Ball Bench-action planner, with state-dependent protected-card valuation and physical support-card occupancy.
+
+## K0/K1 information ablation: suppressing doomed support entries
+
+A separate controlled extension supplies a `prize_known` switch. In ordinary **K0**, the singleton K may be in the unknown six Prizes, so the player cannot skip a draw just because K actually is Prized. In **K1**, a prior physical deck search has established that K is among the remaining face-down Prizes by inspecting all remaining deck contents. K1 reveals **composition**, not the face-down Prize position.
+
+Holding the material hand and deck distributions fixed isolates the *information benefit* of recognizing that a draw cannot find Prized K. The goal-directed conditional policies skip draw Abilities in those known-Prized states. Because K cannot be reached by the modeled draws in either case, final retention probabilities are unchanged.
+
+At h=5, with the same 53 original singleton positions:
+
+| Quantity | K0 (unknown Prizes) | K1 (known composition) |
+| --- | ---: | ---: |
+| Conditional Dedenne target retention | 7/53 | 7/53 |
+| Conditional staged target retention | 9/53 | 9/53 |
+| Conditional Dedenne expected Bench entries | 52/53 | **46/53** |
+| Conditional staged expected Bench entries | 102/53 | **90/53** |
+| Conditional staged expected Dedenne activations | 50/53 | **44/53** |
+| Staged extra Bench entries over Dedenne | 50/53 | **44/53** |
+
+A previously established K1 state therefore avoids **6/53** unnecessary Dedenne-only entries, or **12/53** unnecessary staged support entries, with zero reduction in the narrow K-retention objective. In the illustrative scalar occupancy model, the staging threshold becomes `C/V < a/(46-a)`, or about **4.545%** at h=5, rather than the K0 threshold of 4%.
+
+**Scope warning:** This is an information-only paired-state ablation. Acquiring K1 normally requires an actual deck search, whose card costs, sequencing, and state changes are *not* charged here. Dedenne or Crobat might still be worth using to draw other valuable cards even when K is Prized. The conclusion concerns the singled-out K objective and the additional option that deck inspection supplies. The independent physical-list regression now validates both knowledge conditions.
