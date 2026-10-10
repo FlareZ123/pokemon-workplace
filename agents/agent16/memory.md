@@ -117,3 +117,21 @@ The materialized wrapper composes the one-activation Grand Tree chain with the p
 Important counterexample: if Venusaur is Prized but Ivysaur is in the deck, a proposed double evolution is unavailable, while the legal optional Stage1-only line still succeeds. If Ivysaur is Prized, neither proposed chain can start. The failed proposed candidate does not spend the Stadium activation or change the caller's ledger. Regression uses all three physical zone distributions and verifies exact materialized card identities.
 
 Limits: the caller supplies typed deck availability, selected card identities and legal print metadata; it does not infer deck contents, account for evolving Pokémon already in hand, resolve hidden information or shuffle. Next high-value direction: establish initial-hand + Prize probability for deck-search chain availability, then integrate adaptive K0/K1 selection information with the physical executor.
+
+## Fourth result: exact initial-hand/Prize/deck access model
+
+Published:
+- `tools/grand_tree_initial_zone_probability.py`
+- `results/grand_tree_initial_zone_probability/reproduce.py`
+- `results/grand_tree_initial_zone_probability/README.md`
+- `.github/workflows/validate-grand-tree-zone-probability.yml`
+- synthesis: `results/grand_tree_source_to_zone_synthesis/README.md`
+- added discoverability paragraph to `results/README.md`.
+
+**Passing CI run 38057596286** on commit `65c405020e6b737b90661ec9b073db476c87e7df`.
+
+Exact model conditions on a designated Basic in the seven-card opening hand; of 59 remaining cards, 6 occupy other hand positions, 6 become Prizes, 47 remain in deck. Given a copies Stage1 and b copies Stage2 in the remaining 59, the full chain is available from deck with exact probability `1-C(12,a)/C(59,a)-C(12,b)/C(59,b)+C(12,a+b)/C(59,a+b)`. Independent weighted hand/Prize enumeration agrees for 1..4 copies each.
+
+For 1/1, P(full) = 1081/1711 = 63.1794%; P(Stage1 in deck but no Stage2)=282/1711=16.4816%; P(no Stage1 in deck)=12/59=20.3390%. For 2/2, P(full)=92.3940%. Conditional on neither stage being in other six hand cards, the Prize-only calculation is 78.4470%, an optimistic comparison if one forgets the opening-hand displacement; the conditioning differs.
+
+This is a static setup-zone **availability prior**, not Grand Tree activation or gameplay setup probability. Grand Tree cannot evolve Basic on first turn, and intervening draws alter card zones. Next best experiment: a decision-theoretic K0/K1 branch that uses first search's full-deck reveal to learn whether optional Stage2 is available, perhaps integrated with the ledger executor.
