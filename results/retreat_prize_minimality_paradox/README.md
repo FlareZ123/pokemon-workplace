@@ -67,6 +67,11 @@ The script independently compares each unknown frontier to the
 intersection of both fully known frontiers and measures cases
 where worldwise-minimal intersection loses guaranteed minimal actions.
 
+In **1,792 bounded configurations**, 896 contain at least one robust
+legal payment. Independent minimalization before intersection loses
+**220 guaranteed minimal payment witnesses across 168 configurations**.
+These are structural fixture counts, not probabilities of actual games.
+
 Reproduce:
 
     python results/retreat_prize_minimality_paradox/reproduce.py
