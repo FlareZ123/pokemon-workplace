@@ -16,15 +16,15 @@ RESOURCES = ROOT / "resources"
 summary = summarize_positive_reprint_evidence(RESOURCES)
 
 assert summary["counts"] == {
-    "official_semantic_candidate_prints": 3,
+    "official_semantic_candidate_prints": 5,
     "names": 1,
 }
-assert summary["prints_by_name"] == {"Copycat": 3}
-assert summary["card_ids"] == ["ecard1-138", "ex15-73", "ex7-83"]
+assert summary["prints_by_name"] == {"Copycat": 5}
+assert summary["card_ids"] == ["col1-77", "ecard1-138", "ex15-73", "ex7-83", "hgss1-90"]
 assert summary["explicit_target_id"] == "sm7-127"
 assert EXPLICIT_POSITIVE_SOURCE_ID == "ex7-83"
 assert EXPLICIT_POSITIVE_TARGET_ID == "sm7-127"
-assert len(collect_known_equivalent_ids(RESOURCES)) == 3
+assert len(collect_known_equivalent_ids(RESOURCES)) == 5
 
 resolver = build_reprint_resolver(RESOURCES)
 for card_id in summary["card_ids"]:
@@ -32,8 +32,8 @@ for card_id in summary["card_ids"]:
     assert row.kind == "official_semantic_candidate"
     assert row.target_print_ids == ("sm7-127",)
 
-assert resolver.resolve("col1-77").kind == "semantic_review"
-assert resolver.resolve("hgss1-90").kind == "semantic_review"
+assert resolver.resolve("col1-77").kind == "official_semantic_candidate"
+assert resolver.resolve("hgss1-90").kind == "official_semantic_candidate"
 
 print("current-handbook positive reprint evidence: PASS")
 print("official semantic candidates:", summary["card_ids"])
