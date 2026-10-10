@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from itertools import combinations
-from typing import Any
+from typing import Any, Sequence
 
 ENERGY_TYPES = (
     "Grass",
@@ -55,6 +55,27 @@ def max_typed_match(
         states = new_states
 
     return max(mask.bit_count() for mask in states)
+
+
+
+def attack_cost_ready(
+    cards: list[dict[str, Any]],
+    attack_cost: Sequence[str],
+) -> bool:
+    """Test an attack's Energy cost, where Colorless is a wildcard.
+
+    This differs intentionally from `max_typed_match`, which performs
+    strict Energy-type matching for effects such as 'discard Fire Energy'.
+    Any attached Energy unit can pay a Colorless attack-cost symbol.
+    """
+    providers = [
+        {
+            "units": card["units"],
+            "types": (*card["types"], "Colorless"),
+        }
+        for card in cards
+    ]
+    return max_typed_match(providers, list(attack_cost)) == len(attack_cost)
 
 
 def minimum_card_subsets_generic(
