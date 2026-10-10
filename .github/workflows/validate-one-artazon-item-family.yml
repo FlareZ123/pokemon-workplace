@@ -1,0 +1,19 @@
+name: Validate one-Artazon Item witness family
+
+on:
+  push:
+    paths:
+      - "results/secret_box_global_witnesses/one_artazon_item_family.py"
+      - ".github/workflows/validate-one-artazon-item-family.yml"
+  workflow_dispatch:
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python results/secret_box_global_witnesses/one_artazon_item_family.py
