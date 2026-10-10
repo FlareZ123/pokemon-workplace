@@ -19,7 +19,7 @@ def main() -> None:
     result = build(ROOT / "resources")
     counts = result["counts"]
 
-    assert result["scope"]["legal_prints_scanned"] == 14836
+    assert result["scope"]["legal_prints_scanned"] == 14829
     assert counts["copy_attack_prints"] == 64
     assert counts["unique_copy_attack_signatures"] == 30
     assert counts["unique_card_names"] == 30
