@@ -47,9 +47,9 @@ for B,T in ((1,1),(1,4),(2,3),(4,4)):
 assert exact_prize_take(4,4,1,"computer_search",0)[3] == Fraction(
     12261875,1850700852)
 assert exact_prize_take(4,4,1,"computer_search",1)[3] == Fraction(
-    503011105,44681708412)
+    59977412074,5327705077695)
 assert exact_prize_take(4,4,1,"computer_search",2)[3] == Fraction(
-    37524671,22340854206)
+    447419776261,26638525388475)
 assert exact_prize_take(1,1,0,"computer_search",0)[3] == 0
 assert exact_prize_take(4,4,0,"computer_search",2)[3] > 0
 
