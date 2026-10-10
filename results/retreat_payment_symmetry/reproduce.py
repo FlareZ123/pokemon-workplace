@@ -53,7 +53,7 @@ def verify_counts() -> None:
         assert sum(row.physical_multiplicity for row in orbits) == counts.full
         assert sum(row.physical_multiplicity for row in orbits if row.inclusion_minimal) == counts.inclusion_minimal
         comparisons += 1
-    assert comparisons == 216
+    assert comparisons == 252
 
 
 def verify_physical_successors() -> None:
@@ -122,7 +122,7 @@ def main() -> None:
         4,
     )) == 9
     print("Retreat payment exchangeability orbits: PASS")
-    print({"brute_force_cases": 216, "distinct_payments_in_fixture": 8,
+    print({"brute_force_cases": 252, "distinct_payments_in_fixture": 8,
            "distinct_class_count_orbits": 4,
            "large_16_attachment_orbits": 9, "large_physical_payments": 2352})
 
