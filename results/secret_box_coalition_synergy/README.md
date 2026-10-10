@@ -92,8 +92,43 @@ Secret Box itself starts in hand for **357** cases. In the other **18**, Jirachi
 
 The on-demand full 500,000-opening replication with [trace_pair_witnesses_full.py](trace_pair_witnesses_full.py) verified the **same necessary starting-state pattern for all 1,917 combination-only successes**. Secret Box starts in hand in **1,830** states and is accessible through Jirachi in **87**. Both variants have the two needed named search outputs in deck, held Jet Energy, and no G&H/Tag Call Stellar access. The complete 1,917-state result thus upgrades the mechanism from a 100k diagnostic to a full-sample witness classification. [100k CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38048881043); [full 500k CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38049000028).
 
+## Complete inclusion-minimal winning-route antichains
+
+An inclusion-minimal mask succeeds while every proper subset fails. This differs from only counting minimum-cardinality winners: a state can have a successful single-category route and still have a distinct inclusion-minimal two-category alternative.
+
+The seeded [100k antichain trace](antichain_trace.py) and [full 500k trace](antichain_trace_full.py) exhaustively check all 16 masks per incremental state. The full run [passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38049292465). The number of distinct inclusion-minimal winning masks per state is:
+
+| Distinct minimal routes | Incremental states |
+| ---: | ---: |
+| 1 | 2 |
+| 2 | 15,932 |
+| 3 | 4,847 |
+| 4 | 4 |
+
+Thus 20,783 of 20,785 incremental cases have at least two alternative minimal output masks. All inclusion-minimal combinations are singletons or pairs. The three possible minimal pair routes appear as Tool+Supporter in 42 states, Tool+Stadium in 1,917, and Supporter+Stadium in 42. Overlap is preserved: 24 of the Item-singleton-only states have both pair routes Tool+Supporter and Supporter+Stadium. The dominant signature is singleton Item or Supporter (15,892 states) or those two plus Tool+Stadium (1,917).
+
+A two- or three-route antichain is a mathematical description of successful category subsets for this particular endpoint. It does not guarantee that any of those routes preserves the same discarded resources, board position, or later match utility.
+
+## Arbitrary correlation: sharp availability bounds
+
+Independent category availability is an illustrative model. We can remove independence while keeping a common marginal probability `q` that each of Item, Tool, Supporter, and Stadium is enabled.
+
+The [exact correlation-bound proof and reproducible construction](correlation_bounds.py) establish the **sharp bound**
+
+`0 <= E[D] <= 1917 * min(q, 1-q)`
+
+for every joint distribution over output masks with those four marginal probabilities. Both bounds are attained for every `q` between zero and one.
+
+The lower bound is attained by all-or-none correlation: full output mask 15 appears with probability `q`, empty mask 0 with probability `1-q`. Both masks have zero coalition residual.
+
+For the upper bound, two pointwise inequalities provide simple dual certificates: `D(mask) <= 42 * 1[Tool] + 1875 * 1[Stadium]`, and `D(mask) <= 1917 * 1[Item absent]`. Taking expectations gives `1917q` and `1917(1-q)`. Explicit exact distributions provided in the test attain the minimum of those bounds in each region `q <= 1/3`, `1/3 <= q <= 1/2`, and `q >= 1/2`.
+
+At `q=1/2`, the previously stated independent overlay misses `2043/16 = 127.6875` expected states. Under a suitable correlated availability pattern, the same marginals permit `1917/2 = 958.5` missed expected states, or **4.611499 conditional percentage points** of the 20,785 incremental cases. The independent-overlay figure is therefore only one plausible *mathematical scenario* among many, and these tight bounds do not estimate the physical likelihood of any such correlations.
+
+[GitHub Actions CI 38049440514 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38049440514) for the exact arithmetic and analytic witnesses.
+
 ## Limits and next questions
 
 The underlying Aichi planner models a compressed first-turn core, not complete games, lock matchups, physical category failure rates, or the later value of discarded cards. Output masks change category availability while preserving other planner abstractions. The sample is seeded, its state counts are fixed, and the polynomial describes a hypothetical overlay on those states.
 
-A next step is to distinguish *why* the Tool+Stadium routes work in each of the 1,917 states: Jet already held, board/Bunnelby requirements, Tool selection, and alternative acquisition. That requires instrumenting state-level witnesses rather than inferring the mechanism solely from aggregate mask counts. Another extension is to derive correlated-category availability from actual card/text constraints instead of assuming independent `q`.
+The full 1,917-state witness classification and the sharp mathematical arbitrary-correlation bounds are complete. Next investigate the 42 Tool+Supporter and 42 Supporter+Stadium pair alternatives, state-level route sequencing, and a physically grounded model of correlated category availability.
