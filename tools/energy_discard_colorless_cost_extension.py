@@ -10,7 +10,7 @@ from collections import Counter
 from itertools import combinations_with_replacement
 from typing import Any
 
-from tools.energy_discard_solver import ENERGY_TYPES, max_typed_match
+from tools.energy_discard_solver import ENERGY_TYPES, attack_cost_ready, max_typed_match
 
 COLORS = tuple(t for t in ENERGY_TYPES if t != "Colorless")
 C = "Colorless"
@@ -23,12 +23,7 @@ def pays_attack_cost(cards: list[dict[str, Any]], attack_cost: tuple[str, ...]) 
     Colorless to that unit's accepted symbols. Do *not* use this wrapper for
     effects that require specific typed Energy (e.g., discard Fire Energy).
     """
-    transformed = []
-    for card in cards:
-        types = set(card["types"])
-        types.add(C)
-        transformed.append({"units": card["units"], "types": list(types)})
-    return max_typed_match(transformed, list(attack_cost)) == len(attack_cost)
+    return attack_cost_ready(cards, attack_cost)
 
 
 def verify_colorless_extension() -> dict[str, object]:
