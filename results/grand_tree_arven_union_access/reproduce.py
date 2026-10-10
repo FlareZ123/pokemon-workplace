@@ -15,7 +15,8 @@ def brute(m: ArvenUnionAccess, *, going_second: bool) -> Fraction:
     names=(
         ("B",)*m.basics+("G",)*m.gladion+("A",)*m.arven
         +("T","S1","S2","Comm")
-        +("F",)*(m.total-m.basics-m.gladion-m.arven-4)
+        +("X",)*m.extra_basics
+        +("F",)*(m.total-m.basics-m.gladion-m.arven-4-m.extra_basics)
     )
     assert len(names)==m.total
     cards=tuple(range(m.total))
@@ -23,7 +24,7 @@ def brute(m: ArvenUnionAccess, *, going_second: bool) -> Fraction:
     success=Fraction()
     for hand in itertools.combinations(cards,m.opening):
         hset=set(hand)
-        if not any(names[i]=="B" for i in hand):
+        if not any(names[i] in ("B","X") for i in hand):
             continue
         valid+=1
         hnames={names[i] for i in hand}
