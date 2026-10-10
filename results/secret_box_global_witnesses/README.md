@@ -185,3 +185,14 @@ For any proper enabled-output mask **M**, a guaranteed miss probability relative
 **P(S missing) × 843/48561235923200 + P(Tool or Stadium missing) × 225/7769797747712 + P(Item missing) × 1/4570469263360**,
 
 where each P in this displayed expression denotes a zero-or-one indicator for whether the relevant category is omitted by that fixed mask. The disjoint forced Prize sets permit addition. For the same mask, the actual miss probability can be much greater. The bounds quantify model-specific failure support; they do not estimate tournament rates.
+
+
+### Exhaustive compressed cross-product certificate
+
+The [grouped cross-product verification](grouped_cross_product_certificate.py) removes the earlier methodological gap between testing every Prize pair for a single filler arrangement and testing every filler arrangement for a single Prize layout. [GitHub Actions run 38093867316 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38093867316).
+
+It partitions physically distinct unused cards into the source planner's **11 named deck-compression classes** plus one class of ignored card identities. The 11-card discard-filler stock contains ten cards in the other-Supporter class and one Bellelba in the other-TAG-TEAM class. Every legal combination of opener filler allocation, extra Prize class pair, and eligible first-draw filler class is weighted by the exact number of underlying physical copies. The test calls the **unmodified first-turn planner** for every resulting compressed state and verifies the Grand Tree baseline fails, full Secret Box succeeds, and the relevant category-ablation mask fails.
+
+The weighted count agrees exactly with the physical formulas above for each family. It therefore certifies the **complete cross-product** of the specified Supporter and Tool/Stadium families, without a sampling assumption. It also explicitly verifies each unused-card class, including Basic cards, is legitimately pooled only when it cannot enter the initial Active or first-draw filler selection. Starting Active remains Oddish throughout, so Jirachi top-five effects never arise.
+
+The category model remains restricted to the original immediate-core solver, which compresses downstream value and omits realistic opponent actions. The conclusion about exact family probability is stronger than a simulation estimate, while the conclusion about in-game strategic value still inherits the simulator's limited objective.
