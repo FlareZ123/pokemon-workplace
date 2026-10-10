@@ -151,3 +151,37 @@ The first factor selects one of two Pidgeotto and one of two Gloom for the remai
 Because the three exact Prize layouts are mutually disjoint, if a proposed fixed subset of Secret Box outputs omits Supporter, Tool, Stadium, or Item, its model loss probability relative to full Secret Box is bounded below by the sum of the applicable **distinct** family probabilities above. Tool and Stadium omissions share one family and are counted **once**. Every proper output subset therefore has a provably positive miss probability in this compressed model.
 
 **Scope:** exact masses are rigorous probabilities for these deliberately narrow events under uniform shuffling and accepted Basic starts. Solver success/failure refers to the existing first-turn-core model, which omits future resource utility, opponent actions, and many tactical constraints. The bounds can be far smaller than the true model-wide output-subset loss. They are mathematical counterexample incidence bounds, not match win-rate claims.
+
+
+### Enlarged exact families with two flexible Prize cards
+
+The original two fixed Pidgeotto/Gloom Prize identities unnecessarily restricted the Supporter and Tool/Stadium witness families. The [relaxed Prize-pair reproducer](relaxed_prize_pair_lower_bounds.py) instead fixes only four specific cards in the Prizes and allows the other two cards to vary, excluding only pairs that exhaust a necessary two-copy target. [CI run 38093703503 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38093703503).
+
+- **Supporter:** all four Tag Call are Prized. The two remaining Prize cards may be any two of the other 49 physical unselected cards, except the exact two-card pairs exhausting TM: Evolution, Jet Energy, Artazon, or Bunnelby. This leaves **1,172 allowable Prize pairs**. For a five-filler opening, their sum of available first-draw filler choices is **6,744**.
+- **Tool and Stadium:** all four Guzma & Hala are Prized, with Jet Energy already held. The two other Prizes may be any two of 49, except pairs exhausting TM: Evolution, Artazon, or Bunnelby. This leaves **1,173 allowable Prize pairs**, with **7,875** eligible filler first-draw choices for the fixed four-filler opening.
+
+The code verifies the exact pair counts against explicit named physical card identities and tests the required baseline, full-output, and output-ablated action-planner outcomes for every allowed Prize pair under a canonical filler opener. The previously verified full filler/draw enumerations cover the alternative filler choices for fixed Prizes. The generalization across both dimensions also follows structurally: all chosen 11-stock fillers compress to the same generic in-hand resource; available unprized required target copies retain the same search path; and no Jirachi is active. In this restricted planner the remaining differences in unused deck cards cannot invalidate the certified path.
+
+Let **A = 1 − C(46,7)/C(60,7)** again. After fixing the visible opening family, the four forced Prizes can be chosen in one way. The weighted two-extra-Prize count for Supporter is
+
+**6×C(49,2) − 6×48 − 4×6 = 6744**;
+
+for Tool and Stadium it is
+
+**7×C(49,2) − 7×48 − 3×7 = 7875**.
+
+The middle subtraction counts draws consumed by an extra-Prized filler. The final subtraction excludes pairs exhausting a target supply.
+
+The corresponding **exact accepted-opening lower bounds** are now:
+
+| Necessary output(s) | Enlarged exact family probability | Improvement over earlier fixed-six-Prize family |
+| --- | --- | ---: |
+| Supporter | **843/48561235923200 ≈ 1.73595252257e−11** | 281× |
+| Tool and Stadium | **225/7769797747712 ≈ 2.89582827386e−11** | 281.25× |
+| Item | **1/4570469263360 ≈ 2.18795914025e−13** | Unchanged |
+
+For any proper enabled-output mask **M**, a guaranteed miss probability relative to the full-output solver is at least
+
+**P(S missing) × 843/48561235923200 + P(Tool or Stadium missing) × 225/7769797747712 + P(Item missing) × 1/4570469263360**,
+
+where each P in this displayed expression denotes a zero-or-one indicator for whether the relevant category is omitted by that fixed mask. The disjoint forced Prize sets permit addition. For the same mask, the actual miss probability can be much greater. The bounds quantify model-specific failure support; they do not estimate tournament rates.
