@@ -188,3 +188,10 @@ Important methodological boundary: these probabilities value **direct exposure**
 
 This addresses a concrete deck-building issue: intersecting category-access events cannot generally be multiplied independently. It still excludes card activation/Supporter contention, overlapping card role types, deck-order info beyond modeled prefix, and line-specific success. Next theoretical extension is overlapping-role eligibility and one-card-only allocation when multiple resource channels compete.
 
+
+### 2026-10-10: one-use flexible versus genuine multi-axis effect
+
+Added `tools/prize_resource_allocation_exposure.py` / `results/prize_resource_allocation_exposure/`, a group-level draw-exposure allocator. Each card-group type has multiple **alternative** contribution vectors to resource channels, but one physical copy may choose at most one vector; a vector can contribute on several axes only when the modeled effect genuinely outputs multiple roles. A multivariate hypergeom over compressed effect signatures + a bounded reachable-resource-state DP computes probability of meeting all roles in the drawn window. FLEX,P,E,filler example: if FLEX may choose either P or E but not both, probability both setup channels can be supplied within two draws is1/2; if FLEX simultaneously gives P+E, probability2/3. Two FLEX copies + two filler cards drawn twice yield1/6 (need both single-output copies) vs5/6 (a single multi-output copy suffices). Independent 4!=24 physical deck permutations confirmed the probabilities and guards; [CI 38059272260](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38059272260) passed.
+
+Relation to human concepts: Computer Search provides broad *alternative* access (one use one searched card), while Guzma & Hala can provide several outputs jointly under conditions. This kernel is only material allocation from exposed cards, not an executable card effect: all discard costs, Item/Supporter timing, unique ACE SPEC and proper printed card outputs remain to be compiled. Future work should connect effect profiles to legal source card text and action constraints.
+
