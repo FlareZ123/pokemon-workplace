@@ -1,0 +1,20 @@
+name: Validate stochastic opposing gust arrival
+
+on:
+  push:
+    paths:
+      - tools/stochastic_opponent_gust_arrival.py
+      - tools/two_sided_bidirectional_gust.py
+      - results/stochastic_opposing_gust_arrival/**
+      - .github/workflows/validate-stochastic-opposing-gust-arrival.yml
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.stochastic_opposing_gust_arrival.reproduce
