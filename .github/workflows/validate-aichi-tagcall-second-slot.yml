@@ -1,0 +1,19 @@
+name: Validate Aichi Tag Call second target
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/aichi_tagcall_target_availability.py"
+      - "results/aichi_tagcall_second_slot/**"
+      - ".github/workflows/validate-aichi-tagcall-second-slot.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/aichi_tagcall_second_slot/reproduce.py
