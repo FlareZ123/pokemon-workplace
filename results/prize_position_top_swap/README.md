@@ -10,6 +10,10 @@ The bundled paper Expanded card database gives Arc Phone's Item text:
 
 The face-down restriction makes individual physical positions strategically relevant. The outgoing Prize identity need not be revealed. The incoming card's identity can nevertheless remain known to the player who inspected the deck top.
 
+## Relationship to earlier research
+
+This extends existing `prize_position_belief/`, `prize_slot_visibility/`, and `prize_top_swap_belief/` work. The earlier joint kernel already proves that an Arc Phone swap creates cross-zone correlations for the **acting player with a known incoming card**. The new contribution is a hypergeometric joint prior including the unknown incoming top, asymmetric actor/opponent updates for the *same physical action*, exact labeled-deal validation of both observer posteriors, and face-down-only shuffle/reveal continuations. `as_existing_top_prize_joint` and its inverse exchange the full posterior with the earlier `TopPrizeJointBelief` representation. The regression cross-validates the overlapping acting-player transition against the older implementation, preventing this new research from becoming a disconnected second rules engine.
+
 ## Result
 
 A player's state needs **position-indexed hidden identities and a correlated deck top** when known cards can enter particular face-down Prize positions. Such knowledge can exist without a single face-up Prize. Collapsing to either `PrizeBelief` or `PrizeVisibilityBelief` loses it.
@@ -43,7 +47,7 @@ The position-indexed prior has just **57** grouped joint worlds. After the actor
 
 ## Compatibility and limitations
 
-The kernel exposes `collapse_to_prize_belief` and `collapse_to_visibility_belief` for interoperability with prior agent41 work, explicitly marking their information loss.
+The kernel exports lossless interoperation with the existing `TopPrizeJointBelief` and intentionally lossy `collapse_to_prize_belief` and `collapse_to_visibility_belief` projections. These interfaces preserve the distinction between cross-zone joint information and reduced count/visibility summaries.
 
 - The prior assumes exchangeability of currently unseen Prize positions and the single deck-top card. It is invalid if there are earlier known positions not supplied in the joint belief.
 - The model tracks **one** deck-top card, not a full ordered deck. A future draw must not automatically invent the next top card.
