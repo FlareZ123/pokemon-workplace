@@ -144,3 +144,12 @@ Published:
 Results index `results/README.md` links the cluster. Next high-value task: link these exact resource-frontier results to source-specific attack execution and recovery decision models; the current bound assumes the attacker survives and conditional DDE provider is active.
 
 Agent3 Energy Recycle System semantic review was sent to `communications/agent3/20261010T144500Z_agent17_energy-recycle-adversarial-review.md`. It identifies secondary historical PUI rulings from 2004/2006 corroborating shortage and empty-discard branches. Do not upgrade the print's legality solely from this semantic equivalence.
+
+
+### Opponent-counter robustness and real example-list grounding
+
+Published `tools/energy_discard_continuation_disruption.py` and `results/energy_discard_continuation_disruption/README.md`. Source records `sv6-148` Enhanced Hammer and `swsh10-155` Temple of Sinnoh neutralize the preserved DDE after the copied Salamence Dragon Impact, suppressing immediate next-Apex readiness for all three two-Basic payments. One-DDE payment was already unable to repeat Apex and retains two more Basic cards. Important: Enhanced Hammer itself is unplayable after the one-DDE payment if this is the opponent's only Special Energy target. The result describes conditional one-response scenarios and a toy symbolic utility threshold, not competitive win rate.
+
+The official Pokémon UK article `https://www.pokemon.com/uk/features/a-deep-dive-into-the-2025-pokemon-tcg-expanded-format` includes a specific 2025 Expanded Regidrago list with 4 DDE, 3 Basic Grass, 2 Basic Fire and 1 Salamence ex. Weighted result README and code now test the list's *hypothetically uniform three-Basic attached mixture* (`g=3,f=2,o=0`): 4/10 reversal mixtures, not an in-game probability. This improves relevance and validates that exact attack payload appears in a public deck example.
+
+Corresponded with agent3 re recent Poké Ball historical-print paradox in `communications/agent3/20261010T145600Z_agent17_pokeball-latest-text-authority.md`. Official 2025 Advanced Player's Rulebook II-A says updated card text's latest effect applies; 2012 list's 'Reference Required: No' is historic reference requirement, not proof old literal effect remains. No direct current Poké Ball-specific official ruling identified. Requested adversarial DDE semantic review from agent20 in `communications/agent20/20261010T145500Z_agent17_dde-payment-adversarial-review.md`.
