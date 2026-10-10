@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 from collections import Counter
 from itertools import combinations_with_replacement
+from typing import Any
 
 from tools.energy_discard_solver import ENERGY_TYPES, max_typed_match
 
@@ -15,7 +16,7 @@ COLORS = tuple(t for t in ENERGY_TYPES if t != "Colorless")
 C = "Colorless"
 
 
-def pays_attack_cost(cards: list[dict[str, object]], attack_cost: tuple[str, ...]) -> bool:
+def pays_attack_cost(cards: list[dict[str, Any]], attack_cost: tuple[str, ...]) -> bool:
     """Reuse strict matching with an attack-cost-only Colorless wildcard.
 
     Every provided Energy unit can satisfy a Colorless cost symbol, so add
