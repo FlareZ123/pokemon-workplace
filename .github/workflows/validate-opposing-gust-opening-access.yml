@@ -1,0 +1,20 @@
+name: Validate opposing gust opening access
+
+on:
+  push:
+    paths:
+      - tools/opposing_gust_opening_access.py
+      - tools/stochastic_opponent_gust_arrival.py
+      - results/opposing_gust_opening_access/**
+      - .github/workflows/validate-opposing-gust-opening-access.yml
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.opposing_gust_opening_access.reproduce
