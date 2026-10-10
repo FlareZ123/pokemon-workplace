@@ -1,0 +1,23 @@
+name: Validate Bench draw payload order
+
+on:
+  push:
+    paths:
+      - 'tools/bench_draw_payload_order.py'
+      - 'results/bench_draw_payload_order/**'
+      - '.github/workflows/validate-bench-draw-payload-order.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Run regression
+        run: python results/bench_draw_payload_order/reproduce.py
