@@ -152,6 +152,38 @@ class PrizePositionTopBelief:
             tuple(((prizes, top), mass) for (top, prizes), mass in existing.masses),
         )
 
+    def condition_on_public_world_choice(
+        self,
+        likelihood_by_world: Mapping[World, float],
+    ) -> PrizePositionTopBelief:
+        """Condition on a public action selected using private position information.
+
+        The caller supplies P(observed choice | complete grouped hidden world).
+        A legitimate player policy must depend only on information actually
+        available to that player; this kernel cannot certify that precondition.
+        """
+        supported = {world for world, _ in self.masses}
+        if set(likelihood_by_world) != supported:
+            raise ValueError("provide a likelihood for every supported world")
+        if any(not 0 <= p <= 1 for p in likelihood_by_world.values()):
+            raise ValueError("action likelihoods must be probabilities")
+        weighted = [
+            (world, mass * likelihood_by_world[world])
+            for world, mass in self.masses
+        ]
+        normalizer = sum(weight for _, weight in weighted)
+        if normalizer <= 0:
+            raise ValueError("observed choice has zero likelihood")
+        return PrizePositionTopBelief(
+            self.groups,
+            self.face_up,
+            tuple(
+                (world, weight / normalizer)
+                for world, weight in weighted
+                if weight > 0
+            ),
+        )
+
     def condition_on_public_swap(
         self,
         likelihood_by_top: Mapping[CardGroup, float],
