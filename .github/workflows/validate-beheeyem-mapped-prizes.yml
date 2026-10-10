@@ -1,0 +1,22 @@
+name: Validate Beheeyem mapped Prize selection
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_mapped_prizes.py"
+      - "results/beheeyem_mapped_prizes/**"
+      - ".github/workflows/validate-beheeyem-mapped-prizes.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce exact face-up Prize selection optimum
+        run: python3 results/beheeyem_mapped_prizes/reproduce.py
+      - name: Independently sample physical mapped and blind Prize picks
+        run: python3 results/beheeyem_mapped_prizes/monte_carlo.py
