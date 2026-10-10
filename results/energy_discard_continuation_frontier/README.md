@@ -51,3 +51,17 @@ Minimizing physical-card loss is a poor proxy for minimizing the cost of the res
 The solver's generic payment enumerator is a controlled model, not a comprehensive interpreter of all discard text. It assumes the attachment's provider profile is already active, does not handle typed or named Basic Energy discard clauses, and does not simulate subsequent opponent turns, Energy recovery, attack damage prevention, or game outcomes. Regidrago's continued survival is assumed when assessing next-attack readiness.
 
 The rules basis is the Advanced Player's Rulebook's multi-unit Ignition Energy example, its requirements for attack costs and copy attacks, and the source card texts. Legal reprint/ban adjudication outside the bundled snapshot is not proved by this demonstration.
+
+
+## Bounded exhaustive family: every unordered three-Basic mixture
+
+Holding one active Double Dragon Energy fixed, enumerate the three remaining Basic Energy types from the nine printed Basic types in the supplied Expanded snapshot. Colorless has no Basic Energy card in this pool. The three Basics form an unordered multiset, so their 165 mixtures are distinct type-composition states, **not equally probable opening hands**.
+
+- **165** possible three-Basic type multisets.
+- **81** initially pay Apex Dragon's Grass/Grass/Fire cost alongside one DDE.
+- Of these 81 initially attack-ready mixtures, **80** have the reversal: discarding DDE alone (minimum one physical card for Dragon Impact) breaks Apex readiness, whereas discarding a pair of Basics can preserve it.
+- Exactly **one** initially attack-ready mixture, Grass/Grass/Fire, retains Apex readiness after discarding DDE.
+
+Proof sketch: DDE's two flexible units can cover any two parts of Grass/Grass/Fire; the third required unit can be provided by a remaining Basic Grass or Basic Fire. After DDE alone is discarded, three Basics cover Grass/Grass/Fire precisely when their multiset is Grass/Grass/Fire. Among three Basics, retaining any Grass or Fire by discarding the other two leaves DDE plus that Basic able to pay Grass/Grass/Fire. This creates the 80-composition reversal family. The script exhaustively checks the reasoning with the shared typed-cost matcher.
+
+The aggregate is a controlled combinatorial statement. It cannot be interpreted as an observed rate in games or decks.
