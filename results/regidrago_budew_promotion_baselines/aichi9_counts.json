@@ -17,7 +17,8 @@
       "crispin": 1,
       "raihan": 1,
       "basic_grass": 4,
-      "basic_fire": 2
+      "basic_fire": 2,
+      "double_dragon_energy": 4
     },
     {
       "place": 12,
@@ -34,7 +35,8 @@
       "crispin": 1,
       "raihan": 2,
       "basic_grass": 4,
-      "basic_fire": 2
+      "basic_fire": 2,
+      "double_dragon_energy": 4
     },
     {
       "place": 13,
@@ -51,7 +53,8 @@
       "crispin": 1,
       "raihan": 1,
       "basic_grass": 4,
-      "basic_fire": 3
+      "basic_fire": 3,
+      "double_dragon_energy": 3
     },
     {
       "place": 14,
@@ -68,7 +71,8 @@
       "crispin": 1,
       "raihan": 2,
       "basic_grass": 4,
-      "basic_fire": 2
+      "basic_fire": 2,
+      "double_dragon_energy": 4
     },
     {
       "place": 18,
@@ -85,7 +89,8 @@
       "crispin": 0,
       "raihan": 1,
       "basic_grass": 2,
-      "basic_fire": 2
+      "basic_fire": 2,
+      "double_dragon_energy": 4
     },
     {
       "place": 20,
@@ -102,7 +107,8 @@
       "crispin": 1,
       "raihan": 1,
       "basic_grass": 4,
-      "basic_fire": 2
+      "basic_fire": 2,
+      "double_dragon_energy": 4
     },
     {
       "place": 21,
@@ -119,7 +125,8 @@
       "crispin": 2,
       "raihan": 1,
       "basic_grass": 4,
-      "basic_fire": 3
+      "basic_fire": 3,
+      "double_dragon_energy": 3
     },
     {
       "place": 27,
@@ -136,7 +143,8 @@
       "crispin": 1,
       "raihan": 1,
       "basic_grass": 4,
-      "basic_fire": 2
+      "basic_fire": 2,
+      "double_dragon_energy": 4
     },
     {
       "place": 32,
@@ -153,7 +161,8 @@
       "crispin": 1,
       "raihan": 1,
       "basic_grass": 4,
-      "basic_fire": 2
+      "basic_fire": 2,
+      "double_dragon_energy": 4
     }
   ]
 }
