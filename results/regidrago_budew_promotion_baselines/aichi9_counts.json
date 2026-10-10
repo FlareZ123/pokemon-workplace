@@ -1,0 +1,105 @@
+{
+  "event": "2026 CL Aichi Open League, nine published top-32 Regidrago lists",
+  "source_note": "Transcribed from Limitless decklist pages on 2026-10-10. Search entries count only Quick Ball, Nest Ball, Net Ball. Promotion counts are Guzma and Prime Catcher only. See README for condition caveats.",
+  "decklists": [
+    {
+      "place": 10,
+      "url": "https://limitlesstcg.com/decks/list/26816",
+      "budew": 2,
+      "quick_ball": 3,
+      "nest_ball": 0,
+      "net_ball": 0,
+      "guzma": 2,
+      "prime_catcher": 1,
+      "latias_ex": 1
+    },
+    {
+      "place": 12,
+      "url": "https://limitlesstcg.com/decks/list/26818",
+      "budew": 1,
+      "quick_ball": 4,
+      "nest_ball": 0,
+      "net_ball": 0,
+      "guzma": 2,
+      "prime_catcher": 0,
+      "latias_ex": 1
+    },
+    {
+      "place": 13,
+      "url": "https://limitlesstcg.com/decks/list/26819",
+      "budew": 1,
+      "quick_ball": 3,
+      "nest_ball": 0,
+      "net_ball": 0,
+      "guzma": 2,
+      "prime_catcher": 0,
+      "latias_ex": 1
+    },
+    {
+      "place": 14,
+      "url": "https://limitlesstcg.com/decks/list/26820",
+      "budew": 1,
+      "quick_ball": 4,
+      "nest_ball": 0,
+      "net_ball": 0,
+      "guzma": 2,
+      "prime_catcher": 0,
+      "latias_ex": 1
+    },
+    {
+      "place": 18,
+      "url": "https://limitlesstcg.com/decks/list/27424",
+      "budew": 1,
+      "quick_ball": 3,
+      "nest_ball": 0,
+      "net_ball": 0,
+      "guzma": 3,
+      "prime_catcher": 1,
+      "latias_ex": 1
+    },
+    {
+      "place": 20,
+      "url": "https://limitlesstcg.com/decks/list/27425",
+      "budew": 2,
+      "quick_ball": 4,
+      "nest_ball": 1,
+      "net_ball": 0,
+      "guzma": 2,
+      "prime_catcher": 0,
+      "latias_ex": 1
+    },
+    {
+      "place": 21,
+      "url": "https://limitlesstcg.com/decks/list/27426",
+      "budew": 1,
+      "quick_ball": 4,
+      "nest_ball": 0,
+      "net_ball": 0,
+      "guzma": 2,
+      "prime_catcher": 0,
+      "latias_ex": 1
+    },
+    {
+      "place": 27,
+      "url": "https://limitlesstcg.com/decks/list/27427",
+      "budew": 1,
+      "quick_ball": 4,
+      "nest_ball": 0,
+      "net_ball": 1,
+      "guzma": 2,
+      "prime_catcher": 1,
+      "latias_ex": 1
+    },
+    {
+      "place": 32,
+      "url": "https://limitlesstcg.com/decks/list/27428",
+      "budew": 2,
+      "quick_ball": 4,
+      "nest_ball": 0,
+      "net_ball": 0,
+      "guzma": 2,
+      "prime_catcher": 0,
+      "latias_ex": 1
+    }
+  ]
+}
