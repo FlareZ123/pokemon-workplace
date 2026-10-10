@@ -1,0 +1,30 @@
+name: Validate Stadium voluntary effect turn scope
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/stadium_effect_instance_usage.py"
+      - "tools/effect_evolution_source_gate.py"
+      - "tools/grand_tree_chain_execution.py"
+      - "results/stadium_effect_turn_scope/**"
+      - ".github/workflows/validate-stadium-effect-turn-scope.yml"
+  pull_request:
+    paths:
+      - "tools/stadium_effect_instance_usage.py"
+      - "tools/effect_evolution_source_gate.py"
+      - "tools/grand_tree_chain_execution.py"
+      - "results/stadium_effect_turn_scope/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/stadium_effect_turn_scope/reproduce.py
