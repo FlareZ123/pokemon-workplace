@@ -1,0 +1,26 @@
+name: Validate Prize deck prefix
+
+on:
+  push:
+    paths:
+      - "tools/prize_deck_prefix.py"
+      - "tools/prize_top_two_order.py"
+      - "tools/prize_top_draw_pool.py"
+      - "tools/prize_position_top_swap.py"
+      - "results/prize_deck_prefix/**"
+      - ".github/workflows/validate-prize-deck-prefix.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify variable-order prefix and independent physical oracle
+        run: python results/prize_deck_prefix/reproduce.py
