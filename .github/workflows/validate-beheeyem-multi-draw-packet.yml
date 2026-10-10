@@ -1,0 +1,22 @@
+name: Validate Beheeyem multi-draw packet frontier
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_multi_draw_packet.py"
+      - "results/beheeyem_multi_draw_packet/**"
+      - ".github/workflows/validate-beheeyem-multi-draw-packet.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce exact Prize and multi-draw packet probabilities
+        run: python3 results/beheeyem_multi_draw_packet/reproduce.py
+      - name: Independently replay physical deck and draws
+        run: python3 results/beheeyem_multi_draw_packet/monte_carlo.py
