@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.aichi_post_gnh_prize_reset import Prepared
 from tools.aichi_tagcall_payment_reachability import additional_tag_call
+from tools.aichi_gnh_discard_frontier import paid_gnh_states
 from tools.aichi_tagcall_bellelba_payload import (
     GNH, BELLELBA, supplement_with_bellelba, report, simulate,
 )
@@ -48,7 +49,31 @@ def fixtures():
         "Jirachi", (), True,
     )
     assert supplement_with_bellelba(locked) is None
-    print("Physical named-card conservation fixtures: PASS")
+
+    # Scarce-payment constructive counterexample: the held G&H is already
+    # consumed, Tag Call is the sole other initial hand card, and a real
+    # G&H payment needs two distinct extra cards.
+    scarce = Prepared(
+        Counter({"Tag Call":1}),
+        Counter({
+            GNH:1, BELLELBA:1,
+            "Technical Machine: Evolution":1, "Jet Energy":1,
+        }),
+        "Jirachi", (), True,
+    )
+    only_g = additional_tag_call(scarce)
+    with_b = supplement_with_bellelba(scarce)
+    assert only_g is not None and with_b is not None
+    assert not paid_gnh_states(scarce)
+    assert not paid_gnh_states(only_g)
+    paid = paid_gnh_states(with_b)
+    assert paid and any(
+        set(p.paid_with) == {GNH, BELLELBA}
+        and p.hand["Technical Machine: Evolution"] == 1
+        and p.hand["Jet Energy"] == 1
+        for p in paid if p.paid_with is not None
+    )
+    print("Physical named-card conservation and scarce-payment witnesses: PASS")
 
 
 def main():
