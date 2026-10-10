@@ -1,0 +1,19 @@
+name: Validate Bellelba physical payment witness
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/aichi_tagcall_bellelba_payment_witness/**"
+      - "tools/aichi_tagcall_bellelba_payload.py"
+      - ".github/workflows/validate-aichi-tagcall-bellelba-payment-witness.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/aichi_tagcall_bellelba_payment_witness/reproduce.py
