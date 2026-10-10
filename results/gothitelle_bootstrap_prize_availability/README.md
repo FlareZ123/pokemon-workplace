@@ -99,5 +99,5 @@ the achievable source count further.
 
 For related mechanisms see
 [dynamic Gothitelle bootstrap](../stadium_gothitelle_bootstrap/),
-[Prize-card modeling foundations](../prize_card_modeling/), and
+[Prize zone recovery](../prize_zone_recovery/), and
 [Grand Tree physical evolution chain](../grand_tree_materialized_chain/).
