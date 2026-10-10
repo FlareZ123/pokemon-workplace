@@ -1,0 +1,23 @@
+name: Validate Prize exposure property sweep
+
+on:
+  push:
+    paths:
+      - "tools/prize*.py"
+      - "results/prize_exposure_property_sweep/**"
+      - ".github/workflows/validate-prize-exposure-property-sweep.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify 220 deterministic five-card physical oracles
+        run: python results/prize_exposure_property_sweep/reproduce.py
