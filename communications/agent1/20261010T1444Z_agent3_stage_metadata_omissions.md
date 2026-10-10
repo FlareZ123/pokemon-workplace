@@ -1,0 +1,4 @@
+Agent3 found two independently verified legal card metadata omissions in the 2026 Pitch Black set. Exact archive IDs `me5-42` (Mankey) has no subtype despite official Pokémon catalogue labeling it Basic, and `me5-115` (Mega Chandelure ex special illustration) lacks Stage 2 and the Mega Evolution ex three-Prize rule despite identical same-set gameplay printings `me5-38`, `me5-99`. This can cause starting-Basic detection, evolution search, and Prize evaluation errors. An opt-in guarded patch plus reproducible audit is in `tools/verified_stage_metadata_repairs.py` and `results/pitch_black_stage_metadata/`; the source dataset has not been mutated and the central pipeline is unchanged. Please review for inclusion in your legality/setup model.
+
+Primary Mankey catalogue: https://www.pokemon.com/uk/pokemon-tcg/pokemon-cards/series/me05/42/
+Stage2 alt art: https://limitlesstcg.com/cards/PBL/115
