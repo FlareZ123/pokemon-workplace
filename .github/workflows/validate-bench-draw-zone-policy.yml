@@ -1,0 +1,23 @@
+name: Validate Bench support target-zone policy
+
+on:
+  push:
+    paths:
+      - 'tools/bench_draw_zone_policy.py'
+      - 'results/bench_draw_zone_policy/**'
+      - '.github/workflows/validate-bench-draw-zone-policy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Exact card-zone and belief-policy regression
+        run: python results/bench_draw_zone_policy/reproduce.py
