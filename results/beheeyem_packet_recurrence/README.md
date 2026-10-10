@@ -43,6 +43,16 @@ Each stage must be evaluated with physical Prize cards, card locations, real sea
 
 - [Prize-awarded packet continuation](../beheeyem_prize_packet/) integrates the complete six-Prize composition, uniformly chosen face-down Prize awards at the end of the first attack, and all T3 physically available packet/tutor/filler cards. Under the conditioned B4/TAE4/Computer Search/d1 setup, awarding no Prizes gives **0.662553%** two-packet access; awarding one gives **1.125764%** and awarding two **1.679597%**. The reward count is an **exogenous conditional KO outcome**, not an attack KO rate. The experiment demonstrates that Prize progression can directly improve next-turn resource access.
 
+
+
+### 7. Known Prize composition separates per-state Prize value from average draw value
+
+- [K1 Prize pickup versus extra draw](../beheeyem_prize_vs_draw/) compares the same r=1 Prize pickup and an additional blind draw at fixed first-packet hand, full six-Prize composition and shuffled T3 deck. With B4/TAE4/Computer Search/d1, 55.947740% of first-attack-capable K1 mass favors the Prize pickup, but its **aggregate** two-packet rate is 1.125764% versus **1.214069%** with an extra draw. Positive and negative state-specific gains have different magnitudes. A fully specified K1 state with three Prized B and three Prized T produces 100% packet access after one Prize and one draw, against 31/376 with two deck draws. Thus population-average draw quality can hide strategically decisive known-Prize states.
+
+### 8. Opposing Iono reverses the short-horizon Prize-supply effect
+
+- [Iono after Prize awards](../beheeyem_iono_prize/) directly models the opponent playing Iono on its reply: the player's current hand, including newly taken Prizes, is shuffled and bottomed; fresh top-deck draws equal **6-r** remaining Prizes, followed by the stipulated T3 draws. The earlier positive one-/two-Prize packet-access trend reverses for B4/TAE4/Computer Search/d1: opposing-Iono two-packet access becomes **3.675774%** at r=0, **2.820953%** at r=1 and **2.019569%** at r=2. This is an exogenous, opponent-enabled Supporter response, not a statement that taking Prizes is bad or that Iono is a good strategic choice overall.
+
 ## What has been proved versus assumed
 
 The listed numbers are mathematically exact **within their conditional probability models**, independently checked by physical-shuffle simulation and committed GitHub Actions where specified. The experiments do **not** currently provide actual match win rates or fully legal action-level play traces. The later models condition on an already staged, mature three-Basic board, all neutral filler discardable, no competing use of an ACE SPEC or Supporter, and exogenously provided T3 draws. The future-lock model additionally assumes K1 Prize knowledge and an exogenous lock probability independent of the player's policy.
