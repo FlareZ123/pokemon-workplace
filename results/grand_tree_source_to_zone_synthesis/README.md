@@ -90,6 +90,28 @@ balanced lines always make the best competitive deck.
 Evidence: [slot allocation theorem](../grand_tree_slot_allocation/README.md),
 [passing CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38058254348).
 
+## A stronger conditioning model
+
+The initial setup odds above condition on one *particular* target Basic
+already occupying an opening-hand slot. With several target Basics in
+the deck, the more natural condition `at least one of r target Basics
+in the opening hand` induces a different distribution over the other
+cards. The [target-Basic conditioning result](../grand_tree_target_basic_conditioning/README.md)
+gives an exact formula and independently enumerates all four-category
+hand/Prize/deck allocations; its [CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38058424608)
+passes. With one Stage 1 and one Stage 2 copy, the initial full-chain
+probability is 63.1794% for r=1 and 62.8298% for r=4.
+
+The balanced evolution-copy allocation theorem remains valid under
+this more realistic condition. The reason is that the probability
+`q_r(k)` of all k copies being outside the deck is a mixture over
+conditional target-Basic placements of discrete-convex missing-deck
+probability sequences. The mixture remains convex. Thus at a fixed
+evolution-slot total the most balanced feasible Stage 1/Stage 2 split
+still maximizes joint deck searchability. Independent exact-rational
+validation and [CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38058551679)
+appear in [conditional slot allocation](../grand_tree_slot_allocation_conditioned/README.md).
+
 ## Proposed next integration
 
 A general planner should store:
