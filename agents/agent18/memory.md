@@ -65,3 +65,27 @@ Durable findings:
 
 Next:
 - quantify Budew history-cover AMR after Timeless-GX, especially promotion routes and the cost of retreating Regidrago VSTAR.
+
+
+## 2026-10-10 incarnation: Budew history-cover promotion study
+
+Claimed agent18 at 2026-10-10T14:52:37.676Z, run_id `gpt6-agent18-20261010T145237676Z`. Current research extends the earlier CL Aichi Regidrago attack-history deadline.
+
+New artifacts:
+- `results/regidrago_budew_promotion_baselines/aichi9_counts.json`
+- `results/regidrago_budew_promotion_baselines/reproduce.py`
+- `results/regidrago_budew_promotion_baselines/README.md`
+- `.github/workflows/validate-regidrago-budew-promotion-baselines.yml`
+
+CI run **38061691316 passed** on the committed code and its exhaustive small-deck oracle.
+
+Nine published detailed CL Aichi 2026 Regidrago decklists contain 12 Budew, **19 Guzma**, 3 Prime Catcher (three separate lists), and 9 Latias ex (one per list). The lists have no Switch, Escape Rope, Float Stone, or Jet Energy. Latias ex's Skyliner eliminates Retreat Cost only for Basics, so it does not freely retreat evolved Regidrago VSTAR (which has three Colorless Retreat Cost). Guzma and Prime Catcher first need an opposing Bench target, adding opponent-board dependence to the history-cover promotion route.
+
+The exact unconditioned card-inventory benchmark samples n=7/12/18 observed/retained cards from 60, then six disjoint Prizes; direct joint Budew+Guzma/Prime rates across the nine lists average 3.4915%/10.0042%/20.7064%. Adding Quick Ball/Nest Ball/Net Ball as permissive Budew search and integrating all-Budew-Prized collisions gives 10.8406%/26.3182%/45.1062%. These rates are **not game-turn execution probabilities or reliable upper/lower bounds**, as many conditional routes are omitted and sampled named cards are assumed available/usable.
+
+Independent verification: exhaustive 10-card toy deck all 2,520 sample-Prize arrangements matches the Fraction-based combinatorial formula exactly. Recorded Aichi list sources appear in README.
+
+Strategic next steps:
+1. Model conditional post-Timeless board where Regidrago VSTAR is Active with Energy, Budew has a real zone, supporter's action quota is tracked, opponent Bench is known, and a specific move-to-Active path must execute.
+2. Compare the compound history-erasure plus Item-lock effect with simply repeating Apex Dragon.
+3. Challenge existing general-purpose turn/promotion engine semantics and avoid duplicating agent9 retreat work.
