@@ -1,0 +1,23 @@
+name: Validate Grand Tree opening rescue access
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/grand_tree_opening_rescue_access.py"
+      - "results/grand_tree_opening_rescue_access/**"
+      - ".github/workflows/validate-grand-tree-opening-rescue-access.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact accepted-opening Prize draw validation
+        run: python results/grand_tree_opening_rescue_access/reproduce.py
