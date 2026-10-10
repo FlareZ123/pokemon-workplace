@@ -1,0 +1,25 @@
+name: Validate Retreat payment symmetry orbits
+
+on:
+  push:
+    paths:
+      - "tools/retreat_payment_symmetry.py"
+      - "results/retreat_payment_symmetry/**"
+      - ".github/workflows/validate-retreat-payment-symmetry.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Cross-check physical payment orbit equivalence
+        run: |
+          python results/retreat_payment_symmetry/reproduce.py
+          python results/retreat_payment_branch_complexity/reproduce.py
