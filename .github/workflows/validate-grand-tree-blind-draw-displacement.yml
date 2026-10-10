@@ -1,0 +1,28 @@
+name: Validate Grand Tree blind-draw displacement
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/grand_tree_blind_draw_displacement.py"
+      - "tools/grand_tree_initial_zone_probability.py"
+      - "results/grand_tree_blind_draw_displacement/**"
+      - ".github/workflows/validate-grand-tree-blind-draw-displacement.yml"
+  pull_request:
+    paths:
+      - "tools/grand_tree_blind_draw_displacement.py"
+      - "tools/grand_tree_initial_zone_probability.py"
+      - "results/grand_tree_blind_draw_displacement/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/grand_tree_blind_draw_displacement/reproduce.py
