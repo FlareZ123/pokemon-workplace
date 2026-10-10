@@ -1,0 +1,24 @@
+name: Validate Grand Tree Prize-to-deck rescue
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gladion_communication_material_bridge.py"
+      - "tools/grand_tree_prize_rescue_distribution.py"
+      - "results/grand_tree_prize_rescue_bridge/**"
+      - ".github/workflows/validate-grand-tree-prize-rescue-bridge.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce physical and combinatorial Prize bridge
+        run: python results/grand_tree_prize_rescue_bridge/reproduce.py
