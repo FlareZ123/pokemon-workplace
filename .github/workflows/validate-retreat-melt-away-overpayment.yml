@@ -1,0 +1,26 @@
+name: Validate Melt Away Retreat overpayment
+
+on:
+  push:
+    paths:
+      - "tools/retreat_environment_modifiers.py"
+      - "results/retreat_melt_away_overpayment/**"
+      - ".github/workflows/validate-retreat-melt-away-overpayment.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify zero-attached-Energy no-Retreat-Cost continuation
+        run: |
+          python results/retreat_melt_away_overpayment/reproduce.py
+          python results/retreat_environment_modifiers/reproduce.py
+          python results/retreat_action_enumeration/exhaustive.py
