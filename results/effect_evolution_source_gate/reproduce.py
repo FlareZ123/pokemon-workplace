@@ -87,7 +87,9 @@ def main() -> None:
     spent_supporter = SourceActionContext(
         is_players_first_turn=True,
         went_first=False,
-        budget=TurnActionBudget(supporter_plays_used=1),
+        window=fresh_turn(
+            action_budget=TurnActionBudget(supporter_plays_used=1)
+        ),
     )
     assert not source_action_available(salvatore, spent_supporter)
 
