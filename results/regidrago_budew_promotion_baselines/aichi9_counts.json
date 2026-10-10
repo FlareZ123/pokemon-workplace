@@ -1,6 +1,6 @@
 {
   "event": "2026 CL Aichi Open League, nine published top-32 Regidrago lists",
-  "source_note": "Transcribed from Limitless decklist pages on 2026-10-10. Search entries count only Quick Ball, Nest Ball, Net Ball. Promotion counts are Guzma and Prime Catcher only. See README for condition caveats. Hisuian Heavy Ball counts additionally recorded for the joint Prize collision audit.",
+  "source_note": "Transcribed from Limitless decklist pages on 2026-10-10. Search entries count only Quick Ball, Nest Ball, Net Ball. Promotion counts are Guzma and Prime Catcher only. See README for condition caveats. Hisuian Heavy Ball counts additionally recorded for the joint Prize collision audit. The Kyurem Shrouded Fable print is additionally checked in all nine pages for the adjacent bench-snipe study.",
   "decklists": [
     {
       "place": 10,
@@ -12,7 +12,8 @@
       "guzma": 2,
       "prime_catcher": 1,
       "latias_ex": 1,
-      "hisuian_heavy_ball": 1
+      "hisuian_heavy_ball": 1,
+      "kyurem_sv6pt5_47": 1
     },
     {
       "place": 12,
@@ -24,7 +25,8 @@
       "guzma": 2,
       "prime_catcher": 0,
       "latias_ex": 1,
-      "hisuian_heavy_ball": 1
+      "hisuian_heavy_ball": 1,
+      "kyurem_sv6pt5_47": 1
     },
     {
       "place": 13,
@@ -36,7 +38,8 @@
       "guzma": 2,
       "prime_catcher": 0,
       "latias_ex": 1,
-      "hisuian_heavy_ball": 1
+      "hisuian_heavy_ball": 1,
+      "kyurem_sv6pt5_47": 1
     },
     {
       "place": 14,
@@ -48,7 +51,8 @@
       "guzma": 2,
       "prime_catcher": 0,
       "latias_ex": 1,
-      "hisuian_heavy_ball": 1
+      "hisuian_heavy_ball": 1,
+      "kyurem_sv6pt5_47": 1
     },
     {
       "place": 18,
@@ -60,7 +64,8 @@
       "guzma": 3,
       "prime_catcher": 1,
       "latias_ex": 1,
-      "hisuian_heavy_ball": 2
+      "hisuian_heavy_ball": 2,
+      "kyurem_sv6pt5_47": 1
     },
     {
       "place": 20,
@@ -72,7 +77,8 @@
       "guzma": 2,
       "prime_catcher": 0,
       "latias_ex": 1,
-      "hisuian_heavy_ball": 1
+      "hisuian_heavy_ball": 1,
+      "kyurem_sv6pt5_47": 1
     },
     {
       "place": 21,
@@ -84,7 +90,8 @@
       "guzma": 2,
       "prime_catcher": 0,
       "latias_ex": 1,
-      "hisuian_heavy_ball": 1
+      "hisuian_heavy_ball": 1,
+      "kyurem_sv6pt5_47": 1
     },
     {
       "place": 27,
@@ -96,7 +103,8 @@
       "guzma": 2,
       "prime_catcher": 1,
       "latias_ex": 1,
-      "hisuian_heavy_ball": 1
+      "hisuian_heavy_ball": 1,
+      "kyurem_sv6pt5_47": 1
     },
     {
       "place": 32,
@@ -108,7 +116,8 @@
       "guzma": 2,
       "prime_catcher": 0,
       "latias_ex": 1,
-      "hisuian_heavy_ball": 1
+      "hisuian_heavy_ball": 1,
+      "kyurem_sv6pt5_47": 1
     }
   ]
 }
