@@ -309,3 +309,51 @@ When Jirachi begins Active and obtains Secret Box by Stellar Wish, its seven-car
 This is a constructive hand-card capacity argument specific to the compressed first-turn endpoint and fixed Prize layout. The exact state enumeration verifies the claim even across all viable opening card identities, Jirachi top-five alternatives and player selections in the source action model. Different matchup-dependent protected-card assumptions could invalidate the argument's claim of disposable extras in real competitive play.
 
 The distinction is useful for AMR: Stellar Wish gives theoretical access to Box, but acquisition timing changes the number of *other* starting-hand cards available for the subsequent two sequential discard gates, and can eliminate Item output's marginal payment-financing value.
+
+
+## Item indispensability can persist with an Artazon still available
+
+A new counterexample invalidates the conjecture that all six non-TM Tool and Artazon cards must be Prized before Secret Box's Item output becomes indispensable.
+
+### Physical construction
+
+Take the Aichi 60-card list with Grand Tree replaced by Secret Box. Prize **Stealthy Hood ×3, Counter Gain, one of two Artazon, and one other chosen card**. Ensure the other Artazon and both TM: Evolution copies are already held across the opening hand and natural first draw. Start Oddish Active with Secret Box and exactly three designated generic nonBasic fillers available for its mandatory pre-search discard. Other key targets remain searchable.
+
+A concrete state with an Artazon and G&H as the last two Prizes has the physical opening:
+
+- Oddish; Secret Box; Technical Machine: Evolution; Artazon; Pidgeotto; Gloom; Herdier;
+- Prizes: Stealthy Hood ×3; Counter Gain; Artazon; Guzma & Hala;
+- First natural draw: second Technical Machine: Evolution.
+
+After spending three disposable fillers to play Secret Box, the remaining hand contains **two TM: Evolution and one Artazon**. Artazon is necessary to Bench Bunnelby. One TM must remain to establish the modeled core. The Tool search yields no extra Tool: four non-TM Tools are Prized and both TMs are already held. The Stadium search yields no extra Stadium, since its second Artazon is Prized. G&H from the Supporter output cannot pay its optional two-card discard without sacrificing a required held piece.
+
+Secret Box's **Item search** fetches Tag Call. Tag Call can fetch the spare Bellelba & Brycen-Man and an additional G&H. The extra TAG TEAM and one spare TM can pay G&H's two-card cost, enabling the Jet Energy search. Held Artazon puts Bunnelby onto the Bench, leaving one TM and Jet Energy in hand. When Bellelba is itself Prized, Tag Call can fetch two extra G&H copies and use one as payment instead.
+
+### Full verified physical family and exact lower bound
+
+The [physical-family reproducer](one_artazon_item_family.py) tests the original **unmodified Aichi baseline/full-Box/no-Item/Item-only action planner** for representative physical card allocations on every one of **102** possible Prize layouts in the family: all four non-TM Tools, one of two Artazon, plus any one of 51 other physical cards excluding both TM copies, the ACE SPEC and the other Artazon. It also checks both physical TM ordering choices, one or both TM starting in the opener, remaining TM on the natural draw, alternative Oddish copies, and all feasible combinations of 26 generic source fillers grouped by their deck-compression role. [GitHub Actions 38095153924 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38095153924).
+
+The 26 nonBasic generic filler cards are ten other Supporters, three other Special Energy and thirteen cards whose identities are irrelevant to the immediate-core planner. All their variants become the same hand class. Their differences in remaining deck do not affect this witness's subsequent choices: G&H remains searchable, Bellelba or surplus G&H remains searchable for Tag Call, and Jet remains searchable. The initial Active always stays Oddish.
+
+For each extra Prize identity, let **F** be 26, or 25 when that Prize consumes one generic filler; let **O** be two available physical Oddish, or one if the extra Prize is an Oddish. There are two disjoint starting sequences:
+
+- One TM in the opening, the other on the first draw: **2 O C(F,3)** physical unordered-opener/first-draw selections.
+- Both TM in the opening, a third distinct generic filler on the first draw: **O C(F,2)(F−2)** selections.
+
+Their sum is **5 O C(F,3)**. For each of two choices of which Artazon is Prized, the 51 permissible other Prize identities consist of 26 generic fillers, two Oddish, and 23 other cards. Summing all physical possibilities over both Artazon choices gives
+
+**2 × [52×5×C(25,3) + 48×5×C(26,3)] = 2,444,000**.
+
+Dividing by **C(60,6) C(54,7) 47 A**, where A is the seven-card ordinary-Basic-opening acceptance probability, yields the exact positive-mass **Item-necessity lower bound**
+
+**5 / 734,379,410,688 ≈ 6.808469746334218×10⁻¹²** among accepted starts.
+
+It is disjoint from the earlier **all-six-other-Tools/Artazon-Prized** exact event of **3.064768956826847×10⁻¹²**, so the proven global Item-indispensability model probability is at least
+
+**115,670,219,051 / 11,715,529,476,053,936,332,800 ≈ 9.873238703161065×10⁻¹²**.
+
+This remains a lower bound. The true full-output versus disabled-Item miss probability over *all* accepted openings may be substantially larger. The model still prices every generic filler as disposable and ignores later-turn cost.
+
+### Strategic interpretation
+
+A card physically available in hand can remain strategically indispensable because its immediate assigned role prevents it from funding another action. Here Artazon's Bench-search function takes precedence over its use as discard fodder. A search connector with wide reach can therefore create an apparently abundant hand but still fail to pay G&H's two-card cost. The Item route solves that scarcity indirectly by producing an extra TAG TEAM Supporter. This is an explicit resource-allocation, DCI and connector-contention phenomenon.
