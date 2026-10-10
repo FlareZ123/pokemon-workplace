@@ -41,8 +41,8 @@ class ArvenPrefetchOpening:
             raise ValueError("Opening size exceeds deck")
         if self.prizes > self.total-self.opening:
             raise ValueError("Prize size exceeds deck")
-        if self.total-self.opening-self.prizes < 2:
-            raise ValueError("Two ordinary turn draws require two cards")
+        if self.total-self.opening-self.prizes < 3:
+            raise ValueError("Arven prefetch plus two natural draws require three deck cards")
         if not nchoosek(self.total,self.opening) > nchoosek(
             self.total-self.basics,self.opening
         ):
