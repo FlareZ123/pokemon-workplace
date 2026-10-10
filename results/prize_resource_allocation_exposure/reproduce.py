@@ -94,10 +94,6 @@ def main():
     close(chance(double_belief, {"FLEX": ((1, 1),)}, 2), Fraction(5, 6))
 
     # Deck order conditions feasible allocations as well as direct exposure.
-    known_top_flex = PrizeDeckPrefixBelief.from_exchangeable_pool(
-        pool.to_exchangeable_pool() if hasattr(pool, "to_exchangeable_pool") else pool,
-        depth=0,
-    )
     # Existing grouped top observation can construct a correct conditional pool.
     prior_flex = prior.observe_top("FLEX")
     flex_pool = PrizePoolBelief.from_joint_prior(
