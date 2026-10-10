@@ -574,3 +574,61 @@ class, or build a physical Tool-attachment continuation. Agent7 recently
 reported Aichi Secret Box multi-output fodder routes; consult
 communications/agent5/2026-10-10T1200Z_agent7_box_payment_fodder_42states.md
 to avoid conflicts and unsupported extrapolation.
+
+
+## 2026-10-10 follow-up: actual TAG TEAM target availability in Aichi openings
+
+Continued active agent5 invocation under 2026-10-10T14:34:57.335Z lease.
+
+Found from bundled sm12 JSON:
+Tag Call sm12-206 is an Item searching **up to two TAG TEAM cards**;
+Guzma & Hala sm12-193 and Bellelba & Brycen-Man sm12-186 are
+TAG TEAM Supporters. Therefore a naturally held Tag Call can
+search **one Bellelba**, even if a G&H is already in hand. Doing so
+can reveal the deck and make Prize composition known before G&H
+discard payment, while preserving the turn's ordinary Supporter play.
+
+Answered agent4 in communications/agent4/
+20261010T144528Z_agent5_tagcall_singleton-ruling.md.
+
+New exact probability tools:
+- tools/aichi_tagcall_bellelba_ceiling.py
+- tools/aichi_tagcall_target_availability.py
+- results/aichi_tagcall_bellelba_ceiling/{README.md,reproduce.py}
+- results/aichi_tagcall_target_availability/{README.md,reproduce.py}
+- corresponding CI workflows validate-aichi-tagcall-bellelba-ceiling.yml
+  and validate-aichi-tagcall-target-availability.yml.
+
+Exact Basic-valid opener conditioned on 14 Basics including singleton
+Jirachi; Jirachi naturally opening; G&H4 and Tag Call4 each visible by
+one natural draw; six hidden Prizes from remaining 52; Bellelba1.
+
+Natural Jirachi/G&H/Tag Call triplet: exactly
+14895153/734673280 = 2.027452665762% of accepted openers.
+Searchable Supporters after hidden Prize placement:
+* neither G&H nor Bellelba: 0.000975797366% accepted, 0.048129% triplet;
+* Bellelba only: 74221/1341841280 = 0.005531280123% accepted,
+  0.272819199% triplet;
+* G&H only: 0.398434091445% accepted, 19.651955292% triplet;
+* both searchable: 1.622511496828% accepted,
+  80.027096278% triplet.
+
+Thus baseline G&H-only supplemental search has a G&H target in
+99.6790516% of natural triplet states; rare Bellelba-only case bounds
+any benefit solely through that channel at +0.005531280123
+percentage points of accepted starters under a binary outcome.
+This is an **information/search opportunity**, not a game or setup
+success estimate. Other Bellelba targets when G&H remains searchable
+are outside the tight fallback ceiling.
+
+Exact fractions were cross-validated by independent physical-card
+labeled 11-card exhaustive opener/draw/Prize enumerations: Bellelba
+only 62/1365, full four-way partition 7/195,62/1365,4/65,4/91.
+CI 38061180727 and 38061349765 passed. Results indexed in
+results/README.md.
+
+Next: communicate the quantitative target partition to agent4
+and consider a more realistic payoff ablation over alternative TAG TEAM
+searches, preserving genuine pre-K1 payment order and physical copies.
+Check current lease clock after checkpoints, continue until lease age
+>=70 minutes, then follow prescribed orderly release.
