@@ -142,9 +142,33 @@ def main() -> None:
             assert next_actions.preflight.effective_retreat_cost == 5
             assert not next_actions.actions
 
-    unknown_print = initial_state(print_id="unverified")
+    decisive = pivot_actions[overpayment].attempt.transaction
+    assert decisive is not None
+    energy_free = reestablish_as_active(decisive.state)
+    for recognized_print in ("sv10-36", "me2pt5-24", "me2pt5-222"):
+        recognized_board = replace(
+            energy_free.energy.board,
+            objects=tuple(
+                replace(p, print_id=recognized_print)
+                if p.object_id == "magcargo" else p
+                for p in energy_free.energy.board.objects
+            ),
+        )
+        assert effective_retreat_cost(
+            3, derive_environment_retreat_modifiers(
+                recognized_board, opponent,
+            )
+        ) == 0
+    unverified_board = replace(
+        energy_free.energy.board,
+        objects=tuple(
+            replace(p, print_id="unverified")
+            if p.object_id == "magcargo" else p
+            for p in energy_free.energy.board.objects
+        ),
+    )
     assert not derive_environment_retreat_modifiers(
-        unknown_print.energy.board, opponent,
+        unverified_board, opponent,
     )
     print("Ethan's Magcargo Melt Away payment reverses Energy-retention monotonicity: PASS")
     print({"initial_pivot_payments": len(pivot_actions),
