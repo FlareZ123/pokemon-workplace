@@ -1,0 +1,20 @@
+name: Validate opponent source-lock gust arrivals
+
+on:
+  push:
+    paths:
+      - tools/opponent_source_lock_schedule.py
+      - tools/multisource_opponent_gust_race.py
+      - results/opponent_gust_source_locks/**
+      - .github/workflows/validate-opponent-gust-source-locks.yml
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m results.opponent_gust_source_locks.reproduce
