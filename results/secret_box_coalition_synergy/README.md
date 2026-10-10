@@ -109,6 +109,20 @@ Thus 20,783 of 20,785 incremental cases have at least two alternative minimal ou
 
 A two- or three-route antichain is a mathematical description of successful category subsets for this particular endpoint. It does not guarantee that any of those routes preserves the same discarded resources, board position, or later match utility.
 
+## Payment-fodder mechanisms in the two 42-state alternative routes
+
+The [full 500k named-starting-card trace](trace_small_pair_witnesses.py) verifies both remaining inclusion-minimal two-category alternatives. [Full CI run 38050016278 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38050016278).
+
+**Tool + Supporter, 42 states.** All 42 begin with TM: Evolution already held, no searchable TM copies remaining, and Jet Energy absent but searchable. Secret Box itself is held. In each state a different Pokémon Tool is searchable: Stealthy Hood remains in deck in 42/42, Counter Gain in 40/42. Under the existing compressed search rule, with TM already held, the Tool output obtains a different Tool and places it in the generic "other" category. The Supporter output obtains Guzma & Hala, which can search Jet Energy using its two-other-card discard mode. The otherwise unwanted Tool becomes newly available hand material to pay that later discard cost.
+
+The named-card decomposition matters: in two of these states, Counter Gain is no longer searchable while Stealthy Hood remains. The planner merges both into "other" and treats either as available discard material. This exposes an unmodeled strategic opportunity cost: Stealthy Hood may be valuable future protection in lock matchups. The audit measures immediate setup access, not whether sacrificing that Tool is strategically optimal.
+
+**Supporter + Stadium, 42 states.** All 42 already have Bunnelby accessible from the starting hand or Active position. Secret Box is held and Artazon remains searchable. In 24 states TM is held and Jet missing; in the remaining 18 Jet is held and TM missing. Guzma & Hala can fetch the missing payload after its two-card discard. Because Bunnelby is already accessible, Artazon from Secret Box's Stadium output is unnecessary for the immediate Basic search and can serve as later payment material. Thus a Stadium search may matter even when the Stadium is never played.
+
+Exactly 24 states have both Tool+Supporter and Supporter+Stadium inclusion-minimal backup routes: different resources can fund the same later Supporter. A stateful optimizer must account for the differing discardability of retrieved Tool and Stadium cards.
+
+**Jet-in-hand equivalence.** A separate [full 500k statewise regression](trace_jet_output_equivalence_full.py) confirms that, within these 20,785 incremental successes, Tool+Stadium-only succeeds exactly when Jet Energy was already in the starting hand. The four outcomes are 4,849 both true, 15,936 both false, and zero discordant states. This is a sample-level policy equivalence under the compressed Aichi model.
+
 ## Arbitrary correlation: sharp availability bounds
 
 Independent category availability is an illustrative model. We can remove independence while keeping a common marginal probability `q` that each of Item, Tool, Supporter, and Stadium is enabled.
