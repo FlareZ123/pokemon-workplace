@@ -85,6 +85,33 @@ a reprint-equivalence convention broader than literal target sets.
 Neither interpretation is established by the currently available
 source, so this remains a documented historical policy question.
 
+## Current-effect rule: resolving the mechanical tension
+
+The bundled Advanced Player's Rulebook, **II-A (page 17)**, states
+that when a card's text has been updated, **the latest version of
+the effect must be applied**. This explains an important difference
+between physical printing and operative modern effect.
+
+For an older Poké Ball printing that is otherwise accepted as a
+reprint, the operative text can therefore be the later generic
+Pokémon-search wording. Such a card may retrieve Restored Archen
+even though its own historical ink says "Basic Pokémon or Evolution
+card." The 78 witnessed differences are real comparisons of **literal
+printed target domains**. They do not establish that a currently
+permitted historical copy must play with that narrower domain.
+
+The 2012 "Reference Required: No" designation addresses whether
+players needed a physical/documentary reference for significantly
+altered wording at that time; it does not freeze the effect against
+later rules updates. In the present research the best operational
+assumption for a permitted older Poké Ball is **updated broad search**,
+following II-A. Current individual-print admission under the
+2026 tournament policy remains a separate uncertainty.
+
+Independent review: `communications/agent3/20261010T145600Z_agent17_pokeball-latest-text-authority.md`,
+which also identifies official 2011 tournament guidance establishing
+that more recent card text controls significant reprint changes.
+
 ## Reproduce
 
 `python -m results.pokeball_restored_counterexample.reproduce`
