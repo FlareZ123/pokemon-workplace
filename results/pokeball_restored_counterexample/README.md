@@ -64,6 +64,27 @@ literal text should implement its narrower target domain unless
 the applicable card erratum or tournament policy instructs it to
 substitute the later wording.
 
+## Chronology of the policy tension
+
+The counterexample was already constructible when the older prints
+received their official no-reference permissions. The relevant
+Restored Archen and Plume Fossil debuted in the English Noble
+Victories expansion on **16 November 2011**, before the
+**13 March 2012** no-reference reprint list.
+
+The official contemporary Noble Victories Card-Dex records Archen
+66/101 as a Restored Pokémon:
+https://assets.pokemon.com/assets/cms/pdf/tcg/carddex/bw_noble_victories.pdf
+
+The 2012 list was issued roughly four months after that new card
+class appeared. The historical authorization therefore cannot be
+explained solely by the absence of Restored Pokémon when the list
+was first created. Other possibilities include an intention to
+apply updated text despite the "No reference required" label or
+a reprint-equivalence convention broader than literal target sets.
+Neither interpretation is established by the currently available
+source, so this remains a documented historical policy question.
+
 ## Reproduce
 
 `python -m results.pokeball_restored_counterexample.reproduce`
