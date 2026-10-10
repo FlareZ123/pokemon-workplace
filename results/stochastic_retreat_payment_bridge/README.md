@@ -14,7 +14,7 @@ A prior [restricted-objective minimal-payment result](../typed_retreat_payment_p
 
 The bundled card data verifies Double Colorless Energy `bw11-113` provides two Colorless Energy, and Switch `sv1-194` is the relevant switching Item. The advanced rulebook distinguishes normally Retreating by discarding Energy from using an Item to Switch, and permits discarding one multi-unit Energy card to satisfy smaller requirements.
 
-Both players draw only their one normal card per turn from separate finite piles, see only drawn identities, and optimize expected number of attacks for an attacker to win six Prizes. Opponent attacks, normal Energy attachments, Trainer search, Prize draws, Pokémon death timing beyond one-hit KO, alternate effects, evolving, ability locks and switching trigger effects are excluded. Static Item lock affects Switch but does not prevent ordinary payable Retreat.
+Both players draw only their one normal card per turn from separate finite piles and optimize expected number of attacks for an attacker to win six Prizes. **Information-set caveat:** The defender's adversarial policy is given the attacker's current Boss count in hand, as well as category-level deck counts. Such opponent-hand information is concealed in ordinary play. Results therefore characterize a full-current-count information game and do not establish optimal outcomes for private opponent hands. Opponent attacks, normal Energy attachments, Trainer search, Prize draws, Pokémon death timing beyond one-hit KO, alternate effects, evolving, ability locks and switching trigger effects are excluded. Static Item lock affects Switch but does not prevent ordinary payable Retreat.
 
 ## Constructed physical-Energy counterexample
 
