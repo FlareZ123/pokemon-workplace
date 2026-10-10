@@ -63,3 +63,14 @@ The probability program uses exact \`Fraction\` arithmetic. The independent repr
 Run \`python results/bench_quickball_crobat_dedenne/reproduce.py\` from the repository root with Python 3.11+.
 
 This is a **conditional, target-only** experiment, not a deck's real setup rate or win rate. Its search-out is guaranteed live and its discard cost is easy by assumption. It does not model whether another use of Quick Ball would be better, Item/Ability lock, secondary uses of drawn cards, matchup interaction, pickup, search alternatives, or the tactical value of the target in another zone.
+
+## Information timing: before versus after Quick Ball payment
+
+There are two distinct moments when K1 composition knowledge may become available:
+
+- **K1 acquired by this Quick Ball search:** When K is missing from hand, Quick Ball and F must first be consumed to search Crobat. If the inspection then proves K is Prized, both support entries can be skipped. Quick Ball is still spent on `51/52` cases.
+- **K1 acquired from an earlier search:** If a previous deck inspection already established K was Prized, the target-only policy can skip the **Quick Ball payment itself**. Its expected Quick Ball uses fall to `45/52`, saving `6/52` payments compared with the first timing.
+
+The two K1 variants have identical modeled final-hand target probability and Bench occupancy; the difference is the timing of information relative to spending an Item and one discard card. A prior search's own costs and constraints are omitted. This is a concrete illustration of how two states with identical eventual Prize knowledge can have different resource costs.
+
+The physical test now checks `Counter` conservation across hand, live deck, Bench and discard after every path. Introducing that invariant exposed a test-harness error: one Dedenne draw had been added to hand without removing the same six cards from its deck list. The harness has been corrected. The exact target-retention and Bench calculations were unchanged, and the stronger conservation regression passes locally.
