@@ -1,0 +1,23 @@
+name: Validate Quick Ball Crobat incidence
+
+on:
+  push:
+    paths:
+      - 'tools/bench_quickball_crobat_incidence.py'
+      - 'results/bench_quickball_crobat_incidence/**'
+      - '.github/workflows/validate-bench-quickball-crobat-incidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Exact opening Prize material oracle
+        run: python results/bench_quickball_crobat_incidence/reproduce.py
