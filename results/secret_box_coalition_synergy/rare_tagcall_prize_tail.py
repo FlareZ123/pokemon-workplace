@@ -33,7 +33,7 @@ def accepted_opening_prize_collapse_probability() -> Fraction:
     starting_valid = 1 - Fraction(
         comb(cards - basics, hand_count), comb(cards, hand_count)
     )
-    valid_given_prized = 1 - Fraction(
+    # The opening draws uniformly from the 56 non-Tag-Call cards. The two\n    # other Prize cards can be Basic; never assume all Basics remain among 54.\n    valid_given_prized = 1 - Fraction(
         comb(cards - tag_calls - basics, hand_count),
         comb(cards - tag_calls, hand_count),
     )
@@ -72,7 +72,7 @@ def sample_accepted_prize_collapse(trials: int = 500_000) -> tuple[int, int, int
 
 def main() -> None:
     exact = accepted_opening_prize_collapse_probability()
-    assert exact == Fraction(5_975, 187_007_744)
+    assert exact == Fraction(246_321, 7_805_903_600)
     expected = exact * 500_000
     sampled = sample_accepted_prize_collapse()
     print("Exact P(all four Tag Call Prized | accepted starter) =", exact)
