@@ -262,6 +262,16 @@ def main():
     )
     unconditional = exact_prizes * conditional
 
+    # Pin the exact result, including the surprising absence of any
+    # Item-required state acquired only through Jirachi -> Secret Box.
+    assert conditional == Fraction(35905391051, 243063372123000)
+    assert unconditional == Fraction(35905391051, 11715529476053936332800)
+    assert by_access[("Jirachi", "Stellar Box")] == 0
+    assert Fraction(by_access[("Jirachi", "Box held")], accepted_weight) == \
+        Fraction(24944549, 2859569083800)
+    assert Fraction(by_access[("non-Jirachi", "Box held")], accepted_weight) == \
+        Fraction(517589, 3723739500)
+
     for (active, access), weight in sorted(by_access.items()):
         print("source", active, access,
               "conditional_given_prizes", Fraction(weight, accepted_weight))
