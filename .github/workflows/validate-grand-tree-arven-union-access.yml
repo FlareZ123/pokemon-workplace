@@ -1,0 +1,23 @@
+name: Validate Grand Tree Arven union access
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/grand_tree_arven_union_access.py"
+      - "results/grand_tree_arven_union_access/**"
+      - ".github/workflows/validate-grand-tree-arven-union-access.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Compare exact categories with physical draw worlds
+        run: python results/grand_tree_arven_union_access/reproduce.py
