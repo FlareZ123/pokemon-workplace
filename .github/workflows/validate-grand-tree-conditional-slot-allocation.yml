@@ -1,0 +1,28 @@
+name: Validate Grand Tree conditional Stage allocation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/grand_tree_slot_allocation.py"
+      - "tools/grand_tree_target_basic_conditioning.py"
+      - "results/grand_tree_slot_allocation_conditioned/**"
+      - ".github/workflows/validate-grand-tree-conditional-slot-allocation.yml"
+  pull_request:
+    paths:
+      - "tools/grand_tree_slot_allocation.py"
+      - "tools/grand_tree_target_basic_conditioning.py"
+      - "results/grand_tree_slot_allocation_conditioned/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/grand_tree_slot_allocation_conditioned/reproduce.py
