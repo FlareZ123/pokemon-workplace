@@ -15,6 +15,12 @@ def main():
     assert result.candidate_bellelba > 100
     for key in result.baseline:
         assert result.extended[key] >= result.protected[key] >= result.baseline[key]
+    max_discard_premium = max(
+        (result.extended[key]-result.protected[key] for key in result.baseline),
+        default=0.0,
+    )
+    print("Maximum incremental Bellelba-discard premium:",max_discard_premium)
+    assert max_discard_premium < 1e-12
     print(report(result))
     print("ALL TESTS PASSED")
 
