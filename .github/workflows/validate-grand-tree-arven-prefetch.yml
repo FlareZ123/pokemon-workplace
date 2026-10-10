@@ -1,0 +1,23 @@
+name: Validate Grand Tree Arven prefetch
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/grand_tree_arven_prefetch.py"
+      - "results/grand_tree_arven_prefetch/**"
+      - ".github/workflows/validate-grand-tree-arven-prefetch.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact Arven-Gladion timing and physical access
+        run: python results/grand_tree_arven_prefetch/reproduce.py
