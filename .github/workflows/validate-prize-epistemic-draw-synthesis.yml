@@ -1,0 +1,25 @@
+name: Validate Prize epistemic draw synthesis
+
+on:
+  push:
+    paths:
+      - "tools/prize*.py"
+      - "tools/observer_positioned_prize_truth.py"
+      - "tools/realized_prize_epistemic.py"
+      - "results/prize_epistemic_draw_synthesis/**"
+      - ".github/workflows/validate-prize-epistemic-draw-synthesis.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run foundational and current Prize/draw regressions
+        run: python results/prize_epistemic_draw_synthesis/reproduce.py
