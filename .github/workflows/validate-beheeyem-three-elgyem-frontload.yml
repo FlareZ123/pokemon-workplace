@@ -19,3 +19,5 @@ jobs:
         run: python3 results/beheeyem_three_elgyem_frontload/reproduce.py
       - name: Verify with independently shuffled deck samples
         run: python3 results/beheeyem_three_elgyem_frontload/monte_carlo.py
+      - name: Verify Basic-line redundancy crossover
+        run: python3 results/beheeyem_three_elgyem_frontload/robustness.py
