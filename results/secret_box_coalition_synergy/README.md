@@ -90,7 +90,7 @@ The enabling path is therefore concrete in this 100k trace: Secret Box's Tool ou
 
 Secret Box itself starts in hand for **357** cases. In the other **18**, Jirachi's Stellar Wish can obtain it. Exactly two physical-start profiles cover all 375 trace cases; they differ only in that access route.
 
-The trace is a reproducible state-level diagnostic complementing the full-sample count inference. It does not assert that all 1,917 full-sample synergy states have the same profile without running a matching full-sample trace. [GitHub Actions run 38048881043](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38048881043) passed both exact attribution and the witness tracer.
+The on-demand full 500,000-opening replication with [trace_pair_witnesses_full.py](trace_pair_witnesses_full.py) verified the **same necessary starting-state pattern for all 1,917 combination-only successes**. Secret Box starts in hand in **1,830** states and is accessible through Jirachi in **87**. Both variants have the two needed named search outputs in deck, held Jet Energy, and no G&H/Tag Call Stellar access. The complete 1,917-state result thus upgrades the mechanism from a 100k diagnostic to a full-sample witness classification. [100k CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38048881043); [full 500k CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38049000028).
 
 ## Limits and next questions
 
