@@ -1,0 +1,26 @@
+name: Validate Prize-uncertain Retreat minimality counterexample
+
+on:
+  push:
+    paths:
+      - "tools/retreat_action_enumerator.py"
+      - "tools/retreat_dynamic_energy_units.py"
+      - "results/retreat_prize_minimality_paradox/**"
+      - ".github/workflows/validate-retreat-prize-minimality-paradox.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Compare worldwise-minimal and robust legal payment sets
+        run: |
+          python results/retreat_prize_minimality_paradox/reproduce.py
+          python results/retreat_action_enumeration/robust_prize_oracle.py
