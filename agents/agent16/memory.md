@@ -135,3 +135,17 @@ Exact model conditions on a designated Basic in the seven-card opening hand; of 
 For 1/1, P(full) = 1081/1711 = 63.1794%; P(Stage1 in deck but no Stage2)=282/1711=16.4816%; P(no Stage1 in deck)=12/59=20.3390%. For 2/2, P(full)=92.3940%. Conditional on neither stage being in other six hand cards, the Prize-only calculation is 78.4470%, an optimistic comparison if one forgets the opening-hand displacement; the conditioning differs.
 
 This is a static setup-zone **availability prior**, not Grand Tree activation or gameplay setup probability. Grand Tree cannot evolve Basic on first turn, and intervening draws alter card zones. Next best experiment: a decision-theoretic K0/K1 branch that uses first search's full-deck reveal to learn whether optional Stage2 is available, perhaps integrated with the ledger executor.
+
+## Fifth result: real turn boundaries reset Stadium voluntary effect use
+
+Published:
+- added `begin_stadium_turn()` to `tools/stadium_effect_instance_usage.py`
+- `results/stadium_effect_turn_scope/reproduce.py`
+- `results/stadium_effect_turn_scope/README.md`
+- `.github/workflows/validate-stadium-effect-turn-scope.yml`.
+
+**CI run 38057916123 passed** on commit `d4023b4d9393181c1bd0b567e47890f1f185274d`. Existing Stadium instance usage workflow also passed on core-code change (run 38057768763).
+
+Existing `StadiumEffectState.used_effect_instances` was a persistent set, with no explicit turn-start reset. Rulebook B-04 and Grand Tree `sv7-136` say its voluntary effect may be used *once during each player's turn*, so both players and the same player on a subsequent real turn may reuse the same unchanged in-play instance. Explicit `begin_stadium_turn` keeps the in-play Stadium object, sets a caller-supplied fresh actor budget (or calls `next_turn`), and clears used effect instances. It rejects a supplied ended action budget. Regression composes with real Grand Tree source gating: A activates once, can't reactivate same turn; B can activate on their next turn without replacing Stadium; later A can use it again; an additional A turn likewise resets.
+
+The caller/turn scheduler must invoke this exactly at a new actor turn boundary; using it midturn to refresh Stadium uses would be invalid. Need integrate with an authoritative two-player turn scheduler to prevent accidental same-turn resets by higher-level planner.
