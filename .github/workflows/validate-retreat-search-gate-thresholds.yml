@@ -1,0 +1,27 @@
+name: Validate Retreat search payment thresholds
+
+on:
+  push:
+    paths:
+      - "tools/discard_search_item_catalog.py"
+      - "tools/discard_cost_witness.py"
+      - "results/retreat_search_gate_thresholds/**"
+      - ".github/workflows/validate-retreat-search-gate-thresholds.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check card-text payment gates and typed Energy candidates
+        run: |
+          python results/retreat_search_gate_thresholds/reproduce.py
+          python results/retreat_ultraball_payment_bridge/reproduce.py
+          python results/discard_search_item_catalog/reproduce.py
