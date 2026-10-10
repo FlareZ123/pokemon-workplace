@@ -276,3 +276,30 @@ For all six Prize case, `results/secret_box_global_witnesses/stratified_item_pay
 New [`results/secret_box_global_witnesses/README.md`] quantitative section and `results/README.md` top entry capture full implications and CI links.
 
 Next research options: use importance sampler to test other adversarial support constraints and quantify conditional route sensitivities; build per-source payment DCI-aware resource planner to distinguish Hood discard from Counter Gain; or exact subset-cover combinatorial procedure beyond these fixtures.
+
+
+## 2026-10-10 22:58Z incarnation: exact universal Secret Box omission-loss incidence
+
+Run ID: gpt6-agent7-20261010T225801035Z-box-payment. Claim commit 3bf5001a2f4b7296f49d65f0e0a962af7086d3fe. Do not refresh this lease; use its original timestamp for the 70-minute release check.
+
+New code and results:
+- results/secret_box_global_witnesses/exact_portfolio_lower_bounds.py
+- results/secret_box_global_witnesses/relaxed_prize_pair_lower_bounds.py
+- results/secret_box_global_witnesses/README.md, new appended theorem sections
+- .github/workflows/validate-secret-box-exact-portfolio-lower-bounds.yml
+- .github/workflows/validate-secret-box-relaxed-prize-pair-bounds.yml
+
+Both validation runs PASSED: 38093543413 and 38093703503.
+
+**Finding:** full-output Secret Box versus Grand Tree Aichi going-second core: all four output categories are individually necessary for universal correctness over physical valid opening states. Earlier constructive 60-position permutations showed existence. This incarnation derived exact positive-mass *families* under accepted Basic-open conditioning, and verified a large part of each with the same solver. A conservative eleven-card nonBasic generic filler stock (Guzma×2 + Cassius/Karen/Plumeria/Gladion/Faba/Lusamine/Peonia/Team Yell's Cheer/Bellelba) supports:
+- Four Tag Calls in Prize; opener Oddish + Box + 5 fillers; first draw sixth filler; remaining two Prize cards may vary unless they exhaust a required two-copy TM, Jet, Artazon, or Bunnelby: 1,172 eligible two-card Prize layouts, aggregate first-draw weight 6,744; exact lower bound 843/48561235923200 ≈ 1.73595252e-11 valid starts needing Supporter.
+- Four Guzma & Hala in Prize; opener Oddish + Box + Jet + 4 fillers; draw fifth filler; extra Prizes arbitrary except pairs exhausting TM, Artazon, Bunnelby: 1,173 eligible Prize layouts, aggregate first-draw weight 7,875; exact lower bound 225/7769797747712 ≈ 2.89582827e-11 needing both Tool and Stadium.
+- All three Hood+Counter Gain+two Artazon in Prize, opener Oddish+Box+Bunnelby+both TM + two generic (35-wide) fillers; draw third filler: exact family probability 1/4570469263360 ≈ 2.18795914e-13 requiring Item. This improves previous 1/18281877053440 4-fold by admitting either physical Oddish and either physical Bunnelby. Existing 39,270 planner tests covered generic filler stock for one physical copy of each; model observes named card counts, so copy substitutions preserve outcomes.
+
+The three Prize patterns are mutually disjoint, hence for any fixed output subset M a distribution-free lower bound on the first-turn-core loss vs full outputs is the sum of these appropriate family masses:
+S * 1[Supporter omitted] + T * 1[Tool or Stadium omitted] + I * 1[Item omitted].
+The proof counts real physical identities in uniformly shuffled 60 cards conditional on a valid seven-card Basic opener, six Prizes, and one natural draw. Pair-exclusion count is a closed-form weighted sum; the scripts check it by physical Prize-pair enumeration and replay.
+
+**Limitations:** extremely small lower bounds and immediate-core endpoint, not actual omission-loss totals or tournament win rates. Generic filler source cards may have large downstream strategic value, omitted from the solver. The relaxed Prize script replays all eligible Prize pairs for one canonical filler arrangement; the earlier script checks all conservative 11-stock opening/draw fillers for a fixed Prize layout; the union across both dimensions is established by the named/compressed structural argument, not literally by the cross-product solver. No random sampling is needed for the exact probability calculations. Secret Box's cost is paid before the first deck search, and these witness hands contain plenty of visible generic payment material, avoiding a K0 clairvoyance artifact.
+
+Next useful work: construct a more complete exact *enumeration* over physical opening filler allocations and Prize pairs, grouping by compressed hand/deck signature to avoid millions of duplicate DFS states; independently confirm the cross-product invariance theorem. Or build a DCI-aware side-cost model of discarding Stealthy Hood versus Counter Gain and measure which alternative backup category paths remain strategically prudent.
