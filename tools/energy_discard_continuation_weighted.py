@@ -69,7 +69,16 @@ def verify() -> dict[str, int | Fraction | None]:
     assert example["minimum_card_preserves_apex"] == 30
     assert example["minimum_card_breaks_but_two_cards_preserve_apex"] == 90
     assert example["reversal_given_initial_ready"] == Fraction(3, 4)
-    return {"exhaustive_parameter_checks": checks, **example}
+    # The published 2025 Expanded Regidrago example lists 4 DDE, 3 Grass
+    # and 2 Fire. Treat Basic triples as hypothetical random attachments.
+    published_energy_mix = analytic_counts(3, 2, 0)
+    assert published_energy_mix["all_triples"] == 10
+    assert published_energy_mix["initial_apex_ready"] == 10
+    assert published_energy_mix["minimum_card_preserves_apex"] == 6
+    assert published_energy_mix["minimum_card_breaks_but_two_cards_preserve_apex"] == 4
+    assert published_energy_mix["reversal_given_initial_ready"] == Fraction(2, 5)
+    return {"exhaustive_parameter_checks": checks, **example,
+            "published_2025_regidrago_basic_mix": published_energy_mix}
 
 
 if __name__ == "__main__":
