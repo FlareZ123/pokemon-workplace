@@ -1,0 +1,26 @@
+name: Validate typed gust Retreat payment pruning
+
+on:
+  push:
+    paths:
+      - "tools/typed_retreat_gust.py"
+      - "tools/board_object_kernel.py"
+      - "results/typed_retreat_payment_pruning/**"
+      - ".github/workflows/validate-typed-retreat-payment-pruning.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Compare complete and pruned Retreat game trees
+        run: |
+          python results/typed_retreat_payment_pruning/reproduce.py
+          python results/typed_retreat_gust/reproduce.py
