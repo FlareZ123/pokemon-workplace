@@ -1,0 +1,17 @@
+name: Validate Shadow Rider recovery coalitions
+
+on:
+  push:
+    paths:
+      - tools/shadow_rider_post_trifrost_recovery.py
+      - results/shadow_rider_recovery_coalitions/**
+      - .github/workflows/validate-shadow-rider-recovery-coalitions.yml
+  workflow_dispatch:
+
+jobs:
+  exact-resource-frontiers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exhaustively verify minimal resource coalitions
+        run: python3 results/shadow_rider_recovery_coalitions/reproduce.py
