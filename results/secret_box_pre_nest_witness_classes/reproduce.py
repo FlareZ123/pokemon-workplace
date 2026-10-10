@@ -58,6 +58,8 @@ def main():
         print("visible-class mass", Fraction(weight, denominator), f"{100*weight/denominator:.9f}%")
         print("Box-first", result.box_first_k0, f"{float(result.box_first_k0):.9%}")
         print("Nest-first", result.nest_first_k0, f"{float(result.nest_first_k0):.9%}")
+        print("K1 clairvoyant", result.informational_upper_bound, f"{float(result.informational_upper_bound):.9%}")
+        print("Residual K1 advantage", result.remaining_information_gap)
         print("Conditional gain", result.gain_from_nest_first, f"{float(result.gain_from_nest_first)*100:.9f} pp")
         print("Aggregate contribution", contribution, f"{float(contribution)*100:.12f} pp")
     assert sum((row[3] for row in classes), Fraction(0)) == advantage
