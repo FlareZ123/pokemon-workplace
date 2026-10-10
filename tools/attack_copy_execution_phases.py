@@ -9,15 +9,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-OFFICIAL_BAN_OVERLAY = {
-    "swsh2-22",
-    "swsh45sv-SV013",
-    "swsh10tg-TG02",
-    "swshp-SWSH022",
-    "swsh7-83",
-    "swsh7-185",
-    "swsh7-186",
-}
+from build_expanded_legality_baseline import classify_effective_legality
 
 COPY_PHRASE_RE = re.compile(r"\bas this attack\b", re.IGNORECASE)
 
@@ -38,9 +30,7 @@ def legal_cards(resources_root: Path) -> list[dict[str, Any]]:
         if path.stem not in expanded_sets:
             continue
         for card in load_json(path):
-            if card["id"] in OFFICIAL_BAN_OVERLAY:
-                continue
-            if (card.get("legalities") or {}).get("expanded") == "Banned":
+            if classify_effective_legality(card)[0] != "Legal":
                 continue
             cards.append(card)
     return cards
