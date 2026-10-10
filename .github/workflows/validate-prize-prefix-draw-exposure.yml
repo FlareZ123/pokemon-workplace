@@ -1,0 +1,26 @@
+name: Validate Prize prefix draw exposure
+
+on:
+  push:
+    paths:
+      - "tools/prize_prefix_draw_exposure.py"
+      - "tools/prize_deck_prefix.py"
+      - "tools/prize_top_draw_pool.py"
+      - "tools/prize_position_top_swap.py"
+      - "results/prize_prefix_draw_exposure/**"
+      - ".github/workflows/validate-prize-prefix-draw-exposure.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate exact known-prefix draw probabilities
+        run: python results/prize_prefix_draw_exposure/reproduce.py
