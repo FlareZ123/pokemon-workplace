@@ -28,6 +28,7 @@ REGRESSIONS = (
     "results/prize_prefix_draw_exposure/reproduce.py",
     "results/prize_joint_draw_requirements/reproduce.py",
     "results/prize_resource_allocation_exposure/reproduce.py",
+    "results/prize_exposure_property_sweep/reproduce.py",
 )
 
 
