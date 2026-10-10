@@ -1,0 +1,23 @@
+name: Validate Bench draw multiplicity
+
+on:
+  push:
+    paths:
+      - 'tools/bench_draw_target_multiplicity.py'
+      - 'results/bench_draw_target_multiplicity/**'
+      - '.github/workflows/validate-bench-draw-target-multiplicity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Exact multiple-target physical regression
+        run: python results/bench_draw_target_multiplicity/reproduce.py
