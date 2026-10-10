@@ -128,3 +128,28 @@ def play_stadium_from_hand(
         discard=discard,
         in_play=StadiumInPlay(selected, instance_id),
     )
+
+
+def begin_stadium_turn(
+    state: StadiumEffectState,
+    *,
+    action_budget: TurnActionBudget | None = None,
+) -> StadiumEffectState:
+    """Enter a new actor turn, preserving the current in-play Stadium.
+
+    A voluntary Stadium effect reading 'once during each player's turn'
+    refreshes on a true turn boundary, including an extra turn for the
+    same actor. This helper is explicitly called by a turn scheduler;
+    it must not be used to refresh usage during an ongoing turn.
+
+    The caller may supply the next actor's canonical action budget.
+    """
+
+    next_budget = action_budget if action_budget is not None else state.budget.next_turn()
+    if next_budget.turn_ended:
+        raise ValueError("a new actor turn requires an open action budget")
+    return replace(
+        state,
+        budget=next_budget,
+        used_effect_instances=frozenset(),
+    )
