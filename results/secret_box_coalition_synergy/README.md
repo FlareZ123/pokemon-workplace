@@ -141,6 +141,26 @@ At `q=1/2`, the previously stated independent overlay misses `2043/16 = 127.6875
 
 [GitHub Actions CI 38049440514 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38049440514) for the exact arithmetic and analytic witnesses.
 
+## Unequal category availabilities can force a nonzero synergy floor
+
+The equal-marginal lower bound of zero is not universal when the four resource-category availabilities differ.
+
+The [exact rational extreme-distribution solver](../../tools/category_availability_extrema.py) enumerates all five-column bases of the four-category joint probability simplex. Its five equalities specify total mass and one marginal availability per category. Since every extreme joint distribution can be represented with at most five nonzero masks, the enumeration obtains **globally sharp** expectation bounds without selecting a correlation family. The [reproducer](correlation_extrema.py) checks returned distributions, source-based synergy scores, deterministic corner cases, and additive objectives. [CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38050179416).
+
+For illustrative marginals Item=1/4, Tool=3/4, Supporter=1/3, Stadium=2/3, the exact values are:
+
+| Correlation assumption | Additional expected successful states, out of 20,785 |
+| --- | ---: |
+| Arbitrary dependence, sharp minimum | **7** |
+| Independent categories | **3911/8 = 488.875** |
+| Arbitrary dependence, sharp maximum | **2563/2 = 1281.5** |
+
+The strictly positive lower bound has a short certificate: for every output mask, `D(mask) >= 42 * (1[Tool] + 1[Stadium] - 1 - 1[Item])`. Taking expectations at these marginals yields `42*(3/4 + 2/3 - 1 - 1/4) = 7`. An attaining joint distribution puts probability 1/3 on mask 2, 1/4 on mask 8, 1/12 on mask 11, 1/6 on mask 14 and 1/6 on mask 15.
+
+An attaining maximum distribution puts probability 1/4 on mask 5, 1/12 on mask 6 and 2/3 on mask 10. This gives `(42/12) + (1917*2/3) = 2563/2`.
+
+This is an exact conditional mathematical result on the 20,785 incremental sampled states, under the specified hypothetical category-availability marginals. It does not estimate the probability that any one of those categories becomes practically unavailable in a real paper Expanded game. Physical sources can share costs and restrictions, so a realistic availability model should explain the correlation structure rather than assume it.
+
 ## Limits and next questions
 
 The underlying Aichi planner models a compressed first-turn core, not complete games, lock matchups, physical category failure rates, or the later value of discarded cards. Output masks change category availability while preserving other planner abstractions. The sample is seeded, its state counts are fixed, and the polynomial describes a hypothetical overlay on those states.
