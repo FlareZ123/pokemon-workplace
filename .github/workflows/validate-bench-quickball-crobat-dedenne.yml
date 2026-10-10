@@ -1,0 +1,23 @@
+name: Validate paid Quick Ball Crobat staging
+
+on:
+  push:
+    paths:
+      - 'tools/bench_quickball_crobat_dedenne.py'
+      - 'results/bench_quickball_crobat_dedenne/**'
+      - '.github/workflows/validate-bench-quickball-crobat-dedenne.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Exact physical paid-search replay
+        run: python results/bench_quickball_crobat_dedenne/reproduce.py
