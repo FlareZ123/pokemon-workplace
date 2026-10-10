@@ -65,3 +65,7 @@ Holding one active Double Dragon Energy fixed, enumerate the three remaining Bas
 Proof sketch: DDE's two flexible units can cover any two parts of Grass/Grass/Fire; the third required unit can be provided by a remaining Basic Grass or Basic Fire. After DDE alone is discarded, three Basics cover Grass/Grass/Fire precisely when their multiset is Grass/Grass/Fire. Among three Basics, retaining any Grass or Fire by discarding the other two leaves DDE plus that Basic able to pay Grass/Grass/Fire. This creates the 80-composition reversal family. The script exhaustively checks the reasoning with the shared typed-cost matcher.
 
 The aggregate is a controlled combinatorial statement. It cannot be interpreted as an observed rate in games or decks.
+
+## Independent reproduction checks
+
+Run `python -m results.energy_discard_continuation_frontier.reproduce` at the repository root. The independent bitmask-based payment oracle exhaustively checks **2,904 unit-payment configurations** (one to five cards, one to three units per card, discard requirements zero to seven), followed by the four-payment card-text witness and 165-composition scan. The local test completed successfully.
