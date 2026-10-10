@@ -1,0 +1,18 @@
+name: Validate two-key Prize Item witness
+
+on:
+  push:
+    paths:
+      - "results/secret_box_global_witnesses/two_prize_item_witness.py"
+      - ".github/workflows/validate-two-prize-item-witness.yml"
+  workflow_dispatch:
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python results/secret_box_global_witnesses/two_prize_item_witness.py
