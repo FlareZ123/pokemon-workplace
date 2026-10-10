@@ -20,11 +20,13 @@ class BootstrapState:
             raise ValueError("Negative board population")
         if len(self.stadium.entry.teleport_room_sources) + self.ready + self.other > 6:
             raise ValueError("Ordinary board capacity exceeded")
+        if len(self.stadium.entry.teleport_room_sources) + self.ready > 4:
+            raise ValueError("Gothita/Gothitelle deck-name copy cap exceeded")
 
 
 def build_gothitelle(state: BootstrapState, policy: UsagePolicy) -> BootstrapState | None:
     """One eligible Gothita evolves into a new source, consuming one ready Basic."""
-    if not state.ready:
+    if not state.ready or len(state.stadium.entry.teleport_room_sources) >= 4:
         return None
     used = activate(state.stadium, policy)
     if used is None:
