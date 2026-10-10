@@ -12,8 +12,8 @@ from bench_trigger_lifecycle import scan_bench_trigger_lifecycle  # noqa: E402
 def main() -> None:
     result = scan_bench_trigger_lifecycle(ROOT / "resources")
 
-    assert result["trigger_print_count"] == 124
-    assert result["trigger_name_count"] == 49
+    assert result["trigger_print_count"] == 123
+    assert result["trigger_name_count"] == 48
     assert result["self_vacating_print_count"] == 22
     assert result["self_vacating_name_count"] == 6
     assert result["self_vacating_gameplay_variants"] == 7

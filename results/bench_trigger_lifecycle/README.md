@@ -21,9 +21,9 @@ A built-in self-removal attack can repay that **Bench debt**, but attacking has 
 
 The underlying literal hand-to-Bench trigger catalog contains:
 
-- 124 legal prints;
-- 49 unique card names;
-- 52 conservative gameplay fingerprints.
+- 123 legal prints;
+- 48 unique card names;
+- 51 conservative gameplay fingerprints.
 
 Among those cards, the self-vacating scan finds:
 
@@ -47,7 +47,7 @@ Eldegoss V appears as two conservative gameplay fingerprints because the bundled
 
 ## Structural finding
 
-Only 6 of the 49 literal trigger-Pokémon names have a built-in immediate route to remove themselves from play under this scan, and every one of those routes is an **attack**.
+Only 6 of the 48 literal trigger-Pokémon names have a built-in immediate route to remove themselves from play under this scan, and every one of those routes is an **attack**.
 
 That matters for AMR. A model should not treat built-in cleanup as if it were a free post-trigger action. The cleanup line may require:
 

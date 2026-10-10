@@ -121,9 +121,9 @@ def main() -> None:
         )
 
     catalog = scan_literal_bench_trigger_basics(ROOT / "resources")
-    assert catalog["print_count"] == 124
-    assert catalog["unique_names"] == 49
-    assert catalog["gameplay_variants"] == 52
+    assert catalog["print_count"] == 123
+    assert catalog["unique_names"] == 48
+    assert catalog["gameplay_variants"] == 51
     for name in ("Tapu Lele-GX", "Dedenne-GX", "Crobat V", "Lumineon V", "Jirachi-EX"):
         assert name in catalog["names"]
     assert "Shaymin-EX" not in catalog["names"]

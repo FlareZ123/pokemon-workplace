@@ -81,9 +81,9 @@ This is a physical-card capacity problem. One copy cannot simultaneously occupy 
 
 A literal scan of the bundled paper-Expanded card pool, using the repository's print-level legality overlay, finds:
 
-- 124 legal prints;
-- 49 unique card names;
-- 52 conservative gameplay fingerprints;
+- 123 legal prints;
+- 48 unique card names;
+- 51 conservative gameplay fingerprints;
 
 where a Basic Pokémon Ability contains the literal hand-to-Bench phrase.
 
