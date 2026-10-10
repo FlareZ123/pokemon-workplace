@@ -1,0 +1,24 @@
+name: Validate Gothitelle Stadium bootstrap
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/stadium_gothitelle_bootstrap.py"
+      - "tools/stadium_reentry_usage_bounds.py"
+      - "results/stadium_gothitelle_bootstrap/**"
+      - ".github/workflows/validate-stadium-gothitelle-bootstrap.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Grand Tree built-source frontier
+        run: python results/stadium_gothitelle_bootstrap/reproduce.py
