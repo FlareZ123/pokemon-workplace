@@ -229,3 +229,7 @@ New result `results/beheeyem_three_elgyem_frontload/`: first-turn preloading of 
 The independent shuffled-deck simulator explicitly re-shuffles after deck searches. Corrected the earlier Poffin Monte Carlo missing shuffle in commit `be0ba8ebd45fa7a9021597892f3948893e554156`; prior numerical exact enumeration was unaffected, but simulations before this correction were biased by deck order after removing the first matching Basic.
 
 Next: derive full physical turn-two-through-four evolution/search/Energy and switching feasibility and revisit whether triple staging competes for scarce Beheeyem evolutions, TAE and Bench slots. Existing `results/beheeyem_poffin_eligibility/` remains valid for its restricted reserve event, while the new result tests a broader alternative-path event.
+
+## 2026-10-10: sensitivity extension to third-Elgyem frontload
+
+New `results/beheeyem_three_elgyem_frontload/robustness.py` scans 16 eligibility/Basic-redundancy settings and all 15 four-Item mixtures. When partner HP<=70, Poffin4 wins with E=3 or E=4 across anchor copies 1–4. With partner HP>70, E=3 selects VIP3/Poffin1, E=4 selects VIP4, across anchor copies 1–4. With four high-HP partners, E3 VIP3/Poffin1 5.967177% vs VIP4 5.820593%; E4 VIP4 9.637382% vs VIP3/Poffin1 9.391770%. This proves the high-HP VIP4 winner in the default result depends on the four-copy Elgyem assumption. Exact model only; not a win-rate claim.
