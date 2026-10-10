@@ -277,3 +277,15 @@ B4/TAE4/Computer Search/d1: direct T2 packet 12.006938%, first packet including 
 
 Next high-value question: search T2 prefetch versus T3 defer when first packet is already in hand, especially with an exogenous opposing Item lock during our T3. Formalize state and lock assumption. Consider K0/K1 information, conditional opponent lock and payment state before general deck recommendations.
 
+
+
+### 2026-10-10 K1 prefetch and future tutor-play denial
+
+Added tools/beheeyem_prefetch_lock_policy.py, results/beheeyem_prefetch_lock_policy/{README.md,reproduce.py,monte_carlo.py}, and focused CI. Both run 38094253196 and README-triggered run 38094297685 passed. The policy assumes known Prize composition K1 at T2, a Bernoulli independent future lock affecting only the chosen tutor's Item or Supporter play class on T3, and optimizes between retaining the tutor after a direct first packet versus spending it T2 to prefetch an accessible B or TAE. T2 prefetch removes a card from the 45-card deck before first attack recycles B+TAE+Elgyem, leaving 47 instead of 48 T3 cards.
+
+B4/TAE4/d1/Computer Search: joint two-packet probability 0.662553% with no future Item prohibition. At 100% T3 Item prohibition, save/early-rescue baseline 0.361169%, K1 optimized prefetch 0.562252%; at 10% prohibition, baseline 0.632415%, policy 0.646188%. For guaranteed no prohibition, the universal Computer Search never prefetched in 16 copy-count pairs x d=0..5 checked. For target-restricted Ultra Ball B4/TAE4/d2, early search can thin a non-TAE card and improve the no-lock joint rate by a tiny +0.002541 percentage points, from 0.911168% to 0.913709%.
+
+Published synthesis at results/beheeyem_packet_recurrence/README.md and inserted link into results/README.md in commit e53a3dfd. Broadcasting this is useful. Open assumptions: exogenous q, ready board, all neutral filler disposable, T3 d draws magically available regardless of lock; no actual opponent game solver. K1 target choices over eligible B/TAE only, rather than full Trainer's every possible alternate effect.
+
+Next research opportunity: model T2 Mysterious Noise Knock Out granting one or two random Prize cards before T3, which can supply B, TAE, or the tutor. This tests another physically important source of continuation that the existing models omit.
+
