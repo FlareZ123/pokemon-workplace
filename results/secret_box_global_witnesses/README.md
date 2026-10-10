@@ -244,3 +244,45 @@ The two-copy factors in front count alternative Oddish and Jet Energy physical i
 | 11 | 1.73595e−11 | 2.89583e−11 |
 
 The independent regression directly enumerates all 48-card physical Prize pairs to verify each recycling count, plus all eleven-labeled-card opener/draw exposures to verify the safe-stock combinatorics. **A protected filler is never consumed by the constructed line.** Real DCI is state-, matchup-, and sequencing-dependent; none of these incidence values is a card recommendation or a match win-rate estimate.
+
+
+## Exact enumeration of the six-Prize Item-only rarity, eliminating Monte Carlo noise
+
+The earlier 100,000-start importance sampler for the exact all-other-Tools/Artazon-Prized event found only **13** Item-indispensable cases. The [complete exact enumerator](exact_six_prize_item_necessity.py) removes that sampling uncertainty. It stratifies all physically possible accepted seven-card opening multisets, first-draw groups, starting Active choices, and where relevant, the identities present in Jirachi's next five cards. [CI 38094565530 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38094565530), and an independent [12,000-state actual-physical-permutation oracle](item_exact_projection_oracle.py) reproducing the original full planner passed [CI 38094613227](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38094613227).
+
+### Exact numerical result
+
+Condition on **all three Stealthy Hood, one Counter Gain, and both Artazon cards Prized**, plus a valid seven-card Basic-containing opener. Within that stratum the exact probability that:
+
+- the Grand Tree immediate core fails,
+- Secret Box with all four outputs succeeds,
+- Secret Box with Item output disabled fails,
+
+is
+
+**35,905,391,051 / 243,063,372,123,000 = 0.0001477202868428502 = 0.01477202868428502%.**
+
+The event's exact probability conditional on a Basic-valid opener is **1195 / 57598385152 ≈ 2.07471×10⁻⁸**, so its contribution to overall Item-indispensable model incidence is exactly
+
+**35,905,391,051 / 11,715,529,476,053,936,332,800 ≈ 3.064768956826847×10⁻¹²**.
+
+In one million valid openings that is approximately **0.00000306477** expected occurrences. The original conditional 13/100,000 sample corresponds to a point estimate of 2.697×10⁻¹², within normal rare-event sampling uncertainty. The exact conditional rate instead implies **14.7720286843 expected Item-required events per 100,000 conditional samples**.
+
+The now-exact probability is about **14.007×** the earlier constructive Item-family lower bound of 1/4,570,469,263,360 for this same Prize layout. The constructive family certifies a restricted set of recognizable opening/draw configurations. The enumerator covers every starting configuration and every relevant Jirachi observation for that fixed Prize set.
+
+### Exact model reduction and verification
+
+The six forced Prizes leave **54 physical cards**, partitioned into 13 disjoint card classes with counts:
+
+- G&H 4; Tag Call 4; TM: Evolution 2; Jet Energy 2; ACE SPEC 1; Bunnelby 2; Fan Rotom 1; Jirachi 1;
+- ten other ordinary Basic Pokémon; ten other Supporters; Bellelba 1; three other Special Energy; thirteen irrelevant-to-this-core nonBasic cards.
+
+The groups retain the original planner's exact distinctions for the hand, search targets, initial Active selection and Jirachi options. The enumeration covers **20,401 Basic-valid opening class vectors**, **1,147,468 weighted Active/first-draw/Stellar-presence test branches**, and no random trials. It validates that total weighted accepted-start mass equals the closed-form accepted Basic hand count.
+
+If Jirachi is in the opening hand, the original planner always starts it Active. Otherwise it chooses the first non-Bunnelby Basic in the ordered opener. For a grouped opener containing Fan Rotom plus ordinary Basics, the probability of starting Fan Rotom follows the exact relative count; every denominator divides 840. If Jirachi starts Active, its optional Stellar Wish candidates depend only on which of four relevant Trainer classes appear in the next five cards. Each exact presence-mask weight is computed by hypergeometric inclusion-exclusion, summing to C(46,5).
+
+**Additional mechanism finding:** Every Item-indispensable state in this fixed-Prize stratum already has **Secret Box in the hand by the first normal draw**. Jirachi-first, Box-in-hand states contribute exact conditional probability **24,944,549 / 2,859,569,083,800** (about 5.905% of Item-required states). Other Active choices with Box held contribute **517,589 / 3,723,739,500** (94.095%). There are **zero** Item-required cases in which Secret Box is accessible *only* through the Jirachi top-five Stellar Wish. This zero is an exact statement about the source planner under this Prize condition, rather than a generic claim that Stellar Wish cannot access Secret Box.
+
+The separate physical oracle creates 12,000 uniformly distributed valid 60-card permutations with the same fixed Prizes. For each one it compares the original named-card baseline/full/no-Item action search with the result of reconstructing all relevant 13 grouped opening categories, first draw, Active choice and actual observed top-five mask. Every paired Boolean outcome agrees; only two of the 12,000 source permutations are Item-required, reflecting the event's rarity.
+
+**Scope and significance:** This calculation gives a zero-sampling-error component of all-possible-opening Item necessity for the Aichi compressed turn-one core, conditioned on the explicitly named Prize event. It does not count Item-only necessity under every possible other Prize configuration; the exact event probability is one rigorous subset of the total model loss probability. The original model's strategic and temporal approximations remain in force.
