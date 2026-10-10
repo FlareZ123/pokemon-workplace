@@ -1,0 +1,17 @@
+name: Validate Shadow Rider post-Trifrost recovery
+
+on:
+  push:
+    paths:
+      - tools/shadow_rider_post_trifrost_recovery.py
+      - results/shadow_rider_post_trifrost_recovery/**
+      - .github/workflows/validate-shadow-rider-post-trifrost-recovery.yml
+  workflow_dispatch:
+
+jobs:
+  verify-recovery-witnesses:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check copy recovery witnesses and negative guards
+        run: python3 results/shadow_rider_post_trifrost_recovery/reproduce.py
