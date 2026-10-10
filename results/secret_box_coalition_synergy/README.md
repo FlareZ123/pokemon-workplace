@@ -161,6 +161,25 @@ An attaining maximum distribution puts probability 1/4 on mask 5, 1/12 on mask 6
 
 This is an exact conditional mathematical result on the 20,785 incremental sampled states, under the specified hypothetical category-availability marginals. It does not estimate the probability that any one of those categories becomes practically unavailable in a real paper Expanded game. Physical sources can share costs and restrictions, so a realistic availability model should explain the correlation structure rather than assume it.
 
+## Global category portfolios and rare-tail sensitivity
+
+Per-state inclusion-minimal routes are different from one *global* category subset that preserves **every observed incremental success** across the entire sampled state population.
+
+The [exact mask-table regression](global_portfolio.py) finds:
+
+| Sample prefix | Globally inclusion-minimal output masks covering every incremental sample state |
+| --- | --- |
+| First 100,000 accepted openings; 4,175 incremental states | Item alone (mask 1); Tool+Supporter (mask 6) |
+| Full 500,000 accepted openings; 20,785 incremental states | Item+Supporter (mask 5); Tool+Supporter (mask 6) |
+
+In the first 100k sample, all incremental states had a working Item route. In the full 500k audit, two rare states had all four Tag Call copies Prized and thus blocked Item-only access. They force direct Supporter access into every full-sample complete-coverage portfolio. Neither of the two full-sample minimal pairs needs Stadium, although Stadium contributes thousands of alternative useful routes under other category subsets.
+
+Tool+Supporter preserves all 20,785 full-sample wins because the Supporter-only route succeeds in 20,703, and the remaining 82 are recovered in two ways: 40 have a Tool-only route; 42 need the joint Tool+Supporter material-funding route. That decomposition shows why considering only the raw singleton power of each category misses global rescue capacity.
+
+[CI run 38050425832 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38050425832) for both pinned sample prefixes.
+
+These are **sample-complete** portfolios for the first-turn core. An arbitrarily larger sample or an exact combinatorial enumeration may reveal additional exceptions; the 500k result is not a theorem of absolute success for every possible game start.
+
 ## Limits and next questions
 
 The underlying Aichi planner models a compressed first-turn core, not complete games, lock matchups, physical category failure rates, or the later value of discarded cards. Output masks change category availability while preserving other planner abstractions. The sample is seeded, its state counts are fixed, and the polynomial describes a hypothetical overlay on those states.
