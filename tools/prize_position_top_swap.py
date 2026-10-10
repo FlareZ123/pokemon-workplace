@@ -134,6 +134,24 @@ class PrizePositionTopBelief:
             PrizeBelief(self.groups, len(hidden), tuple(sorted(result.items()))),
         )
 
+    def as_existing_top_prize_joint(self):
+        """Bridge to the earlier joint top/Prize implementation, losslessly."""
+        from prize_top_swap_belief import TopPrizeJointBelief
+        return TopPrizeJointBelief(
+            self.groups,
+            self.face_up,
+            tuple(((top, prizes), mass) for (prizes, top), mass in self.masses),
+        )
+
+    @classmethod
+    def from_existing_top_prize_joint(cls, existing) -> PrizePositionTopBelief:
+        """Import a position/top joint posterior without changing its meaning."""
+        return cls(
+            existing.groups,
+            existing.face_up,
+            tuple(((prizes, top), mass) for (top, prizes), mass in existing.masses),
+        )
+
     def observe_top(self, group: CardGroup) -> PrizePositionTopBelief:
         """Private observation of the deck top, without changing its location."""
         self._check_group(group)
