@@ -138,3 +138,12 @@ Important boundary: physical compatibility is necessary, not sufficient, for com
 
 Next strong objective: model opponent inference under *position-conditioned* decision policies (actor may choose the target using prior private Prize observations); compare with top-group-only signaling. A potential physical integration is top-card drawing with a distribution over the remaining deck composition conditioned on both zones and prior observations.
 
+
+### 2026-10-10 follow-up: position-choice signaling and epistemic admissibility
+
+Added `condition_on_public_world_choice` to joint Prize/top belief. The new `results/prize_position_choice_signaling/` gives a world-specific public Prize-slot selection policy: on equally likely physical positions A/B versus B/A (top X), actor chooses slot 0 with rates 4/5 vs 1/5. Observer's posterior P(outgoing top=A) moves from 1/2 to 4/5 after an Arc Phone-like swap. Independent `Fraction` oracle, deterministic and evidence-neutral policies, and malformed likelihood rejection passed [CI 38057348607](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38057348607). Actor privately knowing physical positions is a stipulated precondition.
+
+Addressed the epistemic hazard with `tools/prize_choice_policy_information.py`, `results/prize_choice_policy_information/`. A randomized actor policy is valid on an actor information partition only if P(public action|physical world) is constant on each indistinguishability class and the eligible action choice probabilities sum to one. If the actor knows A's location the 4/5 versus 1/5 rates are admissible; if it has not learned the mapping they are inadmissible, and an admissible hidden-map-independent policy leaves the observer P(A)=1/2. Exact rational oracle and negative tests passed [CI 38057480801](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38057480801).
+
+Core caution: a **caller-supplied** actor information partition can still falsely claim the actor knows a card. Stronger next work derives partitions from a sequence of private/public observations, then composes policy signaling and physical transitions. The repository's preexisting causal event journal may offer an event-provenance pattern, though it covers a different part of card play.
+
