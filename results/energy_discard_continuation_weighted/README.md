@@ -41,3 +41,17 @@ This is a conditional probability over a deliberately constructed *attachment* m
 The model demonstrates why uniformly counting type configurations is not an empirical gameplay rate. It offers a closed-form sensitivity analysis to supplement the earlier bounded 80-of-81 type-composition theorem.
 
 Sources and rules assumptions are the same as those in `results/energy_discard_continuation_frontier/README.md`.
+
+
+## Source-backed example deck composition
+
+The official Pokémon 2025 Expanded strategy article [*A Deep Dive Into the 2025 Pokémon TCG Expanded Format*](https://www.pokemon.com/uk/features/a-deep-dive-into-the-2025-pokemon-tcg-expanded-format) publishes a Regidrago VSTAR list containing **four Double Dragon Energy, three Basic Grass Energy and two Basic Fire Energy**, along with **one Salamence ex**. This verifies that the core engine and attack payload of the constructed witness appear together in at least one published Expanded example list.
+
+Holding one of its DDE copies fixed and imagining **three uniformly sampled Basic Energy cards** from that list's five Basic Energy, the ten equally weighted labeled three-card mixtures have:
+
+- six Grass/Grass/Fire configurations: a one-card DDE discard preserves Apex readiness;
+- one Grass/Grass/Grass and three Grass/Fire/Fire configurations: discarding DDE breaks readiness, but a two-Basic payment preserves it.
+
+Thus the conditional reversal fraction is **4/10 = 40%** in this deliberately idealized *three-Basic-attachment sampling* model. The program asserts the exact counts separately. This is a bridge to a real published card-count configuration, **not an observed probability of an in-game attachment state**. Drawing, searching, prize availability, turn-by-turn Energy attachment choices and the likelihood of possessing Salamence ex as an attack payload are not modeled.
+
+The official article predates this October 2026 research and illustrates the format in 2025; it is not offered as evidence of the current metagame.
