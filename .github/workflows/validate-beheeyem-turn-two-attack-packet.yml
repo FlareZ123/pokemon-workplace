@@ -1,0 +1,23 @@
+name: Validate Beheeyem turn-two attack packet
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/beheeyem_turn_two_attack_packet/**"
+      - ".github/workflows/validate-beheeyem-turn-two-attack-packet.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact Prize-aware Basic-line and T2 attack packet enumeration
+        run: python3 results/beheeyem_turn_two_attack_packet/reproduce.py
+      - name: Independent physical-deck shuffled Monte Carlo
+        run: python3 results/beheeyem_turn_two_attack_packet/monte_carlo.py
+      - name: Redundancy and HP eligibility sensitivity
+        run: python3 results/beheeyem_turn_two_attack_packet/robustness.py
