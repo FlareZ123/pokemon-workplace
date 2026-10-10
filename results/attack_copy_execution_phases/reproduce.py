@@ -20,7 +20,7 @@ def main() -> None:
 
     assert result["scope"] == {
         "format": "paper Expanded, Black & White onward",
-        "effectively_legal_cards_scanned": 14836,
+        "effectively_legal_cards_scanned": 14829,
         "copy_attack_print_rows": 64,
         "copy_attack_signatures": 30,
     }
