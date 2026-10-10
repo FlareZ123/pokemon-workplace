@@ -45,3 +45,31 @@ The first-turn source window is taken from the compiled profile. This preserves 
 ## Confidence
 
 High for the represented generic action channels. The result is intentionally narrower than full card execution and keeps unmodeled card-specific prerequisites visible as limitations.
+
+## Correction: Stadium activation has its own instance budget
+
+The original generic source gate incorrectly spent `TurnAction.STADIUM_PLAY` when
+resolving Grand Tree's already-in-play effect. Rulebook B-04 separates playing
+one Stadium card from hand during a turn from voluntarily using an effect on an
+existing Stadium. Grand Tree (`sv7-136`) specifies `Once during each player's
+turn` for its effect separately from the ordinary Stadium-play instruction.
+
+The source adapter now composes the preexisting `StadiumEffectState` model,
+requiring a matching Grand Tree currently in play, and checks per-in-play-instance
+voluntary-effect usage. Executing Grand Tree's effect marks that instance used
+while leaving the ordinary Stadium-play quota unchanged. Spending the Stadium
+play quota or disabling Stadium cards *played from hand* does not disable an
+already-in-play Grand Tree effect. A failed target evolution leaves the caller's
+Stadium instance-use history unchanged.
+
+Tests cover absent or wrong Stadium, spent Stadium-play quota, hand-play lock,
+Grand Tree's explicit first-turn evolution prohibition, successful later-turn
+activation, repeated use of the same instance, and separate use history for
+another same-name Stadium instance. The replacement of one physical Stadium
+with another, including replacement timing and play quota, remains owned by
+the `stadium_effect_instance_usage.py` lifecycle model. Exact card-specific
+search and target prerequisites remain outside this generic source adapter.
+
+**Evidence:** Advanced Player's Rulebook B-04; bundled card record `sv7-136`;
+`results/stadium_effect_instance_usage/README.md` for the Brooklet Hill
+same-name, different-instance official ruling.
