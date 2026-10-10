@@ -632,3 +632,81 @@ and consider a more realistic payoff ablation over alternative TAG TEAM
 searches, preserving genuine pre-K1 payment order and physical copies.
 Check current lease clock after checkpoints, continue until lease age
 >=70 minutes, then follow prescribed orderly release.
+
+
+## 2026-10-10 continuation: TAG TEAM second-search stock and stratified payoff
+
+Discovered a materially more frequent Bellelba alternative than the
+singleton-only fallback. Tag Call can search one remaining G&H plus
+one Bellelba in a single Item when exactly one extra G&H exists in
+the deck and Bellelba is unprized. This event has exact accepted-start
+mass 66550477/64945117952 = 0.102471870248%, equal to 5.054218%
+of naturally held Jirachi/G&H/Tag Call triplets. The broader
+"G&H count 0 or1 and Bellelba searchable" event is exactly
+350713867/324725589760 = 0.108003150371% of accepted starts.
+
+Added:
+- tools/aichi_tagcall_target_availability.py count_probabilities extension;
+- results/aichi_tagcall_second_slot/{README.md,reproduce.py}
+- .github/workflows/validate-aichi-tagcall-second-slot.yml
+- tools/aichi_tagcall_bellelba_payload.py
+- results/aichi_tagcall_bellelba_payload/{README.md,reproduce.py,run.py}
+- corresponding validate and sample workflows
+- tools/aichi_tagcall_conditional_payload.py
+- results/aichi_tagcall_conditional_payload/{README.md,reproduce.py,run.py}
+- corresponding validate and sample workflows.
+
+All tests completed so far PASSED. Physical labeled 11-card census
+validates detailed quantity categories. The simple named payment test
+constructs a state with only a held Tag Call after G&H reservation,
+one G&H and one Bellelba remaining searchable: fetching both supplies
+two discard cards and enables G&H payment for TM Evolution + Jet Energy
+where the older G&H-only Tag Call cannot pay.
+
+Uniform 500k Aichi shuffle sample seed20261010:
+accepted 430475, pre-K1 and late Jirachi eligible 23184,
+Bellelba second-target candidate416 (400 g1, 16 g0).
+For dual_stage2 + two Tickets/one Map, optional Bellelba route
+raised candidate-restricted contribution to accepted-start first
+reset from 0.021099004% to 0.021348804%, paired incremental
++0.000249800 ±0.000033530 pp, CI run38061934200.
+All nine inspected metrics were unchanged upon protecting the newly
+retrieved Bellelba from G&H discard in this 500k sample:
+max discretionary discard premium exactly zero. A constructive
+payment feasibility witness nonetheless exists.
+
+Stratified 40k sample (10k g0, 30k g1) uses physically correct
+conditional permutations and exact stratum weight conservation
+to concentrate analysis on the rare named target event. Run
+38062183417 passed, with dual_stage2 two Ticket/one Map gain
++0.000287888 ±0.000003041 pp, nearly entirely from deck thinning.
+Other endpoint item_plus_pidgeot exhibited a very small
+nonzero discard premium +0.000000489 pp for two Tickets/one Map,
++0.000000431 pp for three Tickets/one Map. This reveals the broad
+claim "all benefits are thinning" is not generally correct.
+The tiny premium's statistical uncertainty and a concrete physical
+witness still need investigation. A followup run is in progress
+instrumenting the first successful Bellelba-discard witness.
+
+CI success references:
+- Exact second-slot: 38061763452
+- Uniform smoke: 38061934105
+- Uniform500k: 38061934200
+- Exact conditional sampler SFT: 38062284320
+- Conditional40k: 38062183417
+
+Interpret all results as first-reset access proxies in a synthetic
+Aichi model with TM/Energy, Jirachi, G&H and TechSlot Items;
+never infer tournament win-rate. The parent model has a heuristic
+K0 pre-search guard and endpoint-conditioned postsearch payment.
+The current research can test existence of physical lines, with
+conditional Monte Carlo gains as modeled estimates.
+
+Further steps:
+- Confirm pending conditional rerun that prints payment witness;
+  add it to a regression and quantify its rarity/sampling error.
+- Update results/README.md and send agent4 the named search
+  material/exact result plus the protected-discard sensitivity.
+- Revisit actual K0 payment guard limitations and matchup-specific
+  value of Bellelba. Do not imply its singleton is universally
+  disposable.
