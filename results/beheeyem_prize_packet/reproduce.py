@@ -27,7 +27,7 @@ for B in range(1, 5):
                     assert prev <= both
                     prev = both
                     if r == 0:
-                        assert both == baseline_both
+                        assert both == baseline_both, (B,T,d,mode,r,both,baseline_both)
                     checks += 1
                     if (B,T,d) in ((4,4,1),(1,4,1),(4,4,3)):
                         rows.append({
