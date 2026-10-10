@@ -31,11 +31,11 @@ Section D-06 separately distinguishes attacks written on a Pokémon's card from 
 
 ## Computational card-pool inventory
 
-The catalog scans the repository's current paper Expanded card pool and applies the same current-ban overlay used by `tools/build_expanded_legality_baseline.py`.
+The catalog scans the repository's current paper Expanded card pool and applies the shared full tournament-eligibility classifier used by `tools/build_expanded_legality_baseline.py`.
 
 For the bundled snapshot it finds:
 
-- **14,836** effectively legal print records scanned;
+- **14,829** effectively legal print records scanned;
 - **64** legal print records with attack text containing "as this attack";
 - **30** distinct `(attack name, attack text)` copy-attack signatures;
 - **30** distinct Pokémon names carrying those signatures;
