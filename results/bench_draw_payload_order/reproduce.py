@@ -12,7 +12,8 @@ from bench_draw_payload_order import POLICIES, analyze, exact_closed_form  # noq
 
 
 def physical_oracle(policy: str, *, target_zone: str, target_index: int,
-                    hand_size: int, deck_size: int) -> tuple[bool, bool, int, int, int]:
+                    hand_size: int, deck_size: int,
+                    prize_known: bool = False) -> tuple[bool, bool, int, int, int]:
     """Replay literal hand, discard pile, Bench and ordered deck lists."""
     hand = ["C", "D"]
     if target_zone == "hand":
@@ -41,6 +42,10 @@ def physical_oracle(policy: str, *, target_zone: str, target_index: int,
         hand.extend(draw)
         drawn += len(draw)
 
+    if prize_known and target_zone == "prize" and policy in (
+            "dedenne_stop", "crobat_only", "crobat_dedenne_stop"):
+        return False, False, 0, 0, 0
+
     if policy == "dedenne_blind":
         play_support("D")
     elif policy == "dedenne_stop":
@@ -63,14 +68,16 @@ def physical_oracle(policy: str, *, target_zone: str, target_index: int,
 
 
 def exact_by_physical_positions(*, hand_size: int, deck_size: int,
-                                prizes: int, natural_draws: int = 1):
+                                prizes: int, natural_draws: int = 1,
+                                prize_known: bool = False):
     locations = ([("hand", -1)] * natural_draws
                  + [("prize", -1)] * prizes
                  + [("deck", i) for i in range(deck_size)])
     result = {}
     for policy in POLICIES:
         values = [physical_oracle(policy, target_zone=loc, target_index=i,
-                                  hand_size=hand_size, deck_size=deck_size)
+                                  hand_size=hand_size, deck_size=deck_size,
+                                  prize_known=prize_known)
                   for loc, i in locations]
         result[policy] = tuple(Fraction(sum(x[j] for x in values), len(values))
                                for j in range(5))
@@ -80,19 +87,22 @@ def exact_by_physical_positions(*, hand_size: int, deck_size: int,
 def validate() -> None:
     for deck in (6, 7, 10, 46):
         for hand in (3, 4, 5, 6, 7, 8):
-            p = dict(hand_size=hand, deck_cards=deck, prizes=2, natural_draws=1)
-            actual = analyze(**p)
-            oracle = exact_by_physical_positions(
-                hand_size=hand, deck_size=deck, prizes=2)
-            for policy in POLICIES:
-                x = actual[policy]
-                assert (x.target_in_hand, x.target_discarded,
-                        x.expected_bench_plays, x.expected_dedenne_uses,
-                        x.expected_draws) == oracle[policy], (p, policy, x)
-            if deck >= max(0, 7 - hand) + 6:
-                closed = exact_closed_form(**p)
-                assert all(actual[k].target_in_hand == v
-                           for k, v in closed.items())
+            for known in (False, True):
+                p = dict(hand_size=hand, deck_cards=deck, prizes=2,
+                         natural_draws=1, prize_known=known)
+                actual = analyze(**p)
+                oracle = exact_by_physical_positions(
+                    hand_size=hand, deck_size=deck, prizes=2, prize_known=known)
+                for policy in POLICIES:
+                    x = actual[policy]
+                    assert (x.target_in_hand, x.target_discarded,
+                            x.expected_bench_plays, x.expected_dedenne_uses,
+                            x.expected_draws) == oracle[policy], (p, policy, x)
+                if deck >= max(0, 7 - hand) + 6:
+                    closed = exact_closed_form(
+                        hand_size=hand, deck_cards=deck, prizes=2)
+                    assert all(actual[k].target_in_hand == v
+                               for k, v in closed.items())
 
     main = analyze(hand_size=5, deck_cards=46, prizes=6, natural_draws=1)
     assert main["dedenne_blind"].target_in_hand == Fraction(6, 53)
@@ -106,6 +116,12 @@ def validate() -> None:
     assert main["crobat_dedenne_stop"].expected_dedenne_uses == Fraction(50, 53)
     assert main["crobat_dedenne_stop"].expected_draws == Fraction(404, 53)
     assert list(analyze(bench_slots=1)) == list(POLICIES[:3])
+    prize_known = analyze(hand_size=5, prize_known=True)
+    assert all(prize_known[k].target_in_hand == main[k].target_in_hand
+               for k in POLICIES)
+    assert prize_known["dedenne_stop"].expected_bench_plays == Fraction(46, 53)
+    assert prize_known["crobat_dedenne_stop"].expected_bench_plays == Fraction(90, 53)
+    assert prize_known["crobat_dedenne_stop"].expected_dedenne_uses == Fraction(44, 53)
     print("Physical-position oracle, closed-form identities, and benchmark passed.")
     print("h | Dedenne conditional | Crobat->Dedenne conditional | gain | extra Bench")
     for h in (3, 4, 5, 6, 7):
