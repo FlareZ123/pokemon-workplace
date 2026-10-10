@@ -1,0 +1,23 @@
+name: Validate Gothitelle bootstrap Prize supply
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/gothitelle_bootstrap_prize_availability.py"
+      - "results/gothitelle_bootstrap_prize_availability/**"
+      - ".github/workflows/validate-gothitelle-bootstrap-prize-availability.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce exact Prize supply posterior
+        run: python results/gothitelle_bootstrap_prize_availability/reproduce.py
