@@ -1,0 +1,22 @@
+name: Validate Beheeyem tutor prefetch lock policy
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_prefetch_lock_policy.py"
+      - "results/beheeyem_prefetch_lock_policy/**"
+      - ".github/workflows/validate-beheeyem-prefetch-lock.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce rational K1 prefetch and future lock policy
+        run: python3 results/beheeyem_prefetch_lock_policy/reproduce.py
+      - name: Independently replay physical cards and future lock events
+        run: python3 results/beheeyem_prefetch_lock_policy/monte_carlo.py
