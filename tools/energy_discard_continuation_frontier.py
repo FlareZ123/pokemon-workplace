@@ -120,6 +120,10 @@ def build(resources_root: Path) -> dict[str, Any]:
     assert apex["cost"] == ["Grass", "Grass", "Fire"]
     assert "Choose an attack from a Dragon Pokémon in your discard pile" in apex["text"]
     assert impact["text"] == "Discard 2 Energy from this Pokémon."
+    assert impact["cost"] == ["Fire", "Water", "Colorless", "Colorless"]
+    assert impact["cost"] != apex["cost"]
+    # Apex Dragon pays its own attack cost before copying Dragon Impact's
+    # effect; the source attack's printed Energy cost is not paid again.
     assert impact["damage"] == "300"
     assert "provides every type of Energy" in " ".join(double_dragon["rules"])
     assert "provides only 2 Energy at a time" in " ".join(double_dragon["rules"])
