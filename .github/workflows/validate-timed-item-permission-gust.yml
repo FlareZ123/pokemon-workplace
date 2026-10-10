@@ -1,0 +1,22 @@
+name: Validate Timed Item Permission Gust
+
+on:
+  push:
+    paths:
+      - 'tools/timed_item_lock_gust.py'
+      - 'results/timed_item_permission_gust/**'
+      - '.github/workflows/validate-timed-item-permission-gust.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python results/timed_item_permission_gust/reproduce.py
