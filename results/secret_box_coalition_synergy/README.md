@@ -180,6 +180,22 @@ Tool+Supporter preserves all 20,785 full-sample wins because the Supporter-only 
 
 These are **sample-complete** portfolios for the first-turn core. An arbitrarily larger sample or an exact combinatorial enumeration may reveal additional exceptions; the 500k result is not a theorem of absolute success for every possible game start.
 
+## Constructive counterexamples: all four categories are globally necessary
+
+The sampled complete-coverage portfolio result above does **not** generalize to all possible legal accepted openings. A separate [constructive proof with three physical Aichi starting states](../secret_box_global_witnesses/) forces all four outputs collectively:
+
+| Explicit Prize collapse | Outputs required in every successful subset |
+| --- | --- |
+| All four Tag Call Prized; Jet missing | Supporter |
+| All four Guzma & Hala Prized; Jet held, TM and Bunnelby missing | Tool and Stadium |
+| Three Stealthy Hood, one Counter Gain and both Artazon Prized; two TM held and Jet missing | Item |
+
+Each fixed opening specifies an exact seven-card opener, six Prizes and first draw; the reproducer builds a full unique 60-card order. The baseline Grand Tree planner fails and full Secret Box succeeds in each. Every output mask omitting that fixture's required categories fails. The union of the requirements is **Item + Tool + Supporter + Stadium**, so no proper subset is universally complete under this model.
+
+The Item-only counterexample prizes *exactly six particular cards*. Its unconditioned random Prize probability is `1/C(60,6)=1/50,063,860`, even before imposing the special opening-hand requirements. This explains why Monte Carlo optimized global category sets can miss physically reachable tail states. The theorem concerns only the Aichi compressed first-turn-core simulator, and the Prize rarity calculation is not a match win-rate estimate.
+
+[Constructive witness code](constructive_global_witnesses.py) and [passing CI run 38050810040](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38050810040).
+
 ## Limits and next questions
 
 The underlying Aichi planner models a compressed first-turn core, not complete games, lock matchups, physical category failure rates, or the later value of discarded cards. Output masks change category availability while preserving other planner abstractions. The sample is seeded, its state counts are fixed, and the polynomial describes a hypothetical overlay on those states.
