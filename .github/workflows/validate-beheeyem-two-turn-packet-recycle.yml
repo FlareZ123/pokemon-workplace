@@ -1,0 +1,22 @@
+name: Validate Beheeyem two-turn packet recycling
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_recycle_packet_probability.py"
+      - "results/beheeyem_two_turn_packet_recycle/**"
+      - ".github/workflows/validate-beheeyem-two-turn-packet-recycle.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Enumerate exact Beheeyem/TAE two-turn packet outcomes
+        run: python3 results/beheeyem_two_turn_packet_recycle/reproduce.py
+      - name: Validate using independent materialized-deck simulation
+        run: python3 results/beheeyem_two_turn_packet_recycle/monte_carlo.py
