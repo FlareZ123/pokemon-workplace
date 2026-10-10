@@ -40,9 +40,7 @@ def main() -> None:
     mimikyu = card("sm2", "sm2-58")
     assert regidrago["name"] == "Regidrago VSTAR"
     assert regidrago["retreatCost"] == ["Colorless"] * 3
-    assert kyurem["types"] == ["Water"]
-    # Kyurem is a Dragon-type Pokémon in the canonical print, check below.
-    assert "Dragon" in kyurem["types"]
+    assert kyurem["types"] == ["Dragon"]
     assert mimikyu["hp"] == "70"
     assert mimikyu["subtypes"] == ["Basic"]
     assert len([a for a in mimikyu["attacks"] if a["name"] == "Copycat"]) == 1
