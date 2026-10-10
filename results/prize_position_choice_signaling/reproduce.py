@@ -72,7 +72,7 @@ def main():
         else:
             raise AssertionError(f"accepted invalid policy likelihood {broken}")
 
-    print("Selected Prize-slot signaling passed: posterior 4/5 from 24? no, two worlds")
+    print("Selected Prize-slot signaling passed: exact two-world posterior 4/5")
     print("P(outgoing deck top A)=4/5 with selection-policy inference; baseline=1/2")
 
 
