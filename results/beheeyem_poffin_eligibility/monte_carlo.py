@@ -47,6 +47,8 @@ def estimate(vip: int, nest: int, poffin: int, eligible: bool,
             deck.remove("E")
         for _ in range(missing_a):
             deck.remove("A")
+        if missing:
+            rng.shuffle(deck)
         staged += 1
         if have["N"] + have["P"] - use_n - use_p > 0:
             joint += 1
