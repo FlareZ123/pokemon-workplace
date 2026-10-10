@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 import sys
 
@@ -16,7 +17,13 @@ from tools.effect_evolution_source_gate import (
 )
 from tools.effect_evolution_timing import build_profiles
 from tools.lock_state_kernel import PlayerChannels, apply_play_lock
+from tools.stadium_effect_instance_usage import (
+    StadiumCard,
+    StadiumEffectState,
+    StadiumInPlay,
+)
 from tools.turn_action_budget import TurnActionBudget
+from tools.turn_attack_window import fresh_turn
 
 PROFILES = build_profiles(ROOT / "resources")
 
@@ -128,23 +135,88 @@ def main() -> None:
     assert not source_action_available(boost_shake, item_lock)
 
     grand_tree = profile("sv7-136")
-    assert source_action_available(grand_tree, first_player)
-    spent_stadium = SourceActionContext(
-        is_players_first_turn=True,
-        went_first=True,
+    # Grand Tree must already occupy the Stadium zone for activation.
+    assert not source_action_available(grand_tree, first_player)
+    grand_tree_state = StadiumEffectState(
         budget=TurnActionBudget(stadium_plays_used=1),
+        in_play=StadiumInPlay(
+            StadiumCard("grand-tree-copy", "Grand Tree"),
+            "grand-tree-instance",
+        ),
     )
-    assert not source_action_available(grand_tree, spent_stadium)
+    spent_play = replace(
+        first_player,
+        window=fresh_turn(
+            action_budget=TurnActionBudget(stadium_plays_used=1)
+        ),
+        stadium_state=grand_tree_state,
+    )
+    assert source_action_available(grand_tree, spent_play)
+    # Restricting play from hand does not suppress an in-play effect.
+    assert source_action_available(
+        grand_tree,
+        replace(
+            spent_play,
+            channels=apply_play_lock(PlayerChannels(), "stadium"),
+        ),
+    )
+    assert not source_action_available(
+        grand_tree,
+        replace(
+            spent_play,
+            stadium_state=replace(
+                grand_tree_state,
+                in_play=StadiumInPlay(
+                    StadiumCard("different-copy", "Brooklet Hill"),
+                    "different-instance",
+                ),
+            ),
+        ),
+    )
 
+    # Grand Tree itself forbids evolving on the player's first turn.
     venusaur = PokemonCard("venusaur-copy", "Venusaur", "Bulbasaur")
     assert execute_source_gated_evolution(
         grand_tree,
-        first_player,
+        spent_play,
         board_for("Bulbasaur", first_turn=True),
         "pokemon-a",
         venusaur,
         new_retreat_cost=3,
     ) is None
+    assert not grand_tree_state.used_effect_instances
+
+    ivysaur_line = execute_source_gated_evolution(
+        grand_tree,
+        spent_play,
+        board_for("Bulbasaur", first_turn=False),
+        "pokemon-a",
+        ivysaur,
+        new_retreat_cost=2,
+    )
+    assert ivysaur_line is not None
+    assert ivysaur_line.budget.stadium_plays_used == 1
+    assert ivysaur_line.stadium_state is not None
+    assert ivysaur_line.stadium_state.used_effect_instances == {
+        "grand-tree-instance"
+    }
+    assert not source_action_available(
+        grand_tree,
+        replace(spent_play, stadium_state=ivysaur_line.stadium_state),
+    )
+
+    # A second in-play copy has separate effect-use history.
+    another_grand_tree = replace(
+        ivysaur_line.stadium_state,
+        in_play=StadiumInPlay(
+            StadiumCard("second-grand-tree-copy", "Grand Tree"),
+            "second-grand-tree-instance",
+        ),
+    )
+    assert source_action_available(
+        grand_tree,
+        replace(spent_play, stadium_state=another_grand_tree),
+    )
 
     mismatch = execute_source_gated_evolution(
         salvatore,
