@@ -1,0 +1,19 @@
+name: Validate Aichi exact Item necessity
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/secret_box_global_witnesses/exact_six_prize_item_necessity.py"
+      - ".github/workflows/validate-six-prize-item-necessity.yml"
+
+jobs:
+  exact_test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python results/secret_box_global_witnesses/exact_six_prize_item_necessity.py
