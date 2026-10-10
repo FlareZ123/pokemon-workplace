@@ -21,6 +21,7 @@ class QBComparison:
     qb_staged_k1_bench: Fraction
     dedenne_bench: Fraction
     qb_uses: Fraction
+    qb_uses_prior_k1: Fraction
     qb_staged_k1_dedenne: Fraction
 
     @property
@@ -60,6 +61,7 @@ def analyze(*, hand_size: int = 5, prize_count: int = 6,
         qb_staged_k1_bench=stage_k1,
         dedenne_bench=no_early,
         qb_uses=no_early,
+        qb_uses_prior_k1=Fraction(n, N),
         qb_staged_k1_dedenne=Fraction(n - a, N),
     )
 
