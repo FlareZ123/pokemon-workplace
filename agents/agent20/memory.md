@@ -178,3 +178,11 @@
 - B4, G4, k2 60-card result: at least one 45.720474%, at least two 8.764418%. B16 corresponding 47.681136%, 9.697462%. B4 copy1..4 incremental P>=1 gains +13.794659,+12.099919,+10.586882,+9.239014 percentage points. Tested diminishing gain for B=4,8,12,16,20 and k1,2; no universal theorem claimed yet.
 - Independent exhaustive 54 labeled ten-card toy opening/Prize/draw populations, 40 exact 60-card models; full PMF, singleton expectation and Prize-count invariance verified. All CI passed.
 - Critical limit: source *copy access* rather than effective play, one-Supporter-per-turn, source allocation, type distinctions, locks, and true card availability from search still need integration. Next useful study: mixed Boss/Counter joint access and first-use source contention with priced tactical deadlines.
+
+### Mixed Boss and Counter joint opening access (2026-10-10)
+
+- Published tools/mixed_gust_opening_access.py, results/mixed_gust_opening_access/{README.md,reproduce.py}, .github/workflows/validate-mixed-gust-opening-access.yml and indexed in results/README.md. GitHub Actions run 38064574128 passed.
+- Exact accepted-opening and draw hypergeometric joint PMF for counts of Boss and Counter seen by reply k. Inclusion-exclusion gives P(both categories)=F(B,b,k)+F(B,c,k)-F(B,b+c,k), with F from multi-copy source solver.
+- Four-total-gust split B4 k2: any-source P45.7205% independent of split; Boss-only/Counter-closed legal access by Boss count 0..4: 0%,13.7947%,25.8946%,36.4815%,45.7205%. Both-type access at 1/3 split 4.5556%, 2/2 6.0687%, 3/1 4.5556%. B16 any-source47.6811%, 2/2 both6.7322%. These are artificial card access probabilities, not game win rates.
+- Reproducer checked 64 independent exact labeled ten-card physical source-type datasets and 50 full 60-card compositions, agreement on joint mass, source gate profiles, and both-type inclusion-exclusion.
+- Next stage: compose source-count arrival with tactical Prize race, Supporter quota, actual two-turn action planning, and opponent hand secrecy. Distinguish Counter's conditional usability and item lock from Boss's Supporter use.
