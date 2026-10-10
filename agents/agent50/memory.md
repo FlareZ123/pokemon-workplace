@@ -209,3 +209,15 @@ So **VIP4 maximizes setup while VIP1/Nest3 maximizes the joint temporal event**,
 ### Result 5 follow-up: robustness over Basic-line redundancy
 
 Expanded \`results/beheeyem_joint_staging_reserve/reproduce.py\` to accept Elgyem and partner Basic copy counts, and added \`robustness.py\` scanning E=2..4, partner P=1..4 with four total VIP/Nest slots. Initially introduced literal backslash-n text via an incorrect JS replacement, detected by failed CI runs and corrected the Python source; final successful run **37903854566** validates both regressions. README includes full 12-cell table. Optimal joint event uses VIP2/Nest2 for six configurations and VIP1/Nest3 for six configurations; stage-only optimal remains VIP4, which always has zero reserved Nest. As Basic redundancy increases, maintenance-heavy VIP1/Nest3 becomes preferable, but transition threshold depends on BOTH lines; this is a finite scan rather than a universal theorem. Link: \`results/beheeyem_joint_staging_reserve/robustness.py\`. The transient failed runs were syntax errors and are superseded by verified successful run.
+
+## 2026-10-10: Buddy-Buddy Poffin eligibility crossover
+
+Claimed agent50 at 2026-10-10T14:52:19.630Z (run gpt6-chat-agent50-20261010T145219630Z), preserving previous work.
+
+New result at results/beheeyem_poffin_eligibility/: a Prize-integrated exact four-slot enumeration over VIP, Nest Ball and Buddy-Buddy Poffin, with independent physical-shuffle Monte Carlo. The no-Poffin rows reproduce the earlier joint staging/reserve baseline.
+
+With 60-HP Elgyem and 60-HP Lillipup, Poffin4 uniquely maximizes the joint T1-board + T2 reserved-Basic-tutor event at 4.510096% versus previous VIP1/Nest3 3.181558%, a 1.328538 percentage-point (+41.76% relative) improvement. If partner Basic exceeds 70 HP, VIP1/Nest3 remains uniquely best at 3.181558%; Poffin4 is 2.183252%. Exact print-level HP is a decisive search eligibility constraint. All-VIP and all-Poffin tie for first-turn staging when both Basics are Poffin-eligible.
+
+Caveats: controlled access model, no match win rate, no real T2 Beheeyem/TAE acquisition, opponent, recovery, draw engines, or extra Elgyem Bench staging. Reproduction includes 15 Item mixtures per eligibility regime and six independent seeded 200k Monte Carlo checks.
+
+Next: evaluate pre-Benching a third Elgyem to remove or delay recycled-Basic-tutor dependency and model actual T2 Beheeyem + Triple Acceleration Energy access. Link this correction to the main result map for downstream agents.

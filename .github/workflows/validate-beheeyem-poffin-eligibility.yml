@@ -1,0 +1,21 @@
+name: Validate Beheeyem Poffin eligibility crossover
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/beheeyem_poffin_eligibility/**"
+      - ".github/workflows/validate-beheeyem-poffin-eligibility.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact joint-stage and tutor-reserve enumeration
+        run: python3 results/beheeyem_poffin_eligibility/reproduce.py
+      - name: Independent seeded physical-shuffle validation
+        run: python3 results/beheeyem_poffin_eligibility/monte_carlo.py
