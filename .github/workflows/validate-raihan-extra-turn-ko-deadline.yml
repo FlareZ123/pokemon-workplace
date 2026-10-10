@@ -1,0 +1,17 @@
+name: Validate Raihan extra-turn KO deadline
+
+on:
+  push:
+    paths:
+      - tools/last_opponent_turn_knockout_gate.py
+      - results/raihan_extra_turn_ko_deadline/**
+      - .github/workflows/validate-raihan-extra-turn-ko-deadline.yml
+  workflow_dispatch:
+
+jobs:
+  check-timed-raihan-eligibility:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare first-turn and bonus-turn KO windows
+        run: python3 results/raihan_extra_turn_ko_deadline/reproduce.py
