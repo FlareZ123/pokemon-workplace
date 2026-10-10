@@ -1,0 +1,22 @@
+name: Validate Beheeyem Prize-awarded packet recurrence
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_prize_packet.py"
+      - "results/beheeyem_prize_packet/**"
+      - ".github/workflows/validate-beheeyem-prize-packet.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact Prize-take recurrence and old model parity
+        run: python3 results/beheeyem_prize_packet/reproduce.py
+      - name: Independent 60-card physical shuffle and Prize awards
+        run: python3 results/beheeyem_prize_packet/monte_carlo.py
