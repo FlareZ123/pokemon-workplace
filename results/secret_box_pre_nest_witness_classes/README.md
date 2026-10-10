@@ -65,6 +65,13 @@ of the accepted-opening distribution.
 The first class alone contributes **79.114642%**
 of the aggregate sequencing gain.
 
+**Stronger class-specific finding:** Nest-first reaches the exact
+clairvoyant Box-first K1 upper bound in **each of the four classes**.
+Their remaining information gap is exactly zero. These are classes
+where one legal prior search fully repairs the optimistic-payment error
+for this narrowly defined in-hand acquisition objective. The regression
+checks equality rather than relying on rounded percentages.
+
 The broader eligible event, an already-held Nest Ball plus exactly
 one visible Basic holder, has exact mass
 **808056/7874263 = 10.261988963285%**.
@@ -114,7 +121,7 @@ results/secret_box_pre_nest_witness_classes/reproduce.py. It:
    information bounds, and the high-disposable no-improvement condition.
 
 GitHub Actions validation:
-[run 38060487399, passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38060487399).
+[runs 38060487399 and 38060647783, passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38060487399).
 
 ## Next questions
 
