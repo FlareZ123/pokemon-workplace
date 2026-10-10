@@ -42,7 +42,7 @@ class _Path:
 
 def _run_path(policy: str, *, hand_size: int, target_location: str,
               target_deck_index: int, deck_cards: int,
-              bench_slots: int) -> _Path:
+              bench_slots: int, prize_known: bool) -> _Path:
     """Execute one physical target position; other cards are inert filler."""
     if policy not in POLICIES:
         raise ValueError("unknown policy")
@@ -80,6 +80,10 @@ def _run_path(policy: str, *, hand_size: int, target_location: str,
         current_hand = 0
         draw(6)
 
+    if prize_known and target_location == "prize" and policy in (
+            "dedenne_stop", "crobat_only", "crobat_dedenne_stop"):
+        return _Path(False, False, 0, 0, 0)
+
     if policy == "dedenne_blind":
         dedenne_play()
     elif policy == "dedenne_stop":
@@ -108,7 +112,7 @@ def _run_path(policy: str, *, hand_size: int, target_location: str,
 
 def analyze(*, hand_size: int = 5, deck_cards: int = 46,
             prizes: int = 6, natural_draws: int = 1,
-            bench_slots: int = 2) -> dict[str, Outcome]:
+            bench_slots: int = 2, prize_known: bool = False) -> dict[str, Outcome]:
     """Exact average over target locations without hidden-position clairvoyance.
 
     There is one target singleton among the natural_draws + prizes +
@@ -117,6 +121,8 @@ def analyze(*, hand_size: int = 5, deck_cards: int = 46,
     and preserved if it appeared in any of those draws; the hand-size input is
     already after non-target payments. For the two-support staging policy,
     the decision to use Dedenne depends only on whether K is now in hand.
+    If prize_known, a prior deck inspection established K is Prized, so
+    a goal-directed policy can skip all draw support in that state.
     """
     if min(deck_cards, prizes, natural_draws) < 0:
         raise ValueError("negative card count")
@@ -136,7 +142,8 @@ def analyze(*, hand_size: int = 5, deck_cards: int = 46,
     for policy in available:
         paths = [_run_path(policy, hand_size=hand_size,
                            target_location=zone, target_deck_index=index,
-                           deck_cards=deck_cards, bench_slots=bench_slots)
+                           deck_cards=deck_cards, bench_slots=bench_slots,
+                           prize_known=prize_known)
                  for zone, index in cases]
         result[policy] = Outcome(*(
             Fraction(sum(getattr(p, field) for p in paths), total)
