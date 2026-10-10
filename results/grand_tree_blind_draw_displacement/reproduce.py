@@ -48,7 +48,7 @@ def main() -> None:
                 analytic = probability_joint_after_draws(a, b, d)
                 counted = enumerate_access(
                     n=59, hand=6+d, prizes=6,
-                    stage1=a, stage2=b,
+                    first=a, second=b,
                 )
                 assert analytic == counted.full_chain, (a, b, d)
                 assert analytic <= prior
