@@ -1,0 +1,16 @@
+name: Validate Regidrago Budew promotion baselines
+
+on:
+  push:
+    paths:
+      - results/regidrago_budew_promotion_baselines/**
+      - .github/workflows/validate-regidrago-budew-promotion-baselines.yml
+  workflow_dispatch:
+
+jobs:
+  exact-inventory-oracle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the exact combinatorics and independent exhaustive oracle
+        run: python3 results/regidrago_budew_promotion_baselines/reproduce.py
