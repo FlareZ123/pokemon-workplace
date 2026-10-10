@@ -147,3 +147,12 @@ Addressed the epistemic hazard with `tools/prize_choice_policy_information.py`, 
 
 Core caution: a **caller-supplied** actor information partition can still falsely claim the actor knows a card. Stronger next work derives partitions from a sequence of private/public observations, then composes policy signaling and physical transitions. The repository's preexisting causal event journal may offer an event-provenance pattern, though it covers a different part of card play.
 
+
+### 2026-10-10: source-authorized observation history as epistemic state
+
+Added `tools/prize_epistemic_trace.py` + `results/prize_epistemic_trace/`. Unlike the previous manually caller-labeled actor partition, each physical grouped world now carries an observer-indexed history of private/public events. A `private_peek` splits actor histories on observed top or Prize position without exposing identity to opponents. `select_and_swap` accepts normalized stochastic distributions keyed only by recorded actor history, conditions everyone on the public choice, and physically exchanges chosen Prize with deck top in all worlds. A hidden face-down shuffle applies uniform permutation and tracks the event; public reveal conditions all observers.
+
+Two-state rational oracle validates posterior 4/5 after actor's private peek at Prize0 with slot0 selection rate 4/5 when A and 1/5 when B. With no peek, both worlds share empty actor history, a single admissible mixed action cannot signal A, leaving opponent posterior 1/2. Shuffling hides physical Prize-slot identity but preserves history and outgoing top knowledge, while a later public reveal updates all. Regression and [CI 38057732628](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38057732628) passed.
+
+Cautions: the game-facing producer must ensure `private_peek` is card/rule-authorized and faithfully report all events. Finite grouped observation traces are not full game rules, do not include arbitrary ordered deck state, and have no physical material ledger. Next high-value bridge: couple one realized physical instance world with observer-history trace, guaranteeing the actual world has support and all private observations match actual physical identities. Stronger tests should examine information loss from merging indistinguishable *physical* worlds but distinguishable private histories.
+
