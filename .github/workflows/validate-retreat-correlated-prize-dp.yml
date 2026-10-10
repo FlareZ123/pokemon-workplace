@@ -1,0 +1,25 @@
+name: Validate correlated Prize Retreat payment counting
+
+on:
+  push:
+    paths:
+      - "tools/retreat_correlated_prize_dp.py"
+      - "results/retreat_correlated_prize_dp/**"
+      - ".github/workflows/validate-retreat-correlated-prize-dp.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Compare correlated-world DP with physical action sets
+        run: |
+          python results/retreat_correlated_prize_dp/reproduce.py
+          python results/retreat_prize_minimality_paradox/reproduce.py
