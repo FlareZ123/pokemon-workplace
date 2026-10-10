@@ -169,7 +169,7 @@ def main() -> None:
                 two, reserve, three, union = continuation_access(
                     vip, nest, poffin, anchor_poffin_eligible=eligible
                 )
-                        assert union >= max(three, reserve)
+                assert union >= max(three, reserve)
                 assert union <= three + reserve
                 rows.append({
                     "vip": vip, "nest": nest, "poffin": poffin,
