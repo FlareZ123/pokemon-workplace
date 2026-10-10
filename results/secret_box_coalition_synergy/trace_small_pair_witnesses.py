@@ -79,6 +79,9 @@ def main(trials: int = 500_000) -> None:
             deck["Guzma & Hala"] > 0,
             deck["Tag Call"] > 0,
             deck["Bunnelby"] > 0,
+            deck["tool_other"] > 0,
+            deck["supporter_other"] > 0,
+            deck["tag_team_other"] > 0,
         )
         for bit, is_pair in ((6, a), (12, b)):
             if is_pair:
@@ -103,6 +106,8 @@ def main(trials: int = 500_000) -> None:
         "Jirachi sees G&H", "Jirachi sees Tag Call", "Jet searchable",
         "TM searchable", "Artazon searchable", "G&H searchable",
         "Tag Call searchable", "Bunnelby searchable",
+        "non-TM Tool searchable", "other Supporter searchable",
+        "other TAG TEAM searchable",
     )
     for mask in (6, 12):
         print("pair", mask, "total", sum(profiles[mask].values()))
