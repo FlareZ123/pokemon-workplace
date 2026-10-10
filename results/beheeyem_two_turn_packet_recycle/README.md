@@ -41,7 +41,7 @@ For a comparator, a hypothetical attack **discards** its spent Beheeyem and TAE 
 
 ## Findings with four Beheeyem and four TAE
 
-<|metric|> | Exact probability |
+Metric | Exact probability |
 | --- | ---: |
 | First T2 attack packet available | **12.006938%** |
 | T2 and T3 packets available, actual shuffle effect | **0.316352%** |
