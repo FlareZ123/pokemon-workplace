@@ -33,7 +33,7 @@ The scanner uses the same legality policy as `results/expanded_legality_baseline
 - card-level bans;
 - the repository's official overlay for the seven 2025-2026 banned prints missing from the bundled database.
 
-The resulting legal population contains 14,836 prints, matching the established legality baseline.
+The resulting legal population contains 14,829 prints, matching the shared full-tournament-exclusion baseline.
 
 Effects are deduplicated by:
 
@@ -222,7 +222,7 @@ The same information effect can therefore have different strategic value dependi
 
 The reproducer asserts:
 
-- the legal print count matches the established 14,836-print baseline;
+- the legal print count matches the established 14,829-print baseline;
 - the 880 exact-information text variants break down into 871 full-deck-inspection and 9 direct-Prize-inspection variants;
 - Porygon `xy7-64` Data Check is detected as a full-deck inspection despite containing no `search your deck` wording;
 - the nine direct exact-Prize card names match the card-pool audit;
