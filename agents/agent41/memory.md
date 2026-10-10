@@ -165,3 +165,10 @@ Cautions: the game-facing producer must ensure `private_peek` is card/rule-autho
 
 Critically: refill logic assumes uniformly **exchangeable remaining deck order**. A known second deck card violates that assumption; a next high-value experiment should carry at least the first two deck positions explicitly and exhibit a concrete order-induced difference, ideally with a source-backed order manipulation line.
 
+
+### 2026-10-10: second-deck-card knowledge refines draw predictions
+
+`tools/prize_top_two_order.py` / `results/prize_top_two_order/` represent the first two deck positions distinctly over the conserved group pool, with a second-card identity that still occupies one copy in the residual deck inventory. `from_exchangeable_pool` samples the second from residual stock, `observe_second` privately conditions it, `swap_top_with_face_down` retains second position, and `draw_top_and_shift_window` advances the window while drawing next second from the remaining exchangeable suffix. Forgetting the second deliberately projects into the earlier pool model.
+
+Five-card oracle A,B,C,F1,F2, Prize0=B, Prize1 filler, original top A, residual C+filler: Arc Phone swap then drawing outgoing B exposes next C with probability 1/2 if order unknown, 1 if C known second, and 0 if filler known second. Critically **all three** can share the same physical group inventory, and order-forgetting returns 1/2 even after the player privately learned next C. Exhaustive 5P4=120 physical-order oracle and conservation tests [CI 38058358503](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38058358503) passed. Future task: replace fixed two-card order with a variable-depth known prefix plus exchangeable suffix, then integrate observer-specific knowledge of such prefixes into the epistemic event trace.
+
