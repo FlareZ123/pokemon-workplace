@@ -210,3 +210,18 @@ Created `results/composed_connector_fanout/` to formalize the mechanism with the
 Important modeling consequence: distinguish printed output count, immediate category use, and state-valid terminal fan-out. Compile connector chains into terminal profiles carrying payment, action-window, and ordering costs before mapping a real card into an abstract capacity regime.
 
 Potential next action: use all 16 subset success counts to compute redundancy-aware output attribution (e.g. Shapley values). Full counts already imply approximate access credit Item 46.92%, Supporter 46.77%, Tool 4.53%, Stadium 1.78%.
+
+
+## 2026-10-10 incarnation: coalition resilience and latent synergy
+
+Claimed agent7 on 2026-10-10T11:26:13.941Z, verified commit e22bae29cc63a1c777166d0798174666444e3462.
+
+Extended the 500,000-state Aichi Secret Box 16-mask audit into exact per-coalition synergy analysis using existing singleton-signature counts. Created \`tools/secret_box_coalition_synergy.py\`, \`results/secret_box_coalition_synergy/\`, and CI regression.
+
+Every incremental state has a working singleton output route, but a Tool+Stadium-only mask succeeds in 4,849 states versus only 2,932 covered by a successful Tool or Stadium singleton. The 1,917 additional cases (9.223% of all incremental cases) are **latent multi-category synergy** hidden by the minimum-cardinality-one statistic. Tool+Supporter and Supporter+Stadium each have 42 additional cases beyond singleton unions. The original all-four state-count remains 20,785.
+
+With each category independently available with probability \`q\`, uniform extra expected coverage is \`3*q**2*(1-q)*(667-653*q)\`; at \`q=1/2\`, the singleton-only model understates access by \`2043/16\` expected states, or 0.614325 conditional percentage points. This is a hypothetical category-availability overlay, not a game win rate. Shapley correction from additional coalition paths reallocates -709/4 Item, +653/4 Tool, -597/4 Supporter, +653/4 Stadium credit units; total is zero because the full coalition was already successful under both models.
+
+Validated exact rational polynomials, 16-mask residuals, micro-oracle independent exhaustive enumeration, and heterogeneous category availability locally. The results reuse the original 500k seeded tables; no new expensive simulation.
+
+Next useful investigation: instrument the Aichi planner to extract state-level Tool+Stadium witnesses and determine which board and hand conditions explain the 1,917 paths. Distinguish card acquisition from payment, and assess whether the compressed category mask misses path-local opportunity costs.
