@@ -37,6 +37,12 @@ Each stage must be evaluated with physical Prize cards, card locations, real sea
 - [K1 prefetch under future lock](../beheeyem_prefetch_lock_policy/) compares saving a tutor to T2 prefetch when the first packet already exists. A hypothetical independent T3 Item-play prohibition with probability q can reward early Computer Search. B4/TAE4/d1 and certain prohibition: saved-tutor baseline 0.361169% versus K1-optimized T2 prefetch 0.562252%. At q=0, deferred universal search is at least as good throughout the tested finite grid.
 - Category-limited tutor search has a small different phenomenon: early Ultra Ball can remove a spare Pokémon from the deck and improve the density of the unsearchable TAE before T3 draws, even without a lock. The measured B4/TAE4/d2 unlocked gain is only 0.002541 percentage points, so it should not be mistaken for a deck-building priority without other costs.
 
+
+
+### 6. Knock Out awards can release packet cards previously trapped in Prizes
+
+- [Prize-awarded packet continuation](../beheeyem_prize_packet/) integrates the complete six-Prize composition, uniformly chosen face-down Prize awards at the end of the first attack, and all T3 physically available packet/tutor/filler cards. Under the conditioned B4/TAE4/Computer Search/d1 setup, awarding no Prizes gives **0.662553%** two-packet access; awarding one gives **1.125764%** and awarding two **1.679597%**. The reward count is an **exogenous conditional KO outcome**, not an attack KO rate. The experiment demonstrates that Prize progression can directly improve next-turn resource access.
+
 ## What has been proved versus assumed
 
 The listed numbers are mathematically exact **within their conditional probability models**, independently checked by physical-shuffle simulation and committed GitHub Actions where specified. The experiments do **not** currently provide actual match win rates or fully legal action-level play traces. The later models condition on an already staged, mature three-Basic board, all neutral filler discardable, no competing use of an ACE SPEC or Supporter, and exogenously provided T3 draws. The future-lock model additionally assumes K1 Prize knowledge and an exogenous lock probability independent of the player's policy.
