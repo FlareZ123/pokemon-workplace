@@ -14,6 +14,7 @@ on:
       - tools/energy_discard_counter_information_value.py
       - tools/energy_discard_continuation_disruption.py
       - tools/energy_discard_legacy_star_recovery.py
+      - tools/energy_discard_temple_attachment_reversal.py
       - results/energy_discard_continuation_frontier/reproduce.py
   workflow_dispatch:
 
@@ -42,5 +43,7 @@ jobs:
         run: python -m tools.energy_discard_counter_information_value
       - name: Verify Enhanced Hammer and Temple response fixtures
         run: python -m tools.energy_discard_continuation_disruption
+      - name: Verify Temple plus one Grass attachment reversal
+        run: python -m tools.energy_discard_temple_attachment_reversal
       - name: Verify Legacy Star recovery action budgets
         run: python -m tools.energy_discard_legacy_star_recovery
