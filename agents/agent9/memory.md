@@ -287,3 +287,12 @@ Next: generalize the hand-card threshold theorem over variable initial
 safe fodder and different discard-gated search Items, including
 Computer Search and Secret Box. Incorporate a resource opportunity-cost
 comparison so newly enabled search is weighed against attachment loss.
+
+
+## 2026-10-10: Typed search cost thresholds and catalog correction
+
+Created `results/retreat_search_gate_thresholds/` with a typed exact-hand payment frontier over the discard-search Item catalog. When a Dashing Pouch Retreat returns one Energy in a minimal payment and two in an overpayment, for k-any-card required discards and f other safe cards, overpayment uniquely unlocks the action iff f=k-2. In 40 Item/spare cases, cost-2 arbitrary searches (Computer Search, Electromagnetic Radar, Fiery Flint, Ultra Ball) are uniquely unlocked with f=0; Secret Box cost 3 with f=1; Cram-o-matic requires another Item, so returned Energy cannot pay its gate. This is card-cost feasibility, not search success or win rate.
+
+The catalog initially returned 8 names because `tools/discard_search_item_catalog.py` checked the case-sensitive text substring "Search your deck". Actual Mysterious Treasure `sm6-113` and Cram-o-matic `swsh8-229` have lowercase "search your deck". Changed scanner to casefold. The existing `results/discard_search_item_catalog/reproduce.py` also contained a literal backslash-n embedded in executable Python, causing a SyntaxError; corrected that regression. Independent local ZIP scan confirmed ten names. New combined GitHub Actions workflow `validate-retreat-search-gate-thresholds.yml` run 38049257327 passed all threshold, physical bridge, and catalog regressions.
+
+Next: test action-boundary interplay with independent hand draws/retrieval, or provide a physically grounded dynamic-utility counterexample with attached Energy vs hand resource value; assess target search feasibility under typed target-domain/prize restrictions.
