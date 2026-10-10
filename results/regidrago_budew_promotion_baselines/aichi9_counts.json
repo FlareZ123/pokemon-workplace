@@ -1,6 +1,6 @@
 {
   "event": "2026 CL Aichi Open League, nine published top-32 Regidrago lists",
-  "source_note": "Transcribed from Limitless decklist pages on 2026-10-10. Search entries count only Quick Ball, Nest Ball, Net Ball. Promotion counts are Guzma and Prime Catcher only. See README for condition caveats.",
+  "source_note": "Transcribed from Limitless decklist pages on 2026-10-10. Search entries count only Quick Ball, Nest Ball, Net Ball. Promotion counts are Guzma and Prime Catcher only. See README for condition caveats. Hisuian Heavy Ball counts additionally recorded for the joint Prize collision audit.",
   "decklists": [
     {
       "place": 10,
@@ -11,7 +11,8 @@
       "net_ball": 0,
       "guzma": 2,
       "prime_catcher": 1,
-      "latias_ex": 1
+      "latias_ex": 1,
+      "hisuian_heavy_ball": 1
     },
     {
       "place": 12,
@@ -22,7 +23,8 @@
       "net_ball": 0,
       "guzma": 2,
       "prime_catcher": 0,
-      "latias_ex": 1
+      "latias_ex": 1,
+      "hisuian_heavy_ball": 1
     },
     {
       "place": 13,
@@ -33,7 +35,8 @@
       "net_ball": 0,
       "guzma": 2,
       "prime_catcher": 0,
-      "latias_ex": 1
+      "latias_ex": 1,
+      "hisuian_heavy_ball": 1
     },
     {
       "place": 14,
@@ -44,7 +47,8 @@
       "net_ball": 0,
       "guzma": 2,
       "prime_catcher": 0,
-      "latias_ex": 1
+      "latias_ex": 1,
+      "hisuian_heavy_ball": 1
     },
     {
       "place": 18,
@@ -55,7 +59,8 @@
       "net_ball": 0,
       "guzma": 3,
       "prime_catcher": 1,
-      "latias_ex": 1
+      "latias_ex": 1,
+      "hisuian_heavy_ball": 2
     },
     {
       "place": 20,
@@ -66,7 +71,8 @@
       "net_ball": 0,
       "guzma": 2,
       "prime_catcher": 0,
-      "latias_ex": 1
+      "latias_ex": 1,
+      "hisuian_heavy_ball": 1
     },
     {
       "place": 21,
@@ -77,7 +83,8 @@
       "net_ball": 0,
       "guzma": 2,
       "prime_catcher": 0,
-      "latias_ex": 1
+      "latias_ex": 1,
+      "hisuian_heavy_ball": 1
     },
     {
       "place": 27,
@@ -88,7 +95,8 @@
       "net_ball": 1,
       "guzma": 2,
       "prime_catcher": 1,
-      "latias_ex": 1
+      "latias_ex": 1,
+      "hisuian_heavy_ball": 1
     },
     {
       "place": 32,
@@ -99,7 +107,8 @@
       "net_ball": 0,
       "guzma": 2,
       "prime_catcher": 0,
-      "latias_ex": 1
+      "latias_ex": 1,
+      "hisuian_heavy_ball": 1
     }
   ]
 }
