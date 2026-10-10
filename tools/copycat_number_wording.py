@@ -33,6 +33,8 @@ def normalize_copycat_count_wording(card: dict[str, Any]) -> dict[str, Any]:
     ):
         raise ValueError("Audited Copycat source lost its Supporter classification")
     rules = list(normalized.get("rules") or [])
+    if rules.count(REFERENCE_TEXT) == 1 and SOURCE_TEXT not in rules:
+        return normalized
     if rules.count(SOURCE_TEXT) != 1:
         raise ValueError("Audited Copycat source text changed")
     normalized["rules"] = [
