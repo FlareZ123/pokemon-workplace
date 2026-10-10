@@ -122,3 +122,32 @@ The combined evidence gives complementary tools for robust deck research: finite
 Run `python results/secret_box_coalition_synergy/constructive_global_witnesses.py` from repository root. It verifies card multiplicities, 60 unique physical positions, accepted basic opener, Grand Tree baseline failure, full Secret Box success, and each subset-mask outcome. [Passing CI run 38050810040](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38050810040).
 
 The solver compresses several card identities, does not price future discard utility, and only models a constrained first-turn setup endpoint. These counterexamples are **proofs about that exact computational model**. They identify states a finite random sample can miss, and they motivate exact support-cover verification and more faithful state-level simulator coverage.
+
+
+## Exact positive-mass lower bounds for every omitted output (2026-10-10)
+
+The [exact portfolio lower-bound reproducer](exact_portfolio_lower_bounds.py) strengthens the three constructive witnesses into **three disjoint families**, rather than relying on one physically ordered deck permutation or only Monte Carlo. [GitHub Actions validation passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38093543413).
+
+Define a conservative 11-card physical discard-filler stock comprising Guzma ×2 and single copies of Cassius, Karen, Plumeria, Gladion, Faba, Lusamine, Peonia, Team Yell's Cheer, and Bellelba & Brycen-Man. These are all non-Basic cards that the compressed first-turn planner treats as generic hand material. Their actual future value is omitted by that solver.
+
+1. **Supporter-indispensable family.** Prize Tag Call ×4, one Pidgeotto, and one Gloom. Open Oddish, the ACE SPEC, plus five of the 11 filler cards, then draw a sixth different filler. Across all **2,772** physically indexed filler/draw configurations, Grand Tree fails, full Secret Box succeeds, and Secret Box with Supporter output suppressed fails. Starting Active is always Oddish, so opening and Prize card order changes no modeled state.
+2. **Tool-and-Stadium-indispensable family.** Prize Guzma & Hala ×4, one Pidgeotto, and one Gloom. Open Oddish, the ACE SPEC, one Jet Energy, and four of the 11 fillers; draw a fifth different filler. Across all **2,310** configurations, Grand Tree fails, full Secret Box succeeds, and suppressing **either** Tool or Stadium output causes failure.
+3. **Item-indispensable family.** Prize Stealthy Hood ×3, Counter Gain, and Artazon ×2. Open one of **either** Oddish copies, the ACE SPEC, one of **either** Bunnelby copies, both TM: Evolution copies, and two of the 35 generic fillers identified in [the prior exhaustive study](exhaustive_item_payment_family.py); draw a third distinct filler. The earlier 39,270 ordered regression checks establish this generic-stock family's outcome. Swapping physical-copy indices of Oddish and Bunnelby cannot affect the named-card planner's state, giving a **fourfold stronger probability bound** than the previously quoted family restricted to one indexed copy of each.
+
+With a 60-card deck, six Prizes, and a seven-card opener, let **A = 1 − C(46,7)/C(60,7)** be the exact probability of an accepted opening containing an ordinary Basic. The three event-family probabilities conditional on acceptance are:
+
+| Family | Exact probability | Decimal approximation |
+| --- | --- | ---: |
+| Supporter required | 3/48561235923200 | 6.17776698424e−14 |
+| Tool **and** Stadium required | 1/9712247184640 | 1.02962783071e−13 |
+| Item required | 1/4570469263360 | 2.18795914025e−13 |
+
+For the Supporter family, the unconditional physical draw probability is
+
+**[2×2/C(60,6)] × [2×C(11,5)/C(54,7)] × [6/47].**
+
+The first factor selects one of two Pidgeotto and one of two Gloom for the remaining two Prizes; the second selects one of two Oddish plus the ACE SPEC and five fillers into the unordered opener; the third selects a sixth filler as the first draw. Divide by **A**. For Tool-and-Stadium, substitute **[2×2×C(11,4)/C(54,7)] × [7/47]** for the opener-plus-draw factors. For Item, the factors are **[1/C(60,6)] × [2×2×C(35,2)/C(54,7)] × [33/47]**, again divided by **A**.
+
+Because the three exact Prize layouts are mutually disjoint, if a proposed fixed subset of Secret Box outputs omits Supporter, Tool, Stadium, or Item, its model loss probability relative to full Secret Box is bounded below by the sum of the applicable **distinct** family probabilities above. Tool and Stadium omissions share one family and are counted **once**. Every proper output subset therefore has a provably positive miss probability in this compressed model.
+
+**Scope:** exact masses are rigorous probabilities for these deliberately narrow events under uniform shuffling and accepted Basic starts. Solver success/failure refers to the existing first-turn-core model, which omits future resource utility, opponent actions, and many tactical constraints. The bounds can be far smaller than the true model-wide output-subset loss. They are mathematical counterexample incidence bounds, not match win-rate claims.
