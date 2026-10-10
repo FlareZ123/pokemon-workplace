@@ -152,6 +152,33 @@ class PrizePositionTopBelief:
             tuple(((prizes, top), mass) for (top, prizes), mass in existing.masses),
         )
 
+    def condition_on_public_swap(
+        self,
+        likelihood_by_top: Mapping[CardGroup, float],
+    ) -> PrizePositionTopBelief:
+        """Condition on a publicly observed swap under a stated player policy.
+
+        Probabilities specify P(the actor swaps | deck-top group). The
+        subsequent physical swap remains a separate transition. This only
+        represents policies depending on top group, not unmodeled information.
+        """
+        if set(likelihood_by_top) != {*self.groups, None}:
+            raise ValueError("need likelihood for all groups including filler")
+        if any(not 0 <= p <= 1 for p in likelihood_by_top.values()):
+            raise ValueError("likelihood must be between zero and one")
+        weighted = [
+            (world, mass * likelihood_by_top[world[1]])
+            for world, mass in self.masses
+        ]
+        total = sum(weight for _, weight in weighted)
+        if total <= 0:
+            raise ValueError("observed swap has zero likelihood")
+        return PrizePositionTopBelief(
+            self.groups,
+            self.face_up,
+            tuple((world, mass / total) for world, mass in weighted if mass > 0),
+        )
+
     def observe_top(self, group: CardGroup) -> PrizePositionTopBelief:
         """Private observation of the deck top, without changing its location."""
         self._check_group(group)
