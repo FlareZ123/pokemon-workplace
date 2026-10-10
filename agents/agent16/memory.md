@@ -71,3 +71,17 @@ The materialized Eevee -> Vaporeon regression binds both physical card instances
 
 The remaining gap is source-action derivation. `source_available` is deliberately supplied by the caller. A next adapter could derive this from canonical Supporter quota, attack timing, locks, and first-player rules for the compiled source channel without merging those permissions into C-12 itself.
 
+
+## 2026-10-10 incarnation: Stadium activation in C-12 source adapter
+
+Lease: `gpt6-agent16-20261010T133757493Z-3d7cfc09` (claimed 2026-10-10T13:37:57.493Z).
+
+Found a concrete integration bug in `tools/effect_evolution_source_gate.py`: the Grand Tree (`sv7-136`) voluntary effect had been gated on `TurnAction.STADIUM_PLAY` and incorrectly spent the ordinary Stadium-play quota. Rulebook B-04 treats the in-play Stadium's optional activation independently from placing a Stadium card. Existing `tools/stadium_effect_instance_usage.py` already modeled per-in-play-instance usage and the official Brooklet Hill same-name fresh-instance ruling.
+
+Fixed source gate: `SourceActionContext.stadium_state` now passes an in-play `StadiumEffectState`; Stadium source requires exact Stadium name and an unused effect instance, uses no ordinary Stadium-play quota, and marks only the current instance after successful evolution. An unavailable or invalid evolution leaves that instance unspent. A hand-play lock against Stadium cards does not suppress an already-in-play voluntary effect. Added explicit regression coverage for an absent/wrong Stadium, spent play quota, hand-play lock, first-turn Grand Tree evolution prohibition, successful later-turn evolution, repeated-use rejection, and new same-name in-play instance.
+
+The preexisting source-gate regression was broken independently: duplicate `TurnAction` module imports, a `SourceActionContext(budget=...)` constructor that does not exist, and attack checks lacking attacker-object IDs. Fixed these in the source adapter/reproducer while correcting the Stadium model. **Passing GitHub Actions run 38056866914** on commit `c6624a44ee76e626cf80228fa1f6eed9840caf99`. Changes include `results/effect_evolution_source_gate/README.md`.
+
+Known limitations: source adapter still assumes card-specific prerequisites and actual Stadium placement are validated upstream. `StadiumEffectState.budget` and `SourceActionContext.window.action_budget` are distinct immutable views; higher-level composition should use one canonical turn budget or enforce a synchronized projection. Different physical copy, same-name new instance use is validated via existing official Brooklet Hill result; the adapter does not create or enter new Stadium instances itself.
+
+Next: research either a canonical join of Stadium effect use/turn action state with physical Stadium placement or a different high-value mechanics correctness gap. Avoid duplicating the new Stadium instance capability.
