@@ -66,7 +66,7 @@ def scan_discard_search_items(root: Path) -> tuple[DiscardSearchItem, ...]:
             if "Item" not in (card.get("subtypes") or []):
                 continue
             text = " ".join(card.get("rules") or [])
-            if "Search your deck" not in text:
+            if "search your deck" not in text.casefold():
                 continue
             gate = _gate(text)
             if gate is None:
