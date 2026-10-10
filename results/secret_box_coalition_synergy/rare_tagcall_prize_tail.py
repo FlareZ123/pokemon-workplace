@@ -33,7 +33,9 @@ def accepted_opening_prize_collapse_probability() -> Fraction:
     starting_valid = 1 - Fraction(
         comb(cards - basics, hand_count), comb(cards, hand_count)
     )
-    # The opening draws uniformly from the 56 non-Tag-Call cards. The two\n    # other Prize cards can be Basic; never assume all Basics remain among 54.\n    valid_given_prized = 1 - Fraction(
+    # The opening draws uniformly from the 56 non-Tag-Call cards. The two
+    # other Prize cards can be Basic; never assume all Basics remain among 54.
+    valid_given_prized = 1 - Fraction(
         comb(cards - tag_calls - basics, hand_count),
         comb(cards - tag_calls, hand_count),
     )
