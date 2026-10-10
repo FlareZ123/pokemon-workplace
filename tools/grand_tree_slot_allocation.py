@@ -12,6 +12,7 @@ from fractions import Fraction
 from math import comb
 
 from tools.grand_tree_initial_zone_probability import probability_full
+from tools.grand_tree_target_basic_conditioning import conditional_full_chain
 
 
 @dataclass(frozen=True)
@@ -99,3 +100,41 @@ def optimal_splits(
         return ()
     best = rows[0].both_deck
     return tuple(row for row in rows if row.both_deck == best)
+
+
+def conditional_frontier(
+    total_copies: int,
+    *,
+    target_basics: int,
+    max_copies_per_stage: int = 4,
+    cards: int = 60,
+    hand: int = 7,
+    prizes: int = 6,
+) -> tuple[Allocation, ...]:
+    """Rank Stage1/Stage2 splits given >=1 target Basic in opening hand.
+
+    Uses the same exact card counts as the target-Basic-conditioned
+    hypergeometric model. The ranked objective remains immediate
+    searchable-deck availability, without future game actions.
+    """
+    if total_copies < 2 or max_copies_per_stage < 1 or target_basics < 1:
+        raise ValueError("invalid stage-copy allocation or target Basic count")
+    rows = tuple(
+        Allocation(
+            stage1=stage1,
+            stage2=total_copies - stage1,
+            both_deck=conditional_full_chain(
+                basics=target_basics,
+                stage1=stage1,
+                stage2=total_copies - stage1,
+                cards=cards,
+                hand=hand,
+                prizes=prizes,
+            ),
+        )
+        for stage1 in range(1, total_copies)
+        if stage1 <= max_copies_per_stage
+        and total_copies - stage1 <= max_copies_per_stage
+        and target_basics + total_copies <= cards
+    )
+    return tuple(sorted(rows, key=lambda row: (-row.both_deck, row.stage1)))
