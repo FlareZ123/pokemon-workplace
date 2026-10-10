@@ -57,6 +57,34 @@ def main() -> None:
         for world, mass in actual.masses:
             close(oracle[world], mass)
 
+    # Adversarial cross-check against the pre-existing agent41 joint kernel.
+    # That kernel starts from a Prize-position prior and a known incoming top;
+    # the new kernel supplies the prior by conditioning a fully joint random deal.
+    from prize_position_belief import PrizePositionBelief
+    from prize_slot_visibility import PrizeSlotVisibilityBelief
+    from prize_top_swap_belief import swap_known_top_with_face_down_prize
+
+    old_prior_masses = defaultdict(float)
+    for (prizes, _), mass in base.observe_top("A").masses:
+        old_prior_masses[prizes] += mass
+    old_prior = PrizePositionBelief(
+        ("A", "B"), 2, tuple(old_prior_masses.items())
+    )
+    old_joint = swap_known_top_with_face_down_prize(
+        PrizeSlotVisibilityBelief.all_face_down(old_prior),
+        position=0,
+        incoming_group="A",
+    )
+    bridged = actor.as_existing_top_prize_joint()
+    old_masses = dict(old_joint.masses)
+    assert set(old_masses) == {w for w, _ in bridged.masses}
+    for world, mass in bridged.masses:
+        close(mass, old_masses[world])
+    roundtrip = PrizePositionTopBelief.from_existing_top_prize_joint(bridged)
+    assert dict(roundtrip.masses).keys() == dict(actor.masses).keys()
+    for world, mass in roundtrip.masses:
+        close(mass, dict(actor.masses)[world])
+
     # Composition is insufficient: swap target position zero vs one.
     other_position = base.observe_top("A").swap_face_down_with_top(1)
     first = dict(actor.composition_masses())
