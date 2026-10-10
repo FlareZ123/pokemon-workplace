@@ -1,6 +1,6 @@
 {
   "event": "2026 CL Aichi Open League, nine published top-32 Regidrago lists",
-  "source_note": "Transcribed from Limitless decklist pages on 2026-10-10. Search entries count only Quick Ball, Nest Ball, Net Ball. Promotion counts are Guzma and Prime Catcher only. See README for condition caveats. Hisuian Heavy Ball counts additionally recorded for the joint Prize collision audit. The Kyurem Shrouded Fable print is additionally checked in all nine pages for the adjacent bench-snipe study. The Crispin/Raihan and Basic Energy source-list counts are recorded for a post-Trifrost recharge study.",
+  "source_note": "Transcribed from Limitless decklist pages on 2026-10-10. Search entries count only Quick Ball, Nest Ball, Net Ball. Promotion counts are Guzma and Prime Catcher only. See README for condition caveats. Hisuian Heavy Ball counts additionally recorded for the joint Prize collision audit. The Kyurem Shrouded Fable print is additionally checked in all nine pages for the adjacent bench-snipe study. The Crispin/Raihan and Basic Energy source-list counts are recorded for a post-Trifrost recharge study. Noivern ex (Covert Flight) counts are added for a damage-shield versus attack-history analysis.",
   "decklists": [
     {
       "place": 10,
@@ -18,7 +18,8 @@
       "raihan": 1,
       "basic_grass": 4,
       "basic_fire": 2,
-      "double_dragon_energy": 4
+      "double_dragon_energy": 4,
+      "noivern_ex_sv2_153": 0
     },
     {
       "place": 12,
@@ -36,7 +37,8 @@
       "raihan": 2,
       "basic_grass": 4,
       "basic_fire": 2,
-      "double_dragon_energy": 4
+      "double_dragon_energy": 4,
+      "noivern_ex_sv2_153": 1
     },
     {
       "place": 13,
@@ -54,7 +56,8 @@
       "raihan": 1,
       "basic_grass": 4,
       "basic_fire": 3,
-      "double_dragon_energy": 3
+      "double_dragon_energy": 3,
+      "noivern_ex_sv2_153": 1
     },
     {
       "place": 14,
@@ -72,7 +75,8 @@
       "raihan": 2,
       "basic_grass": 4,
       "basic_fire": 2,
-      "double_dragon_energy": 4
+      "double_dragon_energy": 4,
+      "noivern_ex_sv2_153": 1
     },
     {
       "place": 18,
@@ -90,7 +94,8 @@
       "raihan": 1,
       "basic_grass": 2,
       "basic_fire": 2,
-      "double_dragon_energy": 4
+      "double_dragon_energy": 4,
+      "noivern_ex_sv2_153": 0
     },
     {
       "place": 20,
@@ -108,7 +113,8 @@
       "raihan": 1,
       "basic_grass": 4,
       "basic_fire": 2,
-      "double_dragon_energy": 4
+      "double_dragon_energy": 4,
+      "noivern_ex_sv2_153": 1
     },
     {
       "place": 21,
@@ -126,7 +132,8 @@
       "raihan": 1,
       "basic_grass": 4,
       "basic_fire": 3,
-      "double_dragon_energy": 3
+      "double_dragon_energy": 3,
+      "noivern_ex_sv2_153": 1
     },
     {
       "place": 27,
@@ -144,7 +151,8 @@
       "raihan": 1,
       "basic_grass": 4,
       "basic_fire": 2,
-      "double_dragon_energy": 4
+      "double_dragon_energy": 4,
+      "noivern_ex_sv2_153": 1
     },
     {
       "place": 32,
@@ -162,7 +170,8 @@
       "raihan": 1,
       "basic_grass": 4,
       "basic_fire": 2,
-      "double_dragon_energy": 4
+      "double_dragon_energy": 4,
+      "noivern_ex_sv2_153": 1
     }
   ]
 }
