@@ -6,15 +6,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-OFFICIAL_BAN_OVERLAY = {
-    "swsh2-22",
-    "swsh45sv-SV013",
-    "swsh10tg-TG02",
-    "swshp-SWSH022",
-    "swsh7-83",
-    "swsh7-185",
-    "swsh7-186",
-}
+from build_expanded_legality_baseline import classify_effective_legality
 
 GENERIC_ALL = re.compile(r"^Discard all Energy (?:attached to|from) this Pokémon$", re.I)
 GENERIC_N = re.compile(r"^Discard (an|\d+) Energy (?:attached to|from) this Pokémon$", re.I)
@@ -129,8 +121,7 @@ def build(
         if path.stem not in expanded_sets:
             continue
         for card in load_json(path):
-            database_status = (card.get("legalities") or {}).get("expanded")
-            if card["id"] in OFFICIAL_BAN_OVERLAY or database_status == "Banned":
+            if classify_effective_legality(card)[0] != "Legal":
                 continue
             if "Dragon" not in (card.get("types") or []):
                 continue
