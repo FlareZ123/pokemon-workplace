@@ -16,6 +16,7 @@ from aichi_secret_box_output_dependencies import _state_succeeds_with_mask
 from aichi_vileplume_secret_box import (
     BASE_DECK, SECRET_BOX_DECK, BOX_ALL_OUTPUTS,
     _raw_state, _state_succeeds,
+    TOOL_OTHER, SUPPORTER_OTHER, TAG_TEAM_OTHER,
 )
 
 
@@ -79,9 +80,9 @@ def main(trials: int = 500_000) -> None:
             deck["Guzma & Hala"] > 0,
             deck["Tag Call"] > 0,
             deck["Bunnelby"] > 0,
-            deck["tool_other"] > 0,
-            deck["supporter_other"] > 0,
-            deck["tag_team_other"] > 0,
+            any(deck[name] > 0 for name in TOOL_OTHER),
+            any(deck[name] > 0 for name in SUPPORTER_OTHER),
+            any(deck[name] > 0 for name in TAG_TEAM_OTHER),
             deck["Counter Gain"] > 0,
             deck["Stealthy Hood"] > 0,
         )
@@ -89,7 +90,13 @@ def main(trials: int = 500_000) -> None:
             if is_pair:
                 profiles[bit][features] += 1
                 raw_features[bit][
-                    (active, hand["other"], hand["Jet Energy"],
+                    (active, sum(count for name, count in hand.items()
+                                 if name not in {
+                                     "Guzma & Hala", "Tag Call",
+                                     "Technical Machine: Evolution",
+                                     "Artazon", "Jet Energy", "Secret Box",
+                                     "Bunnelby", "Fan Rotom",
+                                 }), hand["Jet Energy"],
                      hand["Technical Machine: Evolution"],
                      hand["Artazon"], hand["Bunnelby"],
                      deck["Jet Energy"], deck["Technical Machine: Evolution"],
