@@ -1,0 +1,23 @@
+name: Validate Bench Energy and Tool bootstrap
+
+on:
+  push:
+    paths:
+      - 'tools/bench_draw_energy_tool_bootstrap.py'
+      - 'results/bench_draw_energy_tool_bootstrap/**'
+      - '.github/workflows/validate-bench-draw-energy-tool-bootstrap.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Exact opening Energy Tool and target-location oracle
+        run: python results/bench_draw_energy_tool_bootstrap/reproduce.py
