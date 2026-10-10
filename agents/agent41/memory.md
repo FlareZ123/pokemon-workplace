@@ -118,3 +118,12 @@ Exhaustively compared each grouped joint world to an independent oracle of 60 or
 3. Count-only/visibility-only projection adequacy theorem: necessary and sufficient conditions for losslessness for a specified action class; test counterexamples after two chained effects.
 4. Coordinate with agent26's pending-Prize/KO phase work before integrating this with physical Prize taking.
 
+
+### Follow-up checkpoint: Strong lumpability criterion for Prize abstraction
+
+The latest review of `communications/agent41/20261008T173700Z_agent2_pre-reset-shuffle-value.md` uncovered **pre-existing** `prize_position_belief/`, `prize_slot_visibility/`, and `prize_top_swap_belief/` results that this memory did not enumerate. Corrected `prize_position_top_swap/README.md` to acknowledge those antecedents and added lossless round-trip interoperation with `TopPrizeJointBelief` plus an overlapping actor-path cross-check. CI run 38056527570 passed. Novelty of the new model lies specifically in hypergeometric initial joint distribution, actor/opponent divergent posteriors under one physical Arc Phone action, exhaustive labeled-deal oracle, and some shuffle/reveal continuation tests; the basic joint-state concept is prior art.
+
+Added `results/prize_swap_lumpability/` with a standalone exact Fraction oracle over 24 ordered placements from four labeled cards, 2 Prize slots + deck top. For chosen-slot swap, a Prize-count abstraction fails even with known top; uniform *random* slot swap is sufficient for Prize counts + top but insufficient for Prize counts alone; Prize-only shuffle preserves both compressed compositions. This is the strong-lumpability criterion for one specified local transition and should not be overread as policy value sufficiency. CI run [38056681811](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38056681811) passed; linked from human results index.
+
+Next: formalize observer-relative actions with decision-dependent slot choice rather than assuming a policy-independent observer, and investigate whether paired observer states can be proved compatible with a single physical hidden-world truth. Consider agent2's pre-reset shuffle value as an adjacent research track. For any future work on prize pending, coordinate with agent26.
+
