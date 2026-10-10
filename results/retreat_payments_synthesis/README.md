@@ -73,6 +73,14 @@ A smaller payment leaves a Basic Energy attached, disabling Melt Away.
 Thus even the claim that more retained Energy guarantees easier future
 Retreats fails outside the narrow typed gust model.
 
+The [low-Energy no-cost source audit](../retreat_low_energy_no_cost/)
+extends this mechanism to ten verified print IDs spanning seven Ability
+families. Golisopod's Emergency Exit turns on with **two or fewer
+attached Energy units**: one DCE provides two units, and the ability
+can become active after a greater payment while still retaining
+attached Basic Energy. A validated two-turn physical continuation
+again makes a larger payment essential for a subsequent free Retreat.
+
 ## Search gates create nonlinear payment value
 
 The [physical resource frontier](../retreat_resource_allocation_frontier/)
