@@ -64,6 +64,15 @@ The conclusion belongs to the abstract **objective and transition
 model**. It is not permission to erase extra physical payment
 actions from the complete game engine.
 
+The [Melt Away continuation](../retreat_melt_away_overpayment/)
+provides an even sharper limitation without hand-return effects.
+Ethan's Magcargo has no Retreat Cost only while it has zero Energy
+attached. An overpayment that discards its last Basic Energy switches
+on that Ability, allowing a later free Retreat even under Galar Mine.
+A smaller payment leaves a Basic Energy attached, disabling Melt Away.
+Thus even the claim that more retained Energy guarantees easier future
+Retreats fails outside the narrow typed gust model.
+
 ## Search gates create nonlinear payment value
 
 The [physical resource frontier](../retreat_resource_allocation_frontier/)
