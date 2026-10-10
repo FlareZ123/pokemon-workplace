@@ -16,7 +16,7 @@ for B in range(1, 5):
         for mode in MODES:
             for d in range(4):
                 prev = Fraction(0)
-                baseline_first, _, _, baseline_both = exact_deferred_or_rescue(
+                baseline_first, baseline_both, _, _ = exact_deferred_or_rescue(
                     B, T, d, mode)
                 for r in range(3):
                     first, direct_both, rescue_both, both = exact_prize_take(
