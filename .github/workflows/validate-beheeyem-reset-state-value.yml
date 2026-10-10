@@ -1,0 +1,22 @@
+name: Validate Beheeyem hidden-state N versus Iono ranking
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_reset_state_value.py"
+      - "results/beheeyem_reset_state_value/**"
+      - ".github/workflows/validate-beheeyem-reset-state-value.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate K1 known-state exact N versus Iono decomposition
+        run: python3 results/beheeyem_reset_state_value/reproduce.py
+      - name: Sample hidden states and physically shuffled hand resets
+        run: python3 results/beheeyem_reset_state_value/monte_carlo.py
