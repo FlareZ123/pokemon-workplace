@@ -20,7 +20,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from build_expanded_legality_baseline import OFFICIAL_BAN_OVERLAY
+from build_expanded_legality_baseline import classify_effective_legality
 
 
 def _normalize(text: str) -> str:
@@ -65,9 +65,7 @@ def _load_legal_cards(resources_root: Path) -> list[dict[str, Any]]:
         if path.stem not in legal_sets:
             continue
         for card in json.loads(path.read_text(encoding="utf-8")):
-            if card["id"] in OFFICIAL_BAN_OVERLAY:
-                continue
-            if (card.get("legalities") or {}).get("expanded") == "Banned":
+            if classify_effective_legality(card)[0] != "Legal":
                 continue
             cards.append(card)
     return cards
