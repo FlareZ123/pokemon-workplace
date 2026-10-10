@@ -1,0 +1,25 @@
+name: Validate Special Energy print reprint fingerprints
+
+on:
+  push:
+    paths:
+      - "tools/special_energy_print_fingerprints.py"
+      - "results/special_energy_reprint_fingerprints/**"
+      - ".github/workflows/validate-special-energy-reprint-fingerprints.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate complete BW-onward English Special Energy text scan
+        run: |
+          python results/special_energy_reprint_fingerprints/reproduce.py
+          python results/retreat_payment_symmetry/reproduce.py
