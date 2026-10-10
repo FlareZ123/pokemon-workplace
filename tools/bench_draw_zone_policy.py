@@ -20,7 +20,7 @@ class Policy:
 class Outcome:
     policy: Policy
     hand: Fraction
-    discard: Fraction
+    discarded: Fraction
     bench: Fraction
     utility: Fraction
 
