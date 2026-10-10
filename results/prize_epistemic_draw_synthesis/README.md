@@ -126,6 +126,10 @@ These profiles abstract away source-specific activation constraints. A model mus
 
 The table expresses practical **task-specific sufficiency** rather than an unqualified statement that every smaller model is incorrect. The exact projected-action lumpability results give a stronger criterion when choosing safe reductions.
 
+### G. Seeded adversarial replication across many physical deals
+
+[Prize exposure property sweep](../prize_exposure_property_sweep/) adds **220 seeded five-card configurations** with physical copy IDs. It enumerates all 120 ordered physical arrangements for each case, conditionally filters on randomly sampled valid private prefix observations, and cross-checks the resource exposure, multivariate demand, flexible-card allocation, and next-top probability kernels against independently computed physical outcomes. Every configuration tests both an order-preserving and a full-deck-shuffle draw distribution. This augments the hand-designed exact counterexamples with a broader reproducible adversarial coverage sample. It remains a five-card mathematical test.
+
 ## 4. Testing standards and evidence chain
 
 The repositories' focused CI regressions have passed for every result in this synthesis. Their detailed READMEs link each CI run.
