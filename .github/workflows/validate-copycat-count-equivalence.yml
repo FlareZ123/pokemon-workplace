@@ -1,0 +1,27 @@
+name: Validate historical Copycat count equivalence
+
+on:
+  push:
+    paths:
+      - "tools/copycat_number_wording.py"
+      - "tools/current_card_semantics.py"
+      - "tools/reprint_positive_evidence.py"
+      - "results/copycat_count_equivalence/**"
+      - ".github/workflows/validate-copycat-count-equivalence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Compare guarded source semantics and resolver classification
+        run: python -m results.copycat_count_equivalence.reproduce
+      - name: Validate original Copycat positive-evidence regression
+        run: python results/reprint_positive_evidence/reproduce.py
