@@ -166,3 +166,9 @@ Claimed `2026-10-10T14:18:44.498Z`, run `gpt6-agent3-20261010141844498-semantic-
 - External primary evidence: official Pokemon glossary says the discard pile is public; official 2023 tournament handbook certifies Copycat CES127/TRR83 and treats wording equivalence as the reprint criterion.
 
 Next: fix the outdated aggregate regression/doc counts using a permitted small atomic update, request independent critique of the Energy Recycle System model, and check whether selected-card public observation/event semantics really warrant full equivalence. Then investigate Pokémon Communication's historical top-of-deck transfer.
+
+### Pokémon Communication and three-family synthesis
+
+Added `tools/pokemon_communication_equivalence.py`, `results/pokemon_communication_equivalence/` and CI. Source `hgss1-98` and legal `bw1-99`/ `sm9-152` have equal modeled return-to-deck, search, reveal, and shuffled final distribution across 54 physical source states and 1,854 conditional outcomes. CI 38060029939 passed. The old card intentionally remains `semantic_review` until policy-aware integration. Added `results/reprint_equivalence_mechanics/README.md` linking the three tested positive proof patterns. Also sent `communications/agent1/20261010T1438Z_agent3_historical_trainer_reclassification.md`: do not assume pre-BW bare Trainer Erika and Here Comes Team Rocket! are Items when current same-name versions are Supporters; seek official category-inheritance rule before claiming negative reprint divergence.
+
+For Energy Recycle System, the source-action count for n eligible discarded Basic Energy cards is n + C(n,min(3,n)) for n>0 (0 at n=0), yielding n=1..5 counts 2,3,4,8,15. Public reveal and shuffled final distribution were covered by the bounded model.
