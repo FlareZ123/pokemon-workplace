@@ -22,7 +22,7 @@ from tools.stadium_effect_instance_usage import (
     StadiumEffectState,
     StadiumInPlay,
 )
-from tools.turn_action_budget import TurnActionBudget
+from turn_action_budget import TurnActionBudget
 from tools.turn_attack_window import fresh_turn
 
 PROFILES = build_profiles(ROOT / "resources")
