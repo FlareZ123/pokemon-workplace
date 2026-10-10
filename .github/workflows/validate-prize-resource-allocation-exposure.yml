@@ -1,0 +1,24 @@
+name: Validate Prize resource allocation exposure
+
+on:
+  push:
+    paths:
+      - "tools/prize_resource_allocation_exposure.py"
+      - "tools/prize_deck_prefix.py"
+      - "results/prize_resource_allocation_exposure/**"
+      - ".github/workflows/validate-prize-resource-allocation-exposure.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify one-use versus multi-output card allocation
+        run: python results/prize_resource_allocation_exposure/reproduce.py
