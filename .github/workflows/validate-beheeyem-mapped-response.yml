@@ -1,0 +1,22 @@
+name: Validate Town Map planning under opposing N
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_mapped_response.py"
+      - "results/beheeyem_mapped_response/**"
+      - ".github/workflows/validate-beheeyem-mapped-response.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce exact Prize selection with opposing N
+        run: python3 results/beheeyem_mapped_response/reproduce.py
+      - name: Physically sample mapped Prize choices and N shuffle
+        run: python3 results/beheeyem_mapped_response/monte_carlo.py
