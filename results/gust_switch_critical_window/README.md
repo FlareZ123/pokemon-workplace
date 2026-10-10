@@ -46,7 +46,7 @@ One Boss in an attacker deck of twelve; independent defender deck of twelve:
 | 1 | `401/72` = 5.569444 |
 | 2 | `1127/198` = 5.691919 |
 | 3 | `191/33` = 5.787879 |
-| 4 | `17407/2970` = 5.861... |
+| 4 | `17407/2970` = 5.860943 |
 
 The first defender Switch adds `11/72` expected attacker turns when one Boss is present and remains worth exactly zero when there is no Boss.
 
