@@ -8,6 +8,11 @@ from tools.board_position_state import BoardState, PokemonCard
 from tools.effect_evolution_execution import effect_evolve
 from tools.effect_evolution_timing import EvolutionEffectProfile
 from tools.lock_state_kernel import PlayerChannels
+from tools.stadium_effect_instance_usage import (
+    StadiumEffectState,
+    can_use_current_stadium_effect,
+    use_current_stadium_effect,
+)
 from tools.turn_action_budget import TurnAction, TurnActionBudget
 from tools.turn_attack_window import (
     TurnExecutionWindow,
@@ -26,6 +31,7 @@ class SourceActionContext:
     abilities_allowed: bool = True
     attacks_allowed: bool = True
     attacker_object_id: str | None = None
+    stadium_state: StadiumEffectState | None = None
 
     @property
     def budget(self) -> TurnActionBudget:
@@ -36,6 +42,7 @@ class SourceActionContext:
 class SourceGatedEvolution:
     board: BoardState
     window: TurnExecutionWindow
+    stadium_state: StadiumEffectState | None = None
 
     @property
     def budget(self) -> TurnActionBudget:
@@ -84,9 +91,12 @@ def source_action_available(
             and can_take_action(context.window, TurnAction.SUPPORTER)
         )
     if channel == "stadium":
+        stadium = context.stadium_state
         return (
-            context.channels.stadium_play
-            and can_take_action(context.window, TurnAction.STADIUM_PLAY)
+            stadium is not None
+            and stadium.in_play is not None
+            and stadium.in_play.card.name == profile.card_name
+            and can_use_current_stadium_effect(stadium)
         )
     return False
 
@@ -111,7 +121,8 @@ def consume_source_action(
     if channel == "supporter":
         return consume_action(context.window, TurnAction.SUPPORTER)
     if channel == "stadium":
-        return consume_action(context.window, TurnAction.STADIUM_PLAY)
+        # The in-play effect-use allowance is separate from Stadium play.
+        return context.window
     return context.window
 
 
@@ -142,4 +153,10 @@ def execute_source_gated_evolution(
     if transition is None:
         return None
 
-    return SourceGatedEvolution(transition.state, next_window)
+    stadium_state = context.stadium_state
+    if profile.source_channel == "stadium":
+        assert stadium_state is not None
+        stadium_state = use_current_stadium_effect(stadium_state)
+        assert stadium_state is not None
+
+    return SourceGatedEvolution(transition.state, next_window, stadium_state)
