@@ -1,0 +1,22 @@
+name: Validate Beheeyem opposing Supporter resets
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_supporter_reset.py"
+      - "results/beheeyem_supporter_reset/**"
+      - ".github/workflows/validate-beheeyem-supporter-reset.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce exact Iono N Marnie state transitions
+        run: python3 results/beheeyem_supporter_reset/reproduce.py
+      - name: Independently shuffle or bottom physical hands
+        run: python3 results/beheeyem_supporter_reset/monte_carlo.py
