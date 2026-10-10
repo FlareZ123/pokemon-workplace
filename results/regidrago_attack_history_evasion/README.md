@@ -195,3 +195,9 @@ It does not estimate the probability that Budew or Koraidon can be promoted on t
 The nine-list empirical statement applies only to published detailed Regidrago decklists from this event. Two additional top-32 finishes are classified as Regidrago in tournament history but do not appear in the nine-list card aggregation.
 
 A high-value continuation is to compute the AMR of Budew history covering from actual Regidrago states after Timeless-GX, including promotion routes, Bench occupancy, Prize knowledge, and whether the lost Apex body changes the Prize race.
+
+
+## Validated follow-up work
+
+- [Budew physical-promotion and inventory baseline](../regidrago_budew_promotion_baselines/README.md) analyzes nine Aichi lists' Guzma/Prime Catcher counts, the Basic-only Latias ex Skyliner effect, Regidrago VSTAR's Retreat Cost, and exact but explicitly non-gameplay card-inventory baselines (CI 38061691316).
+- [Timeless-GX Budew compound denial](../timeless_budew_dual_denial/README.md) composes this attack-history cover with Itchy Pollen Item lock; its bounded Shadow Rider payload-routing state space contracts from 15/16 zone pairs to 2/16, and to 1/16 when Tulip's Supporter channel must be reserved for Guzma (CI 38061863206). These are reachability counts, not play or win probabilities.
