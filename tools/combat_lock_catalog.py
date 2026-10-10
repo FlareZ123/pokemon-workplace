@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from tools.build_expanded_legality_baseline import (
-    OFFICIAL_BAN_OVERLAY,
+    classify_effective_legality,
     gameplay_fingerprint,
     load_json,
 )
@@ -89,8 +89,7 @@ def _activation(source_kind: str, text: str, subtypes: tuple[str, ...]) -> str:
 
 
 def _is_legal(card: dict[str, Any]) -> bool:
-    status = (card.get("legalities") or {}).get("expanded")
-    return card["id"] not in OFFICIAL_BAN_OVERLAY and status != "Banned"
+    return classify_effective_legality(card)[0] == "Legal"
 
 
 def _effects(card: dict[str, Any]) -> list[tuple[str, str, str]]:

@@ -21,7 +21,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from build_expanded_legality_baseline import OFFICIAL_BAN_OVERLAY
+from build_expanded_legality_baseline import classify_effective_legality
 
 
 def _load_json(path: Path) -> Any:
@@ -48,12 +48,7 @@ def _legal_expanded_trainers(
         for card in _load_json(path):
             if card.get("supertype") != "Trainer":
                 continue
-            if card["id"] in OFFICIAL_BAN_OVERLAY:
-                continue
-            if (
-                (card.get("legalities") or {}).get("expanded")
-                == "Banned"
-            ):
+            if classify_effective_legality(card)[0] != "Legal":
                 continue
             trainers.append(card)
 

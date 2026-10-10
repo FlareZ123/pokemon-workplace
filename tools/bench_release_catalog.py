@@ -5,7 +5,7 @@ import re
 from typing import Any
 
 from build_expanded_legality_baseline import (
-    OFFICIAL_BAN_OVERLAY,
+    classify_effective_legality,
     gameplay_fingerprint,
     load_json,
 )
@@ -87,8 +87,7 @@ def scan_bench_release_catalog(resources_root: Path) -> dict[str, Any]:
         if path.stem not in expanded_sets:
             continue
         for card in load_json(path):
-            status = (card.get("legalities") or {}).get("expanded")
-            if card["id"] in OFFICIAL_BAN_OVERLAY or status == "Banned":
+            if classify_effective_legality(card)[0] != "Legal":
                 continue
             for source_class, source_name, text in _sources(card):
                 for release_kind, pattern in PATTERNS:

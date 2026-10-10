@@ -8,15 +8,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-OFFICIAL_BAN_OVERLAY = {
-    "swsh2-22",
-    "swsh45sv-SV013",
-    "swsh10tg-TG02",
-    "swshp-SWSH022",
-    "swsh7-83",
-    "swsh7-185",
-    "swsh7-186",
-}
+from build_expanded_legality_baseline import OFFICIAL_BAN_OVERLAY, classify_effective_legality
 
 
 def load_json(path: Path) -> Any:
@@ -96,9 +88,7 @@ def structural_same_attack_reentry(card: dict[str, Any], source_class: str) -> b
 
 
 def effective_legal(card: dict[str, Any]) -> bool:
-    if card["id"] in OFFICIAL_BAN_OVERLAY:
-        return False
-    return (card.get("legalities") or {}).get("expanded") != "Banned"
+    return classify_effective_legality(card)[0] == "Legal"
 
 
 def build(resources_root: Path) -> dict[str, Any]:
