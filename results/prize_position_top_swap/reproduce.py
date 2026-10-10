@@ -85,6 +85,49 @@ def main() -> None:
     for world, mass in roundtrip.masses:
         close(mass, dict(actor.masses)[world])
 
+    # An optional public action is itself evidence about hidden information.
+    # Suppose the opponent knows P(swap | top A)=4/5 and P(swap |
+    # other top)=1/5. Seeing a swap changes the posterior before its effect.
+    partial_policy = {"A": 4 / 5, "B": 1 / 5, None: 1 / 5}
+    inferred = base.condition_on_public_swap(partial_policy)
+    inferred_swapped = inferred.swap_face_down_with_top(0)
+    close(inferred.probability_top("A"), 1 / 2)
+    close(inferred_swapped.probability_at(0, "A"), 1 / 2)
+    close(inferred_swapped.probability_group_prized("A"), 5 / 8)
+
+    # Independently condition the same 60 *labeled* deals on the public act.
+    from fractions import Fraction
+
+    normalizer = sum(
+        Fraction(4, 5) if top == "A" else Fraction(1, 5)
+        for _, _, top in deals
+    ) / len(deals)
+    assert normalizer == Fraction(8, 25)
+    oracle_policy = defaultdict(Fraction)
+    for p0, p1, top in deals:
+        likelihood = Fraction(4, 5) if top == "A" else Fraction(1, 5)
+        after = tuple(c if c in ("A", "B") else None for c in (top, p1, p0))
+        oracle_policy[((after[0], after[1]), after[2])] += (
+            likelihood / (60 * normalizer)
+        )
+    assert set(oracle_policy) == {w for w, _ in inferred_swapped.masses}
+    for world, mass in inferred_swapped.masses:
+        close(mass, float(oracle_policy[world]))
+
+    # A deterministic swap-if-A policy fully reveals the top's group.
+    revealing_policy = {"A": 1, "B": 0, None: 0}
+    fully_inferred = base.condition_on_public_swap(revealing_policy)
+    close(fully_inferred.swap_face_down_with_top(0).probability_at(0, "A"), 1)
+    always_swap = {"A": 1, "B": 1, None: 1}
+    for world, mass in base.condition_on_public_swap(always_swap).masses:
+        close(mass, dict(base.masses)[world])
+    try:
+        base.condition_on_public_swap({"A": 0, "B": 0, None: 0})
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("accepted impossible public swap observation")
+
     # Composition is insufficient: swap target position zero vs one.
     other_position = base.observe_top("A").swap_face_down_with_top(1)
     first = dict(actor.composition_masses())
