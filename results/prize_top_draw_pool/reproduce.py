@@ -62,7 +62,7 @@ def main():
         assert old_p0 == "B" and old_top == "A"
         prize_groups = ("A", group(old_p1))
         new_top = group(next_top)
-        consumed = Counter(("A", group(old_p1), new_top))
+        consumed = Counter(("A", "B", group(old_p1), new_top))
         remaining = tuple(
             initial - consumed[key]
             for key, initial in (("A", 1), ("B", 1), ("C", 1), (None, 2))
