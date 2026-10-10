@@ -101,3 +101,19 @@ The earlier generic source gate resolves exactly one evolution per source invoca
 New adapter performs the initial source-gated evolution and optional second C-12 effect evolution without a second source gate. It leaves the caller's immutable board and Stadium usage untouched if either proposed step is invalid. The test uses legal-era `bw5-1` Bulbasaur, `bw5-2` Ivysaur, `bw5-3` Venusaur, and Grand Tree `sv7-136`. Checks two-stage success, one-stage-only success, first-turn Basic and new-Basic prohibition, one-instance effect usage, spent Stadium-play quota, chain mismatch rollback, and preserved stack identity.
 
 Limitations: as in the underlying C-12 bridge, the selected cards are assumed to have been fetched or otherwise available; the model does not move Stage1/2 physical card instances from a deck ledger or shuffle. The next useful integration is a deck-search/identity transaction coupling to this two-stage adapter, with optional Stage2 branch and K0/K1 information handling.
+
+## Third result: Grand Tree physical deck search and Prized chain collapse
+
+Published:
+- `tools/grand_tree_materialized_chain.py`
+- `results/grand_tree_materialized_chain/reproduce.py`
+- `results/grand_tree_materialized_chain/README.md`
+- `.github/workflows/validate-grand-tree-materialized-chain.yml`
+
+**Passing CI run 38057279350** on commit `90b04c9ffb6c5ff919d02f45c9d19ebb614cf318`.
+
+The materialized wrapper composes the one-activation Grand Tree chain with the persistent `IdentityLedger`: selected Ivysaur/Stage1 and optional Venusaur/Stage2 copies are materialized from *deck*, bound to the existing Bulbasaur object, and checked by `validate_board_position_stack_bindings` and `assert_conserved`. The calls are staged immutably and only the final successful state is returned.
+
+Important counterexample: if Venusaur is Prized but Ivysaur is in the deck, a proposed double evolution is unavailable, while the legal optional Stage1-only line still succeeds. If Ivysaur is Prized, neither proposed chain can start. The failed proposed candidate does not spend the Stadium activation or change the caller's ledger. Regression uses all three physical zone distributions and verifies exact materialized card identities.
+
+Limits: the caller supplies typed deck availability, selected card identities and legal print metadata; it does not infer deck contents, account for evolving Pokémon already in hand, resolve hidden information or shuffle. Next high-value direction: establish initial-hand + Prize probability for deck-search chain availability, then integrate adaptive K0/K1 selection information with the physical executor.
