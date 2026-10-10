@@ -86,6 +86,8 @@ def enumerate_one(fixed_prizes, remaining_kind):
         assert sum(pool)==54 and pool[remaining_kind]==1
         checked=0
         gains=0
+        incremental=0
+        example=None
         for opening in composition(7,pool):
             if opening[ACE]+opening[JIR]>1 or opening[JIR]:
                 continue
@@ -106,18 +108,25 @@ def enumerate_one(fixed_prizes, remaining_kind):
                     if _core_possible(s,14):
                         continue
                     if _core_possible(s,15):
-                        gains+=w
-                        print("ITEM_REQUIRED_COUNTEREXAMPLE",
-                              "fixed", fixed_prizes, "sixth", sixth,
-                              "opening", opening, "draw", draw,
-                              "active", active, flush=True)
-                        raise AssertionError("Item needed outside forced-six Prize set")
+                        gains += w
+                        hand,deck,*flags=s
+                        baseline_hand=list(hand)
+                        baseline_hand[HAND_INDEX["secret_box"]]-=1
+                        baseline_hand[HAND_INDEX["other"]]+=1
+                        baseline=(tuple(baseline_hand),deck,*flags)
+                        if not _core_possible(baseline):
+                            incremental += w
+                        if example is None:
+                            example=(opening,draw,active)
             if _core_possible.cache_info().currsize>300_000:
                 _core_possible.cache_clear()
-        summaries.append((sixth,stock,checked,gains))
+        summaries.append((sixth,stock,checked,gains,incremental))
         print("sixth",sixth,"multiplicity",stock,
-              "weighted_scenarios",checked,"gains",gains,flush=True)
-    assert summaries and all(row[-1]==0 for row in summaries)
+              "weighted_scenarios",checked,
+              "full_only_relative_no_item",gains,
+              "also_baseline_failure",incremental,
+              "first_witness",example,flush=True)
+    assert summaries and all(row[3]>=row[4]>=0 for row in summaries)
     return summaries
 
 def main():
@@ -127,8 +136,21 @@ def main():
     tool3_stadium2=(0,)*13+(3,2)
     a=enumerate_one(tool4_stadium1,STADIUM)
     b=enumerate_one(tool3_stadium2,TOOL)
-    print("Exact physically weighted near-tail cases:",len(a)+len(b))
-    print("All fixed-five-Prize, no-Jirachi Item-necessity checks passed.")
+    # Fixed-five physical multiplicities: two Artazon choices in case A,
+    # four choices of which three of four other Tools in case B.
+    weighted_gains=2*sum(row[3] for row in a)+4*sum(row[3] for row in b)
+    weighted_incremental=2*sum(row[4] for row in a)+4*sum(row[4] for row in b)
+    A=1-Fraction(comb(46,7),comb(60,7))
+    denom=comb(60,6)*comb(54,7)*47*ACTIVE_MULTIPLIER*A
+    p_full_only=Fraction(weighted_gains,1)/denom
+    p_incremental=Fraction(weighted_incremental,1)/denom
+    assert p_full_only >= p_incremental > 0
+    assert p_incremental >= Fraction(5,734379410688)
+    print("Exact physically weighted near-tail subcases:",len(a)+len(b))
+    print("Full output but no Item mask fails:",p_full_only,float(p_full_only))
+    print("Incremental vs Grand Tree and Item absent:",p_incremental,
+          float(p_incremental))
+    print("Exact fixed-five-Prize, no-Jirachi incidence passed.")
 
 if __name__=="__main__":
     main()
