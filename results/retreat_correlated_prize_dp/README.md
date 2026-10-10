@@ -72,6 +72,11 @@ each of Counter Energy, Reversal Energy, DCE and Basic Energy,
 with costs zero through six. It cross-checks every count reported
 by the DP against the brute-force physical sets.
 
+In this deliberately constructed multi-copy suite, premature
+worldwise minimalization loses **1,533 robust-minimal physical
+payment witnesses across 254 of 567 configurations**. These counts
+are unweighted structural cases, not match frequencies.
+
 The dedicated CI additionally runs the exact original
 1,792-case board-derived Prize minimality regression.
 
