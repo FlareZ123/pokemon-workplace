@@ -64,3 +64,28 @@ The primary exact calculation sums multivariate hypergeometric opening combinati
 Run \`python results/bench_quickball_crobat_incidence/reproduce.py\` from repository root with Python 3.11+.
 
 The role composition is a controlled experiment. It assumes F is available for safe discard and leaves filler text unspecified. The model excludes another path to K, Item/Ability lock, matchup pressure, alternate starting Active decisions, opponent mulligan bonus draws, search for the connector, and real hand-play feasibility. The major finding is the scale discrepancy between an attractive conditional line and its restricted opening-material frequency.
+
+## Executable seven-card first-turn baseline
+
+The h=5 continuation above requires unspecified additional hand plays. A stronger narrower certificate can be obtained with **no discretionary hand-reduction actions**:
+
+1. A valid opening contains Dedenne-GX, Quick Ball, at least one expendable F and another Basic O; Crobat and the non-Basic K are absent from the opening.
+2. Choose an O as starting Active, keeping Dedenne, Q and F in hand. Do not Bench other Basics during setup.
+3. Place six hidden Prizes. Draw the single normal card for the player's first turn. This leaves exactly **seven cards in hand**: seven-card opener less the chosen Active plus one turn draw.
+4. If K is already in hand, stop. Otherwise either (a) play Dedenne, or (b) discard F to Quick Ball, fetch live Crobat, play Crobat to Bench, use Dark Asset, then conditionally play Dedenne if K remains missing.
+
+The source Rulebook allows playing Basic Pokémon from hand onto Bench, as well as using Items and Abilities on a turn when their conditions are met. The model assumes no applicable Ability/Item lock and two free Bench spaces. For the staged line at h=7, **Dark Asset draws exactly one card**. Because the intended actions themselves reach the compared hand sizes, this certificate does not require a hypothetical filler-action sequence.
+
+| Metric | Seven-card direct line |
+| --- | ---: |
+| Material event given Basic-valid opener | 0.507290815% |
+| Dedenne-only conditional K retention | 13.210702341% |
+| Quick Ball → Crobat → conditional Dedenne K retention | 15.384615385% |
+| Conditional staged improvement | **2.173913043 percentage points** |
+| Restricted material-weighted access contribution | **0.011028061 percentage points** |
+
+The exact weighted increment equals `3395/30785103` as a probability, or approximately **0.011028061 percentage points**. These rates concern an explicitly restricted policy comparison, not the marginal contribution of Crobat across all possible opening hands and continuations.
+
+An independent enumerator at [certificate.py](certificate.py) now proves the composition directly: a physically labeled 18-card toy enumerates every accepted opening, every Prize configuration, every natural draw, and averages all possible target positions in the untouched deck and after Quick Ball's shuffle. It agrees exactly with the product of the independent opening-incidence and support-continuation calculations. The 60-card regression checks the exact rational `3395/30785103` and the one-card Dark Asset draw.
+
+This seven-card comparison provides a better established immediate-play baseline. The h=5 scenario remains useful as a sensitivity experiment for turns where a separately validated sequence has reduced the hand further. Both scenarios still assume the card role F can be discarded harmlessly and that the staged extra Bench exposure is acceptable; opponent interaction, card search competition and decklist optimization remain outside scope.
