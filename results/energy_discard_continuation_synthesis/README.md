@@ -76,3 +76,22 @@ The repository-root Python entry points are:
 `python -m tools.energy_discard_legacy_star_recovery`
 
 The tools use the repository's bundled `resources/` snapshot. The local independent exact enumerations for the base, weighted, and cost-multiset analyses were run and verified. The remaining reproducer scripts embed state and print assertions but do not constitute a full gameplay engine.
+
+
+## Causal provider control: flexible types, rather than two-unit capacity alone
+
+A matched ablation in [Double Dragon versus Double Colorless Energy](../energy_discard_special_provider_ablation/) holds one two-unit Special Energy card and three Basic Energy cards fixed, replacing DDE with DCE.
+
+For **every** three-symbol attack cost drawn from the nine Basic Energy types plus Colorless, the three Basics alone can already pay the cost whenever the DCE-plus-Basics state can pay it. This is because DCE adds only Colorless units, whereas any three Basic Energy units can fill Colorless requirements after the colored requirements have been met.
+
+Consequently:
+
+`ready(DCE + 3 Basics, cost) == ready(3 Basics, cost)`.
+
+And the precise set of DDE states where the Special Energy's flexible types create additional attack readiness is
+
+`ready(DDE + 3 Basics, cost) and not ready(3 Basics, cost)`.
+
+This is **exactly** the set where discarding DDE as one physical two-Energy payment loses that readiness. The independent exhaustive verification found **23,328 such pairs** out of 36,300 cost/mix pairs, versus **zero** minimum-card DCE continuation reversals among states initially ready with DCE. The difference isolates Energy **type flexibility** as the mechanism and reinforces why totals of physical cards or Energy units alone are insufficient.
+
+Source prints: DDE `xy6-97`; DCE `bw4-92`. The ablation is controlled and counterfactual; the DCE version of a specific DDE-enabled attack state may have been unable to launch the attack in the first place.
