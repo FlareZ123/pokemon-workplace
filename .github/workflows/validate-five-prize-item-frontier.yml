@@ -1,0 +1,19 @@
+name: Validate five-Prize Item frontier
+
+on:
+  push:
+    paths:
+      - "results/secret_box_global_witnesses/five_prize_item_frontier.py"
+      - ".github/workflows/validate-five-prize-item-frontier.yml"
+  workflow_dispatch:
+
+jobs:
+  exact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -u results/secret_box_global_witnesses/five_prize_item_frontier.py
