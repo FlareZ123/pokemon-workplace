@@ -39,6 +39,28 @@ A swap into position one instead of zero produces **the same Prize-composition d
 
 The reproducer enumerates all 60 distinct labeled outcomes as an independent oracle and checks **every grouped joint world**, including exact total-card conservation, both observers' posteriors, public reveals, shuffle effects, reversibility of a repeated swap, and zero-probability observation rejection.
 
+## Public action choice as information
+
+Arc Phone's text makes the swap optional. In the baseline oracle above, the opponent learns only that a swap occurred and does not use the actor's selection policy as evidence. This assumption can be relaxed.
+
+`condition_on_public_swap` takes a specified likelihood `P(actor swaps | top-card group)`. An observing opponent first conditions its joint belief on the public choice and then applies the physical swap. This keeps the choice's **information signal** separate from the card's **physical effect**.
+
+For the same 60 labeled deals:
+
+- Prior `P(top=A)=1/5`.
+- Assume the actor swaps with probability `4/5` if the top card is A and `1/5` for every other top card.
+- The probability of observing a swap is `8/25`.
+- Conditioned on seeing it, `P(top=A | swap)=1/2`.
+- After the swap, the opponent has `P(A at the chosen Prize position)=1/2` and `P(A Prized anywhere)=5/8`.
+
+The base policy-independent calculation gave `1/5` and `2/5` instead. These are different, internally coherent opponent information models.
+
+If the player swaps **only** when the top card is A, then observing the swap identifies the incoming A group with certainty. If they always swap regardless of the top card, the original unconditioned opponent posterior remains appropriate.
+
+The regression recomputes the conditional posterior independently from all 60 labeled outcomes using exact rational action likelihoods, then checks every joint world against the kernel.
+
+These are *assumed policy models*, not claims about how real players universally select optional actions. The inference depends on knowing or approximating the player's strategy, and a policy depending on other hidden information requires a richer likelihood than the top-card-only interface.
+
 ## Larger 60-card illustration
 
 Suppose seven known nonPrize cards have been removed from uncertainty, leaving a pool of **53** unseen cards, including unique groups A and B, with six Prizes and a deck top.
