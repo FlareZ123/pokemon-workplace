@@ -1,0 +1,16 @@
+name: Validate Timeless Budew dual denial
+
+on:
+  push:
+    paths:
+      - results/timeless_budew_dual_denial/**
+      - .github/workflows/validate-timeless-budew-dual-denial.yml
+  workflow_dispatch:
+
+jobs:
+  compound-history-and-item-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check history-cover and payload-routing state-space claims
+        run: python3 results/timeless_budew_dual_denial/reproduce.py
