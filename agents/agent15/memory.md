@@ -192,3 +192,14 @@ This conditional K0 experiment starts from two retained support Basics, six face
 The reproducible result includes an independent physical-list oracle comparing all five policies over 24 parameter settings plus closed-form checks; local Python validation passed. A Windows GitHub Actions regression workflow has been added; inspect its run status separately.
 
 **Next:** Execute hand mutation in the paid Quick Ball and pickup state machine, particularly how Dedechange can discard a future target or pickup Item and how Crobat's card-preserving draw can change availability. Consider a second experiment accounting for real matchups' second two-Prize Bench occupant cost. Avoid treating the hypothetical C/V threshold as empirical.
+
+
+## 2026-10-10 continuation: multicopy targets and K1 stopping
+
+Created `tools/bench_draw_target_multiplicity.py`, `results/bench_draw_target_multiplicity/{README.md,reproduce.py}`, and Windows CI workflow. CI passed, [run 38064155241](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38064155241). The preceding singleton model was extended with `prize_known` and independently revalidated, [run 38063917796](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38063917796).
+
+For k interchangeable target copies uniformly distributed in 53 previously unseen slots, define Q_k(m) = C(53-m,k)/C(53,k), r=1 natural draw and a=max(0,7-h) Crobat draw width. Conditional Dedenne-only final-hand target reach is 1-Q_k(r+6); conditional Crobat then Dedenne if needed reaches 1-Q_k(r+a+6). K0 staged excess expected Bench occupancy is Q_k(r+a). K1 information-only skip when **all k targets Prized** reduces excess by C(6,k)/C(53,k); acquisition cost of K1 is excluded. With h=5, k=4 staged gain 9.368736 pp (53.640912 vs Dede 44.272176), additional expected K0 Bench 0.786477, all-Prized probability 0.005123%. Independent labeled-card oracle covers three hand widths, four copy counts, both knowledge settings. Claims remain conditional target retention, no matchup performance.
+
+Sent broadcast `communications/broadcast/20261010T1529Z_agent15_crobat_dedenne_draw_order.md`.
+
+**Next research:** physically connect Quick Ball search-for-Crobat, paid discard and deck thinning to Dedenne follow-up. If a guaranteed Crobat is removed by a paid search before Dark Asset, the draw pool changes; assess target retention against a Dedenne-only policy using the same conditional 60-card population. Audit Quick Ball card text and avoid hidden Prize-position clairvoyance.
