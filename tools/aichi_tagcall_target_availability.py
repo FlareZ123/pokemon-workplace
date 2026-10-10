@@ -20,6 +20,11 @@ class TagCallTargets:
     probabilities: tuple[tuple[bool, bool, Fraction], ...]
     natural_triplet_probability: Fraction
     accepted_opener_probability: Fraction
+    count_probabilities: tuple[tuple[int, int, Fraction], ...]
+
+    def count_probability(self, *, gnh_count: int, bellelba_count: int) -> Fraction:
+        return next((p for g, b, p in self.count_probabilities
+                     if (g, b) == (gnh_count, bellelba_count)), Fraction(0))
 
     def probability(self, *, gnh_searchable: bool, bellelba_searchable: bool) -> Fraction:
         return next(p for g, b, p in self.probabilities
@@ -58,6 +63,7 @@ def exact_tagcall_target_partition(
 
     hits = {(g, b): Fraction(0) for g in (False, True)
             for b in (False, True)}
+    count_hits: dict[tuple[int, int], Fraction] = {}
     # First choose non-Jirachi observed cards, conditioning on the
     # single Jirachi being present in the opening seven.
     base = Fraction(opener, deck_size) / choose(deck_size-1, observed)
@@ -83,15 +89,21 @@ def exact_tagcall_target_partition(
                             choose(other_unknown, prizes-g_prized-b_prized)
                         )
                         if prize_ways:
-                            target = (g_unknown>g_prized, b_unknown>b_prized)
-                            hits[target] += (
+                            g_left = g_unknown-g_prized
+                            b_left = b_unknown-b_prized
+                            target = (g_left>0, b_left>0)
+                            weight = (
                                 base*ways*Fraction(prize_ways,choose(unknown,prizes))
                                 / accept
                             )
+                            hits[target] += weight
+                            key = (g_left, b_left)
+                            count_hits[key] = count_hits.get(key, Fraction(0)) + weight
     partition = tuple((g,b,hits[(g,b)]) for g in (False, True)
                       for b in (False, True))
     return TagCallTargets(
         probabilities=partition,
         natural_triplet_probability=sum(hits.values(), Fraction(0)),
         accepted_opener_probability=accept,
+        count_probabilities=tuple((g,b,p) for (g,b),p in sorted(count_hits.items())),
     )
