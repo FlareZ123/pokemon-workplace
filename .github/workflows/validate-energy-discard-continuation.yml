@@ -10,6 +10,7 @@ on:
       - tools/energy_discard_colored_cost_theorem.py
       - tools/energy_discard_colorless_cost_extension.py
       - tools/energy_discard_special_provider_ablation.py
+      - tools/energy_discard_nonanticipative_coverage.py
       - tools/energy_discard_continuation_disruption.py
       - tools/energy_discard_legacy_star_recovery.py
       - results/energy_discard_continuation_frontier/reproduce.py
@@ -34,6 +35,8 @@ jobs:
         run: python -m tools.energy_discard_colorless_cost_extension
       - name: Verify Double Dragon versus Double Colorless ablation
         run: python -m tools.energy_discard_special_provider_ablation
+      - name: Verify nonanticipative future-cost selection
+        run: python -m tools.energy_discard_nonanticipative_coverage
       - name: Verify Enhanced Hammer and Temple response fixtures
         run: python -m tools.energy_discard_continuation_disruption
       - name: Verify Legacy Star recovery action budgets
