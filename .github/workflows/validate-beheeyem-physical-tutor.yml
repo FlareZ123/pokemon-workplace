@@ -1,0 +1,22 @@
+name: Validate Beheeyem physical tutor packet
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_physical_tutor.py"
+      - "results/beheeyem_physical_tutor/**"
+      - ".github/workflows/validate-beheeyem-physical-tutor.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce exact physical tutor probabilities
+        run: python3 results/beheeyem_physical_tutor/reproduce.py
+      - name: Independently replay physical deck, Prizes and tutor
+        run: python3 results/beheeyem_physical_tutor/monte_carlo.py
