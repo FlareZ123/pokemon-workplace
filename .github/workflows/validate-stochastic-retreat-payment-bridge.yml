@@ -1,0 +1,24 @@
+name: Validate Stochastic Retreat Payment Bridge
+
+on:
+  push:
+    paths:
+      - 'tools/two_sided_typed_retreat_draw.py'
+      - 'tools/typed_retreat_gust.py'
+      - 'tools/two_sided_stochastic_escape.py'
+      - 'results/stochastic_retreat_payment_bridge/**'
+      - '.github/workflows/validate-stochastic-retreat-payment-bridge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python results/stochastic_retreat_payment_bridge/reproduce.py
