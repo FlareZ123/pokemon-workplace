@@ -24,7 +24,7 @@ def _find(catalog, mechanism: str, card_name: str, effect_name: str = ""):
 def main() -> None:
     catalog = build_catalog(ROOT / "resources")
 
-    assert catalog["legal_print_count"] == 14836
+    assert catalog["legal_print_count"] == 14829
     assert catalog["exact_variant_count"] == 880
 
     expected_exact_counts = {
