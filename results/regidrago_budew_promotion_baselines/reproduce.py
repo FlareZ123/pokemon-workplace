@@ -68,6 +68,14 @@ def rates(
     return direct, assisted
 
 
+def joint_prize_collapse(*, budew: int, heavy_ball: int) -> Fraction:
+    """All Budew AND all Hisuian Heavy Ball in six initial Prizes."""
+    return Fraction(
+        choose(60 - budew - heavy_ball, 6 - budew - heavy_ball),
+        choose(60, 6),
+    )
+
+
 def brute_small() -> tuple[Fraction, Fraction]:
     """Independent enumeration over every ordered seen/Prize partition."""
     cards = ("B", "B", "Q", "Q", "S", "S", "O", "O", "O", "O")
@@ -103,6 +111,7 @@ def main() -> None:
     assert sum(r["budew"] for r in rows) == 12
     assert sum(r["guzma"] for r in rows) == 19
     assert sum(r["prime_catcher"] for r in rows) == 3
+    assert sum(r["hisuian_heavy_ball"] for r in rows) == 10
     assert all(r["latias_ex"] == 1 for r in rows)
     assert all(r["guzma"] >= 2 and r["budew"] >= 1 for r in rows)
 
@@ -125,6 +134,20 @@ def main() -> None:
 
     for b, target in ((1, Fraction(1, 10)), (2, Fraction(1, 118))):
         assert Fraction(choose(60 - b, 6 - b), choose(60, 6)) == target
+    collapses = [
+        joint_prize_collapse(
+            budew=row["budew"],
+            heavy_ball=row["hisuian_heavy_ball"],
+        )
+        for row in rows
+    ]
+    assert sum(c == Fraction(1, 118) for c in collapses) == 5
+    assert sum(c == Fraction(1, 1711) for c in collapses) == 4
+    for row, chance in zip(rows, collapses):
+        print(f"place={row['place']} all Budew+Heavy Ball prized = "
+              f"{100 * float(chance):.6f}%")
+    print(f"equal-weight nine-list joint Prize collapse mean: "
+          f"{100 * float(sum(collapses) / len(collapses)):.6f}%")
     print("Exact small-deck oracle and Prize collision checks passed.")
 
 
