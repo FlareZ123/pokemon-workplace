@@ -1,0 +1,24 @@
+name: Shared Effect Catalog Legality
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/attack_copy_catalog.py'
+      - 'tools/lock_effect_catalog.py'
+      - 'tools/combat_lock_catalog.py'
+      - 'tools/bench_release_catalog.py'
+      - 'tools/multi_output_search_catalog.py'
+      - 'results/shared_effect_catalog_legality/**'
+
+jobs:
+  regression:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m results.shared_effect_catalog_legality.reproduce
+      - run: python -m results.attack_copy_semantics.reproduce
+      - run: python -m results.bench_release_catalog.reproduce
