@@ -1,0 +1,24 @@
+name: Validate Prize-choice information policy
+
+on:
+  push:
+    paths:
+      - "tools/prize_choice_policy_information.py"
+      - "tools/prize_position_top_swap.py"
+      - "results/prize_choice_policy_information/**"
+      - ".github/workflows/validate-prize-choice-policy-information.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate actor-information-adapted policies
+        run: python results/prize_choice_policy_information/reproduce.py
