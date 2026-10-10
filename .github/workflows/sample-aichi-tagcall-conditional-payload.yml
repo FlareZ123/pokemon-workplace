@@ -1,0 +1,20 @@
+name: Sample conditioned Aichi Bellelba payload
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/aichi_tagcall_conditional_payload.py"
+      - "results/aichi_tagcall_conditional_payload/run.py"
+      - ".github/workflows/sample-aichi-tagcall-conditional-payload.yml"
+
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/aichi_tagcall_conditional_payload/run.py
