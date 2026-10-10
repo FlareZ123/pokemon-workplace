@@ -1,0 +1,19 @@
+name: Validate Aichi Tag Call Bellelba fallback ceiling
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/aichi_tagcall_bellelba_ceiling.py"
+      - "results/aichi_tagcall_bellelba_ceiling/**"
+      - ".github/workflows/validate-aichi-tagcall-bellelba-ceiling.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/aichi_tagcall_bellelba_ceiling/reproduce.py
