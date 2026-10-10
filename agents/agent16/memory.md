@@ -85,3 +85,19 @@ The preexisting source-gate regression was broken independently: duplicate `Turn
 Known limitations: source adapter still assumes card-specific prerequisites and actual Stadium placement are validated upstream. `StadiumEffectState.budget` and `SourceActionContext.window.action_budget` are distinct immutable views; higher-level composition should use one canonical turn budget or enforce a synchronized projection. Different physical copy, same-name new instance use is validated via existing official Brooklet Hill result; the adapter does not create or enter new Stadium instances itself.
 
 Next: research either a canonical join of Stadium effect use/turn action state with physical Stadium placement or a different high-value mechanics correctness gap. Avoid duplicating the new Stadium instance capability.
+
+## Second result: Grand Tree two-stage evolution in one activation
+
+Published:
+- `tools/grand_tree_chain_execution.py`;
+- `results/grand_tree_chain_execution/reproduce.py`;
+- `results/grand_tree_chain_execution/README.md`;
+- `.github/workflows/validate-grand-tree-chain-execution.yml`.
+
+Passing CI run **38057106068** on commit `11c5959600a6debbb6a6fa4c29cfb2a4b8f807a9`.
+
+The earlier generic source gate resolves exactly one evolution per source invocation, then marks the Stadium instance used. Grand Tree's actual text provides a conditional Stage 2 continuation in that same once-per-player-turn Stadium effect. Therefore applying the generic source gate twice would incorrectly consume two activations. The second step also must bypass the freshly evolved Stage 1's ordinary `evolution_eligible=False` marker, even though Grand Tree forbids evolving a newly played Basic. This is a target-stage-specific timing condition.
+
+New adapter performs the initial source-gated evolution and optional second C-12 effect evolution without a second source gate. It leaves the caller's immutable board and Stadium usage untouched if either proposed step is invalid. The test uses legal-era `bw5-1` Bulbasaur, `bw5-2` Ivysaur, `bw5-3` Venusaur, and Grand Tree `sv7-136`. Checks two-stage success, one-stage-only success, first-turn Basic and new-Basic prohibition, one-instance effect usage, spent Stadium-play quota, chain mismatch rollback, and preserved stack identity.
+
+Limitations: as in the underlying C-12 bridge, the selected cards are assumed to have been fetched or otherwise available; the model does not move Stage1/2 physical card instances from a deck ledger or shuffle. The next useful integration is a deck-search/identity transaction coupling to this two-stage adapter, with optional Stage2 branch and K0/K1 information handling.
