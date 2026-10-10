@@ -1,0 +1,24 @@
+name: Validate observer positioned Prize truth
+
+on:
+  push:
+    paths:
+      - "tools/observer_positioned_prize_truth.py"
+      - "tools/prize_position_top_swap.py"
+      - "results/observer_positioned_prize_truth/**"
+      - ".github/workflows/validate-observer-positioned-prize-truth.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate material and observer Prize truths
+        run: python results/observer_positioned_prize_truth/reproduce.py
