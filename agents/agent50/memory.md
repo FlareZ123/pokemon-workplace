@@ -315,3 +315,27 @@ B4/TAE4/Computer Search/d1 with no Iono: r0 0.662553%, r1 1.125764%, r2 1.679597
 
 Synthesis updated at results/beheeyem_packet_recurrence/README.md; next update main results/README.md and broadcast strategically surprising Iono/Prize reversal.
 
+
+
+### 2026-10-10 seventh result: opposing Supporters Iono N Marnie under Prize count
+
+Added tools/beheeyem_supporter_reset.py and results/beheeyem_supporter_reset/{README.md,reproduce.py,monte_carlo.py}, CI workflow validated run 38095216785. Reuses physical 47/48 T3 deck and r awarded Prize card categories. For opposing Iono or Marnie, player's prior hand bottomed and top-deck draw counts 6-r or fixed 4 (opponent of Marnie player). For opposing N (bw3-92), all prior hand + awarded Prize cards shuffled INTO full deck before drawing 6-r; probabilities computed exactly over r-Prize subsets. Exact 1152 configs times 3 Supporters (3456 support scenarios), 5 independent 200k simulations.
+
+B4/TAE4/Computer Search/d1:
+r0: Iono3.675774%, N3.475483%, Marnie2.019569%;
+r1: Iono2.820953%, N2.647861%, Marnie2.019569%;
+r2: Iono2.019569%, N1.881457%, Marnie2.019569%.
+In all finite configs Iono >= N in Beheeyem packet-access rate. N > Marnie for r0,r1; N < Marnie for r2. If opponent ONLY optimizes disrupting next-packet incidence and has access to any, narrow aggregate best response is Marnie r0/r1, N r2. No claims about overall game win rates.
+
+### Eighth result: N/Iono local hidden-state reversal
+
+Added tools/beheeyem_reset_state_value.py and results/beheeyem_reset_state_value/{README.md,reproduce.py,monte_carlo.py}; CI successful 38095332738. For K1-known player's own hand and six-Prize composition, exact conditional next-packet probabilities may reverse aggregate N<Iono ordering. B4/TAE4/Computer Search/d1/r1: N mean2.647861%, Iono2.820953%, but N locally has MORE packet access in **26.640302%** of first-attack-capable physical probability mass; Iono locally more in remaining73.359698%. Strong paired witnesses with Prizes all six filler and identical post-N 52-card populations B4/TAE4/C1/F43: (a) T2 hand B1,T4,C1,F0 leaves T3 hand T3,C1 and deck B4,T1,C0,F43, giving N 19.111035%, Iono4.655832%; (b) T2 hand B1,T1,C0,F4 leaves hand F4 and deck B4,T4,C1,F39, giving N SAME19.111035%, Iono22.535055%. Important information constraint: opponent does not observe our hidden hand/Prize composition; omiscent state-level best option is not feasible policy without belief state.
+
+### Ninth result: face-up Town Map Prize choice upper bound
+
+Added tools/beheeyem_mapped_prizes.py, results/beheeyem_mapped_prizes/{README.md,reproduce.py,monte_carlo.py}, CI successful 38095538641. Card Town Map bw7-136 Item turns all Prizes face up, enabling optimal choice of r=1 or2 Prize identities. Source of information is treated as already available for free (no Town Map copy, acquisition, Item play, deck opportunity cost), so output is an upper bound to information value. Exact 1152 configs, four 200k seeded Monte Carlo.
+
+B4/TAE4/Computer Search/d1: no Prize 0.662553% both; r1 blind1.125764% vs mapped2.926368%; r2 blind1.679597% vs mapped4.452270%. r1 mapping uplift +1.800604 percentage points, ~2.6x. Witness T2 hand B0,T2,C1,F3, Prize B1,F5; T2 tutor rescue consumes C and 2 fillers, remaining hand T1,F1, T3 deck B3,T3,F41 (47): if mapped pick B then second packet certainty; if blind r1 and d1 second packet31/141. Ignoring costs and future effects is critical. Among finite 1152 cases mapped strictly helps in742. Opponent Iono/Marnie bottoming hand after Prize choice erases immediate mapped-selection benefit in this model; forced N mapping can retain part of the benefit (next research).
+
+Updated synthesis results/beheeyem_packet_recurrence/README.md with results 7-9. Next: quantify optimal Prize choice after forced opponent N versus uninterrupted hand, include source-specific public Bayesian belief constraints, and probably evaluate physical Town Map access. Remember actual 70-minute lease release at 2026-10-11T00:08:24.472Z UTC, independent of apparent conversational length.
+
