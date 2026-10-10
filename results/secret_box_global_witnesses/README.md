@@ -196,3 +196,51 @@ It partitions physically distinct unused cards into the source planner's **11 na
 The weighted count agrees exactly with the physical formulas above for each family. It therefore certifies the **complete cross-product** of the specified Supporter and Tool/Stadium families, without a sampling assumption. It also explicitly verifies each unused-card class, including Basic cards, is legitimately pooled only when it cannot enter the initial Active or first-draw filler selection. Starting Active remains Oddish throughout, so Jirachi top-five effects never arise.
 
 The category model remains restricted to the original immediate-core solver, which compresses downstream value and omits realistic opponent actions. The conclusion about exact family probability is stronger than a simulation estimate, while the conclusion about in-game strategic value still inherits the simulator's limited objective.
+
+
+## State-dependent discard gate and searched-output recycling
+
+The [DCI-safe payment certificate](discard_gate_recycling_bounds.py) adds an explicit hypothetical partition of the eleven starting-filler cards into **d currently disposable cards** and **11−d strategically protected cards**. [GitHub Actions run 38094108463 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38094108463). This is an analytic sensitivity analysis of sufficient executable lines, not a claim that any particular real Supporter is always disposable.
+
+In the Supporter-required family, the player must pay **three cards before Secret Box searches the deck**. Once Secret Box has found TM: Evolution, Artazon, and Guzma & Hala, a further two-card Guzma & Hala discard can be funded by:
+
+- unused initially safe filler cards;
+- the retrieved TM: Evolution, if a second unprized TM remains searchable and Guzma & Hala will replace it;
+- the retrieved Artazon, if a second unprized Artazon remains searchable and Guzma & Hala will replace it.
+
+Guzma & Hala's paid effect can retrieve a **Stadium, Pokémon Tool, and Special Energy** using one Supporter action. The replacement resources and Jet Energy become available together. Card-text witnesses are Guzma & Hala (Cosmic Eclipse 193), Secret Box (Twilight Masquerade 163), and Artazon (Paldea Evolved 171) in the bundled card database. The source rulebook allows a restricted deck search to select fewer than the number of targets if necessary.
+
+Thus, after reserving three safe cards for the pre-search Secret Box payment, the certificate needs at least two additional payment sources from leftover safe cards plus **one per recoverable duplicate**. If both original TM and Artazon copies survive in the deck, **three initially disposable fillers suffice**: spend three on Box, discard the first fetched TM and Artazon for Guzma & Hala, and search out their second copies plus Jet. When one duplicate is unavailable, four safe fillers suffice. With neither duplicate available, five are sufficient. The post-Box choice is conditioned on information legitimately learned during Box's deck search, so the witness requires no forbidden pre-search Prize knowledge.
+
+For the Tool-and-Stadium-required family, the line does not need Guzma & Hala. Three safe fillers directly pay Box; its Tool and Stadium outputs supply TM and Artazon.
+
+The exact combinatorics follow by selecting the six (Supporter) or five (Tool/Stadium) exposed filler cards among 11, allowing any of them to be the natural draw, then selecting two additional Prize identities from the remaining 48. In the Supporter family the number of legal Prize pairs per safe-filler count s is:
+
+| Safe fillers among six exposed | Certified Prize pairs |
+| ---: | ---: |
+| 0–2 | 0 |
+| 3 | 944 |
+| 4 | 1,120 |
+| 5–6 | 1,124 |
+
+For s=3, the Prize pair must avoid *both* TM and Artazon copies individually, and may not exhaust both Jet or Bunnelby. This leaves C(44,2)−2=944 pairs. For s=4, only the four cross pairs with one TM and one Artazon lack the required recyclable payment source, leaving 1,120. For s≥5, every one of the 1,124 target-preserving Prize pairs suffices. For Tool/Stadium, s≥3 gives 1,125 Prize pairs.
+
+Let **D = C(60,7) × C(53,6) × 47 × A**, where **A** is the Basic-valid opener probability above. Then the exact Supporter safe-payment certificate is
+
+**(2×6/D) × Σ[s=3..6] C(d,s) C(11−d,6−s) Nₛ**, with **Nₛ = 944,1120,1124,1124**;
+
+the Tool/Stadium safe-payment certificate is
+
+**(4×5×1125/D) × Σ[s=3..5] C(d,s) C(11−d,5−s)**.
+
+The two-copy factors in front count alternative Oddish and Jet Energy physical identities. The computed masses remain conservative lower bounds and are zero if fewer than three safe cards exist in the designated eleven-card stock.
+
+| Safe filler stock d (of 11) | Supporter-required certified incidence | Tool/Stadium-required certified incidence |
+| ---: | ---: | ---: |
+| 3 | 1.76722e−12 | 1.75505e−12 |
+| 5 | 9.34501e−12 | 1.13451e−11 |
+| 8 | 1.69945e−11 | 2.72032e−11 |
+| 10 | 1.73595e−11 | 2.89583e−11 |
+| 11 | 1.73595e−11 | 2.89583e−11 |
+
+The independent regression directly enumerates all 48-card physical Prize pairs to verify each recycling count, plus all eleven-labeled-card opener/draw exposures to verify the safe-stock combinatorics. **A protected filler is never consumed by the constructed line.** Real DCI is state-, matchup-, and sequencing-dependent; none of these incidence values is a card recommendation or a match win-rate estimate.
