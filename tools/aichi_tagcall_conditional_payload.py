@@ -108,6 +108,8 @@ class Stratum:
     variance_gain: dict[tuple[str,str],float]
     improved_counts: Counter[tuple[str,str]]
     material_only: Counter[tuple[str,str]]
+    payment_helped: Counter[tuple[str,str]]
+    first_payment_witness: tuple | None
 
 
 @dataclass
@@ -134,8 +136,10 @@ def sample_stratified(*, zero_g_samples: int=1_000, one_g_samples: int=3_000,
         squares=defaultdict(float)
         improved=Counter()
         material_only=Counter()
+        payment_helped=Counter()
+        first_payment_witness=None
         eligible=0
-        for _ in range(samples):
+        for trial_index in range(samples):
             order=sample_conditioned_order(rng,g_left)
             state,deferred=prepare_with_deferred_stellar(list(order))
             assert state is not None and state.gnh_access
@@ -164,6 +168,21 @@ def sample_stratified(*, zero_g_samples: int=1_000, one_g_samples: int=3_000,
                     delta=upgraded-old
                     safe=guarded-old
                     bonus=upgraded-guarded
+                    if bonus>1e-12:
+                        payment_helped[key]+=1
+                        funding_paths=[
+                            p for p in g_plus_b
+                            if p.paid_with is not None
+                            and BELLELBA in p.paid_with
+                            and chance((p,),assignment,late)>guarded+1e-12
+                        ]
+                        assert funding_paths, (g_left,trial_index,key,bonus)
+                        if first_payment_witness is None:
+                            first_payment_witness=(
+                                trial_index,key,tuple(order),
+                                old,guarded,upgraded,
+                                funding_paths[0].paid_with,
+                            )
                     gain[key]+=delta
                     protected[key]+=safe
                     payment[key]+=bonus
@@ -181,7 +200,8 @@ def sample_stratified(*, zero_g_samples: int=1_000, one_g_samples: int=3_000,
             mean_protected_gain={key:protected[key]/samples for key in gain},
             mean_payment_premium={key:payment[key]/samples for key in gain},
             variance_gain=variance,improved_counts=improved,
-            material_only=material_only,
+            material_only=material_only,payment_helped=payment_helped,
+            first_payment_witness=first_payment_witness,
         ))
     keys=tuple((objective,package) for objective in OBJECTIVES
                for package in PACKAGES_USED)
@@ -208,8 +228,11 @@ def report(result: StratifiedResult) -> str:
         lines.append(
             f"stratum g={s.g_left}, Bellelba deck=1, "
             f"accepted mass={float(s.mass)*100:.12f}% "
-            f"sampled={s.samples}, G&H core/late={s.eligible}"
+            f"sampled={s.samples}, G&H core/late={s.eligible}, "
+            f"Bellelba_payment_helped={dict(s.payment_helped)}"
         )
+        if s.first_payment_witness is not None:
+            lines.append(f"first physical Bellelba payment witness: {s.first_payment_witness}")
     lines.append(
         "objective | package | weighted uplift pp ± paired 95% halfCI | "
         "with Bellelba protected uplift pp | Bellelba discard premium pp"
