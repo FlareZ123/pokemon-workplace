@@ -40,3 +40,12 @@ Run `python -m tools.energy_discard_legacy_star_recovery` at the repository root
 The model represents the recovery line with one specifically discarded DDE. Legacy Star can access any card in discard, and other draws, search effects, Supporters, and attachments might provide alternative routes. A real deck may contain several DDE, other attached Energy, or active lock/Stadium effects. Subsequent attacks, opponent Knock Outs, prize taking, and win probability are not simulated.
 
 The tactical point is the **opportunity cost of restoration**. Merely marking the one-card payment "recoverable" can obscure its resource commitments.
+
+
+## A concrete Ability-lock matchup boundary
+
+The bundled Expanded print **Iron Thorns ex** (`sv6-77`) has **Initialization**: while Active, Pokémon with Rule Boxes in play (on either side) have no Abilities, except Future Pokémon. Regidrago VSTAR has a VSTAR Rule Box and is a Dragon Pokémon, so its Legacy Star Ability is suppressed by an opposing Active Iron Thorns ex when no other countereffect intervenes.
+
+This makes the suppressed-Ability branch source-specific. With only Basic Grass/Fire/Fire remaining after the one-DDE-card Dragon Impact payment and no other source of Grass or DDE, the opponent's active Iron Thorns prevents the Legacy Star rescue. A two-Basic payment keeps DDE attached, satisfies the next Apex Dragon attack cost directly, and is not itself disabled by Pokémon Ability suppression.
+
+That is a conditional card-text interaction. It does not evaluate Iron Thorns's attacks, retreat, gust, damage, the opponent's stadiums, or whether Regidrago survives to the next turn.
