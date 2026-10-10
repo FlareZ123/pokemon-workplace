@@ -16,7 +16,11 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from typing import Literal
 
-from stadium_entry_channels import StadiumEntryState, teleport_room_options
+from stadium_entry_channels import (
+    StadiumEntryState,
+    play_stadium_from_hand,
+    teleport_room_options,
+)
 from stadium_effect_instance_usage import (
     StadiumCard,
     StadiumEffectState,
@@ -119,17 +123,30 @@ def teleport_successors(
     return tuple(out)
 
 
+
+def ordinary_play_successors(
+    state: StadiumReentryState,
+) -> tuple[StadiumReentryState, ...]:
+    """Enumerate ordinary Stadium plays with their actual once-per-turn cost."""
+    out = []
+    for card in state.entry.hand:
+        next_entry = play_stadium_from_hand(state.entry, card.copy_id)
+        if next_entry is not None:
+            out.append(replace(state, entry=next_entry, epoch=state.epoch + 1))
+    return tuple(out)
+
 def max_activations(
     initial: StadiumReentryState,
     policy: UsagePolicy,
     *,
     stadium_name: str = "Grand Tree",
+    include_normal_play: bool = False,
 ) -> tuple[int, tuple[str, ...]]:
     """Exhaustively search a finite turn with fixed Teleport Room sources.
 
-    Only permitted actions: activate the named Stadium effect or use one
-    remaining Gothitelle source. Ordinary Stadium play is excluded, so the
-    benchmark uses a pre-spent Stadium-play allowance.
+    Permitted actions: activate the named Stadium effect, use one remaining
+    Gothitelle source, and optionally play one Stadium normally from hand.
+    Ordinary play is excluded unless include_normal_play=True.
     """
     agenda = [(initial, ())]
     seen = {initial}
@@ -142,6 +159,15 @@ def max_activations(
         if after_use is not None and after_use not in seen:
             seen.add(after_use)
             agenda.append((after_use, trace + ("use:" + after_use.uses[-1].copy_id,)))
+        if include_normal_play:
+            for successor in ordinary_play_successors(state):
+                if successor not in seen:
+                    seen.add(successor)
+                    assert successor.entry.in_play is not None
+                    agenda.append((
+                        successor,
+                        trace + ("play->" + successor.entry.in_play.copy_id,),
+                    ))
         for source in sorted(
             state.entry.teleport_room_sources - state.entry.teleport_room_used
         ):
