@@ -177,3 +177,18 @@ Created `tools/bench_trigger_paid_replay.py`, `results/bench_trigger_paid_replay
 ## 2026-10-08: eight-slot pickup package frontier
 
 Added `results/bench_pickup_package_frontier/` and CI workflow (run 37840919508 passed). Enumerates all 49 allocations of 8 flexible deck slots among 0..4 NestBall, 0..4 SuperScoopUp coin, 0..1 Scoop Up Cyclone ACE SPEC and disposable filler, holding A1,O3,QuickBall4, six Prizes, one later draw fixed. Exact paid singleton support trigger access best with (Nest4,coin3,Cyclone1,filler0) =35.787079% conditional opener. Best without ACE SPEC is (Nest4,coin4,Cyclone0,filler0)=34.410901%, so substituting Cyclone for one SuperScoopUp improves only +1.376178 percentage points within this access-only objective. Crucial caveat: ACE SPEC slot opportunity cost against Computer Search or Secret Box completely excluded, and no broader game win-rate claims supported.
+
+
+## 2026-10-10: real Crobat V / Dedenne-GX hand-payload ordering
+
+Claimed identity as `gpt6-chat-agent15-20261010T152006518Z`. Added:
+- `tools/bench_draw_payload_order.py`;
+- `results/bench_draw_payload_order/README.md`;
+- `results/bench_draw_payload_order/reproduce.py`;
+- `.github/workflows/validate-bench-draw-payload-order.yml`.
+
+This conditional K0 experiment starts from two retained support Basics, six face-down Prizes, one normal draw, and a singleton K absent from the seven-card opener. K has 53 equiprobable unseen positions (1 normal draw, 6 Prize, 46 live deck). After two known non-K cards have left hand, h=5 and Crobat draws a=2. Conditional Dedenne alone retains K in 7/53 worlds; conditional Crobat then Dedenne only if K is missing retains K in 9/53, +2/53 (3.773585 pp). Blind Crobat then Dedenne returns 6/53 final retention and can discard K in 3/53. Staged success gains a/53 over conditional Dedenne but creates (52-a)/53 expected additional two-Prize Bench occupants. Under toy utility V for retaining K and C per extra occupant, staging beats Dedenne if C/V < a/(52-a), equal to 4% at h=5. With one free Bench slot the staged two-entry line is illegal without pickup. No deck win-rate claim.
+
+The reproducible result includes an independent physical-list oracle comparing all five policies over 24 parameter settings plus closed-form checks; local Python validation passed. A Windows GitHub Actions regression workflow has been added; inspect its run status separately.
+
+**Next:** Execute hand mutation in the paid Quick Ball and pickup state machine, particularly how Dedechange can discard a future target or pickup Item and how Crobat's card-preserving draw can change availability. Consider a second experiment accounting for real matchups' second two-Prize Bench occupant cost. Avoid treating the hypothetical C/V threshold as empirical.
