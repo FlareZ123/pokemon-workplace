@@ -1,0 +1,22 @@
+name: Validate Beheeyem Iono Prize-dependent redraw
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_iono_prize.py"
+      - "results/beheeyem_iono_prize/**"
+      - ".github/workflows/validate-beheeyem-iono-prize.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check exact Iono remaining-Prize redraw and reversals
+        run: python3 results/beheeyem_iono_prize/reproduce.py
+      - name: Independently bottom hand and physically draw with Iono
+        run: python3 results/beheeyem_iono_prize/monte_carlo.py
