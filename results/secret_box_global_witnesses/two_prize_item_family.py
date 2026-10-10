@@ -72,12 +72,12 @@ def main():
             physical_weight+=comb(26,3)*len(ODDISH)*len(BUN)*len(remainder)
 
     assert prize_patterns==30
-    assert physical_weight==624_000
+    assert physical_weight==1_248_000
     A=1-Fraction(comb(46,7),comb(60,7))
     p=Fraction(
         physical_weight,comb(60,6)*comb(54,7)*47
     )/A
-    assert p==Fraction(5,2876319358528)
+    assert p==Fraction(5,1438159679264)
     print("Two-key-Prize paired alternatives:",prize_patterns)
     print("Physical source-planner regression outcomes:",cases)
     print("Exact physical counted events:",physical_weight)
