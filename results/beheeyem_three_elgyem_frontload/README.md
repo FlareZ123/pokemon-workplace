@@ -50,3 +50,14 @@ A single mandatory search-resource assumption can distort deck optimization. Bac
 A next useful experiment should combine these exact Basic-access states with literal turn-two, turn-three, and turn-four Beheeyem evolution/TAE search transitions, switching, Prize safety, and an opponent capable of disrupting the lock anchor. The current result provides a reproducible *necessary-condition component* for such a simulator.
 
 To reproduce: `python results/beheeyem_three_elgyem_frontload/reproduce.py` and `python results/beheeyem_three_elgyem_frontload/monte_carlo.py`.
+
+## Robustness across Elgyem and partner Basic counts
+
+An exact 16-case sensitivity scan varies Elgyem copies (3 or 4), partner Basic copies (1–4), and whether the partner is Poffin-eligible. All 15 four-Item distributions are re-evaluated at each setting with `robustness.py`.
+
+| Elgyem copies | Partner ≤70 HP | Partner >70 HP |
+| ---: | --- | --- |
+| 3 | 4 Poffin wins at all four partner counts | 3 VIP + 1 Poffin wins at all four partner counts |
+| 4 | 4 Poffin wins at all four partner counts | 4 VIP wins at all four partner counts |
+
+At four high-HP partners, E3 gives VIP3/Poffin1 **5.967177%** versus VIP4 **5.820593%**. With E4, the order reverses: VIP4 **9.637382%** versus VIP3/Poffin1 **9.391770%**. Thus the default high-HP VIP4 conclusion depends on Elgyem redundancy. These are controlled early access metrics only. Reproduce with `python results/beheeyem_three_elgyem_frontload/robustness.py`.
