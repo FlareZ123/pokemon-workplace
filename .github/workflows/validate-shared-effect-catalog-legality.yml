@@ -10,6 +10,7 @@ on:
       - 'tools/bench_release_catalog.py'
       - 'tools/multi_output_search_catalog.py'
       - 'results/shared_effect_catalog_legality/**'
+      - 'results/catalog_legality_source_audit/**'
 
 jobs:
   regression:
@@ -22,3 +23,4 @@ jobs:
       - run: python -m results.shared_effect_catalog_legality.reproduce
       - run: python -m results.attack_copy_semantics.reproduce
       - run: python -m results.bench_release_catalog.reproduce
+      - run: python -m results.catalog_legality_source_audit.reproduce
