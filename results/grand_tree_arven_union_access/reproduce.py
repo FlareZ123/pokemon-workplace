@@ -73,9 +73,9 @@ def main() -> None:
         ArvenUnionAccess(10,2,1,1,4,2),
         ArvenUnionAccess(10,2,2,1,4,2),
         ArvenUnionAccess(11,2,1,2,5,2),
-        ArvenUnionAccess(11,2,2,2,5,3),
-        ArvenUnionAccess(11,3,1,2,5,3),
-        ArvenUnionAccess(11,3,2,1,5,3),
+        ArvenUnionAccess(11,2,2,2,5,2),
+        ArvenUnionAccess(11,3,1,2,5,2),
+        ArvenUnionAccess(11,3,2,1,5,2),
         ArvenUnionAccess(11,3,2,2,5,2),
     )
     for case in cases:
