@@ -8,7 +8,7 @@ import tempfile
 from pathlib import Path
 from typing import Any, Iterable
 
-from build_expanded_legality_baseline import OFFICIAL_BAN_OVERLAY
+from build_expanded_legality_baseline import classify_effective_legality
 
 BENCH_ENTRY_RE = re.compile(r"when you play this pok[eé]mon from your hand onto your bench", re.IGNORECASE)
 RESOURCE_ACCESS_RE = re.compile(
@@ -43,8 +43,7 @@ def iter_legal_cards(resources_root: Path) -> Iterable[dict[str, Any]]:
         if path.stem not in expanded_sets:
             continue
         for card in load_json(path):
-            status = (card.get("legalities") or {}).get("expanded")
-            if card["id"] in OFFICIAL_BAN_OVERLAY or status == "Banned":
+            if classify_effective_legality(card)[0] != "Legal":
                 continue
             yield card
 

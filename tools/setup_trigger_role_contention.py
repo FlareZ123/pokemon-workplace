@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 from typing import Any
 
-from build_expanded_legality_baseline import OFFICIAL_BAN_OVERLAY, gameplay_fingerprint, load_json
+from build_expanded_legality_baseline import classify_effective_legality, gameplay_fingerprint, load_json
 
 BENCH_TRIGGER_RE = re.compile(r"play this Pokémon from your hand onto your Bench", re.IGNORECASE)
 
@@ -132,8 +132,7 @@ def scan_literal_bench_trigger_basics(resources_root: Path) -> dict[str, Any]:
         if path.stem not in expanded_sets:
             continue
         for card in load_json(path):
-            status = (card.get("legalities") or {}).get("expanded")
-            if card["id"] in OFFICIAL_BAN_OVERLAY or status == "Banned":
+            if classify_effective_legality(card)[0] != "Legal":
                 continue
             if "Basic" not in (card.get("subtypes") or []):
                 continue
