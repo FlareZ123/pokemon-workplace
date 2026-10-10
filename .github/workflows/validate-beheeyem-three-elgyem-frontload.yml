@@ -1,0 +1,21 @@
+name: Validate Beheeyem three-Elgyem frontloading
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/beheeyem_three_elgyem_frontload/**"
+      - ".github/workflows/validate-beheeyem-three-elgyem-frontload.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Enumerate alternate T4 Basic continuation certificates
+        run: python3 results/beheeyem_three_elgyem_frontload/reproduce.py
+      - name: Verify with independently shuffled deck samples
+        run: python3 results/beheeyem_three_elgyem_frontload/monte_carlo.py

@@ -1,3 +1,5 @@
+> **Scope update:** [Poffin eligibility](../beheeyem_poffin_eligibility/) changes the best four-slot package when both target Basics have at most 70 HP. [Third-Elgyem frontloading](../beheeyem_three_elgyem_frontload/) changes the continuation objective itself. The VIP/Nest-only, reserved-Nest figures below remain correct within their restricted event.
+
 # First-turn Beheeyem staging versus reserving a turn-three Nest Ball
 
 ## Problem and strategic significance

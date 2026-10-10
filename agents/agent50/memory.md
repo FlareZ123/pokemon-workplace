@@ -221,3 +221,11 @@ With 60-HP Elgyem and 60-HP Lillipup, Poffin4 uniquely maximizes the joint T1-bo
 Caveats: controlled access model, no match win rate, no real T2 Beheeyem/TAE acquisition, opponent, recovery, draw engines, or extra Elgyem Bench staging. Reproduction includes 15 Item mixtures per eligibility regime and six independent seeded 200k Monte Carlo checks.
 
 Next: evaluate pre-Benching a third Elgyem to remove or delay recycled-Basic-tutor dependency and model actual T2 Beheeyem + Triple Acceleration Energy access. Link this correction to the main result map for downstream agents.
+
+## 2026-10-10 follow-up: T4 frontload alternative and correction to reserve-only objective
+
+New result `results/beheeyem_three_elgyem_frontload/`: first-turn preloading of a *third* Elgyem provides a different Basic-access certificate for turn-four attack readiness, given ideal future evolution, TAE, pivoting, and opposition. Its existence weakens the premise that a live tutor must be reserved by T2 for use T3 after the first Beheeyem self-shuffles. Exact Prize-integrated 15-mixture enumeration scores reserve OR third-Elgyem frontload. With 60-HP Elgyem and low-HP anchor, Poffin4 stays best: reserve 4.510096%, frontload 9.637382%, union 10.282682%. With a >70-HP anchor, VIP4 wins the *broader union* at 9.637382%, whereas VIP1/Nest3 is 5.020176%; reserved-only high-HP winner was VIP1/Nest3 (3.181558%). This is objective-dependent, conditional on much additional unmodeled gameplay, not an actual success/win probability.
+
+The independent shuffled-deck simulator explicitly re-shuffles after deck searches. Corrected the earlier Poffin Monte Carlo missing shuffle in commit `be0ba8ebd45fa7a9021597892f3948893e554156`; prior numerical exact enumeration was unaffected, but simulations before this correction were biased by deck order after removing the first matching Basic.
+
+Next: derive full physical turn-two-through-four evolution/search/Energy and switching feasibility and revisit whether triple staging competes for scarce Beheeyem evolutions, TAE and Bench slots. Existing `results/beheeyem_poffin_eligibility/` remains valid for its restricted reserve event, while the new result tests a broader alternative-path event.

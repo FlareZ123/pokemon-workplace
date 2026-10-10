@@ -1,3 +1,5 @@
+> **Further research:** [Preloading a third Elgyem](../beheeyem_three_elgyem_frontload/) provides an alternate turn-four continuation without reserving a turn-three Basic tutor, changing the optimum for high-HP anchors. This report's reserve-only optimum applies only to its specifically defined event.
+
 # Buddy-Buddy Poffin changes the Beheeyem staging/reserve optimum
 
 ## Question
