@@ -1,0 +1,23 @@
+name: Validate Stadium reentry usage bounds
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/stadium_reentry_usage_bounds.py"
+      - "results/stadium_reentry_usage_bounds/**"
+      - ".github/workflows/validate-stadium-reentry-usage-bounds.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Stadium return identity sensitivity
+        run: python results/stadium_reentry_usage_bounds/reproduce.py
