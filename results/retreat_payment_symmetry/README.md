@@ -55,7 +55,7 @@ permutation-invariant projection agrees.
 
 `results/retreat_payment_symmetry/reproduce.py` compares the orbit
 construction with the canonical physical payment enumerator across
-216 independent labeled-card configurations, with 0-5 copies per
+252 independent labeled-card configurations, with 0-5 copies per
 class and costs 0-6. It additionally checks the exact physical
 Dashing Pouch action set above.
 
