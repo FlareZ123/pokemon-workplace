@@ -286,3 +286,26 @@ If Jirachi is in the opening hand, the original planner always starts it Active.
 The separate physical oracle creates 12,000 uniformly distributed valid 60-card permutations with the same fixed Prizes. For each one it compares the original named-card baseline/full/no-Item action search with the result of reconstructing all relevant 13 grouped opening categories, first draw, Active choice and actual observed top-five mask. Every paired Boolean outcome agrees; only two of the 12,000 source permutations are Item-required, reflecting the event's rarity.
 
 **Scope and significance:** This calculation gives a zero-sampling-error component of all-possible-opening Item necessity for the Aichi compressed turn-one core, conditioned on the explicitly named Prize event. It does not count Item-only necessity under every possible other Prize configuration; the exact event probability is one rigorous subset of the total model loss probability. The original model's strategic and temporal approximations remain in force.
+
+
+## Stronger exact Stellar Wish dominance under all alternative Tools/Artazon Prized
+
+The zero Stellar-only Item-necessity class above is stronger than merely asserting its absence among incremental Box gains. The [Jirachi-fetched Box dominance enumerator](jirachi_box_item_dominance.py) tests **every physically possible grouped observation** in the six-Prize stratum with:
+
+- Jirachi in the valid seven-card opening and therefore chosen as Active;
+- Secret Box absent from opening and first natural draw;
+- Secret Box present among the next five cards observed by Stellar Wish.
+
+It verifies **full-output Secret Box success equals no-Item-output Secret Box success in every case**, regardless of whether Grand Tree could also complete the initial core. [GitHub Actions CI 38094813803 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38094813803).
+
+There are **382,008 nonzero grouped Stellar observation branches**, each carrying its exact physical multiplicity. The event Jirachi-Active/Stellar-only Box access occurs with probability **49/3585** among accepted openings given these fixed six Prizes. In that event both full-output and no-Item output packages complete the core with exact probability **791/2210 ≈ 35.7919%**. Their disagreement probability is **exactly zero**.
+
+### Resource-count explanation
+
+Here all other Tools and both Artazon are Prized. The Item output's access to Tag Call can only help by materializing later payment cards; its effect cannot directly produce Bunnelby, TM: Evolution, or Jet Energy.
+
+When Jirachi begins Active and obtains Secret Box by Stellar Wish, its seven-card hand after the first draw initially contains **no Secret Box**. Box is added through the Ability, so paying its three-card discard cost leaves **four of those original cards**. To complete this particular core without Artazon, the player must have Bunnelby or Fan Rotom accessible from the opening hand. If Jet is already held, the Box Tool output can obtain a missing TM and complete the setup without using G&H's paid mode. If Jet must be searched, one Bunnelby/Fan Rotom access card, one already-held TM (if any) and one already-held G&H (if any) are the only three distinct held roles that need preserving from the seven original hand cards. Four other cards remain available for the three Box payments. After Box, TM is available through Tool and G&H through Supporter if not already held. If G&H was already held, the Box Supporter category can fetch an additional other Supporter, since all six Prizes are Tools/Stadiums and the deck contains ten other Supporter copies, more than could all occupy the seven-card hand. Consequently two cards remain disposable for G&H's optional fee after its play while preserving the Bunnelby/Fan-Rotom route and TM. G&H then finds Jet.
+
+This is a constructive hand-card capacity argument specific to the compressed first-turn endpoint and fixed Prize layout. The exact state enumeration verifies the claim even across all viable opening card identities, Jirachi top-five alternatives and player selections in the source action model. Different matchup-dependent protected-card assumptions could invalidate the argument's claim of disposable extras in real competitive play.
+
+The distinction is useful for AMR: Stellar Wish gives theoretical access to Box, but acquisition timing changes the number of *other* starting-hand cards available for the subsequent two sequential discard gates, and can eliminate Item output's marginal payment-financing value.
