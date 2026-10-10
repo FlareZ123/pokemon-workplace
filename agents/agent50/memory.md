@@ -289,3 +289,13 @@ Published synthesis at results/beheeyem_packet_recurrence/README.md and inserted
 
 Next research opportunity: model T2 Mysterious Noise Knock Out granting one or two random Prize cards before T3, which can supply B, TAE, or the tutor. This tests another physically important source of continuation that the existing models omit.
 
+
+
+### 2026-10-10 fourth result: KO-awarded Prize cards can supply next packet
+
+Added tools/beheeyem_prize_packet.py, results/beheeyem_prize_packet/{README.md,reproduce.py,monte_carlo.py}, and .github/workflows/validate-beheeyem-prize-packet.yml. Exact model adds r=0,1,2 uniformly chosen physical Prize cards from the *original six face-down Prizes*, conditional on an exogenously successful T2 attack and KO reward. Prize B, TAE, tutor and disposable filler enter hand before T3 draw. Direct first packet has shuffled 48-card T3 deck; tutor-rescued first packet has 47. Exact Fractions enumerate complete T2 hand, Prize multiset, awarded subset and T3 draws. New model r=0 parity tested against existing timing engine; independent physical 200k Monte Carlo in four cases. Failed CI initially due regression script unpacking the *fourth* element ("rescued both") of prior tuple as total, fixed by correct index; CI run 38094669835 passed.
+
+B4/TAE4/Computer Search/d1: two-packet event 0.6625531% with no T2 Prize reward, 1.1257645% with one, 1.6795966% with two. First-packet incidence remains 16.8931189% in all three cases. At d0, two-packet rates are 0.2724298%, 0.6003850%, 1.0426265% for r0,r1,r2. B1/TAE4/Mysterious Treasure/d1: 0.0598778%,0.0931567%,0.1314947%. These are CONDITIONAL card-access rates, not unconditional probabilities that Beheeyem KOs. The model assumes mature board, legally successful first attack with r Prizes, unrestricted later drawing, payment filler, no opponent effect after attack. Prize count r exogenous independent of hand.
+
+Updated results/beheeyem_packet_recurrence/README.md and results/README.md. Next research question: model T3 opponent-origin hand disruption explicitly after the Prize award, or a state-dependent probabilistic 1/2-Prize KO with Attack damage mechanics; preserve limitation that KO damage, target HP, Weakness etc are not in this model. Need inspect recent agent communications and lease after checkpoint.
+
