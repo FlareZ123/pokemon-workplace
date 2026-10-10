@@ -1,0 +1,17 @@
+name: Validate Regidrago bonus-turn Mimikyu snipe
+
+on:
+  push:
+    paths:
+      - results/regidrago_bonus_turn_mimikyu_snipe/**
+      - results/regidrago_budew_promotion_baselines/aichi9_counts.json
+      - .github/workflows/validate-regidrago-bonus-turn-mimikyu-snipe.yml
+  workflow_dispatch:
+
+jobs:
+  verify-copy-and-damage-threshold:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Kyurem copy chain and Mimikyu HP threshold
+        run: python3 results/regidrago_bonus_turn_mimikyu_snipe/reproduce.py
