@@ -7,12 +7,12 @@ from __future__ import annotations
 
 from board_object_kernel import BoardState
 from retreat_cost_semantics import RetreatCostModifier
+from retreat_attached_energy_free_cost import derive_attached_energy_threshold_no_cost
 
 
 _GALAR_MINE = "swsh2-160"
 _BIG_NET_ARIADOS = "sv6-5"
 _CARRY_AND_CLIMB_SNEASLER = "swsh10-93"
-_MELT_AWAY_MAGCARGO_PRINTS = frozenset({"sv10-36", "me2pt5-24", "me2pt5-222"})
 _EVOLUTION_TAGS = frozenset({"Stage1", "Stage 1", "Stage2", "Stage 2", "Evolution"})
 
 
@@ -34,15 +34,9 @@ def derive_environment_retreat_modifiers(
     if stadium_print_id == _GALAR_MINE and stadium_effect_enabled:
         modifiers.append(RetreatCostModifier("stadium:Galar Mine", delta=2))
 
-    if (
-        active.print_id in _MELT_AWAY_MAGCARGO_PRINTS
-        and active.card_name == "Ethan\u0027s Magcargo"
-        and active.abilities_enabled
-        and not active.energy
-    ):
-        modifiers.append(RetreatCostModifier(
-            f"{active.object_id}:Melt Away", no_retreat_cost=True,
-        ))
+    low_energy_no_cost = derive_attached_energy_threshold_no_cost(active)
+    if low_energy_no_cost is not None:
+        modifiers.append(low_energy_no_cost)
 
     if active.tags & _EVOLUTION_TAGS:
         for source in opponent_board.objects:
