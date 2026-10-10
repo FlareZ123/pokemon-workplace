@@ -106,6 +106,7 @@ class Stratum:
     mean_protected_gain: dict[tuple[str,str],float]
     mean_payment_premium: dict[tuple[str,str],float]
     variance_gain: dict[tuple[str,str],float]
+    variance_payment: dict[tuple[str,str],float]
     improved_counts: Counter[tuple[str,str]]
     material_only: Counter[tuple[str,str]]
     payment_helped: Counter[tuple[str,str]]
@@ -118,6 +119,7 @@ class StratifiedResult:
     uplift: dict[tuple[str,str],float]
     protected_uplift: dict[tuple[str,str],float]
     payment_premium: dict[tuple[str,str],float]
+    payment_ci_halfwidth: dict[tuple[str,str],float]
     ci_halfwidth: dict[tuple[str,str],float]
 
 
@@ -134,6 +136,7 @@ def sample_stratified(*, zero_g_samples: int=1_000, one_g_samples: int=3_000,
         protected=defaultdict(float)
         payment=defaultdict(float)
         squares=defaultdict(float)
+        payment_squares=defaultdict(float)
         improved=Counter()
         material_only=Counter()
         payment_helped=Counter()
@@ -186,6 +189,7 @@ def sample_stratified(*, zero_g_samples: int=1_000, one_g_samples: int=3_000,
                     gain[key]+=delta
                     protected[key]+=safe
                     payment[key]+=bonus
+                    payment_squares[key]+=bonus*bonus
                     squares[key]+=delta*delta
                     improved[key]+=int(delta>1e-12)
                     material_only[key]+=int(
@@ -194,12 +198,16 @@ def sample_stratified(*, zero_g_samples: int=1_000, one_g_samples: int=3_000,
         means={key:gain[key]/samples for key in gain}
         variance={key:max(0,squares[key]/samples-means[key]**2)
                   for key in gain}
+        payment_var={key:max(0,payment_squares[key]/samples-
+                             (payment[key]/samples)**2)
+                     for key in gain}
         strata.append(Stratum(
             g_left=g_left,mass=p,samples=samples,eligible=eligible,
             mean_gain=means,
             mean_protected_gain={key:protected[key]/samples for key in gain},
             mean_payment_premium={key:payment[key]/samples for key in gain},
-            variance_gain=variance,improved_counts=improved,
+            variance_gain=variance,variance_payment=payment_var,
+            improved_counts=improved,
             material_only=material_only,payment_helped=payment_helped,
             first_payment_witness=first_payment_witness,
         ))
@@ -212,6 +220,13 @@ def sample_stratified(*, zero_g_samples: int=1_000, one_g_samples: int=3_000,
         uplift={key:mixture("mean_gain",key) for key in keys},
         protected_uplift={key:mixture("mean_protected_gain",key) for key in keys},
         payment_premium={key:mixture("mean_payment_premium",key) for key in keys},
+        payment_ci_halfwidth={
+            key:1.96*sqrt(sum(
+                float(s.mass)**2*s.variance_payment.get(key,0.0)/s.samples
+                for s in strata
+            ))
+            for key in keys
+        },
         ci_halfwidth={
             key:1.96*sqrt(sum(
                 float(s.mass)**2*s.variance_gain.get(key,0.0)/s.samples
@@ -235,7 +250,7 @@ def report(result: StratifiedResult) -> str:
             lines.append(f"first physical Bellelba payment witness: {s.first_payment_witness}")
     lines.append(
         "objective | package | weighted uplift pp ± paired 95% halfCI | "
-        "with Bellelba protected uplift pp | Bellelba discard premium pp"
+        "with Bellelba protected uplift pp | Bellelba discard premium pp +/- 95% CI"
     )
     for key in result.uplift:
         obj,pkg=key
@@ -244,6 +259,7 @@ def report(result: StratifiedResult) -> str:
             f"{100*result.uplift[key]:+.9f} +/- "
             f"{100*result.ci_halfwidth[key]:.9f} | "
             f"{100*result.protected_uplift[key]:+.9f} | "
-            f"{100*result.payment_premium[key]:+.9f}"
+            f"{100*result.payment_premium[key]:+.9f} +/- "
+            f"{100*result.payment_ci_halfwidth[key]:.9f}"
         )
     return "\n".join(lines)
