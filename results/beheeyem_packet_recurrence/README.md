@@ -59,6 +59,16 @@ Each stage must be evaluated with physical Prize cards, card locations, real sea
 
 - [Opposing Iono, N and Marnie reset comparison](../beheeyem_supporter_reset/) distinguishes N's full-hand shuffle into the deck from Iono/Marnie's bottom-of-deck placement. N and Iono redraw according to remaining Prizes; Marnie redraws four for the opponent regardless of Prize count. For B4/TAE4/Computer Search/d1, the three next-packet rates at r=0 are Iono 3.675774%, N 3.475483% and Marnie **2.019569%**; at r=2 they are Iono 2.019569%, N **1.881457%**, and Marnie 2.019569%. Across the complete finite 1,152-configuration grid, an opponent minimizing only this packet-access event would select **Marnie at r=0,1** and **N at r=2**. This is a narrow response rule, not global matchup strategy.
 
+
+
+### 10. Opponent Supporters have hidden-state reversals even with identical post-N decks
+
+- [Known-state N versus Iono reversal](../beheeyem_reset_state_value/) partitions the same finite hand/Prize states by their relative chance of yielding the next packet after an opposing N or Iono. B4/TAE4/Computer Search/d1/r1 has **N better for Beheeyem in 26.640302% of first-attack-capable K1 probability mass**, despite N having lower average packet access (2.647861% versus Iono 2.820953%). Two precise witnesses have the same 52-card post-N shuffled population B4/TAE4/C1/F43, giving identical 19.111035% N packet access. Their Iono probabilities differ: **4.655832%** if the old hand held 3 TAE + Computer Search, versus **22.535055%** if it held four filler. An opponent generally cannot observe this hidden-state distinction; a usable policy needs a belief state.
+
+### 11. Revealing Prize positions can make critical earned Prizes selectable
+
+- [Mapped face-up Prize selection](../beheeyem_mapped_prizes/) evaluates the information effect of Town Map (bw7-136), which makes Prize cards face-up. Under a free-information upper bound, choose an optimal r-card Prize subset before T3 random draws rather than selecting uniform face-down positions. B4/TAE4/Computer Search/d1: r=1 raises joint two-packet access from **1.125764% blind** to **2.926368% mapped**; r=2 raises it from **1.679597%** to **4.452270%**. Actual Town Map acquisition, card slot and Item-play costs are excluded, so these numbers are information ceilings. A subsequent opponent Iono/Marnie bottoming the newly chosen cards erases their immediate top-draw benefit within the current model.
+
 ## What has been proved versus assumed
 
 The listed numbers are mathematically exact **within their conditional probability models**, independently checked by physical-shuffle simulation and committed GitHub Actions where specified. The experiments do **not** currently provide actual match win rates or fully legal action-level play traces. The later models condition on an already staged, mature three-Basic board, all neutral filler discardable, no competing use of an ACE SPEC or Supporter, and exogenously provided T3 draws. The future-lock model additionally assumes K1 Prize knowledge and an exogenous lock probability independent of the player's policy.
