@@ -56,6 +56,40 @@ first-turn Grand Tree activation probability, or a complete setup estimate.
 Grand Tree cannot evolve a Basic during its player's first turn, and card
 draws/searches between setup and later activation alter these zones.
 
+## Further cross-layer evidence
+
+**Stadium use resets across actual turn boundaries.** The existing
+per-in-play-instance model formerly kept its use history indefinitely.
+`begin_stadium_turn` now explicitly refreshes that history only when the
+turn scheduler advances to a new actor turn. The same Grand Tree can
+therefore be used once by player A, then once by player B on the
+subsequent turn, and again by A on a later turn, without replacement.
+Evidence: [turn-scope regression](../stadium_effect_turn_scope/README.md),
+[passing CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38057916123).
+
+**Effect placement followed by Stadium activation is reachable in a
+controlled line.** Gothitelle `xy3-41` can use Teleport Room to put
+Grand Tree from the discard pile into play, even after the player has
+spent the ordinary Stadium-play allowance. The just-entered Grand Tree
+can then activate to evolve an otherwise eligible Basic. The adapter
+projects one authoritative physical Stadium-entry state into an
+ephemeral effect-source view, preserving exact Stadium identity and
+both usage counters. Evidence:
+[Teleport Room bridge](../teleport_grand_tree_bridge/README.md),
+[passing CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38058117566).
+
+**Balanced stage allocations optimize one static joint-search objective.**
+For a fixed total `a+b` of Stage 1 and Stage 2 copies, the chance
+that both stages are searchable from deck at initial setup is
+maximized by a split as close to equal as feasible. This follows from
+discrete convexity of `q(k)=C(12,k)/C(59,k)` and is verified by exact
+finite-population calculations. At four stage-copy slots, 2/2 gives
+92.3940% joint access versus 79.0930% for 1/3. This is an
+optimization of one declared static objective, not a proof that
+balanced lines always make the best competitive deck.
+Evidence: [slot allocation theorem](../grand_tree_slot_allocation/README.md),
+[passing CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38058254348).
+
 ## Proposed next integration
 
 A general planner should store:
