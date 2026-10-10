@@ -17,7 +17,7 @@ def packet_possible(hand: list[str], mode: str) -> bool:
     b, t = "B" in hand, "T" in hand
     if b and t:
         return True
-    if "C" not in hand or hand.count("F") < payment:
+    if "C" not in hand or hand.count("F") + hand.count("E") < payment:
         return False
     return (
         (not b and t and target in ("pokemon","either")) or
