@@ -1,0 +1,22 @@
+name: Validate Gust-Switch Critical Window
+
+on:
+  push:
+    paths:
+      - 'tools/two_sided_stochastic_escape.py'
+      - 'results/gust_switch_critical_window/**'
+      - '.github/workflows/validate-gust-switch-critical-window.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python results/gust_switch_critical_window/reproduce.py
