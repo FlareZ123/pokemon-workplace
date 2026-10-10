@@ -1,6 +1,7 @@
 """Physical hand, Quick Ball payment/search, shuffle, and draw comparison."""
 from __future__ import annotations
 
+from collections import Counter
 from fractions import Fraction
 from pathlib import Path
 import sys
@@ -11,7 +12,8 @@ from bench_quickball_crobat_dedenne import analyze  # noqa: E402
 
 
 def replay(*, hand_size: int, deck: list[str], k_in_hand: bool,
-           qb_staged: bool, prize_known: bool, shuffled_k_rank: int = -1
+           qb_staged: bool, prize_known: bool, prior_knowledge: bool = False,
+           shuffled_k_rank: int = -1
            ) -> tuple[bool, int, int, int]:
     """Independent literal-card replay (K, QB, D, F, C, inert filler)."""
     hand = ["QB", "D", "F"] + (["K"] if k_in_hand else [])
@@ -21,10 +23,17 @@ def replay(*, hand_size: int, deck: list[str], k_in_hand: bool,
     ball_uses = 0
     dede_uses = 0
     live = list(deck)
+    initial_cards = Counter(hand + live)
+
+    def finish() -> tuple[bool, int, int, int]:
+        assert Counter(hand + live + bench + discarded) == initial_cards
+        return "K" in hand, len(bench), ball_uses, dede_uses
 
     if "K" in hand:
-        return True, 0, 0, 0
+        return finish()
     if qb_staged:
+        if prior_knowledge and "K" not in live:
+            return finish()
         hand.remove("QB")
         discarded.append("QB")
         hand.remove("F")
@@ -37,7 +46,7 @@ def replay(*, hand_size: int, deck: list[str], k_in_hand: bool,
             live.remove("K")
             live.insert(shuffled_k_rank, "K")
         if prize_known and "K" not in live:
-            return False, 0, ball_uses, dede_uses
+            return finish()
         hand.remove("C")
         bench.append("C")
         width = max(0, 6 - len(hand))
@@ -51,12 +60,13 @@ def replay(*, hand_size: int, deck: list[str], k_in_hand: bool,
         discarded.extend(hand)
         hand.clear()
         hand.extend(live[:6])
-    return "K" in hand, len(bench), ball_uses, dede_uses
+        del live[:6]
+    return finish()
 
 
 def physical_oracle(*, hand_size: int, prizes: int = 6,
                     earlier_draws: int = 1, others_in_deck: int = 45,
-                    prize_known: bool = False):
+                    prize_known: bool = False, prior_knowledge: bool = False):
     n = others_in_deck
     N = prizes + earlier_draws + n
     inert = [f"x{i}" for i in range(n+1)]
@@ -67,7 +77,8 @@ def physical_oracle(*, hand_size: int, prizes: int = 6,
                      prize_known=False)
     prize_s = replay(hand_size=hand_size, deck=known_live_c,
                      k_in_hand=False, qb_staged=True,
-                     prize_known=prize_known)
+                     prize_known=prize_known,
+                     prior_knowledge=prior_knowledge)
 
     baseline = []
     staged = []
@@ -86,6 +97,7 @@ def physical_oracle(*, hand_size: int, prizes: int = 6,
             staged.append(replay(hand_size=hand_size, deck=live,
                                  k_in_hand=False, qb_staged=True,
                                  prize_known=prize_known,
+                                 prior_knowledge=prior_knowledge,
                                  shuffled_k_rank=post_shuffle_rank))
 
     def average(index: int, which: str) -> Fraction:
@@ -108,22 +120,26 @@ def validate() -> None:
                 continue
             formula = analyze(hand_size=h, natural_draws=1,
                               prize_count=prizes, other_live_cards=n)
-            for known in (False, True):
+            for known, prior in ((False, False), (True, False), (True, True)):
                 result = physical_oracle(hand_size=h, prizes=prizes,
                                          earlier_draws=1,
-                                         others_in_deck=n, prize_known=known)
+                                         others_in_deck=n, prize_known=known,
+                                         prior_knowledge=prior)
                 assert result[0] == formula.dedenne_success
                 assert result[1] == formula.qb_staged_success
                 assert result[2] == formula.dedenne_bench
                 assert result[3] == (formula.qb_staged_k1_bench if known
                                      else formula.qb_staged_k0_bench)
-                assert result[4] == formula.qb_uses
+                assert result[4] == (formula.qb_uses_prior_k1 if prior
+                                     else formula.qb_uses)
                 if known:
                     assert result[5] == formula.qb_staged_k1_dedenne
     x = analyze(hand_size=5)
     assert x.dedenne_success == Fraction(79, 598)
     assert x.qb_staged_success == Fraction(5, 26)
     assert x.access_gain == Fraction(18, 299)
+    assert x.qb_uses_prior_k1 == Fraction(45, 52)
+    assert x.qb_uses - x.qb_uses_prior_k1 == Fraction(6, 52)
     assert x.qb_staged_k0_bench - x.dedenne_bench == Fraction(12, 13)
     assert x.qb_staged_k1_bench - x.dedenne_bench == Fraction(9, 13)
     print("Physical paid Quick Ball, searched Crobat, shuffle and Dedenne replay matches exact model.")
