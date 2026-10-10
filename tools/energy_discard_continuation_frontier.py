@@ -5,7 +5,7 @@ Run from repository root: python -m tools.energy_discard_continuation_frontier
 from __future__ import annotations
 
 import json
-from itertools import combinations
+from itertools import combinations, combinations_with_replacement
 from pathlib import Path
 from typing import Any
 
@@ -68,6 +68,40 @@ def continuation_frontier(
     return rows
 
 
+
+def enumerate_basic_triples() -> dict[str, int]:
+    """Exhaust all unordered three-Basic mixtures under one DDE on a Dragon."""
+    basic_types = [t for t in ENERGY_TYPES if t != "Colorless"]
+    cost = ["Grass", "Grass", "Fire"]
+    counts = {"all_triples": 0, "initial_apex_ready": 0,
+              "minimum_card_preserves_apex": 0, "minimum_card_breaks_but_two_cards_preserve_apex": 0}
+    for triple in combinations_with_replacement(basic_types, 3):
+        cards = [DRAGON_ENERGIES[0]] + [
+            {"name": f"Basic {t} Energy", "units": 1, "types": [t]}
+            for t in triple
+        ]
+        counts["all_triples"] += 1
+        if max_typed_match(cards, cost) < len(cost):
+            continue
+        counts["initial_apex_ready"] += 1
+        rows = continuation_frontier(cards, 2, cost)
+        cheapest = min(row["physical_cards_discarded"] for row in rows)
+        cheap_retains = any(row["next_attack_cost_satisfied"] for row in rows
+                            if row["physical_cards_discarded"] == cheapest)
+        two_retains = any(row["next_attack_cost_satisfied"] for row in rows
+                          if row["physical_cards_discarded"] == 2)
+        if cheap_retains:
+            counts["minimum_card_preserves_apex"] += 1
+        if not cheap_retains and two_retains:
+            counts["minimum_card_breaks_but_two_cards_preserve_apex"] += 1
+    assert counts == {
+        "all_triples": 165,
+        "initial_apex_ready": 81,
+        "minimum_card_preserves_apex": 1,
+        "minimum_card_breaks_but_two_cards_preserve_apex": 80,
+    }
+    return counts
+
 def _load_card(resources_root: Path, card_id: str) -> dict[str, Any]:
     set_id = card_id.partition("-")[0]
     cards = json.loads((resources_root / "cards" / "en" / f"{set_id}.json").read_text(encoding="utf-8"))
@@ -104,6 +138,7 @@ def build(resources_root: Path) -> dict[str, Any]:
         "copied_attack": {"name": impact["name"], "damage": impact["damage"], "text": impact["text"]},
         "future_attack": {"name": apex["name"], "cost": apex["cost"]},
         "payments": payments,
+        "three_basic_type_multiset_scan": enumerate_basic_triples(),
         "summary": {"total_irredundant_payments": len(payments), "minimum_physical_discard_count": min_cards,
                     "minimum_card_payments_retaining_apex": sum(r["next_attack_cost_satisfied"] for r in cheapest),
                     "two_card_payments_retaining_apex": len(ready)},
