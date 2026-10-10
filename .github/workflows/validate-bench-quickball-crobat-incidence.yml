@@ -21,3 +21,5 @@ jobs:
           python-version: '3.13'
       - name: Exact opening Prize material oracle
         run: python results/bench_quickball_crobat_incidence/reproduce.py
+      - name: First-turn physical composition oracle
+        run: python results/bench_quickball_crobat_incidence/certificate.py
