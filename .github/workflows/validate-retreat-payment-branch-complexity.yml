@@ -1,0 +1,26 @@
+name: Validate Retreat payment branching formula
+
+on:
+  push:
+    paths:
+      - "tools/retreat_payment_branch_complexity.py"
+      - "tools/board_object_kernel.py"
+      - "results/retreat_payment_branch_complexity/**"
+      - ".github/workflows/validate-retreat-payment-branch-complexity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify combinatorial branch formula
+        run: |
+          python results/retreat_payment_branch_complexity/reproduce.py
+          python results/retreat_action_enumeration/exhaustive.py
