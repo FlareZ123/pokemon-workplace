@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import random
 from fractions import Fraction
+from math import comb
 from pathlib import Path
 import sys
 
@@ -38,6 +39,16 @@ def physical_checks():
 def main():
     physical_checks()
     weights=exact_tagcall_target_partition()
+    for g in (0,1):
+        event_weight=sum(w for _,_,w in category_weights(g))
+        independently_normalized=(
+            Fraction(7,60)*Fraction(event_weight,comb(59,7)*comb(52,6))
+            / Fraction(252032,292581)
+        )
+        assert independently_normalized == weights.count_probability(
+            gnh_count=g,bellelba_count=1
+        )
+    print("Exact conditioning strata vs independent target census: PASS")
     assert weights.count_probability(gnh_count=0,bellelba_count=1) == Fraction(74221,1341841280)
     assert weights.count_probability(gnh_count=1,bellelba_count=1) == Fraction(66550477,64945117952)
     x=sample_stratified(zero_g_samples=300,one_g_samples=1_000,seed=20261010)
