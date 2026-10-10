@@ -5,6 +5,7 @@ singleton successful route and a distinct inclusion-minimal two-output route.
 """
 
 from collections import Counter
+from collections.abc import Iterator
 from pathlib import Path
 import random
 import sys
@@ -18,7 +19,7 @@ from aichi_vileplume_secret_box import (
 )
 
 
-def inclusion_minimal_masks(successes: tuple[bool, ...]) -> tuple[int, ...]:
+def inclusion_minimal_masks(successes: tuple[bool, ...]) -> Iterator[int]:
     """Return the antichain of inclusion-minimal winning output masks."""
     if len(successes) != 16:
         raise ValueError("expected all sixteen four-category outcomes")
