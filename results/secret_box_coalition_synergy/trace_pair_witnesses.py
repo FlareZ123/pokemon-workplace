@@ -1,4 +1,4 @@
-"""Trace early-hand features of the 100k seeded Tool+Stadium synergy cases."""
+"""Trace early-hand features of seeded Tool+Stadium synergy cases."""
 
 from collections import Counter
 from pathlib import Path
@@ -15,13 +15,13 @@ from aichi_vileplume_secret_box import (
 )
 
 
-def main() -> None:
+def main(trials: int = 100_000) -> None:
     rng = random.Random(20261007)
     total = 0
     profiles = Counter()
     pair = BOX_TOOL_OUTPUT | BOX_STADIUM_OUTPUT
 
-    for _ in range(100_000):
+    for _ in range(trials):
         while True:
             order = rng.sample(range(60), 60)
             baseline = _raw_state(BASE_DECK, order)
@@ -58,7 +58,7 @@ def main() -> None:
 
     # Mask10 978, Tool-only 470, Stadium-only 135, two overlapping:
     # 978 - (470 + 135 - 2) = 375.
-    assert total == 375, total
+    assert total == {100_000: 375, 500_000: 1_917}[trials], total
     assert sum(profiles.values()) == total
     names = (
         "Jet already in hand", "TM Evolution already in hand",
