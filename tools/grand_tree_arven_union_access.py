@@ -28,22 +28,25 @@ class ArvenUnionAccess:
     arven: int = 2
     opening: int = 7
     prizes: int = 6
+    extra_basics: int = 0
 
     def __post_init__(self) -> None:
         if min(
             self.total, self.basics, self.gladion, self.arven,
-            self.opening, self.prizes,
+            self.opening, self.prizes, self.extra_basics,
         ) < 0:
             raise ValueError("Negative population")
         if self.total < self.basics + self.gladion + self.arven + 4:
             raise ValueError("Not enough deck slots")
+        if self.extra_basics > self.total-self.basics-self.gladion-self.arven-4:
+            raise ValueError("Other Basics must replace existing filler")
         if not 0 <= self.opening <= self.total:
             raise ValueError("Invalid opening size")
         if not 0 <= self.prizes <= self.total-self.opening:
             raise ValueError("Invalid Prize population")
         if self.total-self.opening-self.prizes < 4:
             raise ValueError("Need at least four cards after Prize setting")
-        if ch(self.total,self.opening)==ch(self.total-self.basics,self.opening):
+        if ch(self.total,self.opening)==ch(self.total-self.basics-self.extra_basics,self.opening):
             raise ValueError("No legal Basic opener can occur")
 
     def probability(self, *, going_second: bool) -> Fraction:
@@ -52,7 +55,7 @@ class ArvenUnionAccess:
         deck_after_prizes = deck_after_hand-self.prizes
         filler = self.total-self.basics-self.gladion-self.arven-4
         accepted = ch(self.total,self.opening)-ch(
-            self.total-self.basics,self.opening
+            self.total-self.basics-self.extra_basics,self.opening
         )
         answer = Fraction()
         for b in range(1,self.basics+1):
