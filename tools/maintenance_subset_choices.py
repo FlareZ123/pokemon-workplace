@@ -20,7 +20,18 @@ def verify():
         hand = tuple(f"H{i}" for i in range(h))
         for d in range(4):
             deck = tuple(f"D{i}" for i in range(d))
-            historical = outcomes(hand, deck)
+            historical = {
+                (
+                    (hand[i], hand[j]),
+                    ordering[0],
+                    hand[:i] + hand[i+1:j] + hand[j+1:] + ordering[:1],
+                    ordering[1:],
+                    Fraction(1, factorial(d + 2)),
+                )
+                for i in range(h)
+                for j in range(i + 1, h)
+                for ordering in permutations(deck + (hand[i], hand[j]))
+            }
             current = outcomes(hand, deck)
             assert historical == current
             assert bool(current) == (h >= 2)
