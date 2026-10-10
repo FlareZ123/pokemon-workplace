@@ -53,7 +53,7 @@ enumeration of hand and Prize partitions in
 | 2 | 1 | 76.4804% | 19.6622% | 3.8574% |
 | 2 | 2 | 92.3940% | 3.7486% | 3.8574% |
 | 3 | 3 | 98.6486% | 0.6747% | 0.6767% |
-| 4 | 4 | 99.7825% | 0.1093% | 0.1083% |
+| 4 | 4 | 99.7825% | 0.1087% | 0.1088% |
 
 The three exclusive columns partition the possible zone outcomes.
 "Stage 1 only" means a Stage 1 remains in deck but no Stage 2 does,
