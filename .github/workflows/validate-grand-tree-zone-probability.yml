@@ -1,0 +1,26 @@
+name: Validate Grand Tree initial-zone probability
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/grand_tree_initial_zone_probability.py"
+      - "results/grand_tree_initial_zone_probability/**"
+      - ".github/workflows/validate-grand-tree-zone-probability.yml"
+  pull_request:
+    paths:
+      - "tools/grand_tree_initial_zone_probability.py"
+      - "results/grand_tree_initial_zone_probability/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/grand_tree_initial_zone_probability/reproduce.py
