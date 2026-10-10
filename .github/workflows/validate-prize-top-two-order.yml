@@ -1,0 +1,25 @@
+name: Validate Prize top-two deck order
+
+on:
+  push:
+    paths:
+      - "tools/prize_top_two_order.py"
+      - "tools/prize_top_draw_pool.py"
+      - "tools/prize_position_top_swap.py"
+      - "results/prize_top_two_order/**"
+      - ".github/workflows/validate-prize-top-two-order.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify retained second-card order against labeled oracle
+        run: python results/prize_top_two_order/reproduce.py
