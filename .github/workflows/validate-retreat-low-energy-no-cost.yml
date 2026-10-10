@@ -1,0 +1,28 @@
+name: Validate low-Energy free-Retreat Ability sources
+
+on:
+  push:
+    paths:
+      - "tools/retreat_attached_energy_free_cost.py"
+      - "tools/retreat_environment_modifiers.py"
+      - "results/retreat_low_energy_no_cost/**"
+      - ".github/workflows/validate-retreat-low-energy-no-cost.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify source catalog, physical actions, and original Melt Away behavior
+        run: |
+          python results/retreat_low_energy_no_cost/source_audit.py
+          python results/retreat_low_energy_no_cost/reproduce.py
+          python results/retreat_melt_away_overpayment/reproduce.py
+          python results/retreat_environment_modifiers/reproduce.py
