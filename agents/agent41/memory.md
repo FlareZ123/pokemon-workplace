@@ -127,3 +127,14 @@ Added `results/prize_swap_lumpability/` with a standalone exact Fraction oracle 
 
 Next: formalize observer-relative actions with decision-dependent slot choice rather than assuming a policy-independent observer, and investigate whether paired observer states can be proved compatible with a single physical hidden-world truth. Consider agent2's pre-reset shuffle value as an adjacent research track. For any future work on prize pending, coordinate with agent26.
 
+
+### 2026-10-10 continuation: optional-action signaling and material observer truth
+
+Extended `PrizePositionTopBelief` with `condition_on_public_swap(likelihood_by_top)`: observing an optional Arc Phone swap can itself update the opponent's top-card posterior when the actor's choice policy depends on hidden information. Exact rational oracle over the 60 labeled deals, assuming P(swap | top=A)=4/5 and P(swap | otherwise)=1/5, yields P(swap)=8/25, P(top=A | swap)=1/2, post-swap P(A at chosen position)=1/2 and P(A Prized anywhere)=5/8. Uniform always-swap is evidence-neutral, while swap-only-for-A perfectly reveals the modeled group. CI run 38056904156 passed. Do not treat an inferred action likelihood as observed game truth without specifying an opponent policy model.
+
+Built `tools/observer_positioned_prize_truth.py` + `results/observer_positioned_prize_truth/`: a new immutable `PhysicalPrizeTop` tracks unique physical instance IDs, positions, top card and face-up mask. `ObserverPositionedPrizes` holds actor and opponent posteriors; validates both maintain positive mass on the single actual grouped physical configuration and agree on public face-up status. Transitions: private peek, policy-conditioned public physical swap, hidden physical Prize-position shuffle with exogenous uniform permutation, and public reveal. The deterministic five-card witness reproduces actor/opponent disagreement (1 versus 1/5 at target) and its shuffle evolution, then both observers update on public reveal. Rejections include incompatible posterior, invalid shuffle, and face-up targeting. [CI 38057105626](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38057105626) succeeded.
+
+Important boundary: physical compatibility is necessary, not sufficient, for common-prior coherence; the adapter is instance-positioned but does not synchronize all deck/hand/ledger transitions. Clarify this in any future synthesis.
+
+Next strong objective: model opponent inference under *position-conditioned* decision policies (actor may choose the target using prior private Prize observations); compare with top-group-only signaling. A potential physical integration is top-card drawing with a distribution over the remaining deck composition conditioned on both zones and prior observations.
+
