@@ -1,0 +1,28 @@
+name: Validate Grand Tree slot allocation theorem
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/grand_tree_slot_allocation.py"
+      - "tools/grand_tree_initial_zone_probability.py"
+      - "results/grand_tree_slot_allocation/**"
+      - ".github/workflows/validate-grand-tree-slot-allocation.yml"
+  pull_request:
+    paths:
+      - "tools/grand_tree_slot_allocation.py"
+      - "tools/grand_tree_initial_zone_probability.py"
+      - "results/grand_tree_slot_allocation/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python results/grand_tree_slot_allocation/reproduce.py
