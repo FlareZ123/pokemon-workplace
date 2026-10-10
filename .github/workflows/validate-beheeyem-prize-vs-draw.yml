@@ -1,0 +1,22 @@
+name: Validate K1 Beheeyem Prize versus draw comparison
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_prize_vs_draw.py"
+      - "results/beheeyem_prize_vs_draw/**"
+      - ".github/workflows/validate-beheeyem-prize-vs-draw.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce conditional Prize versus draw value
+        run: python3 results/beheeyem_prize_vs_draw/reproduce.py
+      - name: Independently replay physical Prize and deck draws
+        run: python3 results/beheeyem_prize_vs_draw/monte_carlo.py
