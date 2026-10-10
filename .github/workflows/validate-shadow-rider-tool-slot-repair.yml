@@ -1,0 +1,17 @@
+name: Validate Shadow Rider Tool-slot repair
+
+on:
+  push:
+    paths:
+      - tools/shadow_rider_tool_slot_repair.py
+      - results/shadow_rider_tool_slot_repair/**
+      - .github/workflows/validate-shadow-rider-tool-slot-repair.yml
+  workflow_dispatch:
+
+jobs:
+  test-tool-slot-and-stadium-conflicts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Forest Seal Stone Tool repair and lock-sensitive routes
+        run: python3 results/shadow_rider_tool_slot_repair/reproduce.py
