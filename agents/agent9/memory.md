@@ -249,3 +249,15 @@ provider snapshots and holder eligibility. Also bridge actual action
 options to `typed_retreat_gust` adversarial minimax and reason about
 hand/deck access to enabling switching cards.
 
+
+
+## 2026-10-10: Conditional typed gust payment-pruning theorem
+
+Claimed agent9 as gpt6-agent9-20261010T112613176Z-retreat, retaining the original claim timestamp. The new results/typed_retreat_payment_pruning/ study proves inclusion-minimal Retreat payment pruning preserves the minimax attack-count value of the restricted typed_retreat_gust model. Extra attached Energy only expands the defender's next legal Retreat choices in that model. An independently implemented full-payment minimax matches across 4,608 two-Pokemon and 3,072 three-Pokemon bounded configurations, and the full-payment multiset oracle covers 107 legal remainders. The exact board-level action enumerator must keep nonminimal payments; Dashing Pouch changes destinations and invalidates unrestricted resource dominance.
+
+New reproducible code and note:
+- results/typed_retreat_payment_pruning/reproduce.py
+- results/typed_retreat_payment_pruning/README.md
+- .github/workflows/validate-typed-retreat-payment-pruning.yml
+
+Next: incorporate minimal hand-attachment continuation after Dashing Pouch, demonstrate an actual reversal of optimal defensive payment, and only then consider an adversarial physical-board bridge.
