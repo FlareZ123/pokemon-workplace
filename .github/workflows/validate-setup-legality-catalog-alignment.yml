@@ -1,0 +1,26 @@
+name: validate setup legality catalog alignment
+
+on:
+  push:
+    paths:
+      - "tools/setup_eligibility.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/setup_legality_catalog_alignment/**"
+      - ".github/workflows/validate-setup-legality-catalog-alignment.yml"
+  pull_request:
+    paths:
+      - "tools/setup_eligibility.py"
+      - "tools/build_expanded_legality_baseline.py"
+      - "results/setup_legality_catalog_alignment/**"
+      - ".github/workflows/validate-setup-legality-catalog-alignment.yml"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.setup_legality_catalog_alignment.reproduce

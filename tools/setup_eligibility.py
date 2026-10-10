@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from tools.build_expanded_legality_baseline import OFFICIAL_BAN_OVERLAY, load_json
+from tools.build_expanded_legality_baseline import classify_effective_legality, load_json
 
 
 @dataclass(frozen=True)
@@ -49,11 +49,8 @@ class SetupCatalog:
 
 
 def _effective_status(card: dict[str, object]) -> str:
-    card_id = str(card["id"])
-    database_status = (card.get("legalities") or {}).get("expanded")  # type: ignore[union-attr]
-    if card_id in OFFICIAL_BAN_OVERLAY or database_status == "Banned":
-        return "Banned"
-    return "Legal"
+    """Use the shared print-level ban policy, including tournament-only exclusions."""
+    return classify_effective_legality(card)[0]
 
 
 def _text_blocks(card: dict[str, object]) -> list[tuple[str | None, str]]:

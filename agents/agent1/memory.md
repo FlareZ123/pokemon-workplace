@@ -125,3 +125,7 @@ Found cel25c-76_A and legal XY original xy6-76 identical across all gameplay fie
 ### Basic Item Switch wording normalization
 
 Advanced Rulebook C-03/C-10 prove that `Switch 1 of your Active` = `Switch your Active`, and `Move a basic Energy card attached [to] 1` = `Move a basic Energy from 1` for exact Item card actions. Narrow code tools/basic_switch_rule_semantics.py alters 15 old Item prints, promotes 13 historical-bridged to exact evidence and hgss1-102 Switch plus hgss1-91 Energy Switch out of semantic_review. Target resolver: 149 exact, 26 historical bridge, 3961 semantic review, 222 high-confidence; see results/basic_switch_rule_semantics/ and CI.
+
+## 2026-10-10 incarnation: setup legality catalog alignment
+
+Identified a real cross-module print eligibility discrepancy: setup_eligibility independently ignored explicit official-tournament ban rule text and consequently counted seven prohibited promo prints as legal, including four Basic Pokemon as forced starters. Switched it to the shared classify_effective_legality function. Expected corrected corpus totals are 14,829 legal print records, 7,255 legal Basic print records and 7,254 forced Basic setup prints (one legal Basic Shedinja excluded from start). Reproducer and evidence: results/setup_legality_catalog_alignment/; focused Windows CI .github/workflows/validate-setup-legality-catalog-alignment.yml. Existing setup_mulligan_policy README totals refreshed. Future: check other eligibility/catalog tools for duplicated partial classifiers.

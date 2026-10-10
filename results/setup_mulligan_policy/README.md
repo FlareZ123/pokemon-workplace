@@ -40,7 +40,7 @@ The bundled card database supplies the exact Expanded card texts used by the cat
 
 ## Complete setup-exception catalog in the bundled snapshot
 
-The legal Expanded snapshot contains **14,836** effectively legal prints. Of those, **7,259** are Basic Pokémon prints by subtype. Exactly one of those Basic prints is forbidden from normal setup, leaving **7,258** forced-Basic prints.
+The legal Expanded snapshot contains **14,829** effectively legal prints. Of those, **7,255** are Basic Pokémon prints by subtype. Exactly one of those Basic prints is forbidden from normal setup, leaving **7,254** forced-Basic prints.
 
 The setup-text scan found the following exceptions that directly alter whether a card can be placed during setup:
 
@@ -56,6 +56,12 @@ The setup-text scan found the following exceptions that directly alter whether a
 Three Salvatore prints also contain the phrase "setting up to play", but only because Salvatore can evolve a Pokémon that was put down during setup. They do not change opening eligibility. `setup_text_audit` retains these hits so the scanner's exclusions remain auditable.
 
 This catalog is exhaustive for the bundled snapshot under a broad text scan for setup wording and face-down Active placement.
+The print totals use the same ban classification as the shared paper Expanded
+legality baseline. Seven tournament-prohibited promotional prints are excluded,
+including four Basic Pokémon. A previous independent setup-status check missed
+these prohibitions; the regression and explanation are in
+[setup_legality_catalog_alignment](../setup_legality_catalog_alignment/).
+
 
 ## Exact policy model
 
