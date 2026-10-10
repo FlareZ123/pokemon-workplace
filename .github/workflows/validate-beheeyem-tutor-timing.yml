@@ -1,0 +1,22 @@
+name: Validate Beheeyem tutor timing
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_tutor_timing.py"
+      - "results/beheeyem_tutor_timing/**"
+      - ".github/workflows/validate-beheeyem-tutor-timing.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Reproduce exact timing and 47-card deck probabilities
+        run: python3 results/beheeyem_tutor_timing/reproduce.py
+      - name: Independently replay tutor rescue and deferred search
+        run: python3 results/beheeyem_tutor_timing/monte_carlo.py
