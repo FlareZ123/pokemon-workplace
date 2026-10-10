@@ -53,6 +53,7 @@ def main():
     print("aggregate sequencing gain pp:", f"{float(advantage)*100:.12f}")
     print("Class count:", len(classes))
     for hand, weight, result, contribution in classes:
+        assert result.remaining_information_gap == 0
         desc = ", ".join(f"{name}{n}" for name, n in zip(KINDS, hand) if n)
         print("\nHAND", desc)
         print("visible-class mass", Fraction(weight, denominator), f"{100*weight/denominator:.9f}%")
