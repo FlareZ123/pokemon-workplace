@@ -1,0 +1,40 @@
+name: Validate Energy discard continuation research
+
+on:
+  push:
+    paths:
+      - .github/workflows/validate-energy-discard-continuation.yml
+      - tools/energy_discard_solver.py
+      - tools/energy_discard_continuation_frontier.py
+      - tools/energy_discard_continuation_weighted.py
+      - tools/energy_discard_colored_cost_theorem.py
+      - tools/energy_discard_colorless_cost_extension.py
+      - tools/energy_discard_special_provider_ablation.py
+      - tools/energy_discard_continuation_disruption.py
+      - tools/energy_discard_legacy_star_recovery.py
+      - results/energy_discard_continuation_frontier/reproduce.py
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify source-backed Energy discard and independent oracle
+        run: python -m results.energy_discard_continuation_frontier.reproduce
+      - name: Verify exact multiplicity-weighted formula
+        run: python -m tools.energy_discard_continuation_weighted
+      - name: Verify three-colored attack-cost theorem
+        run: python -m tools.energy_discard_colored_cost_theorem
+      - name: Verify Colorless attack-cost extension
+        run: python -m tools.energy_discard_colorless_cost_extension
+      - name: Verify Double Dragon versus Double Colorless ablation
+        run: python -m tools.energy_discard_special_provider_ablation
+      - name: Verify Enhanced Hammer and Temple response fixtures
+        run: python -m tools.energy_discard_continuation_disruption
+      - name: Verify Legacy Star recovery action budgets
+        run: python -m tools.energy_discard_legacy_star_recovery
