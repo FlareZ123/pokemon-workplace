@@ -59,6 +59,14 @@ def build(resources_root: Path) -> dict[str, Any]:
     assert "discard the top 7 cards of your deck" in power["text"]
     assert "put up to 2 cards from your discard pile into your hand" in power["text"]
     assert "VSTAR Power" in power["text"]
+    iron_thorns = _load_card(resources_root, "sv6-77")
+    assert iron_thorns["name"] == "Iron Thorns ex"
+    initialization = next(a for a in iron_thorns["abilities"]
+                          if a["name"] == "Initialization")
+    assert "Pokémon with a Rule Box in play" in initialization["text"]
+    assert "have no Abilities, except for Future Pokémon" in initialization["text"]
+    assert any("VSTAR rule" in rule for rule in regidrago.get("rules") or ())
+    assert "Future" not in (regidrago.get("subtypes") or ())
 
     cost = source["future_attack"]["cost"]
     variants = {
@@ -97,7 +105,7 @@ def build(resources_root: Path) -> dict[str, Any]:
 
     return {
         "sources": {"regidrago_vstar": "swsh12-136", "dragon_impact": "sv9-114",
-                    "double_dragon_energy": "xy6-97"},
+                    "double_dragon_energy": "xy6-97", "iron_thorns_ex": "sv6-77"},
         "deck_after_legacy_star": "at least seven inert deck cards before ability, all seven discarded",
         "recovery_scope": "previously discarded DDE only, then normal hand attachment",
         "next_attack_cost": cost,
