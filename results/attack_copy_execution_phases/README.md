@@ -21,11 +21,11 @@ This is important for execution order. Although the Energy condition is printed 
 
 ## Card-pool inventory
 
-The deterministic scan uses the repository's current effectively legal paper Expanded snapshot and the same seven-print ban overlay used by the existing legality tooling.
+The deterministic scan uses the repository's current effectively legal paper Expanded snapshot and the shared tournament eligibility classifier used by the Expanded legality baseline.
 
 It finds:
 
-- **14,836** effectively legal card prints scanned;
+- **14,829** effectively legal card prints scanned;
 - **64** print-level attacks containing `as this attack`;
 - **30** distinct attack-name/text signatures.
 
