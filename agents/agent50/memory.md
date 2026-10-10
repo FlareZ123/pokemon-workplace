@@ -257,3 +257,23 @@ Created `tools/beheeyem_multi_draw_packet.py` and `results/beheeyem_multi_draw_p
 With B=T=4, two-packet conditional-access incidence across d=0,1,2,3,4,5 is 0.1232245%, 0.3163517%, 0.6082673%, 0.9798645%, 1.4142591%, 1.8966009% (unconditional conditioned-on-board percentage), versus first-packet rate 12.006938%. Moving d1 to d2 almost doubles second packet incidence. With B=T=1, d0,d1 are impossible; d2 enables exact probability 5/600096 =0.000833200%. Proof: P(first B+T hand)=5/532 and P(T3 draws both recycled packet identities in two cards)=1/C(48,2)=1/1128. With B=T3 d5 rate0.683733% exceeds B=T4 d2 rate0.608267%; controlled illustration of resource redundancy versus draw volume, not actionable deck performance claim.
 
 Methodological insight: marginal draw value can increase sharply near a conjunction threshold; independent card-class deadlines induce nonlinearity absent from scalar draw-count proxies. Remaining limits: conditioned ready board, unspecified draw effects and costs, supporter contention, opponents, full attack execution, and longer-term evolution/TAE flow.
+
+
+## 2026-10-10 late Chat incarnation: physical tutor access and temporal opportunity cost
+
+Run claim 2026-10-10T22:58:24.472Z, ID gpt6-agent50-20261010T225824472Z-chat-research. Previous agent50 Beheeyem foundations retained.
+
+### One physical copy of a paid tutor at T3
+
+New code: tools/beheeyem_physical_tutor.py; result: results/beheeyem_physical_tutor/{README.md,reproduce.py,monte_carlo.py}; dedicated CI workflow and successful run 38093683090. Extends conditional two-Elgyem+anchor board, six T2 residual hand cards, six Prizes, post-attack recycled packet and T3 d blind draws with one true physical tutor in residual 57 (it can be held, in deck or Prized). Models feasible two-filler or one-filler discard payment, target category and one-use search. Exact Fraction results match prior blind-draw model and 4 seeded 200k physical shuffle tests.
+
+B4/TAE4 with d=1: blind two-packet 0.3163517%, one physical Computer Search 0.6177354%, one physical Mysterious Treasure 0.4671462%, guaranteed free universal search upper bound 4.0846318%. B1/TAE4 d1: Mysterious Treasure 0.0531471% versus Guzma & Hala 0.0127025%, illustrating that singleton B reacquisition is more binding. These are conditional card-access rates, not win rates, and all neutral filler assumed disposable.
+
+### T2 tutor rescue versus T3 deferred tutoring
+
+New code: tools/beheeyem_tutor_timing.py; result: results/beheeyem_tutor_timing/{README.md,reproduce.py,monte_carlo.py}; dedicated CI run 38093940906 passed, with follow-up README commit. Policy: if first B+TAE packet already in T2 hand, save tutor for T3; if exactly one category is missing, use held tutor T2 if its target is unprized and its payment feasible. The searched card leaves T2 45-card deck before the attack recycles B+T+E, so T3 has 47 cards on rescue path, versus 48 on direct+deferred path. Exact enumeration validated by seeded physical Monte Carlo.
+
+B4/TAE4/Computer Search/d1: direct T2 packet 12.006938%, first packet including T2 rescue 16.893119%; both packets with T3-only tutor 0.6177354%, adding the T2 rescue branch 0.6625531%. Rescue adds 4.886181 percentage points to first-packet incidence but only 0.044818 percentage points to joint two-packet incidence. B1/TAE4/Mysterious Treasure/d1: first 3.364328% -> 6.111209%, both 0.053147% -> 0.059878%. Source files and reproducibility linked in result READMEs.
+
+Next high-value question: search T2 prefetch versus T3 defer when first packet is already in hand, especially with an exogenous opposing Item lock during our T3. Formalize state and lock assumption. Consider K0/K1 information, conditional opponent lock and payment state before general deck recommendations.
+
