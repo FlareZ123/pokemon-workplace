@@ -1,0 +1,16 @@
+name: Validate Noivern Covert Flight copycat turn boundary
+
+on:
+  push:
+    paths:
+      - results/noivern_covert_flight_copycat_turn_boundary/**
+      - .github/workflows/validate-noivern-covert-copycat-turn-boundary.yml
+  workflow_dispatch:
+
+jobs:
+  verify-damage-shield-and-extra-turn:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Covert Flight damage prevention and copied Timeless extra turn
+        run: python3 results/noivern_covert_flight_copycat_turn_boundary/reproduce.py
