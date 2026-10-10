@@ -49,8 +49,12 @@ def board_for(name: str, *, first_turn: bool, entered_this_turn: bool = False):
 
 
 def main() -> None:
-    first_player = SourceActionContext(is_players_first_turn=True, went_first=True)
-    second_player = SourceActionContext(is_players_first_turn=True, went_first=False)
+    first_player = SourceActionContext(
+        is_players_first_turn=True, went_first=True, attacker_object_id="pokemon-a"
+    )
+    second_player = SourceActionContext(
+        is_players_first_turn=True, went_first=False, attacker_object_id="pokemon-a"
+    )
 
     salvatore = profile("sv5-160")
     assert not source_action_available(salvatore, first_player)
@@ -115,6 +119,7 @@ def main() -> None:
         is_players_first_turn=True,
         went_first=True,
         attacks_allowed=False,
+        attacker_object_id="pokemon-a",
     )
     assert not source_action_available(exeggcute, closed_attack)
 
