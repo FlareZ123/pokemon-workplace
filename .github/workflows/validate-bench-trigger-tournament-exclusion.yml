@@ -1,0 +1,25 @@
+name: validate Bench trigger tournament exclusion
+
+on:
+  push:
+    paths:
+      - "tools/setup_trigger_role_contention.py"
+      - "tools/bench_resource_catalog.py"
+      - "tools/bench_trigger_lifecycle.py"
+      - "results/bench_trigger_tournament_exclusion/**"
+      - "results/setup_trigger_role_contention/reproduce.py"
+      - "results/bench_trigger_lifecycle/reproduce.py"
+      - ".github/workflows/validate-bench-trigger-tournament-exclusion.yml"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.bench_trigger_tournament_exclusion.reproduce
+      - run: python -m results.setup_trigger_role_contention.reproduce
+      - run: python -m results.bench_trigger_lifecycle.reproduce
