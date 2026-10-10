@@ -181,3 +181,10 @@ Five-card oracle A,B,C,F1,F2, Prize0=B, Prize1 filler, original top A, residual 
 
 Important methodological boundary: these probabilities value **direct exposure**, not card playability, AMR, required multi-resource combinations, shuffle/search opportunity cost, Item lock, or full match outcomes. Next high-value task is multivariate per-category draw requirements, e.g. at least 1 Pokémon plus 1 Energy in one draw window, and observer-specific order knowledge. Coordinate with agent2's pre-reset shuffle value work before building a larger optimizer.
 
+
+### 2026-10-10: dependent multi-resource access, not products of marginals
+
+`tools/prize_joint_draw_requirements.py` / `results/prize_joint_draw_requirements/` compute simultaneous minimums for **disjoint** strategic card groups using a multivariate hypergeometric tail over the unknown suffix, plus exact known-prefix counts and averaging over the full grouped Prize/top posterior. Five-card X,P1,P2,E,F independent 5!=120 labeled permutations: conditioned on X top and drawing three, P(at least 1 P and 1 E)=1/3. Naive multiplication of correct marginals P(P)=5/6 and P(E)=1/2 gives 5/12, an overestimate. Full-deck shuffle yields1/2; known second E yields2/3; known second E, third P yields certainty. Stronger both P copies + E in next four draws:1/4 unshuffled versus2/5 shuffled. Regression crosschecks one-category against `prize_prefix_draw_exposure.py`, invalid requirements and exact labeled permutations. [CI 38059004808](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38059004808) passed.
+
+This addresses a concrete deck-building issue: intersecting category-access events cannot generally be multiplied independently. It still excludes card activation/Supporter contention, overlapping card role types, deck-order info beyond modeled prefix, and line-specific success. Next theoretical extension is overlapping-role eligibility and one-card-only allocation when multiple resource channels compete.
+
