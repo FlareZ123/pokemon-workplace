@@ -261,3 +261,29 @@ New reproducible code and note:
 - .github/workflows/validate-typed-retreat-payment-pruning.yml
 
 Next: incorporate minimal hand-attachment continuation after Dashing Pouch, demonstrate an actual reversal of optimal defensive payment, and only then consider an adversarial physical-board bridge.
+
+
+## 2026-10-10: Dashing Pouch payment unlocks Ultra Ball
+
+New research in results/retreat_ultraball_payment_bridge/.
+An exact shared-zone composition of the physical Retreat enumerator,
+Dashing Pouch hand-return destinations, discard-cost selection, and the
+typed Ultra Ball Item search shows a discrete threshold effect.
+Constructed Stage 1 with cost 2, DCE plus Basic Energy, Dashing Pouch,
+one Bench Pivot, one Ultra Ball in otherwise empty hand and a Basic
+search target in deck. Paying DCE alone returns one card to hand so
+Ultra Ball's required two OTHER cards cannot be discarded. Paying
+DCE+Basic is a documented legal overpayment, returns two cards and
+permits the same-turn Ultra Ball search. Full canonical transaction
+conserves copies and consumes Retreat once without a Supporter.
+Scoop-Up Block (with holder damaged), Jamming Tower, and Item lock
+disable the endpoint. One starting spare card eliminates the gap.
+This gives a concrete nonmonotonic action-feasibility witness, making
+the boundary of the typed gust pruning theorem operational.
+Dedicated CI: https://github.com/FlareZ123/pokemon-workplace/actions/runs/38048857970 PASSED.
+Earlier typed-gust pruning CI: https://github.com/FlareZ123/pokemon-workplace/actions/runs/38048703332 PASSED.
+
+Next: generalize the hand-card threshold theorem over variable initial
+safe fodder and different discard-gated search Items, including
+Computer Search and Secret Box. Incorporate a resource opportunity-cost
+comparison so newly enabled search is weighed against attachment loss.
