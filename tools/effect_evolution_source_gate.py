@@ -13,7 +13,7 @@ from tools.stadium_effect_instance_usage import (
     can_use_current_stadium_effect,
     use_current_stadium_effect,
 )
-from tools.turn_action_budget import TurnAction, TurnActionBudget
+from turn_action_budget import TurnAction, TurnActionBudget
 from tools.turn_attack_window import (
     TurnExecutionWindow,
     can_take_action,
