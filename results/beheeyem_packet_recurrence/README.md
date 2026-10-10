@@ -53,6 +53,12 @@ Each stage must be evaluated with physical Prize cards, card locations, real sea
 
 - [Iono after Prize awards](../beheeyem_iono_prize/) directly models the opponent playing Iono on its reply: the player's current hand, including newly taken Prizes, is shuffled and bottomed; fresh top-deck draws equal **6-r** remaining Prizes, followed by the stipulated T3 draws. The earlier positive one-/two-Prize packet-access trend reverses for B4/TAE4/Computer Search/d1: opposing-Iono two-packet access becomes **3.675774%** at r=0, **2.820953%** at r=1 and **2.019569%** at r=2. This is an exogenous, opponent-enabled Supporter response, not a statement that taking Prizes is bad or that Iono is a good strategic choice overall.
 
+
+
+### 9. Hand-shuffle destination creates a Prize-dependent adversarial Supporter ranking
+
+- [Opposing Iono, N and Marnie reset comparison](../beheeyem_supporter_reset/) distinguishes N's full-hand shuffle into the deck from Iono/Marnie's bottom-of-deck placement. N and Iono redraw according to remaining Prizes; Marnie redraws four for the opponent regardless of Prize count. For B4/TAE4/Computer Search/d1, the three next-packet rates at r=0 are Iono 3.675774%, N 3.475483% and Marnie **2.019569%**; at r=2 they are Iono 2.019569%, N **1.881457%**, and Marnie 2.019569%. Across the complete finite 1,152-configuration grid, an opponent minimizing only this packet-access event would select **Marnie at r=0,1** and **N at r=2**. This is a narrow response rule, not global matchup strategy.
+
 ## What has been proved versus assumed
 
 The listed numbers are mathematically exact **within their conditional probability models**, independently checked by physical-shuffle simulation and committed GitHub Actions where specified. The experiments do **not** currently provide actual match win rates or fully legal action-level play traces. The later models condition on an already staged, mature three-Basic board, all neutral filler discardable, no competing use of an ACE SPEC or Supporter, and exogenously provided T3 draws. The future-lock model additionally assumes K1 Prize knowledge and an exogenous lock probability independent of the player's policy.
