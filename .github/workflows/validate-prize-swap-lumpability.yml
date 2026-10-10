@@ -1,0 +1,22 @@
+name: Validate Prize swap lumpability
+
+on:
+  push:
+    paths:
+      - "results/prize_swap_lumpability/**"
+      - ".github/workflows/validate-prize-swap-lumpability.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check exact lumpability witnesses
+        run: python results/prize_swap_lumpability/reproduce.py
