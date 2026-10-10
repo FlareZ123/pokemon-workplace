@@ -14,7 +14,10 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
 
 from aichi_vileplume_als import BASICS, DECK_COUNTS, DECK
-from aichi_vileplume_secret_box import SECRET_BOX_DECK
+from aichi_secret_box_output_dependencies import _state_succeeds_with_mask
+from aichi_vileplume_secret_box import (
+    BASE_DECK, SECRET_BOX_DECK, _raw_state, _state_succeeds,
+)
 
 
 def accepted_opening_prize_collapse_probability() -> Fraction:
@@ -42,12 +45,13 @@ def accepted_opening_prize_collapse_probability() -> Fraction:
     return all_prized * valid_given_prized / starting_valid
 
 
-def sample_accepted_prize_collapse(trials: int = 500_000) -> tuple[int, int, int]:
+def sample_accepted_prize_collapse(trials: int = 500_000) -> tuple[int, int, int, int]:
     """Replay exact accepted opener seed, tracking rare Prize placement."""
     rng = random.Random(20261007)
     all_prized = 0
     box_in_hand = 0
     box_visible_in_stellar = 0
+    incremental_item_failures = 0
 
     for _ in range(trials):
         while True:
@@ -69,7 +73,16 @@ def sample_accepted_prize_collapse(trials: int = 500_000) -> tuple[int, int, int
             ]
         )
         box_visible_in_stellar += int(stellar)
-    return all_prized, box_in_hand, box_visible_in_stellar
+        base_state = _raw_state(BASE_DECK, order)
+        secret_state = _raw_state(SECRET_BOX_DECK, order)
+        assert base_state is not None and secret_state is not None
+        if (
+            not _state_succeeds(base_state)
+            and _state_succeeds_with_mask(secret_state, 15)
+            and not _state_succeeds_with_mask(secret_state, 1)
+        ):
+            incremental_item_failures += 1
+    return all_prized, box_in_hand, box_visible_in_stellar, incremental_item_failures
 
 
 def main() -> None:
@@ -83,6 +96,7 @@ def main() -> None:
     print("First 100k zero-event probability if unconditional collapse:", 
           float((1 - exact) ** 100_000))
     assert 0 <= sampled[1] + sampled[2] <= sampled[0]
+    assert sampled[3] == 2, sampled
     print("Exact rare-Prize incidence model and sampler passed.")
 
 
