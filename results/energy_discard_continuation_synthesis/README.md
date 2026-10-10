@@ -95,3 +95,10 @@ And the precise set of DDE states where the Special Energy's flexible types crea
 This is **exactly** the set where discarding DDE as one physical two-Energy payment loses that readiness. The independent exhaustive verification found **23,328 such pairs** out of 36,300 cost/mix pairs, versus **zero** minimum-card DCE continuation reversals among states initially ready with DCE. The difference isolates Energy **type flexibility** as the mechanism and reinforces why totals of physical cards or Energy units alone are insufficient.
 
 Source prints: DDE `xy6-97`; DCE `bw4-92`. The ablation is controlled and counterfactual; the DCE version of a specific DDE-enabled attack state may have been unable to launch the attack in the first place.
+
+
+## Information timing can inflate apparent Energy-payment reachability
+
+[Nonanticipative discard coverage](../energy_discard_nonanticipative_coverage/) separates selecting a payment **before** versus **after** learning the later attack cost. From DDE plus three distinct Basic types, an advance choice of which one Basic to retain alongside DDE covers exactly **100/220** abstract future three-symbol attack-cost signatures. Choosing the retained Basic *after* seeing the future target would cover **164/220**. The **64/220** gap is a pure information-timing advantage that an optimizer must avoid crediting to an earlier choice.
+
+The future-cost distribution here is deliberately uniform over 220 synthetic signatures. Actual Regidrago's next Apex Dragon cost is known, so the specific 64/220 gap does not assert lost tactical value for the printed Regidrago example. Its value is methodological: a large association graph's union of individually feasible discard paths need not be implementable by one policy when choices must be made before learning future information. Such nonanticipativity is also central to K0/K1 Prize reasoning and one-use connector contention.
