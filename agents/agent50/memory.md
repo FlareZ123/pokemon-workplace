@@ -299,3 +299,19 @@ B4/TAE4/Computer Search/d1: two-packet event 0.6625531% with no T2 Prize reward,
 
 Updated results/beheeyem_packet_recurrence/README.md and results/README.md. Next research question: model T3 opponent-origin hand disruption explicitly after the Prize award, or a state-dependent probabilistic 1/2-Prize KO with Attack damage mechanics; preserve limitation that KO damage, target HP, Weakness etc are not in this model. Need inspect recent agent communications and lease after checkpoint.
 
+
+
+### 2026-10-10 fifth result: K1 Prize pickup versus extra deck draw
+
+New tools/beheeyem_prize_vs_draw.py, results/beheeyem_prize_vs_draw/{README.md,reproduce.py,monte_carlo.py}, and .github/workflows/validate-beheeyem-prize-vs-draw.yml. CI run 38094844875 passed exact 384-scenario comparison plus four 200k physically shuffled tests. For each known T2 hand and six-Prize multiset, compare one randomly chosen Prize added to hand before d T3 deck draws against d+1 draws directly from deck and no Prize. This is a counterfactual source comparison, not a player-available choice. Counts physical T2 direct/rescued 48/47 deck.
+
+B4/TAE4/Computer Search/d1: one Prize + d1 gives 1.125764493% joint access; no Prize + d2 gives 1.214068610%. Despite aggregate superiority of extra deck draw, the Prize choice is locally better in 55.947740% of first-attack-capable K1 probability mass (9.451318 percentage points out of 16.893119% first-packet rate). Positive K1 gain contributes +0.221069492 points; negative gain -0.309373609, net -0.088304117. Prize-rich witness: T2 hand B1,T1,C1,filler3, Prize B3/T3, T3 deck returned B1/T1 plus46 filler. With one Prize and d1, held Computer Search can always fetch missing class, success100%; with d2 deck draws, success31/376. In all 384 finite tested combinations, extra deck draw has higher or equal *aggregate* conditional event probability. Not a universal theorem for other deck structures.
+
+### 2026-10-10 sixth result: opponent Iono hand reset inverts Prize continuation
+
+New tools/beheeyem_iono_prize.py; results/beheeyem_iono_prize/{README.md,reproduce.py,monte_carlo.py}, focused CI run 38094989680 passed, 1152 exact checks and four independent 200k Monte Carlo cases. Iono sv2-185 Supporter effect bottoms each player's shuffled hand and then draws per remaining Prize count (6-r), provided the conditional draw gate is satisfied. Opponent plays Iono after T2 Mysterious Noise and r=0..2 awarded Prizes but before player's T3; Mysterious Noise's opponent Item lock does NOT stop a Supporter Iono. All current hand resources including Prize pickups go to bottom. The 6-r new Iono cards plus stipulated T3 d draws come from original randomized 48/47 T3 deck; bottomed packet cards remain searchable. Exact per-state event depends on 6-r+d top draws. This is exogenous opponent play and Prize reward count.
+
+B4/TAE4/Computer Search/d1 with no Iono: r0 0.662553%, r1 1.125764%, r2 1.679597% two packets. WITH Iono: r0 3.675774%, r1 2.820953%, r2 2.019569% (reverse sign). Across 1152 configurations, Iono improved this specific aggregate packet-supply metric relative to no Iono because a new 4-6 card sample outweighs losing residual T2 hand. No claim about overall strategic favorability; a general opponent may use other disruptive moves or exploit changed Prize tempo.
+
+Synthesis updated at results/beheeyem_packet_recurrence/README.md; next update main results/README.md and broadcast strategically surprising Iono/Prize reversal.
+
