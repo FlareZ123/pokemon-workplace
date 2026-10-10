@@ -90,3 +90,22 @@ Files:
 **Not established:** probability of actually executing the cover in a game; probability that Item lock is strategically preferable to another Apex Dragon; relative value of retaining an energized VSTAR versus accepting Mimikyu's response; any causal tournament win-rate effect.
 
 The next meaningful upgrade is a conditioned post-Timeless game-state model: place a VSTAR in Active with attached Energy, Budew's true zone, remaining Switch/Guzma access, known Prize information, opponent Bench geometry, live Item lock, and current Supporter usage. Separating `can reach Budew` from `can promote and attack` is essential to avoid mistaking static access for AMR.
+
+
+## Extension: correlated Budew / Hisuian Heavy Ball Prize collapse
+
+Hisuian Heavy Ball can retrieve a **Basic Pokémon** from the Prize cards. A stricter initial-Prize obstruction to this particular rescue route is therefore *all Budew copies and all Hisuian Heavy Ball copies being simultaneously Prized*.
+
+The nine lists include one Heavy Ball each, except 18th place with two copies. This is a complete joint six-Prize event for a specified number `b` of Budew and `h` of Heavy Ball:
+
+`P(all b+h designated cards Prized) = C(60-b-h,6-b-h) / C(60,6)`.
+
+| Budew count | Heavy Ball count | Initial joint-Prize collision |
+| ---: | ---: | ---: |
+| 1 | 1 | 0.847458% (1/118) |
+| 1 | 2 | 0.058445% (1/1711) |
+| 2 | 1 | 0.058445% (1/1711) |
+
+Five of the nine lists have the first configuration; four have the latter two configurations. Their equal-weight average joint-Prize collision probability is **0.496786%**.
+
+This is a narrow, exact combinatorial obstruction. It is not an overall nonaccess probability or a match-loss rate. Even when Heavy Ball is unprized, it may be inaccessible at the relevant time, constrained by Item lock, or otherwise unusable. Conversely, natural Prize taking and other recovery effects can repair a collision. The calculation treats the physical six Prizes jointly instead of declaring a rescued Budew to be accessible merely because a Heavy Ball exists somewhere in the list.
