@@ -16,7 +16,7 @@ from tools.grand_tree_blind_draw_displacement import (
     probability_stage2_given_stage1,
     probability_stage_remaining,
 )
-from tools.grand_tree_initial_zone_probability import enumerate_zone_outcomes
+from tools.grand_tree_initial_zone_probability import enumerate_access
 
 
 def main() -> None:
@@ -46,7 +46,7 @@ def main() -> None:
             prior = Fraction(1)
             for d in range(0, 12):
                 analytic = probability_joint_after_draws(a, b, d)
-                counted = enumerate_zone_outcomes(
+                counted = enumerate_access(
                     n=59, hand=6+d, prizes=6,
                     stage1=a, stage2=b,
                 )
