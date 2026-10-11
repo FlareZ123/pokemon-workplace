@@ -18,3 +18,5 @@ jobs:
           python-version: '3.13'
       - name: Check exhaustive physical action equivalence
         run: python -m results.gnh_typed_search_frontier.reproduce
+      - name: Confirm source card names and printed types
+        run: python -m results.gnh_typed_search_frontier.card_roles_reproduce
