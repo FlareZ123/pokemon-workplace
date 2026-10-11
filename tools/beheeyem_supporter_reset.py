@@ -12,6 +12,10 @@ Opponent Supporter responses:
   the player who used Marnie).
 - N: shuffle current hand INTO the deck, then draw 6-r cards from the
   newly shuffled entire physical deck.
+- Judge: shuffle current hand INTO the deck, then draw 4 cards.
+- Ace Trainer: shuffle current hand INTO the deck, then draw 3 cards,
+  only if the opponent has more Prize cards remaining than Beheeyem.
+  Here the opponent has all six Prizes, making this legal only at r >= 1.
 
 All three are followed by d extra T3 top-deck draws. The exact next-packet
 event accepts B+TAE directly, or one missing type searched by one physical
@@ -38,8 +42,10 @@ def exact_supporter_reset(
         raise ValueError("Packet copy counts must be 1..4")
     if not (0 <= T3_draws <= 5 and 0 <= prizes_awarded <= 2):
         raise ValueError("T3 draws 0..5 and Prize awards 0..2")
-    if tutor not in MODES or supporter not in ("N","Iono","Marnie"):
+    if tutor not in MODES or supporter not in ("N","Iono","Marnie","Judge","Ace Trainer"):
         raise ValueError("Unknown tutor or opposing hand-reset Supporter")
+    if supporter == "Ace Trainer" and prizes_awarded == 0:
+        raise ValueError("Ace Trainer requires Beheeyem to lead the Prize race")
 
     target, payment = MODES[tutor]
     F = 56-B-T
@@ -100,7 +106,12 @@ def exact_supporter_reset(
                                 )
                             else:
                                 probability = Fraction()
-                                # N shuffles the awarded Prizes AND every
+                                redraw = {
+                                    "N": 6-prizes_awarded,
+                                    "Judge": 4,
+                                    "Ace Trainer": 3,
+                                }[supporter]
+                                # Full-deck shuffle puts awarded Prizes AND every
                                 # remaining held card into the full deck.
                                 for xb in range(min(pb,prizes_awarded)+1):
                                     for xt in range(min(pt,prizes_awarded-xb)+1):
@@ -119,7 +130,7 @@ def exact_supporter_reset(
                                                 ways,prize_draw_space
                                             ) * second_draw_success(
                                                 0,0,0,0,*joined,
-                                                6-prizes_awarded+T3_draws,tutor
+                                                redraw+T3_draws,tutor
                                             )
                             if direct:
                                 direct_both += weight*probability
