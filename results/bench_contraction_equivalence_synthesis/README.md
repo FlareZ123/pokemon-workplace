@@ -89,6 +89,10 @@ With a fixed probability `p` of executing an eligible action, this posterior giv
 
 For the 5→4→3 Lunatone/Solrock guard, retaining two, one or zero prerequisites in the final three gives posterior availability **100%, 50%, 0%**, and the unconditioned intermediate-availability probability is **3/5**. This probabilistic claim is contingent on the hypothetical uniform-discard policy and payment-ready action state, with no assumption about competitive player choice. Independent subset oracles verified **18,943** cases, [Windows CI 38133534623 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38133534623).
 
+## Correlated guard probabilities
+
+The [joint guard posterior](../bench_guard_joint_posterior/) shows that separate Ability-access probabilities cannot generally be multiplied. With a source-backed disjoint two-object and six-object guard on an eight-occupant Bench contracted to seven, the marginal availabilities are 3/4 and 1/4 while their intersection is impossible. Shared requirements can instead yield positive correlation. The formula uses the union of required occupants and was confirmed by 128,397 exact oracle comparisons. [Windows CI 38133713699 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38133713699). All probabilities assume uniformly chosen discard sets.
+
 ## Open questions
 
 - Can the existing action/Ability execution compiler automatically produce a minimal set of state dimensions needed for safe contraction quotients?
