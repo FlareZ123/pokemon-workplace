@@ -1,0 +1,22 @@
+name: Validate Bench guard-history posterior
+
+on:
+  push:
+    paths:
+      - tools/bench_guard_history_posterior.py
+      - tools/bench_intermediate_guard_equivalence.py
+      - .github/workflows/validate-bench-guard-history-posterior.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify 18943 exact posterior cases and full endpoint normalization
+        run: python tools/bench_guard_history_posterior.py --self-test
+      - name: Print conditional Lunatone-guard probabilities
+        run: python tools/bench_guard_history_posterior.py
