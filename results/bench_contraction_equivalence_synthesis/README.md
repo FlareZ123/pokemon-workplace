@@ -69,6 +69,15 @@ This formula properly accounts for shared prerequisites and prevents false actio
 
 This result assumes fixed and distinguishable resource effects for each selected action, with no other action costs or contention. For actual play, named guard geometry must be composed with source positions, Ability and Supporter quotas, resource-payment constraints, applicable locks and the action window.
 
+
+## Live quota-grant sources and historical legality
+
+The [Magnezone quota-source extension](../bench_quota_source_action_equivalence/) adds per-turn action-budget semantics to the intermediate-guard quotient. Expanded-legal Magnezone `bw8-46`, Dual Brains, permits two Supporter cards on a turn while its Ability is active. In a controlled model with two independently executable, resource-distinguishable Supporter actions, an action subset of size two requires Magnezone to survive into the intermediate state, while zero or one Supporter requires no quota grant. The union-of-prerequisites `R` formula therefore applies with Magnezone added to the guard only for the two-action subset.
+
+For a five-to-four-to-three Bench contraction, this changes the total complete terminal resource/board states from **30** at the ordinary one-Supporter limit to **40** with transient Dual Brains, across **76** action-annotated paths. Importantly, the player can play two Supporters while Magnezone remains on the intermediate Bench and subsequently discard Magnezone: the final state then has a single-Supporter current limit but a historical usage of two. The [earlier quota kernel](../action_quota_effects/) explicitly represents such `used=2, limit=1` states. An independent exhaustive oracle matched **125,004** parameter configurations with varying guard sets, source identities and Bench capacities; [Windows CI 38133327769 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38133327769).
+
+This model assumes the Supporter effects are independently available and distinguishable; it is a general action-history geometry result rather than a simulation of printed Supporter effects or setup frequency.
+
 ## Open questions
 
 - Can the existing action/Ability execution compiler automatically produce a minimal set of state dimensions needed for safe contraction quotients?
