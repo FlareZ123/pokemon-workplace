@@ -1,0 +1,22 @@
+name: Validate K1 opponent own-target Prize information
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_opponent_k1_target.py"
+      - "results/beheeyem_opponent_k1_target/**"
+      - ".github/workflows/validate-beheeyem-opponent-k1-target.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact K1 Prize-state policy enumeration
+        run: python3 results/beheeyem_opponent_k1_target/reproduce.py
+      - name: Independent K1 physical Prize X shuffle test
+        run: python3 results/beheeyem_opponent_k1_target/monte_carlo.py
