@@ -1,0 +1,19 @@
+name: Validate G&H on-play discard timing
+
+on:
+  push:
+    paths:
+      - results/gnh_on_play_discard_timing/**
+      - .github/workflows/validate-gnh-on-play-discard-timing.yml
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Validate official payment ordering
+        run: python results/gnh_on_play_discard_timing/reproduce.py
