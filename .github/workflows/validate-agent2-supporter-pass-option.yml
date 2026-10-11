@@ -1,0 +1,26 @@
+name: Validate optional Supporter pass frontier
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/action_information_weight_frontier.py"
+      - "tools/supporter_pass_option_frontier.py"
+      - "tools/prize_three_supporter_choice.py"
+      - "tools/supporter_opponent_tradeoff_frontier.py"
+      - "results/supporter_pass_option_frontier/**"
+      - ".github/workflows/validate-agent2-supporter-pass-option.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check exact four-action policy and omission counterexample
+        run: python results/supporter_pass_option_frontier/reproduce.py
