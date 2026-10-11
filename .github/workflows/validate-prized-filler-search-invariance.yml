@@ -1,0 +1,20 @@
+name: Validate prized filler search invariance
+
+on:
+  push:
+    paths:
+      - tools/prized_filler_search_invariance.py
+      - results/prized_filler_search_invariance/**
+      - .github/workflows/validate-prized-filler-search-invariance.yml
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Exhaust physical Prize and observation states
+        run: python -m results.prized_filler_search_invariance.reproduce
