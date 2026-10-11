@@ -39,19 +39,21 @@ def enumerated(unseen: int, prizes: int, removed_names: int, seen: int) -> Fract
 def physical_observations(
     unseen: int, prizes: int, removed_names: int, seen: int,
 ) -> Fraction:
-    """Independent physical Prize and observed-card subset enumeration."""
+    """Independent equal-world Prize and observed-card subset enumeration."""
     exact(unseen, prizes, removed_names, seen)
     target = removed_names
-    positive = total = 0
+    value = Fraction(0)
+    worlds = 0
     for prize in combinations(range(unseen), prizes):
         excluded = set(prize)
         deck = tuple(i for i in range(removed_names, unseen) if i not in excluded)
+        local_hits = local_total = 0
         for inspected in combinations(deck, seen):
-            total += 1
-            positive += int(target in inspected)
-    # Prize worlds must be equally weighted even though deck lengths differ.
-    # This raw fraction is only valid if observed deck sizes are equal.
-    return Fraction(positive, total)
+            local_total += 1
+            local_hits += int(target in inspected)
+        value += Fraction(local_hits, local_total)
+        worlds += 1
+    return value / worlds
 
 
 def hypergeometric_by_prized_sources(
