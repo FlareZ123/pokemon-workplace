@@ -1,0 +1,24 @@
+name: Validate physical Quick Ball source cost frontier
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/physical_quick_ball_cost_frontier.py"
+      - "tools/physical_quick_ball_search_option.py"
+      - "results/physical_quick_ball_cost_frontier/**"
+      - ".github/workflows/validate-agent2-physical-quick-ball-cost.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate independently enumerated source-cost thresholds
+        run: python results/physical_quick_ball_cost_frontier/reproduce.py
