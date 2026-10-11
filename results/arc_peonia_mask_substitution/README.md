@@ -1,75 +1,60 @@
-# An accessible Trekking Shoes weakly dominates the final Arc Phone
+# An accessible Trekking Shoes can replace the final Arc Phone
 
-## Resource-availability question
+## Pointwise source-mask result
 
-Previous results show four Arc Phones and three Arc Phones plus one Trekking Shoes have identical access to a singleton known to be Prized, provided all four Items are playable. Does this equality survive *missing* Items caused by uncertain natural access, including when the replacement Shoes is itself inaccessible?
+Compare four labeled prospective Item slots in a one-target Peonia recovery model:
 
-**Yes, for every accessible Item subset** in the source-isolated model. The stronger result is pointwise, so it applies under arbitrary probability distributions over item-access masks.
+- Package A: four Arc Phone.
+- Package B: three Arc Phone plus one Trekking Shoes, replacing only the fourth slot.
 
-## Fixed-mask theorem
+A binary mask determines which of the four candidate Item slots is **already available**. Every other hidden card has inert filler behavior; unavailable Items cannot become playable later. One Peonia and sufficient replacement filler are held. The one valuable singleton is either certainly Prized among n facedown Prize positions (K1), or uniformly distributed among n Prize and d deck positions (uniform K0), with d>=2.
 
-Compare packages with four labeled Item slots:
+Let a be the accessible count among the first three Arc Phone slots and x be 1 if the replacement slot is accessible and 0 otherwise.
 
-- Old: A1,A2,A3,A4, all Arc Phone.
-- New: A1,A2,A3,S4, replacing only A4 with Trekking Shoes.
+**K1, certainly Prized:** Every single mask produces exact equality:
 
-Hold Peonia and one expendable filler for its hand replacement payment. One valuable singleton T exists, all other hidden cards are inert filler; cards outside the initially available Item subset are unavailable as actions. The initial deck has at least two positions.
+\`P(B|mask,K1) = P(A|mask,K1) = min(n,3+max(0,a+x-1))/n\`.
 
-For any binary access mask m of those four slots, let a be the number of held, usable Arcs among A1..A3 and x indicate whether slot 4 is accessible.
+When x=1 and at least one Arc is available, Shoes takes the final Arc-displaced Prize card directly from the deck top, replacing the observation that an additional Arc would have provided. When the substituted slot is inaccessible, the action inventories are identical. This equality therefore holds under **any probability distribution over masks** that is shared between the packages.
 
-Under **K1**, T is uniformly Prized across n facedown Prize positions, and the deck is known filler. The two packages achieve exactly the same optimal T-retrieval probability:
+**Uniform K0:** Every single mask has
 
-\`P_K1(old|m) = P_K1(new|m) = min(n,3+max(0,a+x-1))/n\`.
+\`P(B|mask,K0)-P(A|mask,K0) = x/(n+d)\`.
 
-The second expression remains valid for x=1,a=0 because Shoes without Arc does not touch the hidden Prize positions; when x=1 and a>=1, Shoes can acquire the top card after the final Arc exchange, offsetting the removed Arc. The equality is independent of the distribution of masks.
+Shoes can access one additional *initial deck position*, while the optimal total number of equiprobable target locations covered increases by one whenever the substituted slot is available. The formula concerns the uniform target-location prior. With a nonuniform Prize/deck prior, an adaptive planner may choose a deck-heavy line that trades away Prize coverage to see two extra deck positions, so the **exact** one-position increment does not automatically carry over.
 
-Under **K0** with T uniformly distributed among n Prize and d deck positions, d>=2:
+## Exact sampled-source overlay
 
-\`P_K0(new|m)-P_K0(old|m) = x/(n+d)\`.
+Under a deliberately separated access model, the four labeled candidate Item slots are placed in a uniformly shuffled population of 57 positions with 53 inert source positions. A random h-subset of those positions is accessible. Target-location uncertainty is independent of this source mask, and there is no subsequent Item acquisition. Thus
 
-If x=0, the packages are identical. If x=1, Shoes can access one additional original deck position, without sacrificing any Prize coverage. This is one extra initial target location among the n+d equiprobable locations.
+\`P(x=1) = h/57\`.
 
-For an arbitrary zone prior p=P(T Prized), uniform conditional positions in each zone, the exact pointwise gain becomes
+For K1, the two packages continue to have exactly equal expected success, regardless of h.
 
-\`P(new|m,p)-P(old|m,p) = x*(1-p)/d\`.
+For a uniform K0 target among six Prizes and 46 deck positions, the **expected absolute improvement** of Package B over Package A is
 
-This requires the access mask to carry no additional information about the target location. A source-aware planner could update p if obtaining a particular Item were correlated with target location.
+\`E[P(B)-P(A)] = h/(57*52)\`.
 
-## Hypergeometric natural-access projection
-
-Assume the four labeled Item slots occupy random positions among an independent 57-location source population, with 53 other inert slots. Let h locations be uniformly visible/usable, and leave target location uncertainty independent of that source population. Then
-
-\`P(S4 accessible) = h/57\`.
-
-Averaging the exact pointwise identity over all 16 access masks yields
-
-\`E[P(new)-P(old)] = (h/57)*(1-p)/d\`.
-
-For n=6,d=46 and the uniform target prior p=6/52:
-
-\`E[P(new)-P(old)] = h/(57*52)\`.
-
-| h accessible source positions | Absolute improvement in target retrieval |
+| Accessible source positions h | Expected absolute advantage |
 |---:|---:|
-| 7 | 7/2964 = 0.236167% |
-| 20 | 20/2964 = 0.674764% |
-| 40 | 40/2964 = 1.349528% |
-| 52 | 52/2964 = 1.754386% |
+| 7 | 7/2964 = 0.236167 percentage points |
+| 20 | 20/2964 = 0.674764 percentage points |
+| 40 | 40/2964 = 1.349528 percentage points |
+| 52 | 52/2964 = 1.754386 percentage points |
 
-Under K1 (p=1), the expected gain is identically zero for every h. The stochastic source constraint does not destroy the pointwise equivalence. Under K0, the substitution is weakly positive and generally strictly improves target access.
+This is an *access projection*, with Peonia and payment assumed available and all nonavailable source copies abstracted as inert. It is not a sample of actual live draws which can acquire additional Arc Phone, Shoes, or Supporters.
 
-## Exact verification
+## Independent physical verification
 
-\`tools/arc_peonia_mask_substitution.py\` enumerates all 16 availability masks, compares the independently implemented physical K1 and K0 dynamic programs, and also compares posterior-weighted mixed-zone physical decisions.
+\`tools/arc_peonia_mask_substitution.py\` enumerates every mask and runs both separately developed exact physical-world adaptive solvers:
 
-- K1/K0: n=1..6, d=2..8, 16 masks per state, **672** exact mask configurations.
-- Mixed prior: p in \`{0,1/10,1/2,9/10,1}\`, n=6,d=8 and 16 masks, **80** exact configurations.
-- Natural-access projection: nine h values and three prior values, **27** exact hypergeometric identities.
+- 672 n=1..6, d=2..8, 16-mask cases check K1 equality and uniform-K0 increment.
+- 18 population h cases check the exact full hypergeometric mask mixture and equality / expected increment.
 
-The test checks **779** independently evaluated identities with \`Fraction\` arithmetic. Run \`python tools/arc_peonia_mask_substitution.py\` or inspect the shared Windows CI workflow.
+All 690 identities use \`Fraction\` arithmetic. Reproduce with \`python tools/arc_peonia_mask_substitution.py\`, also executed by the Windows GitHub Actions workflow.
 
-## Scope of the conclusion
+## Limits and implications
 
-This is a pointwise *acquisition-probability* dominance under equal candidate accessibility, a single target, filler-only other card effects, and Peonia already in hand with feasible payment. Actual deck construction changes starting hands, Prize allocation, Item search chains and drawn Item reuse. Trekking Shoes may draw an additional usable resource, and an inaccessible Arc could later be recovered, violating the static-access assumption. The model also omits Item lock, sequencing time, Supporter contention, alternative targets and the opportunity cost of consuming Shoes.
+This establishes a robust *within-subsystem* K1 substitution equivalence and a strict K0 improvement under equal starting access. Real deck changes can change hand/Prize distributions, Item search links, Bench cost, opportunity costs and opponent lock exposure. Trekking Shoes may draw another actionable card, which is beyond this static-mask experiment.
 
-The reliable design principle is narrower: in this Prize-recovery subsystem, replacing the final Arc with a Shoes does not sacrifice the known-Prized rescue axis under a matched Item-access mask. One can then evaluate Shoes' additional deck access and its other game functions using richer models.
+The generalized lesson is that an identical K1 outcome under uncertain availability need not imply equal value under partial information about whether the target remains in the deck. Follow-up work should allow the access mask to reveal target-location information and should model newly drawn usable Trainers physically.
