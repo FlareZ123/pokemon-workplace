@@ -47,6 +47,29 @@ A subtle distinction: **46.477077%** of early Basic-valid hands can physically p
 
 The highest buy price changes with the reward prior because Ace Trainer's Prize restriction and Beheeyem's packet risk both depend on r. If reward 2 is impossible, the highest payable source benefit is lower than with r1/r2 having positive probability.
 
+## Denial-weight sensitivity reveals nonmonotonic source incidence
+
+The willingness-to-pay frontier is conditional on the relative value of denying a second Beheeyem packet. We therefore repeated the exact optimization with nine different denial weights while keeping the future reward prior uniform. A tempting hypothesis was that maximizing Beheeyem denial would eventually make the own-X information source worthless. The test **falsified** that hypothesis.
+
+| Packet-denial weight `lambda` | Early Ultra Ball used at tau=0 | Maximum source extra cost worth paying | Utility gain from free early source | Pure K1 component if all payable sources played |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 26.220950% | 0.015240845 | 0.002623500 | 0 |
+| 3 | 26.220950% | 0.017123106 | 0.002895786 | 0.000299744 |
+| 5 | 26.220950% | 0.011103445 | 0.002040649 | 0.000057456 |
+| 10 | 26.220950% | 0.011593924 | 0.001760650 | 0.000067454 |
+| 20 | **46.477077%** | 0.009831310 | 0.001916277 | 0.000000514 |
+| 50 | 46.477077% | 0.010274685 | 0.001975399 | 0.000059636 |
+| 100 | 46.477077% | 0.011723366 | 0.002417794 | 0.000279464 |
+| 10,000 | **46.477077%** | 0.009318140 | 0.001932211 | **0** |
+
+With lambda=10, the zero-extra-cost source is played in 26.220950% of all legal early hands. Increasing the emphasis on disruption to lambda=20 changes the best later Judge/Ace/pass response in enough configurations that **all 46.477077% physically payable sources are chosen** at tau=0. The chosen policy therefore has **nonmonotonic source-incidence behavior** with respect to the *relative objective weight*, even though it is monotone decreasing with respect to its own extra source cost tau.
+
+At lambda=10, the causal decomposition was mainly physical deck thinning. At lambda=10,000, the exact additional K1 information component is **zero**, yet the paid action still improves the remaining own-X redraw concentration through the U+F+F physical payment, yielding positive scalar utility. An agent treating the acquired information as the sole benefit would incorrectly conclude that the action should never be used.
+
+The first sensitivity regression originally asserted the intuitive but unsupported claim that near-pure packet denial must imply zero early source use; that assertion failed. After correcting the expectation, all nine denial weights and 27 independent full sequential-policy source-cost checks passed [CI 38135734996](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38135734996). The failed [CI 38135700363](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38135700363) documents the rejected assumption. [Denial-weight regression](reproduce_lambda.py) preserves reproducible evidence.
+
+This behavior is confined to the chosen toy scalar utility with its hypothetical X target and cost-free disposable filler. For actual deck optimization, it strengthens the case for tracking **both source side effects and the current tactical objective**, with their weights explicit rather than hidden in a generic search value.
+
 ## Exact validation
 
 - [Per-state benefit distribution](../../tools/beheeyem_paid_k1_reward_prior.py) is exposed alongside the previously verified early decision solver, with every class weighted by its actual Basic-conditioned opening probability.
