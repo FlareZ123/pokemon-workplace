@@ -150,7 +150,7 @@ class PosteriorTests(unittest.TestCase):
                                 ),
                             )
                             cases += 1
-        self.assertEqual(cases, 16824)
+        self.assertEqual(cases, 18943)
 
     def test_lunatone_posterior_depends_on_final_partner_count(self) -> None:
         guard = frozenset((0, 1))
