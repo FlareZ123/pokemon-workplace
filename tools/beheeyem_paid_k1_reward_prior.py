@@ -124,6 +124,7 @@ def uncertain_reward_early_search(
 
     baseline=optimal=forced=thin_only=pure_k1=Fraction()
     paid_available=paid_used=Fraction()
+    source_benefit_masses = {}
     for (a,j,x,payable),mass in initial_prelock_masses(k_pre).items():
         no=sum(pr*future(r,a,j,x,False,False)
                for r,(pr,_,_) in cases.items())
@@ -140,6 +141,10 @@ def uncertain_reward_early_search(
                     for r,(pr,_,_) in cases.items())
         assert paid_k1>=paid_blind>=no
         pure_k1+=mass*(paid_k1-paid_blind)
+        benefit = paid_k1-no
+        source_benefit_masses[benefit] = (
+            source_benefit_masses.get(benefit,Fraction())+mass
+        )
         thin_only+=mass*paid_blind
         forced+=mass*(paid_k1-tau)
         if paid_k1-tau>no:
@@ -168,5 +173,8 @@ def uncertain_reward_early_search(
         "value_of_future_reward_information":clairvoyant-optimal,
         "unconditionally_paid_thinning_component":thin_only-baseline,
         "unconditionally_paid_K1_component":pure_k1,
-        "forced_paid_search_value":forced
+        "forced_paid_search_value":forced,
+        "payable_source_benefit_distribution":tuple(sorted(
+            source_benefit_masses.items()
+        ))
     }
