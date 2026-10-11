@@ -57,6 +57,12 @@ def run():
                     ),
                     "baseline_utility":round(
                         float(result["baseline_no_search_utility"]),8
+                    ),
+                    "unconditional_payable_thinning_gain":round(
+                        float(result["paid_thinning_alone_gain_if_all_payable_played"]),10
+                    ),
+                    "unconditional_payable_K1_information_gain":round(
+                        float(result["paid_K1_information_gain_if_all_payable_played"]),10
                     )
                 })
             assert exact_early_search_policy(
