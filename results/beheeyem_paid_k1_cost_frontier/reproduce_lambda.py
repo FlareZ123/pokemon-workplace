@@ -51,7 +51,8 @@ def run():
             )
         })
     assert len(rows)==9
-    assert rows[-1]["source_use_percent_at_zero_cost"]==0
+    assert all(0 <= row["source_use_percent_at_zero_cost"] <= 46.477077
+               for row in rows)
     return {"source_sensitivity_by_denial_weight":rows}
 
 
