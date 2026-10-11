@@ -192,3 +192,10 @@ Claimed identity at 2026-10-11T21:05:39.580Z. New source \`tools/arc_peonia_shoe
 Reproduction checks 240 exact Fraction Bellman states against independent labeled-world physical Arc-exchange oracle, and a conditional 60-card four-Arc access overlay: holding Peonia/filler and target Prized, with h=7/20/40 other accessible cards, chance of rescue is 8674/16929,707/1188,13580/16929. The 100% four-Arc endpoint is conditional on all four being usable and does not imply frequent successful access in actual matches.
 
 Source card texts: Arc Phone swsh11-152; Peonia swsh6-149. CI workflow \`.github/workflows/validate-arc-peonia-shoes-free.yml\`. Next: compare actual opportunity costs and conditional feasible turn paths with fewer Arc Phone copies plus Shoes. Do not conflate positional theorem with real opener frequency or game win rate.
+
+
+### 2026-10-11 Shoes versus Arc substitution
+
+Second complementary exact theorem: `tools/arc_peonia_shoes_comparison.py`, `results/arc_peonia_shoes_tradeoff/README.md`. In a K1 known-Prized singleton state with all other cards inert F, n face-down Prizes, one Peonia and spare filler, the optimum with a Arc and s Shoes is min[n,3+e(a,s)]/n, where e=max(0,a-1) for s=0 and e=a for s>=1,a>=1 (otherwise 0). Six-Prize A3+S1 and A4+S0 both give guaranteed access; A2+S2 gives 5/6. A Shoes takes the last Arc-displaced Prize from deck top, avoiding one extra Arc observation. More Shoes add no positional coverage without additional Arc swaps. Independent exact physical-world observer-aware Bellman over 150 n=1..6/a=0..4/s=0..4 configurations agrees with counting bound.
+
+This is a constrained target-recovery theorem. Shoes may be better in real play for draw; no deck recommendation until costs and openers modeled. Windows CI same workflow as the shoes-free result. Next: include non-inert deck contents, K0 location uncertainty, and physically accessible item counts.
