@@ -7,10 +7,12 @@ on:
       - "tools/arc_peonia_shoes_comparison.py"
       - "tools/arc_peonia_k0_shoes.py"
       - "tools/arc_peonia_mixed_prior.py"
+      - "tools/arc_peonia_mask_substitution.py"
       - "results/arc_peonia_shoes_free/**"
       - "results/arc_peonia_shoes_tradeoff/**"
       - "results/arc_peonia_k0_item_frontier/**"
       - "results/arc_peonia_mixed_prior/**"
+      - "results/arc_peonia_mask_substitution/**"
       - "resources/cards/en/swsh11.json"
       - "resources/cards/en/swsh6.json"
       - ".github/workflows/validate-arc-peonia-shoes-free.yml"
@@ -35,3 +37,5 @@ jobs:
         run: python tools/arc_peonia_k0_shoes.py
       - name: Verify 125 mixed-prior rational policies
         run: python tools/arc_peonia_mixed_prior.py
+      - name: Verify matched-access-mask substitution
+        run: python tools/arc_peonia_mask_substitution.py
