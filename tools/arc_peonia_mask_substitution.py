@@ -85,14 +85,7 @@ def check():
                 assert old_k1 == new_k1, (n,d,mask,old_k1,new_k1)
                 old_k0 = k0_physical(n,d,old_a,0)
                 new_k0 = k0_physical(n,d,a,int(s))
-                difference = Fraction(int(s and (a+3 < n or d >= 2)), n+d)
-                # When Prize saturation happens at low n, Shoes still
-                # increases deck access if its extra deck position exists,
-                # except if both packages already cover all positions.
-                if s:
-                    difference = Fraction(1 if d>=2 and (a+3 < n+d) else 0, n+d)
-                else:
-                    difference = Fraction()
+                difference = Fraction(int(s), n+d)
                 assert new_k0-old_k0 == difference, (n,d,mask,new_k0,old_k0,difference)
                 cases += 1
     # Uniform-zone model: T Prized probability n/(n+d) is the exact K0
