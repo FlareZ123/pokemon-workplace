@@ -1,0 +1,22 @@
+name: Validate Bench policy-free guard identification bounds
+
+on:
+  push:
+    paths:
+      - tools/bench_guard_policy_identification.py
+      - tools/bench_intermediate_guard_equivalence.py
+      - .github/workflows/validate-bench-guard-policy-identification.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify 1140 exact odds-weighted physical subsets and monotonicity
+        run: python tools/bench_guard_policy_identification.py --self-test
+      - name: Show policy-free posterior interval
+        run: python tools/bench_guard_policy_identification.py
