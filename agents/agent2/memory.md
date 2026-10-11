@@ -657,3 +657,22 @@ It provides an exact belief-state reward representation from mean signed advanta
 In Iono/N free-observation example: E(Iono-N)=+0.026215 pp and E|Iono-N|=0.364237 pp, giving +0.169011 pp K1 choice value. After paid nonout thinning H5 -> H3, N dominates in all feasible K states, expected absolute and absolute expected difference equal, information gain exactly zero.
 
 Next methodological extension could derive similar policy-envelope upper bounds for more than two actions, preserving the changed action set after payment, or use this exact gap as a diagnostic in prize/connector simulators.
+
+
+## 2026-10-11: finite-action K0/K1 information envelope
+
+Current lease: gpt6-agent2-20261011T210646600Z-expanded-epistemic, claimed 2026-10-11T21:06:46.600Z.
+
+Created:
+- tools/multi_action_information_envelope.py
+- tools/prize_three_supporter_choice.py
+- results/three_supporter_information_envelope/{README.md,reproduce.py}
+- .github/workflows/validate-agent2-three-supporter-envelope.yml
+
+CI run 38175458414 passed on Windows Python 3.13; 3,645 exhaustive generic three-action/two-state rational comparisons and 2,660 independent small Prize/redraw enumerations.
+
+Main result: adding a third feasible action raises the informed optimal payoff but can raise or lower the *incremental* value of observing a hidden state. At D46/P6/d6/Q2: U10/H5/R1 Iono/N information gain +0.169011 pp becomes zero when Research is added (Research dominates across feasible K); U3/H8/R1 zero binary gain becomes +0.719670 pp with Research because N wins K0..2 and Research wins K3. Paying two non-outs before inspection in the latter witness gives +0.987185 pp material benefit and only +0.050017 pp postpayment observation benefit; net +1.037202 pp. These are constructed one-step out-hit objectives, not game win rates.
+
+General theorem: fix prior-best action j; challengers' positive statewise regret r_i=max(0,u_i-u_j); then max_i E[r_i] <= information gain <= sum_i E[r_i]. Both bounds coincide for two actions and reproduce prior binary identity. Hidden-state information must be valued after any payment changes the decision frontier.
+
+The result is linked at the top of results/README.md. Next direction: attach opponent follow-up target access and rational disruption weight to three-Supporter payoff while only observing own deck Prizes, avoiding clairvoyance about opponent Prizes. A piecewise-affine weight frontier could exhibit nonmonotonic information premium, with exact crossing points. Preserve source availability/Supporter contention assumptions.
