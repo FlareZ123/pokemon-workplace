@@ -1,0 +1,25 @@
+name: Validate Beheeyem no-reset versus opposing Supporter choices
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_prize_packet.py"
+      - "tools/beheeyem_supporter_reset.py"
+      - "results/beheeyem_optional_supporter_response/**"
+      - ".github/workflows/validate-beheeyem-optional-supporter-response.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact response census and public tutor-use branch
+        run: python3 results/beheeyem_optional_supporter_response/reproduce.py
+      - name: Independently simulate the hand-preservation branch
+        run: python3 results/beheeyem_prize_packet/monte_carlo.py
+      - name: Independently simulate full-deck Supporter hand resets
+        run: python3 results/beheeyem_judge_ace_response/monte_carlo.py
