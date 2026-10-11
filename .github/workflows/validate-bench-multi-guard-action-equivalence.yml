@@ -1,0 +1,22 @@
+name: Validate multiple Bench guard-action quotients
+
+on:
+  push:
+    paths:
+      - tools/bench_multi_guard_action_equivalence.py
+      - tools/bench_intermediate_guard_equivalence.py
+      - .github/workflows/validate-bench-multi-guard-action-equivalence.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Exhaustive guard subsets and geometric state quotient
+        run: python tools/bench_multi_guard_action_equivalence.py --self-test
+      - name: Print disjoint eight-source guard witness
+        run: python tools/bench_multi_guard_action_equivalence.py
