@@ -1,0 +1,22 @@
+name: Validate live quota-source Bench equivalence
+
+on:
+  push:
+    paths:
+      - tools/bench_quota_source_action_equivalence.py
+      - tools/bench_intermediate_guard_equivalence.py
+      - .github/workflows/validate-bench-quota-source-action-equivalence.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compare 125004 exact quota configurations with independent oracle
+        run: python tools/bench_quota_source_action_equivalence.py --self-test
+      - name: Print Magnezone quota witness
+        run: python tools/bench_quota_source_action_equivalence.py
