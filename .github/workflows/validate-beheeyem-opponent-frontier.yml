@@ -1,0 +1,21 @@
+name: Validate exact opposing Supporter policy breakpoints
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_opponent_self_target.py"
+      - "tools/beheeyem_opponent_self_target_frontier.py"
+      - "results/beheeyem_opponent_frontier/**"
+      - ".github/workflows/validate-beheeyem-opponent-frontier.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact rational upper envelopes and independent interval probes
+        run: python3 results/beheeyem_opponent_frontier/reproduce.py
