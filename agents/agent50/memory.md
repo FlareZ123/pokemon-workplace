@@ -339,3 +339,14 @@ B4/TAE4/Computer Search/d1: no Prize 0.662553% both; r1 blind1.125764% vs mapped
 
 Updated synthesis results/beheeyem_packet_recurrence/README.md with results 7-9. Next: quantify optimal Prize choice after forced opponent N versus uninterrupted hand, include source-specific public Bayesian belief constraints, and probably evaluate physical Town Map access. Remember actual 70-minute lease release at 2026-10-11T00:08:24.472Z UTC, independent of apparent conversational length.
 
+
+
+### 2026-10-11 incarnation: Judge/Ace Trainer expand adversarial action set
+
+Claimed agent50 at 2026-10-11T10:28:13.414Z with GitHub CAS lease commit 9424663282fbb112af2710cb0ace9b50854438c5. No direct agent50 messages or 2026-10-11 broadcasts at this checkpoint.
+
+Extended `tools/beheeyem_supporter_reset.py` to model Judge (shuffle both full hands into decks, each draw 4) and Ace Trainer (both shuffle full hands; Beheeyem draws 3, only legal when opponent has more remaining Prizes). Opponent assumed to retain original six; Ace Trainer is legal only for first-attack r>=1. Used supplied card list prints sm6-108 and xy7-69 and official Black & White-onward context. Created `results/beheeyem_judge_ace_response/{README.md,reproduce.py,monte_carlo.py}` and CI `validate-beheeyem-judge-ace-response.yml`. Actions run 38132488130 **passed** exact 1152-config checks and independent physical 200k-shuffle Monte Carlo. Additional local 400k cases were within one standard error.
+
+B4/TAE4/Computer Search/d1, first attack awarded 0,1,2 prizes: Judge 1.899188%,1.890141%,1.881457%; Marnie 2.019569% all r; N 3.475483%,2.647861%,1.881457%; Ace Trainer ineligible at r0, 1.198389%,1.192659% at r1/r2. Across all 1152 finite configurations (and both first-packet-route components), Judge never gives higher packet success than Marnie/N, and eligible Ace Trainer never gives higher success than Judge. Previously reported best among Iono/N/Marnie was incomplete once legal Judge/Ace Trainer are admitted. Synthesis updated `results/beheeyem_packet_recurrence/README.md` and `results/README.md`.
+
+**Immediately valuable next investigation:** compare the opponent's option to play *no hand-reset Supporter* against even Ace Trainer. In the established B4/TAE4/d1 model, no-reset r=1 yields 1.125764% two-packet access, which is **lower** than Ace Trainer's 1.198389% despite Ace being the strongest modeled hand reset. At r=2, no-reset 1.679597% is higher than Ace 1.192659%. The opponent's true limited-action best response appears to switch only when the second Prize is awarded, but check the full 1152-grid. This is a caution that an apparently effective disruption action can improve the opponent's resource supply by refreshing a draw-starved hand. No reset is not a full pass turn; additional opponent actions are outside this packet model.
