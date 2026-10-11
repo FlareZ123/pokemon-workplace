@@ -1,0 +1,20 @@
+name: Validate maximal K1 opponent Prize information benefit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_opponent_k1_information_frontier.py"
+      - "results/beheeyem_opponent_k1_information_frontier/**"
+      - ".github/workflows/validate-beheeyem-opponent-k1-information-frontier.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact rational K1 information-value upper envelope
+        run: python3 results/beheeyem_opponent_k1_information_frontier/reproduce.py
