@@ -9,12 +9,14 @@ on:
       - "tools/arc_peonia_mixed_prior.py"
       - "tools/arc_peonia_mask_substitution.py"
       - "tools/arc_peonia_deck_depletion_phase.py"
+      - "tools/arc_peonia_two_dimensional_phases.py"
       - "results/arc_peonia_shoes_free/**"
       - "results/arc_peonia_shoes_tradeoff/**"
       - "results/arc_peonia_k0_item_frontier/**"
       - "results/arc_peonia_mixed_prior/**"
       - "results/arc_peonia_mask_substitution/**"
       - "results/arc_peonia_deck_depletion_phase/**"
+      - "results/arc_peonia_two_dimensional_phases/**"
       - "resources/cards/en/swsh11.json"
       - "resources/cards/en/swsh6.json"
       - ".github/workflows/validate-arc-peonia-shoes-free.yml"
@@ -43,3 +45,5 @@ jobs:
         run: python tools/arc_peonia_mask_substitution.py
       - name: Verify deck depletion inventory phase transitions
         run: python tools/arc_peonia_deck_depletion_phase.py
+      - name: Verify Prize prior and deck size phase diagram
+        run: python tools/arc_peonia_two_dimensional_phases.py
