@@ -19,9 +19,10 @@ def hypergeometric_probe_policy(n: int, q: int, arcs: int, m: int = 3):
     total = Fraction()
     for j in range(max(0,k-(n-q)), min(k,q)+1):
         prior=Fraction(comb(q,j)*comb(n-q,k-j),comb(n,k))
-        if m<j or m-j<q-j or n-k<q-j:
+        remaining_slots=min(m-j,n-k)
+        if m<j or remaining_slots<q-j:
             continue
-        conditional=Fraction(comb(m-j,q-j),comb(n-k,q-j))
+        conditional=Fraction(comb(remaining_slots,q-j),comb(n-k,q-j))
         total += prior*conditional
     return total
 
