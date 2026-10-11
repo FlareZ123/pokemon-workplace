@@ -1,0 +1,24 @@
+name: Validate Basic-valid Item discard quotas
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/basic_valid_discard_quota.py"
+      - "tools/basic_valid_item_payment_geometry.py"
+      - "results/basic_valid_discard_quota/**"
+      - ".github/workflows/validate-agent2-basic-valid-discard-quota.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exhaustively validate one two three card Item discard gates
+        run: python results/basic_valid_discard_quota/reproduce.py
