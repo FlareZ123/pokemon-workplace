@@ -48,7 +48,7 @@ This is an *access projection*, with Peonia and payment assumed available and al
 
 \`tools/arc_peonia_mask_substitution.py\` enumerates every mask and runs both separately developed exact physical-world adaptive solvers:
 
-- 672 n=1..6, d=2..8, 16-mask cases check K1 equality and uniform-K0 increment.
+- 672 n=1..6, d=2..8, 16-mask cases check K1 equality and uniform-K0 weak dominance; the 112 cases with n=6 also check the exact one-position increment.
 - 18 population h cases check the exact full hypergeometric mask mixture and equality / expected increment.
 
 All 690 identities use \`Fraction\` arithmetic. Reproduce with \`python tools/arc_peonia_mask_substitution.py\`, also executed by the Windows GitHub Actions workflow.
