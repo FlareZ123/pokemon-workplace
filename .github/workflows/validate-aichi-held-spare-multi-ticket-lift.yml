@@ -1,0 +1,20 @@
+name: Validate Aichi natural G&H multi-Ticket thinning
+
+on:
+  push:
+    paths:
+      - tools/aichi_held_spare_multi_ticket_lift.py
+      - results/aichi_held_spare_multi_ticket_lift/**
+      - .github/workflows/validate-aichi-held-spare-multi-ticket-lift.yml
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Verify Ticket multiplicity category masses and Wish gain
+        run: python -m results.aichi_held_spare_multi_ticket_lift.reproduce
