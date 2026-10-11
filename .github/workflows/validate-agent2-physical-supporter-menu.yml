@@ -1,0 +1,25 @@
+name: Validate physical Supporter hand menu
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/physical_supporter_menu.py"
+      - "tools/supporter_opponent_tradeoff_frontier.py"
+      - "tools/multi_action_information_envelope.py"
+      - "results/physical_supporter_menu/**"
+      - ".github/workflows/validate-agent2-physical-supporter-menu.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Independently enumerate physical Basic openings and known action menus
+        run: python results/physical_supporter_menu/reproduce.py
