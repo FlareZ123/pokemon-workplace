@@ -59,6 +59,20 @@ payment remains available even with TM and Jet held.
 
 CI: [Windows validation workflow](../../.github/workflows/validate-gnh-typed-search-frontier.yml).
 
+## Card-pool ontology check
+
+The companion [card-role regression](card_roles_reproduce.py) reads
+the repository's complete English card JSON to verify every named
+Aichi search target exists in the source roster and has the expected
+printed category. It confirms Artazon/Grand Tree are Stadiums;
+Stealthy Hood, Technical Machine: Evolution and Counter Gain
+are Pokémon Tools; Capture, Jet and Memory Energy are Special
+Energy; Guzma & Hala is a TAG TEAM Supporter with the
+optional on-play discard clause; and Tag Call is an Item whose
+search permits up to two TAG TEAM targets. This check prevents a
+synthetic frontier from silently using invented card classifications.
+It cannot replace format-specific legality verification.
+
 ## Interpretation limits
 
 This enumerates **feasible named material lines** in a known physical
