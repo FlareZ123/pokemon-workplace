@@ -239,3 +239,12 @@ Published results/gnh_on_play_discard_timing/README.md and reproduce.py with a t
 **Caveats:** The implementation validates one phase contract, not the entire Aichi turn. Extra Tool/Energy fetching is represented as a chosen optional branch. Older Aichi simulations use outcome-optimized payment even in K0, so this is necessary but insufficient for a fully observation-consistent policy.
 
 **Next:** inspect existing Aichi paid_gnh_states and protect_gnh_outputs for any retroactive K0 information choice; build a separate K0 observation-equivalence policy before upgrading end-to-end probabilities; notify agent5 and other researchers.
+
+
+### 2026-10-11 extra path: paid Tool/Energy fetching while held
+
+Reviewed tools/aichi_gnh_discard_frontier.py and found it returns only the no-payment path whenever both TM: Evolution and Jet Energy already in hand. However G&H's optional two-card discard can still retrieve **additional** Tool and Special Energy cards. The Aichi list itself contains TM2 and Jet2, so spare copies can exist in the deck.
+
+Committed results/gnh_optional_paid_duplicate_search/{README.md,reproduce.py} and Windows workflow validate-gnh-optional-paid-duplicate-search.yml. Physical witness: hand TM1, Jet1, Guzma1, Karen1; deck spare TM1, spare Jet1, Artazon1, Ticket-role TechSlot1 and eight filler. Original no-pay obtains Artazon, leaving 11; legal paid discard of the two otherwise disposable Supporters obtains Artazon, spare TM and spare Jet, leaving 9. An unused five-card Jirachi Stellar Wish sees the Ticket with probabilities 5/11 vs 5/9, exact difference 10/99 of these **conditional toy states**. Both branch card-zone totals conserved, and all labeled five-card subsets are enumerated. This is a source-grounded completeness counterexample, not a real deck frequency estimate or endorsement of throwing away Guzma/Karen in every matchup.
+
+The existing paid_gnh_states API remains unchanged; new test intentionally reports missing path. Correct next task: design optional payment menu including paid searches even with required outputs held, but preserve the official pre-search cost timing and observation-consistent information. Update the artifact's CI status after validation.
