@@ -6,9 +6,11 @@ on:
       - "tools/arc_peonia_shoes_free.py"
       - "tools/arc_peonia_shoes_comparison.py"
       - "tools/arc_peonia_k0_shoes.py"
+      - "tools/arc_peonia_mixed_prior.py"
       - "results/arc_peonia_shoes_free/**"
       - "results/arc_peonia_shoes_tradeoff/**"
       - "results/arc_peonia_k0_item_frontier/**"
+      - "results/arc_peonia_mixed_prior/**"
       - "resources/cards/en/swsh11.json"
       - "resources/cards/en/swsh6.json"
       - ".github/workflows/validate-arc-peonia-shoes-free.yml"
@@ -31,3 +33,5 @@ jobs:
         run: python tools/arc_peonia_shoes_comparison.py
       - name: Verify 1225 K0 adaptive policy states
         run: python tools/arc_peonia_k0_shoes.py
+      - name: Verify 125 mixed-prior rational policies
+        run: python tools/arc_peonia_mixed_prior.py
