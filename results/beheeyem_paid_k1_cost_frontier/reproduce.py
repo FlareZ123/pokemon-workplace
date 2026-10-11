@@ -9,6 +9,7 @@ from beheeyem_paid_k1_cost_frontier import (
     early_source_cost_frontier,evaluate_frontier
 )
 from beheeyem_paid_k1_reward_prior import uncertain_reward_early_search
+from beheeyem_prelock_k1_search import search_window_probabilities
 
 
 def run():
@@ -22,9 +23,7 @@ def run():
     probes=0
     for prior in priors:
         f=early_source_cost_frontier(prior)
-        assert f["total_physical_payable_mass"]==Fraction(
-            344381894833,740972473208
-        )
+        assert f["total_physical_payable_mass"]==search_window_probabilities(2)["paid_search_feasible"]
         assert len(f["segments"])==f["num_positive_benefits"]+1
         assert f["max_positive_benefit"]>0
         previous_mass=None
