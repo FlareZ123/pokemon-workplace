@@ -1,0 +1,28 @@
+name: Validate three Supporter information envelope
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/multi_action_information_envelope.py"
+      - "tools/prize_three_supporter_choice.py"
+      - "tools/prize_informed_iono_n_choice.py"
+      - "tools/iono_n_access_comparison.py"
+      - "tools/hand_return_payment_frontier.py"
+      - "tools/binary_choice_information_gap.py"
+      - "results/three_supporter_information_envelope/**"
+      - ".github/workflows/validate-agent2-three-supporter-envelope.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate exact action information and Supporter composition
+        run: python results/three_supporter_information_envelope/reproduce.py
