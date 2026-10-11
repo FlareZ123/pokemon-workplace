@@ -58,6 +58,17 @@ A state-merging implementation can use the following progression:
 
 In a more general engine, event history, public and private observations, lock states, phase boundaries, and opponent reactions may matter even when the materialized board and zone counts coincide.
 
+
+## Multiple guarded actions and simultaneous feasibility
+
+The [multi-guard extension](../bench_multi_guard_action_equivalence/) generalizes the one-Ability result to multiple optional actions. A subset of actions `U` can be performed at the intermediate stage only if the union of their prerequisite Pokémon `G_U` fits inside the **same** intermediate survivor set. If `R(n,a,b,d)` is the earlier single-guard reachable-final-set function, then for distinguishable independent action effects:
+
+`Q = sum_{U subseteq actions} R(n,a,b,|G_U|)`.
+
+This formula properly accounts for shared prerequisites and prevents false action combinations when the union exceeds intermediate capacity. In a source-grounded, abstract eight-Bench witness with disjoint Lunatone/Solrock and Regigigas-plus-five-Regis guards, 8→7→5 gives 336 action-annotated histories and **148** full terminal states. In particular, 36 purported combined-action states would be impossible if one naively combined independently reachable effects. An independent exhaustive oracle checked **27,172** configurations with zero, one or two guard actions for all Bench sizes up to five. [Windows CI 38133033085 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38133033085).
+
+This result assumes fixed and distinguishable resource effects for each selected action, with no other action costs or contention. For actual play, named guard geometry must be composed with source positions, Ability and Supporter quotas, resource-payment constraints, applicable locks and the action window.
+
 ## Open questions
 
 - Can the existing action/Ability execution compiler automatically produce a minimal set of state dimensions needed for safe contraction quotients?
