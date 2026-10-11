@@ -1,0 +1,25 @@
+name: Validate physical Quick Ball search option
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/physical_quick_ball_search_option.py"
+      - "tools/physical_supporter_menu.py"
+      - "tools/multi_action_information_envelope.py"
+      - "results/physical_quick_ball_search_option/**"
+      - ".github/workflows/validate-agent2-physical-quick-ball.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Independently enumerate payable Quick Ball and post-search actions
+        run: python results/physical_quick_ball_search_option/reproduce.py
