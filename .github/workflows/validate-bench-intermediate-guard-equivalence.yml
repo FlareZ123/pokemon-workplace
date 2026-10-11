@@ -1,0 +1,21 @@
+name: Validate intermediate guard equivalence formula
+
+on:
+  push:
+    paths:
+      - tools/bench_intermediate_guard_equivalence.py
+      - .github/workflows/validate-bench-intermediate-guard-equivalence.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Exact formulas against 1155 independent small cases
+        run: python tools/bench_intermediate_guard_equivalence.py --self-test
+      - name: Print five and eight slot examples
+        run: python tools/bench_intermediate_guard_equivalence.py
