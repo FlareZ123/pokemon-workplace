@@ -57,7 +57,7 @@ Each stage must be evaluated with physical Prize cards, card locations, real sea
 
 ### 9. Hand-shuffle destination creates a Prize-dependent adversarial Supporter ranking
 
-- [Opposing Iono, N and Marnie reset comparison](../beheeyem_supporter_reset/) distinguishes N's full-hand shuffle into the deck from Iono/Marnie's bottom-of-deck placement. N and Iono redraw according to remaining Prizes; Marnie redraws four for the opponent regardless of Prize count. For B4/TAE4/Computer Search/d1, the three next-packet rates at r=0 are Iono 3.675774%, N 3.475483% and Marnie **2.019569%**; at r=2 they are Iono 2.019569%, N **1.881457%**, and Marnie 2.019569%. Across the complete finite 1,152-configuration grid, an opponent minimizing only this packet-access event would select **Marnie at r=0,1** and **N at r=2**. This is a narrow response rule, not global matchup strategy.
+- [Opposing Iono, N and Marnie reset comparison](../beheeyem_supporter_reset/) distinguishes N's full-hand shuffle into the deck from Iono/Marnie's bottom-of-deck placement. N and Iono redraw according to remaining Prizes; Marnie redraws four for the opponent regardless of Prize count. For B4/TAE4/Computer Search/d1, the three next-packet rates at r=0 are Iono 3.675774%, N 3.475483% and Marnie **2.019569%**; at r=2 they are Iono 2.019569%, N **1.881457%**, and Marnie 2.019569%. Across the complete finite 1,152-configuration grid, **among these three candidate Supporters**, an opponent minimizing only this packet-access event would select **Marnie at r=0,1** and **N at r=2**. See section 12 for the stronger Judge/Ace Trainer candidates. This is a narrow response rule, not global matchup strategy.
 
 
 
@@ -68,6 +68,10 @@ Each stage must be evaluated with physical Prize cards, card locations, real sea
 ### 11. Revealing Prize positions can make critical earned Prizes selectable
 
 - [Mapped face-up Prize selection](../beheeyem_mapped_prizes/) evaluates the information effect of Town Map (bw7-136), which makes Prize cards face-up. Under a free-information upper bound, choose an optimal r-card Prize subset before T3 random draws rather than selecting uniform face-down positions. B4/TAE4/Computer Search/d1: r=1 raises joint two-packet access from **1.125764% blind** to **2.926368% mapped**; r=2 raises it from **1.679597%** to **4.452270%**. Actual Town Map acquisition, card slot and Item-play costs are excluded, so these numbers are information ceilings. A subsequent opponent Iono/Marnie bottoming the newly chosen cards erases their immediate top-draw benefit within the current model.
+
+### 12. Expanded counterplay action set: Judge and Ace Trainer
+
+- [Judge and Ace Trainer opposing hand-reset frontier](../beheeyem_judge_ace_response/) expands the prior N/Iono/Marnie comparison to two more legal Supporters. Judge shuffles both hands **into** the deck and gives the Beheeyem player four cards. Ace Trainer is playable by the opponent only when it has **more Prizes remaining**, then gives Beheeyem three cards. For B4/TAE4/Computer Search/d1 at r=0, **Judge 1.899188%** narrowly outperforms Marnie 2.019569% as a disruption source; Ace Trainer is ineligible. At r=1, **Ace Trainer 1.198389%** is stronger than Judge 1.890141%, while N yields 2.647861%. For all 1,152 exact parameter configurations, including direct-first and paid-tutor-first branches separately, Judge is at least as disruptive as N/Marnie, and Ace Trainer is at least as disruptive as Judge when eligible. This **revises the three-candidate best-response statement** in section 9. It still ignores the opponent's actual Supporter access and own Prize count beyond an assumed six remaining.
 
 ## What has been proved versus assumed
 
