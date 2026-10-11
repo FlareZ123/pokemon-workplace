@@ -78,6 +78,17 @@ For a five-to-four-to-three Bench contraction, this changes the total complete t
 
 This model assumes the Supporter effects are independently available and distinguishable; it is a general action-history geometry result rather than a simulation of printed Supporter effects or setup frequency.
 
+
+## Probability-preserving quotients under a specified discard policy
+
+The [guard-history posterior](../bench_guard_history_posterior/) supplies exact weights when a simulator compresses earlier Bench decisions under the special assumption that each forced contraction chooses uniformly among legal survivor subsets. Given `n→a→b`, final survivor set `S`, and guard `G`, write `g=|G\\S|` for the number of prerequisites lost by the final stage. The probability that the guard was jointly present at the intermediate stage is
+
+`P(G subseteq intermediate | S) = C(n-b-g,a-b-g) / C(n-b,a-b)`.
+
+With a fixed probability `p` of executing an eligible action, this posterior gives exact weights `P(S,used)=P(S)*p*P(guard enabled|S)` and `P(S,skipped)=P(S)-P(S,used)`. The two uniform choice steps give `P(S)=1/C(n,b)`.
+
+For the 5→4→3 Lunatone/Solrock guard, retaining two, one or zero prerequisites in the final three gives posterior availability **100%, 50%, 0%**, and the unconditioned intermediate-availability probability is **3/5**. This probabilistic claim is contingent on the hypothetical uniform-discard policy and payment-ready action state, with no assumption about competitive player choice. Independent subset oracles verified **18,943** cases, [Windows CI 38133534623 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38133534623).
+
 ## Open questions
 
 - Can the existing action/Ability execution compiler automatically produce a minimal set of state dimensions needed for safe contraction quotients?
