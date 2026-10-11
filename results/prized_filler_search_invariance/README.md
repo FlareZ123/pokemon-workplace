@@ -48,6 +48,69 @@ least `s` unmarked cards, even when no named source is Prized.
 Beyond that boundary, sampling may exhaust the deck and a
 different, saturated expression is required.
 
+## Stronger statement: the entire observation subset is uniform
+
+The single-target theorem is a corollary of a stronger result.
+After removing every available named non-target source, the
+**entire unordered `s`-card observation** is a uniform subset
+of the `M=U-c` originally unseen non-source physical cards,
+regardless of the uniform Prize count `P`, provided
+`s<=M-P` and the search/removal policy does not depend on
+hidden identities among those non-source cards.
+
+For any particular subset `A` of `s` non-source cards,
+condition on `j` of the named sources being Prized and
+write `r=P-j`. The Prizes select `r` among `M` uniformly.
+The probability that none of the `s` selected cards is
+Prized equals `C(M-s,r)/C(M,r)`. Conditional on their
+survival, the remaining deck has `M-r` cards and the
+probability that the later uniform observation is exactly
+`A` is `1/C(M-r,s)`. Multiplying gives
+
+`Pr(observed exactly A | j)=1/C(M,s)`.
+
+This does not depend on `j`, so averaging over all
+possible Prized-source counts gives the same expression.
+Consequently **any payoff depending only on the observed
+card identities** can be averaged against a uniform
+`s`-subset of the `U-c` non-source pool, without
+simulating the Prize allocation.
+
+If `q` of the non-source cards are marked desirable
+targets, the exact probability of seeing `x` among
+the `s` observations is
+
+`C(q,x) C(M-q,s-x) / C(M,s)`.
+
+For two disjoint named groups, with `t` Ticket and
+`m` Map cards, the probability of **seeing at least
+one member of each group** is
+
+`1 - [C(M-t,s)+C(M-m,s)-C(M-t-m,s)]/C(M,s)`.
+
+For example, `M=49,s=5,t=2,m=1` gives exactly
+`65/3948` for *visibility of both groups*,
+independent of the feasible Prize count. Note that
+Jirachi's Stellar Wish obtains at most **one Trainer
+card** from the five observed cards, so this
+two-group *visibility* event is not simultaneous
+two-card acquisition.
+
+The expanded SFT enumerates entire physical top-`s`
+sets across small-deck Prize worlds and checks that
+each non-source subset has probability exactly
+`1/C(M,s)`. It independently tests the target-count
+hypergeometric law and the two-disjoint-groups
+inclusion-exclusion formula.
+
+The property can fail when sources are removed
+selectively as a function of hidden non-source
+information, after changing the deck via other
+non-exchangeable operations, or when too few cards
+remain for the requested observation. K1 policies
+that adapt to hidden Prize locations require a
+separate calculation.
+
 ## Concrete Guzma & Hala application
 
 The source-grounded [Aichi omitted-action example](../gnh_optional_paid_duplicate_search/)
