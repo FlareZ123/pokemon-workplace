@@ -72,3 +72,55 @@ def hypergeometric_by_prized_sources(
         hit_conditional = Fraction(seen, unprized_unmarked)
         value += prize_mass*survivor*hit_conditional
     return value
+
+
+def target_count_probability(
+    unseen: int, prizes: int, removed_names: int, seen: int,
+    targets: int, hits: int,
+) -> Fraction:
+    """Exactly hits of targets distinct from named removed sources are observed."""
+    exact(unseen, prizes, removed_names, seen)
+    m = unseen-removed_names
+    if not 0 <= targets <= m or not 0 <= hits <= min(targets,seen):
+        raise ValueError("Invalid target multiplicity")
+    return Fraction(
+        (comb(targets,hits) * comb(m-targets,seen-hits)
+         if 0 <= seen-hits <= m-targets else 0),
+        comb(m,seen),
+    )
+
+
+def two_type_visibility(
+    unseen: int, prizes: int, removed_names: int, seen: int,
+    first_count: int, second_count: int,
+) -> Fraction:
+    """Observe at least one of each of two disjoint, unremoved target classes."""
+    exact(unseen, prizes, removed_names, seen)
+    m = unseen-removed_names
+    if not (1 <= first_count and 1 <= second_count
+            and first_count+second_count <= m):
+        raise ValueError("Invalid target groups")
+
+    def pick(top: int) -> int:
+        return comb(top,seen) if top >= seen else 0
+
+    return Fraction(
+        (pick(m)-pick(m-first_count)-pick(m-second_count)
+         +pick(m-first_count-second_count)),comb(m,seen),
+    )
+
+
+def physical_subset_distribution(
+    unseen: int, prizes: int, removed_names: int, seen: int,
+) -> dict[tuple[int, ...], Fraction]:
+    """Enumerate physical Prize and Wish sets, weighting every Prize world equally."""
+    exact(unseen, prizes, removed_names, seen)
+    result: dict[tuple[int, ...], Fraction] = {}
+    worlds = comb(unseen,prizes)
+    for prize in combinations(range(unseen),prizes):
+        prized = set(prize)
+        deck = tuple(i for i in range(removed_names,unseen) if i not in prized)
+        p_each = Fraction(1,worlds*comb(len(deck),seen))
+        for observed in combinations(deck,seen):
+            result[observed] = result.get(observed,Fraction(0))+p_each
+    return result
