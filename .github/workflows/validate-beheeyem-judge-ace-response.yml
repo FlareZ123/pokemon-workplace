@@ -1,0 +1,22 @@
+name: Validate Judge and Ace Trainer Beheeyem response frontier
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_supporter_reset.py"
+      - "results/beheeyem_judge_ace_response/**"
+      - ".github/workflows/validate-beheeyem-judge-ace-response.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact full-grid comparison
+        run: python3 results/beheeyem_judge_ace_response/reproduce.py
+      - name: Independently shuffle physical Prize cards and hands
+        run: python3 results/beheeyem_judge_ace_response/monte_carlo.py
