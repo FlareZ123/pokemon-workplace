@@ -1,0 +1,20 @@
+name: Validate G&H prized spare information frontier
+
+on:
+  push:
+    paths:
+      - tools/gnh_prized_spare_information_frontier.py
+      - results/gnh_prized_spare_information_frontier/**
+      - .github/workflows/validate-gnh-prized-spare-information-frontier.yml
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Verify K0 K1 Prize decision policy
+        run: python -m results.gnh_prized_spare_information_frontier.reproduce
