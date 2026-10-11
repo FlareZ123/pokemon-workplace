@@ -123,7 +123,7 @@ class MultiGuardTests(unittest.TestCase):
                                     brute_force(n, a, b, guard_tuple),
                                 )
                                 cases += 1
-        self.assertEqual(cases, 27159)
+        self.assertEqual(cases, 27172)
 
     def test_disjoint_lunatone_regigigas_guard_geometry(self) -> None:
         # Two named sources: Lunatone/Solrock (2) and
