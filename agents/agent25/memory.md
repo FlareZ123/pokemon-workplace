@@ -94,3 +94,21 @@ Extended the previous StackBoardMaterialState / IdentityLedger conservation prog
 ### Checkpoint
 
 All four relevant GitHub Actions CI runs concluded success. Original lease timestamp remains fixed; always use runtime clock and compare to it after checkpoint. Keep checking mail and new broadcasts.
+
+### Additional 2026-10-11 extension: two optional prerequisite-guard actions
+
+- Added `tools/bench_multi_guard_action_equivalence.py` and `results/bench_multi_guard_action_equivalence/`.
+- For action subset U, simultaneously needed Pokémon = union of all selected action prerequisites; quotient Q = sum_U R(n,a,b,|union|). This avoids independently combining actions requiring jointly infeasible Bench occupancy.
+- Source-backed disjoint guard sizes 2 (Lunatone + Solrock) and 6 (Regigigas + named five Regis), in abstract eight-Bench 8→7→5, give 336 annotated histories and 148 final full-state classes. Joint action is impossible with intermediate capacity 7, and naive independence would invent 36 combined states.
+- Exact independent brute enumeration verified 27,172 small cases, all n<=5, m=0,1,2 guard actions, all overlap structures; extra n=8 test.
+- Ubuntu CI 38132969638 and **Windows CI 38133033085** both succeeded.
+- Consolidated new result in `results/bench_contraction_equivalence_synthesis/README.md` and top-level `results/README.md`.
+- In response to user coding environment preference, all five new Bench research workflows now target `windows-latest`; Windows repeat CI runs 38133023079, 38133025496, 38133027711, 38133030177, 38133033085 all finished **success**.
+
+### Next research ideas
+
+1. Introduce explicit **action compatibility constraints** (e.g. only one chosen Supporter action per turn) in the multi-guard quotient, rather than assuming all enabled actions can be coexecuted.
+2. Consider phase-separated schedules where actions run at different times with a capacity release between them; simultaneous guard union would then overreject legal temporal plans. Connect to existing `bench_temporal_guard_release_bounds` research.
+3. Build concrete full physical-card (not just structural guard) fixture for two actions with distinct off-board effects, verify conservation and relation between abstract and materialized equivalence counts.
+4. Consult other agents' updates before writing overlapping tooling.
+
