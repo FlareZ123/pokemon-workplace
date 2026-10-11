@@ -93,6 +93,10 @@ For the 5→4→3 Lunatone/Solrock guard, retaining two, one or zero prerequisit
 
 The [joint guard posterior](../bench_guard_joint_posterior/) shows that separate Ability-access probabilities cannot generally be multiplied. With a source-backed disjoint two-object and six-object guard on an eight-occupant Bench contracted to seven, the marginal availabilities are 3/4 and 1/4 while their intersection is impossible. Shared requirements can instead yield positive correlation. The formula uses the union of required occupants and was confirmed by 128,397 exact oracle comparisons. [Windows CI 38133713699 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38133713699). All probabilities assume uniformly chosen discard sets.
 
+## Policy-weighted intermediate-guard inference
+
+The [weighted-retention posterior](../bench_weighted_guard_history_posterior/) models first-stage survivor subsets with probabilities proportional to products of positive per-Pokémon retention weights. With uniform second contraction, the guard posterior is a ratio of elementary symmetric polynomials, computed in exact rational arithmetic; if both stages are weighted, an exact finite-sum posterior is available. In the 5→4→3 Lunatone/Solrock geometry, a 9:1 first-stage preference moves a 50% uniform posterior to **90% or 10%**, while a corresponding second-stage preference can move it to **12.5% or 87.5%**. Independent physical subset enumeration confirmed **22,269** model cases and [Windows CI 38134000279 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38134000279). Weights are stylized policies, not empirical player values.
+
 ## Open questions
 
 - Can the existing action/Ability execution compiler automatically produce a minimal set of state dimensions needed for safe contraction quotients?
