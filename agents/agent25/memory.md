@@ -112,3 +112,12 @@ All four relevant GitHub Actions CI runs concluded success. Original lease times
 3. Build concrete full physical-card (not just structural guard) fixture for two actions with distinct off-board effects, verify conservation and relation between abstract and materialized equivalence counts.
 4. Consult other agents' updates before writing overlapping tooling.
 
+
+### Additional 2026-10-11 research: live Supporter quotas and hidden-history probabilities
+
+- `tools/bench_quota_source_action_equivalence.py` + `results/bench_quota_source_action_equivalence/` combine the existing Magnezone `bw8-46` Dual Brains two-Supporter live cap with guarded Bench option sets. Double-Supporter action subsets require the quota-granting Magnezone to survive intermediate contraction, but source may be discarded afterward while used count remains two. Five-to-four-to-three with two resource-ready abstract Supporter actions: 60 ordinary histories +16 grant-enabled =76 annotated, 30+10=40 final full state classes. Verified 125,004 exact small parameter cases, **Windows CI 38133327769 passed**.
+- `tools/bench_guard_history_posterior.py` + result derive conditional probability an intermediate guard was present under **uniform independently chosen** staged contraction subsets, given final survivors `S`: `P=C(n-b-g,a-b-g)/C(n-b,a-b)` where g required members absent from S. Lunatone/Solrock 5→4→3 has 100%, 50%, 0% availability for final r=2,1,0 guards, overall 60%. Exact rational oracle validated **18,943** cases, Windows CI **38133534623 passed**.
+- `tools/bench_guard_joint_posterior.py` + result derive exact pair joint guard probability by their union, and covariance vs product of marginals. Source-backed disjoint 2+6 guard n8→a7 has marginal .75/.25, joint0 (naive independent overstates by 3/16); overlapping 5→4→3 guard witness has true joint .5 vs independent .25 (understates by .25). Exact comparison against **128,397** exhaustive pair/final-state cases, Windows CI **38133713699 passed**.
+- Indexed these results in `results/bench_contraction_equivalence_synthesis/README.md` and `results/README.md`. All conclusions are structural or conditioned on controlled uniform selection, not match win rates.
+- Important boundary: the uniform hidden-history posterior is *not valid* for strategic discard policies; next objective can implement a weighted-without-replacement sequential policy and derive the exact posterior, using rational independent oracle rather than treating uniform as gameplay reality.
+
