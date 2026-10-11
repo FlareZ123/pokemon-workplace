@@ -86,7 +86,7 @@ def main() -> None:
     assert values(0,Fraction(10,99)).information_value == 0
     print("PASS: exact P2 lambda=1/10 K0 and K1 values")
     print("PASS: maximum K1 option premium at the K0 action-switch cost")
-    print("P2 λ=1/10 K0:",v.k0,"K1:",v.k1,
+    print("P2 lambda=1/10 K0:",v.k0,"K1:",v.k1,
           "information premium:",v.information_value)
 
 
