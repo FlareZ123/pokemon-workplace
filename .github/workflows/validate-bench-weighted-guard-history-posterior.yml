@@ -1,0 +1,23 @@
+name: Validate weighted Bench guard-history posterior
+
+on:
+  push:
+    paths:
+      - tools/bench_weighted_guard_history_posterior.py
+      - tools/bench_guard_history_posterior.py
+      - tools/bench_intermediate_guard_equivalence.py
+      - .github/workflows/validate-bench-weighted-guard-history-posterior.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify 22269 weighted subset posterior cases and two-stage selection
+        run: python tools/bench_weighted_guard_history_posterior.py --self-test
+      - name: Print policy-sensitivity counterexample
+        run: python tools/bench_weighted_guard_history_posterior.py
