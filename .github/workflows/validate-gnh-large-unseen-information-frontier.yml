@@ -1,0 +1,20 @@
+name: Validate G&H 52-card information frontier
+
+on:
+  push:
+    paths:
+      - tools/gnh_large_unseen_information_frontier.py
+      - results/gnh_large_unseen_information_frontier/**
+      - .github/workflows/validate-gnh-large-unseen-information-frontier.yml
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Test scaled G&H hidden-pool policy
+        run: python -m results.gnh_large_unseen_information_frontier.reproduce
