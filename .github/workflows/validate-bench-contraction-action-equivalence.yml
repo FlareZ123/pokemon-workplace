@@ -1,0 +1,23 @@
+name: Validate Bench action-sensitive equivalence
+
+on:
+  push:
+    paths:
+      - tools/bench_contraction_action_equivalence.py
+      - tools/bench_contraction_intermediate_action.py
+      - tools/bench_contraction_batch_conservation.py
+      - .github/workflows/validate-bench-contraction-action-equivalence.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Count exact optional-Lunar-Cycle physical endpoints
+        run: python tools/bench_contraction_action_equivalence.py --self-test
+      - name: Print equivalence census
+        run: python tools/bench_contraction_action_equivalence.py
