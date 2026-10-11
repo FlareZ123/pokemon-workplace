@@ -1,0 +1,23 @@
+name: Validate physical Bench contraction confluence
+
+on:
+  push:
+    paths:
+      - tools/bench_contraction_physical_confluence.py
+      - tools/bench_contraction_batch_conservation.py
+      - tools/batch_zone_exit_conservation.py
+      - .github/workflows/validate-bench-contraction-physical-confluence.yml
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Exhaustive staged-contraction physical equality
+        run: python tools/bench_contraction_physical_confluence.py --self-test
+      - name: Print path-merging census
+        run: python tools/bench_contraction_physical_confluence.py
