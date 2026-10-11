@@ -1,0 +1,22 @@
+name: Validate Basic-conditioned opposing Supporter access
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_opponent_supporter_access.py"
+      - "results/beheeyem_opponent_supporter_access/**"
+      - ".github/workflows/validate-beheeyem-opponent-supporter-access.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact physical availability and policy enumeration
+        run: python3 results/beheeyem_opponent_supporter_access/reproduce.py
+      - name: Independent sixty-card permutation simulation
+        run: python3 results/beheeyem_opponent_supporter_access/monte_carlo.py
