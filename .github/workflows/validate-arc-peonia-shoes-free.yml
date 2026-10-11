@@ -4,7 +4,9 @@ on:
   push:
     paths:
       - "tools/arc_peonia_shoes_free.py"
+      - "tools/arc_peonia_shoes_comparison.py"
       - "results/arc_peonia_shoes_free/**"
+      - "results/arc_peonia_shoes_tradeoff/**"
       - "resources/cards/en/swsh11.json"
       - "resources/cards/en/swsh6.json"
       - ".github/workflows/validate-arc-peonia-shoes-free.yml"
@@ -23,3 +25,5 @@ jobs:
           python-version: "3.13"
       - name: Verify exact policy and access frontier
         run: python results/arc_peonia_shoes_free/reproduce.py
+      - name: Verify 150 Arc and Shoes substitution states
+        run: python tools/arc_peonia_shoes_comparison.py
