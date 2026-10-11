@@ -1,0 +1,22 @@
+name: Validate sequential paid Ultra Ball K1 search before Beheeyem lock
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_paid_k1_policy.py"
+      - "results/beheeyem_paid_k1_policy/**"
+      - ".github/workflows/validate-beheeyem-paid-k1-policy.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact opponent early K1 source vs paid zone-thinning decision
+        run: python3 results/beheeyem_paid_k1_policy/reproduce.py
+      - name: Physical Ultra Ball and later Judge Ace reshuffle
+        run: python3 results/beheeyem_paid_k1_policy/monte_carlo.py
