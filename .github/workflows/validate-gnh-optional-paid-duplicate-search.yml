@@ -1,0 +1,19 @@
+name: Validate G&H optional paid duplicate search
+
+on:
+  push:
+    paths:
+      - results/gnh_optional_paid_duplicate_search/**
+      - .github/workflows/validate-gnh-optional-paid-duplicate-search.yml
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Verify physical G&H payment branch
+        run: python -m results.gnh_optional_paid_duplicate_search.reproduce
