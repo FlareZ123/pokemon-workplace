@@ -1,0 +1,22 @@
+name: Validate exact target discard and redraw probability geometry
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/discard_target_hit_probability.py"
+      - "results/discard_target_hit_geometry/**"
+      - ".github/workflows/validate-discard-target-hit-geometry.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact all-small-decks count and counterexample
+        run: python3 results/discard_target_hit_geometry/reproduce.py
+      - name: Independent physical shuffle test
+        run: python3 results/discard_target_hit_geometry/monte_carlo.py
