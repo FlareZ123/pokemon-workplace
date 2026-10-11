@@ -1,0 +1,23 @@
+name: Validate Basic-valid Item discard payability
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/basic_valid_item_payment_geometry.py"
+      - "results/basic_valid_item_payment_geometry/**"
+      - ".github/workflows/validate-agent2-basic-valid-item-payment.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exhaustive labeled first-turn Item-payment tests
+        run: python results/basic_valid_item_payment_geometry/reproduce.py
