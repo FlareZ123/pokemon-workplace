@@ -1,0 +1,21 @@
+name: Validate exact cost policy for early paid Ultra Ball K1
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_paid_k1_reward_prior.py"
+      - "tools/beheeyem_paid_k1_cost_frontier.py"
+      - "results/beheeyem_paid_k1_cost_frontier/**"
+      - ".github/workflows/validate-beheeyem-paid-k1-cost-frontier.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify exact willingness-to-pay threshold frontier
+        run: python3 results/beheeyem_paid_k1_cost_frontier/reproduce.py
