@@ -82,8 +82,8 @@ def main() -> None:
     witness = Action(("Guzma", "Karen"), "Artazon",
                      "Technical Machine: Evolution", "Jet Energy")
     assert any(out.action == witness for out in new)
-    assert all(out.action != witness for out in
-               [Action(p.paid_with, None, None, None) for p in old])
+    assert all(Action(p.paid_with, None, None, None) != witness
+               for p in old)
     no_pay = [out for out in new if out.action.paid_with is None]
     assert all(out.action.tool is None and out.action.special_energy is None
                for out in no_pay)
