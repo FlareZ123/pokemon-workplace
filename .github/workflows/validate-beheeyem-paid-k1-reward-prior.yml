@@ -1,0 +1,20 @@
+name: Validate opponent early K1 purchase without future reward foresight
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_paid_k1_reward_prior.py"
+      - "results/beheeyem_paid_k1_reward_prior/**"
+      - ".github/workflows/validate-beheeyem-paid-k1-reward-prior.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Verify exact uncertain future Prize policy against degenerate oracle
+        run: python3 results/beheeyem_paid_k1_reward_prior/reproduce.py
