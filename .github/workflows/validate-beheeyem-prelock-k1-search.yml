@@ -1,0 +1,22 @@
+name: Validate Ultra Ball early paid K1 access under impending Item lock
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_prelock_k1_search.py"
+      - "results/beheeyem_prelock_k1_search/**"
+      - ".github/workflows/validate-beheeyem-prelock-k1-search.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Independent exact opener and draw enumeration
+        run: python3 results/beheeyem_prelock_k1_search/reproduce.py
+      - name: Independent physical shuffled Item-lock access oracle
+        run: python3 results/beheeyem_prelock_k1_search/monte_carlo.py
