@@ -31,12 +31,12 @@ Let k=max(0,a-1) be the number of newly identified Prize positions from a Arcs w
 \[
 P = \sum_{j=\max(0,k-n+q)}^{\min(k,q)}
 \frac{\binom{q}{j}\binom{n-q}{k-j}}{\binom{n}{k}}
-\frac{\binom{m-j}{q-j}}{\binom{n-k}{q-j}},
+\frac{\binom{\min(m-j,n-k)}{q-j}}{\binom{n-k}{q-j}},
 \]
 
 where any impossible combination contributes zero.
 
-The first fraction is the probability of observing j targets among the k physically inspected positions. The second is the probability that the remaining q-j target positions lie among the m-j still-available Peonia selections in the uninspected pool.
+The first fraction is the probability of observing j targets among the k physically inspected positions. The second is the probability that the remaining q-j target positions lie among up to min(m-j,n-k) still-available Peonia selections in the uninspected pool.
 
 This formula depends on the joint goal. Counting the union of observed and Peonia-selected positions and then applying a one-target argument overstates the probability of acquiring multiple targets because identified targets consume the same finite retrieval slots.
 
