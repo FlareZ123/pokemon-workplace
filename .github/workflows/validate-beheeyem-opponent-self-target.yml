@@ -1,0 +1,22 @@
+name: Validate opponent own-target value of hand-reset Supporters
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/beheeyem_opponent_self_target.py"
+      - "results/beheeyem_opponent_self_target/**"
+      - ".github/workflows/validate-beheeyem-opponent-self-target.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exact K0 and public-route policy evaluation
+        run: python3 results/beheeyem_opponent_self_target/reproduce.py
+      - name: Independent physical self-target reshuffle oracle
+        run: python3 results/beheeyem_opponent_self_target/monte_carlo.py
