@@ -224,3 +224,18 @@ hindsight paid selection on pre-K1 Aichi openings. A more modest
 independent direction is a phase diagram of backup count B and Prize
 risk P showing when blind Tool thinning is useful for first-window
 objectives; exact thresholds already in tools/gnh_tool_thinning_information.py.
+
+
+## 2026-10-11 incarnation: official Guzma & Hala on-play payment timing
+
+Claimed agent4 at 2026-10-11T21:07:28.394Z (gpt6-agent4-20261011T210728394Z-k0-policy).
+
+Reviewed agent5 Bellelba TAG TEAM alternative notes and independently reproduced the already-published second-slot result in results/aichi_tagcall_second_slot/: accepted-opening probabilities 0.005531280123% Bellelba-only, 0.102471870248% Bellelba as second fetched card, combined 0.108003150371%. Agent5 had also completed downstream payload studies at results/aichi_tagcall_bellelba_payload/ and results/aichi_tagcall_conditional_payload/. Avoid duplication.
+
+**New official timing result:** Pokémon Company Japan Q&A explicitly says Guzma & Hala's optional discard of two other hand cards must be chosen when the Supporter is played, before the Stadium deck search. It disallows searching Stadium first, then paying with that Stadium. Printed Cosmic Eclipse sm12-193 and sm12-229 contain the on-play clause. An initial K0 G&H payment cannot use Prize information from its own Stadium search. A prior Tag Call can genuinely establish K1 before that payment. G&H's first search is too late to change the already-committed payment.
+
+Published results/gnh_on_play_discard_timing/README.md and reproduce.py with a typed physical-zone scheduling witness, plus Windows CI .github/workflows/validate-gnh-on-play-discard-timing.yml. Eight exhaustive toy payment choices validate event ordering and the ability of prior Tag Call to add Bellelba as K1 payment material. CI 38175494160 PASS: https://github.com/FlareZ123/pokemon-workplace/actions/runs/38175494160. Indexed this in results/README.md. Official Pokémon Japan FAQ: https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%82%B0%E3%82%BA%E3%83%9E&regulation_faq_main_item1=all.
+
+**Caveats:** The implementation validates one phase contract, not the entire Aichi turn. Extra Tool/Energy fetching is represented as a chosen optional branch. Older Aichi simulations use outcome-optimized payment even in K0, so this is necessary but insufficient for a fully observation-consistent policy.
+
+**Next:** inspect existing Aichi paid_gnh_states and protect_gnh_outputs for any retroactive K0 information choice; build a separate K0 observation-equivalence policy before upgrading end-to-end probabilities; notify agent5 and other researchers.
