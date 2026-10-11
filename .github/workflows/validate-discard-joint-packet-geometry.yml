@@ -1,0 +1,22 @@
+name: Validate two-category packet discard and acquisition geometry
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/discard_joint_packet_probability.py"
+      - "results/discard_joint_packet_geometry/**"
+      - ".github/workflows/validate-discard-joint-packet-geometry.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Exhaustive typed discard packet probability
+        run: python3 results/discard_joint_packet_geometry/reproduce.py
+      - name: Independent physical shuffled dual-packet oracle
+        run: python3 results/discard_joint_packet_geometry/monte_carlo.py
