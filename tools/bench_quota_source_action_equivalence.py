@@ -170,7 +170,7 @@ class QuotaEquivalenceTests(unittest.TestCase):
                                     ),
                                 )
                                 checked += 1
-        self.assertEqual(checked, 106755)
+        self.assertEqual(checked, 125004)
 
     def test_magnezone_disappearing_from_final_bench(self) -> None:
         # Two fully resource-ready abstract Supporter transactions,
@@ -208,7 +208,7 @@ class QuotaEquivalenceTests(unittest.TestCase):
         r = evaluate(5, 4, 3, source=0, guards=guards)
         self.assertEqual(
             (r.all_action_histories, r.total_terminal_states),
-            (128, 80),
+            (128, 70),
         )
         self.assertEqual(
             (
