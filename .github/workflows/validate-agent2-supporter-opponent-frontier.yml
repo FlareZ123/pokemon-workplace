@@ -1,0 +1,25 @@
+name: Validate opponent-weighted Supporter frontier
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/supporter_opponent_tradeoff_frontier.py"
+      - "tools/multi_action_information_envelope.py"
+      - "tools/prize_three_supporter_choice.py"
+      - "results/supporter_opponent_weight_frontier/**"
+      - ".github/workflows/validate-agent2-supporter-opponent-frontier.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate opponent-marginalized exact weight crossings
+        run: python results/supporter_opponent_weight_frontier/reproduce.py
