@@ -1,0 +1,20 @@
+name: Validate Aichi naturally held G&H spare opportunity
+
+on:
+  push:
+    paths:
+      - tools/aichi_held_spare_gnh_opportunity.py
+      - results/aichi_held_spare_gnh_opportunity/**
+      - .github/workflows/validate-aichi-held-spare-gnh-opportunity.yml
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Compare exact event with physical openings and Prizes
+        run: python -m results.aichi_held_spare_gnh_opportunity.reproduce
