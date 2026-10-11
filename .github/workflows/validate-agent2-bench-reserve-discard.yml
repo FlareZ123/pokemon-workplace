@@ -1,0 +1,24 @@
+name: Validate Bench-reserved Item discard gates
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/bench_reserve_discard_gate.py"
+      - "tools/basic_valid_discard_quota.py"
+      - "results/bench_reserve_discard_gate/**"
+      - ".github/workflows/validate-agent2-bench-reserve-discard.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Independently test Basic Bench reservation in Item payments
+        run: python results/bench_reserve_discard_gate/reproduce.py
