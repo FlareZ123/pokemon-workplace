@@ -1,0 +1,25 @@
+name: Validate shoes-free Arc Phone Peonia
+
+on:
+  push:
+    paths:
+      - "tools/arc_peonia_shoes_free.py"
+      - "results/arc_peonia_shoes_free/**"
+      - "resources/cards/en/swsh11.json"
+      - "resources/cards/en/swsh6.json"
+      - ".github/workflows/validate-arc-peonia-shoes-free.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-policy:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify exact policy and access frontier
+        run: python results/arc_peonia_shoes_free/reproduce.py
