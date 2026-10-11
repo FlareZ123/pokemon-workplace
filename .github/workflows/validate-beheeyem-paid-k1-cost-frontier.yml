@@ -19,3 +19,5 @@ jobs:
       - uses: actions/checkout@v7
       - name: Verify exact willingness-to-pay threshold frontier
         run: python3 results/beheeyem_paid_k1_cost_frontier/reproduce.py
+      - name: Verify source-buying thresholds across denial weights
+        run: python3 results/beheeyem_paid_k1_cost_frontier/reproduce_lambda.py
