@@ -12,6 +12,7 @@ on:
       - "tools/arc_peonia_two_dimensional_phases.py"
       - "tools/arc_peonia_zone_information_premium.py"
       - "tools/arc_peonia_multi_target.py"
+      - "tools/arc_peonia_multi_target_shoes.py"
       - "results/arc_peonia_shoes_free/**"
       - "results/arc_peonia_shoes_tradeoff/**"
       - "results/arc_peonia_k0_item_frontier/**"
@@ -55,3 +56,5 @@ jobs:
         run: python tools/arc_peonia_zone_information_premium.py
       - name: Verify simultaneous Prized target retrieval geometry
         run: python tools/arc_peonia_multi_target.py
+      - name: Validate joint-target acquisition with both Item classes
+        run: python tools/arc_peonia_multi_target_shoes.py
