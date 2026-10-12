@@ -105,6 +105,8 @@ jobs:
         run: node simulation/twinleaf/test-regidrago-celestial-roar.cjs
       - name: Verify live match installs legal Underworld Door target guard
         run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
+      - name: Verify lock-guarded atomic JSON artifact writer
+        run: node simulation/twinleaf/test-report-atomic.cjs
       - name: Probe complete 60-card tournament decks through pinned live engine
         timeout-minutes: 4
         env:
@@ -112,4 +114,12 @@ jobs:
           TWINLEAF_DECK_B: ${{ inputs.deck_b }}
           TWINLEAF_SEEDS: ${{ inputs.seeds }}
           TWINLEAF_TACTIC_ORDER: ${{ inputs.tactic_order }}
+          TWINLEAF_REPORT_PATH: tournament-match-report.json
         run: node simulation/twinleaf/tournament-bounded-match.cjs
+      - name: Save immutable run manifest and raw paired traces
+        uses: actions/upload-artifact@v4
+        with:
+          name: twinleaf-matchup-report
+          path: tournament-match-report.json
+          if-no-files-found: error
+          retention-days: 30
