@@ -39,3 +39,5 @@ Reproduce from repository root: `python -m results.regidrago_legacy_star_launch.
 ## Practical implication
 
 It is dangerous to describe the swapped list as unable to gust on T2 under Item lock after spending Guzma on T1. Legacy Star can rescue the situation, and the original Regidrago VSTAR engine has the potential to make this route accessible via its other search/draw tools. At the same time, the original's second Guzma improves the chance of naturally establishing the prerequisite first-turn Guzma plus T2 VSTAR line. The **published original remains the stronger evidence-based competitive baseline**, and no representative-field win-rate advantage has been demonstrated for the swap.
+
+**Verification status:** [Windows GitHub Actions run 38249351068 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38249351068) on October 12, 2026.
