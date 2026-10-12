@@ -55,6 +55,10 @@ def search(
             continue
         if policy == "filler_only" and discard_index not in (OTHER_BASIC, 5):
             continue
+        if policy == "energy_only" and discard_index != 5:
+            continue
+        if policy == "energy_or_quickball" and discard_index not in (QUICK_BALL, 5):
+            continue
         after_payment = paid.copy()
         after_payment[discard_index] -= 1
         for target in BASIC_TYPES:
