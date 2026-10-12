@@ -29,9 +29,17 @@ Across scenarios the first-turn Guzma event itself occurs in **24.208012%** of v
 
 This **conditioning inversion** is an important lesson for deck optimization: the same accessible-card count and even a better conditional continuation can hide the loss of a scarce first-action prerequisite. It is an example of card-consumption and connector-substitution effects changing what the apparent gust redundancy means.
 
+## An important VSTAR recovery counterexample
+
+Regidrago VSTAR's printed **Legacy Star** Ability (`swsh12-136`) discards the top seven cards of the deck and may put up to two cards from the discard pile into hand, consuming that player's one VSTAR Power for the game. If Regidrago VSTAR is already in play on T2, its VSTAR Power is unspent, its Ability is not blocked, the player can legally use the effect, and **Supporter play on T2 is allowed**, Legacy Star can recover the Guzma spent on T1. That recovery is independent of whether Items are locked.
+
+The `legacy_ready=True` counterfactual therefore gives **100% follow-up conditional on having first-turn Guzma** in this restricted model, including Item lock: joint chain **24.208012%** for the original list and **12.825315%** for the swap. A Supporter lock still prohibits replay, so merely recovering Guzma does not create a second gust.
+
+**This materially qualifies the zero in the Item-locked row above.** Zero applies only to the named natural/VS Seeker/Prime/Counter sources when Legacy Star is excluded. It is *not* a statement that the real swapped Regidrago VSTAR deck has no Item-lock answer. This exogenous readiness flag is deliberately not assigned a probability. Establishing VSTAR on T2, retaining the one-use Power, avoiding Ability lock, and paying the resource/opportunity cost must be modeled before drawing deck-win conclusions.
+
 ## Verification and evidence
 
-The [exact mathematical engine](../../tools/regidrago_double_gust_access.py) enumerates physical hand-category multiplicities, then the first and second natural draws, and explicitly consumes one held Guzma before evaluating the second-turn source. It integrates the six random Prizes out using without-replacement exchangeability. The [independent reproducer](reproduce.py) instead enumerates a complete **labeled, tenable miniature game-zone deal**: three-card hand, two set-aside Prizes, ordered two-card draw, actual hand removal of the first Guzma, then checking the legal second-turn source. **16 independently enumerated small-deck scenarios agree exactly** with the Fraction solver, spanning the Guzma/VS Seeker/Prime/Counter distribution and Item/Supporter conditions.
+The [exact mathematical engine](../../tools/regidrago_double_gust_access.py) enumerates physical hand-category multiplicities, then the first and second natural draws, and explicitly consumes one held Guzma before evaluating the second-turn source. It integrates the six random Prizes out using without-replacement exchangeability. The [independent reproducer](reproduce.py) instead enumerates a complete **labeled, tenable miniature game-zone deal**: three-card hand, two set-aside Prizes, ordered two-card draw, actual hand removal of the first Guzma, then checking the legal second-turn source. **24 independently enumerated small-deck scenarios agree exactly** with the Fraction solver, spanning the Guzma/VS Seeker/Prime/Counter distribution and Item/Supporter conditions.
 
 The source regression checks the [full 60-card original and swapped list](../aichi_regidrago_gust_deadlines/), their conservative paper Expanded legality, and the physical `xy6-110` VS Seeker text: *put a Supporter card from your discard pile into your hand*. It does not treat an unspent or Prized Guzma as eligible for retrieval.
 
