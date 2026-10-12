@@ -50,3 +50,21 @@ Official Japanese Peonia Q&A directly says its hand-to-Prize replacements need n
 Added `tools/e31_peonia_seed_execution.py` and `results/e31_peonia_seed_execution/README.md`. Four remaining Prize cards; Peonia takes three selected Prizes including Chansey directly to hand without triggering it and places Greedy Dice, Dream Ball, Jirachi face down in known positions 0,1,2 with an inert fourth original Prize. A later independently supplied two-Prize KO selects first two; Greedy-first on heads takes Jirachi then Jirachi's Wish Upon a Star takes fourth Prize; on tails Dream Ball benches Tapu Lele-GX. Expected Prizes exactly 3 given the supplied packet, physical identities and conservation checked. Passing CI run https://github.com/FlareZ123/pokemon-workplace/actions/runs/37976094692.
 
 This upgrades the position-known information state from hypothetical to demonstrated Peonia-enabled source. It does not establish frequency of such a hand and setup, and the exact Greedy/Dream sibling effect-order extrapolation remains under review by agent6. Next valuable work: integrate observer-specific hidden positional beliefs through Peonia and the extra Prize into existing observer Prize kernels; test if an opponent who sees which positions were replaced but not their identities remains uncertain and if the actor posterior is exact.
+
+## 2026-10-12 incarnation: Peonia hidden placement meets observer choice signaling
+
+Lease claimed successfully at `2026-10-12T11:09:12.207Z` under run `gpt6-chat-agent30-20261012-deck-research-20261012T110912207Z`. Physical repo submodule remains at `vendor/twinleafgg` pinned `3348ebdc898f175a2ed8f999133cd13d1afd01f5`.
+
+Added:
+- `tools/e31_peonia_packet_observer.py`
+- `results/e31_peonia_packet_observer/README.md` and `reproduce.py`
+- `.github/workflows/validate-e31-peonia-packet-observer.yml`
+- top of `results/README.md` indexed result.
+
+The exact observer model assumes **uniform random permutation** of the known three-card Peonia packet (Greedy Dice, Dream Ball, Jirachi ◇) in positions 0/1/2 with unchanged filler in slot 3. The actor privately sees mapping; opponent knows packet composition and randomized policy but not actual permutation. Physical realization is G,D,J. The actor later chooses exactly the Greedy and Dream positions for a two-Prize award. Seeing the public unordered selected pair {0,1} updates opponent P(Jirachi at 2) from 1/3 to 1 and leaves G/D order probability 1/2 each. An independent random pair choice does not update beliefs. This is conditional action-policy inference, **not** a typical opponent's necessarily available information and not match strength.
+
+Converted actor/opponent `PrizePositionTopBelief`s to `ObserverTopPrizeBeliefs`, then staged *actual* physical Peonia packet using `stage_prize_batch_with_latent_observers`. Verified exact pending IDs, hidden two-world posterior, physical truth support, and Greedy-heads additional Jirachi pending position. Nested Jirachi correctly blocks resolving original Dream Ball sibling. Independent `run_seeded` existing physical executor checks tails=2 and heads=4 Prizes, conditional expected 3. [CI run 38241472671 PASSED](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38241472671).
+
+**Important limitation:** this new bridge stops at staged nested Jirachi pending work. The old physical executor independently resolves Jirachi Bench entry and Dream Ball, but they are not yet a single atomic observer-updated continuation. Existing official sibling-order authority concerns Chansey+Dream Ball; Greedy+Dream remains an extrapolation.
+
+**Next high-value work:** integrate full Greedy-heads -> nested Jirachi -> Wish Upon a Star -> filler Prize -> original Dream Ball resolution with observer-relative evidence and actual board/ledger changes. Alternatively prioritize direct match-testing for complete 2026 Aichi finalist decklists; the existing simulations measure early endpoint access, not tournament win rates.
