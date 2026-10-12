@@ -7,6 +7,8 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from board_position_state import BoardPokemon, PokemonCard, make_state
+from board_object_kernel import ToolAttachment, knock_out, make_board, make_pokemon
+from prize_destination_applicability import derive_knockout_prize_overrides
 from identity_materialization import (
     IdentityLedger,
     assert_conserved,
