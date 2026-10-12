@@ -164,3 +164,7 @@ HP changes dependent on Energy are not recomputed.
 
 Reproduction `results/physical_energy_backlash_reactions/`; CI
 `37771894219` passed. Links added in results/README.md.
+
+## 2026-10-12: Scrafty counter-stacking feasibility frontier
+
+Added `tools/reactive_counter_stack_frontier.py` and `results/reactive_counter_stack_frontier/` to source-validate Mega Scrafty ex `me2pt5-135`, Bench Spiritomb `me1-87`, Spiky Energy `sv9-159`, Punk Helmet `me2-92`, and Deluxe Bomb `sv7-134`. Exact static 5+4+8+12 = 29 counters ceiling; normal evolution/attachment timing makes the maximum costly. With ability lock the same state drops to 20, Tool suppression to 17, and combined to 8. The exhaustive 25-combination resource frontier per Tool class has no solution for 300 HP, and (3 Spiritomb,4 Spiky) is minimal for 280 HP with Deluxe. Source constraints and a Windows reproducer are committed. Never mistake this bounded reaction potential for deck effectiveness, and investigate material source survival through step 5, active attacker counter-prevention, and availability in actual playable 60s next.

@@ -1,0 +1,20 @@
+name: Verify Scrafty reactive counter stack
+on:
+  push:
+    paths:
+      - 'tools/reactive_counter_stack_frontier.py'
+      - 'results/reactive_counter_stack_frontier/**'
+      - '.github/workflows/validate-reactive-counter-stack-frontier.yml'
+      - 'tools/build_expanded_legality_baseline.py'
+      - 'resources/**'
+  workflow_dispatch:
+jobs:
+  source-and-frontier:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate source prints and exhaustive frontier
+        run: python results/reactive_counter_stack_frontier/reproduce.py
