@@ -1,0 +1,24 @@
+name: Validate Shadow Rider Dialga payload discard
+
+on:
+  push:
+    paths:
+      - "tools/shadow_rider_dialga_payload_discard.py"
+      - "tools/shadow_rider_treasure_discard_sensitivity.py"
+      - "results/shadow_rider_dialga_payload_discard/**"
+      - ".github/workflows/validate-shadow-rider-dialga-payload-discard.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-dialga-payload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify exact conditional Dialga identity and Active choices
+        run: python results/shadow_rider_dialga_payload_discard/reproduce.py
