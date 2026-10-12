@@ -1,0 +1,18 @@
+name: Validate 2026 Aichi top-32 opponent field plans
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check source counts and deterministic seat-swapped proxy assignment
+        run: python results/tests/aichi_2026_top32_field/reproduce.py
