@@ -1,0 +1,15 @@
+name: Validate Aichi Regidrago gust deadlines
+on:
+  workflow_dispatch:
+
+jobs:
+  exact-gust-access:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check source prints, variant legality, and exact physical oracles
+        run: python -m results.aichi_regidrago_gust_deadlines.reproduce
