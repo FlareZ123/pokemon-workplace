@@ -30,6 +30,7 @@ PAGES = {
     "mew-genesect": "mew",
     "mew-genesect-vip4-aichi-counterfactual": "mew_vip4",
     "regidrago-vstar": "regidrago",
+    "regidrago_dragapult_2": "regidrago_dragapult_2",
     "mega-absol-garbodor": "absol",
 }
 
@@ -78,6 +79,11 @@ def expected_catalog() -> dict[str, Counter[str]]:
     vip4["swsh8-225"] += 1
     vip4["me4-82"] -= 1
     expected["mew_vip4"] = vip4
+
+    doubled_dragon = expected["regidrago"].copy()
+    doubled_dragon["sv6-130"] += 1
+    doubled_dragon["swsh8-225"] -= 1
+    expected["regidrago_dragapult_2"] = doubled_dragon
 
     for family, cards in expected.items():
         if sum(cards.values()) != 60 or min(cards.values()) <= 0:
