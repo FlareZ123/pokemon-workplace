@@ -40,3 +40,5 @@ jobs:
         run: python -m results.mew_genesect_vip_opening.mew_vmax_ultra_frontier
       - name: Verify joint Mew V Genesect and VMAX material readiness
         run: python -m results.mew_genesect_vip_opening.joint_stage_ready_frontier
+      - name: Verify Trainers Mail Ultra Ball Stage retrieval option
+        run: python -m results.mew_genesect_vip_opening.trainer_mail_ultra_stage_frontier
