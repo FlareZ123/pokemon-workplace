@@ -1,0 +1,82 @@
+name: Twinleaf manual paired Aichi matchup
+
+on:
+  workflow_dispatch:
+    inputs:
+      deck_a:
+        description: First paper Expanded tournament reference deck
+        type: choice
+        required: true
+        default: shadow_rider
+        options:
+          - vileplume
+          - shadow_rider
+          - regidrago
+          - mew_genesect
+      deck_b:
+        description: Distinct second tournament reference deck
+        type: choice
+        required: true
+        default: regidrago
+        options:
+          - vileplume
+          - shadow_rider
+          - regidrago
+          - mew_genesect
+      seeds:
+        description: One to three distinct unsigned 32-bit seeds, comma-separated
+        type: string
+        required: true
+        default: '20261012'
+
+permissions:
+  contents: read
+
+jobs:
+  paired-matchup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout research revision without broken nested upstream submodule
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Initialize only pinned Twinleaf
+        run: git submodule update --init --depth=1 vendor/twinleafgg
+      - name: Set up pinned Twinleaf Node.js runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: vendor/twinleafgg/.nvmrc
+          cache: npm
+          cache-dependency-path: vendor/twinleafgg/ptcg-server/package-lock.json
+      - name: Install pinned server dependencies
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Restore pinned server compile
+        id: compiled
+        uses: actions/cache/restore@v4
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
+      - name: Compile pinned server if uncached
+        if: steps.compiled.outputs.cache-hit != 'true'
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: ./node_modules/.bin/tsc --project tsconfig.json
+      - name: Cache compiled server
+        if: steps.compiled.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
+      - name: Verify seat attribution, draws and censored outcomes
+        run: node simulation/twinleaf/test-paired-result-summary.cjs
+      - name: Verify deck and seed limits
+        run: node simulation/twinleaf/test-tournament-probe-settings.cjs
+      - name: Probe complete 60-card tournament decks through pinned live engine
+        timeout-minutes: 4
+        env:
+          TWINLEAF_DECK_A: ${{ inputs.deck_a }}
+          TWINLEAF_DECK_B: ${{ inputs.deck_b }}
+          TWINLEAF_SEEDS: ${{ inputs.seeds }}
+        run: node simulation/twinleaf/tournament-bounded-match.cjs
