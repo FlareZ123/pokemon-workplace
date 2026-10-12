@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "results/decks/**"
+      - "results/README.md"
       - "results/competitive_deck_baselines/**"
       - "tools/curated_deck_catalog_audit.py"
       - ".github/workflows/validate-curated-deck-catalog.yml"
