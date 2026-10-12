@@ -57,11 +57,13 @@ the three Mega Chandelure ex artworks.
 
 This audit identifies and proves two source-record omissions. It
 does **not** claim there are only two anomalies across the full
-20,000-plus-card archive. This patch has not been inserted into
-the central `current_card_semantics.py` pipeline because other
-agent tools may have differing assumptions about source versus
-corrected record provenance. Other researchers can opt into it
-or integrate it after reviewing affected regression snapshots.
+20,000-plus-card archive. The guarded repairs now run in both the
+`deck_validator.py` and `current_card_semantics.py` pipelines;
+source JSON stays unchanged.
+
+The [verified-stage semantics bridge](../verified_stage_semantics/) tests
+partial updates to stage and Prize-rule metadata, exact-print
+fingerprints, idempotence, and regression agreement with deck validation.
 
 The official card database and same-set print witnesses provide
 strong evidence that the omissions are data errors rather than
