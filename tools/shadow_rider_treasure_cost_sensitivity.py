@@ -16,7 +16,7 @@ from collections import Counter
 from fractions import Fraction
 from math import comb, prod
 
-from shadow_rider_heavy_ball_launch import COUNTS, allocations, classify
+from tools.shadow_rider_heavy_ball_launch import COUNTS, allocations, classify
 
 
 def treasure_two_vmax_hand_buckets(
