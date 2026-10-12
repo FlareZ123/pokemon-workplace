@@ -3,8 +3,8 @@ const assert = require('node:assert/strict');
 
 /**
  * Lightweight reporting boundary for the pinned Twinleaf Store.
- * All events are read from dispatched actions and real game state; evaluation
- * does not alter decisions or consume any random numbers.
+ * Capture the inputs before dispatch because the engine mutates a State in
+ * place. Neither capture nor observation changes decisions or uses RNG.
  */
 function makeMatchActionTelemetry() {
   const activity = [
@@ -19,19 +19,35 @@ function makeMatchActionTelemetry() {
   }
 
   /**
-   * @param {object} action Pinned live-engine action
-   * @param {object} before State before successful Store dispatch
-   * @param {object} after State after successful Store dispatch
+   * @param {object} action Native Twinleaf action
+   * @param {object} state Native Twinleaf State, before dispatch
+   * @returns {{turn:number,seat:number,prizes:number[],played_card:string|null}}
+   */
+  function capture(action, state) {
+    assert.equal(state.players.length, 2, 'Game must have two players');
+    const playerId = action.clientId ?? (action.type === 'PLAY_CARD_ACTION' ? action.id : undefined);
+    const seat = state.players.findIndex(player => player.id === playerId);
+    let playedCard = null;
+    if (seat >= 0 && action.type === 'PLAY_CARD_ACTION') {
+      const card = state.players[seat].hand.cards[action.handIndex];
+      assert.ok(card && typeof card.name === 'string', 'Played card must originate in hand');
+      playedCard = card.name;
+    }
+    return {turn: state.turn, seat, prizes: state.players.map(p => p.getPrizeLeft()),
+      played_card: playedCard};
+  }
+
+  /**
+   * Called only after the Store accepts the action.
+   * @param {object} action Native Twinleaf action
+   * @param {{turn:number,seat:number,prizes:number[],played_card:string|null}} before
+   * @param {object} after Native Twinleaf State after dispatch
    * @param {number} step Zero-based action index
    */
   function observe(action, before, after, step) {
     assert.ok(Number.isSafeInteger(step) && step >= 0);
-    assert.equal(before.players.length, 2);
     assert.equal(after.players.length, 2);
-
-    const playerId = action.clientId ?? (action.type === 'PLAY_CARD_ACTION' ? action.id : undefined);
-    const seat = before.players.findIndex(player => player.id === playerId);
-    const row = activity[seat];
+    const row = activity[before.seat];
 
     if (row) {
       if (action.type === 'ATTACK_ACTION') {
@@ -43,9 +59,7 @@ function makeMatchActionTelemetry() {
         assert.ok(typeof action.name === 'string' && action.name.length > 0);
         record(row.abilities, action.name);
       } else if (action.type === 'PLAY_CARD_ACTION') {
-        const card = before.players[seat].hand.cards[action.handIndex];
-        assert.ok(card && typeof card.name === 'string', 'Played card must originate in hand');
-        record(row.cards_played, card.name);
+        record(row.cards_played, before.played_card);
       } else if (action.type === 'RETREAT_ACTION') {
         row.retreats++;
       } else if (action.type === 'PASS_TURN') {
@@ -53,23 +67,21 @@ function makeMatchActionTelemetry() {
       }
     }
 
-    // A single resolution may take several Prizes; record one transition per
-    // affected player, preserving the before and after counts. Initial setup
-    // places the six Prizes and is deliberately excluded.
-    if (before.turn >= 1 && before.phase !== 1 && after.phase !== 1) {
+    // Prize setup is over before the first player turn. A single resolution
+    // can take multiple Prizes, so record counts for each player separately.
+    if (before.turn >= 1) {
       for (let i = 0; i < 2; i++) {
-        const prior = before.players[i].getPrizeLeft();
         const next = after.players[i].getPrizeLeft();
-        if (next !== prior) {
+        if (next !== before.prizes[i]) {
           prizeEvents.push({step, turn: before.turn, seat: i + 1,
-            prizes_before: prior, prizes_after: next});
+            prizes_before: before.prizes[i], prizes_after: next});
         }
       }
     }
   }
 
   return {
-    observe,
+    capture, observe,
     /** @returns {{by_seat:object[],prize_events:object[]}} */
     snapshot() {
       return {
@@ -84,4 +96,5 @@ function makeMatchActionTelemetry() {
     }
   };
 }
+
 module.exports = {makeMatchActionTelemetry};
