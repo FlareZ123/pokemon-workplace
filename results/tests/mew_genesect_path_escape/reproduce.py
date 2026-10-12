@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from collections import Counter
 from datetime import date
@@ -120,6 +121,36 @@ def verify_prints() -> None:
     assert sum(TRAINERS.values()) == 42
 
 
+def verify_candidate_manifest() -> None:
+    """Require the human list, JSON manifest and source-derived swap to agree."""
+
+    folder = ROOT/"results"/"decks"/"mew-genesect-sky3-path1-aichi-counterfactual"
+    manifest = json.loads((folder/"deck.json").read_text(encoding="utf-8"))
+    assert manifest["as_of"] == "2026-10-12"
+    entries = manifest["cards"]
+    assert len(entries) == len(PRINT_IDS)
+    assert sum(card["quantity"] for card in entries) == 60
+    assert len({card["print_id"] for card in entries}) == len(entries)
+
+    expected = Counter({**POKEMON, **TRAINERS, **ENERGY})
+    expected["Sky Field"] += 1
+    expected["Path to the Peak"] -= 1
+    by_print = {
+        PRINT_IDS[name]: copies
+        for name, copies in expected.items()
+    }
+    assert {card["print_id"]: card["quantity"] for card in entries} == by_print
+
+    readme = (folder/"README.md").read_text(encoding="utf-8")
+    rows = re.findall(
+        r"^\\|\\s*(\\d+)\\s*\\|[^|\\n]+\\|\\s*([a-z0-9]+-[A-Za-z0-9]+)\\s*\\|$",
+        readme, flags=re.MULTILINE,
+    )
+    documented = {print_id: int(qty) for qty, print_id in rows}
+    assert len(rows) == len(entries)
+    assert documented == by_print
+
+
 def verify_legal_swap() -> None:
     counts: Counter[str] = Counter({**POKEMON, **TRAINERS, **ENERGY})
     for candidate in (False, True):
@@ -151,6 +182,7 @@ def run() -> None:
         assert exact == oracle, (args, exact, oracle)
 
     verify_prints()
+    verify_candidate_manifest()
     verify_legal_swap()
 
     # The Aichi source has 11 starting Basics: four Genesect and seven others.
