@@ -1,6 +1,7 @@
 'use strict';
 const assert = require('node:assert/strict');
 const {loadTournamentDecks} = require('./tournament-deck-loader.cjs');
+const {loadAbsolTwinleaf} = require('./absol-twinleaf-deck.cjs');
 const {loadImplementedCards} = require('./print-coverage.cjs');
 
 /**
@@ -62,6 +63,14 @@ function loadCandidateDecks() {
     };
   });
 
-  return [...baselines, ...candidates];
+  const absol=loadAbsolTwinleaf();
+  assert.equal(absol.status,'verified_full_print_mapping',
+    'Mega Absol must preserve both documented same-print alias checks');
+  assert.equal(absol.engine_names.length,60);
+  return [...baselines, ...candidates, {
+    ...absol,
+    status:'strictly_mappable',
+    source:'2026_aichi_eighth_source_with_audited_same_print_aliases'
+  }];
 }
 module.exports = {loadCandidateDecks};
