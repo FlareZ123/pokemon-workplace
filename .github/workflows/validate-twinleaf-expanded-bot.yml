@@ -68,6 +68,9 @@ jobs:
         timeout-minutes: 2
       - name: Check Shadow Rider Underworld Door target guard against real engine
         run: node simulation/twinleaf/test-underworld-door-targets.cjs
+      - name: Collect bounded, seeded Aichi Vileplume vs Mew self-play diagnostics
+        run: node simulation/twinleaf/tournament-bounded-match.cjs
+        timeout-minutes: 1
       - name: Smoke-test two headless Expanded bots in real game setup
         timeout-minutes: 1
         run: node simulation/twinleaf/test-headless-setup.cjs
