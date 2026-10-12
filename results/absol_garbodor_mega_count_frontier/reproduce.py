@@ -6,6 +6,7 @@ This models visible card identity, not searches, payments, Energy or attacks.
 """
 from __future__ import annotations
 
+from datetime import date
 from fractions import Fraction
 from itertools import combinations
 from math import comb
@@ -108,7 +109,7 @@ def verify() -> None:
         proof = adjudicate_deck(
             [DeckEntry(card_id, count) for card_id, count in quantities.items()],
             RESOURCES,
-            as_of=__import__("datetime").date(2026, 10, 12),
+            as_of=date(2026, 10, 12),
         )
         assert proof.disposition == "eligible_snapshot", (title, proof.disposition)
         assert proof.construction.valid, (title, proof.construction.issues)
