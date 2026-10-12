@@ -1,13 +1,6 @@
 name: Validate Aichi Mega Absol Stone bridge
 
 on:
-  push:
-    paths:
-      - "tools/mega_absol_stone_bridge.py"
-      - "tools/mega_absol_crobat_darkasset.py"
-      - "results/absol_garbodor_darkasset_frontier/**"
-      - "results/absol_garbodor_stone_bridge/**"
-      - ".github/workflows/validate-agent1-stone-bridge.yml"
   workflow_dispatch:
 
 jobs:
