@@ -13,6 +13,7 @@ class Turn2:
     supporter: bool = True
     item: bool = True
     behind: bool = False
+    legacy_ready: bool = False  # Unspent, unblocked Regidrago VSTAR Legacy Star on T2.
 
 
 def choose(n: int, k: int) -> int:
@@ -65,7 +66,8 @@ def chain(basics: int, guzma: int, seekers: int, prime: int, counter: int,
                                 on_t2[b] += 1
                                 legal_second = (
                                     (second.supporter and
-                                     (on_t2[1] or (second.item and on_t2[2]))) or
+                                     (second.legacy_ready or on_t2[1] or
+                                      (second.item and on_t2[2]))) or
                                     (second.item and
                                      (on_t2[3] or (second.behind and on_t2[4])))
                                 )
