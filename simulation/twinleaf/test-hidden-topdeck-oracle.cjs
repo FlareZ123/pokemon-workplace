@@ -19,6 +19,7 @@ const {State, GamePhase} = engine('game/store/state/state.ts');
 const {Player} = engine('game/store/state/player.ts');
 const {Format} = engine('game/store/card/card-types.ts');
 const {PlayTrainerTactic} = engine('simple-bot/simple-tactics/play-trainer-tactic.ts');
+const {PlayCardAction, PlayerType, SlotType} = engine('game/store/actions/play-card-action.ts');
 const {defaultStateScores, defaultArbiterOptions, allPromptResolvers} =
   engine('simple-bot/simple-bot-definitions.ts');
 const {Pokegear30} = engine('sets/10-scarlet-and-violet/set-scarlet-and-violet/pokegear-30.ts');
@@ -147,14 +148,29 @@ for (const {item, searchItem, window} of [
   {item: 'Trainers Mail ROS', searchItem: 'mail', window: 4},
 ]) {
   let playedPositions = 0;
+  const scoreDeltas = {hit: new Map(), miss: new Map()};
   for (let position = 0; position < 46; position++) {
     const world = fixture(position, searchItem);
     const action = tactic.useTactic(world, world.players[0]);
     assert.equal(action?.type === 'PLAY_CARD_ACTION', position < window,
       item + ' native choice differed from exact secret search window at position ' + position);
     if (action) playedPositions++;
+    const actorId = world.players[0].id;
+    const baselineScore = tactic.getStateScore(world, actorId);
+    const hypothetical = new PlayCardAction(actorId, 0,
+      {player: PlayerType.ANY, slot: SlotType.BOARD, index: 0});
+    const afterScore = tactic.evaluateAction(world, actorId, hypothetical);
+    const delta = afterScore === undefined ? 'invalid' : String(afterScore - baselineScore);
+    const bucket = scoreDeltas[position < window ? 'hit' : 'miss'];
+    bucket.set(delta, (bucket.get(delta) || 0) + 1);
   }
   assert.equal(playedPositions, window);
+  console.log('[hidden-order-audit] ' + JSON.stringify({
+    item, score_delta_by_secret_outcome: Object.fromEntries(
+      Object.entries(scoreDeltas).map(([label, counts]) =>
+        [label, Object.fromEntries(counts)])
+    )
+  }));
   console.log('[hidden-order-audit] ' + JSON.stringify({
     item, full_hidden_positions: 46, played_positions: playedPositions,
     held_on_hidden_miss: 46 - playedPositions,
