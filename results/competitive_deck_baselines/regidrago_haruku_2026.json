@@ -1,0 +1,228 @@
+{
+  "source": {
+    "event": "CL Aichi Open League",
+    "date": "2026-05-10",
+    "place": 10,
+    "player": "Haruku Yoshioka",
+    "url": "https://limitlesstcg.com/decks/list/26816",
+    "source_scope": "Card-name counts are transcribed from the published decklist; exact English print IDs selected for functional equivalence with pictured Limitless cards, not a claim about Japanese physical artwork."
+  },
+  "cards": [
+    {
+      "category": "Pokémon",
+      "quantity": 4,
+      "name": "Regidrago V",
+      "print_id": "swsh12-135"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 3,
+      "name": "Regidrago VSTAR",
+      "print_id": "swsh12-136"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 2,
+      "name": "Budew",
+      "print_id": "sv8pt5-4"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Dragapult ex",
+      "print_id": "sv6-130"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Dialga-GX",
+      "print_id": "sm5-100"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Koraidon ex",
+      "print_id": "sv5-120"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Kyurem",
+      "print_id": "sv6pt5-47"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Hisuian Goodra VSTAR",
+      "print_id": "swsh11-136"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Dedenne-GX",
+      "print_id": "sm10-57"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Squawkabilly ex",
+      "print_id": "sv2-169"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Tapu Lele-GX",
+      "print_id": "sm2-60"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Latias ex",
+      "print_id": "sv8-76"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Marshadow",
+      "print_id": "sm10-81"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Wobbuffet",
+      "print_id": "xy4-36"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Professor's Research",
+      "print_id": "sv8pt5-122"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Guzma",
+      "print_id": "sm3-115"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Iono",
+      "print_id": "sv2-185"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Carmine",
+      "print_id": "sv6-145"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Lillie's Determination",
+      "print_id": "me1-119"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Marnie",
+      "print_id": "swsh1-169"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Raihan",
+      "print_id": "swsh7-152"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Crispin",
+      "print_id": "sv7-133"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Faba",
+      "print_id": "sm8-173"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 3,
+      "name": "Quick Ball",
+      "print_id": "swsh1-179"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 3,
+      "name": "Mysterious Treasure",
+      "print_id": "sm6-113"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 3,
+      "name": "Battle VIP Pass",
+      "print_id": "swsh8-225"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 3,
+      "name": "VS Seeker",
+      "print_id": "xy6-110"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Hisuian Heavy Ball",
+      "print_id": "swsh10-146"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Battle Compressor Team Flare Gear",
+      "print_id": "xy4-92"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Super Rod",
+      "print_id": "sv2-188"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Prime Catcher",
+      "print_id": "sv5-157"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Muscle Band",
+      "print_id": "xy1-121"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Parallel City",
+      "print_id": "xy8-145"
+    },
+    {
+      "category": "Energy",
+      "quantity": 4,
+      "name": "Double Dragon Energy",
+      "print_id": "xy6-97"
+    },
+    {
+      "category": "Energy",
+      "quantity": 4,
+      "name": "Grass Energy",
+      "print_id": "bw1-105"
+    },
+    {
+      "category": "Energy",
+      "quantity": 2,
+      "name": "Fire Energy",
+      "print_id": "bw1-106"
+    }
+  ]
+}

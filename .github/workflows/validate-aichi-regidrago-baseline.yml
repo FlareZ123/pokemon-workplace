@@ -1,0 +1,28 @@
+name: Validate 2026 Aichi Regidrago deck
+
+on:
+  push:
+    paths:
+      - "results/competitive_deck_baselines/regidrago_haruku_2026.json"
+      - "results/competitive_deck_baselines/regidrago_reproduce.py"
+      - ".github/workflows/validate-aichi-regidrago-baseline.yml"
+  pull_request:
+    paths:
+      - "results/competitive_deck_baselines/regidrago_haruku_2026.json"
+      - "results/competitive_deck_baselines/regidrago_reproduce.py"
+      - ".github/workflows/validate-aichi-regidrago-baseline.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify published counts, core roles and paper Expanded legality
+        run: python -m results.competitive_deck_baselines.regidrago_reproduce

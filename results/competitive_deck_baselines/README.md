@@ -139,3 +139,78 @@ The independently executable [legality proof](shadow_rider_reproduce.py) fixes t
 Shadow Rider Calyrex VMAX supplies a repeating Psychic acceleration/draw engine through **Underworld Door**, with Max Geist converting the board's Psychic Energy into damage. Radiant Eternatus can establish VMAX bodies rapidly in applicable opening states. Mimikyu Copycat plus Dialga-GX provides a matchup-conditional answer to an opponent's copied attacks; its real action feasibility needs explicit attack-copy and Energy checks. Sky Field increases potential Bench occupancy while creating exposure to Stadium replacement.
 
 Its tournament first place is meaningful empirical evidence of strength in that event. It is **not** an estimated modern field-wide win rate. The next practical experiment is a matched-head-to-head setup and match comparison against Vileplume, Regidrago, Iron Thorns, Snorlax, and other plausible Expanded opponents, with the opponent pool and simulator revision pinned.
+
+---
+
+## 2026 Aichi Open League 10th place: Regidrago VSTAR
+
+**Status:** published tournament top-ten reference, fully specified as a 60-card English-print realization and checked through the existing conservative Expanded-snapshot deck adjudicator. This list comes from **Haruku Yoshioka, 10th place at the May 10, 2026 CL Aichi Open League**: https://limitlesstcg.com/decks/list/26816 . The linked decklist publishes counts and recognizable card identities. Representative English print IDs below need not be the exact artwork or language used in Japan.
+
+### Pokémon (20)
+
+| Qty | Card | English print ID |
+| ---: | --- | --- |
+| 4 | Regidrago V | `swsh12-135` |
+| 3 | Regidrago VSTAR | `swsh12-136` |
+| 2 | Budew | `sv8pt5-4` |
+| 1 | Dragapult ex | `sv6-130` |
+| 1 | Dialga-GX | `sm5-100` |
+| 1 | Koraidon ex | `sv5-120` |
+| 1 | Kyurem | `sv6pt5-47` |
+| 1 | Hisuian Goodra VSTAR | `swsh11-136` |
+| 1 | Dedenne-GX | `sm10-57` |
+| 1 | Squawkabilly ex | `sv2-169` |
+| 1 | Tapu Lele-GX | `sm2-60` |
+| 1 | Latias ex | `sv8-76` |
+| 1 | Marshadow | `sm10-81` |
+| 1 | Wobbuffet | `xy4-36` |
+
+### Trainer (30)
+
+| Qty | Card | English print ID |
+| ---: | --- | --- |
+| 2 | Professor's Research | `sv8pt5-122` |
+| 2 | Guzma | `sm3-115` |
+| 1 | Iono | `sv2-185` |
+| 1 | Carmine | `sv6-145` |
+| 1 | Lillie's Determination | `me1-119` |
+| 1 | Marnie | `swsh1-169` |
+| 1 | Raihan | `swsh7-152` |
+| 1 | Crispin | `sv7-133` |
+| 1 | Faba | `sm8-173` |
+| 3 | Quick Ball | `swsh1-179` |
+| 3 | Mysterious Treasure | `sm6-113` |
+| 3 | Battle VIP Pass | `swsh8-225` |
+| 3 | VS Seeker | `xy6-110` |
+| 1 | Hisuian Heavy Ball | `swsh10-146` |
+| 1 | Battle Compressor Team Flare Gear | `xy4-92` |
+| 1 | Super Rod | `sv2-188` |
+| 1 | Prime Catcher | `sv5-157` |
+| 2 | Muscle Band | `xy1-121` |
+| 1 | Parallel City | `xy8-145` |
+
+### Energy (10)
+
+| Qty | Card | English print ID |
+| ---: | --- | --- |
+| 4 | Double Dragon Energy | `xy6-97` |
+| 4 | Grass Energy | `bw1-105` |
+| 2 | Fire Energy | `bw1-106` |
+
+**Deck totals:** 60; **20 Pokémon / 30 Trainers / 10 Energy**; **15 Basic Pokémon**; one ACE SPEC (**Prime Catcher**). The complete machine-readable manifest, including each selected English print, is [regidrago_haruku_2026.json](regidrago_haruku_2026.json). Every printed card-name count is preserved from the published source. The only name abbreviation expanded for the card database is **Battle Compressor Team Flare Gear**, whose card text matches the event's Battle Compressor.
+
+### Tactical role and published evidence
+
+Regidrago VSTAR's **Apex Dragon** copies attacks of Dragon Pokémon in its owner's discard pile. The deck includes distinct Dragon payloads with sharply different functions: Dialga-GX **Timeless-GX** for another turn; Dragapult ex **Phantom Dive** for Active damage and distributed Bench counters; Kyurem **Trifrost** for multi-target spread with an Energy discard; Hisuian Goodra VSTAR **Rolling Iron** for damage reduction; and Dragon Koraidon ex **Retribution Strike** for a direct attack whose damage scales with its own damage counters. These bodies entail different damage/effect timing and attacker Energy budget constraints.
+
+Two Budew enable **Itchy Pollen** Item lock and a direct non-Apex-Dragon attack-history cover after a Timeless-GX extra turn, provided Regidrago can physically promote Budew. Guzma and Prime Catcher are opponent-Bench-dependent switch routes. One Latias ex grants free retreat only to **Basic** Pokémon, so it does not make the evolved Regidrago VSTAR retreat free. The Wobbuffet selected is the **Bide Barricade** print and the Marshadow is **Resetting Hole**; other same-name prints have different effects and cannot be substituted without checking the intended roles.
+
+The list uses Quick Ball/Mysterious Treasure and Battle Compressor for setup and purposeful Dragon discarding. Preserve hand-resource discard costs, one-Supporter-per-turn contention, the exact ACE SPEC limit, initial six-Prize uncertainty, and Bench occupancy when evaluating execution feasibility. Item lock, Ability lock and opponent promotion can interrupt apparently reachable search lines.
+
+### Validation, uncertainty and next work
+
+[regidrago_reproduce.py](regidrago_reproduce.py) independently confirms the 20/30/10 quantities; all 36 exact print identities; 15 Basic Pokémon; one ACE SPEC; 13 source-card attack/Ability identities; crosschecks a dozen observed counts against the repository's earlier nine-list Aichi transcription; and runs the existing deck-construction plus print-provenance adjudicator for **October 12, 2026**. The intended outcome is `eligible_snapshot`, the same conservative evidence class as the existing Shadow Rider and Vileplume lists. This supports paper Expanded within the bundled English data. Regional print acceptance and historical artwork details are outside the claim.
+
+**Evidence:** 10th place and card-name counts are published observations from Limitless. Print identities and rules are drawn from the supplied card database and Advanced Player's Rulebook. No project-measured tournament matchup win rate or optimization claim follows from a top-ten finish.
+
+A useful next experiment is to compare this 60-card reference against the 2026 Aichi champion Shadow Rider list across reproducible opening boards and a checked simulator. The policy set should include the Apex Dragon Timeless-GX continuation and choice of bonus-turn Budew Item lock, Kyurem Trifrost, or Noivern ex alternatives; this particular published list does **not** contain Noivern ex, so that branch belongs to a clearly marked alternative build. Each comparison must control attack history, available Supporter and Energy actions, Prized singleton payloads, and what resources can actually be discarded.
