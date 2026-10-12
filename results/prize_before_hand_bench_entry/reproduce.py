@@ -15,6 +15,7 @@ from identity_materialization import (
 )
 from multicopy_zone_state import ZoneCountState
 from prize_before_hand_bench_entry import (
+    resolve_replaced_jirachi_prize,
     use_lucky_bonus,
     use_wish_upon_a_star,
 )
@@ -284,8 +285,21 @@ def validate_billowing_smoke_destination_gate() -> None:
             final_ledger = resolved.resolution.after.physical.ledger
             assert final_ledger.instance(f"{prefix}-prize-0").zone == "discard"
             assert_conserved(initial, final_ledger)
-        # Jirachi's Prism Star Lost-Zone replacement requires its own
-        # separate transition; this test checks the no-trigger gate only.
+        else:
+            # Jirachi's own Prism Star rule replaces the attempted
+            # Billowing Smoke discard with the Lost Zone.
+            resolved = resolve_replaced_jirachi_prize(
+                staged,
+                post_ko,
+                destination=decision,
+            )
+            assert resolved is not None
+            assert resolved.after_prizes.pending == ()
+            assert resolved.after_board.ledger.instance(
+                f"{prefix}-prize-0"
+            ).zone == "lost_zone"
+            assert resolved.after_board.pokemon == ()
+            assert_conserved(initial, resolved.after_board.ledger)
 
 
 def main() -> None:
