@@ -47,6 +47,31 @@ function run() {
   assert.equal(wrongName.status, 'name_mismatch_review');
   const unknown = matchPaperPrint({ qty: 1, name: 'Unknown', printId: 'foo-74' }, paperSets, examples);
   assert.equal(unknown.status, 'unmapped_set');
+  const promoSets = new Map([['xyp', 'PR-XY'], ['smp', 'PR-SM']]);
+  const promoCards = [
+    { set: 'XYP', setNumber: '177', name: 'Karen', fullName: 'Karen XYP' },
+    { set: 'SMP', setNumber: '217', name: 'Trevenant & Dusknoir-GX', fullName: 'Trevenant & Dusknoir-GX SMP' }
+  ];
+  assert.equal(matchPaperPrint({ qty: 1, name: 'Karen', printId: 'xyp-XY177' }, promoSets, promoCards).status, 'exact');
+  assert.equal(matchPaperPrint({
+    qty: 1, name: 'Trevenant & Dusknoir-GX', printId: 'smp-SM217'
+  }, promoSets, promoCards).status, 'exact');
+
+  const copycat = [{
+    set: 'GRI', setNumber: '58', name: 'Mimikyu', fullName: 'Mimikyu GRI',
+    attacks: [{ name: 'Copycat' }]
+  }];
+  assert.equal(matchPaperPrint({
+    qty: 1, name: 'Mimikyu (Copycat)', printId: 'sm2-58'
+  }, new Map([['sm2', 'GRI']]), copycat).status, 'qualified_exact');
+  const basic = [{
+    set: 'BLW', setNumber: '109', name: 'Psychic Energy', fullName: 'Psychic Energy BLW',
+    energyType: 0
+  }];
+  assert.equal(matchPaperPrint({
+    qty: 11, name: 'Basic Psychic Energy', printId: 'bw1-109'
+  }, new Map([['bw1', 'BLW']]), basic).status, 'qualified_exact');
+
   console.log('[print-coverage] Synthetic collision and set-resolution checks passed');
 
   const decks = auditAichiBaselines();
