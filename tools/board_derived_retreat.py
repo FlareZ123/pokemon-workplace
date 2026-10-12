@@ -114,6 +114,7 @@ def attempt_board_derived_retreat(
         opponent_sources,
         stadium_print_id=stadium_print_id,
         stadium_effect_enabled=stadium_effect_enabled,
+        provider_context=provider_context,
     )
     modifiers = (
         external_modifiers
