@@ -56,9 +56,13 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     trackRandom('setup',()=>store.dispatch(new AddPlayerAction(1,'Aichi A',deckA)));
     trackRandom('setup',()=>store.dispatch(new AddPlayerAction(2,'Aichi B',deckB)));
     let actions=0,attacks=0,status='action_cap',error=null,firstActor=null;
+    const openingHands=[null,null];
     while(actions<maxActions) {
       if(Date.now()-started>wallMilliseconds){status='wall_cap';break;}
       const state=store.state;
+      if(state.phase===GamePhase.PLAYER_TURN && state.turn<=2 &&
+        openingHands[state.activePlayer]===null)
+        openingHands[state.activePlayer]=state.players[state.activePlayer].hand.cards.map(card=>card.name);
       if(firstActor===null && state.phase===GamePhase.PLAYER_TURN)
         firstActor=state.players[state.activePlayer]?.id ?? null;
       if(state.phase===GamePhase.FINISHED){status='finished';break;}
@@ -89,7 +93,8 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     if(state.phase===GamePhase.FINISHED && (status==='action_cap' || status==='wall_cap'))
       status='finished';
     const rng=ledger.snapshot();
-    return {seed,status,actions,attacks,first_actor:firstActor,random_calls:rng.calls,
+    return {seed,status,actions,attacks,first_actor:firstActor,
+      first_turn_hands:openingHands,random_calls:rng.calls,
       game_random_calls:rng.gameCalls,policy_random_calls:rng.policyCalls,
       random_sources:rng.bySource,turn:state.turn,phase:GamePhase[state.phase],
       winner:state.winner,prizes:state.players.map(p=>p.getPrizeLeft()),
