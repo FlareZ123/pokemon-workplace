@@ -8,6 +8,7 @@ from __future__ import annotations
 from board_object_kernel import BoardState
 from retreat_cost_semantics import RetreatCostModifier
 from retreat_attached_energy_free_cost import derive_attached_energy_threshold_no_cost
+from retreat_conditional_self_free_cost import derive_conditional_self_free_cost
 
 
 _GALAR_MINE = "swsh2-160"
@@ -37,6 +38,12 @@ def derive_environment_retreat_modifiers(
     low_energy_no_cost = derive_attached_energy_threshold_no_cost(active)
     if low_energy_no_cost is not None:
         modifiers.append(low_energy_no_cost)
+
+    conditional_no_cost = derive_conditional_self_free_cost(
+        active, opponent_board, stadium_print_id=stadium_print_id,
+    )
+    if conditional_no_cost is not None:
+        modifiers.append(conditional_no_cost)
 
     if active.tags & _EVOLUTION_TAGS:
         for source in opponent_board.objects:
