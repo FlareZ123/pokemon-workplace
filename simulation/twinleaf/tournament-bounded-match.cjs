@@ -8,6 +8,7 @@ const {makeSeatPairs,deckDigest}=require('./paired-seat-plan.cjs');
 const {summarizePairedTraces}=require('./paired-result-summary.cjs');
 const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
 const {makeMatchActionTelemetry}=require('./match-action-telemetry.cjs');
+const {makeTacticOrder}=require('./tactic-order-policy.cjs');
 const {loadImplementedCards}=require('./print-coverage.cjs');
 const {CardManager}=engine('game/cards/card-manager');
 const {Store}=engine('game/store/store');
@@ -33,8 +34,9 @@ function registerLists(lists) {
 /** Run a capped native Store trace. Results are engine/policy diagnostics, not win-rate samples.
  * @param {string[]} deckA @param {string[]} deckB @param {number} seed
  * @param {number} maxActions @param {number} wallMilliseconds
+ * @param {'native'|'attack_before_retreat'} tacticOrder
  */
-function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
+function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrder='native') {
   const prior=Math.random;
   const ledger=makeRandomStreamLedger(seed);
   Math.random=ledger.random;
@@ -45,7 +47,8 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
     const store=new Store({onStateChange:()=>{}});
     store.state.gameSettings.format=Format.EXPANDED;
     store.state.gameSettings.recordingEnabled=false;
-    const settings={tactics:allSimpleTactics,promptResolvers:allPromptResolvers,
+    const settings={tactics:makeTacticOrder(tacticOrder,allSimpleTactics),
+      promptResolvers:allPromptResolvers,
       scores:defaultStateScores,arbiter:defaultArbiterOptions};
     const players=new Map([[1,new SimpleTacticsAi({id:1,name:'Aichi A'},settings,deckA)],
       [2,new SimpleTacticsAi({id:2,name:'Aichi B'},settings,deckB)]]);
@@ -101,13 +104,15 @@ function main() {
   assert.equal(a.status,'strictly_mappable');assert.equal(b.status,'strictly_mappable');
   registerLists([a.engine_names,b.engine_names]);
   const seatPairs=makeSeatPairs(a,b,config.seeds);
-  const traces=seatPairs.map(p=>runOne(p.seat1.engine_names,p.seat2.engine_names,p.seed));
+  const traces=seatPairs.map(p=>runOne(p.seat1.engine_names,p.seat2.engine_names,p.seed,
+    350,25000,config.tacticOrder));
   const pairedResults=summarizePairedTraces(seatPairs,traces);
   const report={scope:'bounded engine self-play diagnostics only, SimpleTacticsAi policy unvalidated',
     twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
     shuffle_policy:'research_uniform_fisher_yates_v1',
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
+    tactic_order:config.tacticOrder,
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
     max_actions:350,wall_ms:25000,paired_results:pairedResults,traces};
