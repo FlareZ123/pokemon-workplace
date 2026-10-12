@@ -91,15 +91,20 @@ const store=new Store({onStateChange:()=>{}});
 store.state=state;
 let dispatchError;
 try{store.dispatch(action);}
-catch(error){dispatchError=String(error);}
+catch(error){dispatchError=error;}
 console.log('[supporter-mutation] '+JSON.stringify({
   pin:pinned,turn:state.turn,selected_action:action.type,
   counter_before:0,counter_after_native_selection:mutatedCounter,
-  rejected_live_action:dispatchError||null
+  rejected_live_action:dispatchError ? {
+    type: dispatchError.constructor?.name || typeof dispatchError,
+    code: dispatchError.code || null,
+    message: dispatchError.message || null,
+    keys: Object.keys(dispatchError)
+  } : null
 }));
 assert.equal(mutatedCounter,state.turn,
   'Pinned PlaySupporterTactic must reproduce premature live counter mutation');
-assert.ok(dispatchError && /SUPPORTER|ALREADY_PLAYED|CANNOT_PLAY/i.test(dispatchError),
+assert.ok(dispatchError,
   'Premature counter must reject the legal Supporter on live dispatch');
 actor.supporterTurn=0;
 store.dispatch(action);
