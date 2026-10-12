@@ -75,6 +75,8 @@ jobs:
       - name: Enter a real Twinleaf turn with Aichi Vileplume and Mew exact 60-card lists
         run: node simulation/twinleaf/test-tournament-headless-setup.cjs
         timeout-minutes: 2
+      - name: Reproduce pinned native shuffle bias and validate research-only hook
+        run: node simulation/twinleaf/test-native-shuffle-bias.cjs
       - name: Check Shadow Rider Underworld Door target guard against real engine
         run: node simulation/twinleaf/test-underworld-door-targets.cjs
       - name: Collect bounded, seeded Aichi Vileplume vs Mew self-play diagnostics
