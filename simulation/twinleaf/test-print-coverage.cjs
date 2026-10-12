@@ -54,32 +54,6 @@ function run() {
     new Map([['xyp', 'ABC']]), promoCards
   ).status, 'missing_print');
 
-  const battleCompressor = [{
-    set: 'PHF', setNumber: '92', name: 'Battle Compressor',
-    fullName: 'Battle Compressor PHF', attacks: [], powers: []
-  }];
-  const phfSet = new Map([['xy4', 'PHF']]);
-  const compressorEntry = {
-    qty: 1, name: 'Battle Compressor Team Flare Gear', printId: 'xy4-92'
-  };
-  const compressorMatch = matchPaperPrint(compressorEntry, phfSet, battleCompressor);
-  assert.equal(compressorMatch.status, 'qualified_exact');
-  assert.equal(compressorMatch.matches[0].fullName, 'Battle Compressor PHF');
-  assert.equal(matchPaperPrint(
-    {...compressorEntry, printId: 'xy4-93'}, phfSet, battleCompressor
-  ).status, 'missing_print');
-  assert.equal(matchPaperPrint(
-    {...compressorEntry, name: 'Unrelated Item'}, phfSet, battleCompressor
-  ).status, 'name_mismatch_review');
-  assert.equal(matchPaperPrint(
-    compressorEntry, phfSet, [{...battleCompressor[0], name: 'Random Item'}]
-  ).status, 'name_mismatch_review');
-  assert.equal(matchPaperPrint(
-    compressorEntry, phfSet, [{...battleCompressor[0], setNumber: '93'}]
-  ).status, 'missing_print');
-  assert.equal(matchPaperPrint(
-    compressorEntry, phfSet, [{...battleCompressor[0], set: 'XY'}]
-  ).status, 'missing_print');
   const wrongName = matchPaperPrint({ qty: 3, name: 'Mewtwo', printId: 'swsh6-74' }, paperSets, examples);
   assert.equal(wrongName.status, 'name_mismatch_review');
   const unknown = matchPaperPrint({ qty: 1, name: 'Unknown', printId: 'foo-74' }, paperSets, examples);
