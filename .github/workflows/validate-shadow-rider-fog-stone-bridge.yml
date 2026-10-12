@@ -1,0 +1,18 @@
+name: Validate Fog Crystal Stone host Radiant bridge
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Verify exact Fog to V to Forest Seal Stone source route
+        run: python -m results.shadow_rider_fog_stone_bridge.reproduce
