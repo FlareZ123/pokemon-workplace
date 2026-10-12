@@ -1,0 +1,18 @@
+name: Validate Harto Raichu joint search gate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Raichu prize and overlap-sensitive Item payment
+        run: python results/raichu_multi_search_gate/reproduce.py
