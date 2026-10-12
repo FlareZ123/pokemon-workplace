@@ -18,8 +18,8 @@ CHAND_RULE = (
 def normalize_verified_stage_metadata(card: dict[str, Any]) -> dict[str, Any]:
     """Patch only two independently verified missing stage fields.
 
-    This is an opt-in layer for research tooling, intentionally not yet
-    included in the central fingerprint/legality pipeline.
+    Each audited field is repaired independently, including partial source
+    updates that corrected stage metadata but left the prize rule absent.
     """
     normalized = deepcopy(card)
     card_id = str(card.get("id", ""))
@@ -30,9 +30,7 @@ def normalize_verified_stage_metadata(card: dict[str, Any]) -> dict[str, Any]:
     if normalized.get("name") != name or normalized.get("supertype") != "Pokémon":
         raise ValueError(f"Stage repair identity changed: {card_id}")
     actual = tuple(normalized.get("subtypes") or ())
-    if actual == correct:
-        return normalized
-    if actual != expected:
+    if actual not in (expected, correct):
         raise ValueError(f"Audited stage fields changed: {card_id}: {actual}")
 
     if card_id == "me5-42":
@@ -41,8 +39,8 @@ def normalize_verified_stage_metadata(card: dict[str, Any]) -> dict[str, Any]:
     else:
         if normalized.get("hp") != "350" or normalized.get("evolvesFrom") != "Lampent":
             raise ValueError("Mega Chandelure print's identity fields changed")
-        if normalized.get("rules"):
-            raise ValueError("Unexpected special-rule text in defective Chandelure record")
+        if (normalized.get("rules") or []) not in ([], [CHAND_RULE]):
+            raise ValueError("Unexpected special-rule text in Chandelure record")
         normalized["rules"] = [CHAND_RULE]
 
     normalized["subtypes"] = list(correct)
