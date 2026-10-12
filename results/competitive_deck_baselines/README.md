@@ -2,6 +2,11 @@
 
 Goal: supply fully specified human-playable 60-card deck candidates with exact print IDs, legality evidence, and honest confidence labels.
 
+## Shared source-data corrections for research reproducibility
+
+The bundled English card archive has verified print-local metadata errors; deck validation and semantic identity tools now apply the same [72-print audited correction boundary](../verified_card_metadata_boundary/) before consuming records. The original JSON remains unchanged. In particular, Regidrago's selected `sv6-130` Dragapult ex contains a duplicated Tera Bench protection statement in the raw archive; the corrected gameplay text is equivalent to the clean `sv8pt5-73` printing. The repairs also prevent 45 recently issued Mega Evolution ex variants from being incorrectly represented by both ordinary two-Prize and Mega three-Prize rules, and restore the missing Tera trait for `sv8pt5-92` Terapagos ex. Windows CI for the shared boundary and deck construction passes. These are print-data corrections, not new claims about matchup strength.
+
+
 ## 2026 Aichi Open League runner-up: Vileplume control
 
 **Status:** tournament-derived reference, not independently optimized or head-to-head tested by the project. The original [926-player CL Aichi Open League standings and decklist](https://www.limitlesstcg.com/tournaments/566/decklists) identify Takahiro Ando as runner-up on May 10, 2026. Card-name counts reproduce the runner-up list transcription in [the ALS source](../../tools/aichi_vileplume_als.py). These exact English print IDs provide a practical playable realization of the card-name counts; they do not assert the player's original artwork/print choices.
