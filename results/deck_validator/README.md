@@ -33,6 +33,14 @@ A second, less obvious case is Shining Celebi. The 30th Celebration Classic Coll
 
 This reinforces the repository's three-layer identity model. Deck validation requires both exact-print properties and name-level aggregation.
 
+## Verified Pitch Black exact-print repairs
+
+The 2026 Pitch Black snapshot has two independently audited stage/rule metadata omissions, `me5-42` Mankey and `me5-115` Mega Chandelure ex. The validator now composes `tools/verified_stage_metadata_repairs.py` at the CardRecord loading boundary, only for these exact two IDs. The stored `resources/cards/en/me5.json` source remains unmodified, as do historical reprint fingerprints and other consumers' raw-source views.
+
+Mankey `me5-42` is recognized as a Basic Pokémon; one Mankey plus 59 unrestricted Basic Grass Energy therefore satisfies the validator's construction check. Mega Chandelure ex `me5-115` is recognized as Stage 2 with its three-Prize Mega Evolution ex rule, matching same-set `me5-38` and `me5-99`. A deck containing only Mega Chandelure and Energy remains invalid for lack of a Basic starter. Full regressions exercise both print identities in the Expanded and historical-construction loaders.
+
+Evidence and source-normalization proof: [Pitch Black stage metadata audit](../pitch_black_stage_metadata/). [Expanded legality regressions, Windows CI 38247326557](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38247326557) passed. The correction is restricted to construction-relevant records; game simulators and unrelated search/index pipelines may still need to opt into the normalization.
+
 ## Legality provenance
 
 The validator consumes the shared \`classify_effective_legality()\` function from \`tools/build_expanded_legality_baseline.py\` rather than duplicating ban logic. As a result it inherits the corrected exclusions for seven cards whose own rules text says they cannot be used at official tournaments, along with the maintained official ban overlay.
