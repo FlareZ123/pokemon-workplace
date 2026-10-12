@@ -242,7 +242,7 @@ A useful next experiment is to compare this 60-card reference against the 2026 A
 |1|Marnie|swsh1-169|
 |1|Pokémon Ranger|xy11-104|
 |4|Quick Ball|swsh1-179|
-|4|Ultra Ball|swsh1-186|
+|4|Ultra Ball|swsh9-150|
 |3|Trainers' Mail|xy6-92|
 |3|Battle VIP Pass|swsh8-225|
 |2|Special Charge|xy11-105|
