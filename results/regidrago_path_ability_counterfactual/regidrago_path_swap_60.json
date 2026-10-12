@@ -1,0 +1,196 @@
+{
+  "event": "CL 2026 Aichi Open League",
+  "placement": "10th",
+  "player": "Haruku Yoshioka",
+  "source": "Counterfactual single-slot replacement of published Haruku Yoshioka 2026 Aichi 10th-place Regidrago list (https://limitlesstcg.com/decks/list/26816)",
+  "notes": "Replaces the published Parallel City 1 with Path to the Peak 1 (swsh6-148); retains the other 59 card choices. Hypothesis: suppress champion's Psychic Rule Box Underworld Door engine while accounting for own Rule Box inhibition, Marshadow reset and Stadium replacement counterplay.",
+  "groups": {
+    "Pokémon": [
+      {
+        "count": 4,
+        "name": "Regidrago V",
+        "print_id": "swsh12-135"
+      },
+      {
+        "count": 3,
+        "name": "Regidrago VSTAR",
+        "print_id": "swsh12-136"
+      },
+      {
+        "count": 2,
+        "name": "Budew",
+        "print_id": "me2pt5-16"
+      },
+      {
+        "count": 1,
+        "name": "Dragapult ex",
+        "print_id": "sv6-130"
+      },
+      {
+        "count": 1,
+        "name": "Dialga-GX",
+        "print_id": "sm5-100"
+      },
+      {
+        "count": 1,
+        "name": "Koraidon ex",
+        "print_id": "sv5-120"
+      },
+      {
+        "count": 1,
+        "name": "Kyurem",
+        "print_id": "sv6pt5-47"
+      },
+      {
+        "count": 1,
+        "name": "Hisuian Goodra VSTAR",
+        "print_id": "swsh11-136"
+      },
+      {
+        "count": 1,
+        "name": "Dedenne-GX",
+        "print_id": "sm10-57"
+      },
+      {
+        "count": 1,
+        "name": "Squawkabilly ex",
+        "print_id": "sv2-169"
+      },
+      {
+        "count": 1,
+        "name": "Tapu Lele-GX",
+        "print_id": "sm2-60"
+      },
+      {
+        "count": 1,
+        "name": "Latias ex",
+        "print_id": "sv8-76"
+      },
+      {
+        "count": 1,
+        "name": "Marshadow",
+        "print_id": "sm10-81"
+      },
+      {
+        "count": 1,
+        "name": "Wobbuffet",
+        "print_id": "xy4-36"
+      }
+    ],
+    "Trainer": [
+      {
+        "count": 2,
+        "name": "Professor's Research",
+        "print_id": "sv9-155"
+      },
+      {
+        "count": 2,
+        "name": "Guzma",
+        "print_id": "sm3-115"
+      },
+      {
+        "count": 1,
+        "name": "Iono",
+        "print_id": "sv2-185"
+      },
+      {
+        "count": 1,
+        "name": "Carmine",
+        "print_id": "sv6-145"
+      },
+      {
+        "count": 1,
+        "name": "Lillie's Determination",
+        "print_id": "me1-119"
+      },
+      {
+        "count": 1,
+        "name": "Marnie",
+        "print_id": "swsh1-169"
+      },
+      {
+        "count": 1,
+        "name": "Raihan",
+        "print_id": "swsh7-152"
+      },
+      {
+        "count": 1,
+        "name": "Crispin",
+        "print_id": "sv7-133"
+      },
+      {
+        "count": 1,
+        "name": "Faba",
+        "print_id": "sm8-173"
+      },
+      {
+        "count": 3,
+        "name": "Quick Ball",
+        "print_id": "swsh1-179"
+      },
+      {
+        "count": 3,
+        "name": "Mysterious Treasure",
+        "print_id": "sm6-113"
+      },
+      {
+        "count": 3,
+        "name": "Battle VIP Pass",
+        "print_id": "swsh8-225"
+      },
+      {
+        "count": 3,
+        "name": "VS Seeker",
+        "print_id": "xy4-109"
+      },
+      {
+        "count": 1,
+        "name": "Hisuian Heavy Ball",
+        "print_id": "swsh10-146"
+      },
+      {
+        "count": 1,
+        "name": "Battle Compressor",
+        "print_id": "xy4-92"
+      },
+      {
+        "count": 1,
+        "name": "Super Rod",
+        "print_id": "sv2-188"
+      },
+      {
+        "count": 1,
+        "name": "Prime Catcher",
+        "print_id": "sv5-157"
+      },
+      {
+        "count": 2,
+        "name": "Muscle Band",
+        "print_id": "xy1-121"
+      },
+      {
+        "count": 1,
+        "name": "Path to the Peak",
+        "print_id": "swsh6-148"
+      }
+    ],
+    "Energy": [
+      {
+        "count": 4,
+        "name": "Double Dragon Energy",
+        "print_id": "xy6-97"
+      },
+      {
+        "count": 4,
+        "name": "Grass Energy",
+        "print_id": "bw1-105"
+      },
+      {
+        "count": 2,
+        "name": "Fire Energy",
+        "print_id": "bw1-106"
+      }
+    ]
+  },
+  "status": "Experimental, snapshot-legal one-card Stadium swap, no reported match win-rate validation"
+}

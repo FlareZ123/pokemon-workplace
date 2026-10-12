@@ -1,0 +1,21 @@
+name: Validate Regidrago Path ability counterfactual
+
+on:
+  push:
+    paths:
+      - results/regidrago_path_ability_counterfactual/**
+      - results/regidrago_aichi_top10_playable/yoshioka_regidrago_2026.json
+      - results/regidrago_shadow_rider_temporal_counterplay/shadow_rider_aichi_2026.json
+      - .github/workflows/validate-regidrago-path-counterfactual.yml
+  workflow_dispatch:
+
+jobs:
+  exact-slot-typed-locks:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify 60-card swap, printed locks and counterplay
+        run: python results/regidrago_path_ability_counterfactual/reproduce.py
