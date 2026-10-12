@@ -49,9 +49,12 @@ function summarizePairedTraces(pairs, traces) {
       byDeck[pair.seat1.id].unresolved++;
       byDeck[pair.seat2.id].unresolved++;
     }
+    assert.ok(trace.first_actor == null || trace.first_actor === 1 || trace.first_actor === 2,
+      'First-turn actor must be player ID 1 or 2 when supplied');
     const row = {pair_id: pair.pair_id, seed: pair.seed, orientation: pair.orientation,
       seat1: pair.seat1.id, seat2: pair.seat2.id, status: trace.status,
       raw_winner_index: trace.winner, outcome, winner_deck: winnerDeck,
+      first_actor: trace.first_actor ?? null,
       error: trace.error || null};
     if (!byPair.has(pair.pair_id)) byPair.set(pair.pair_id, []);
     byPair.get(pair.pair_id).push(row);
