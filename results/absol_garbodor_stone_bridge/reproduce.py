@@ -102,6 +102,9 @@ def verify() -> None:
         assert counts["stone"] == counts["bag"] == 1
         output = exact_access(counts)
         assert output["named_or_stone"] >= output["named_paid"]
+        assert output["ability_locked"] == output["named_paid"]
+        assert output["both_locked"] <= output["item_locked"]
+        assert output["item_locked"] <= output["named_or_stone"]
         assert output["stone_any"] == (
             output["stone_held_crobat"] + output["stone_prize_crobat"]
         )
@@ -117,6 +120,15 @@ def verify() -> None:
     assert keep["named_or_stone"] > cut["named_or_stone"]
     assert baseline["named_or_stone"] < keep["named_or_stone"]
     assert cut["stone_any"] == cut["crobat_held"] == 0
+    assert cut["item_locked"] == cut["both_locked"]
+    assert keep["item_locked"] < cut["item_locked"]
+    assert keep["ability_locked"] < cut["ability_locked"]
+    for state in ("ability_locked", "item_locked", "both_locked"):
+        open_advantage = keep["named_or_stone"] - cut["named_or_stone"]
+        blocked_advantage = keep[state] - cut[state]
+        threshold = open_advantage / (open_advantage - blocked_advantage)
+        assert 0 < threshold < 1
+        print(f"break_even_{state}_mixture={float(threshold):.9%}")
     print("PASS: three full independently validated tournament-legal 60s")
     print("PASS: three independent exhaustive labeled physical-card oracles")
     print("PASS: ranking inversion after jointly accessible VSTAR Tool route")
