@@ -214,3 +214,58 @@ The list uses Quick Ball/Mysterious Treasure and Battle Compressor for setup and
 **Evidence:** 10th place and card-name counts are published observations from Limitless. Print identities and rules are drawn from the supplied card database and Advanced Player's Rulebook. No project-measured tournament matchup win rate or optimization claim follows from a top-ten finish.
 
 A useful next experiment is to compare this 60-card reference against the 2026 Aichi champion Shadow Rider list across reproducible opening boards and a checked simulator. The policy set should include the Apex Dragon Timeless-GX continuation and choice of bonus-turn Budew Item lock, Kyurem Trifrost, or Noivern ex alternatives; this particular published list does **not** contain Noivern ex, so that branch belongs to a clearly marked alternative build. Each comparison must control attack history, available Supporter and Energy actions, Prized singleton payloads, and what resources can actually be discarded.
+
+---
+
+## 2026 Aichi fifth place: Mew Genesect
+
+**Status:** published 60-card Fusion Strike benchmark, Yamato Nakano fifth among 926 players at the [May 10, 2026 Aichi event](https://www.limitlesstcg.com/tournaments/566/decklists). These exact English print IDs were selected for the October 2026 Expanded snapshot, and can differ from the original Japanese prints.
+
+### Pokémon (14)
+
+| Qty | Card | Print |
+|---:|---|---|
+|4|Mew V (Fusion Strike)|swsh8-113|
+|3|Mew VMAX|swsh8-114|
+|4|Genesect V|swsh8-185|
+|1|Dedenne-GX|sm10-57|
+|1|Crobat V|swsh3-104|
+|1|Lillie's Clefairy ex|sv9-56|
+
+### Trainers (42)
+
+| Qty | Card | Print |
+|---:|---|---|
+|2|Guzma|sm3-115|
+|2|Karen|xyp-XY177|
+|1|Wally|xy6-94|
+|1|Marnie|swsh1-169|
+|1|Pokémon Ranger|xy11-104|
+|4|Quick Ball|swsh1-179|
+|4|Ultra Ball|swsh1-186|
+|3|Trainers' Mail|xy6-92|
+|3|Battle VIP Pass|swsh8-225|
+|2|Special Charge|xy11-105|
+|2|VS Seeker|xy6-110|
+|2|Special Red Card|me4-82|
+|1|Enhanced Hammer|sv6-148|
+|1|Field Blower|sm2-125|
+|1|Lost Vacuum|swsh11-162|
+|1|Escape Rope|swsh5-125|
+|1|Hisuian Heavy Ball|swsh10-146|
+|1|Secret Box (ACE SPEC)|sv6-163|
+|2|Muscle Band|xy1-121|
+|2|Float Stone|xy8-137|
+|1|Forest Seal Stone|swsh12-156|
+|2|Sky Field|xy6-89|
+|2|Path to the Peak|swsh6-148|
+
+### Energy (4)
+
+| Qty | Card | Print |
+|---:|---|---|
+|4|Double Colorless Energy|sm1-136|
+
+**Totals:** 14 Pokémon / 42 Trainers / 4 Energy = 60, with 11 eligible starting Basics and singleton Secret Box ACE SPEC. The [exact-print regression](mew_genesect_reproduce.py) verifies construction and current English Expanded status, plus the named Fusion Strike System, Cross Fusion Strike, Dedechange and Dark Asset signatures.
+
+This list is an aggressive Item-heavy Fusion Strike counterpoint to the Vileplume control and Shadow Rider references. Its key Pokémon draw Abilities depend on Rule Box sources, making active Iron Thorns ex Ability lock an important matchup variable. The tournament finish provides empirical viability evidence in that event; the project has not demonstrated its current field-wide win probability.
