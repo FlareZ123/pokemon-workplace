@@ -1,0 +1,162 @@
+{
+  "name": "Mew VMAX / Genesect V, 2026 Aichi fifth-place +1 Battle VIP Pass / -1 Special Red Card",
+  "format": "Paper Expanded (Black & White onward)",
+  "source": "https://www.limitlesstcg.com/tournaments/566/decklists",
+  "as_of": "2026-10-12",
+  "pokemon": [
+    {
+      "name": "Mew V",
+      "count": 4,
+      "print_id": "swsh8-113"
+    },
+    {
+      "name": "Mew VMAX",
+      "count": 3,
+      "print_id": "swsh8-114"
+    },
+    {
+      "name": "Genesect V",
+      "count": 4,
+      "print_id": "swsh8-185"
+    },
+    {
+      "name": "Dedenne-GX",
+      "count": 1,
+      "print_id": "sm10-57"
+    },
+    {
+      "name": "Crobat V",
+      "count": 1,
+      "print_id": "swsh3-104"
+    },
+    {
+      "name": "Lillie's Clefairy ex",
+      "count": 1,
+      "print_id": "sv9-56"
+    }
+  ],
+  "trainers": [
+    {
+      "name": "Guzma",
+      "count": 2,
+      "print_id": "sm3-115"
+    },
+    {
+      "name": "Karen",
+      "count": 2,
+      "print_id": "xyp-XY177"
+    },
+    {
+      "name": "Wally",
+      "count": 1,
+      "print_id": "xy6-94"
+    },
+    {
+      "name": "Marnie",
+      "count": 1,
+      "print_id": "swsh1-169"
+    },
+    {
+      "name": "Pokémon Ranger",
+      "count": 1,
+      "print_id": "xy11-104"
+    },
+    {
+      "name": "Quick Ball",
+      "count": 4,
+      "print_id": "swsh1-179"
+    },
+    {
+      "name": "Ultra Ball",
+      "count": 4,
+      "print_id": "swsh9-150"
+    },
+    {
+      "name": "Trainers' Mail",
+      "count": 3,
+      "print_id": "xy6-92"
+    },
+    {
+      "name": "Battle VIP Pass",
+      "count": 4,
+      "print_id": "swsh8-225"
+    },
+    {
+      "name": "Special Charge",
+      "count": 2,
+      "print_id": "xy11-105"
+    },
+    {
+      "name": "VS Seeker",
+      "count": 2,
+      "print_id": "xy6-110"
+    },
+    {
+      "name": "Special Red Card",
+      "count": 1,
+      "print_id": "me4-82"
+    },
+    {
+      "name": "Enhanced Hammer",
+      "count": 1,
+      "print_id": "sv6-148"
+    },
+    {
+      "name": "Field Blower",
+      "count": 1,
+      "print_id": "sm2-125"
+    },
+    {
+      "name": "Lost Vacuum",
+      "count": 1,
+      "print_id": "swsh11-162"
+    },
+    {
+      "name": "Escape Rope",
+      "count": 1,
+      "print_id": "swsh5-125"
+    },
+    {
+      "name": "Hisuian Heavy Ball",
+      "count": 1,
+      "print_id": "swsh10-146"
+    },
+    {
+      "name": "Secret Box",
+      "count": 1,
+      "print_id": "sv6-163"
+    },
+    {
+      "name": "Muscle Band",
+      "count": 2,
+      "print_id": "xy1-121"
+    },
+    {
+      "name": "Float Stone",
+      "count": 2,
+      "print_id": "xy8-137"
+    },
+    {
+      "name": "Forest Seal Stone",
+      "count": 1,
+      "print_id": "swsh12-156"
+    },
+    {
+      "name": "Sky Field",
+      "count": 2,
+      "print_id": "xy6-89"
+    },
+    {
+      "name": "Path to the Peak",
+      "count": 2,
+      "print_id": "swsh6-148"
+    }
+  ],
+  "energy": [
+    {
+      "name": "Double Colorless Energy",
+      "count": 4,
+      "print_id": "sm1-136"
+    }
+  ]
+}
