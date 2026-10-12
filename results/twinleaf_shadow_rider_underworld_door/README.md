@@ -1,6 +1,6 @@
 # Shadow Rider Calyrex VMAX: Underworld Door target-legality defect and research-side guard
 
-**Status (2026-10-12):** Source-confirmed defect at pinned Twinleaf revision `3348ebdc898f175a2ed8f999133cd13d1afd01f5`; targeted executable regression and hook committed, awaiting CI confirmation. This is a simulator-compatibility finding, not a measured deck advantage.
+**Status (2026-10-12):** Source-confirmed defect at pinned Twinleaf revision `3348ebdc898f175a2ed8f999133cd13d1afd01f5`; the targeted engine regression and runtime hook [passed CI run 38246939386](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38246939386). This is a simulator-compatibility finding, not a measured deck advantage.
 
 ## Rules and implemented path
 
@@ -16,7 +16,7 @@ Research-owned hook: [`simulation/twinleaf/hooks/shadow-rider-underworld-door.cj
 
 It intercepts only the Underworld Door PowerEffect in the research runtime, finds non-Psychic or empty Bench destinations using the actual slot's `getPokemonCard()`, adds those slots to `blockedTo` for bot/UI selection, and wraps `AttachEnergyPrompt.validate` to reject non-Psychic destinations even if supplied by a scripted client. The installer is idempotent, uses the existing engine class and prompt interfaces, and preserves normal Energy selection, Ability timing, and existing card effects. It leaves vendor code and the pinned Gitlink unchanged.
 
-Targeted regression: [`simulation/twinleaf/test-underworld-door-targets.cjs`](../../simulation/twinleaf/test-underworld-door-targets.cjs). It constructs a live pinned engine Ability prompt with a Psychic and a Dragon Bench target. Its assertions confirm that the baseline permits the incorrect Dragon assignment, the hook rejects that assignment, the Psychic assignment remains permitted, and second installation is a no-op. The manual Twinleaf workflow also exercises this SFT after compilation.
+Targeted regression: [`simulation/twinleaf/test-underworld-door-targets.cjs`](../../simulation/twinleaf/test-underworld-door-targets.cjs). It constructs a live pinned engine Ability prompt with a Psychic and a Dragon Bench target. Its assertions confirm that the baseline permits the incorrect Dragon assignment, the hook rejects that assignment, the Psychic assignment remains permitted, and second installation is a no-op. The manual Twinleaf workflow exercised this SFT after compilation and passed: the unpatched prompt accepted an invalid Dragon Bench attachment; the patched prompt rejected it while accepting a Psychic Bench target; duplicate installation remained idempotent. The CI run also completed the real-bot setup smoke after cleaning up and exiting the standalone process.
 
 ## Limits and next evidence
 
