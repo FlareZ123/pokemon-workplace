@@ -1,0 +1,26 @@
+name: Validate Shadow Rider Latias Dynamic Ability Lock
+
+on:
+  push:
+    paths:
+      - 'tools/shadow_rider_latias_lock.py'
+      - 'tools/shadow_rider_guzma_damage.py'
+      - 'results/tests/shadow_rider_latias_lock/**'
+      - 'resources/cards/en/sv8.json'
+      - 'resources/cards/en/swsh2.json'
+      - 'resources/cards/en/swsh6.json'
+      - '.github/workflows/validate-shadow-rider-latias-lock.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m results.tests.shadow_rider_latias_lock.reproduce
