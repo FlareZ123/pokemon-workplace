@@ -5,6 +5,7 @@ on:
     paths:
       - "tools/mew_path_escape_frontier.py"
       - "results/tests/mew_genesect_path_escape/**"
+      - "results/decks/mew-genesect-sky3-path1-aichi-counterfactual/**"
       - "results/competitive_deck_baselines/mew_genesect_reproduce.py"
       - ".github/workflows/validate-mew-genesect-path-escape.yml"
   workflow_dispatch:
