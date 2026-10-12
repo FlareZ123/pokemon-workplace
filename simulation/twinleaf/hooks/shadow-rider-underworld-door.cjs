@@ -7,6 +7,8 @@ const {AttachEnergyPrompt}=require(path.join(ENGINE,'game/store/prompts/attach-e
 const {PlayerType,SlotType}=require(path.join(ENGINE,'game/store/actions/play-card-action'));
 const {CardType}=require(path.join(ENGINE,'game/store/card/card-types'));
 const {pokemonHasCardType}=require(path.join(ENGINE,'game/store/card/pokemon-card'));
+const {GameError}=require(path.join(ENGINE,'game/game-error'));
+const {GameMessage}=require(path.join(ENGINE,'game/game-message'));
 const MARK=Symbol.for('pokemon-research.shadow-rider-underworld-door-guard');
 /** Restrict Underworld Door's targets to actual Benched Psychic Pokemon.
  * Pinned Twinleaf currently checks PokemonCardList instanceof PokemonCard and passes
@@ -22,6 +24,12 @@ function install() {
     if(!(effect instanceof PowerEffect) || effect.power!==this.powers[0])
       return original.call(this,store,state,effect);
     const owner=effect.player,previous=store.prompt;
+    // The pinned source checks only for a nonempty Bench. With no Psychic
+    // Bench target the Ability has no possible effect and cannot be used.
+    if(!owner.bench.some(slot=>{
+      const pokemon=slot.getPokemonCard();
+      return pokemon && pokemonHasCardType(pokemon,CardType.PSYCHIC);
+    })) throw new GameError(GameMessage.CANNOT_USE_POWER);
     store.prompt=function(s,prompt,continuation) {
       if(prompt instanceof AttachEnergyPrompt && prompt.playerId===owner.id &&
           prompt.cardList===owner.hand && prompt.slots.includes(SlotType.BENCH)) {
