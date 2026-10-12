@@ -1,0 +1,15 @@
+name: Validate Regidrago Legacy Star natural launch
+on:
+  workflow_dispatch:
+
+jobs:
+  legacy-launch:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact Legacy Star draw-event and independent Prize oracle
+        run: python -m results.regidrago_legacy_star_launch.reproduce
