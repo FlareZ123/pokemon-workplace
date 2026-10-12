@@ -28,6 +28,14 @@ on:
         type: string
         required: true
         default: '20261012'
+      tactic_order:
+        description: Research comparison of native bot action priority
+        type: choice
+        required: true
+        default: native
+        options:
+          - native
+          - attack_before_retreat
 
 permissions:
   contents: read
@@ -75,10 +83,13 @@ jobs:
         run: node simulation/twinleaf/test-tournament-probe-settings.cjs
       - name: Verify action telemetry under in-place game-state mutation
         run: node simulation/twinleaf/test-match-action-telemetry.cjs
+      - name: Verify research bot tactic reorder and pinned assumptions
+        run: node simulation/twinleaf/test-tactic-order-policy.cjs
       - name: Probe complete 60-card tournament decks through pinned live engine
         timeout-minutes: 4
         env:
           TWINLEAF_DECK_A: ${{ inputs.deck_a }}
           TWINLEAF_DECK_B: ${{ inputs.deck_b }}
           TWINLEAF_SEEDS: ${{ inputs.seeds }}
+          TWINLEAF_TACTIC_ORDER: ${{ inputs.tactic_order }}
         run: node simulation/twinleaf/tournament-bounded-match.cjs
