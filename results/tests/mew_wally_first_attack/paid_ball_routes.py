@@ -3,7 +3,15 @@ from collections import Counter
 from fractions import Fraction
 from itertools import combinations
 from math import comb
-from reproduce import opening_counts, probability_all_prized
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT))
+
+from results.tests.mew_wally_first_attack.reproduce import (
+    opening_counts, probability_all_prized,
+)
 
 # Mew V, Genesect V, Mew VMAX, Wally, DCE, VIP, Quick Ball, Ultra Ball, other.
 POOL = (4, 4, 3, 1, 4, 3, 4, 4, 33)
