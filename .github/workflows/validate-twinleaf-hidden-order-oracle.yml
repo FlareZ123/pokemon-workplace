@@ -1,0 +1,30 @@
+name: Audit Twinleaf hidden-order policy leakage
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hidden-order:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out research source
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Fetch only pinned Twinleaf
+        run: git submodule update --init --depth=1 vendor/twinleafgg
+      - name: Set up pinned Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+          cache: npm
+          cache-dependency-path: vendor/twinleafgg/ptcg-server/package-lock.json
+      - name: Install engine dependencies
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Exercise physical hidden-order counterexample
+        run: node simulation/twinleaf/test-hidden-topdeck-oracle.cjs
