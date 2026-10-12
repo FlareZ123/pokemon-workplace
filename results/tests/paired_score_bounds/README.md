@@ -41,6 +41,12 @@ For each deck, subtract this radius from the empirical lower endpoint and add it
 
 At only three paired seeds, the confidence half-width is 0.784100276, so the formal band remains extremely broad. At 200 genuinely random independent seed pairs it is still approximately 0.096032279. With the current bounded manual CI design permitting at most three pairs, these statistics should remain an audit and reporting aid rather than a ranking criterion.
 
+## Reinterpreting one real six-game diagnostic
+
+The earlier [Shadow Rider versus Regidrago headless comparison](../twinleaf_shadow_rider_regidrago_baseline/) recorded Shadow Rider winning all six complete games across three seat-swapped seeds. Its raw within-sample score is therefore exactly 1.0, and its sample identified score interval is [1,1]. Our tool would report the corresponding *conditional iid paired-seed* 95% band as approximately **[0.215899724,1]**, assuming the engine and policy remain fixed and the seeds are representative independent draws.
+
+Those seeds were selected explicitly, and the Regidrago bot barely used Apex Dragon; the conditions for interpreting the band as a meaningful matchup forecast are unproven. This illustrates why a 6-0 headless observation cannot establish a 100% expected simulator win rate, much less a skilled paper Expanded outcome. The raw six-game observation remains valuable as an engine and policy diagnostic.
+
 ## Reproduction and integration
 
 - [Score calculator](../../../simulation/twinleaf/paired-score-bounds.cjs)
