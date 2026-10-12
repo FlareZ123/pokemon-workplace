@@ -73,6 +73,10 @@ function run() {
     qty: 11, name: 'Basic Psychic Energy', printId: 'bw1-109'
   }, new Map([['bw1', 'BLW']]), basic).status, 'qualified_exact');
 
+  const fusionMew=[{set:'FST',setNumber:'113',name:'Mew V',fullName:'Mew V FST',
+    tags:['V','Fusion Strike'],attacks:[{name:'Energy Mix'},{name:'Psychic Leap'}]}];
+  assert.equal(matchPaperPrint({qty:4,name:'Mew V (Fusion Strike)',printId:'swsh8-113'},
+    new Map([['swsh8','FST']]),fusionMew).status,'qualified_exact');
   console.log('[print-coverage] Synthetic collision and set-resolution checks passed');
 
   const decks = auditAichiBaselines();
