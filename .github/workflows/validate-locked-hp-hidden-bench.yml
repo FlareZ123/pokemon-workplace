@@ -1,0 +1,25 @@
+name: Validate lock preflight before Poffin K1
+
+on:
+  push:
+    paths:
+      - 'tools/locked_hp_hidden_direct_bench_bridge.py'
+      - 'tools/locked_hp_direct_bench_transaction.py'
+      - 'tools/hp_bounded_hidden_direct_bench_bridge.py'
+      - 'results/locked_hp_hidden_direct_bench_bridge/**'
+      - '.github/workflows/validate-locked-hp-hidden-bench.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Assert Item lock prevents physical search and K1 inference
+        run: python results/locked_hp_hidden_direct_bench_bridge/reproduce.py
