@@ -24,6 +24,8 @@ Tournament source: [CL Aichi Open League decklists](https://limitlesstcg.com/tou
 
 **Promising experimental candidate:** [Mew/Genesect with a fourth Battle VIP Pass](decks/mew-genesect-vip4-aichi-counterfactual/) swaps one Special Red Card for an additional first-turn setup Item. The [exact restricted setup model](mew_genesect_vip_opening/) quantifies improvement in a defined Mew-plus-Genesect early-access endpoint; its lost Red Card disruption value and actual match results remain untested. This is an experiment, not a replacement for the fifth-place published list.
 
+**Experimental Regidrago:** [Two-Dragapult 60-card variant](decks/regidrago_dragapult_2/) substitutes one Battle VIP Pass for a second Dragapult ex. [Exact first-Item study](regidrago_joint_launch/) improves the restricted joint access endpoint; legality is checked by its [variant proof](decks/regidrago_dragapult_2/reproduce.py). Match win rates remain unknown.
+
 ## How to interpret strength
 
 The research contains exact mathematical probabilities, constrained first-turn launch simulations, card-rule regressions, physical conservation tests, and tournament observations. These answer different questions. **A first-turn access probability is not a match win rate.** Candidate swaps that improve an access endpoint can still worsen tactical value under lock effects, Supporter contention, occupied Bench slots, Prize configurations, resource discard requirements, or other metagames.
