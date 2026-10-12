@@ -45,7 +45,7 @@ With Path to the Peak, moving an opposing Active does nothing to remove the Stad
 
 `tools/shadow_rider_latias_lock.py` uses an explicit dynamic lock state before/after the opposing gust, rather than treating a starting Ability lock as permanently active for an entire attacking turn. It tracks six own Pokémon, their attached Psychic counts, one Retreat, one Supporter and the chosen Active as actions resolve. The independent `reproduce.py` uses a breadth-first action graph and verifies printed Abilities/rules for Latias ex, Galarian Weezing and Path to the Peak.
 
-**2,592** state/source/Ability-lock/HP comparisons were independently verified. Reproduce from repository root:
+**3,888** state/source/Ability-lock/HP comparisons were independently verified. Reproduce from repository root:
 `python -m results.tests.shadow_rider_latias_lock.reproduce`.
 
 **Limits and implications:** This model omits other attacking options, Pokémon with additional attached Energy, Ability reactivation triggers, evolving and searching, Tool access, stadium replacement and opponent retaliation. It identifies a specific reason that an active-only Ability lock can be neutralized by an opponent-first gust before choosing a free retreat line. It also shows why Bench selection between Mimikyu and Latias, both actual champion 60 cards, may change tactical source availability. Any assertion about which to Bench in a real game requires its matchup-specific counterattacks and resources.
