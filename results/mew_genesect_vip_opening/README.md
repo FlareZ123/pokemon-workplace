@@ -133,6 +133,22 @@ Cutting Ultra Ball rather than Special Red Card sacrifices only **0.186098795 pe
 
 Four newly varied physical ten-card source distributions, each evaluated with two target requirements, agree with an independent labeled-card setup/Prize/Mail-inspection oracle. Printed card identities and all 60-card candidate constructions are validated by the shared paper Expanded checker.
 
+## Countervailing Ultra Ball function: acquiring Mew VMAX
+
+The narrow two-Genesect Basic access difference between cutting Ultra Ball and cutting Special Red Card cannot capture the lost **Evolution search**. [mew_vmax_ultra_frontier.py](mew_vmax_ultra_frontier.py) separately models access to at least one Mew VMAX (three copies in the tournament list) in the naturally visible eight cards or through **one** physically payable Ultra Ball, with an unprized Mew VMAX still in the deck. All six Prizes and the Basic-valid seven-card opener are integrated exactly; this event means acquiring an Evolution card for possible later use, since normal first-turn evolution is prohibited.
+
+| Designated safely discardable copies | Natural held Mew VMAX | Four Ultra Ball: direct or payable search | Three Ultra Ball: direct or payable search | Search access lost |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 33.759100285% | 33.759100285% | 33.759100285% | 0 pp |
+| 4 | 33.759100285% | 35.684429083% | 35.265837540% | 0.418591543 pp |
+| 6 | 33.759100285% | **38.040233151%** | **37.113331304%** | **0.926901847 pp** |
+| 12 | 33.759100285% | 46.882391219% | 44.078132488% | 2.804258731 pp |
+| 20 | 33.759100285% | 56.730142863% | 51.908345690% | 4.821797173 pp |
+
+At D=6, the 0.9269-point Ultra Ball loss for acquiring Mew VMAX is almost five times the 0.1861-point loss in the *separate* Mew+two-Genesect first-turn board metric. The increased relative effect at D=12 reflects that discard payment is no longer as much of the limiting factor.
+
+This Stage-1 acquisition event does not simultaneously require the Mew V + Genesect setup and does not reserve a Ball or two discard cards for competing Basic searches. It therefore overstates realizable *joint* setup readiness. An independent physical labeled-card oracle exactly matches 34,272 valid toy hand/Prize/draw configurations for each of three Ultra counts, and printed English Ultra Ball/Mew VMAX identity is checked from the bundled database.
+
 ## Strategic interpretation and limitations
 
 This is a **narrow first-turn source-access study**. The all-VIP table omits the Ball routes; the paid-Ball extension adds Quick Ball and Ultra Ball with explicit hypothetical discharge policies. Both models omit Trainers' Mail, Secret Box, Dedenne-GX, Crobat V, Genesect V's Fusion Strike System, Forest Seal Stone, further natural turns, Energy attachments, VMAX evolution, and opponent interaction. It does not model match wins. Genesect's Ability draw size also depends on hand size and the number of Fusion Strike Pokémon in play, so an extra Genesect is not a fixed card-draw reward.
