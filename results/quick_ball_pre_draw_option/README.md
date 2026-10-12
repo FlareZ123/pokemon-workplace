@@ -1,0 +1,7 @@
+# Quick Ball: pre-draw resource commitment
+
+This result compares retaining Quick Ball through one natural draw with spending one payable copy before the draw. It conditions on a legal Basic opening and one or more critical non-starters being Prized. At 12 dedicated disposable cards in the 60-card model, waiting yields 17.755369% joint attacker/Gladion access, compared with 17.498092% for attacker-priority eager spending and 16.919584% for rescue-priority eager spending. Each is an exact opening-access calculation, not a match win rate.
+
+Model: [Python implementation](../../tools/quick_ball_pre_draw_option.py). The strict after-draw line matches [the independent post-draw frontier](../quick_ball_allocation_draw_frontier/). The experiment holds subsequent Item and Ability permission, Bench space, and deadlines unconstrained. It models one Tapu Lele-GX, one required attacker, two Gladion-like Supporters, four Quick Ball, six Prizes, a seven-card opening, and 10 other Basic starters. A Quick Ball spends one physical copy and one designated disposable card. The eager targets are chosen using opening-hand priorities without peeking at hidden Prizes.
+
+The central result is a small, positive value to retaining the search decision. Natural draws can make one target redundant, freeing Quick Ball to satisfy the other. However, any objective that expires before the draw prohibits waiting for that objective, and the reported probabilities cannot be used as real-world win rates.
