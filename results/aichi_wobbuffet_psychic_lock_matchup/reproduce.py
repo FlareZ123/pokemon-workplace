@@ -70,6 +70,6 @@ for id_, ptype, ability, survives in named:
     assert ("Psychic" in card["types"]) == survives
 
 assert "Your Basic Pokémon" in printed["sv8-76"]["abilities"][0]["text"]
-assert printed["xy4-36"]["stage"] == "Basic"
-assert printed["swsh12-136"]["stage"] == "VSTAR"
+assert "Basic" in printed["xy4-36"]["subtypes"]
+assert "VSTAR" in printed["swsh12-136"]["subtypes"]
 print("PASS: per-print, copy-weighted Bide Barricade suppression counts and type gates.")
