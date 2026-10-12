@@ -167,3 +167,13 @@ A stronger next step would value a concrete Expanded archetype-line-specific
 objective and calculate the opponent's optimal choice of bonus draws,
 including Bench space and Prize-dependent search. The resulting matchup
 calibration could replace the illustrative L.
+
+
+## Two singleton hand-to-Bench triggers with paid search
+
+The [dual Bench-trigger Item result](bench_trigger_item_notes.md) composes starting-Active role consumption with physically distinct one-output search Items, two-discard payments and conditional Prize risk. Unlike the earlier non-starting two-target model, the two target cards themselves count as ordinary Basic starters during the seven-card opening.
+
+For an abstract deck with three Items, twelve designated disposable cards and eight opponent bonus draws, conditional joint entry-trigger access falls from 41.304032% in a role-blind estimate to 7.746101% with one unrelated Basic starter, and from 24.774078% to 20.694951% with eleven unrelated Basics. Both estimates enforce the same Prize and payment gates. When no unrelated Basic exists, reaching both singleton hand-to-Bench triggers without zone recovery is impossible even though a legal Basic opening can occur.
+
+See the [independent physical enumerator](bench_trigger_item_reproduce.py) and [exact kernel](../../tools/opponent_bonus_bench_trigger_items.py). The card-text anchors are Expanded-legal Radiant Eternatus swsh12pt5-105 and Lumineon V swsh9-40. These values are narrow conditional access endpoints, not win rates.
+
