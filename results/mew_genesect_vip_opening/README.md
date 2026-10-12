@@ -184,6 +184,22 @@ For D6, accounting for naturally held Mail's ability to search Ultra increases t
 
 Mail search opportunities also have competing VIP Pass and other Trainer uses; this Stage-only table cannot be added to the Basic-board and joint-Stage tables. A comprehensive adaptive Mail policy deciding whether to take VIP or Ultra based on observed state is the next natural research problem.
 
+## Finite Mail capacity: adaptive VIP versus Ultra selection
+
+[mail_vip_ultra_choice.py](mail_vip_ultra_choice.py) solves the actual one-Trainer-per-Mail output choice in an illustrative **conditional** Mew/Genesect state: the unprized deck contains 46 cards, including three searchable Battle VIP Passes and four searchable Ultra Balls; two or three Trainers' Mail are already in hand. The player must obtain at least one of each target, and each Mail may search the top four, choose one observed Trainer (excluding Mail), shuffle the rest, and remove the chosen card from the deck. This is a conditional connector-capacity calculation: the likelihood of naturally holding two or three Mails and the prerequisite Basic/VMAX material requirements are not included.
+
+| Held Mail copies | Optimal chance of both targets | VIP-first policy | Ultra-first policy | Naive independent-target proxy |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 0% | 0% | 0% | 7.655718473% |
+| 2 | **14.081827527%** | 14.081827527% | 13.639183491% | 22.667747284% |
+| 3 | **31.199717330%** | 31.199717330% | 30.343220688% | 38.435146930% |
+
+At a fixed N=46, three VIP and four Ultra, the VIP target is scarcer, so a greedy Ultra-first choice can waste a top-four observation in which both are present. With only one Mail, the true success probability of obtaining **both distinct Trainers** is exactly zero even when it sees both simultaneously; it has only one output slot. The independent-target proxy incorrectly treats each desired target as reachable without sharing one physical Mail search.
+
+An exact memoized finite-horizon state policy dynamically chooses which observed target to acquire after each top-four inspection, accounts for targeted copies removed from the deck, and tracks the remaining physical Mail copies. Four independently constructed fully labeled eight- and nine-card deck game trees, with multiple policies and top-two inspections, exactly reproduce all twelve grouped probability cases.
+
+This extends the existing project theme of shared connector contention to a real printed card in a tournament deck. The result does not establish the overall optimal first-turn Mew policy because it does not integrate simultaneously required Basics, Mew VMAX, Ultra discard payment, Prize uncertainty before K1, and other Mail outputs.
+
 ## Strategic interpretation and limitations
 
 This is a **narrow first-turn source-access study**. The all-VIP table omits the Ball routes; the paid-Ball extension adds Quick Ball and Ultra Ball with explicit hypothetical discharge policies. Both models omit Trainers' Mail, Secret Box, Dedenne-GX, Crobat V, Genesect V's Fusion Strike System, Forest Seal Stone, further natural turns, Energy attachments, VMAX evolution, and opponent interaction. It does not model match wins. Genesect's Ability draw size also depends on hand size and the number of Fusion Strike Pokémon in play, so an extra Genesect is not a fixed card-draw reward.
