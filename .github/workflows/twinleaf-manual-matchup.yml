@@ -125,9 +125,10 @@ jobs:
           TWINLEAF_REPORT_PATH: tournament-match-report.json
         run: node simulation/twinleaf/tournament-bounded-match.cjs
       - name: Save immutable run manifest and raw paired traces
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: twinleaf-matchup-report
           path: tournament-match-report.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
