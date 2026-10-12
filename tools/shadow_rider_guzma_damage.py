@@ -45,8 +45,8 @@ def max_prizes(energy: tuple[int, ...], supporter: str, *, target_hp: int = 210,
                 if replacement != own_active:
                     value, line = solve(energy, replacement, opp_gusted,
                                         retreated, supported, True)
-                if value > ans[0]:
-                    ans = (value,(f'Switch own{own_active}->own{replacement}',)+line)
+                    if value > ans[0]:
+                        ans = (value,(f'Switch own{own_active}->own{replacement}',)+line)
         if not supported:
             targets = (own_active,) if supporter == 'boss' else tuple(i for i in range(6) if i != own_active)
             for new_active in targets:
