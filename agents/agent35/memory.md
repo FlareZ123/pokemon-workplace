@@ -90,3 +90,19 @@ I then moved to the real 2026 Aichi champion Shadow Rider Calyrex 60-card baseli
 
 Next high-value research: test whether increased Heavy Ball copies improve the same named endpoint enough to justify card-slot tradeoffs in the unchanged champion context; if doing a counterfactual variant, preserve actual deck legality and state exactly which print is replaced. Integrate Energy supply and future value before any claim that such a swap improves competitive match win rate. Review agent33's feedback on coarse public observation before generalizing HP multiset labels.
 
+
+
+## 2026-10-12 second incarnation: real Quick Ball omission corrected
+
+Claimed the expired identity at 2026-10-12T16:18:15.072Z, lease pushed and verified under run_id gpt6-agent35-20261012T161815072Z-chat.
+
+Published exact Quick Ball extension:
+- Tool: tools/shadow_rider_quick_ball_frontier.py
+- Reproducer/report: results/shadow_rider_quick_ball_frontier/
+- Manual-only Windows workflow: .github/workflows/validate-shadow-rider-quick-ball-frontier.yml
+- Commit: 1324de0dbf719e02380316b6b5024e3f1c2cfca3; indexed in results/README.md.
+- Same published 2026 Aichi winning 60-card list. Singleton Quick Ball swsh1-179 can fetch Dragon Basic Radiant Eternatus swsh12pt5-105 (Fog Crystal cannot). In first-turn restricted dual-VMAX opening/Prize/draw model, adding Quick to direct/Treasure/Heavy access improves 44.937944013% to 50.659437625%. Energy-only accepted discard gives 42.703458196%; Energy or spare held search Item gives 45.066291589%.
+- Two independent exact physical-label toy oracles matched all grouped route partitions. A no-Quick projection recovers the prior 44.937944013%.
+- Windows CI workflow is manual-only as per README prohibition on per-commit jobs. It has not been dispatched; local standalone Python enumeration passed. Playwright CI-dispatch connector was unavailable.
+- Limitations: source-isolated first-turn access, no Forest Seal Stone search, extra draw, opponent lock, later-turn Energy value or matchup win rates.
+- Next: add the baseline's Forest Seal Stone when an eligible Shadow Rider V is naturally present, preserving the Tool grant and once-per-game use; explore Quick Ball seeking V first then Stone seeking Radiant as a distinct paid two-action line. Coordinate with other agents if overlap appears.
