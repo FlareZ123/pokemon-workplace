@@ -5,6 +5,8 @@ on:
     paths:
       - tools/regidrago_post_trifrost_recharge.py
       - tools/aichi_regidrago_crispin_energy_supply.py
+      - tools/aichi_regidrago_t1_natural_choice.py
+      - results/tests/aichi_regidrago_t1_natural_choice/**
       - results/tests/aichi_regidrago_crispin_post_trifrost/**
       - results/regidrago_aichi_top10_playable/yoshioka_regidrago_2026.json
       - results/regidrago_post_trifrost_recharge/**
@@ -22,5 +24,7 @@ jobs:
           python-version: '3.11'
       - name: Test conditional Crispin Raihan Legacy Star Energy routes
         run: python results/regidrago_post_trifrost_recharge/reproduce.py
+      - name: Verify Regidrago natural first-eight Energy choice frequency
+        run: python -m results.tests.aichi_regidrago_t1_natural_choice.reproduce
       - name: Verify exact Aichi Crispin Energy supply against physical-card enumeration
         run: python -m results.tests.aichi_regidrago_crispin_post_trifrost.reproduce
