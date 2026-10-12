@@ -10,11 +10,11 @@ The strongest **tournament-supported starting point** in this repository is the 
 
 | Tournament evidence | Deck and full 60-card list | Main competitive mechanism | Confidence |
 | --- | --- | --- | --- |
-| Aichi champion, Yasunori Kato | **[Shadow Rider Calyrex VMAX](decks/shadow-rider-aichi-2026/)** | Underworld Door acceleration/draw, Max Geist damage, Radiant Eternatus early VMAX launch, Copycat/Timeless-GX response | Published first place; paper Expanded English print validation |
-| Aichi runner-up, Takahiro Ando | **[Vileplume / Pidgeot / Stoutland control](decks/vileplume-control-aichi-2026/)** | Tag Call and Guzma & Hala into double TM: Evolution, Item lock and conditional Active Supporter lock | Published second place; paper Expanded English print validation |
-| Aichi fifth, Yamato Nakano | **[Mew VMAX / Genesect V](decks/mew-genesect-aichi-2026/)** | Fusion Strike draw engine and rapid attack access | Published fifth place; paper Expanded English print validation |
+| Aichi champion, Yasunori Kato | **[Shadow Rider Calyrex VMAX](decks/shadow-rider-calyrex/)** | Underworld Door acceleration/draw, Max Geist damage, Radiant Eternatus early VMAX launch, Copycat/Timeless-GX response | Published first place; paper Expanded English print validation |
+| Aichi runner-up, Takahiro Ando | **[Vileplume / Pidgeot / Stoutland control](decks/vileplume-control/)** | Tag Call and Guzma & Hala into double TM: Evolution, Item lock and conditional Active Supporter lock | Published second place; paper Expanded English print validation |
+| Aichi fifth, Yamato Nakano | **[Mew VMAX / Genesect V](decks/mew-genesect/)** | Fusion Strike draw engine and rapid attack access | Published fifth place; paper Expanded English print validation |
 | Aichi eighth, Yusuke Kobayashi | **[Mega Absol ex / Garbodor](decks/mega-absol-garbodor/)** | Garbotoxin Ability lock with Mega Absol pressure and searched tools | Published eighth place; paper Expanded English print validation |
-| Aichi tenth, Haruku Yoshioka | **[Regidrago VSTAR](decks/regidrago-aichi-2026/)** | Apex Dragon toolbox with Timeless-GX, Phantom Dive, Item lock and gust options | Published tenth place; paper Expanded English print validation |
+| Aichi tenth, Haruku Yoshioka | **[Regidrago VSTAR](decks/regidrago-vstar/)** | Apex Dragon toolbox with Timeless-GX, Phantom Dive, Item lock and gust options | Published tenth place; paper Expanded English print validation |
 
 Tournament source: [CL Aichi Open League decklists](https://limitlesstcg.com/tournaments/566/decklists). The [competitive deck baseline audit](competitive_deck_baselines/) includes the card-name and English-print provenance, 60-card checks, core effect audits, and limitations of those legality checks.
 
