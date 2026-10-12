@@ -8,6 +8,7 @@ The candidate deck pages below contain all 60 cards, with English print IDs for 
 | 2026 Aichi runner-up | [Vileplume / Pidgeot / Stoutland Control](vileplume-control/) | First-turn Ω Barrage / TM Evolution line, Item and Supporter locks |
 | 2026 Aichi fourth place | [Raichu / Electrode Combo](raichu-electrode-aichi-2026/) | Extra Energy Bomb, conditional Reversal/Counter Energy, Electro Rain spreading |
 | 2026 Aichi fifth place | [Mew VMAX / Genesect V](mew-genesect/) | Fusion Strike engine, rapid Item-search access, lock vulnerability |
+| 2026 Aichi sixth, **English adaptation** | [Iron Thorns ex quad-lock](iron_thorns_aichi_english/) | Lock-focused, 57 source cards preserved, three Japanese-only substitutions; [English proof](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38292730598) |
 | 2026 Aichi eighth place | [Mega Absol ex / Garbodor](mega-absol-garbodor/) | Garbotoxin Ability lock, Absol attacks and searchable Tools |
 | 2026 Aichi tenth place | [Regidrago VSTAR](regidrago-vstar/) | Discard-pile Dragon attack copying, Timeless-GX, gust and Budew |
 | **Experimental one-card variant** | [Mew / Genesect, four Battle VIP Pass](mew-genesect-vip4-aichi-counterfactual/) | Early access versus lost Special Red Card disruption |
