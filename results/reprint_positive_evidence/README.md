@@ -8,17 +8,19 @@ Can the resolver turn the Tournament Handbook's explicit Copycat example into pr
 
 Yes.
 
-The current Tournament Handbook identifies Copycat `ex7-83` and `sm7-127` as functionally identical despite their wording difference. The bundled archive also contains two other historical Copycat prints, `ecard1-138` and `ex15-73`, whose current-semantic fingerprints are exactly identical to the certified source print `ex7-83`.
+The current Tournament Handbook identifies Copycat `ex7-83` and `sm7-127` as functionally identical despite their wording difference. The bundled archive contains two more prints, `ecard1-138` and `ex15-73`, that share the certified source print's fingerprint. Two additional prints, `col1-77` and `hgss1-90`, use the expression “draw a number of cards equal to” rather than “count the number ... and draw that many”. Their count, shuffle, and draw transitions coincide; `tools/copycat_number_wording.py` applies that narrowly verified normalization before fingerprinting.
 
-The positive-evidence layer therefore resolves exactly three historical prints:
+The positive-evidence layer therefore resolves exactly five historical prints:
 
 - `ecard1-138`;
 - `ex15-73`;
-- `ex7-83`.
+- `ex7-83`;
+- `col1-77`;
+- `hgss1-90`.
 
 All three point to the explicitly certified legal target `sm7-127`.
 
-The two other pre-Black & White Copycat wording forms, `hgss1-90` and `col1-77`, remain in semantic review. Their effects appear closely related, but this result does not infer equivalence from that similarity.
+The two count-wording forms now have explicit source-ID, name, Supporter-classification, and exact-rule guards. Their equivalence is a narrow, testable semantic inference; the Tournament Handbook directly certifies only `ex7-83` against `sm7-127`.
 
 ## Method
 
@@ -27,7 +29,7 @@ The two other pre-Black & White Copycat wording forms, `hgss1-90` and `col1-77`,
 1. take the official positive source `ex7-83`;
 2. verify the official target `sm7-127` is directly legal in the current paper Expanded model;
 3. compute the current-semantic fingerprint of `ex7-83`;
-4. admit only historical same-name prints with that exact source fingerprint.
+4. admit only historical same-name prints with that exact source fingerprint after the two guarded count-wording normalizations.
 
 If an old print is semantically identical under the repository fingerprint to a source that official current policy says is functionally identical to a legal target, the same legal target is valid for that exact duplicate.
 
@@ -47,7 +49,7 @@ The separation preserves provenance. A Copycat accepted through an explicit curr
 
 **Repository card-text evidence.** `ecard1-138`, `ex15-73`, and `ex7-83` share one exact current-semantic fingerprint.
 
-**Conservative inference.** The evidence propagates only across that exact source fingerprint. The other historical Copycat wording class remains unresolved.
+**Conservative inference.** Evidence propagates across the certified source fingerprint and the two audited count-wording synonyms, without generalizing to other cards.
 
 ## Reproduction
 
@@ -57,7 +59,7 @@ Run:
 
 Expected output class:
 
-- 3 official semantic candidate prints;
+- 5 official semantic candidate prints;
 - 1 name, Copycat;
 - explicit legal target `sm7-127`.
 
