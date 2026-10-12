@@ -1,0 +1,28 @@
+name: Validate Shadow Rider Dual Recovery Lock Matrix
+
+on:
+  push:
+    paths:
+      - 'tools/shadow_rider_dual_rescue.py'
+      - 'tools/shadow_rider_guzma_damage.py'
+      - 'results/tests/shadow_rider_dual_rescue/**'
+      - 'resources/cards/en/bw11.json'
+      - 'resources/cards/en/sv8.json'
+      - 'resources/cards/en/xy8.json'
+      - 'resources/cards/en/sv6.json'
+      - 'resources/cards/en/swsh6.json'
+      - '.github/workflows/validate-shadow-rider-dual-rescue.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m results.tests.shadow_rider_dual_rescue.reproduce
