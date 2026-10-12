@@ -98,6 +98,9 @@ jobs:
         run: node simulation/twinleaf/test-baseline-decks.cjs
       - name: Check strict, complete Aichi 60-card Twinleaf deck materialization
         run: node simulation/twinleaf/test-tournament-deck-loader.cjs
+      - name: Smoke-test experimental Mew Sky3 Path1 under pinned Twinleaf
+        run: node simulation/twinleaf/test-mew-sky3-candidate.cjs
+        timeout-minutes: 1
       - name: Enter a real Twinleaf turn with Aichi Vileplume and Mew exact 60-card lists
         run: node simulation/twinleaf/test-tournament-headless-setup.cjs
         timeout-minutes: 2
