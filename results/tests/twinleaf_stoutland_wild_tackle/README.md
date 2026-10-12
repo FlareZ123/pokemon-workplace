@@ -16,6 +16,12 @@ The [single-file attack-level regression](../../../simulation/twinleaf/test-stou
 
 Both Twinleaf manual workflows run the Stoutland SFT before producing headless matchup diagnostics.
 
+## Executed validation
+
+[Paired manual CI 38302051788](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38302051788) passed the Stoutland old-versus-fixed coin branch regression, the real bounded-runner hook-installation test, both earlier source-specific hook tests and a physical Vileplume vs Shadow Rider 60-card pair. The runs finished normally with three installed `engine_hooks` labels.
+
+The native AI did **not** choose Wild Tackle in either game: the Vileplume side's recorded attacks were Roar, Massive Bloom, Allergic Explosion-GX, Collect and Itchy Pollen. Thus the full-game pair validates safe integration but does not observe the corrected Stoutland damage during gameplay. Both wins belonged to the Shadow Rider bot under its weak native policy. Those outcomes cannot rank the two published archetypes.
+
 ## Boundaries
 
 This regression isolates the printed self-hit and native `DealDamageEffect` payload. It is deliberately agnostic about whether a particular control bot elects to attack with Stoutland, whether the opponent creates enough damage to KO it, and the comparative value of Item and Supporter locks. Real game matchups still need a legal policy against a varied field. Engine outcomes from older unguarded traces should not be treated as identical-semantic samples.
