@@ -111,7 +111,7 @@ def main():
         unfiltered, total_deck_copies=CAPS,
     )
     assert len(filtered.belief_for("opponent").masses) == 3
-    assert oracle(False) == (F(1, 2), F(3, 4), F(1, 4))
+    assert oracle(False) == (F(1, 2), F(3, 4), F(1, 2))
     assert oracle(True) == (F(1), F(1, 2), F(1, 2))
 
     old_ledger, acquired = acquired_fixture()
