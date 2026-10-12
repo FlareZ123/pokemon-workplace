@@ -1,0 +1,20 @@
+name: Validate Shadow Rider Path counter frontier
+on:
+  push:
+    paths:
+      - 'results/shadow_rider_path_counter_frontier/**'
+      - 'results/competitive_deck_baselines/shadow_rider_reproduce.py'
+      - 'tools/deck_legality_proof.py'
+      - '.github/workflows/validate-shadow-rider-path-counter.yml'
+  workflow_dispatch:
+jobs:
+  exact-path-counter:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate exact counter, physical oracle and 60-card legality
+        run: python -m results.shadow_rider_path_counter_frontier.reproduce
