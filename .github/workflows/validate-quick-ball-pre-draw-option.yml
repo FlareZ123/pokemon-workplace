@@ -1,0 +1,21 @@
+name: Validate Quick Ball pre-draw option
+
+on:
+  push:
+    paths:
+      - "tools/quick_ball_pre_draw_option.py"
+      - "tools/test_quick_ball_pre_draw_option.py"
+      - "results/quick_ball_pre_draw_option/**"
+      - ".github/workflows/validate-quick-ball-pre-draw-option.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python results/quick_ball_pre_draw_option/reproduce.py
+      - run: python tools/test_quick_ball_pre_draw_option.py
