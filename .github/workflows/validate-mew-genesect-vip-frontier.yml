@@ -42,3 +42,5 @@ jobs:
         run: python -m results.mew_genesect_vip_opening.joint_stage_ready_frontier
       - name: Verify Trainers Mail Ultra Ball Stage retrieval option
         run: python -m results.mew_genesect_vip_opening.trainer_mail_ultra_stage_frontier
+      - name: Verify Mail VIP Ultra physical one-target-per-play allocation
+        run: python -m results.mew_genesect_vip_opening.mail_vip_ultra_choice
