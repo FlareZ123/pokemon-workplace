@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('node:assert/strict');
-const { ExpandedResearchBot } = require('./expanded-research-bot');
+const { ExpandedResearchBot } = require('./expanded-research-bot.cjs');
 const { Format } = require('../../vendor/twinleafgg/ptcg-server/output/game/store/card/card-types');
 
 /**
