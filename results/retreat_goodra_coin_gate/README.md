@@ -127,3 +127,15 @@ consumed Retreat quota and unchanged total physical-copy counts.
 The dedicated CI run
 [38279403233](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38279403233)
 passed this extension and both parent transaction tests.
+
+## Corpus-wide source coverage check
+
+`source_audit.py` scans the **14,888 bundled English records marked
+Expanded-legal** and inspects every Pokémon Ability containing both
+"Retreat" and "coin", case-insensitively. It finds exactly one:
+`me4-68` Goodra's Slimy Sliding, with exact failed-payment and
+non-stacking text. The exhaustive text filter deliberately does
+not claim that every non-English promo or indirect effect is absent.
+The audit was added to the CI workflow, with
+[run 38279655163](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38279655163)
+passing.
