@@ -407,3 +407,7 @@ Next: connect stochastic Retreat outcome events to typed gust adversarial
 turn continuations, distinguish switching paths, and audit coin-flip
 modifiers where actual card texts affect the probability distribution.
 No claim about Goodra competitiveness.
+
+### 2026-10-12: Goodra and Ultra Ball continuation
+
+Created `results/retreat_goodra_coin_gate/ultra_ball_reproduce.py` composing exact weighted Goodra Retreat outcomes and canonical typed Ultra Ball searches under Dashing Pouch. With no spare hand cards, DCE-only Retreat has zero probability of paying Ultra Ball, while legal DCE+Basic overpayment produces target access with probability 1 without Goodra and 1/2 under one or two Goodra. One extra safe card gives both payments 1/2; two safe cards give both 1 (baseline access even without Retreat). Exact physical zones conserved. CI 38279403233 passed. Scope: constructed conditional access, not game-win probability.
