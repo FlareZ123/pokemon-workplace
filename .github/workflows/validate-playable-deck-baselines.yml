@@ -31,3 +31,5 @@ jobs:
         run: python -m results.competitive_deck_baselines.reproduce
       - name: Verify the Aichi champion Shadow Rider reference
         run: python -m results.competitive_deck_baselines.shadow_rider_reproduce
+      - name: Verify the Aichi fifth-place Mew Genesect reference
+        run: python -m results.competitive_deck_baselines.mew_genesect_reproduce
