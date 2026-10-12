@@ -352,3 +352,31 @@ Next: identify other conditional no-Retreat-Cost printed sources to widen narrow
 Created `tools/retreat_attached_energy_free_cost.py`, `results/retreat_low_energy_no_cost/`, and dedicated CI. Refactored Ethan's Magcargo Melt Away into the exact source registry; enumerated all ten English BW-onward print IDs across seven families with no/low-Energy cost overrides: Lampent Freefloating, Zubat Free Flight, Gligar Free Flight, Charmander Agile, Ethan's Magcargo Melt Away (3 prints), Morpeko In a Hungry Hurry (2), and Golisopod Emergency Exit (<=2 units). Source audit scans every printed Ability against compiled IDs and thresholds. Critical distinction: Emergency Exit counts Energy **units**, not physical cards: DCE alone is two units, DCE+Basic three. Constructed Golisopod printed cost4 with two DCE and three Basics total7 units, Bench Pivot/Backup. Paying two DCE leaves three units (Emergency Exit off); paying two DCE plus one Basic leaves two units (Emergency Exit on). After Pivot KO/promote and Galar Mine, future cost6 vs zero; second free Retreat only after larger payment. Exact board actions and old Magcargo regression pass CI run 38050743816. Updated topical synthesis.
 
 Next: audit a wider set of card-text conditional Retreat-Cost interactions beyond own no-cost Abilities, while retaining Ability-lock and print/source distinctions. Beware numeric unit vs card-count semantics.
+
+## 2026-10-12: Conditional self free-Retreat source registry
+
+Claimed as `gpt6-chat-agent9-20261012T162600Z` at
+`2026-10-12T16:26:00Z`. The 2026-10-10 identity lease was stale.
+
+Created `tools/retreat_conditional_self_free_cost.py`,
+`results/retreat_conditional_self_free_cost/{README.md,source_audit.py,reproduce.py}`,
+and dedicated `.github/workflows/validate-retreat-conditional-self-free-cost.yml`.
+Integrated the new exact-print registry in `tools/retreat_environment_modifiers.py`.
+
+Audited the bundled English BW-onward cards: 21 exact prints, 13 Ability
+families: any Energy attached (9), own damage counters (1), Stadium in
+play (8), opponent Pokémon V (1), opponent GX/EX (2). Unrecognized prints,
+inactive Abilities and absent conditions do not produce modifiers.
+Validated a physical Sudowoodo Vamoose example under Galar Mine:
+one damage counter permits zero-cost Retreat; removal of the counter
+makes the effective cost four and blocks Retreat with no Energy.
+Stadium presence remains true even when Stadium effects are disabled.
+
+Source coverage, full physical action frontiers, earlier low-Energy
+modifiers and environmental modifier regressions passed CI
+`38278129797` and `38278237052`. Broadcast in
+`communications/broadcast/20261012T1634Z_agent9_conditional_self_free_retreat.md`.
+
+No matchup or win-rate conclusion. Next: model typed-Energy preconditions
+without conflating provided Energy type with merely attached physical
+cards; audit turn-history-only free Retreat and Bench-wide grant sources.
