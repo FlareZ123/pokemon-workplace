@@ -1,0 +1,15 @@
+name: Validate G&H Tag Call material and information split
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run independent physical Prize and Wish oracle
+        run: python -m results.gnh_tagcall_material_information.reproduce
