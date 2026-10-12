@@ -1,0 +1,17 @@
+name: Verify reactive counter matchup thresholds
+on:
+  push:
+    paths:
+      - 'tools/reactive_counter_prize_matchups.py'
+      - 'results/reactive_counter_matchup_thresholds/**'
+      - '.github/workflows/validate-reactive-counter-matchup-thresholds.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python results/reactive_counter_matchup_thresholds/reproduce.py
