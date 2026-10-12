@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "tools/shadow_rider_dual_entry_launch.py"
+      - "tools/shadow_rider_stone_dual_entry.py"
       - "results/shadow_rider_dual_entry_launch/**"
       - "tools/opponent_bonus_matching.py"
       - "results/competitive_deck_baselines/shadow_rider_reproduce.py"
@@ -24,3 +25,5 @@ jobs:
           python-version: "3.13"
       - name: Check legal print texts, analytic access and physical toy oracles
         run: python results/shadow_rider_dual_entry_launch/reproduce.py
+      - name: Check Forest Seal Stone fallback and physical resources
+        run: python results/shadow_rider_dual_entry_launch/stone_reproduce.py
