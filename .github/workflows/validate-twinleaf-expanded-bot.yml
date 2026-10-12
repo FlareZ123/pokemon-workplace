@@ -126,6 +126,8 @@ jobs:
         run: node simulation/twinleaf/test-tournament-probe-settings.cjs
       - name: Verify Regidrago Celestial Roar attaches all Energy card types
         run: node simulation/twinleaf/test-regidrago-celestial-roar.cjs
+      - name: Verify Stoutland Wild Tackle source self-damage and coin branches
+        run: node simulation/twinleaf/test-stoutland-wild-tackle.cjs
       - name: Verify live match installs legal Underworld Door target guard
         run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
       - name: Collect seat-paired diagnostics for selected Aichi tournament lists
