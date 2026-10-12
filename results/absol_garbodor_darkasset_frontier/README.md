@@ -48,7 +48,7 @@ The union is the chance that at least one declared positive-draw line is feasibl
 
 The separate `physical_oracle` explicitly enumerates labeled card IDs in the chronological order **hand → Prize cards → first natural draw** for three independent 12-card toy cases. Its eleven event rates exactly equal the combinatorial solver. `results/absol_garbodor_darkasset_frontier/reproduce.py` also verifies Crobat's printed Dark Asset trigger, VIP's direct-to-Bench text, the complete 60-card source and conservative 2026-10-12 paper Expanded legality of all three variants. It compares the physically seen-Crobat metric with the independently written Stone model.
 
-Run `python -m results.absol_garbodor_darkasset_frontier.reproduce` on Windows or in CI.
+Run `python -m results.absol_garbodor_darkasset_frontier.reproduce` on Windows or in CI. **[Windows CI run 38277945028](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38277945028) passed**, including the previous Stone and named-Item regressions. [Earlier Windows CI 38277816456](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38277816456) also passed.
 
 ## Strategic interpretation
 
