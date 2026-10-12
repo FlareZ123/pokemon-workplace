@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'tools/energy_turn_windows.py'
+      - 'tools/opening_attack_permissions.py'
       - 'tools/typed_energy_access.py'
       - 'tools/energy_action_budget.py'
       - 'tools/turn_action_budget.py'
@@ -19,3 +20,5 @@ jobs:
           python-version: '3.12'
       - name: Run turn-window regression
         run: python results/tests/energy_turn_windows/reproduce.py
+      - name: Audit printed opening-attack exceptions
+        run: python results/tests/energy_turn_windows/opening_attack_regressions.py
