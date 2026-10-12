@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const path=require('node:path');
 const base=path.resolve(__dirname,'../../vendor/twinleafgg/ptcg-server/output');
 const engine=p=>require(path.join(base,p));
-const {loadTournamentDecks}=require('./tournament-deck-loader.cjs');
+const {loadCandidateDecks}=require('./candidate-deck-loader.cjs');
 const {makeSeatPairs,deckDigest}=require('./paired-seat-plan.cjs');
 const {summarizePairedTraces}=require('./paired-result-summary.cjs');
 const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
@@ -107,7 +107,7 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
   } finally {Math.random=prior;}
 }
 function main() {
-  const decks=loadTournamentDecks();
+  const decks=loadCandidateDecks();
   const config=parseProbeSettings(process.env,
     decks.filter(d=>d.status==='strictly_mappable').map(d=>d.id));
   const a=decks.find(d=>d.id===config.deckAId),b=decks.find(d=>d.id===config.deckBId);
@@ -124,6 +124,7 @@ function main() {
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
     tactic_order:config.tacticOrder,
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
+    deck_sources:[a.source||'aichi_reference',b.source||'aichi_reference'],
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
     max_actions:350,wall_ms:25000,paired_results:pairedResults,traces};
   console.log('[tournament-probe] '+JSON.stringify(report));
