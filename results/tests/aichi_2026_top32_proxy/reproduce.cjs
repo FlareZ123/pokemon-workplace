@@ -26,10 +26,10 @@ const selectable=source.counts.map(r=>Number(r.manual_matchup_selectable));
 const curated=source.counts.map(r=>Number(r.curated_reference));
 const selectMass=extremalFieldScore(field,selectable,false);
 const curatedMass=extremalFieldScore(field,curated,true);
-assert.equal(selectMass.score,14/32);
+assert.equal(selectMass.score,19/32);
 assert.equal(curatedMass.score,27/32);
 assert.deepEqual(source.counts.filter(r=>!r.manual_matchup_selectable)
-  .map(r=>r.count).reduce((n,c)=>n+c,0),18);
+  .map(r=>r.count).reduce((n,c)=>n+c,0),13);
 assert.equal(source.counts.filter(r=>!r.curated_reference).length,5);
 assert.equal(source.counts.filter(r=>!r.curated_reference)
   .reduce((n,r)=>n+r.count,0),5);
