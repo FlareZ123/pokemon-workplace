@@ -139,11 +139,12 @@ jobs:
           TWINLEAF_SEEDS: ${{ inputs.seeds }}
           TWINLEAF_REPORT_PATH: tournament-match-report.json
       - name: Preserve paired source-controlled report and traces
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: twinleaf-full-deck-matchup-report
           path: tournament-match-report.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
       - name: Strictly map published Aichi Mega Absol print aliases and execute bounded headless diagnostic
         run: node simulation/twinleaf/test-absol-headless-sft.cjs
