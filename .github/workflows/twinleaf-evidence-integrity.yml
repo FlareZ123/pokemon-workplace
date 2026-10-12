@@ -10,6 +10,7 @@ on:
       - 'simulation/twinleaf/test-matchup-evidence-ledger.cjs'
       - 'tools/uncertain_metagame_field.cjs'
       - 'tools/test-uncertain-metagame-field.cjs'
+      - 'results/tests/aichi_2026_top32_proxy/**'
       - 'simulation/twinleaf/report-atomic.cjs'
       - 'simulation/twinleaf/test-report-atomic.cjs'
       - '.github/workflows/twinleaf-evidence-integrity.yml'
@@ -22,6 +23,7 @@ on:
       - 'simulation/twinleaf/test-matchup-evidence-ledger.cjs'
       - 'tools/uncertain_metagame_field.cjs'
       - 'tools/test-uncertain-metagame-field.cjs'
+      - 'results/tests/aichi_2026_top32_proxy/**'
       - 'simulation/twinleaf/report-atomic.cjs'
       - 'simulation/twinleaf/test-report-atomic.cjs'
       - '.github/workflows/twinleaf-evidence-integrity.yml'
@@ -51,5 +53,7 @@ jobs:
         run: node simulation/twinleaf/test-matchup-evidence-ledger.cjs
       - name: Validate box-constrained opponent-field bounds against exhaustive oracle
         run: node tools/test-uncertain-metagame-field.cjs
+      - name: Reproduce Aichi top-32 proxy composition and coverage
+        run: node results/tests/aichi_2026_top32_proxy/reproduce.cjs
       - name: Check lock-guarded atomic artifact writer
         run: node simulation/twinleaf/test-report-atomic.cjs
