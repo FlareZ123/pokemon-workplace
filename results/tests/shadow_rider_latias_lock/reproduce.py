@@ -27,7 +27,7 @@ def oracle(energy, latias, source, lock, hp):
             ans=2
         if not retreated:
             ability_live=latias and (lock=='none' or (lock=='active_weezing' and gusted))
-            cost=0 if ability_live and active >= 3 else (2 if active < 3 else 1)
+            cost=0 if ability_live and active >= 3 else (2 if active < 3 or (latias and active==5) else 1)
             if e[active]>=cost:
                 remaining=list(e)
                 remaining[active]-=cost
@@ -51,6 +51,7 @@ def main():
     assert 'Pokémon with a Rule Box in play' in ' '.join(path['rules'])
     assert 'have no Abilities' in ' '.join(path['rules'])
     assert 'ex' in latias['subtypes']
+    assert latias['retreatCost']==['Colorless','Colorless']
 
     # The sixth own slot is a powered-off Basic Latias ex rather than Mimikyu.
     assert max_two_prize_gust(BASE,latias_on_bench=True,lock='none')[0]==2
@@ -62,7 +63,7 @@ def main():
     assert max_two_prize_gust(BASE,latias_on_bench=True,lock='active_weezing')[1][0].startswith('guzma')
 
     checks=0
-    for e0,e1,e2,basicenergy in product((3,4,5),(0,1,2),(0,1,2),(0,1)):
+    for e0,e1,e2,basicenergy in product((3,4,5),(0,1,2),(0,1,2),(0,1,2)):
         state=(e0,e1,e2,0,0,basicenergy)
         for latias in (False,True):
             for source in ('guzma','boss'):
@@ -72,6 +73,7 @@ def main():
                                                        lock=lock,target_hp=hp)[0]
                         assert obtained==oracle(state,latias,source,lock,hp)
                         checks+=1
+    assert checks==3888
     print('Ability source text verified; dynamic lock/action BFS checked:',checks)
     print('Latias active / active-only Weezing removed: 2-Prize KO; Path to Peak: no KO')
 
