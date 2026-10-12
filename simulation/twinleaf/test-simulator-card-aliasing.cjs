@@ -80,7 +80,7 @@ function main() {
     'Full preclone must detach card identity before native Simulator copies it');
   const safeSim=simulateSwitch(detached);
   assert.equal(safeCard.movedToActiveThisTurn,false,
-    'The preclone's counterfactual Switch must not mutate live Card metadata');
+    'A precloned counterfactual Switch must preserve live Card metadata');
   assert.equal(safeSim.store.state.players[0].active.getPokemonCard().movedToActiveThisTurn,true);
   assert.equal(safeLive.players[0].active.getPokemonCard().id,100);
   console.log('[sim-card-alias] '+JSON.stringify({
