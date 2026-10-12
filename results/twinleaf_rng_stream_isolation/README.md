@@ -44,6 +44,9 @@ The [test SFT](../../simulation/twinleaf/test-random-stream-ledger.cjs) checks t
 
 These two pseudorandom streams are deliberately isolated in **state advancement**; they are still reproducible mathematical sequences derived from a common seed. No statistical independence or cryptographic security is asserted.
 
+
+**Coin-path qualification (native CI 38294095876):** [The separate coin regression](../tests/twinleaf_counterfactual_coin_paths/) establishes that Pokémon Catcher SVI's actual CoinFlipEffect uses Math.random even when a Simulator has ALL_HEADS arbiter options. Only legacy CoinFlipPrompt objects respond to that arbiter setting. The default NO_SHUFFLE prompt option still warrants a separate hidden-information audit. Do not extrapolate default all-heads to all coin-effect card actions.
+
 ## Post-fix run results
 
 | Runner and seat order | All draws | Physical-game draws | Policy draws | Termination |
