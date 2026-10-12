@@ -82,6 +82,9 @@ jobs:
       - name: Collect bounded, seeded Aichi Vileplume vs Mew self-play diagnostics
         run: node simulation/twinleaf/tournament-bounded-match.cjs
         timeout-minutes: 1
+      - name: Strictly map published Aichi Mega Absol print aliases and execute bounded headless diagnostic
+        run: node simulation/twinleaf/test-absol-headless-sft.cjs
+        timeout-minutes: 2
       - name: Smoke-test two headless Expanded bots in real game setup
         timeout-minutes: 1
         run: node simulation/twinleaf/test-headless-setup.cjs
