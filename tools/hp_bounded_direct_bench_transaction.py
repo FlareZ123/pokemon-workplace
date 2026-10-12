@@ -37,8 +37,8 @@ from typed_search_target_allocator import DemandChannel, TypedTargetAction
 
 _HP_DIRECT_BENCH_RE = re.compile(
     r"^Search your deck for up to ([1-9][0-9]*) Basic Pok[eé]mon "
-    r"with ([1-9][0-9]*) HP or less and put them onto your Bench\\. "
-    r"Then, shuffle your deck\\.$",
+    r"with ([1-9][0-9]*) HP or less and put them onto your Bench\. "
+    r"Then, shuffle your deck\.$",
     re.IGNORECASE,
 )
 
