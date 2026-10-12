@@ -48,6 +48,27 @@ function cleanNumber(value) {
   return /^0*\d+$/.test(text) ? String(Number(text)) : text.toUpperCase();
 }
 
+/**
+ * TCGdex promotional collector numbers carry a prefix absent from some
+ * Twinleaf engine setNumber values (e.g. XYP XY177 -> XYP 177).
+ * Restrict prefix stripping to known promo set codes; normal numbered sets
+ * must retain their exact collector-number semantics.
+ *
+ * @param {string} sourceNumber Printed collector number (part after final '-').
+ * @param {string} sourceSetCode Mapped printed set code from resources/sets/en.json.
+ * @returns {string} Comparable collector number.
+ */
+function normalizePromoPrintNumber(sourceNumber, sourceSetCode) {
+  const cleaned = cleanNumber(sourceNumber);
+  const prefixBySet = { XYP: 'XY', SMP: 'SM', BWP: 'BW', SWSHP: 'SWSH' };
+  const prefix = prefixBySet[String(sourceSetCode).toUpperCase()];
+  if (prefix && cleaned.startsWith(prefix) &&
+      /^\\d+$/.test(cleaned.slice(prefix.length))) {
+    return cleanNumber(cleaned.slice(prefix.length));
+  }
+  return cleaned;
+}
+
 /** @param {string} value */
 function cleanName(value) {
   return value.normalize('NFKC').replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
@@ -65,8 +86,10 @@ function matchPaperPrint(entry, paperSetCodes, cards) {
   const dash = entry.printId.lastIndexOf('-');
   if (dash < 1) throw new Error(`Unrecognized print ID: ${entry.printId}`);
   const sourceSetId = entry.printId.slice(0, dash);
-  const sourceNumber = cleanNumber(entry.printId.slice(dash + 1));
   const sourceSetCode = paperSetCodes.get(sourceSetId);
+  const sourceNumber = sourceSetCode
+    ? normalizePromoPrintNumber(entry.printId.slice(dash + 1), sourceSetCode)
+    : cleanNumber(entry.printId.slice(dash + 1));
   if (!sourceSetCode) {
     return { ...entry, sourceSetCode: null, status: 'unmapped_set', matches: [] };
   }
@@ -117,6 +140,6 @@ function auditAichiBaselines() {
 }
 
 module.exports = {
-  parseBaselineDecks, cleanNumber, cleanName,
+  parseBaselineDecks, cleanNumber, normalizePromoPrintNumber, cleanName,
   matchPaperPrint, loadImplementedCards, auditAichiBaselines
 };
