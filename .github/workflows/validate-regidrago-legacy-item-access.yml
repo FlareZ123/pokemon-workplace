@@ -1,0 +1,15 @@
+name: Validate Regidrago Legacy Item-source access
+on:
+  workflow_dispatch:
+
+jobs:
+  exact-regidrago-item-legacy:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact search, source prints, Prize physical labels, deck legality
+        run: python -m results.regidrago_legacy_item_access.reproduce
