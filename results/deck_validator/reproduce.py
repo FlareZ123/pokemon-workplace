@@ -73,6 +73,16 @@ r = validate_deck(
 assert "invalid_quantity" in codes(r)
 
 records = load_expanded_card_records(RESOURCES)
+# Two verified Pitch Black record omissions must not change legal deck construction.
+assert records["me5-42"].is_basic_pokemon
+assert records["me5-115"].subtypes == ("Stage 2", "MEGA", "ex")
+assert records["me5-115"].rules == records["me5-38"].rules == records["me5-99"].rules
+assert records["me5-115"].rules[0].startswith("Mega Evolution ex Rule:")
+assert deck(("me5-42", 1), (GRASS, 59)).valid
+assert "missing_basic_pokemon" in codes(deck(("me5-115", 1), (GRASS, 59)))
+assert deck(("me5-115", 1), (SNIVY, 1), (GRASS, 58)).valid
+assert historical(("me5-42", 1), (GRASS, 59)).valid
+
 restriction_prints = 0
 restriction_texts = set()
 for record in records.values():
