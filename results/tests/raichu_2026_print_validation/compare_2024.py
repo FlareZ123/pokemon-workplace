@@ -82,6 +82,16 @@ def verify() -> None:
         print(title + ": " + ", ".join(
             f"{key}={float(value)*100:.9f}%"
             for key, value in row.items()))
+    # The 2024 list has one Raichu and two Gladion; the 2026 list has
+    # two Raichu and one Gladion. All are non-Basic and all three
+    # landing in the six Prizes is a necessary condition for complete
+    # initial loss of both target and direct unrestricted Prize rescue.
+    all_2024 = zone_probs(60, 16, 3)["all_raichu_prized"]
+    all_2026 = zone_probs(60, 13, 3)["all_raichu_prized"]
+    assert all_2024 < Fraction(1, 1000)
+    assert all_2026 < Fraction(1, 1000)
+    print(f"Harto 2024: Raichu + 2 Gladion all Prized={float(all_2024)*100:.9f}%")
+    print(f"Hosoda 2026: 2 Raichu + Gladion all Prized={float(all_2026)*100:.9f}%")
     print("LIMIT: source-only physical access, no search, sequencing, knockout or match win rate")
 
 if __name__ == "__main__":
