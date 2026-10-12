@@ -44,3 +44,5 @@ jobs:
           path: twinleaf-print-coverage.json
           if-no-files-found: error
           retention-days: 14
+      - name: Smoke-test two headless Expanded bots in real game setup
+        run: node simulation/twinleaf/test-headless-setup.cjs
