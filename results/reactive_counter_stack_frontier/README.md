@@ -50,3 +50,21 @@ Run `python results/reactive_counter_stack_frontier/reproduce.py` from the repos
 Related prior research: [physical_copy_damage_reaction_bridge](../physical_copy_damage_reaction_bridge/), [physical_energy_backlash_reactions](../physical_energy_backlash_reactions/), [optional_overkill_reflection](../optional_overkill_reflection/).
 
 Rules: supplied Advanced Player's Rulebook sections A-01, E-03, C-07, E-12 and general Tool, Energy, and deck-building rules.
+
+## Natural-only inventory access: exact combinatorics
+
+To test how misleading the maximum can be for consistency, a second reproducer fixes a hypothetical 60-card composition: **4 Scraggy, 3 Mega Scrafty ex, 4 Spiritomb, 4 Spiky Energy, 1 Deluxe Bomb, and 44 inert other cards**. This is only a defined count vector for an access experiment, not a playable or competitively optimized decklist.
+
+A successful source inventory contains at least one Scraggy, one Mega Scrafty, Deluxe Bomb and enough Spiritomb plus Spiky Energy to reach the target counter threshold. Sampling is without replacement from the 60 cards. Six physical Prize cards do not alter the unconditioned distribution of an unordered natural-draw sample of size n. Initial Basic-valid mulligan conditioning, timing, search, other draw effects, placement and actual opponent actions are excluded.
+
+| Natural cards seen | At least 170 counter-equivalent HP | At least 220 | Full 290 |
+| ---: | ---: | ---: | ---: |
+| 11 | 4.024708% | 0.188251% | 3.501604 × 10^-9 % |
+| 14 | 7.732630% | 0.896864% | 1.088586 × 10^-6 % |
+| 18 | 14.400474% | 3.618221% | 0.000076915% |
+| 24 | 27.016484% | 13.497244% | 0.004365066% |
+| 30 | 41.043244% | 29.936908% | 0.069000604% |
+
+Those are exact **untimed natural-card-access** probabilities. They are generally optimistic upper bounds for stricter natural-only action sequences. Search and acceleration can substantially change actual access. The 290 ceiling is vanishingly inaccessible through early natural draws in this 60-card count vector. The 170 line is less demanding and deserves more attention in any real deck construction or ACE SPEC opportunity-cost comparison.
+
+Run `python results/reactive_counter_stack_frontier/reproduce_access.py` to validate all 61 sample sizes, integer-exact multivariate hypergeometric enumeration, and independent inclusion-exclusion formulas for the 170 and 290 endpoints.
