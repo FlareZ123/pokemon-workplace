@@ -6,6 +6,7 @@ const engine=p=>require(path.join(base,p));
 const {loadTournamentDecks}=require('./tournament-deck-loader.cjs');
 const {makeSeatPairs,deckDigest}=require('./paired-seat-plan.cjs');
 const {summarizePairedTraces}=require('./paired-result-summary.cjs');
+const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
 const {loadImplementedCards}=require('./print-coverage.cjs');
 const {CardManager}=engine('game/cards/card-manager');
 const {Store}=engine('game/store/store');
@@ -85,16 +86,19 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
 }
 function main() {
   const decks=loadTournamentDecks();
-  const a=decks.find(d=>d.id==='vileplume'),b=decks.find(d=>d.id==='mew_genesect');
+  const config=parseProbeSettings(process.env,
+    decks.filter(d=>d.status==='strictly_mappable').map(d=>d.id));
+  const a=decks.find(d=>d.id===config.deckAId),b=decks.find(d=>d.id===config.deckBId);
   assert.equal(a.status,'strictly_mappable');assert.equal(b.status,'strictly_mappable');
   registerLists([a.engine_names,b.engine_names]);
-  const seatPairs=makeSeatPairs(a,b,[20261012]);
+  const seatPairs=makeSeatPairs(a,b,config.seeds);
   const traces=seatPairs.map(p=>runOne(p.seat1.engine_names,p.seat2.engine_names,p.seed));
   const pairedResults=summarizePairedTraces(seatPairs,traces);
   const report={scope:'bounded engine self-play diagnostics only, SimpleTacticsAi policy unvalidated',
     twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
     shuffle_policy:'research_uniform_fisher_yates_v1',
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
+    ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
     max_actions:350,wall_ms:25000,paired_results:pairedResults,traces};
