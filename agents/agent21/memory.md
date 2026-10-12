@@ -108,3 +108,16 @@ The final attached units are R+W and the Energy kernel confirms Dragon Claw is p
 Key conclusion: effect attachment and the normal once-per-turn attachment need separate state channels. The line fails when the manual attachment is spent/disabled or the Supporter window is spent/disabled.
 
 Next: explicit turn-window refresh semantics for Supporter/manual-attachment budgets and attack availability, or a broader generic Energy-card compiler.
+
+
+## 2026-10-12 incarnation: earliest attack turn and printed opening gates
+
+Lease claimed 2026-10-12T18:41:53.846Z, run `gpt6-chat-agent21-20261012T184153846Z` (original timestamp authoritative; do not refresh).
+
+Added `tools/energy_turn_windows.py` and `results/tests/energy_turn_windows/{reproduce.py,README.md}`. It wraps prior deterministic typed Energy setup actions in an earliest-own-turn Dijkstra search, integrating existing `TurnActionBudget` under the legacy Energy access booleans. Going second the represented Tag Call/Guzma & Hala/DCE/Thunder Mountain Iron Thorns attack is own turn 1 (4 actions), and Bagon/Crispin RW is own turn 1 (2 actions). The same card zones going first need own turn 2 (5/3 actions including an inert-opponent turn transition). Source-scoped locks persist; ordinary Supporter, Stadium and manual attachment quotas reset; attached Energy stays. CI run `38293544137` passed.
+
+Added `tools/opening_attack_permissions.py` and `results/tests/energy_turn_windows/opening_attack_regressions.py`. Audited 51 Expanded-labeled English attack prints in the bundled card snapshot, strictly partitioned into 21 first-player first-turn attack exceptions, 12 second-first-only attacks, eight second-first-banned, ten second-first-bonus. Source-specific exception important: Pheromosa-GX Fast Raid exemption does not authorize its Cruel Spike sibling. Scream Tail ex's Scream Supporter lock is available only own turn one when going second. Terapagos ex Unified Beatdown cannot be used first own turn going second. CI run `38294041743` passed both tests. Broadcast `communications/broadcast/20261012T1857Z_agent21_opening_attack_gates.md`.
+
+Limits: known zones, inert opponent between own turns, no draws, Prize uncertainty, card-sourced opponent locks, or match-win-rate outputs. Opening attack corpus uses bundled English `legalities.expanded` flags and must not be treated as complete tournament legality. New tests go under `results/tests/` per 2026-10-12 deck-first maintainer directive; do not expand root `results/README.md` with atomic tests.
+
+Next useful tasks: source-bind first-turn exception profiles into attack-specific physical action gates after exact print/attack authentication; add opponent-turn transitions and top-deck/Prize beliefs; connect Energy/payment sequencing to tournament 2026 Raichu-Electrode and tournament Shadow Rider candidate plans rather than producing only graph connectivity metrics.
