@@ -6,10 +6,7 @@ from pathlib import Path
 from typing import Iterable, Literal
 
 from tools.build_expanded_legality_baseline import classify_effective_legality, load_json
-from tools.verified_stage_metadata_repairs import KNOWN_STAGE_REPAIRS, normalize_verified_stage_metadata
-from tools.verified_tera_metadata_repairs import CARD_ID as TERAPAGOS_TERA_PRINT_ID, normalize_verified_tera_metadata
-from tools.verified_mega_prize_rules import AUDITED_DUPLICATED_RULE_PRINTS, normalize_verified_mega_prize_rules
-from tools.verified_tera_duplicate_rules import AUDITED_DUPLICATE_TERA_PRINTS, normalize_verified_tera_duplicate_rules
+from tools.verified_card_metadata import AUDITED_CARD_METADATA_IDS, normalize_verified_card_metadata
 
 Severity = Literal["error", "warning"]
 
@@ -66,14 +63,8 @@ class ValidationReport:
 
 def _card_record(raw: dict) -> CardRecord:
     # Apply audited print-local stage/rule corrections without mutating archive data.
-    if raw["id"] in KNOWN_STAGE_REPAIRS:
-        raw = normalize_verified_stage_metadata(raw)
-    if raw["id"] == TERAPAGOS_TERA_PRINT_ID:
-        raw = normalize_verified_tera_metadata(raw)
-    if raw["id"] in AUDITED_DUPLICATED_RULE_PRINTS:
-        raw = normalize_verified_mega_prize_rules(raw)
-    if raw["id"] in AUDITED_DUPLICATE_TERA_PRINTS:
-        raw = normalize_verified_tera_duplicate_rules(raw)
+    if raw["id"] in AUDITED_CARD_METADATA_IDS:
+        raw = normalize_verified_card_metadata(raw)
     status, source = classify_effective_legality(raw)
     return CardRecord(
         card_id=raw["id"],
