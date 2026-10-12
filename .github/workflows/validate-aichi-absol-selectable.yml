@@ -70,9 +70,10 @@ jobs:
           TWINLEAF_TACTIC_ORDER: native
           TWINLEAF_REPORT_PATH: absol-vs-regidrago-paired.json
       - name: Preserve revisioned print-grounded paired diagnostic
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: aichi-absol-regidrago-seed-20261012
           path: absol-vs-regidrago-paired.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 14
