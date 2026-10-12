@@ -28,6 +28,21 @@ The headless runner uses native live `Store` actions, the research Fisher–Yate
 
 These results are **not empirical paper Expanded match win rates**. Six correlated seed-paired traces, no human-competitive AI, no diverse opponent field, and incomplete audit of all engine-implemented interactions prevent concluding that Shadow Rider is universally favored. The result is also insufficient to validate a 6-0 matchup forecast even *within Twinleaf* beyond these fixed seeds/policy conditions.
 
+## First source-grounded action breakdown
+
+The expanded live runner with mutation-safe action and Prize telemetry passed [manual CI 38294204546](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38294204546) at research revision `b0dbbdf7bebed0b3c21fda8f6c083c53185bdca3`, replaying seed 20261012 with both orientations. The telemetry SFT passed on the same run.
+
+| Player deck | Seat orientation | Native attacks used | Ability activations recorded | Passed turns | Retreat actions |
+| --- | --- | --- | --- | ---: | ---: |
+| Shadow Rider | seat 1 | Shadow Mist ×1, Max Geist ×8 | Resetting Hole ×1; Underworld Door ×1 | 1 | 0 |
+| Regidrago | seat 2 | Celestial Roar ×2, Itchy Pollen ×1 | none | 7 | 5 |
+| Regidrago | seat 1 | Celestial Roar ×1, Apex Dragon ×1 | Legacy Star ×1 | 16 | 3 |
+| Shadow Rider | seat 2 | Shadow Mist ×5, Max Geist ×4 | none | 10 | 0 |
+
+The Regidrago bot used `Apex Dragon` only **once across the two seed-20261012 games**, despite drawing or playing many setup cards, and had no Prizes in either game. The seat-2 Regidrago game has no recorded Regidrago VSTAR hand-to-play evolution; seat-1 Regidrago did play the VSTAR and use Legacy Star, but still attacked with Apex Dragon only once. Meanwhile the Shadow Rider bot completed four Prize-taking transitions in the first orientation (2, 2, 1, 1 Prizes), and three two-Prize transitions in the other. Its victory in the second orientation required no recorded Underworld Door activation.
+
+These observations narrow the reason the six-game result cannot validate real competitive superiority: the current `SimpleTacticsAi` makes little productive use of the Regidrago VSTAR attack-copy engine. We have **not** yet independently validated every selected copied-attack target or classified each pass as forced versus discretionary. Counting attempts that successfully dispatch also does not imply every copied attack dealt positive damage.
+
 ## Follow-up
 
 A mutation-safe per-seat telemetry adapter, `simulation/twinleaf/match-action-telemetry.cjs`, with independent SFT and live integration has been added to record attack names, Abilities, cards played and Prize transitions without consuming RNG. Inspect its next pinned CI trace for missing Regidrago setup/attack behavior, then implement strategy-aware decisions or targeted engine card validations as necessary. Preserve the exact simulation conditions when comparing revisions.
