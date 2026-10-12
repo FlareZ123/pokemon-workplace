@@ -15,14 +15,8 @@ const {SimpleTacticsAi}=engine('simple-bot/simple-tactics-ai');
 const {BotArbiter,BotFlipMode,BotShuffleMode}=engine('game/bots/bot-arbiter');
 const {allSimpleTactics,allPromptResolvers,defaultStateScores,defaultArbiterOptions}=engine('simple-bot/simple-bot-definitions');
 const {makeUniformShuffleArbiter}=require('./hooks/uniform-random-shuffle.cjs');
+const {makeRandomStreamLedger}=require('./random-stream-ledger.cjs');
 const UniformBotArbiter=makeUniformShuffleArbiter(BotArbiter);
-/** Deterministic draw for a bounded execution trace. @param {number} seed */
-function seededRandom(seed) {
-  let n=seed>>>0;
-  return ()=>{n=(n+0x6D2B79F5)>>>0;let t=n;
-    t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);
-    return ((t^(t>>>14))>>>0)/4294967296;};
-}
 /** Register every exact implementation used by the two source lists once. @param {string[][]} lists */
 function registerLists(lists) {
   const manager=CardManager.getInstance();
@@ -39,18 +33,9 @@ function registerLists(lists) {
  */
 function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
   const prior=Math.random;
-  const random=seededRandom(seed);
-  let randomCalls=0;
-  Math.random=()=>{randomCalls++;return random();};
-  const randomSources={setup:0,arbiter:0,policy:0,dispatch:0};
-  /** Attribute RNG draws to the real caller, including draws from counterfactual policy simulation.
-   * @template T @param {keyof typeof randomSources} source @param {()=>T} operation @returns {T}
-   */
-  function trackRandom(source,operation) {
-    const before=randomCalls;
-    try{return operation();}
-    finally{randomSources[source]+=randomCalls-before;}
-  }
+  const ledger=makeRandomStreamLedger(seed);
+  Math.random=ledger.random;
+  const trackRandom=ledger.track;
   const started=Date.now();
   try {
     const store=new Store({onStateChange:()=>{}});
@@ -87,10 +72,10 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
       actions++;
     }
     const state=store.state;
-    assert.equal(Object.values(randomSources).reduce((a,b)=>a+b,0),randomCalls,
-      'Every seeded RNG draw must have an attributed source');
-    return {seed,status,actions,attacks,first_actor:firstActor,random_calls:randomCalls,
-      random_sources:randomSources,turn:state.turn,phase:GamePhase[state.phase],
+    const rng=ledger.snapshot();
+    return {seed,status,actions,attacks,first_actor:firstActor,random_calls:rng.calls,
+      game_random_calls:rng.gameCalls,policy_random_calls:rng.policyCalls,
+      random_sources:rng.bySource,turn:state.turn,phase:GamePhase[state.phase],
       winner:state.winner,prizes:state.players.map(p=>p.getPrizeLeft()),
       elapsed_ms:Date.now()-started,error};
   } finally {Math.random=prior;}
@@ -105,6 +90,7 @@ function main() {
   const report={scope:'bounded engine self-play diagnostics only, SimpleTacticsAi policy unvalidated',
     twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
     shuffle_policy:'research_uniform_fisher_yates_v1',
+    random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
     max_actions:350,wall_ms:25000,traces};
