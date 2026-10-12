@@ -55,13 +55,8 @@ def check_card_text(records: dict) -> None:
         )
         for phrase in phrases:
             assert phrase in full_text, (card_id, phrase)
-    assert "Pokémon V" in " ".join(json.loads(
-        (RESOURCES / "cards" / "en" / "swsh12.json")
-        .read_text(encoding="utf-8")
-    )[next(i for i, row in enumerate(json.loads(
-        (RESOURCES / "cards" / "en" / "swsh12.json")
-        .read_text(encoding="utf-8")
-    )) if row["id"] == STONE)]["rules"])
+        if card_id == STONE:
+            assert any("Pokémon V" in text for text in raw["rules"])
 
 
 def verify() -> None:
