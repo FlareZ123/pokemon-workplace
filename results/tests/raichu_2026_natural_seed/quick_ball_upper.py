@@ -31,10 +31,15 @@ def search(
     deck: tuple[int, ...],
     board: tuple[int, ...],
     policy: str,
+    goal: str = "either",
 ) -> bool:
     """All available Basic placements and paid Quick Ball transitions."""
-    if two_evolution_bases(*board):
+    if goal == "native" and board[0] > 0 and board[1] > 0:
         return True
+    if goal == "either" and two_evolution_bases(*board):
+        return True
+    if goal not in ("native", "either"):
+        raise ValueError(f"Unknown evolution-source goal: {goal}")
 
     for index in TARGET_TYPES:
         if hand[index]:
@@ -42,7 +47,7 @@ def search(
             next_board = list(board)
             next_hand[index] -= 1
             next_board[index] += 1
-            if search(tuple(next_hand), deck, tuple(next_board), policy):
+            if search(tuple(next_hand), deck, tuple(next_board), policy, goal):
                 return True
 
     if not hand[QUICK_BALL]:
@@ -68,7 +73,7 @@ def search(
             next_deck[target] -= 1
             next_hand = after_payment.copy()
             next_hand[target] += 1
-            if search(tuple(next_hand), tuple(next_deck), board, policy):
+            if search(tuple(next_hand), tuple(next_deck), board, policy, goal):
                 return True
     return False
 
