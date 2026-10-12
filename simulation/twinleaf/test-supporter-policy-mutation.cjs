@@ -20,6 +20,7 @@ const {CardList} = engine('game/store/state/card-list.ts');
 const {PokemonCardList} = engine('game/store/state/pokemon-card-list.ts');
 const {Format} = engine('game/store/card/card-types.ts');
 const {PlaySupporterTactic} = engine('simple-bot/simple-tactics/play-supporter-tactic.ts');
+const {SimpleTacticsAi} = engine('simple-bot/simple-tactics-ai.ts');
 const {defaultStateScores, defaultArbiterOptions, allPromptResolvers} =
   engine('simple-bot/simple-bot-definitions.ts');
 const {BossOrders} = engine('sets/10-scarlet-and-violet/set-paldea-evolved/boss-orders.ts');
@@ -138,3 +139,33 @@ assert.equal(exceptionState.players[0].supporterTurn,0,
   'Even failed policy evaluation must restore native live counter');
 assert.equal(guard.snapshot().restored_live_supporter_counters,2);
 console.log('[supporter-mutation] PASS: guarded Supporter action dispatches legally and restores counter even after policy exceptions');
+
+const nativeBotState=makeState();
+const nativeBot=new SimpleTacticsAi({id:1,name:'Native Bot'},
+  {...opts,tactics:[PlaySupporterTactic]},null);
+const nativeBotAction=nativeBot.decodeNextAction(nativeBotState);
+console.log('[supporter-mutation] '+JSON.stringify({
+  native_bot_action:nativeBotAction?.constructor.name,
+  native_bot_supporter_counter_after_choice:nativeBotState.players[0].supporterTurn
+}));
+assert.equal(nativeBotAction?.constructor.name,'PassTurnAction',
+  'Pinned full native bot must reject its own prematurely invalidated Supporter');
+assert.equal(nativeBotState.players[0].supporterTurn,nativeBotState.turn,
+  'Native bot must leave leaked policy mutation after rejecting its own action');
+
+const protectedBotState=makeState();
+const protectedGuard=makeSupporterSelectionGuard();
+const ProtectedTactic=protectedGuard.wrapTactic(PlaySupporterTactic);
+const protectedBot=new SimpleTacticsAi({id:1,name:'Guarded Bot'},
+  {...opts,tactics:[ProtectedTactic]},null);
+const protectedAction=protectedGuard.decode(protectedBot,protectedBotState,1);
+assert.equal(protectedAction?.type,'PLAY_CARD_ACTION',
+  'The guarded real bot must pass its internal action validity simulation');
+assert.equal(protectedBotState.players[0].supporterTurn,0,
+  'The real bot must not spend the Supporter before dispatch');
+assert.equal(protectedGuard.snapshot().restored_live_supporter_counters,1);
+const protectedStore=new Store({onStateChange:()=>{}});
+protectedStore.state=protectedBotState;
+protectedStore.dispatch(protectedAction);
+assert.equal(protectedBotState.players[0].hand.cards.some(c=>c.name==="Boss's Orders"),false);
+console.log('[supporter-mutation] PASS: complete SimpleTacticsAi changes PassTurn to legal Boss Orders when tactic-side restoration precedes validity check');
