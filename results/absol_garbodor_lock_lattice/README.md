@@ -37,7 +37,7 @@ This is simple exact rational interpolation of the [underlying physical access p
 
 The solver `tools/mega_absol_stone_bridge.py` enumerates hands, one natural draw, and the *joint* Prizing of Mega, Crobat and Stone with exact integer coefficients. The results include the separate three additional lock-state flags. `results/absol_garbodor_stone_bridge/reproduce.py` verifies each flag against an **independent exhaustive labeled hand/Prize/draw oracle** in three 12-card toy decks, checks the card text, validates the full published and two counterfactual 60s, and calculates the three break-even weights with exact `Fraction` arithmetic.
 
-Reproduce: `python -m results.absol_garbodor_stone_bridge.reproduce`. The restricted Dark Asset line remains separately tested in [its companion study](../absol_garbodor_darkasset_frontier/).
+Reproduce: `python -m results.absol_garbodor_stone_bridge.reproduce`. **[Windows CI run 38278438352](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38278438352) passed**, independently supported by [run 38278381413](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38278381413), including the earlier named-Item and Dark Asset regression suites. The restricted Dark Asset line remains separately tested in [its companion study](../absol_garbodor_darkasset_frontier/).
 
 ## Strategic implication
 
