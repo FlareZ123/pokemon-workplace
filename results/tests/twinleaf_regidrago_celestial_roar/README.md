@@ -34,6 +34,14 @@ Both manual Twinleaf workflows run the focused Regidrago SFT and live engine-hoo
 
 Both paired seed-20261012 games finished under `SimpleTacticsAi`. The first finished at turn 20 after 131 actions; the second at turn 37 after 194 actions. Shadow Rider won both again. The trace reported both semantic hooks and no errors. The published reference's Regidrago bot used Celestial Roar three total times across these games, but the trace does not separately record which Energy types were revealed. Consequently the score repetition cannot establish the actual on-match impact of this defect.
 
+## Additional real-Store confirmation and numerical risk context
+
+[Manual CI run 38301157584](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38301157584) passed the additional `test-regidrago-celestial-roar-store.cjs`. This exercise uses Twinleaf's actual `Store.reduceEffect`, native move-card handling and `CheckProvidedEnergyEffect`. With a prepared Regidrago V Active and a top-three reveal containing Double Dragon Energy, Basic Grass Energy, and a non-Energy card, the patched effect attaches both Energy cards and discards only the non-Energy. The resulting native energy map confirms that Double Dragon supplies **two `ANY` Energy units** to its Dragon recipient.
+
+The reproducible exact blind-three composition census is [`reproduce.py`](reproduce.py), derived directly from the published 60-card JSON. With four Double Dragon, six Basic Energy and fifty non-Energy cards in an *untouched hypothetical 60*, a uniformly random three-card reveal contains at least one Double Dragon with probability **325/1711 = 18.994739918%**. The original Basic-only code misses an expected **1/5 Double Dragon cards** or **2/5 provided Energy units** per such reveal. The chance of at least one Energy of either category is **731/1711 = 42.723553477%**.
+
+**Scope:** an untouched 60-card blind draw is a diagnostic null model. An actual Celestial Roar happens after a Basic-containing opening, six Prizes, card draw/search, and usually other setup decisions. The conditional probability of the bug affecting a *played* Celestial Roar depends on the resulting live deck composition and the policy's decision to attack. Neither the 18.99% nor the expected 0.4 units is a match win-rate estimate.
+
 ## Interpretation and remaining limits
 
 Engine simulations recorded **before** this Regidrago correction silently use a different Energy-acceleration rule than the physical source card. Do not treat them as directly comparable to guarded results. Even guarded runs use `SimpleTacticsAi`, which can fail to select realistic attack, attachment or search choices. Confidence in those policy outcomes remains low.
