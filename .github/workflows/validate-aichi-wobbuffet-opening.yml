@@ -1,0 +1,20 @@
+name: Validate Aichi Wobbuffet natural starting lock
+
+on:
+  push:
+    paths:
+      - results/aichi_wobbuffet_opening_lock/**
+      - results/regidrago_aichi_top10_playable/yoshioka_regidrago_2026.json
+      - .github/workflows/validate-aichi-wobbuffet-opening.yml
+  workflow_dispatch:
+
+jobs:
+  physical-hands:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify Basic-valid first-seven probabilities
+        run: python results/aichi_wobbuffet_opening_lock/reproduce.py
