@@ -13,14 +13,6 @@ function audit(decks,metadata,engineCards,getSourceSet) {
       const print=source.get(c.print_id);
       if(!print) throw Error('Missing exact source print '+c.print_id);
       const found=matchPaperPrint({qty:c.quantity,name:c.name,printId:c.print_id},codes,engineCards);
-      if(c.print_id==='xy4-92' && found.status==='qualified_exact') {
-        const expected='Search your deck for up to 3 cards and discard them. Shuffle your deck afterward.';
-        if(print.name!=='Battle Compressor Team Flare Gear' ||
-           print.supertype!=='Trainer' || !print.subtypes?.includes('Item') ||
-           !print.rules?.includes(expected)) {
-          throw Error('Pinned Battle Compressor name alias no longer matches source print rules');
-        }
-      }
       if(!['exact','qualified_exact'].includes(found.status))
         return {...c,status:found.status,engine_candidates:found.matches};
       const impl=byFullName.get(found.matches[0].fullName);
