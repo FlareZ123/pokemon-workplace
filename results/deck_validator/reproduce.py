@@ -81,7 +81,6 @@ assert records["me5-115"].rules[0].startswith("Mega Evolution ex Rule:")
 assert deck(("me5-42", 1), (GRASS, 59)).valid
 assert "missing_basic_pokemon" in codes(deck(("me5-115", 1), (GRASS, 59)))
 assert deck(("me5-115", 1), (SNIVY, 1), (GRASS, 58)).valid
-assert historical(("me5-42", 1), (GRASS, 59)).valid
 
 restriction_prints = 0
 restriction_texts = set()
@@ -114,6 +113,7 @@ assert "unrecognized_deck_constraint" not in warnings(
     historical(("neo4-16", 2), (SNIVY, 1), (GRASS, 57))
 )
 assert historical(("neo4-16", 1), (SNIVY, 1), (GRASS, 58)).valid
+assert historical(("me5-42", 1), (GRASS, 59)).valid
 assert historical(("pl4-AR1", 5), (GRASS, 55)).valid
 assert historical(("pl4-94", 5), (SNIVY, 1), (GRASS, 54)).valid
 assert "name_copy_limit" in codes(historical(("xyp-XY83", 5), (GRASS, 55)))
