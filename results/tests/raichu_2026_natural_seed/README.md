@@ -59,3 +59,20 @@ Of naturally complete turn-two evolution-material states, **57.663601% depend on
 Independent exact oracles agree: one enumerates every legal seven-card hand and two chronological draws; the other enumerates every qualifying first-eight multiset and the physical identities of the possible ninth card. Both marginalize unknown Prizes. The sample space remains a valid initial seven, with no search or draw effects.
 
 **Do not treat 0.569670% as the deck's turn-two attack rate.** The published deck has Quick Balls, Battle Compressor, multiple draw Abilities, search and recovery, and twelve Special Energy. The attack also needs Energy available and Electrode-GX to be activated in a compatible Prize state. The statistic shows how strongly the list depends on those action channels to assemble the target state.
+
+
+## Physically paid Quick Ball-only first-turn base-access ceiling
+
+The `quick_ball_upper.py` SFT introduces **all four actual Quick Ball copies** from the published deck. It enumerates **68,462 weighted hand/Prize/draw class configurations** conditional on a valid initial seven, accounting for the six Prized physical copies, exact remaining Basic targets in the deck, the starting Active drawn from the initial seven, and distinct Quick Ball discard payments. Searches move the selected Basic from deck to hand, and subsequent Bench placement is represented.
+
+| First-turn access scenario | Exact fraction / probability |
+| --- | --- |
+| Natural source Basics only | `814128/9797437` = **8.309602%** |
+| Natural sources + up to four Quick Ball searches, all legal discard payments allowed | `80313436404203/265089546832110` = **30.296719%** |
+| Same, while preserving all source-role Basics and remaining Quick Balls as discard targets | **30.296719%** in this particular coarse card-class model |
+
+This **3.65× multiplicative material-reachability gain** shows that Quick Ball meaningfully changes first-turn access even before considering Ultra Ball, Battle VIP Pass, Secret Box, draw Abilities or card-effect searches. The script validates its natural-only subtotal independently against the separate eight-card closed-form oracle, and asserts distinct-card discard-cost counterexamples.
+
+**Upper-envelope conditions:** the planner chooses the starting Active and Quick Ball action sequence optimistically with knowledge of the physical six-Prize configuration. In an actual game, the starting Active is chosen before deck inspection, and discard choices incur strategic opportunity costs. The `filler_only` policy protects target source Basics and other Quick Balls, but treats every other 52 physical cards as a potential cost, including important Trainers, attackers and Energy. Equal measured outcomes across those two policies do not imply that a rational tournament player can always afford the payments. Every source remains subject to Bench position, Klefki suppressing Ditto later, deck-search lock, and the need to evolve and accelerate Energy on turn two.
+
+This is a verified **first-turn two-evolution-source access ceiling for one deliberately limited Item channel**, with no claim about whole-deck setup success or match outcomes.
