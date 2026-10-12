@@ -5,6 +5,7 @@ on:
     paths:
       - "results/decks/iron_thorns_aichi_english/**"
       - "tools/iron_thorns_gnh_side_payload.py"
+      - "tools/iron_thorns_gnh_discard_gate.py"
       - "tools/deck_legality_proof.py"
       - ".github/workflows/validate-iron-thorns-aichi-english.yml"
   workflow_dispatch:
@@ -18,3 +19,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m results.decks.iron_thorns_aichi_english.reproduce
+      - run: python -m results.decks.iron_thorns_aichi_english.discard_gate_reproduce
