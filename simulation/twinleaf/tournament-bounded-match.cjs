@@ -9,18 +9,21 @@ const {summarizePairedTraces}=require('./paired-result-summary.cjs');
 const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
 const {makeMatchActionTelemetry}=require('./match-action-telemetry.cjs');
 const {makeTacticOrder}=require('./tactic-order-policy.cjs');
+const {makeVipFirstTactic}=require('./vip-first-tactic.cjs');
 const {loadImplementedCards}=require('./print-coverage.cjs');
 const {CardManager}=engine('game/cards/card-manager');
 const {Store}=engine('game/store/store');
 const {Format}=engine('game/store/card/card-types');
 const {GamePhase}=engine('game/store/state/state');
 const {AddPlayerAction}=engine('game/store/actions/add-player-action');
+const {PlayCardAction,PlayerType,SlotType}=engine('game/store/actions/play-card-action');
 const {SimpleTacticsAi}=engine('simple-bot/simple-tactics-ai');
 const {BotArbiter,BotFlipMode,BotShuffleMode}=engine('game/bots/bot-arbiter');
 const {allSimpleTactics,allPromptResolvers,defaultStateScores,defaultArbiterOptions}=engine('simple-bot/simple-bot-definitions');
 const {makeUniformShuffleArbiter}=require('./hooks/uniform-random-shuffle.cjs');
 const {makeRandomStreamLedger}=require('./random-stream-ledger.cjs');
 const UniformBotArbiter=makeUniformShuffleArbiter(BotArbiter);
+const ResearchVipTactic=makeVipFirstTactic(PlayCardAction,PlayerType,SlotType);
 /** Register every exact implementation used by the two source lists once. @param {string[][]} lists */
 function registerLists(lists) {
   const manager=CardManager.getInstance();
@@ -34,7 +37,7 @@ function registerLists(lists) {
 /** Run a capped native Store trace. Results are engine/policy diagnostics, not win-rate samples.
  * @param {string[]} deckA @param {string[]} deckB @param {number} seed
  * @param {number} maxActions @param {number} wallMilliseconds
- * @param {'native'|'attack_before_retreat'} tacticOrder
+ * @param {'native'|'attack_before_retreat'|'vip_first'|'vip_attack_before_retreat'} tacticOrder
  */
 function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrder='native') {
   const prior=Math.random;
@@ -47,7 +50,7 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     const store=new Store({onStateChange:()=>{}});
     store.state.gameSettings.format=Format.EXPANDED;
     store.state.gameSettings.recordingEnabled=false;
-    const settings={tactics:makeTacticOrder(tacticOrder,allSimpleTactics),
+    const settings={tactics:makeTacticOrder(tacticOrder,allSimpleTactics,ResearchVipTactic),
       promptResolvers:allPromptResolvers,
       scores:defaultStateScores,arbiter:defaultArbiterOptions};
     const players=new Map([[1,new SimpleTacticsAi({id:1,name:'Aichi A'},settings,deckA)],
