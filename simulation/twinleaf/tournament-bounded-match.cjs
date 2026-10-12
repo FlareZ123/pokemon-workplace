@@ -82,7 +82,9 @@ function main() {
   const traces=seatPairs.map(p=>runOne(p.seat1.engine_names,p.seat2.engine_names,p.seed));
   const report={scope:'bounded engine self-play diagnostics only, SimpleTacticsAi policy unvalidated',
     twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
-    decks:['aichi_vileplume','aichi_mew_genesect'],max_actions:1000,wall_ms:12000,traces};
+    decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
+    seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
+    max_actions:1000,wall_ms:12000,traces};
   console.log('[tournament-probe] '+JSON.stringify(report));
   assert.ok(traces.every(t=>t.turn>=1),'Both games must enter actual turn one');
   console.log('[tournament-probe] PASS: paired bounded headless traces emitted with explicit limitations');
