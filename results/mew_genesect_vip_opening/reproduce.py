@@ -34,6 +34,7 @@ def outcome(
     prizes: tuple[int, ...],
     counts: tuple[int, ...],
     required_genesect: int,
+    *, vip_use_limit: int | None = 1,
 ) -> tuple[bool, bool, bool]:
     """Return direct success, added VIP-only success, combined success."""
     mew, genesect, _, vip, _ = visible
@@ -42,7 +43,9 @@ def outcome(
     missing_genesect = max(0, required_genesect - genesect)
     use_vip = (
         vip >= 1
-        and missing_mew + missing_genesect <= 2
+        and missing_mew + missing_genesect <= 2 * (
+            vip if vip_use_limit is None else min(vip, vip_use_limit)
+        )
         and counts[0] - visible[0] - prizes[0] >= missing_mew
         and counts[1] - visible[1] - prizes[1] >= missing_genesect
     )
@@ -55,6 +58,7 @@ def exact(
     *,
     hand_size: int = 7,
     prize_size: int = 6,
+    vip_use_limit: int | None = 1,
 ) -> dict[str, Fraction]:
     """Enumerate disjoint physical hand/Prize/draw categories exactly.
 
@@ -82,7 +86,8 @@ def exact(
             for count, taken in zip(remaining, prizes):
                 weight *= comb(count, taken)
             direct, vip_only, union = outcome(
-                visible, prizes, counts, required_genesect
+                visible, prizes, counts, required_genesect,
+                vip_use_limit=vip_use_limit,
             )
             masses[0] += weight
             masses[1] += weight * direct
@@ -107,7 +112,7 @@ def exact(
 
 def physical_oracle(
     counts: tuple[int, ...], required_genesect: int, *,
-    hand_size: int, prize_size: int
+    hand_size: int, prize_size: int, vip_use_limit: int | None = 1,
 ) -> dict[str, Fraction]:
     """Independently enumerate labeled hand, Prize, and draw allocations."""
     deck = tuple(i for i, copies in enumerate(counts) for _ in range(copies))
@@ -126,7 +131,8 @@ def physical_oracle(
                 visible_counts = tuple(sum(deck[i] == category for i in visible)
                                        for category in range(5))
                 direct, vip_only, union = outcome(
-                    visible_counts, prize_counts, counts, required_genesect
+                    visible_counts, prize_counts, counts, required_genesect,
+                    vip_use_limit=vip_use_limit,
                 )
                 masses[0] += 1
                 masses[1] += direct
@@ -137,7 +143,8 @@ def physical_oracle(
 
 
 def simulated(counts: tuple[int, ...], required_genesect: int, *,
-              seed: int, trials: int) -> tuple[float, int]:
+              seed: int, trials: int,
+              vip_use_limit: int | None = 1) -> tuple[float, int]:
     deck = tuple(i for i, copies in enumerate(counts) for _ in range(copies))
     rng = Random(seed)
     good = valid = 0
@@ -149,7 +156,10 @@ def simulated(counts: tuple[int, ...], required_genesect: int, *,
         prize_counts = tuple(sample[7:13].count(c) for c in range(5))
         visible_counts = tuple((sample[:7] + sample[13:14]).count(c)
                                for c in range(5))
-        good += outcome(visible_counts, prize_counts, counts, required_genesect)[2]
+        good += outcome(
+            visible_counts, prize_counts, counts, required_genesect,
+            vip_use_limit=vip_use_limit,
+        )[2]
     return good / valid, valid
 
 
@@ -180,32 +190,49 @@ def assert_legal_deck_variants() -> None:
 
 
 def self_test() -> None:
-    # Independent labeled physical oracle, 12 distinct card instances.
-    tiny = (2, 2, 1, 1, 6)
-    for target in (1, 2):
-        expected = exact(tiny, target, hand_size=3, prize_size=2)
-        oracle = physical_oracle(tiny, target, hand_size=3, prize_size=2)
-        for key in ("direct", "vip_only", "combined"):
-            assert expected[key] == oracle[key], (key, expected[key], oracle[key])
-        print(f"Physical {target}-Genesect toy oracle: {oracle['valid_worlds']} valid worlds, all metrics agree")
+    # Distinct physical-card labels and independently enumerated zones.
+    for tiny in ((2, 2, 1, 1, 6), (2, 2, 1, 2, 5)):
+        for target in (1, 2):
+            for limit in (1, None):
+                expected = exact(tiny, target, hand_size=3, prize_size=2,
+                                 vip_use_limit=limit)
+                oracle = physical_oracle(tiny, target, hand_size=3,
+                                         prize_size=2, vip_use_limit=limit)
+                for key in ("direct", "vip_only", "combined"):
+                    assert expected[key] == oracle[key], (
+                        tiny, target, limit, key, expected[key], oracle[key]
+                    )
+                print(f"Physical {target}-Genesect toy VIP{tiny[3]} "
+                      f"limit={limit}: {oracle['valid_worlds']} legal worlds agree")
     for target in (2, 3):
-        baseline = exact(category_counts(3), target)
-        expanded = exact(category_counts(4), target)
-        assert baseline["direct"] == expanded["direct"]
-        assert expanded["combined"] > baseline["combined"]
-        assert baseline["valid_hand"] == expanded["valid_hand"]
-        print(f"Mew V + {target} Genesect V; first natural draw, conditional on Basic-valid opener:")
-        for name, result in (("published VIP3", baseline), ("legal +VIP/-Red VIP4", expanded)):
-            print(f"  {name}: direct={float(result['direct']):.9%}, "
-                  f"VIP only={float(result['vip_only']):.9%}, "
-                  f"union={float(result['combined']):.9%}")
-        difference = expanded["combined"] - baseline["combined"]
-        print(f"  Difference: {float(difference)*100:.9f} percentage points")
-        for vip in (3, 4):
-            estimated, accepted = simulated(category_counts(vip), target, seed=20261012, trials=100000)
-            truth = float(exact(category_counts(vip), target)["combined"])
-            assert abs(estimated - truth) < 0.006, (vip, target, accepted, estimated, truth)
-            print(f"  100000-seed Monte Carlo VIP{vip}: {estimated:.9%}, accepted {accepted}")
+        for limit in (1, None):
+            baseline = exact(category_counts(3), target, vip_use_limit=limit)
+            expanded = exact(category_counts(4), target, vip_use_limit=limit)
+            assert baseline["direct"] == expanded["direct"]
+            assert expanded["combined"] > baseline["combined"]
+            assert baseline["valid_hand"] == expanded["valid_hand"]
+            label = "one VIP Pass maximum" if limit == 1 else "all held VIP Passes"
+            print(f"Mew V + {target} Genesect V; {label}; "
+                  "conditional on Basic-valid opener:")
+            for name, result in (("published VIP3", baseline),
+                                 ("legal +VIP/-Red VIP4", expanded)):
+                print(f"  {name}: direct={float(result['direct']):.9%}, "
+                      f"VIP only={float(result['vip_only']):.9%}, "
+                      f"union={float(result['combined']):.9%}")
+            difference = expanded["combined"] - baseline["combined"]
+            print(f"  Difference: {float(difference)*100:.9f} percentage points")
+            for vip in (3, 4):
+                estimated, accepted = simulated(
+                    category_counts(vip), target, seed=20261012, trials=100000,
+                    vip_use_limit=limit,
+                )
+                truth = float(exact(category_counts(vip), target,
+                                    vip_use_limit=limit)["combined"])
+                assert abs(estimated - truth) < 0.006, (
+                    vip, target, limit, accepted, estimated, truth
+                )
+                print(f"  100000-seed Monte Carlo VIP{vip}: "
+                      f"{estimated:.9%}, accepted {accepted}")
 
 
 if __name__ == "__main__":
