@@ -111,8 +111,7 @@ function matchPaperPrint(entry, paperSetCodes, cards) {
   const dash = entry.printId.lastIndexOf('-');
   if (dash < 1) throw new Error(`Unrecognized print ID: ${entry.printId}`);
   const sourceSetId = entry.printId.slice(0, dash);
-  const promoCode = { xyp: 'XYP', smp: 'SMP' }[sourceSetId];
-  const sourceSetCode = promoCode ?? paperSetCodes.get(sourceSetId);
+  const sourceSetCode = paperSetCodes.get(sourceSetId);
   const sourceNumber = sourceSetCode
     ? normalizePromoPrintNumber(entry.printId.slice(dash + 1), sourceSetCode)
     : cleanNumber(entry.printId.slice(dash + 1));
