@@ -63,6 +63,19 @@ Source: https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%83%A9%E3%
 
 The regression mirrors this exact geometry. After Active disposal and before promotion, all five survivors still occupy the Bench, so `open_bench_slots == 0`. A later promotion would open a slot, which is too late for Lucky Bonus.
 
+## Two competing destination replacements across two Prizes
+
+The official Japanese Q&A confirms that Lost Block and Billowing Smoke can both apply to the same Knock Out, and that the player taking a two-Prize award may choose the destination separately for each card. Applying Lost Block first sends a selected Prize to the Lost Zone; applying Billowing Smoke first sends an ordinary selected Prize to discard. [Official Lost Block and Billowing Smoke interaction](https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%83%AD%E3%82%B9%E3%83%88%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF&regulation_faq_main_item1=BW).
+
+The added end-to-end regression obtains those replacement choices from the **actual Knocked Out Tool holder and surviving Barbaracle in the board-object KO kernel**, then stages two exact face-down Prizes: Jirachi Prism Star and Chansey. Both choice orders resolve successfully:
+
+| Selected override for Jirachi | Selected override for Chansey | Final Jirachi | Final Chansey |
+| --- | --- | --- | --- |
+| Billowing Smoke | Lost Block | Lost Zone (Prism Star rule) | Lost Zone |
+| Lost Block | Billowing Smoke | Lost Zone | Discard |
+
+Both self-to-Bench effects are ineligible because the respective Prize destination is not the hand. Both cases conserve every physical Prize/board card and finish the pending queue. These are a deterministic rules test under an assumed two-Prize KO award. It is deliberately separate from deck selection, matchup frequency, or win-rate evidence. The KO object and pending Prize board are separate kernel projections; the fixture checks them in sequence but does not claim a unified game-engine implementation.
+
 ## Recursive E-31 chain
 
 The Jirachi regression starts with Jirachi Prism Star as the taken Prize and Chansey as another face-down Prize.
