@@ -131,3 +131,14 @@ New source-grounded study:
 Limitations: one-turn Prize payout conditional on arbitrary instant-KO capability; no multi-turn attacking, energy/card cost, lock persistence, opponent action, damage carryover, Prize acquisition or match win rates. Do not treat structural case counts as metagame frequencies.
 
 Next highest-value research: match Guzma's mandatory own switch to actual attacker Energy/attack costs, legal retreat effects and persistent Active-only locks; test card-swap consequence in real tournament deck snapshots. Refine the model's immediate knockout abstraction before using it for deck construction.
+
+
+### October 12 second result: physical own Retreat payment changes Guzma/ Boss source value
+
+- Added tools/guzma_retreat_payment.py, results/tests/guzma_retreat_payment/{README.md,reproduce.py}, and .github/workflows/validate-guzma-retreat-payment.yml.
+- Reuses existing tools/typed_retreat_gust.retreat_payment_remainders; physical attached Energy cards are counted as whole units of payment. Attacker records own KO mask, Colorless-compatible attack cost, retreat cost, energy card tuple, retreat blocking flag. Exact bounded turn search interleaves 1 Retreat, optional one Switch Item, 1 Supporter, final attack.
+- Counterexample: original own Active can KO opponent three-Prize Bench with one Energy and has Retreat Cost1; sole own Bench unready, Retreat Cost2 and no Energy. With one Double Colorless (2 units on a single card), Boss3/Guzma0. With two Basic (1+1) Boss3/Guzma3 by Retreat-before-Guzma, retaining 1 Energy. With own Bench Retreat Cost0, Guzma-first and free Retreat back regains 3 even with Double Colorless. Item lock blocks held Switch but not normal Retreat.
+- Independent BFS vs recursive engine 3,654 source / physical states, plus 6,048 exact reductions to older KO-mask source model. Card text checked sm1-136 DCE, sm3-115 Guzma, swsh2-154 Boss.
+- Local test and Windows GitHub Actions SUCCESS https://github.com/FlareZ123/pokemon-workplace/actions/runs/38300733696 .
+- These are synthetic generic Colorless-compatible Energy states and immediate Prize payoffs, no actual deck list change or match win rates. Do not claim that the Mew/Shadow Rider list realizes this board without verifying actual attack costs/HP/Tools.
+- Follow-on concrete candidate: Shadow Rider VMAX Max Geist depends on Psychic Energy still in play, so physical Retreat cost can change **both attack availability and damage**, and a forced Guzma pivot can disrupt an already ready VMAX. Need source-verified card-state witness and Tool interactions.
