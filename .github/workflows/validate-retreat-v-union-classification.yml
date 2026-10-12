@@ -1,0 +1,27 @@
+name: Validate in-play V-UNION Retreat semantics
+
+on:
+  push:
+    paths:
+      - "tools/retreat_dynamic_energy_units.py"
+      - "tools/retreat_conditional_self_free_cost.py"
+      - "results/retreat_v_union_classification/**"
+      - ".github/workflows/validate-retreat-v-union-classification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify official V-UNION classification and source compatibility
+        run: |
+          python results/retreat_v_union_classification/reproduce.py
+          python results/retreat_dynamic_special_energy_providers/reproduce.py
+          python results/retreat_conditional_self_free_cost/reproduce.py
