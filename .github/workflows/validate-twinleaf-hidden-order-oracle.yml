@@ -28,3 +28,5 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Exercise physical hidden-order counterexample
         run: node simulation/twinleaf/test-hidden-topdeck-oracle.cjs
+      - name: Audit native Supporter decision mutation of the live State
+        run: node simulation/twinleaf/test-supporter-policy-mutation.cjs
