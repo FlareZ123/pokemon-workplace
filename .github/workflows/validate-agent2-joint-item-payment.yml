@@ -1,0 +1,18 @@
+name: Validate joint Item discard payability
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact category and labeled physical deal reproducer
+        run: python results/joint_item_payment/reproduce.py
