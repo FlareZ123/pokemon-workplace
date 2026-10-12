@@ -66,4 +66,8 @@ assert.throws(()=>summarizeScoreBounds(summarizePairedTraces(plan([77]),[
   trace(77,0),trace(77,1)]),'missing'),/Deck A missing/);
 assert.throws(()=>summarizeScoreBounds(summarizePairedTraces(plan([77]),[
   trace(77,0),trace(77,1)]),deckA.id,1),/Confidence/);
+assert.throws(()=>evaluate([77,77],[
+  trace(77,0),trace(77,1),trace(77,0),trace(77,1)
+]),/Seed labels must be unique/);
+console.log('[paired-score] Repeated seed labels cannot be counted as independent evidence.');
 console.log('[paired-score] PASS: seat attribution, draws, adversarial censoring, dependence and small-sample uncertainty');
