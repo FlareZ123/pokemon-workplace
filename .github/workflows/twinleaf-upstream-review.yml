@@ -1,0 +1,121 @@
+name: Review Twinleaf upstream updates
+
+on:
+  schedule:
+    - cron: '37 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: twinleaf-upstream-review
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    outputs:
+      changed: ${{ steps.detect.outputs.changed }}
+      pinned: ${{ steps.detect.outputs.pinned }}
+      candidate: ${{ steps.detect.outputs.candidate }}
+    steps:
+      - name: Checkout current research revision
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+      - name: Compare gitlink against upstream main
+        id: detect
+        shell: pwsh
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          $pinned = (git rev-parse HEAD:vendor/twinleafgg).Trim()
+          $remote = (git ls-remote --exit-code https://github.com/twinleafgg/twinleafgg.git refs/heads/main).Trim()
+          $candidate = $remote.Split([char]9)[0]
+          if ($candidate -notmatch '^[0-9a-f]{40}$') { throw 'Invalid upstream Git SHA' }
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "pinned=$pinned"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "candidate=$candidate"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "changed=$($pinned -ne $candidate)"
+          Write-Output "Research pin: $pinned"
+          Write-Output "Upstream main: $candidate"
+          Write-Output 'No release branch is mutated during discovery.'
+
+  test_candidate:
+    needs: discover
+    if: needs.discover.outputs.changed == 'True'
+    runs-on: windows-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout research source without malformed nested upstream submodule
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+      - name: Fetch candidate into the existing first-level Twinleaf submodule
+        shell: pwsh
+        env:
+          PINNED: ${{ needs.discover.outputs.pinned }}
+          CANDIDATE: ${{ needs.discover.outputs.candidate }}
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          git submodule update --init --depth=1 vendor/twinleafgg
+          if ((git -C vendor/twinleafgg rev-parse HEAD).Trim() -ne $env:PINNED) { throw 'Main branch gitlink mismatch' }
+          git -C vendor/twinleafgg fetch --depth=1 origin $env:CANDIDATE
+          git -C vendor/twinleafgg checkout --detach $env:CANDIDATE
+          if ((git -C vendor/twinleafgg rev-parse HEAD).Trim() -ne $env:CANDIDATE) { throw 'Candidate checkout mismatch' }
+      - name: Setup proposed upstream Node runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: vendor/twinleafgg/.nvmrc
+          cache: npm
+          cache-dependency-path: vendor/twinleafgg/ptcg-server/package-lock.json
+      - name: Install candidate dependencies
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Compile candidate Twinleaf engine
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: npm exec -- tsc --project tsconfig.json
+      - name: Regress fixed-deck adapter and exact tournament print mapping
+        shell: pwsh
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          node simulation/twinleaf/test-expanded-bot.cjs
+          node simulation/twinleaf/test-print-coverage.cjs
+          node simulation/twinleaf/test-regidrago-print-coverage.cjs
+          node simulation/twinleaf/test-tournament-print-audit.cjs
+          node simulation/twinleaf/test-baseline-decks.cjs
+          node simulation/twinleaf/test-tournament-deck-loader.cjs
+      - name: Regress action, RNG, abilities, and bounded-match accounting
+        shell: pwsh
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          node simulation/twinleaf/test-random-stream-ledger.cjs
+          node simulation/twinleaf/test-underworld-door-targets.cjs
+          node simulation/twinleaf/test-tournament-engine-hooks.cjs
+          node simulation/twinleaf/test-paired-result-summary.cjs
+          node simulation/twinleaf/test-paired-score-bounds.cjs
+      - name: Propose tested revision in a draft PR
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PINNED: ${{ needs.discover.outputs.pinned }}
+          CANDIDATE: ${{ needs.discover.outputs.candidate }}
+        run: |
+          $PSNativeCommandUseErrorActionPreference = $true
+          $short = $env:CANDIDATE.Substring(0,12)
+          $branch = "automation/twinleaf-$short"
+          $existing = gh pr list --head $branch --base main --state open --json number --jq length
+          if ($existing -ne '0') {
+            Write-Output "Review PR already exists for $branch"
+            exit 0
+          }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c $branch
+          git add vendor/twinleafgg
+          git commit -m "Agent 23: propose Twinleaf upstream revision $short"
+          git push origin "HEAD:refs/heads/$branch"
+          $title = "Review Twinleaf upstream revision $short"
+          $body = "Pinned Twinleaf: $($env:PINNED); candidate: $($env:CANDIDATE). The proposed branch passed TypeScript compilation and the selected research-side SFTs. This is a DRAFT for card-effect, rule, headless gameplay and hard-coded pin review. Do not merge until the new revision is reconciled with research-specific hooks and experiment metadata. A passing static suite is not evidence of paper Expanded behavioral parity."
+          gh pr create --draft --head $branch --base main --title $title --body $body
