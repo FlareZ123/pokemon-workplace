@@ -14,6 +14,8 @@ const {AddPlayerAction}=engine('game/store/actions/add-player-action');
 const {SimpleTacticsAi}=engine('simple-bot/simple-tactics-ai');
 const {BotArbiter,BotFlipMode,BotShuffleMode}=engine('game/bots/bot-arbiter');
 const {allSimpleTactics,allPromptResolvers,defaultStateScores,defaultArbiterOptions}=engine('simple-bot/simple-bot-definitions');
+const {makeUniformShuffleArbiter}=require('./hooks/uniform-random-shuffle.cjs');
+const UniformBotArbiter=makeUniformShuffleArbiter(BotArbiter);
 /** Deterministic draw for a bounded execution trace. @param {number} seed */
 function seededRandom(seed) {
   let n=seed>>>0;
