@@ -12,8 +12,7 @@ function run() {
     ...Array.from({ length: 20 }, (_, i) => `| 3 | Test ${i} | sm5-${i + 1} |`),
     '## Some other heading'
   ].join('\n');
-  const parsed = parseBaselineDecks;
-  assert.equal(typeof parsed, 'function');
+  assert.throws(() => parseBaselineDecks(sample), /Incomplete vileplume baseline/);
 
   const paperSets = new Map([['swsh6', 'CRE']]);
   const examples = [
