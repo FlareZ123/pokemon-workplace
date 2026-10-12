@@ -94,3 +94,21 @@ The strict Energy-only policy sacrifices 6.22249 percentage points of modeled fi
 This captures one measurable implication of state-dependent discardability (DCI) and connector opportunity cost: identical four-Quick-Ball access paths yield distinct feasibility after the permitted cost cards change. Full-card strategic preservation, draw/search sequencing, Ability lock, and opponent actions remain unmodeled. In particular, treating every other card as protected is a deliberately conservative discard policy, **not** an experimentally established optimal Pokémon TCG policy.
 
 Reproduction: `python results/tests/raichu_2026_natural_seed/quick_ball_energy_sensitivity.py`. Independent boundary tests in `quick_ball_upper.py` confirm a played Quick Ball cannot pay its own discard cost and that discarding another Quick Ball sacrifices its future use.
+
+
+## Ditto-off counterfactual: a lock-sensitive source endpoint
+
+The `quick_ball_ditto_lock.py` regression asks which physical Quick Ball lines remain capable of establishing **native Voltorb + Pikachu** when Ditto Prism Star's Almighty Evolution cannot function. This is applicable to a hypothetical state with continuous active Klefki Mischievous Lock, or another effective suppression of Ditto's Basic-Pokémon Ability. It is a counterfactual conditional restriction, **not a claim that Klefki remains Active throughout real games**.
+
+| First-turn source access under the corresponding discard policy | Ditto available | Ditto Ability disabled |
+| --- | ---: | ---: |
+| Natural draws alone | **8.309602%** | **3.583794%** |
+| Quick Ball with Energy-only discard payments | **24.074229%** | **16.253624%** |
+| Quick Ball with Energy or spare Quick Ball payments | **25.003751%** | **17.025574%** |
+| Quick Ball with unrestricted physically legal payments | **30.296719%** | **21.961958%** |
+
+A permanently unavailable Ditto evolution lowers the unrestricted first-turn two-evolution-base ceiling by **8.334761 percentage points**. This is one way a game-state-dependent Ability lock can remove search graph endpoints while all four Quick Ball cards remain usable.
+
+The regression reuses the exact 799,953-class physical hand/Prize/draw enumeration and the same discarding/search engine with an attack-role-specific endpoint. It source-validates the Klefki and Ditto print IDs and their printed Ability text.
+
+**Crucial limit:** the full deck has three Escape Rope, U-Turn Board, mobility and switching options. Klefki need not remain Active on own turn two. Other cards and opponents can also suppress or restore the Ability. The two columns represent fixed conditional game environments, and cannot be translated directly into the expected tournament frequency of being locked.
