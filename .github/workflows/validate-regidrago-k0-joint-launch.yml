@@ -15,3 +15,4 @@ jobs:
         with:
           python-version: '3.13'
       - run: python results/regidrago_k0_joint_launch/reproduce.py
+      - run: python results/regidrago_k0_joint_launch/physical_oracle.py
