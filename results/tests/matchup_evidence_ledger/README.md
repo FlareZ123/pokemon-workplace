@@ -39,6 +39,12 @@ The SFT constructs explicit paired raw traces and checks:
 
 All cases passed when the actual committed CommonJS sources were executed with an assertion-compatible V8 harness on 12 October 2026. The new test is also wired into manual GitHub Actions but a real Node.js CI run has not yet been observed.
 
+## Machine-readable CI handoff
+
+Both manual Twinleaf matchup workflows now set TWINLEAF_REPORT_PATH to tournament-match-report.json. The live runner writes the full JSON as one exclusive-lock-guarded, atomic replacement while preserving its existing structured console log. Each manual run uploads a 30-day GitHub Actions artifact containing all seat assignments, seed labels, raw traces, deck hashes, engine and research revisions, hook labels and censored/decided counts. A subsequent analyst can download those JSON files and supply their parsed objects to mergeTournamentReports().
+
+The [atomic writer](../../../simulation/twinleaf/report-atomic.cjs) and its [single-file regression](../../../simulation/twinleaf/test-report-atomic.cjs) cover initial output, repeated replacement, stale-lock rejection and temp cleanup. The small [Windows Node 20 integrity workflow](../../../.github/workflows/twinleaf-evidence-integrity.yml) runs all relevant portable tests on scoped code changes without compiling the Twinleaf vendor submodule. Its first CI execution must be checked before treating the safeguards as independently Node-validated.
+
 ## Interpretation and limits
 
 A consistent experiment signature establishes reproducible conditions and protects against obvious invalid comparisons. It does **not** prove the seed distribution is representative or draws are statistically independent in practice. A merge containing 100 independently chosen seeds can support a narrower interval for *that fixed engine and bot*; it still cannot turn the native SimpleTacticsAi into skilled human play or infer a tournament field-wide win probability.
