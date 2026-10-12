@@ -1,0 +1,24 @@
+name: Validate Shadow Rider Treasure discard sensitivity
+
+on:
+  push:
+    paths:
+      - 'tools/shadow_rider_treasure_cost_sensitivity.py'
+      - 'tools/shadow_rider_heavy_ball_launch.py'
+      - 'results/shadow_rider_treasure_payability/**'
+      - '.github/workflows/validate-shadow-rider-treasure-payability.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Exact Treasure payment gates and physical toy oracle
+        run: python -m results.shadow_rider_treasure_payability.reproduce
