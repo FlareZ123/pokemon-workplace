@@ -1,0 +1,25 @@
+name: validate Shadow Rider discard gate
+
+on:
+  push:
+    paths:
+      - "results/shadow_rider_discard_gate/**"
+      - "results/shadow_rider_radiant_launch/reproduce.py"
+      - ".github/workflows/validate-shadow-rider-discard-gate.yml"
+  pull_request:
+    paths:
+      - "results/shadow_rider_discard_gate/**"
+      - "results/shadow_rider_radiant_launch/reproduce.py"
+      - ".github/workflows/validate-shadow-rider-discard-gate.yml"
+  workflow_dispatch:
+
+jobs:
+  exact-discard-gate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate source-matched exact DCI frontier and physical oracle
+        run: python -m results.shadow_rider_discard_gate.reproduce
