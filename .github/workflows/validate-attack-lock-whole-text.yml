@@ -1,0 +1,28 @@
+name: Validate attack lock whole-text coverage
+
+on:
+  push:
+    paths:
+      - "tools/attack_lock_whole_text_audit.py"
+      - "results/attack_lock_whole_text_audit/**"
+      - ".github/workflows/validate-attack-lock-whole-text.yml"
+  pull_request:
+    paths:
+      - "tools/attack_lock_whole_text_audit.py"
+      - "results/attack_lock_whole_text_audit/**"
+      - ".github/workflows/validate-attack-lock-whole-text.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Audit entire attack-lock source corpus
+        run: python results/attack_lock_whole_text_audit/reproduce.py
