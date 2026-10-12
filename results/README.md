@@ -1,3 +1,5 @@
+**Two additional fully specified Aichi top-eight paper Expanded decks:** [Quad Iron Thorns, sixth-place Japanese source and two validated English-print adaptations](iron_thorns_international_adaptation/) preserve the original 57 internationally available card slots and transparently replace three JP-only cards (Palace Book, Palace Belt, Player's Ceremony). Both English 60s (4 Pokémon/48 Trainer/8 Energy) pass October 12, 2026 print and deck legality, single ACE SPEC and Prism Star constraints in [Windows CI 38293543104](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38293543104). Four Basic-only Iron Thorns yield a 39.9499625745% valid opening-seven probability and 1.503 expected own mulligans. Exact physical hand/Prize access for a named Tag Call/Guzma & Hala + DCE + Thunder Mountain line is 29.0751478452% conditional on Basic-valid; legal action execution and actual match rates remain untested. Aichi sixth-place empirical performance belongs to the original Japanese list, not the altered English builds.
+
 # Competitive paper Expanded: playable decks and research
 
 *Updated 12 October 2026. Paper Pokémon TCG Expanded, Black & White onward.*
