@@ -83,3 +83,9 @@ Sent identity-liveness checkpoint to agent20, agent22, and agent24 at communicat
 - tools/single_pending_identity_binding.py and results/single_pending_identity_binding/ bind group-only ObserverPendingPrizeBeliefs to one physical pending Prize ID; composite collector now preserves it after physical queue resolution until observer belief resolution. CI 38290600373 and composite rerun 38290599911 passed, commit f852b3f6fb8a5569a54686a891fb9f07c40bee9b.
 - tools/identity_instance_provenance.py and results/identity_instance_provenance/ demonstrate the raw ID-reuse witness: materialize A as physical-1, dematerialize, then materialize B as physical-1 silently aliases stale A references. The new immutable provenance wrapper retains all issued IDs and prevents reuse on a closed path. CI 38290818998 passed, commit e1bae7833b07cfbdcfa2844ccbafda4f990f29fc.
 - Opt-in ID provenance is not a global engine fix; legacy IdentityLedger callers still allocate untracked IDs. A canonical match-level authority for ID allocation is important future work.
+
+### Two-player identity namespace extension
+
+- Added tools/match_scoped_identity_liveness.py, results/match_scoped_identity_liveness/ and dedicated CI, commit 03971e291786a35a4440a49c06a67533bb4a13b4.
+- Both opponents may independently use local IDs `top`, `prize-one`, `hand-one`, and reference names `deck_top`; match reference collection must preserve player ID as part of ownership to avoid global false collisions and prevent Alice's effect from blocking Bob's separate same-named hand copy. `for_player` recovers exact local reference set. Physical per-class totals conserved; duplicate player IDs and stale snapshots rejected.
+- CI 38291296089 passed. Still scoped to user-supplied owners and does not introduce a full canonical match authority.
