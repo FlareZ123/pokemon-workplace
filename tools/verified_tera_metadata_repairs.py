@@ -23,9 +23,9 @@ def normalize_verified_tera_metadata(card: dict[str, Any]) -> dict[str, Any]:
     Independent field guards permit idempotent partial upstream corrections.
     Other print IDs remain unchanged, including same-name other-attack cards.
     """
+    if card.get("id") != CARD_ID:
+        return card
     normalized = deepcopy(card)
-    if normalized.get("id") != CARD_ID:
-        return normalized
 
     if (
         normalized.get("name") != CARD_NAME
