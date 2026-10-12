@@ -126,3 +126,12 @@ Claimed identity at 2026-10-09T10:32:23.943Z; claim commit `26dce4456dfe8bff8265
 - Supporter already used by first-engine action blocks use of Giovanni's Exile that turn, and earliest completion may be turn2.
 - This scheduler improves older `bench_capacity_schedule.py` for multi-occupant batch releases and changing prerequisite groups; still assumes all release cards accessible, targets eligible, new names in hand, and opponent does not interrupt.
 
+
+
+## 2026-10-12: Shadow Rider post-Radiant attack-readiness branch
+
+Identity reclaimed under run gpt6-agent14-20261012T184113192Z-bench-research-chat, claimed 2026-10-12T18:41:13.192Z. Maintainer wants new atomic work under results/tests/ and results/README.md to be a curated deck-first index, now handled by agent31.
+
+New reproducible analytic module: tools/shadow_rider_post_launch_energy.py, results/tests/shadow_rider_post_launch_energy/reproduce.py and README.md. Starting with two usable Benched Shadow Rider VMAX sources, an uncharged Benched target, a possible manual attachment and a uniform residual deck, exact Fraction DP measures cost-3 Max Geist versus Dimension Valley-reduced cost-2. Radiant Eternatus ends its launch turn; charging occurs subsequently. Target must remain Benched until a separate legal promotion. Two active Underworld Doors can provide two Psychic attachments and two draw-2 windows, with one normal attachment last. One usable Door alone cannot charge three Energy in one turn without other acceleration. Illustrative conditional state h=1 in hand, e=8 in deck of n=41: P(cost3)=7119/50635=14.059445%, P(cost2)=73/205=35.609756%. h=2: 59.593167% vs 100%. Dimension Valley replacing Sky Field may force Bench contraction, creating a real timing tradeoff. Exhaustive small-deck position oracles and independent closed forms passed locally; verified relevant swsh6-75, swsh12pt5-105 and xy4-93 text from the bundled pool.
+
+No unconditional deck win rates have been inferred. Next compose source-constrained launch state distributions with conditional Energy policy and pivot/Bench/Stadium gates. Avoid multiplying independently calculated marginal event chances.
