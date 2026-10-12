@@ -19,7 +19,7 @@
       "label": "Mega Absol Box",
       "count": 5,
       "points": 73,
-      "manual_matchup_selectable": false,
+      "manual_matchup_selectable": true,
       "curated_reference": true
     },
     {
