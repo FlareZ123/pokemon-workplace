@@ -29,13 +29,13 @@ assert {g["archetype"]: g["count"] for g in data["groups"]} == SOURCE
 assert data["registered_players"] == 926
 c = coverage(data)
 assert c["observed_top32"] == 32
-assert c["provisional_proxy_top32"] == 25
+assert c["provisional_proxy_top32"] == 27
 assert c["archetypes"] == 13
-assert c["provisional_proxy_archetypes"] == 7
-assert sum(r["count"] for r in c["missing"]) == 7
-assert len(c["missing"]) == 6
-print("PASS: independent source transcription: 13 archetypes, 32 finishers, 7 eligible proxies")
-print("PASS: 25/32 source category coverage, 7/32 missing (Snorlax2 + five singleton decks)")
+assert c["provisional_proxy_archetypes"] == 8
+assert sum(r["count"] for r in c["missing"]) == 5
+assert len(c["missing"]) == 5
+print("PASS: independent source transcription: 13 archetypes, 32 finishers, 8 eligible proxies")
+print("PASS: 27/32 source category coverage, 5/32 missing singleton archetypes")
 
 proxies = available_proxies(data)
 assert proxies == {
@@ -43,13 +43,14 @@ assert proxies == {
     "Mega Absol Box": "mega-absol-garbodor",
     "Raichu Electrode Combo": "raichu-electrode-aichi-2026",
     "Iron Thorns": "iron_thorns_aichi_english",
+    "Snorlax Stall": "snorlax-stall-aichi-2026-english",
     "Shadow Rider Calyrex": "shadow-rider-calyrex",
     "Vileplume Control": "vileplume-control",
     "Mew Genesect": "mew-genesect",
 }
 for candidate in proxies:
     for scenario, expected_replicas in (
-        ("observed_top32", 25), ("equal_archetypes", 7),
+        ("observed_top32", 27), ("equal_archetypes", 8),
     ):
         plan = paired_plan(data, candidate, scenario)
         assert plan == paired_plan(data, candidate, scenario)
@@ -75,5 +76,5 @@ for candidate in proxies:
             assert (ROOT / "results/decks" / row["seat1_proxy"] / "README.md").is_file()
             assert (ROOT / "results/decks" / row["seat2_proxy"] / "README.md").is_file()
 print("PASS: 14 deterministic two-seat scenario schedules with faithful category multiplicities")
-print("PASS: each observed schedule=25 source-finish proxies x 2 seats; equal scenario=7 x 2")
-print("LIMIT: seven 60-card proxy archetypes only, 7 missing finishers; no simulation or match rate")
+print("PASS: each observed schedule=27 source-finish proxies x 2 seats; equal scenario=8 x 2")
+print("LIMIT: eight 60-card proxy archetypes only, 5 missing finishers; no simulation or match rate")
