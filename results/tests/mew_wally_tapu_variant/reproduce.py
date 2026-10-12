@@ -131,6 +131,18 @@ def verify_cards() -> None:
     assert (sum(pokemon.values()), sum(trainers.values()), sum(energy.values())) == (15, 41, 4)
     all_copies = {**pokemon, **trainers, **energy}
     assert sum(all_copies.values()) == 60
+    manifest = json.loads(
+        (ROOT / "results" / "decks" /
+         "mew-genesect-tapu-wally-counterfactual" / "deck.json")
+        .read_text(encoding="utf-8")
+    )
+    assert manifest["as_of"] == "2026-10-12"
+    assert {
+        entry["name"]: entry["quantity"] for entry in manifest["cards"]
+    } == all_copies
+    assert {
+        entry["name"]: entry["print_id"] for entry in manifest["cards"]
+    } == prints
     resources = ROOT / "resources"
     records = load_all_card_records(resources)
     basic = 0
