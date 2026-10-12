@@ -42,3 +42,5 @@ Reproduce: `python -m results.regidrago_double_gust_access.reproduce`. The manua
 The test *forces* Guzma use on T1 when present; it does not optimize whether that is a sound tactical choice. It assumes a legal opposing Bench target, no opponent-induced hand disruption, no alternative searches or extra draws, no changes to hand other than spending Guzma and drawing once, and only exogenous turn-two source locks. Regidrago VSTAR attack readiness, extra turns from Timeless-GX, opponent counterplay, damage, and how often the game is behind on Prizes are outside this model.
 
 The published **two-Guzma** configuration is favored as a first-two-turn sequential-access baseline, even though the Counter Catcher alternative has situational benefits under Supporter lock. **No inferred match-win probability, field frequency, or unconditional optimal card swap is claimed.** The appropriate next test is a matchup- and turn-state-weighted model with realistic card searches and attacking policy.
+
+**Verification status:** [Windows GitHub Actions run 38248508572 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38248508572) on October 12, 2026.
