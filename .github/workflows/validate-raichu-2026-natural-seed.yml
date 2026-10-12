@@ -23,3 +23,5 @@ jobs:
         run: python results/tests/raichu_2026_natural_seed/quick_ball_upper.py
       - name: Source-tagged Energy-only discard sensitivity
         run: python results/tests/raichu_2026_natural_seed/quick_ball_energy_sensitivity.py
+      - name: Source-specific Ditto Ability suppression sensitivity
+        run: python results/tests/raichu_2026_natural_seed/quick_ball_ditto_lock.py
