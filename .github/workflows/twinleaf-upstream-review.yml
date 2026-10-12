@@ -110,6 +110,8 @@ jobs:
             Write-Output "Review PR already exists for $branch"
             exit 0
           }
+          $remoteBranch = git ls-remote --heads origin "refs/heads/$branch"
+          if ($remoteBranch) { throw "Review branch $branch exists without an open PR; reconcile it manually" }
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch -c $branch
