@@ -24,12 +24,13 @@ const diagnostic = summarizePairedTraces(pairs, [
 assert.equal(diagnostic.paired_seed_count, 2);
 assert.equal(diagnostic.fully_decided_pairs, 1);
 assert.equal(diagnostic.completed_decisions, 2);
+assert.equal(diagnostic.drawn_games, 0);
 assert.equal(diagnostic.censored_games, 1);
 assert.equal(diagnostic.error_games, 1);
 assert.equal(diagnostic.terminal_unresolved_games, 0);
 assert.deepEqual(diagnostic.by_deck, {
-  vileplume: {wins: 2, losses: 0, unresolved: 2},
-  mew_genesect: {wins: 0, losses: 2, unresolved: 2},
+  vileplume: {wins: 2, losses: 0, draws: 0, unresolved: 2},
+  mew_genesect: {wins: 0, losses: 2, draws: 0, unresolved: 2},
 });
 assert.deepEqual(diagnostic.games.map(g => g.winner_deck), ['vileplume', 'vileplume', null, null]);
 assert.equal(diagnostic.games[3].error, 'rejected action');
@@ -52,6 +53,18 @@ assert.equal(unresolved.terminal_unresolved_games, 1);
 assert.equal(unresolved.censored_games, 1);
 assert.equal(unresolved.by_deck.vileplume.wins, 0);
 console.log('[paired-result] Unresolved terminal and action-capped outcomes never become wins.');
+
+const drawn = summarizePairedTraces(pairs.slice(0, 2), [
+  trace(77, 'finished', 'FINISHED', 3),
+  trace(77, 'finished', 'FINISHED', 0),
+]);
+assert.equal(drawn.drawn_games, 1);
+assert.equal(drawn.completed_decisions, 1);
+assert.equal(drawn.by_deck.vileplume.draws, 1);
+assert.equal(drawn.by_deck.mew_genesect.draws, 1);
+assert.equal(drawn.by_deck.vileplume.wins, 0);
+assert.equal(drawn.by_deck.mew_genesect.wins, 1);
+console.log('[paired-result] Pinned engine GameWinner.DRAW=3 is not a win for either deck.');
 
 assert.throws(() => summarizePairedTraces(pairs.slice(0, 2), [trace(77, 'finished', 'FINISHED', 0)]),
   /one trace per seat assignment/);
