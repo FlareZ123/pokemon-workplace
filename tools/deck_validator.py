@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Iterable, Literal
 
 from tools.build_expanded_legality_baseline import classify_effective_legality, load_json
+from tools.verified_stage_metadata_repairs import KNOWN_STAGE_REPAIRS, normalize_verified_stage_metadata
 
 Severity = Literal["error", "warning"]
 
@@ -61,6 +62,9 @@ class ValidationReport:
 
 
 def _card_record(raw: dict) -> CardRecord:
+    # Apply audited print-local stage/rule corrections without mutating archive data.
+    if raw["id"] in KNOWN_STAGE_REPAIRS:
+        raw = normalize_verified_stage_metadata(raw)
     status, source = classify_effective_legality(raw)
     return CardRecord(
         card_id=raw["id"],
