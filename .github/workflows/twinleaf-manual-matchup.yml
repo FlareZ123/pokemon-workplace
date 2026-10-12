@@ -97,6 +97,8 @@ jobs:
         run: node simulation/twinleaf/test-vip-first-tactic.cjs
       - name: Validate exact Mew VIP4 candidate mapping and published 60-card reference
         run: node simulation/twinleaf/test-candidate-deck-loader.cjs
+      - name: Verify live match installs legal Underworld Door target guard
+        run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
       - name: Probe complete 60-card tournament decks through pinned live engine
         timeout-minutes: 4
         env:
