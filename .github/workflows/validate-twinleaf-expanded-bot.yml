@@ -27,9 +27,22 @@ jobs:
       - name: Install pinned Twinleaf server dependencies
         working-directory: vendor/twinleafgg/ptcg-server
         run: npm ci --no-audit --no-fund
+      - name: Restore pinned CommonJS compile cache
+        id: twinleaf-cjs
+        uses: actions/cache/restore@v4
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
       - name: Compile the CommonJS server used by research adapters
+        if: steps.twinleaf-cjs.outputs.cache-hit != 'true'
         working-directory: vendor/twinleafgg/ptcg-server
         run: ./node_modules/.bin/tsc --project tsconfig.json
+      - name: Save compiled Twinleaf output, even if downstream tests fail
+        if: steps.twinleaf-cjs.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
       - name: Run Expanded fixed-deck SFT
         run: node simulation/twinleaf/test-expanded-bot.cjs
       - name: Audit Aichi baseline exact-print coverage
