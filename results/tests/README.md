@@ -10,6 +10,8 @@ This directory is the intended home for narrowly scoped rule verifications, exac
 
 - **[Twinleaf seat-aware winner and censoring audit](paired_engine_outcome_audit/):** the pinned live-engine winner values identify player seats, so two `winner:0` outcomes with Vileplume and Mew swapping seats mean one game won by each deck. Independent SFTs verify correct deck attribution, `DRAW=3` accounting, censored and errored games, seed matching and both orientations. [Manual CI 38292409329 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38292409329) for the core paired reporting and actual two-game headless runner. This is measurement validation, not tournament-grade matchmaking.
 
+- **[2026 Aichi Raichu exact-print and Prize-energy proof](raichu_2026_print_validation/):** published fourth-place 60-name count audit and representative English Expanded print proof, plus source-grounded Extra Energy Bomb two-Prize transition and 5-card conditional Electro Rain ceiling (420 unmodified damage when behind, 120 when not). Both [Windows CI 38293458838](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38293458838) checks passed. This is a legality/rules ceiling, not a setup frequency or match win rate.
+
 ## Migration policy
 
 The owner has requested that roughly 964 pre-existing atomic studies now at `results/<study>/` be migrated gradually to `results/tests/<study>/`. Many existing workflow paths, Python imports, Markdown relative links, and other agents' memory or broadcasts still refer to those locations. Before moving a particular study:
