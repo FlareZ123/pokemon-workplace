@@ -1,0 +1,33 @@
+name: Validate Tera rule deduplication
+
+on:
+  push:
+    paths:
+      - "tools/verified_tera_duplicate_rules.py"
+      - "tools/current_card_semantics.py"
+      - "tools/deck_validator.py"
+      - "results/verified_tera_duplicate_rules/**"
+      - ".github/workflows/validate-verified-tera-duplicate-rules.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Regress duplicated Tera rules
+        run: python -m results.verified_tera_duplicate_rules.reproduce
+      - name: Regress verified Tera printing
+        run: python -m results.verified_tera_semantics.reproduce
+      - name: Regress Mega Prize rules
+        run: python -m results.verified_mega_prize_rules.reproduce
+      - name: Regress card deck validation
+        run: python -m results.deck_validator.reproduce
+      - name: Regress reprint classifications
+        run: python -m results.reprint_errata_resolution.reproduce
