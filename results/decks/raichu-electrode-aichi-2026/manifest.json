@@ -1,0 +1,200 @@
+{
+  "source": {
+    "event": "CL Aichi Open League",
+    "date": "2026-05-10",
+    "place": 4,
+    "player": "Shu Hosoda",
+    "url": "https://www.limitlesstcg.com/decks/list/26812"
+  },
+  "scope": "Representative legal English gameplay prints, not claimed Japanese physical print selections",
+  "cards": [
+    {
+      "category": "Pokémon",
+      "name": "Voltorb",
+      "quantity": 2,
+      "print_id": "xy6-21"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Electrode-GX",
+      "quantity": 3,
+      "print_id": "sm7-48"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Pikachu",
+      "quantity": 1,
+      "print_id": "swsh11-52"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Alolan Raichu",
+      "quantity": 2,
+      "print_id": "sm11-57"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Dedenne-GX",
+      "quantity": 2,
+      "print_id": "sm10-57"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Crobat V",
+      "quantity": 2,
+      "print_id": "swsh3-104"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Squawkabilly ex",
+      "quantity": 1,
+      "print_id": "sv2-169"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Tapu Lele-GX",
+      "quantity": 1,
+      "print_id": "sm2-60"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Eldegoss V",
+      "quantity": 1,
+      "print_id": "swsh2-19"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Gengar & Mimikyu-GX",
+      "quantity": 1,
+      "print_id": "sm9-53"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Klefki",
+      "quantity": 1,
+      "print_id": "sv1-96"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Ditto ◇",
+      "quantity": 1,
+      "print_id": "sm8-154"
+    },
+    {
+      "category": "Trainer",
+      "name": "Gladion",
+      "quantity": 1,
+      "print_id": "sm4-95"
+    },
+    {
+      "category": "Trainer",
+      "name": "Carmine",
+      "quantity": 1,
+      "print_id": "sv6-145"
+    },
+    {
+      "category": "Trainer",
+      "name": "Pokémon Ranger",
+      "quantity": 1,
+      "print_id": "xy11-104"
+    },
+    {
+      "category": "Trainer",
+      "name": "Lillie's Determination",
+      "quantity": 1,
+      "print_id": "me1-119"
+    },
+    {
+      "category": "Trainer",
+      "name": "Quick Ball",
+      "quantity": 4,
+      "print_id": "swsh1-179"
+    },
+    {
+      "category": "Trainer",
+      "name": "Battle Compressor Team Flare Gear",
+      "quantity": 4,
+      "print_id": "xy4-92",
+      "published_name": "Battle Compressor"
+    },
+    {
+      "category": "Trainer",
+      "name": "Rescue Stretcher",
+      "quantity": 4,
+      "print_id": "sm2-130"
+    },
+    {
+      "category": "Trainer",
+      "name": "Escape Rope",
+      "quantity": 3,
+      "print_id": "swsh5-125"
+    },
+    {
+      "category": "Trainer",
+      "name": "Hisuian Heavy Ball",
+      "quantity": 2,
+      "print_id": "swsh10-146"
+    },
+    {
+      "category": "Trainer",
+      "name": "Ultra Ball",
+      "quantity": 1,
+      "print_id": "swsh9-150"
+    },
+    {
+      "category": "Trainer",
+      "name": "Battle VIP Pass",
+      "quantity": 1,
+      "print_id": "swsh8-225"
+    },
+    {
+      "category": "Trainer",
+      "name": "Secret Box",
+      "quantity": 1,
+      "print_id": "sv6-163"
+    },
+    {
+      "category": "Trainer",
+      "name": "Telescopic Sight",
+      "quantity": 1,
+      "print_id": "swsh4-160"
+    },
+    {
+      "category": "Trainer",
+      "name": "U-Turn Board",
+      "quantity": 1,
+      "print_id": "sm11-211"
+    },
+    {
+      "category": "Trainer",
+      "name": "Forest Seal Stone",
+      "quantity": 1,
+      "print_id": "swsh12-156"
+    },
+    {
+      "category": "Trainer",
+      "name": "Sky Field",
+      "quantity": 3,
+      "print_id": "xy6-89"
+    },
+    {
+      "category": "Energy",
+      "name": "Reversal Energy",
+      "quantity": 4,
+      "print_id": "sv2-192"
+    },
+    {
+      "category": "Energy",
+      "name": "Counter Energy",
+      "quantity": 4,
+      "print_id": "sm4-100"
+    },
+    {
+      "category": "Energy",
+      "name": "Unit Energy LightningPsychicMetal",
+      "quantity": 4,
+      "print_id": "sm5-138",
+      "published_name": "Unit Energy LPM"
+    }
+  ]
+}
