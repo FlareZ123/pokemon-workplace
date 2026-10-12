@@ -76,3 +76,21 @@ This **3.65× multiplicative material-reachability gain** shows that Quick Ball 
 **Upper-envelope conditions:** the planner chooses the starting Active and Quick Ball action sequence optimistically with knowledge of the physical six-Prize configuration. In an actual game, the starting Active is chosen before deck inspection, and discard choices incur strategic opportunity costs. The `filler_only` policy protects target source Basics and other Quick Balls, but treats every other 52 physical cards as a potential cost, including important Trainers, attackers and Energy. Equal measured outcomes across those two policies do not imply that a rational tournament player can always afford the payments. Every source remains subject to Bench position, Klefki suppressing Ditto later, deck-search lock, and the need to evolve and accelerate Energy on turn two.
 
 This is a verified **first-turn two-evolution-source access ceiling for one deliberately limited Item channel**, with no claim about whole-deck setup success or match outcomes.
+
+
+## Sensitivity to discard preservation: twelve actual Special Energy
+
+The `quick_ball_energy_sensitivity.py` companion refines the 43-card generic `other` class into **12 printed Special Energy** (4 Reversal, 4 Counter, 4 Unit Energy LPM) plus 31 remaining non-Basic non-Quick-Ball cards. It exhaustively evaluates **799,953 physically weighted seven-hand/six-Prize/first-draw configurations** with the same optimized Active choice and sequential paid Quick Ball transitions.
+
+| Hypothetical permitted Quick Ball discard payments | First-turn two-base accessibility |
+| --- | ---: |
+| Energy cards only | **24.074229%** |
+| Energy cards or another Quick Ball | **25.003751%** |
+| Any physically legal discard target | **30.296719%** |
+| No Quick Ball (natural draw only) | **8.309602%** |
+
+The strict Energy-only policy sacrifices 6.22249 percentage points of modeled first-turn base access relative to unrestricted payments. Even so, its 24.07% is nearly three times the natural-only baseline. These are exact combinatorial probabilities under each stated permission policy, not Monte Carlo estimates. A 12-Energy discard pool is concrete and relevant to Electrode-GX, whose ability later attaches from discard, but the actual strategic acceptability of discarding any particular Energy depends on the Prize differential, remaining copies, timing, and intended Electro Rain payload.
+
+This captures one measurable implication of state-dependent discardability (DCI) and connector opportunity cost: identical four-Quick-Ball access paths yield distinct feasibility after the permitted cost cards change. Full-card strategic preservation, draw/search sequencing, Ability lock, and opponent actions remain unmodeled. In particular, treating every other card as protected is a deliberately conservative discard policy, **not** an experimentally established optimal Pokémon TCG policy.
+
+Reproduction: `python results/tests/raichu_2026_natural_seed/quick_ball_energy_sensitivity.py`. Independent boundary tests in `quick_ball_upper.py` confirm a played Quick Ball cannot pay its own discard cost and that discarding another Quick Ball sacrifices its future use.
