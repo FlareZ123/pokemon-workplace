@@ -61,7 +61,7 @@ PRINT_IDS: dict[str, str] = {
     "Marnie": "swsh1-169",
     "Pokémon Ranger": "xy11-104",
     "Quick Ball": "swsh1-179",
-    "Ultra Ball": "swsh1-186",
+    "Ultra Ball": "swsh9-150",
     "Trainers' Mail": "xy6-92",
     "Battle VIP Pass": "swsh8-225",
     "Special Charge": "xy11-105",
