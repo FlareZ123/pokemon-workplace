@@ -19,17 +19,13 @@ function writeReportAtomic(filename,report) {
   const lockPath=target+'.lock';
   const lock=fs.openSync(lockPath,'wx');
   const temporary=target+'.'+process.pid+'.'+Date.now()+'.tmp';
-  let wroteTemp=false;
   try {
     fs.writeFileSync(temporary,JSON.stringify(report,null,2)+'\n',
       {encoding:'utf8',flag:'wx'});
-    wroteTemp=true;
     fs.renameSync(temporary,target);
-    wroteTemp=false;
   } finally {
-    if(wroteTemp)fs.unlinkSync(temporary);
-    fs.closeSync(lock);
-    fs.unlinkSync(lockPath);
+    if(fs.existsSync(temporary))fs.unlinkSync(temporary);
+    try{fs.closeSync(lock);}finally{fs.unlinkSync(lockPath);}
   }
 }
 
