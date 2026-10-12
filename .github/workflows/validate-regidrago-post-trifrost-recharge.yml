@@ -7,6 +7,8 @@ on:
       - tools/aichi_regidrago_crispin_energy_supply.py
       - tools/aichi_regidrago_t1_natural_choice.py
       - tools/aichi_regidrago_crispin_paired_causal.py
+      - tools/aichi_regidrago_super_rod_bridge.py
+      - results/tests/aichi_regidrago_super_rod_bridge/**
       - results/tests/aichi_regidrago_crispin_paired_causal/**
       - results/tests/aichi_regidrago_t1_natural_choice/**
       - results/tests/aichi_regidrago_crispin_post_trifrost/**
@@ -26,6 +28,8 @@ jobs:
           python-version: '3.11'
       - name: Test conditional Crispin Raihan Legacy Star Energy routes
         run: python results/regidrago_post_trifrost_recharge/reproduce.py
+      - name: Verify causal Super Rod Crispin next-turn reversal
+        run: python -m results.tests.aichi_regidrago_super_rod_bridge.reproduce
       - name: Verify causal invariance under same-hand Basic attachment
         run: python -m results.tests.aichi_regidrago_crispin_paired_causal.reproduce
       - name: Verify Regidrago natural first-eight Energy choice frequency
