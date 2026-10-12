@@ -17,3 +17,5 @@ jobs:
         run: python -m results.absol_garbodor_stone_bridge.reproduce
       - name: Reproduce Dark Asset hand-trigger and payment frontier
         run: python -m results.absol_garbodor_darkasset_frontier.reproduce
+      - name: Reproduce Lumineon V and Tapu Lele Supporter physical access
+        run: python -m results.absol_lumineon_supporter_frontier.reproduce
