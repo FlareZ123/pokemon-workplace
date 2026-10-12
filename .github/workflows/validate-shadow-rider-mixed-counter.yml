@@ -1,0 +1,20 @@
+name: Validate mixed Shadow Rider Iron Thorns counters
+on:
+  push:
+    paths:
+      - 'results/shadow_rider_mixed_counter_frontier/**'
+      - 'results/competitive_deck_baselines/shadow_rider_reproduce.py'
+      - 'tools/deck_legality_proof.py'
+      - '.github/workflows/validate-shadow-rider-mixed-counter.yml'
+  workflow_dispatch:
+jobs:
+  exact-mixed-counters:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact mixed counter frontier, toy oracle and legality
+        run: python -m results.shadow_rider_mixed_counter_frontier.reproduce
