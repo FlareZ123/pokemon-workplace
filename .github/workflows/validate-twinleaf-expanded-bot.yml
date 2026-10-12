@@ -114,6 +114,12 @@ jobs:
         run: node simulation/twinleaf/test-underworld-door-targets.cjs
       - name: Verify paired-seat deck winners and censoring semantics
         run: node simulation/twinleaf/test-paired-result-summary.cjs
+      - name: Audit seed-paired outcome interval estimator
+        run: node simulation/twinleaf/test-paired-score-bounds.cjs
+      - name: Audit compatible-run evidence ledger
+        run: node simulation/twinleaf/test-matchup-evidence-ledger.cjs
+      - name: Verify atomic JSON report artifact writer
+        run: node simulation/twinleaf/test-report-atomic.cjs
       - name: Validate bounded manual matchup selections
         run: node simulation/twinleaf/test-tournament-probe-settings.cjs
       - name: Verify Regidrago Celestial Roar attaches all Energy card types
@@ -127,6 +133,14 @@ jobs:
           TWINLEAF_DECK_A: ${{ inputs.deck_a }}
           TWINLEAF_DECK_B: ${{ inputs.deck_b }}
           TWINLEAF_SEEDS: ${{ inputs.seeds }}
+          TWINLEAF_REPORT_PATH: tournament-match-report.json
+      - name: Preserve paired source-controlled report and traces
+        uses: actions/upload-artifact@v4
+        with:
+          name: twinleaf-full-deck-matchup-report
+          path: tournament-match-report.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Strictly map published Aichi Mega Absol print aliases and execute bounded headless diagnostic
         run: node simulation/twinleaf/test-absol-headless-sft.cjs
         timeout-minutes: 2
