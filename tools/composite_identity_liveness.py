@@ -18,6 +18,10 @@ from identity_reference_sources import (
 )
 from pending_prize_batch_identity_belief import ObserverPendingPrizeBatchBeliefs
 from prize_pending_take import PrizePendingTakeState
+from single_pending_identity_binding import (
+    BoundSinglePendingPrizeIdentity,
+    single_pending_identity_references,
+)
 from top_prize_physical_bridge import TopPrizePhysicalState
 
 
@@ -27,6 +31,7 @@ def collect_composite_identity_references(
     top_prize: TopPrizePhysicalState | None = None,
     pending_prize: PrizePendingTakeState | None = None,
     pending_beliefs: ObserverPendingPrizeBatchBeliefs | None = None,
+    single_pending_beliefs: BoundSinglePendingPrizeIdentity | None = None,
     effect_references: Iterable[IdentityReference] = (),
 ) -> tuple[IdentityReference, ...]:
     """Collect all represented owners, rejecting stale and contradictory inputs.
@@ -55,6 +60,9 @@ def collect_composite_identity_references(
 
     if pending_beliefs is not None:
         sources.append(pending_prize_belief_identity_references(pending_beliefs))
+
+    if single_pending_beliefs is not None:
+        sources.append(single_pending_identity_references(single_pending_beliefs))
 
     sources.append(tuple(effect_references))
 

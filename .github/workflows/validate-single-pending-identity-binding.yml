@@ -1,0 +1,27 @@
+name: Validate single pending identity binding
+
+on:
+  push:
+    paths:
+      - "tools/single_pending_identity_binding.py"
+      - "tools/composite_identity_liveness.py"
+      - "tools/pending_prize_identity_belief.py"
+      - "tools/identity_reference_sources.py"
+      - "tools/identity_liveness.py"
+      - "results/single_pending_identity_binding/**"
+      - ".github/workflows/validate-single-pending-identity-binding.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate one pending Prize identity ownership
+        run: python results/single_pending_identity_binding/reproduce.py
