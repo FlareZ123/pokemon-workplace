@@ -1,0 +1,33 @@
+name: Validate audited Mega ex Prize-rule semantics
+
+on:
+  push:
+    paths:
+      - "tools/verified_mega_prize_rules.py"
+      - "tools/current_card_semantics.py"
+      - "tools/deck_validator.py"
+      - "results/verified_mega_prize_rules/**"
+      - ".github/workflows/validate-verified-mega-prize-rules.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify audited Mega ex Rule Boxes
+        run: python -m results.verified_mega_prize_rules.reproduce
+      - name: Check prior verified-stage bridge
+        run: python -m results.verified_stage_semantics.reproduce
+      - name: Check prior verified-Tera bridge
+        run: python -m results.verified_tera_semantics.reproduce
+      - name: Check 60-card deck validation
+        run: python -m results.deck_validator.reproduce
+      - name: Check current reprint classifications
+        run: python -m results.reprint_errata_resolution.reproduce
