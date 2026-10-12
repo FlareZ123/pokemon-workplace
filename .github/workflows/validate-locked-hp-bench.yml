@@ -1,0 +1,26 @@
+name: Validate Item-lock Poffin Bench transaction
+
+on:
+  push:
+    paths:
+      - 'tools/locked_hp_direct_bench_transaction.py'
+      - 'tools/hp_bounded_direct_bench_transaction.py'
+      - 'tools/source_scoped_channel_projection.py'
+      - 'tools/source_scoped_action_restrictions.py'
+      - 'results/locked_hp_direct_bench_transaction/**'
+      - '.github/workflows/validate-locked-hp-bench.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Test source-scoped locks before direct Poffin Bench placement
+        run: python results/locked_hp_direct_bench_transaction/reproduce.py
