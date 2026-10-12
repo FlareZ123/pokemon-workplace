@@ -1,0 +1,31 @@
+name: Validate Terapagos Tera metadata
+
+on:
+  push:
+    paths:
+      - "tools/verified_tera_metadata_repairs.py"
+      - "tools/deck_validator.py"
+      - "tools/current_card_semantics.py"
+      - "results/verified_tera_semantics/**"
+      - ".github/workflows/validate-verified-tera-semantics.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify Prismatic Evolutions Terapagos correction
+        run: python -m results.verified_tera_semantics.reproduce
+      - name: Check earlier stage corrections
+        run: python -m results.verified_stage_semantics.reproduce
+      - name: Check deck validation
+        run: python -m results.deck_validator.reproduce
+      - name: Check reprint evidence
+        run: python -m results.reprint_errata_resolution.reproduce
