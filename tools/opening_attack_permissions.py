@@ -33,17 +33,17 @@ def classify(text: str) -> OpeningKind | None:
     """Recognize all audited first-turn English attack wording families."""
     normalized = " ".join(text.split())
     if re.search(
-        r"^If you go first, you can use this attack (?:on|during) your first turn\\.",
+        r"^If you go first, you can use this attack (?:on|during) your first turn\.",
         normalized,
     ):
         return OpeningKind.FIRST_PLAYER_EXCEPTION
     if re.search(
-        r"^You can use this attack only if you go second, and only (?:on|during) your first turn\\.",
+        r"^You can use this attack only if you go second, and only (?:on|during) your first turn\.",
         normalized,
     ):
         return OpeningKind.SECOND_FIRST_ONLY
     if re.search(
-        r"^If you go second, you can't use this attack during your first turn\\.",
+        r"^If you go second, you can't use this attack during your first turn\.",
         normalized,
     ):
         return OpeningKind.SECOND_FIRST_BANNED
