@@ -11,6 +11,7 @@ from prize_pending_take import (
     stage_additional_prize_front,
 )
 from promotion_pending_conservation import PromotionPendingState
+from prize_destination_overrides import PrizeDestinationDecision
 
 
 LUCKY_BONUS_CARD_CLASS = "sv3pt5-113"
@@ -152,4 +153,47 @@ def use_wish_upon_a_star(
         during_your_turn=during_your_turn,
         pre_hand_destination=pre_hand_destination,
         extra_prize_position=extra_prize_position,
+    )
+
+
+@dataclass(frozen=True)
+class ReplacedPrismStarPrize:
+    """Jirachi's replacement destination after a resolved Prize override."""
+
+    before_prizes: PrizePendingTakeState
+    after_prizes: PrizePendingTakeState
+    before_board: PromotionPendingState
+    after_board: PromotionPendingState
+    instance_id: str
+
+
+def resolve_replaced_jirachi_prize(
+    prizes: PrizePendingTakeState,
+    board: PromotionPendingState,
+    *,
+    destination: PrizeDestinationDecision,
+) -> ReplacedPrismStarPrize | None:
+    """Route a suppressed Jirachi Prism Star Prize to the Lost Zone.
+
+    A replacement such as Billowing Smoke or Lost Block must have already
+    been selected by the ordinary destination-decision layer. Jirachi's
+    Prism Star rule then replaces an attempted discard with the Lost Zone.
+    This function does not choose between competing Prize replacements.
+    """
+
+    if destination.destination_zone not in ("discard", "lost_zone"):
+        return None
+    if prizes.physical.ledger != board.ledger:
+        raise ValueError("Prize and board states must share the same physical ledger")
+    if not _next_pending_matches(prizes, WISH_UPON_A_STAR_CARD_CLASS):
+        return None
+
+    resolved = resolve_next_pending_prize(prizes, destination_zone="lost_zone")
+    after_board = board.with_ledger(resolved.after.physical.ledger)
+    return ReplacedPrismStarPrize(
+        prizes,
+        resolved.after,
+        board,
+        after_board,
+        resolved.resolved.instance_id,
     )
