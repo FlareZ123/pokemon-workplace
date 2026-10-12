@@ -31,3 +31,19 @@ The exact unconditional union is `18541777258637/2042734652758800`. Opening seve
 The model **deliberately omits** Genesect V's Fusion Strike System, Quick Ball, Ultra Ball, Trainers' Mail, VS Seeker recursion, prize recovery, opponent interference, and multiple sequential actions that increase reach. It excludes starting a non-Mew Basic and switching later. It also excludes any separate special first-turn attack exceptions. The narrow estimate is a certified restricted natural-hand/VIP line, **not** a comprehensive first-turn attack probability, match win percentage, or deck-strength ranking. Wally consumes the Supporter turn; actual setup must respect opponent lock conditions, Bench space, evolving legality and future turn continuation.
 
 **Next work:** add source-aware Ball access with discard payment and ordered Genesect System draw windows, then test policy-dependent follow-on turns. Compare the actual outcome utility of early 210 damage with preserving Wally as a tactical option.
+
+## Existing paid-Ball routes: mechanical feasibility versus strategic cost
+
+The published 60 also contains four Quick Ball (`swsh1-179`) and four Ultra Ball (`swsh9-150`). [`paid_ball_routes.py`](paid_ball_routes.py) splits the 41-card "other" class into those eight paid Balls plus 33 remaining cards, maintaining the **same unmodified 60**. The exact first seven + first natural draw + six hidden Prize model then selects a disjoint route by precedence:
+
+| First-turn route | Unconditional launch probability |
+| --- | ---: |
+| Genesect naturally held/drawn | 0.581386703842% |
+| Extra VIP route when no Genesect held | 0.326307167880% |
+| Extra Quick Ball route when neither above is available | 0.319438451878% |
+| Extra Ultra Ball route when the first three are unavailable | 0.216912880689% |
+| **Union** | **1.444045204289%** |
+
+The union is exactly `167155400140607/11575496365633200`. The additional Quick and Ultra Ball lines are **legally payable**: out of the eight physically observed cards (seven opening, one draw), one is the starting Active Mew, and the line reserves Wally, one DCE, and its chosen search Item. At least **four other cards** remain in hand before the search, so one Quick discard or two Ultra discards can be paid without sacrificing those three named prerequisites. Whether any of those four is *strategically* expendable is **not** proved; a board/hand-sensitive DCI policy can make the search unattractive or fatally costly for later turns. Ball search of Genesect also requires at least one Genesect remaining in the post-Prize deck, and Wally's evolution search independently requires a VMAX there; the model checks both jointly.
+
+Two independent physically labeled toy-population enumerations (N=11, N=12) confirm all four disjoint probabilities and the prize-state inclusion-exclusion formula. The larger result remains a **restricted mechanical-access** probability because Fusion Strike System, Trainers' Mail, sequential card draws, alternate starters/pivots, matchup disruptions, and opponent response are omitted. Even this enlarged value is not an estimated win percentage.
