@@ -36,3 +36,5 @@ jobs:
         run: python -m results.mew_genesect_vip_opening.special_red_access_frontier
       - name: Verify paper Expanded slot-cut candidates and physical policy
         run: python -m results.mew_genesect_vip_opening.vip_slot_cut_frontier
+      - name: Verify Mew VMAX Ultra access tradeoff with physical Prize oracle
+        run: python -m results.mew_genesect_vip_opening.mew_vmax_ultra_frontier
