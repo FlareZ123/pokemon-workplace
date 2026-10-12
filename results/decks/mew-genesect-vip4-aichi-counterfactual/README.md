@@ -1,6 +1,6 @@
 # Experimental Mew VMAX / Genesect V with four Battle VIP Pass
 
-**Status: fully specified, paper Expanded-eligible 60-card counterfactual to Yamato Nakano's [fifth-place 2026 Aichi list](../mew-genesect-aichi-2026/).** The exact-print and 60-count verifier in [mew_genesect_vip_opening](../../mew_genesect_vip_opening/) checks the +1 Battle VIP Pass / −1 Special Red Card substitution. This variant has no demonstrated head-to-head win-rate superiority.
+**Status: fully specified, paper Expanded-eligible 60-card counterfactual to Yamato Nakano's [fifth-place 2026 Aichi list](../mew-genesect/).** The exact-print and 60-count verifier in [mew_genesect_vip_opening](../../mew_genesect_vip_opening/) checks the +1 Battle VIP Pass / −1 Special Red Card substitution. This variant has no demonstrated head-to-head win-rate superiority.
 
 ## Full 60-card list
 
