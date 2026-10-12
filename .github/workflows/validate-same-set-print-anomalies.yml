@@ -1,0 +1,27 @@
+name: Audit same-set Pokémon print metadata
+
+on:
+  push:
+    paths:
+      - "tools/same_set_print_anomalies.py"
+      - "tools/verified_card_metadata.py"
+      - "resources/cards/en/**"
+      - "results/same_set_print_anomaly_guard/**"
+      - ".github/workflows/validate-same-set-print-anomalies.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Scan full current English card pool for same-set metadata drift
+        run: python -m results.same_set_print_anomaly_guard.reproduce
+      - name: Verify shared audited corrections
+        run: python -m results.verified_card_metadata_boundary.reproduce
