@@ -1,0 +1,22 @@
+name: Validate Mew Wally Path recovery joint access
+
+on:
+  push:
+    paths:
+      - "results/tests/mew_wally_path_joint/**"
+      - ".github/workflows/validate-mew-wally-path-joint.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproducible-path-escape:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact physical prize and joint payment oracles
+        run: python results/tests/mew_wally_path_joint/reproduce.py
