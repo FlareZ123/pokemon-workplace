@@ -7,6 +7,9 @@ on:
       - simulation/twinleaf/paired-seat-plan.cjs
       - simulation/twinleaf/test-paired-seat-plan.cjs
       - simulation/twinleaf/tournament-bounded-match.cjs
+      - simulation/twinleaf/hooks/uniform-random-shuffle.cjs
+      - simulation/twinleaf/test-uniform-random-shuffle.cjs
+      - simulation/twinleaf/test-tournament-headless-setup.cjs
       - .github/workflows/validate-twinleaf-pairing.yml
   workflow_dispatch:
 
@@ -29,5 +32,9 @@ jobs:
         run: |
           node --check simulation/twinleaf/paired-seat-plan.cjs
           node --check simulation/twinleaf/tournament-bounded-match.cjs
+          node --check simulation/twinleaf/hooks/uniform-random-shuffle.cjs
+          node --check simulation/twinleaf/test-uniform-random-shuffle.cjs
       - name: Standalone paired-seat test
         run: node simulation/twinleaf/test-paired-seat-plan.cjs
+      - name: Exhaustive three-card uniform shuffle
+        run: node simulation/twinleaf/test-uniform-random-shuffle.cjs
