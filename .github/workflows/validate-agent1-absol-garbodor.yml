@@ -1,0 +1,15 @@
+name: Validate Aichi Mega Absol Garbodor baseline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate exact-print tournament baseline
+        run: python -m results.competitive_deck_baselines.absol_garbodor_reproduce
