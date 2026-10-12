@@ -37,6 +37,9 @@ The conditional named-status signal can be compressed to the single Boolean even
 
 ## Verification and limitations
 
+The [manually triggered Windows CI run](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38291451157) passed on 2026-10-12. The new workflow has no push trigger.
+
+
 [Exact grouped solver](../../tools/gnh_partial_prize_observability.py) and [single-file test](reproduce.py) compare 864 partial-observation policies against a separate physical-label oracle that explicitly enumerates Prize combinations and every small-game Stellar Wish subset. Tests also verify monotonic value of refining signals, K0/K1 regression equivalence, minimum sufficient named signals, and a counterexample at another discard penalty.
 
 This result is limited to the fixed conditional hand and card composition. It omits acquiring or paying Tag Call, prior searches, actual Aichi opening distributions, matchup-valued discarded cards, Bench restrictions, lock effects and match-winning objectives. No deck-strength claim follows from these exact option values.
