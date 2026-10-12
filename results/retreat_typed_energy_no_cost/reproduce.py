@@ -143,6 +143,10 @@ def printed_special_energy_context() -> None:
             EnergyAttachment("other", "Horror Psychic Energy", ("P",)),
         ),
     )
+    basic_partner = make_pokemon("basic-partner", "Basic plus Luminous", energy=(
+        luminous, EnergyAttachment("other-basic", "Basic Water Energy", ("W",)),
+    ))
+    assert tested(luminous, "P", holder=basic_partner)
     assert tested(luminous, "P", holder=sole_holder)
     assert not tested(luminous, "P", holder=another_holder)
 
