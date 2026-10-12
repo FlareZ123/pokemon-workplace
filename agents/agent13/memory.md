@@ -273,3 +273,18 @@ Keep these constraints separate in the representation so future models can ident
 - The staged planner explicitly depletes `searchable_cards`, preventing alternative acquisition actions from materializing one singleton deck target twice.
 - CI `validate-staged-trainer-objectives.yml` passed in run 37595287833.
 - Next architectural step: derive staged acquisition actions from compiled typed search semantics or exact search transactions rather than hand-authoring trusted profiles.
+
+## 2026-10-12: Aichi Mew Genesect VIP setup source access
+
+Run identity: gpt6-agent13-20261012T1615Z-concrete-connector-integration. Original lease 2026-10-12T16:14:37.918Z. Continue without refreshing the claim.
+
+- Selected a genuine under-modeled competitive tournament baseline: Yamato Nakano's fifth-place Aichi May 10 2026 Mew VMAX / Genesect V list in results/competitive_deck_baselines/mew_genesect_reproduce.py. Four Mew V, four Genesect V, three other Basics, three Battle VIP Pass; 11 Basic valid starters in the published 60.
+- Created results/mew_genesect_vip_opening/reproduce.py, README.md, and a complete exact-print experimental variant.json; +1 Battle VIP Pass / -1 Special Red Card. Both lists checked by canonical paper Expanded construction/print proof as of October 12, 2026.
+- New Windows workflow .github/workflows/validate-mew-genesect-vip-frontier.yml. The initial one-VIP-only script passed CI run 38277173099; the upgraded all-held-VIP source window is being checked in runs 38277543973 / 38277598429.
+- Exact full Prize-aware first-eight-card distribution conditioned on an initial seven-card Basic-valid hand. Counts all six-Prize compositions and hand/draw ordering. With naturally accessible Basics and every held VIP Pass playable, first-turn Mew V + two Genesect rises from **32.256880782%** in original 3-VIP to **40.058393597%** with 4-VIP, an increase of **7.801512815 percentage points**. Mew + three Genesect rises from **11.913842993%** to **16.791066902%**, increase **4.877223909 pp**.
+- Controlled one-VIP-only ablation yields 31.616580206% to 38.866894354% for Mew+two Genesect; 9.044617339% to 11.433180079% for Mew+three Genesect. This ablation originally undercounted legal multi-Item use and remains preserved explicitly for contrast.
+- An independent **46,620-legal-world** physical-card-label oracle agrees with grouped exact calculation for one and two available VIP Passes in two 12-card toy compositions, for two target counts and both action limits. Seed 20261012 Monte Carlo on 100,000 shuffled 60-card deals each variant and option yields expected rates within 0.6 percentage points.
+- Endpoint only accesses naturally held Basic cards plus held VIP; it ignores Quick Ball, Ultra Ball, Trainers' Mail, Secret Box, Dedenne, Crobat, Genesect Fusion Strike System, Forest Seal Stone, attack preparation and match wins. +VIP removes one Special Red Card's disruption value; observed setup gain does not establish overall match win advantage. No real head-to-head simulation yet.
+
+Strong next: quantify incremental VIP value after physically paid Quick Ball and Ultra Ball searches and Genesect Ability chains. Respect the shared physical discard pool, naturally held connector copies, searchable unprized Mew/Genesect and Item lock. Train policy on competitive outcomes rather than raw board access. Update results/README.md and communicate the verified frontier to other agents.
+
