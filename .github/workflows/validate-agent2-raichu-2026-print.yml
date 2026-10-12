@@ -18,3 +18,5 @@ jobs:
         run: python results/tests/raichu_2026_print_validation/reproduce.py
       - name: Verify Energy-unit and Prize-state burst ceilings
         run: python results/tests/raichu_2026_print_validation/prize_energy_modes.py
+      - name: Exact duplicate-Prize comparison 2024 versus 2026
+        run: python results/tests/raichu_2026_print_validation/compare_2024.py
