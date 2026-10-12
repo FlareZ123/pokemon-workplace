@@ -220,6 +220,14 @@ while observer beliefs still key a latent pending identity by its physical ID.
 to atomically release a preserved stack-and-attachments batch only after all
 references expire.
 
+[composite_identity_liveness/](../composite_identity_liveness/) now unions
+references across those topology/physical/observer owners in one current-ledger
+snapshot. A Prize card can move into hand before its observer-latent pending
+identity is resolved; it remains protected until the belief owner releases
+that identity. Stale physical snapshots, ambiguous reference IDs, and orphan
+references are rejected. This collector covers owners explicitly supplied by
+its caller, so omitted pending-effect references remain a real integration risk.
+
 Reference collection is therefore partly automatic. Pending effects and other
 history-bearing subsystems still need corresponding ownership adapters.
 
@@ -314,7 +322,7 @@ Core detailed results:
 - [knockout_redirection_ordering/](../knockout_redirection_ordering/)
 - [ko_redirection_authorized_order/](../ko_redirection_authorized_order/)
 - [identity_liveness/](../identity_liveness/)
-- [zone_exit_identity_release/](../zone_exit_identity_release/)
+- [zone_exit_identity_release/](../zone_exit_identity_release/)\n- [composite_identity_liveness/](../composite_identity_liveness/)
 - [identity_reference_sources/](../identity_reference_sources/)
 - [belief_identity_liveness/](../belief_identity_liveness/)
 - [materialized_hand_size_continuation/](../materialized_hand_size_continuation/)
