@@ -14,6 +14,12 @@ The new standalone regression `simulation/twinleaf/test-tournament-engine-hooks.
 
 The existing `test-underworld-door-targets.cjs` is a complementary semantics test: it demonstrates the pinned engine accepting an invalid Dragon destination before the hook, then the hook rejecting it while retaining the legal Psychic destination. Together these tests cover semantic correctness and the runner's installation path.
 
+## Executed validation (12 October 2026)
+
+[Manual paired Twinleaf run 38299641617](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38299641617) passed, including the new `Verify live match installs legal Underworld Door target guard` step and the real two-orientation, one-seed tournament matchup. Both physical 60-card traces explicitly report `engine_hooks: ["shadow_rider_underworld_door_guard_v1"]`. Both games terminated normally (133 and 194 actions; 20 and 37 turns), with no reported bot/engine error or censor. Shadow Rider won both games under the unvalidated native policy.
+
+Those terminal outcomes match the older published seed-20261012 native-bot observation and do **not** establish that the bug was encountered or that the guard changes an actual head-to-head result. More realistic decisions and adversarial target fixtures remain prerequisites for evaluating match-winning impact.
+
 ## Evidence boundary
 
 Any earlier Shadow Rider match diagnostic run through the unguarded runner lacks a verified ability-target restriction. This does **not** prove that every trace actually selected an illegal target. It does mean the old traces and the new guarded traces differ in their game-engine semantics and must not be pooled as matched-replicate evidence.
