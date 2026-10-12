@@ -1,6 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict');
 const path=require('node:path');
+const cp=require('node:child_process');
 const base=path.resolve(__dirname,'../../vendor/twinleafgg/ptcg-server/output');
 const engine=p=>require(path.join(base,p));
 const {loadCandidateDecks}=require('./candidate-deck-loader.cjs');
@@ -138,6 +139,8 @@ function main() {
   const pairedScoreBounds=summarizeScoreBounds(pairedResults,a.id);
   const report={scope:'bounded engine self-play diagnostics only, SimpleTacticsAi policy unvalidated',
     twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
+    research_revision:cp.execFileSync('git',['rev-parse','HEAD'],
+      {cwd:path.resolve(__dirname,'../..'),encoding:'utf8'}).trim(),
     shuffle_policy:'research_uniform_fisher_yates_v1',
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
