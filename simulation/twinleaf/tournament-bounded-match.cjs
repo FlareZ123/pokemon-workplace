@@ -42,6 +42,15 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
   const random=seededRandom(seed);
   let randomCalls=0;
   Math.random=()=>{randomCalls++;return random();};
+  const randomSources={setup:0,arbiter:0,policy:0,dispatch:0};
+  /** Attribute RNG draws to the real caller, including draws from counterfactual policy simulation.
+   * @template T @param {keyof typeof randomSources} source @param {()=>T} operation @returns {T}
+   */
+  function trackRandom(source,operation) {
+    const before=randomCalls;
+    try{return operation();}
+    finally{randomSources[source]+=randomCalls-before;}
+  }
   const started=Date.now();
   try {
     const store=new Store({onStateChange:()=>{}});
@@ -52,8 +61,8 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
     const players=new Map([[1,new SimpleTacticsAi({id:1,name:'Aichi A'},settings,deckA)],
       [2,new SimpleTacticsAi({id:2,name:'Aichi B'},settings,deckB)]]);
     const arbiter=new UniformBotArbiter({flipMode:BotFlipMode.RANDOM,shuffleMode:BotShuffleMode.RANDOM});
-    store.dispatch(new AddPlayerAction(1,'Aichi A',deckA));
-    store.dispatch(new AddPlayerAction(2,'Aichi B',deckB));
+    trackRandom('setup',()=>store.dispatch(new AddPlayerAction(1,'Aichi A',deckA)));
+    trackRandom('setup',()=>store.dispatch(new AddPlayerAction(2,'Aichi B',deckB)));
     let actions=0,attacks=0,status='action_cap',error=null,firstActor=null;
     while(actions<maxActions) {
       if(Date.now()-started>wallMilliseconds){status='wall_cap';break;}
@@ -66,16 +75,22 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
       const bot=players.get(id);
       if(!bot){status='unknown_actor';error=String(id);break;}
       let move;
-      try {move=(prompt?arbiter.resolvePrompt(state,prompt):undefined)||bot.decodeNextAction(state);}
+      try {
+        move=prompt?trackRandom('arbiter',()=>arbiter.resolvePrompt(state,prompt)):undefined;
+        if(!move)move=trackRandom('policy',()=>bot.decodeNextAction(state));
+      }
       catch(e){status='policy_error';error=String(e);break;}
       if(!move){status='no_action';break;}
-      try {store.dispatch(move);}
+      try {trackRandom('dispatch',()=>store.dispatch(move));}
       catch(e){status='dispatch_error';error='step '+actions+' '+move.constructor.name+': '+String(e);break;}
       if(move.type==='ATTACK_ACTION')attacks++;
       actions++;
     }
     const state=store.state;
-    return {seed,status,actions,attacks,first_actor:firstActor,random_calls:randomCalls,turn:state.turn,phase:GamePhase[state.phase],
+    assert.equal(Object.values(randomSources).reduce((a,b)=>a+b,0),randomCalls,
+      'Every seeded RNG draw must have an attributed source');
+    return {seed,status,actions,attacks,first_actor:firstActor,random_calls:randomCalls,
+      random_sources:randomSources,turn:state.turn,phase:GamePhase[state.phase],
       winner:state.winner,prizes:state.players.map(p=>p.getPrizeLeft()),
       elapsed_ms:Date.now()-started,error};
   } finally {Math.random=prior;}
