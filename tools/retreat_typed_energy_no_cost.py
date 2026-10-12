@@ -83,6 +83,12 @@ _UNIT_ENERGY = {
     "sm6-146": frozenset({"F", "D", "Y"}),
 }
 _BASIC_TAGS = frozenset({"Basic", "Basic Pokémon", "Basic Pokemon"})
+_BASIC_ENERGY_NAMES = frozenset(
+    f"{prefix}{name} Energy"
+    for prefix in ("", "Basic ")
+    for name in ("Grass", "Fire", "Water", "Lightning", "Psychic",
+                 "Fighting", "Darkness", "Metal", "Fairy")
+)
 
 
 def provides_required_energy_type(
@@ -126,7 +132,11 @@ def provides_required_energy_type(
     if attachment.card_name == "Luminous Energy" and attachment.print_id in {
         "sv2-191", "sv6-226",
     }:
-        return len(active.energy) == 1
+        return all(
+            other.instance_id == attachment.instance_id
+            or other.card_name in _BASIC_ENERGY_NAMES
+            for other in active.energy
+        )
     unit_energy_types = _UNIT_ENERGY.get(attachment.print_id)
     if unit_energy_types is not None and attachment.card_name.startswith("Unit Energy"):
         return required_symbol in unit_energy_types
