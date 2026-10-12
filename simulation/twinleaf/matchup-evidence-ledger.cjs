@@ -28,7 +28,11 @@ function experimentIdentity(report) {
   assert.ok(Array.isArray(report.engine_hooks) &&
     report.engine_hooks.every(x => typeof x === 'string' && x.length > 0),
     'Explicit engine hook manifest required');
-  for (const key of ['shuffle_policy','random_stream_policy','tactic_order']) {
+  assert.ok(Array.isArray(report.policy_hooks) &&
+    report.policy_hooks.every(x => typeof x === 'string' && x.length > 0),
+    'Explicit bot policy-hook manifest required');
+  for (const key of ['shuffle_policy','random_stream_policy','tactic_order',
+    'policy_hidden_information']) {
     assert.ok(typeof report[key] === 'string' && report[key].length > 0,
       'Missing model field: ' + key);
   }
@@ -41,6 +45,8 @@ function experimentIdentity(report) {
     pin:report.twinleaf_pin,
     research:report.research_revision,
     hooks:[...report.engine_hooks].sort(),
+    bot_policy_hooks:[...report.policy_hooks].sort(),
+    policy_hidden_information:report.policy_hidden_information,
     shuffle:report.shuffle_policy,
     random_stream:report.random_stream_policy,
     tactics:report.tactic_order,
