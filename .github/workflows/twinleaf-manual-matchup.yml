@@ -73,6 +73,8 @@ jobs:
         run: node simulation/twinleaf/test-paired-result-summary.cjs
       - name: Verify deck and seed limits
         run: node simulation/twinleaf/test-tournament-probe-settings.cjs
+      - name: Verify action telemetry under in-place game-state mutation
+        run: node simulation/twinleaf/test-match-action-telemetry.cjs
       - name: Probe complete 60-card tournament decks through pinned live engine
         timeout-minutes: 4
         env:
