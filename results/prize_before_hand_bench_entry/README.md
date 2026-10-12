@@ -63,6 +63,12 @@ Source: https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%83%A9%E3%
 
 The regression mirrors this exact geometry. After Active disposal and before promotion, all five survivors still occupy the Bench, so `open_bench_slots == 0`. A later promotion would open a slot, which is too late for Lucky Bonus.
 
+## Terminal consequence: Billowing Smoke can turn a Jirachi win into a tie
+
+A source-grounded regression checks simultaneous final Prize taking after both Active Pokémon are Knocked Out, with neither side retaining any Pokémon. Jirachi Prism Star from a final face-down Prize can enter its player's Bench before game resolution, giving that player a win. Billowing Smoke blocks its before-hand Ability; Jirachi instead goes to Lost Zone, and both players tie under the official simultaneous-loss table. The pending-Prize gate prevents premature terminal resolution in both cases.
+
+[Official Jirachi/Billowing Smoke ruling](https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%82%82%E3%81%8F%E3%82%82%E3%81%8F%E3%82%B9%E3%83%A2%E3%83%BC%E3%82%AF), [Jirachi card text](https://www.pokemon-card.com/card-search/details.php/card/34980/regu/all), and [green reproducibility CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38293359832). This is an exact conditional game-state result; the specific mutual-KO attack and its frequency were not modeled.
+
 ## Two competing destination replacements across two Prizes
 
 The official Japanese Q&A confirms that Lost Block and Billowing Smoke can both apply to the same Knock Out, and that the player taking a two-Prize award may choose the destination separately for each card. Applying Lost Block first sends a selected Prize to the Lost Zone; applying Billowing Smoke first sends an ordinary selected Prize to discard. [Official Lost Block and Billowing Smoke interaction](https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%83%AD%E3%82%B9%E3%83%88%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF&regulation_faq_main_item1=BW).
