@@ -129,3 +129,5 @@ jobs:
       - name: Smoke-test two headless Expanded bots in real game setup
         timeout-minutes: 1
         run: node simulation/twinleaf/test-headless-setup.cjs
+      - name: Audit native Simulator live Card aliasing under hypothetical Switch
+        run: node simulation/twinleaf/test-simulator-card-aliasing.cjs
