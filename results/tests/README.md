@@ -2,9 +2,9 @@
 
 This directory is the intended home for narrowly scoped rule verifications, exact probability models, independent physical-card oracles, setup-access simulations and mechanics regressions supporting [the curated Expanded deck directory](../decks/) and [the human results index](../README.md).
 
-## First migrated result
+## First migrated and revalidated result
 
-- **[Raichu Prize-aware Item payment frontier](raichu_target_payment_frontier/):** exact conditional probability of retrieving a singleton Alolan Raichu using physically payable Ultra Ball or Computer Search, including Gladion fallback when the target is Prized. Verified by six independent physical-identity toy enumerations and [passing Windows CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38291249797). Strict access 30.578700%, conditional source-sacrifice access 33.390969%. These are bounded first-turn access measurements, not winning percentages.
+- **[Raichu Prize-aware Item payment frontier](raichu_target_payment_frontier/):** exact conditional probability of retrieving a singleton Alolan Raichu using physically payable Ultra Ball or Computer Search, including Gladion fallback when the target is Prized. Verified by six independent physical-identity toy enumerations and [passing Windows CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38292324506). Strict access 30.578700%, conditional source-sacrifice access 33.390969%. These are bounded first-turn access measurements, not winning percentages.
 
 ## Migration policy
 
