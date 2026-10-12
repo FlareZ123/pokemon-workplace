@@ -1,0 +1,19 @@
+name: Validate 2026 Aichi Regidrago playable 60
+
+on:
+  push:
+    paths:
+      - results/regidrago_aichi_top10_playable/**
+      - .github/workflows/validate-regidrago-aichi-top10-playable.yml
+  workflow_dispatch:
+
+jobs:
+  verify-deck-print-snapshot:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify complete 60 and type-selective Wobbuffet
+        run: python results/regidrago_aichi_top10_playable/reproduce.py
