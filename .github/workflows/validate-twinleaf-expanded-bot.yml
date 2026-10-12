@@ -2,6 +2,32 @@ name: Validate fixed-deck Twinleaf Expanded bot
 
 on:
   workflow_dispatch:
+    inputs:
+      deck_a:
+        description: Tournament deck in player seat A
+        type: choice
+        required: true
+        default: vileplume
+        options:
+          - vileplume
+          - shadow_rider
+          - regidrago
+          - mew_genesect
+      deck_b:
+        description: Tournament deck in player seat B
+        type: choice
+        required: true
+        default: mew_genesect
+        options:
+          - vileplume
+          - shadow_rider
+          - regidrago
+          - mew_genesect
+      seeds:
+        description: One to three unique unsigned 32-bit seeds, separated by commas
+        type: string
+        required: true
+        default: '20261012'
 
 permissions:
   contents: read
@@ -85,9 +111,15 @@ jobs:
         run: node simulation/twinleaf/test-underworld-door-targets.cjs
       - name: Verify paired-seat deck winners and censoring semantics
         run: node simulation/twinleaf/test-paired-result-summary.cjs
-      - name: Collect bounded, seeded Aichi Vileplume vs Mew self-play diagnostics
+      - name: Validate bounded manual matchup selections
+        run: node simulation/twinleaf/test-tournament-probe-settings.cjs
+      - name: Collect seat-paired diagnostics for selected Aichi tournament lists
         run: node simulation/twinleaf/tournament-bounded-match.cjs
-        timeout-minutes: 1
+        timeout-minutes: 4
+        env:
+          TWINLEAF_DECK_A: ${{ inputs.deck_a }}
+          TWINLEAF_DECK_B: ${{ inputs.deck_b }}
+          TWINLEAF_SEEDS: ${{ inputs.seeds }}
       - name: Strictly map published Aichi Mega Absol print aliases and execute bounded headless diagnostic
         run: node simulation/twinleaf/test-absol-headless-sft.cjs
         timeout-minutes: 2
