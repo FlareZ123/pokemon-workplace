@@ -1,0 +1,24 @@
+name: Validate Poffin hidden Bench search
+
+on:
+  push:
+    paths:
+      - 'tools/hp_bounded_hidden_direct_bench_bridge.py'
+      - 'tools/hp_bounded_direct_bench_transaction.py'
+      - 'results/hp_bounded_hidden_direct_bench_bridge/**'
+      - '.github/workflows/validate-hp-bounded-hidden-bench.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Verify Poffin two-target public signal and K1
+        run: python results/hp_bounded_hidden_direct_bench_bridge/reproduce.py
