@@ -1,0 +1,26 @@
+name: Validate match identity release
+
+on:
+  push:
+    paths:
+      - "tools/match_identity_release.py"
+      - "tools/match_scoped_identity_liveness.py"
+      - "tools/composite_identity_liveness.py"
+      - "tools/identity_instance_provenance.py"
+      - "results/match_identity_release/**"
+      - ".github/workflows/validate-match-identity-release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check atomic match identity release
+        run: python results/match_identity_release/reproduce.py
