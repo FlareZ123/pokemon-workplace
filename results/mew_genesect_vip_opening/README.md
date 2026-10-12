@@ -93,6 +93,25 @@ The solver conditions on a Basic-valid opening, exactly six Prizes, the first na
 
 The D marker is a **policy hypothesis**, not a factual designation of which actual tournament-list cards are discardable. Real hands contain protected Supporters, search pieces, and tactical singletons; opponent lock effects and draw Ability sequencing may reverse a specific card-choice policy. These probabilities still measure a sharply restricted setup event rather than games won.
 
+## The lost second Special Red Card: a late-game access counterweight
+
+The tournament baseline contains **two Special Red Card**, whereas the experimental fourth-VIP list retains only one. The exact printed `me4-82` Item is playable only when the opponent has **three or fewer Prize cards remaining**. It puts the opponent's hand at the bottom of their deck and, if cards were put there, makes them draw three cards. The discarded copy therefore has a conditional disruption role that a first-turn setup metric cannot score.
+
+[special_red_access_frontier.py](special_red_access_frontier.py) gives an exact, independent natural-exposure proxy: *conditional on a Basic-valid seven-card opening*, the probability of seeing at least one Special Red Card in the opening hand plus `r` subsequently drawn unprized cards. It integrates random six-card Prizes. No Red is presumed discarded, and the card's opponent-Prize threshold must be met independently.
+
+| Cards drawn beyond starting seven | Original 2 Red naturally seen | Candidate 1 Red naturally seen | Natural access lost |
+| ---: | ---: | ---: | ---: |
+| 1 | 23.807914225% | 12.598307692% | −11.209606533 pp |
+| 3 | 29.611383805% | 15.959911242% | −13.651472563 pp |
+| 6 | 37.885637464% | 21.002316567% | −16.883320897 pp |
+| 10 | 48.113534348% | 27.725523668% | −20.388010680 pp |
+| 14 | 57.422069714% | 34.448730769% | −22.973338945 pp |
+| 20 | 69.661069918% | 44.533541420% | −25.127528498 pp |
+
+This is a **different endpoint** from the first-turn Mew/Genesect source-access percentages. More natural Red exposure does not by itself mean the opponent reaches the qualifying three-Prize threshold, the player retains the Item, an Item play is legal under a lock, or that a three-card hand reset has tactical value in that matchup. Actual Genesect draws can increase exposure; Trainers' Mail and other search connectors are excluded. Six Prize identities are averaged out before random future draws, and an independent labeled-opening/Prize/draw oracle tests exact small populations with zero, one and two Red copies.
+
+The early VIP improvement and late Special Red availability loss have no common win-probability conversion established. The fourth VIP may be promising, but the exact card cut is an unresolved optimization choice. Other non-Basic cuts can preserve both Special Red copies while sacrificing different tactical effects, which requires matchup-aware comparison.
+
 ## Strategic interpretation and limitations
 
 This is a **narrow first-turn source-access study**. The all-VIP table omits the Ball routes; the paid-Ball extension adds Quick Ball and Ultra Ball with explicit hypothetical discharge policies. Both models omit Trainers' Mail, Secret Box, Dedenne-GX, Crobat V, Genesect V's Fusion Strike System, Forest Seal Stone, further natural turns, Energy attachments, VMAX evolution, and opponent interaction. It does not model match wins. Genesect's Ability draw size also depends on hand size and the number of Fusion Strike Pokémon in play, so an extra Genesect is not a fixed card-draw reward.
