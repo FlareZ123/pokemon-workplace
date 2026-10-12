@@ -1,0 +1,22 @@
+name: Validate Shadow Rider Cologne counter
+on:
+  push:
+    paths:
+      - 'results/shadow_rider_cologne_thorns_counter/**'
+      - 'results/competitive_deck_baselines/shadow_rider_reproduce.py'
+      - 'tools/deck_legality_proof.py'
+      - 'tools/deck_validator.py'
+      - '.github/workflows/validate-shadow-rider-cologne-thorns.yml'
+  workflow_dispatch:
+
+jobs:
+  exact-cologne-counter:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact card access, physical oracle and 60-card legality
+        run: python -m results.shadow_rider_cologne_thorns_counter.reproduce
