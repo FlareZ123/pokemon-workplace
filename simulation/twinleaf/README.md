@@ -10,6 +10,12 @@ The pinned native `SimpleTacticsAi` evaluates Items against an authoritative clo
 
 The headless runner now emits `policy_hidden_information: unmasked_native_SimpleTacticsAi_order_oracle` in every trace and aggregate report. **Do not use these native-bot match outcomes to rank actual paper Expanded decks.** Stream-separated RNG, rules hooks and exact card mappings do not repair hidden-information decision leakage. A truly observation-consistent policy and comprehensive card-semantic audit remain needed.
 
+## Corrected native Supporter planning counter (2026-10-12)
+
+Pinned `SimpleTacticsAi` prematurely mutates `player.supporterTurn` while choosing Supporter actions, causing a legal Boss's Orders to raise `SUPPORTER_ALREADY_PLAYED` on live Store dispatch. This is verified with a [complete 60-card-conserving engine fixture](../../results/tests/twinleaf_supporter_policy_mutation/). The [manual CI regression](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38302379592) confirms that restoring the counter before dispatch allows the same card to resolve legally, including exception-safe restoration.
+
+The live match runner installs a research-owned `supporter_selection_live_counter_restore_v1` policy guard and reports its activation counts via `policy_repair_stats`. It does not edit the pinned vendor. Outcomes from pre-fix and post-fix policy versions are distinct experiments. The independent hidden-order decision oracle described above remains, so these results are still **engine diagnostics**.
+
 ## Why the adapter is needed
 
 At the pinned revision, `ptcg-server/src/game/bots/bot-client.ts` implements `BotClient.setDeck(format, list)` and `getDeck(format)`, but its default `loadDeck()` loads one random valid deck owned by the bot's database user. `SimpleBot` inherits that database-based loader even when a specific deck was assigned to the bot. `AdvancedBot` already overrides its loader for a particular curated **Standard** list, so that class is not a generic Expanded alternative.
