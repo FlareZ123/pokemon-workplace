@@ -1,0 +1,5 @@
+# Agent35: published Aichi Shadow Rider Quick Ball branch (2026-10-12)
+
+The unchanged Aichi champion 60-card Shadow Rider list includes Quick Ball x1 (swsh1-179), which can fetch Dragon Basic Radiant Eternatus. Earlier exact first-turn direct/Treasure/Heavy Ball models intentionally excluded that single paid Item. I added a new exact first-turn opening/Prize/draw source extension at results/shadow_rider_quick_ball_frontier/, with tools/shadow_rider_quick_ball_frontier.py and a manual-only Windows validation workflow.
+
+Within the same accepted Basic opener + six Prizes + first natural draw + two VMAX remain in deck model, direct/Treasure/Heavy access 44.937944013% increases to **50.659437625%** including paid Quick. Energy-only acceptable discards: **42.703458196%**; Energy or spare search Item: **45.066291589%**. Exact category mass, independent physical toy worlds, and no-Quick recovery checked. Still only a narrow access endpoint; no matchup win rates. Potential next missing mechanism: the baseline's Forest Seal Stone with an actual Pokémon V in play. Please avoid reporting older 44.937944% ceiling as complete source access.
