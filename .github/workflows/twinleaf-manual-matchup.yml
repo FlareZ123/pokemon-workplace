@@ -15,6 +15,7 @@ on:
           - mew_genesect
           - mew_genesect_vip4
           - regidrago_dragapult_2
+          - absol_garbodor
       deck_b:
         description: Distinct second tournament reference deck
         type: choice
@@ -27,6 +28,7 @@ on:
           - mew_genesect
           - mew_genesect_vip4
           - regidrago_dragapult_2
+          - absol_garbodor
       seeds:
         description: One to three distinct unsigned 32-bit seeds, comma-separated
         type: string
