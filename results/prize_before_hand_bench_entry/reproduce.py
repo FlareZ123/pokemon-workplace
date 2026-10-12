@@ -371,6 +371,91 @@ def validate_competing_prize_replacements() -> None:
         assert_conserved(initial, final.resolution.after.physical.ledger)
 
 
+
+def validate_billowing_smoke_terminal_reversal() -> None:
+    """End-of-Prize-window win without Smoke becomes a tie with Smoke."""
+    for smoked in (False, True):
+        tag = "smoke" if smoked else "clear"
+        first, first_board, first_physical = build_state(
+            prefix=f"terminal-{tag}-a", bench_count=0,
+            prize_classes=(("sm7-97", "Jirachi ◇"),),
+        )
+        second, second_board, second_physical = build_state(
+            prefix=f"terminal-{tag}-b", bench_count=0,
+            prize_classes=((f"terminal-{tag}-filler", "Filler"),),
+        )
+        first_board = after_active_ko(first_board)
+        second_board = after_active_ko(second_board)
+        first_prizes = stage_prize_takes(
+            sync_physical(first_physical, first_board), positions=(0,)
+        )
+        second_prizes = stage_prize_takes(
+            sync_physical(second_physical, second_board), positions=(0,)
+        )
+        first_board = first_board.with_ledger(first_prizes.physical.ledger)
+        second_board = second_board.with_ledger(second_prizes.physical.ledger)
+        context = PostKnockOutPromotionContext(
+            (("A", first_board), ("B", second_board)),
+            next_player_id="B",
+        )
+        totals = {"A": 0, "B": 0}
+        assert resolve_after_prize_window(
+            context, prizes_remaining=totals
+        ) is None
+
+        if smoked:
+            destination = decide_prize_destination(
+                (PrizeDestinationOverride("Billowing Smoke:tool", "discard"),)
+            )
+            assert use_wish_upon_a_star(
+                first_prizes, first_board,
+                pokemon_id=f"terminal-{tag}-jirachi",
+                during_your_turn=True,
+                pre_hand_destination=destination.destination_zone,
+            ) is None
+            transition = resolve_replaced_jirachi_prize(
+                first_prizes, first_board, destination=destination
+            )
+            assert transition is not None
+            first_board = transition.after_board
+            assert first_board.ledger.instance(
+                f"terminal-{tag}-a-prize-0"
+            ).zone == "lost_zone"
+        else:
+            transition = use_wish_upon_a_star(
+                first_prizes, first_board,
+                pokemon_id=f"terminal-{tag}-jirachi",
+                during_your_turn=True,
+            )
+            assert transition is not None
+            first_board = transition.after_board
+            assert first_board.promotion_candidates == (
+                f"terminal-{tag}-jirachi",
+            )
+
+        second_result = resolve_next_pending_prize(second_prizes)
+        second_board = second_board.with_ledger(
+            second_result.after.physical.ledger
+        )
+        context = replace_player_state(
+            context, player_id="A", state=first_board
+        )
+        context = replace_player_state(
+            context, player_id="B", state=second_board
+        )
+        final = resolve_after_prize_window(
+            context, prizes_remaining=totals
+        )
+        assert final is not None
+        expected = Outcome.TIE if smoked else Outcome.WIN
+        assert final.resolution.outcome("A") == expected
+        assert final.resolution.outcome("B") == (
+            Outcome.TIE if smoked else Outcome.LOSS
+        )
+        assert_conserved(first, first_board.ledger)
+        assert_conserved(second, second_board.ledger)
+
+
 def main() -> None:
     initial_c, board_c, physical_c = build_state(
         prefix="c",
@@ -480,6 +565,7 @@ def main() -> None:
     validate_jirachi_knockout_slot_geometry()
     validate_billowing_smoke_destination_gate()
     validate_competing_prize_replacements()
+    validate_billowing_smoke_terminal_reversal()
     print("before-hand Prize Bench-entry regressions passed")
 
 
