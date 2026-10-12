@@ -1,0 +1,114 @@
+{
+  "event": "CL Aichi Open League 2026",
+  "date": "2026-05-10",
+  "participants": 926,
+  "source_statistics": "https://limitlesstcg.com/tournaments/566/statistics",
+  "source_rankings": "https://limitlesstcg.com/tournaments/566",
+  "scope": "exactly 32 archived top-ranking deck classifications, not all 926 entrants",
+  "counts": [
+    {
+      "id": "regidrago",
+      "label": "Regidrago",
+      "count": 11,
+      "points": 130,
+      "manual_matchup_selectable": true,
+      "curated_reference": true
+    },
+    {
+      "id": "mega_absol_box",
+      "label": "Mega Absol Box",
+      "count": 5,
+      "points": 73,
+      "manual_matchup_selectable": false,
+      "curated_reference": true
+    },
+    {
+      "id": "raichu_electrode",
+      "label": "Raichu Electrode Combo",
+      "count": 3,
+      "points": 40,
+      "manual_matchup_selectable": false,
+      "curated_reference": true
+    },
+    {
+      "id": "iron_thorns",
+      "label": "Iron Thorns",
+      "count": 3,
+      "points": 38,
+      "manual_matchup_selectable": false,
+      "curated_reference": true
+    },
+    {
+      "id": "snorlax_stall",
+      "label": "Snorlax Stall",
+      "count": 2,
+      "points": 38,
+      "manual_matchup_selectable": false,
+      "curated_reference": true
+    },
+    {
+      "id": "shadow_rider",
+      "label": "Shadow Rider Calyrex",
+      "count": 1,
+      "points": 26,
+      "manual_matchup_selectable": true,
+      "curated_reference": true
+    },
+    {
+      "id": "vileplume_control",
+      "label": "Vileplume Control",
+      "count": 1,
+      "points": 22,
+      "manual_matchup_selectable": true,
+      "curated_reference": true
+    },
+    {
+      "id": "mew_genesect",
+      "label": "Mew Genesect",
+      "count": 1,
+      "points": 18,
+      "manual_matchup_selectable": true,
+      "curated_reference": true
+    },
+    {
+      "id": "mega_lopunny",
+      "label": "Mega Lopunny",
+      "count": 1,
+      "points": 15,
+      "manual_matchup_selectable": false,
+      "curated_reference": false
+    },
+    {
+      "id": "raging_bolt",
+      "label": "Raging Bolt",
+      "count": 1,
+      "points": 10,
+      "manual_matchup_selectable": false,
+      "curated_reference": false
+    },
+    {
+      "id": "lillies_clefairy",
+      "label": "Lillie's Clefairy",
+      "count": 1,
+      "points": 10,
+      "manual_matchup_selectable": false,
+      "curated_reference": false
+    },
+    {
+      "id": "meloetta_donk",
+      "label": "Meloetta Donk",
+      "count": 1,
+      "points": 10,
+      "manual_matchup_selectable": false,
+      "curated_reference": false
+    },
+    {
+      "id": "dusknoir_chimecho",
+      "label": "Dusknoir Chimecho",
+      "count": 1,
+      "points": 10,
+      "manual_matchup_selectable": false,
+      "curated_reference": false
+    }
+  ]
+}
