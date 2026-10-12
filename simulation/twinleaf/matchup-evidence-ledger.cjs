@@ -85,6 +85,8 @@ function mergeTournamentReports(reports, deckA) {
       assert.equal(row.status,trace.status,'Raw and attributed status mismatch');
       assert.equal(row.raw_winner_index,trace.winner,
         'Raw and attributed winner mismatch');
+      assert.equal(row.first_actor ?? null,trace.first_actor ?? null,
+        'Raw and attributed first-turn actor mismatch');
       assert.deepEqual(row.error,trace.error || null,
         'Raw and attributed error mismatch');
       assert.ok(names.includes(row.seat1) && names.includes(row.seat2) &&
