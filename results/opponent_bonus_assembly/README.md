@@ -177,3 +177,11 @@ For an abstract deck with three Items, twelve designated disposable cards and ei
 
 See the [independent physical enumerator](bench_trigger_item_reproduce.py) and [exact kernel](../../tools/opponent_bonus_bench_trigger_items.py). The card-text anchors are Expanded-legal Radiant Eternatus swsh12pt5-105 and Lumineon V swsh9-40. These values are narrow conditional access endpoints, not win rates.
 
+
+
+## Published Aichi Shadow Rider: two real hand-to-Bench triggers
+
+The [Aichi champion dual-entry calculation](../shadow_rider_dual_entry_launch/) applies the setup-role model to the unchanged 60-card published Shadow Rider list. It follows Radiant Eternatus x1 and Tapu Lele-GX x2, physically paid Mysterious Treasure/Quick Ball searches, Hisuian Heavy Ball Prize rescue, four VMAX deck targets, the mandatory starting Active and one going-second natural draw.
+
+With an exact Basic-valid seven-card opening and six Prizes, the source-constrained joint Wonder Tag entry followed by Radiant's two-VMAX entry is **15.085879759%** when normal searches discard Psychic Energy only, or **23.314279776%** when any mechanically expendable hand card may be discarded. The corresponding role-blind access overestimates by 3.936666659 or 4.085959627 percentage points. Removing the Wonder Tag requirement exactly reproduces the previously established Quick Ball-inclusive Radiant launch rates of 42.703458196% and 50.659437625%. The independent physical toy oracles verify exact grouped arithmetic. These probabilities evaluate a narrow first-turn source-access event, not match wins.
+
