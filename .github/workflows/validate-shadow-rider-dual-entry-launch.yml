@@ -6,6 +6,7 @@ on:
       - "tools/shadow_rider_dual_entry_launch.py"
       - "tools/shadow_rider_stone_dual_entry.py"
       - "tools/shadow_rider_bonus_vmax_competition.py"
+      - "tools/shadow_rider_conditional_vmax_draw.py"
       - "results/shadow_rider_dual_entry_launch/**"
       - "tools/opponent_bonus_matching.py"
       - "results/competitive_deck_baselines/shadow_rider_reproduce.py"
@@ -30,3 +31,5 @@ jobs:
         run: python results/shadow_rider_dual_entry_launch/stone_reproduce.py
       - name: Validate paired bonus draw gains and VMAX target depletion
         run: python results/shadow_rider_dual_entry_launch/bonus_reproduce.py
+      - name: Validate conditioned opening draw-restriction and physical positions
+        run: python results/shadow_rider_dual_entry_launch/conditional_bonus_reproduce.py
