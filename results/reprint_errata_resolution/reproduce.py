@@ -25,18 +25,18 @@ assert counts["official_errata_candidate_prints"] == 44
 assert counts["official_errata_candidate_names"] == 11
 assert counts["known_non_equivalent_prints"] == 77
 assert counts["known_non_equivalent_names"] == 22
-assert counts["official_semantic_candidate_prints"] == 3
+assert counts["official_semantic_candidate_prints"] == 5
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 3961
-assert counts["high_confidence_candidate_prints"] == 222
+assert counts["semantic_review_prints"] == 3959
+assert counts["high_confidence_candidate_prints"] == 224
 assert counts["exact_fingerprint_trainer_candidate_prints"] == 36
 assert counts["trainer_same_name_review_pool_prints"] == 168
 assert counts["historical_official_trainer_candidate_prints"] == 25
-assert counts["high_confidence_trainer_candidate_prints"] == 108
+assert counts["high_confidence_trainer_candidate_prints"] == 110
 assert counts["name_wide_trainer_errata_names"] == 15
 
-assert summary["official_semantic_candidates_by_name"] == {"Copycat": 3}
-assert summary["official_semantic_candidate_ids"] == ["ecard1-138", "ex15-73", "ex7-83"]
+assert summary["official_semantic_candidates_by_name"] == {"Copycat": 5}
+assert summary["official_semantic_candidate_ids"] == ["col1-77", "ecard1-138", "ex15-73", "ex7-83", "hgss1-90"]
 
 assert summary["known_non_equivalent_by_name"] == {
     "Apricorn Maker": 1,
@@ -146,9 +146,11 @@ assert resolver.resolve("hgss4-100").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("neo4-106").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("pl2-112").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("pop2-16").kind == "exact_fingerprint_candidate"
+assert resolver.resolve("col1-77").kind == "official_semantic_candidate"
 assert resolver.resolve("ex7-83").kind == "official_semantic_candidate"
 assert resolver.resolve("ex15-73").kind == "official_semantic_candidate"
 assert resolver.resolve("ecard1-138").kind == "official_semantic_candidate"
+assert resolver.resolve("hgss1-90").kind == "official_semantic_candidate"
 assert resolver.resolve("bw5-100").kind == "direct_legal"
 
 print("errata-aware reprint resolution: PASS")
