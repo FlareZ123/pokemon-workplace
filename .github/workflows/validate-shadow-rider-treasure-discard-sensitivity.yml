@@ -1,0 +1,25 @@
+name: Validate Shadow Rider Treasure discard sensitivity
+
+on:
+  push:
+    paths:
+      - "tools/shadow_rider_treasure_discard_sensitivity.py"
+      - "results/shadow_rider_treasure_discard_sensitivity/**"
+      - "results/shadow_rider_radiant_launch/reproduce.py"
+      - "results/competitive_deck_baselines/shadow_rider_reproduce.py"
+      - ".github/workflows/validate-shadow-rider-treasure-discard-sensitivity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-payment-sensitivity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact six-category enumeration and physical oracle
+        run: python results/shadow_rider_treasure_discard_sensitivity/reproduce.py
