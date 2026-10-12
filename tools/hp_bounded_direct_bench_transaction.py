@@ -103,24 +103,15 @@ def compile_hp_bounded_direct_bench_profiles(
     return tuple(sorted(found, key=lambda row: (row.direct.name, row.direct.card_id)))
 
 
-def execute_hp_bounded_direct_bench_trainer_transaction(
-    state: DirectBenchTrainerExecutionState,
+def validate_hp_bounded_targets(
     profile: HPBoundedDirectBenchProfile,
     *,
     action_card_class: str,
-    demands: Sequence[DemandChannel],
     targets: Sequence[DirectBenchTarget],
-    search_action: TypedTargetAction,
-    placements: Sequence[DirectBenchPlacement],
     board_metadata_by_id: Mapping[str, PokemonBoardMetadata],
     card_profiles_by_id: Mapping[str, PokemonCardProfile],
-) -> DirectBenchTrainerTransaction:
-    """Pay and Bench exact eligible prints in one conserved Item transaction.
-
-    The full declared target universe must consist of eligible prints.
-    An optimizer may keep ineligible Pokémon in its wider deck model, but must
-    not pass them as Poffin-search candidates into this typed action.
-    """
+) -> None:
+    """Authenticate the full eligible candidate universe before any action."""
 
     if action_card_class != profile.direct.card_id:
         raise ValueError("played Item print disagrees with compiled profile")
@@ -142,6 +133,34 @@ def execute_hp_bounded_direct_bench_trainer_transaction(
                 f"{print_id!r} has {card_profile.hp} printed HP, "
                 f"exceeding search limit {profile.max_hp}"
             )
+
+
+def execute_hp_bounded_direct_bench_trainer_transaction(
+    state: DirectBenchTrainerExecutionState,
+    profile: HPBoundedDirectBenchProfile,
+    *,
+    action_card_class: str,
+    demands: Sequence[DemandChannel],
+    targets: Sequence[DirectBenchTarget],
+    search_action: TypedTargetAction,
+    placements: Sequence[DirectBenchPlacement],
+    board_metadata_by_id: Mapping[str, PokemonBoardMetadata],
+    card_profiles_by_id: Mapping[str, PokemonCardProfile],
+) -> DirectBenchTrainerTransaction:
+    """Pay and Bench exact eligible prints in one conserved Item transaction.
+
+    The full declared target universe must consist of eligible prints.
+    An optimizer may keep ineligible Pokémon in its wider deck model, but must
+    not pass them as Poffin-search candidates into this typed action.
+    """
+
+    validate_hp_bounded_targets(
+        profile,
+        action_card_class=action_card_class,
+        targets=targets,
+        board_metadata_by_id=board_metadata_by_id,
+        card_profiles_by_id=card_profiles_by_id,
+    )
 
     return execute_direct_bench_trainer_transaction(
         state,
