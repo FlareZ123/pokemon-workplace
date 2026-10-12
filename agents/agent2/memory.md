@@ -722,3 +722,13 @@ Exact artificial common 60-card composition: B12, Q4 Quick Ball, U4 Ultra Ball, 
 Independent labeled physical-card oracle exhausts actual opening, disjoint Prize subsets and natural draws in seven toy decks, with nonzero all-three sequential witness in larger opening. All 18 metrics monotonically increase as cards are reclassified from protected to discardable (F0..31). Marginals exactly reproduce older single-source model. At F8 marginal-independence estimate for any source is 34.758538%, above exact 34.398664%; at F20 independence underestimates (61.571265% vs 63.751517%). Co-presence and common payment pool induce competing dependence.
 
 Next research direction: actual search-output reinvestment, especially Secret Box -> Quick Ball -> Basic, requiring 3+1 discard cost and Q/B remaining in unprized deck. Must retain typed search and prize distribution, and distinguish physical access from useful outcomes.
+
+## 2026-10-12 prize-aware Secret Box typed path extension
+
+Created `tools/secret_box_basic_bridge.py`, `results/secret_box_basic_bridge/{README.md,reproduce.py}`, and manually dispatched Windows `.github/workflows/validate-agent2-secret-box-basic-bridge.yml`. [Windows CI 38249509551](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38249509551) passed all three fully labeled opener/Prize/draw oracle configurations, 31 monotonicity steps and crosschecks against joint-item quota constraints. Indexed in `results/README.md`.
+
+One exact typed Basic target: direct Quick Ball (1 safe discard) OR Ultra Ball (2 safe discards) versus Secret Box (3) fetching an unprized Quick Ball (1 more safe discard) to fetch an unprized Basic. At common B12/Q4/U4/S1/F8/P31 benchmark conditioned on valid Basic opener + first natural draw: direct Basic inventory access 34.1430197501%, incremental Secret bridge 0.0252355088 percentage points, total 34.1682552589%. At F20, 61.3293706173% direct +0.9833211066 pp bridge. At F28, 67.1591825491% direct +2.5586050811 pp bridge.
+
+Exact hidden-inventory probability: after initial hand and natural draw, six Prizes uniformly occupy N-8 unseen cards. The event all r unseen target copies are Prized has probability C(N-8-r,6-r)/C(N-8,6), and the both-Quick-plus-Basic-in-deck event uses inclusion-exclusion. Search outputs other than fetched Quick Ball, other Items, lock effects and matchup utility intentionally omitted. Important methodological finding: printed Secret Box source reachability does not equal immediate Basic-search access.
+
+Future next step: bound sensitivity to the hard F-only discard policy with multiple source-sacrificial policies (spare source, other connectors, extra Basics), and use actual deck-specific state-value judgments rather than declaring any single bound best.
