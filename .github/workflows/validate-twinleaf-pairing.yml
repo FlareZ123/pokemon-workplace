@@ -1,0 +1,33 @@
+name: Validate Twinleaf paired-seat planning
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - simulation/twinleaf/paired-seat-plan.cjs
+      - simulation/twinleaf/test-paired-seat-plan.cjs
+      - simulation/twinleaf/tournament-bounded-match.cjs
+      - .github/workflows/validate-twinleaf-pairing.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pairing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+      - name: Syntax check paired runner
+        run: |
+          node --check simulation/twinleaf/paired-seat-plan.cjs
+          node --check simulation/twinleaf/tournament-bounded-match.cjs
+      - name: Standalone paired-seat test
+        run: node simulation/twinleaf/test-paired-seat-plan.cjs
