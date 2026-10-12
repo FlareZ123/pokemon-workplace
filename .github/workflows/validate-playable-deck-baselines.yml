@@ -29,3 +29,5 @@ jobs:
           python-version: "3.12"
       - name: Verify the Aichi reference
         run: python -m results.competitive_deck_baselines.reproduce
+      - name: Verify the Aichi champion Shadow Rider reference
+        run: python -m results.competitive_deck_baselines.shadow_rider_reproduce
