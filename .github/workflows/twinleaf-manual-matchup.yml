@@ -101,6 +101,8 @@ jobs:
         run: node simulation/twinleaf/test-candidate-deck-loader.cjs
       - name: Check legal Underworld Door target and zero-target rejection
         run: node simulation/twinleaf/test-underworld-door-targets.cjs
+      - name: Verify published Regidrago 60-card blind-three Special Energy frequency
+        run: python -m results.tests.twinleaf_regidrago_celestial_roar.reproduce
       - name: Verify Regidrago Celestial Roar attaches all Energy card types
         run: node simulation/twinleaf/test-regidrago-celestial-roar.cjs
       - name: Verify Regidrago Celestial Roar through native Store and provided Energy
