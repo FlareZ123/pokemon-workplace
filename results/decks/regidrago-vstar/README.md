@@ -59,4 +59,6 @@
 
 The restricted K0 first-Item study models joint Regidrago V access plus discarded Dragapult ex as 13.257301% at D=0. This is not attack readiness or a match win rate.
 
+**New exact Energy-conservation finding:** [Aichi post-Trifrost Crispin deck-supply study](../../tests/aichi_regidrago_crispin_post_trifrost/) uses this exact 60. In the restricted state where Regidrago VSTAR is powered by one DDE and one interchangeable Basic Energy before copied Kyurem Trifrost, placing **Grass** instead of scarce **Fire** preserves both types somewhere in the eventual searchable deck more often. With just six randomly assigned Prize cards outside the remaining 58 unknown cards, the respective two-type deck-presence probabilities are 99.0279% and 89.6518%. This does not measure Crispin access, opponent intervention, or gameplay incidence, and is a conditional deck-management observation rather than a deck replacement.
+
 **Unresolved:** All decks still require legal and capable opponent policies, actual complete-game simulation or match observations, a representative field, and matchup-aware resource preservation before being ranked by expected win percentage.
