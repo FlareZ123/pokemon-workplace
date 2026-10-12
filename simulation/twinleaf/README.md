@@ -4,6 +4,12 @@
 
 The repository vendors Twinleaf as a Git submodule at `vendor/twinleafgg`, pinned on 2026-10-12 to Git commit `3348ebdc898f175a2ed8f999133cd13d1afd01f5`. `.gitmodules` gives the upstream remote `https://github.com/twinleafgg/twinleafgg.git`. The research-owned integration in this directory does not patch or send contributions to upstream.
 
+## Critical policy blocker: hidden-order oracle (2026-10-12)
+
+The pinned native `SimpleTacticsAi` evaluates Items against an authoritative cloned `State` containing the real, unrevealed deck order. A [60-card-conserving exhaustive regression](../../results/tests/twinleaf_hidden_topdeck_oracle/) demonstrates that it plays Pokégear 3.0 and tournament-relevant Trainers' Mail exactly when the secret top-seven or top-four search will hit a Supporter, while preserving the Item on hidden misses. In all 92 fixed-world tests, the Item choice differed according to hidden order. [CI evidence](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38301578059) also captures native score distortions.
+
+The headless runner now emits `policy_hidden_information: unmasked_native_SimpleTacticsAi_order_oracle` in every trace and aggregate report. **Do not use these native-bot match outcomes to rank actual paper Expanded decks.** Stream-separated RNG, rules hooks and exact card mappings do not repair hidden-information decision leakage. A truly observation-consistent policy and comprehensive card-semantic audit remain needed.
+
 ## Why the adapter is needed
 
 At the pinned revision, `ptcg-server/src/game/bots/bot-client.ts` implements `BotClient.setDeck(format, list)` and `getDeck(format)`, but its default `loadDeck()` loads one random valid deck owned by the bot's database user. `SimpleBot` inherits that database-based loader even when a specific deck was assigned to the bot. `AdvancedBot` already overrides its loader for a particular curated **Standard** list, so that class is not a generic Expanded alternative.
