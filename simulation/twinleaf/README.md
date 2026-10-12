@@ -30,3 +30,16 @@ A **manual-only** [GitHub Actions workflow](../../.github/workflows/validate-twi
 4. Implement periodic reviewable submodule update checks and regression gating without silently updating the submodule in live experiments.
 
 A compiled source tree and passing fixed-deck SFT alone establish **none** of the win probabilities required by the project's main objective. No published head-to-head match data is claimed here.
+
+
+## Seeded live Store smoke: first completed match
+
+The independently tested [\`headless-smoke.cjs\`](headless-smoke.cjs) extends the integration by executing **an actual complete headless match**, independently of the fixed-deck adapter above. It runs the upstream TypeScript \`Store\`, \`AddPlayerAction\`, card classes, \`SimpleTacticsAi\`, and \`BotArbiter\` in memory. It uses \`ts-node/register/transpile-only\` from pinned server dependencies, without building a WebSocket server, database, or modifying the upstream code.
+
+The smoke deck for **each** player is deliberately simplistic: four Regidrago V SIT, 28 BLW Grass Energy, 28 BLW Fire Energy. These are legal-size engine fixtures, not tournament lists or strategic candidates. The script asserts the exact pinned upstream SHA and a normal \`Format.EXPANDED\` game, seeds \`Math.random\` with 20261012, dispatches all bot/prompt actions through the live Store, and returns JSON with phase history, turns, actions, attacks, winner and a \`finished\` or \`action_limit\` status. It bounds execution at 1,000 dispatches.
+
+**Observed pinned-revision CI outcome**, [run 38242872905](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38242872905): \`finished\`, **43 actions**, **6 turns**, **5 attacks**, \`winner=0\`, actual pinned engine revision \`3348ebdc898f175a2ed8f999133cd13d1afd01f5\`. Workflow \`.github/workflows/twinleaf-headless-smoke.yml\` runs this single seeded smoke in bounded Ubuntu CI.
+
+A real integration obstacle was discovered and resolved: recursive GitHub checkout of the upstream dependency fails because its nested \`vendor/pokemon-cards-css\` submodule has no matching URL in the upstream \`.gitmodules\`. The workflow initializes only the known first-level \`vendor/twinleafgg\` submodule and verifies its actual pinned SHA before running. This reproducibly avoids the malformed nested pointer without touching upstream.
+
+This proves that one instrumented, complete game can execute headlessly through the pinned engine. The naive SimpleBot policy and all-Energy filler decks make the recorded winner and turn count **unsuitable for estimating paper Expanded deck strength**. Further work should translate full-paper card manifests to implemented Twinleaf class identifiers, validate semantic coverage, run real tournament reference decks under stronger decision policies, and pin seeds plus paired seat orientations for fair match comparisons. This smoke does not yet imply that the engine accepts the source-verified Aichi Shadow Rider, Vileplume, or Regidrago lists in full.
