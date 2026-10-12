@@ -32,6 +32,19 @@ A real player selecting whether to use the Item before a new observation cannot 
 
 **CI passed:** [exhaustive run 38301300891](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38301300891), superseding [initial two-world 60-card run 38300915037](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38300915037). The [manual-only workflow](../../../.github/workflows/validate-twinleaf-hidden-order-oracle.yml) pins Node 20.19.0 and the exact vendor revision, installs dependencies, and executes both cases without touching upstream.
 
+### Exact counterfactual score distortion
+
+The exhaustive SFT also calls the native `PlayTrainerTactic.evaluateAction` on each of the 92 worlds and subtracts the baseline state score. For *either* Item the native score change is **+4 on a Supporter hit** and **−2 on a miss**. These are Twinleaf's default arbitrary bot-score units, not calibrated game or match values.
+
+| Item | Expected score from always playing blindly | Best constant K0 play/hold choice | Native hidden-oracle expected score | Oracle premium over best blind choice |
+| --- | ---: | --- | ---: | ---: |
+| Pokégear (7/46 hit) | `-25/23 ≈ -1.086957` | hold (0) | `14/23 ≈ +0.608696` | `14/23` |
+| Trainers' Mail (4/46 hit) | `-34/23 ≈ -1.478261` | hold (0) | `8/23 ≈ +0.347826` | `8/23` |
+
+Each expectation marginalizes over all 46 equally likely hidden Supporter positions. The native bot effectively chooses `play` iff the search succeeds. The decision-theoretic advantage is the reward obtained by conditioning the choice on a future search result; its direction is positive in the fixture. Even an apparently small per-action bias can make complete-game outcomes unreliable because such choices recur and interact.
+
+**Scored-run reproduction:** [38301578059](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38301578059), exact per-position score deltas `{hit:+4, miss:-2}` for both Items.
+
 ## Interpretation and implications
 
 This proves that the pinned native bot is **not observation-invariant**. Its full-game winners are currently suitable as engine diagnostics only. They must not be promoted to competitive Expanded win-rate evidence until the simulator policy's hidden-information boundary is corrected and revalidated.
