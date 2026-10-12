@@ -1,0 +1,17 @@
+name: Validate Regidrago Dragapult loading frontier
+
+on:
+  push:
+    paths:
+      - tools/regidrago_payload_load_frontier.py
+      - results/regidrago_payload_load_frontier/**
+      - .github/workflows/validate-regidrago-payload-load-frontier.yml
+  workflow_dispatch:
+
+jobs:
+  verify-item-lines:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exact card-loading and independent physical oracle
+        run: python results/regidrago_payload_load_frontier/reproduce.py
