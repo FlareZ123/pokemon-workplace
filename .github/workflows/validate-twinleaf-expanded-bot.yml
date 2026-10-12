@@ -48,5 +48,7 @@ jobs:
           retention-days: 14
       - name: Validate both Aichi tournament baselines as 60-card engine lists
         run: node simulation/twinleaf/test-baseline-decks.cjs
+      - name: Check Shadow Rider Underworld Door target guard against real engine
+        run: node simulation/twinleaf/test-underworld-door-targets.cjs
       - name: Smoke-test two headless Expanded bots in real game setup
         run: node simulation/twinleaf/test-headless-setup.cjs
