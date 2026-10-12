@@ -13,6 +13,7 @@ require(require.resolve('ts-node/register/transpile-only', {paths: [server]}));
 const engine = file => require(path.join(server, 'src', file));
 const {CardManager} = engine('game/cards/card-manager.ts');
 const {Store} = engine('game/store/store.ts');
+const {makeSupporterSelectionGuard} = require('./supporter-selection-guard.cjs');
 const {State, GamePhase} = engine('game/store/state/state.ts');
 const {Player} = engine('game/store/state/player.ts');
 const {CardList} = engine('game/store/state/card-list.ts');
@@ -110,10 +111,15 @@ assert.equal(dispatchError?.message, 'SUPPORTER_ALREADY_PLAYED',
 // so retry the same policy in an independent, otherwise identical game state.
 const recovered=makeState();
 const recoveredActor=recovered.players[0];
-const recoveredAction=new PlaySupporterTactic(opts).useTactic(recovered,recoveredActor);
+const guard=makeSupporterSelectionGuard();
+const recoveredAction=guard.decode({
+  decodeNextAction: state => new PlaySupporterTactic(opts).useTactic(state,state.players[0])
+},recovered,recoveredActor.id);
 assert.equal(recoveredAction?.type, action.type);
 assert.equal(recoveredAction?.handIndex, action.handIndex);
-recoveredActor.supporterTurn=0;
+assert.equal(recoveredActor.supporterTurn, 0,
+  'Policy guard must restore before Store.dispatch');
+assert.equal(guard.snapshot().restored_live_supporter_counters, 1);
 const recoveredStore=new Store({onStateChange:()=>{}});
 recoveredStore.state=recovered;
 recoveredStore.dispatch(recoveredAction);
@@ -121,4 +127,14 @@ assert.ok(recoveredActor.supporterTurn > 0,
   'Successfully played Supporter must increment actual usage');
 assert.equal(recoveredActor.hand.cards.some(card=>card.name==="Boss's Orders"),false,
   'Successful dispatch must move played Supporter out of hand');
-console.log('[supporter-mutation] PASS: policy-mutated live counter illegally blocks Supporter; restoring counter permits native engine play');
+const exceptionState=makeState();
+assert.throws(()=>guard.decode({
+  decodeNextAction: state => {
+    state.players[0].supporterTurn=state.turn;
+    throw new Error('policy evaluation failed');
+  }
+},exceptionState,1),/policy evaluation failed/);
+assert.equal(exceptionState.players[0].supporterTurn,0,
+  'Even failed policy evaluation must restore native live counter');
+assert.equal(guard.snapshot().restored_live_supporter_counters,2);
+console.log('[supporter-mutation] PASS: guarded Supporter action dispatches legally and restores counter even after policy exceptions');
