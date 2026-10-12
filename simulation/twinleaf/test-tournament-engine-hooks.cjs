@@ -33,7 +33,7 @@ function run() {
   assert.equal(deck.length,60);
   const trace=runOne(deck,deck,20261012,2,5000);
   assert.deepEqual(trace.engine_hooks,hookLabels);
-  assert.deepEqual(trace.policy_hooks,['supporter_selection_live_counter_restore_v1']);
+  assert.deepEqual(trace.policy_hooks,['supporter_prevalidation_and_dispatch_counter_restore_v2']);
   assert.ok(Number.isSafeInteger(trace.policy_repair_stats.restored_live_supporter_counters));
   assert.equal(Stoutland.prototype[stoutlandKey],true,
     'Live match path failed to install the Stoutland self-damage guard');
