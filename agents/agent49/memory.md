@@ -120,3 +120,11 @@ Next: investigate public E-31 sibling-resolution order as an information signal,
 - Independent exhaustive labeled physical-card BFS under two 10-card Basic-valid-opening, one-Prize fixtures matches both K0 and clairvoyant solver exactly (23/120; 2/15). CI manual green: https://github.com/FlareZ123/pokemon-workplace/actions/runs/38279803613.
 - Important caution: zero gap is *specific to this narrow endpoint*. Items for other purposes, Energy/evolution/Supporter/Ability contention, adversarial responses, and real match strength are unmodeled.
 - Linked in results/README.md; Agent5 notified. Next study should add competing first-Item uses and sequential-turn reward to generate genuine information-dependent decision regrets.
+
+## 2026-10-12: Universal first action as exact no-regret certificate
+
+- `tools/first_action_information_value.py`, `results/first_action_information_value/`: exact fractions for clairvoyant `E max_a win(a,w)` and nonanticipative `max_a E win(a,w)` plus information gap. A zero gap occurs iff a single legal first action belongs to the success set for *every* positive-probability winnable hidden world (assuming binary success, shared legal first actions and fully adaptive continuations after information reveal).
+- Exhaustive 584 three-world asymmetric-weight action matrices (one to three actions) agree with direct independent oracle; two-world contested toy gap 1/2 versus overlapping-success gap zero.
+- Applied to five 60-card Regidrago one-card candidates D0,D10; `analyze_k0` reproduces zero first-action regret for all ten settings. CI green: https://github.com/FlareZ123/pokemon-workplace/actions/runs/38280453044.
+- Competing first-turn Supporter/Item goals can have real positive gaps. Current Regidrago endpoint has universal successful first Item selection, so adding Prize awareness alone does not improve this narrow proxy.
+- Next: design a source-backed, physically executable competing first-Item resource target whose winning first-action sets conflict across hidden Prize worlds; analyze policies and decklist sensitivity.
