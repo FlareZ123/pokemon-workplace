@@ -304,6 +304,70 @@ def validate_billowing_smoke_destination_gate() -> None:
             assert_conserved(initial, resolved.after_board.ledger)
 
 
+
+def validate_competing_prize_replacements() -> None:
+    """Derive genuine KO replacement programs, then route each Prize separately."""
+    smoke = ToolAttachment("smoke-tool", "Billowing Smoke", "swsh3-158")
+    victim = make_pokemon("victim", "Victim", tool=smoke)
+    blocker = make_pokemon("barbaracle", "Barbaracle", print_id="swsh11-107")
+    ko = knock_out(make_board(victim, (blocker,)), "victim",
+                   promote_object_id="barbaracle")
+    assert ko is not None and ko[0] is not None
+    choices = derive_knockout_prize_overrides(
+        ko[0], ko[1], knocked_out_by_opponent_attack_damage=True
+    )
+    ids = {row.effect_id.split(":")[0]: row.effect_id for row in choices}
+    assert set(ids) == {"Lost Block", "Billowing Smoke"}
+    assert decide_prize_destination(choices).requires_choice
+
+    for first, second in (("Lost Block", "Billowing Smoke"),
+                          ("Billowing Smoke", "Lost Block")):
+        prefix = ("test-" + first + second).replace(" ", "")
+        initial, board, physical = build_state(
+            prefix=prefix, bench_count=1,
+            prize_classes=(("sm7-97", "Jirachi ◇"),
+                           ("sv3pt5-113", "Chansey")),
+        )
+        board = after_active_ko(board)
+        prizes = stage_prize_takes(sync_physical(physical, board),
+                                  positions=(0, 1))
+        board = board.with_ledger(prizes.physical.ledger)
+        first_choice = decide_prize_destination(
+            choices, chosen_effect_id=ids[first]
+        )
+        assert use_wish_upon_a_star(
+            prizes, board, pokemon_id=prefix + "-jirachi",
+            during_your_turn=True,
+            pre_hand_destination=first_choice.destination_zone,
+        ) is None
+        jirachi = resolve_replaced_jirachi_prize(
+            prizes, board, destination=first_choice
+        )
+        assert jirachi is not None
+        assert jirachi.after_board.ledger.instance(
+            prefix + "-prize-0"
+        ).zone == "lost_zone"
+        second_choice = decide_prize_destination(
+            choices, chosen_effect_id=ids[second]
+        )
+        assert use_lucky_bonus(
+            jirachi.after_prizes, jirachi.after_board,
+            pokemon_id=prefix + "-chansey", coin_heads=True,
+            during_your_turn=True,
+            pre_hand_destination=second_choice.destination_zone,
+        ) is None
+        final = resolve_pending_prize_with_overrides(
+            jirachi.after_prizes, choices, chosen_effect_id=ids[second]
+        )
+        assert final.resolution is not None
+        assert final.resolution.after.pending == ()
+        expected = "lost_zone" if second == "Lost Block" else "discard"
+        assert final.resolution.after.physical.ledger.instance(
+            prefix + "-prize-1"
+        ).zone == expected
+        assert_conserved(initial, final.resolution.after.physical.ledger)
+
+
 def main() -> None:
     initial_c, board_c, physical_c = build_state(
         prefix="c",
@@ -412,6 +476,7 @@ def main() -> None:
 
     validate_jirachi_knockout_slot_geometry()
     validate_billowing_smoke_destination_gate()
+    validate_competing_prize_replacements()
     print("before-hand Prize Bench-entry regressions passed")
 
 
