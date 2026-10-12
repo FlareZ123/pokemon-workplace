@@ -11,20 +11,13 @@ from tools.tool_category_normalization import normalize_legacy_tool_category
 from tools.trainer_boilerplate_normalization import normalize_trainer_boilerplate
 from tools.trainer_rule_semantics import normalize_rule_grounded_trainer_semantics
 from tools.copycat_number_wording import normalize_copycat_count_wording
-from tools.verified_stage_metadata_repairs import normalize_verified_stage_metadata
-from tools.verified_tera_metadata_repairs import normalize_verified_tera_metadata
-from tools.verified_mega_prize_rules import normalize_verified_mega_prize_rules
-from tools.verified_tera_duplicate_rules import normalize_verified_tera_duplicate_rules
+from tools.verified_card_metadata import normalize_verified_card_metadata
 
 
 def normalize_current_card_semantics(card: dict[str, Any]) -> dict[str, Any]:
     """Apply authoritative repository normalizations for current card meaning."""
 
-    normalized = normalize_verified_tera_duplicate_rules(
-        normalize_verified_mega_prize_rules(
-            normalize_verified_tera_metadata(normalize_verified_stage_metadata(card))
-        )
-    )
+    normalized = normalize_verified_card_metadata(card)
     normalized = normalize_print_specific_errata(normalized)
     normalized = normalize_empty_attack_fields(normalized)
     normalized = normalize_legacy_tool_category(normalized)
