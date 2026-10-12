@@ -23,8 +23,16 @@ const {BotArbiter,BotFlipMode,BotShuffleMode}=engine('game/bots/bot-arbiter');
 const {allSimpleTactics,allPromptResolvers,defaultStateScores,defaultArbiterOptions}=engine('simple-bot/simple-bot-definitions');
 const {makeUniformShuffleArbiter}=require('./hooks/uniform-random-shuffle.cjs');
 const {makeRandomStreamLedger}=require('./random-stream-ledger.cjs');
+const {install:installUnderworldDoorGuard}=require('./hooks/shadow-rider-underworld-door.cjs');
 const UniformBotArbiter=makeUniformShuffleArbiter(BotArbiter);
 const ResearchVipTactic=makeVipFirstTactic(PlayCardAction,PlayerType,SlotType);
+/** Install verified rules-correctness hooks for every live match, including direct runOne callers.
+ * @returns {readonly string[]}
+ */
+function ensureResearchEngineHooks() {
+  installUnderworldDoorGuard();
+  return ['shadow_rider_underworld_door_guard_v1'];
+}
 /** Register every exact implementation used by the two source lists once. @param {string[][]} lists */
 function registerLists(lists) {
   const manager=CardManager.getInstance();
@@ -41,6 +49,7 @@ function registerLists(lists) {
  * @param {'native'|'attack_before_retreat'|'vip_first'|'vip_attack_before_retreat'} tacticOrder
  */
 function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrder='native') {
+  const engineHooks=ensureResearchEngineHooks();
   const prior=Math.random;
   const ledger=makeRandomStreamLedger(seed);
   Math.random=ledger.random;
@@ -97,7 +106,7 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     if(state.phase===GamePhase.FINISHED && (status==='action_cap' || status==='wall_cap'))
       status='finished';
     const rng=ledger.snapshot();
-    return {seed,status,actions,attacks,first_actor:firstActor,
+    return {seed,status,actions,attacks,engine_hooks:engineHooks,first_actor:firstActor,
       first_turn_hands:openingHands,random_calls:rng.calls,
       game_random_calls:rng.gameCalls,policy_random_calls:rng.policyCalls,
       random_sources:rng.bySource,turn:state.turn,phase:GamePhase[state.phase],
@@ -133,6 +142,7 @@ function main() {
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
     tactic_order:config.tacticOrder,
+    engine_hooks:['shadow_rider_underworld_door_guard_v1'],
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
     deck_sources:[a.source||'aichi_reference',b.source||'aichi_reference'],
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
@@ -145,4 +155,4 @@ function main() {
   console.log('[tournament-probe] PASS: paired bounded headless traces emitted with explicit limitations');
 }
 if(require.main===module){try{main();}catch(error){console.error('[tournament-probe] FAIL',error);process.exitCode=1;}}
-module.exports={registerLists,runOne};
+module.exports={registerLists,runOne,ensureResearchEngineHooks};
