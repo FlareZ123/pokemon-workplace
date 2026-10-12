@@ -54,3 +54,11 @@ Give actual pending effect/history objects owned reference adapters and
 require match-level release callers to pass the complete current owner set.
 An explicitly missing owner cannot be detected by this collector, so no
 global guarantee of safe dematerialization follows from this result alone.
+
+## Extension: original single-Prize pending beliefs
+
+[single_pending_identity_binding/](../single_pending_identity_binding/)
+publishes the analogous reference for the original one-card observer pending
+belief, whose group-only state lacks a physical instance ID. The composite
+collector accepts this separately bound owner and protects that instance
+after the physical queue empties until observer resolution is complete.
