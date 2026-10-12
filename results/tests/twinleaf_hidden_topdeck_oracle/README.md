@@ -19,7 +19,18 @@ The [standalone runnable test](../../../simulation/twinleaf/test-hidden-topdeck-
 
 The test asserts matching visible observations, matching complete deck multisets, 60 physical cards for each side, and different native decisions solely as a function of undisclosed card order.
 
-**CI passed:** [run 38300915037](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38300915037). The [manual-only workflow](../../../.github/workflows/validate-twinleaf-hidden-order-oracle.yml) pins Node 20.19.0 and the exact vendor revision, installs dependencies, and executes both cases without touching upstream.
+### Exhaustive private-position audit
+
+The regression additionally enumerates **all 46 possible positions** of the single Boss's Orders in the 46-card remaining deck, separately for both Items (92 native tactic decisions). It proves exact correspondence between the Item's secret search window and the native decision:
+
+| Item | Plays on positions | Holds on positions | Conditional play probability with a uniform random hidden order |
+| --- | --- | --- | --- |
+| Pokégear 3.0 | 7/46 | 39/46 | 15.2173913043% |
+| Trainers' Mail | 4/46 | 42/46 | 8.6956521739% |
+
+A real player selecting whether to use the Item before a new observation cannot condition that decision on the unseen position. In this example, native foresight achieves each card's hit probability while paying the Item cost **only in the hit worlds**. This is a controlled resource-payment distortion, not a calculated match-win advantage.
+
+**CI passed:** [exhaustive run 38301300891](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38301300891), superseding [initial two-world 60-card run 38300915037](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38300915037). The [manual-only workflow](../../../.github/workflows/validate-twinleaf-hidden-order-oracle.yml) pins Node 20.19.0 and the exact vendor revision, installs dependencies, and executes both cases without touching upstream.
 
 ## Interpretation and implications
 
