@@ -2,7 +2,7 @@
 
 const assert = require('node:assert/strict');
 const {
-  parseBaselineDecks, matchPaperPrint, auditAichiBaselines
+  parseBaselineDecks, matchPaperPrint, auditAichiBaselines, makePaperSetCodes
 } = require('./print-coverage.cjs');
 
 /** @returns {void} */
@@ -22,7 +22,18 @@ function run() {
   const valid = matchPaperPrint({ qty: 3, name: 'Shadow Rider Calyrex V', printId: 'swsh6-74' }, paperSets, examples);
   assert.equal(valid.status, 'exact');
   assert.equal(valid.matches[0].fullName, examples[0].fullName);
-  const promoSets = new Map([['xyp', 'XYP'], ['smp', 'SMP']]);
+  const resolvedPromoSets = makePaperSetCodes([
+    { id: 'xyp', ptcgoCode: 'PR-XY' },
+    { id: 'smp', ptcgoCode: 'PR-SM' },
+    { id: 'swsh6', ptcgoCode: 'CRE' },
+  ]);
+  assert.equal(resolvedPromoSets.get('xyp'), 'XYP');
+  assert.equal(resolvedPromoSets.get('smp'), 'SMP');
+  assert.equal(resolvedPromoSets.get('swsh6'), 'CRE');
+  assert.equal(makePaperSetCodes([
+    { id: 'xyp', ptcgoCode: 'UNKNOWN' }
+  ]).get('xyp'), 'UNKNOWN');
+  const promoSets = resolvedPromoSets;
   const promoCards = [
     { set: 'XYP', setNumber: '177', name: 'Karen', fullName: 'Karen XYP' },
     { set: 'SMP', setNumber: '217', name: 'Trevenant & Dusknoir-GX',
