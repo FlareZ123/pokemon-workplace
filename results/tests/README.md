@@ -23,3 +23,5 @@ The owner has requested that roughly 964 pre-existing atomic studies now at `res
 5. Keep clear labels separating game rules, exact access results, simulations and tournament placements.
 
 This is a staged relocation plan. The many still-existing `results/<study>/` directories have **not** all been migrated. Avoid claiming otherwise, and avoid bulk path changes that destroy reproducer access.
+
+- **[Regidrago response and next-Energy-attachment frontier](energy_discard_response_reattachment/):** 48 exact physical attack-readiness cells checked with an independent Energy-slot backtracker, plus 66 exact hypothetical probability tests. Demonstrates when opponent Special Energy counters reverse the preferred Dragon Impact discard payment. No matchup win rates are inferred.
