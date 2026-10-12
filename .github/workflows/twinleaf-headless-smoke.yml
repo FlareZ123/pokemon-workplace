@@ -1,14 +1,6 @@
 name: Twinleaf pinned headless Store smoke
 
 on:
-  push:
-    paths:
-      - "simulation/twinleaf/**"
-      - ".github/workflows/twinleaf-headless-smoke.yml"
-  pull_request:
-    paths:
-      - "simulation/twinleaf/**"
-      - ".github/workflows/twinleaf-headless-smoke.yml"
   workflow_dispatch:
 
 permissions:
