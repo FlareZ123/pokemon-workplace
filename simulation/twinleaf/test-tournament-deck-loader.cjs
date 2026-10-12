@@ -7,11 +7,11 @@ function run() {
   const decks=loadTournamentDecks();
   assert.deepEqual(decks.map(d=>d.id),['vileplume','shadow_rider','regidrago','mew_genesect']);
   const runnable=decks.filter(d=>d.status==='strictly_mappable');
-  assert.deepEqual(runnable.map(d=>d.id),['vileplume','mew_genesect']);
-  for(const d of decks.filter(d=>d.status==='blocked')) {
-    assert.equal(d.blocked_prints.length,1);
-    assert.equal(d.blocked_prints[0].print_id,'xy4-92');
-    assert.equal(d.blocked_prints[0].status,'name_mismatch_review');
+  assert.deepEqual(runnable.map(d=>d.id),['vileplume','shadow_rider','regidrago','mew_genesect']);
+  for(const d of decks) {
+    assert.deepEqual(d.blocked_prints,[]);
+    assert.deepEqual(d.verified_text_aliases,
+      ['shadow_rider','regidrago'].includes(d.id)?['xy4-92']:[]);
   }
   const manager=CardManager.getInstance();
   const byName=new Map(loadImplementedCards().map(c=>[c.fullName,c]));
@@ -25,7 +25,7 @@ function run() {
     }
     console.log('[tournament-loader] '+d.id+': 60 exact verified engine cards registered');
   }
-  console.log('[tournament-loader] Unresolved printed-name aliases correctly block Shadow Rider and Regidrago');
-  console.log('[tournament-loader] PASS: no silent tournament print substitution');
+  console.log('[tournament-loader] Battle Compressor source text alias independently verified for Shadow Rider and Regidrago');
+  console.log('[tournament-loader] PASS: four complete verified 60-card engine lists without silent print substitution');
 }
 try {run();} catch(error) {console.error('[tournament-loader] FAIL',error);process.exitCode=1;}
