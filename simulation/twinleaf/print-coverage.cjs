@@ -93,6 +93,7 @@ function comparePrintedName(printedName, card) {
   if (annotated && cleanName(annotated[1]) === cleanName(card.name)) {
     const qualifier = cleanName(annotated[2]);
     if (qualifier === 'ace spec' && card.tags?.includes('Ace Spec')) return 'qualified';
+    if (qualifier === 'fusion strike' && card.tags?.includes('Fusion Strike')) return 'qualified';
     if (card.attacks?.some(attack => cleanName(attack.name) === qualifier)) return 'qualified';
     if (card.powers?.some(power => cleanName(power.name) === qualifier)) return 'qualified';
   }
