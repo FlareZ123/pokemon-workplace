@@ -30,3 +30,5 @@ jobs:
         run: python -m results.mew_genesect_vip_opening.paid_ball_frontier
       - name: Verify Trainers Mail VIP top-four bridge and physical oracle
         run: python -m results.mew_genesect_vip_opening.trainers_mail_vip_bridge
+      - name: Verify joint Ball-first Mail VIP policy and labeled cards
+        run: python -m results.mew_genesect_vip_opening.combined_mail_ball_frontier
