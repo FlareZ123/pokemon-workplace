@@ -1,0 +1,27 @@
+name: Validate Peonia packet observer choice
+
+on:
+  push:
+    paths:
+      - "tools/e31_peonia_packet_observer.py"
+      - "tools/e31_peonia_seed_execution.py"
+      - "tools/prize_pending_batch_observer.py"
+      - "tools/pending_prize_batch_identity_belief.py"
+      - "tools/prize_position_top_swap.py"
+      - "results/e31_peonia_packet_observer/**"
+      - ".github/workflows/validate-e31-peonia-packet-observer.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate randomized Peonia packet signaling and physical batch
+        run: python results/e31_peonia_packet_observer/reproduce.py
