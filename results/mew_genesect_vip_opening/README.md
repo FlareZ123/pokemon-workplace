@@ -36,9 +36,30 @@ The denominator conditions on a valid seven-card opening hand, with unconditiona
 - The reproduction calls the project's authoritative snapshot print checker for both 60-card lists, including the counterfactual four VIP and remaining one Special Red Card. It requires construction validity and conservative paper Expanded eligibility as of October 12, 2026.
 - GitHub Actions Windows regression: validate-mew-genesect-vip-frontier.yml. Run from repository root using: python -m results.mew_genesect_vip_opening.reproduce.
 
+## Paid Quick Ball and Ultra Ball extension
+
+The published deck and variant each retain **four Quick Ball and four Ultra Ball**, in addition to the Battle VIP Pass copies. [paid_ball_frontier.py](paid_ball_frontier.py) adds these sources with their actual printed costs: Quick Ball consumes one other hand card for one Basic Pokémon; Ultra Ball consumes two other hand cards for one Pokémon. Both may acquire a missing Mew V or Genesect V from the unprized deck. All naturally exposed Pass, Quick Ball, and Ultra Ball copies are shared physical resources and each copy is usable at most once. Quick Ball is allocated before Ultra Ball when maximizing only the number of Basic searches from the same approved discard pool.
+
+Because the real discardability of other cards depends on state and matchup, this model designates exactly **D other, non-Basic deck cards as safe discard payment** and protects every other non-Basic card. The D categories are hypothetical sensitivity policies on the otherwise unchanged sixty-card decks, with D held cards as the only allowed Ball discards. Draw Abilities, Trainer Mail, Secret Box, and cards newly drawn or searched by those effects remain excluded.
+
+| Board target | D safe cards | Published 3 VIP with paid Balls | Four VIP with paid Balls | Fourth VIP gain |
+| --- | ---: | ---: | ---: | ---: |
+| Mew V + 2 Genesect V | 0 | 32.256880782% | 40.058393597% | +7.801512815 pp |
+| Mew V + 2 Genesect V | 6 | 38.246260181% | 45.874230398% | +7.627970217 pp |
+| Mew V + 2 Genesect V | 12 | 44.049425752% | 51.407525025% | +7.358099273 pp |
+| Mew V + 2 Genesect V | 24 | 53.386342601% | 60.019573174% | +6.633230574 pp |
+| Mew V + 3 Genesect V | 0 | 11.913842993% | 16.791066902% | +4.877223909 pp |
+| Mew V + 3 Genesect V | 6 | 16.521479564% | 22.223912880% | +5.702433316 pp |
+| Mew V + 3 Genesect V | 12 | 20.523005698% | 26.834820308% | +6.311814610 pp |
+| Mew V + 3 Genesect V | 24 | 26.256085577% | 33.100660270% | +6.844574694 pp |
+
+**Sensitivity inversion.** As safe payment density grows, the incremental fourth-VIP advantage *decreases* for the two-Genesect goal, while it *increases* for the three-Genesect goal over the examined D values. Extra searchable capacity has different marginal returns at different simultaneous target demands.
+
+The calculation conditions on Basic-valid seven-card starts, considers the first natural draw, and integrates all six Prizes. It marginalizes non-target Prize categories only after demonstrating that this endpoint depends on Prize placement solely through the remaining Mew and Genesect counts. Four independent twelve-card exhaustive physical deal tests, each comprising 46,620 valid labeled worlds, reproduce the grouped direct, VIP-only and paid-Ball counts. A separate brute-force paid-Item allocation oracle checks every Quick/Ultra payment combination across 250 small hand-resource configurations. The D=0 case provably reduces to the all-VIP source-only result.
+
 ## Strategic interpretation and limitations
 
-This is a **narrow first-turn source-access study**. It omits Quick Ball, Ultra Ball, Trainers' Mail, Secret Box, Dedenne-GX, Crobat V, Genesect V's Fusion Strike System, Forest Seal Stone, further natural turns, Energy attachments, VMAX evolution, and opponent interaction. It does not model match wins. Genesect's Ability draw size also depends on hand size and the number of Fusion Strike Pokémon in play, so an extra Genesect is not a fixed card-draw reward.
+This is a **narrow first-turn source-access study**. The all-VIP table omits the Ball routes; the paid-Ball extension adds Quick Ball and Ultra Ball with explicit hypothetical discharge policies. Both models omit Trainers' Mail, Secret Box, Dedenne-GX, Crobat V, Genesect V's Fusion Strike System, Forest Seal Stone, further natural turns, Energy attachments, VMAX evolution, and opponent interaction. It does not model match wins. Genesect's Ability draw size also depends on hand size and the number of Fusion Strike Pokémon in play, so an extra Genesect is not a fixed card-draw reward.
 
 The fourth VIP has a substantial measurable access benefit under this restriction. The removed Special Red Card has disruption value that this model does not score. This candidate is a **legal experimental deck**, pending richer line modeling and diverse matchup evaluation.
 
