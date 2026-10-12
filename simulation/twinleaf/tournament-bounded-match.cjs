@@ -111,7 +111,9 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
       status='finished';
     const rng=ledger.snapshot();
     return {seed,status,actions,attacks,engine_hooks:engineHooks,first_actor:firstActor,
-      first_turn_hands:openingHands,random_calls:rng.calls,
+      first_turn_hands:openingHands,
+      policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
+      random_calls:rng.calls,
       game_random_calls:rng.gameCalls,policy_random_calls:rng.policyCalls,
       random_sources:rng.bySource,turn:state.turn,phase:GamePhase[state.phase],
       winner:state.winner,prizes:state.players.map(p=>p.getPrizeLeft()),
@@ -146,6 +148,8 @@ function main() {
       {cwd:path.resolve(__dirname,'../..'),encoding:'utf8'}).trim(),
     shuffle_policy:'research_uniform_fisher_yates_v1',
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
+    policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
+    policy_hidden_information_evidence:'results/tests/twinleaf_hidden_topdeck_oracle/README.md',
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
     tactic_order:config.tacticOrder,
     engine_hooks:['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1'],
