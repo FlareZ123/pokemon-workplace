@@ -107,7 +107,7 @@ Sources:
 
 The specialized executors now accept a `pre_hand_destination` keyword and reject the optional Bench entry when its value is not `hand`. This follows the existing `before_hand_prize_executor` contract and uses the upstream `prize_destination_applicability` / `prize_destination_overrides` layers to determine replacements. The regression checks both Jirachi and Chansey with a Billowing Smoke destination decision, and physically resolves the ordinary Chansey case into discard without inventing a Bench object.
 
-The Jirachi case validates trigger ineligibility only. Its Prism Star Lost-Zone replacement after a forced discard is outside the present specialized executor's scope; callers must not treat an ordinary `discard` material transition as correct for that Prism Star card. The default argument remains `hand` for existing hand-bound callers, so any integration that evaluates a replaced Prize destination must explicitly pass that decision to the specialized executor.
+The specialized Jirachi branch now also executes its **Prism Star Lost-Zone rule** after a final Prize-destination decision. Billowing Smoke's attempted `discard` sends exact `sm7-97` to `lost_zone`, leaving no board object; the matching Chansey Prize ends in `discard`. The complete resulting physical ledgers conserve every card. Official [Jirachi Prism Star text](https://www.pokemon-card.com/card-search/details.php/card/34980/regu/all) and the [Pokémon TCG Prism Star rulebook](https://assets.pokemon.com/assets/cms2-en-uk/pdf/trading-card-game/rulebook/par_rulebook_en.pdf) require this replacement. This single-print handler consumes a selected decision from the existing Prize-destination layer; it does not replace the engine-wide handling of Prism Star cards. The default pre-hand argument remains `hand`, so integrations must pass any applicable override destination explicitly.
 
 ## Limits
 
@@ -117,6 +117,7 @@ The current executable island does not yet cover:
 - Treasure Energy;
 - Greedy Dice;
 - observer-belief updates for an additional Prize staged from inside an E-31 effect;
-- general card-text compilation from the atom catalog into these executable functions.
+- general card-text compilation from the atom catalog into these executable functions;
+- global Prism Star replacement for arbitrary Pokémon, Trainers, and Energy outside the exact Jirachi Prize transition.
 
 Those are separate semantic layers rather than assumptions hidden inside this transition.
