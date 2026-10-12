@@ -1,0 +1,23 @@
+name: Validate Mew Wally Tapu Lele counterfactual
+
+on:
+  push:
+    paths:
+      - "results/tests/mew_wally_tapu_variant/**"
+      - "results/decks/mew-genesect-tapu-wally-counterfactual/**"
+      - ".github/workflows/validate-mew-wally-tapu-variant.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact opening and print legality
+        run: python results/tests/mew_wally_tapu_variant/reproduce.py
