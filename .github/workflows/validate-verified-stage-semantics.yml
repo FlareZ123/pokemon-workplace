@@ -1,0 +1,30 @@
+name: Validate verified-stage semantic bridge
+
+on:
+  push:
+    paths:
+      - "tools/verified_stage_metadata_repairs.py"
+      - "tools/current_card_semantics.py"
+      - "results/verified_stage_semantics/**"
+      - ".github/workflows/validate-verified-stage-semantics.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify corrected exact-print semantic fingerprints
+        run: python -m results.verified_stage_semantics.reproduce
+      - name: Preserve original card-data repair audit
+        run: python -m results.pitch_black_stage_metadata.reproduce
+      - name: Recheck historical reprint classification
+        run: python -m results.reprint_errata_resolution.reproduce
+      - name: Recheck deck validation boundary
+        run: python -m results.deck_validator.reproduce
