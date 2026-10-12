@@ -1,3 +1,5 @@
+**Reactive Ability and Tool locks have unequal effects and a real competitive reference self-conflict:** [Scrafty/Spiritomb counterattack versus Garbotoxin, Path, Wobbuffet and Jamming Tower](reactive_counter_lock_profiles/) source-verifies the full 29-counter ceiling becomes 24 under Path to the Peak, 20 under Garbotoxin or Active Wobbuffet, 17 under Jamming Tower, and eight under Garbotoxin plus Jamming. The published 2026 Aichi eighth-place Absol/Garbodor list contains Garbotoxin and Secret Box ACE SPEC, making Ability-based counter-reaction imports self-conflicting and a second Deluxe Bomb ACE SPEC illegal. [Windows CI 38291864243 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38291864243). Static source-window mechanics, not outcome probabilities.
+
 # Competitive paper Expanded: playable decks and research
 
 *Updated 12 October 2026. Paper Pokémon TCG Expanded, Black & White onward.*
