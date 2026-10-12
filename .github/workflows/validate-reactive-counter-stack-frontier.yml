@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'tools/reactive_counter_stack_frontier.py'
+      - 'tools/reactive_stack_natural_access.py'
       - 'results/reactive_counter_stack_frontier/**'
       - '.github/workflows/validate-reactive-counter-stack-frontier.yml'
       - 'tools/build_expanded_legality_baseline.py'
@@ -18,3 +19,5 @@ jobs:
           python-version: '3.12'
       - name: Validate source prints and exhaustive frontier
         run: python results/reactive_counter_stack_frontier/reproduce.py
+      - name: Verify exact natural-access probabilities
+        run: python results/reactive_counter_stack_frontier/reproduce_access.py
