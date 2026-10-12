@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
 from quick_ball_pre_draw_option import opening_option_probability
 
 
-def oracle(n, p, h, *, s, a, c, g, q, d):
+def oracle(n, p, h, *, s, a, c, g, q, d, allow_search_fallback=False):
     labels = "C"*c + "G"*g + "L" + "A"*a + "Q"*q + "D"*d + "S"*s
     labels += "F"*(n-len(labels))
     total = wait = eager_a = eager_g = 0.0
@@ -34,6 +34,11 @@ def oracle(n, p, h, *, s, a, c, g, q, d):
                     hand.remove(next(i for i in hand if labels[i] == "Q"))
                     hand.remove(next(i for i in hand if labels[i] == "D"))
                     matches = sorted(i for i in deck if labels[i] == target)
+                    if not matches and allow_search_fallback:
+                        alternate = "A" if target == "L" else "L"
+                        if (alternate == "A" and not made_a) or (alternate == "L" and not made_g and has("G", deck)):
+                            target = alternate
+                            matches = sorted(i for i in deck if labels[i] == target)
                     if matches:
                         deck.remove(matches[0])
                         if target == "A":
