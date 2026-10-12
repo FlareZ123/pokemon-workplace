@@ -21,6 +21,7 @@ jobs:
           python-version: "3.13"
       - name: Verify coin outcomes, quota, Energy conservation and switching
         run: |
+          python results/retreat_goodra_coin_gate/source_audit.py
           python results/retreat_goodra_coin_gate/reproduce.py
           python results/retreat_goodra_coin_gate/ultra_ball_reproduce.py
           python results/retreat_ultraball_payment_bridge/reproduce.py
