@@ -149,6 +149,25 @@ At D=6, the 0.9269-point Ultra Ball loss for acquiring Mew VMAX is almost five t
 
 This Stage-1 acquisition event does not simultaneously require the Mew V + Genesect setup and does not reserve a Ball or two discard cards for competing Basic searches. It therefore overstates realizable *joint* setup readiness. An independent physical labeled-card oracle exactly matches 34,272 valid toy hand/Prize/draw configurations for each of three Ultra counts, and printed English Ultra Ball/Mew VMAX identity is checked from the bundled database.
 
+## Joint Mew V + Genesect V board and Mew VMAX future-evolution material
+
+Access to Mew VMAX can contend with the very same Ultra Balls and discard cards used to establish a Basic attacker and Genesect engine. [joint_stage_ready_frontier.py](joint_stage_ready_frontier.py) combines the requirements into one physically constrained first-turn plan: obtain Mew V and two Genesect V onto the field **and have a Mew VMAX in hand** for a possible future evolution. If no Mew VMAX is already visible, an Ultra Ball plus two designated safe discards and an unprized Mew VMAX must be reserved first. Remaining paid Balls fetch missing Basics; each held Trainers' Mail then searches for VIP Pass under actual sequential top-four shuffle probabilities.
+
+| Full paper Expanded 60-card candidate | Mew V + 2 Genesect V + held Mew VMAX, D=6 |
+| --- | ---: |
+| Published three VIP | 13.698294305% |
+| Fourth VIP, −Special Red Card | **16.705527572%** |
+| Fourth VIP, −Trainers' Mail | 16.050838270% |
+| Fourth VIP, −Quick Ball | **16.410337323%** |
+| Fourth VIP, −Ultra Ball | **16.344165449%** |
+| Fourth VIP, −Karen | **16.705527572%** |
+
+**A ranking inversion occurs.** For the earlier Basic-only Mew + 2 Genesect benchmark, cutting Ultra Ball preserved more setup access than cutting Quick Ball (51.228134805% versus 50.346499309% at D=6). When access to a Mew VMAX is required from the same physical starting hand, cutting Quick Ball becomes slightly better (16.410337323% versus 16.344165449%). Ultra Ball's Evolution-search flexibility changes the outcome even though Quick Ball has the lower discard cost.
+
+The model exhaustively integrates the first eight seen card identities and all six hidden Prize cards, including Mew, Genesect, Mew VMAX, and VIP targets separately. All 60-card alternatives retain their original 11 Basic starters and are previously checked for print-level legality. Three independent twelve-card toy populations, two Mew/Genesect target counts each, agree between the mathematical model and a distinct 41,328-legal-world physically labeled oracle with explicit Ultra payment, Basic retrieval, and every stochastic Mail inspection.
+
+This is a first-turn **material-acquisition** endpoint. It requires the Mew VMAX to be obtainable in hand; it does not assume the Pokémon can evolve on the first turn, survive for its next evolution window, attach attacks' Energy, or exploit real Genesect draws. The separate value of the removed Trainer's disruption/recovery/attack flexibility and the metagame remain unresolved.
+
 ## Strategic interpretation and limitations
 
 This is a **narrow first-turn source-access study**. The all-VIP table omits the Ball routes; the paid-Ball extension adds Quick Ball and Ultra Ball with explicit hypothetical discharge policies. Both models omit Trainers' Mail, Secret Box, Dedenne-GX, Crobat V, Genesect V's Fusion Strike System, Forest Seal Stone, further natural turns, Energy attachments, VMAX evolution, and opponent interaction. It does not model match wins. Genesect's Ability draw size also depends on hand size and the number of Fusion Strike Pokémon in play, so an extra Genesect is not a fixed card-draw reward.
