@@ -26,7 +26,7 @@ def max_two_prize_gust(energy: tuple[int, ...], *, latias_on_bench: bool,
         if not retreated:
             # Gust removes Neutralizing Gas by moving its source off Active.
             latias_works=latias_on_bench and (lock=='none' or (lock=='active_weezing' and gusted))
-            cost=0 if latias_works and active in (3,4,5) else RETREAT_COST[active]
+            cost=0 if latias_works and active in (3,4,5) else (2 if latias_on_bench and active==5 else RETREAT_COST[active])
             if e[active]>=cost:
                 after=list(e)
                 after[active]-=cost
