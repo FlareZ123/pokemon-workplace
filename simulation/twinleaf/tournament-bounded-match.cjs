@@ -89,6 +89,7 @@ function main() {
   const traces=seatPairs.map(p=>runOne(p.seat1.engine_names,p.seat2.engine_names,p.seed));
   const report={scope:'bounded engine self-play diagnostics only, SimpleTacticsAi policy unvalidated',
     twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
+    shuffle_policy:'research_uniform_fisher_yates_v1',
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
     max_actions:350,wall_ms:25000,traces};
