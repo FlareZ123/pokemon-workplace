@@ -25,4 +25,4 @@ jobs:
         with:
           python-version: "3.13"
       - name: Verify published counts, core roles and paper Expanded legality
-        run: python results/competitive_deck_baselines/regidrago_reproduce.py
+        run: python -m results.competitive_deck_baselines.regidrago_reproduce
