@@ -50,7 +50,7 @@ For initial category histogram \(h\) and draw category \(j\), the conditional st
 \frac{N_j-h_j}{N-7}.
 \]
 
-Every probability uses exact Python `Fraction` arithmetic. The independent [physical-card oracle and reproducer](reproduce.py) exhaustively deal labeled small decks, select a starting Basic, separately place each possible Prize combination, then try every permitted natural draw. Four toy configurations agree with all **18** modeled event fractions. Further regression checks all 18 events are nondecreasing as protected cards are reclassified into F over 32 baseline filler-pool sizes. Existing [single-Item exact quota calculations](../../tools/basic_valid_discard_quota.py) provide independent marginal crosschecks.
+Every probability uses exact Python `Fraction` arithmetic. The independent [physical-card oracle and reproducer](reproduce.py) exhaustively deal labeled small decks, select a starting Basic, separately place each possible Prize combination, then try every permitted natural draw. Seven toy configurations agree with all **18** modeled event fractions. Further regression checks all 18 events are nondecreasing as protected cards are reclassified into F over 32 baseline filler-pool sizes. Existing [single-Item exact quota calculations](../../tools/basic_valid_discard_quota.py) provide independent marginal crosschecks.
 
 A manually dispatched [Windows Python CI](../../.github/workflows/validate-agent2-joint-item-payment.yml) runs the full reproducer. Nothing is scheduled on repository push.
 
