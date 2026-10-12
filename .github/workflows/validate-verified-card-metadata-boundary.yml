@@ -1,0 +1,37 @@
+name: Validate shared print metadata boundary
+
+on:
+  push:
+    paths:
+      - "tools/verified_card_metadata.py"
+      - "tools/current_card_semantics.py"
+      - "tools/deck_validator.py"
+      - "results/verified_card_metadata_boundary/**"
+      - ".github/workflows/validate-verified-card-metadata-boundary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Shared metadata integration
+        run: python -m results.verified_card_metadata_boundary.reproduce
+      - name: Audited Stage repair
+        run: python -m results.verified_stage_semantics.reproduce
+      - name: Audited Terapagos correction
+        run: python -m results.verified_tera_semantics.reproduce
+      - name: Audited Mega three-Prize rules
+        run: python -m results.verified_mega_prize_rules.reproduce
+      - name: Audited duplicated Tera rules
+        run: python -m results.verified_tera_duplicate_rules.reproduce
+      - name: Deck validator
+        run: python -m results.deck_validator.reproduce
+      - name: Historical reprint resolver
+        run: python -m results.reprint_errata_resolution.reproduce
