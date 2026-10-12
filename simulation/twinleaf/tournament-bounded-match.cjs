@@ -93,6 +93,16 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
       game_random_calls:rng.gameCalls,policy_random_calls:rng.policyCalls,
       random_sources:rng.bySource,turn:state.turn,phase:GamePhase[state.phase],
       winner:state.winner,prizes:state.players.map(p=>p.getPrizeLeft()),
+      end_board:state.players.map(p=>({
+        deck_left:p.deck.cards.length,
+        hand_count:p.hand.cards.length,
+        discard_count:p.discard.cards.length,
+        active:p.active.getPokemonCard()?.name||null,
+        bench:p.bench.map(slot=>slot.getPokemonCard()?.name).filter(Boolean)
+      })),
+      terminal_log:state.logs.slice(-6).map(log=>({
+        code:log.message,client:log.client,params:{...log.params}
+      })),
       elapsed_ms:Date.now()-started,error,telemetry:telemetry.snapshot()};
   } finally {Math.random=prior;}
 }
