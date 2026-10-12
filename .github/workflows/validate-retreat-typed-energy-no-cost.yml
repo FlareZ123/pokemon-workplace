@@ -1,0 +1,31 @@
+name: Validate typed-Energy no-Retreat Ability sources
+
+on:
+  push:
+    paths:
+      - "tools/retreat_typed_energy_no_cost.py"
+      - "tools/retreat_environment_modifiers.py"
+      - "tools/board_derived_retreat.py"
+      - "results/retreat_typed_energy_no_cost/**"
+      - ".github/workflows/validate-retreat-typed-energy-no-cost.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Audit sources and execute physical typed-cost regression
+        run: |
+          python results/retreat_typed_energy_no_cost/source_audit.py
+          python results/retreat_typed_energy_no_cost/reproduce.py
+          python results/retreat_dynamic_special_energy_providers/reproduce.py
+          python results/retreat_low_energy_no_cost/reproduce.py
+          python results/retreat_conditional_self_free_cost/reproduce.py
+          python results/board_derived_retreat/reproduce.py
