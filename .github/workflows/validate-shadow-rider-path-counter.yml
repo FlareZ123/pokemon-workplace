@@ -17,4 +17,6 @@ jobs:
         with:
           python-version: '3.12'
       - name: Validate exact counter, physical oracle and 60-card legality
-        run: python -m results.shadow_rider_path_counter_frontier.reproduce
+        run: |
+          python -m results.shadow_rider_path_counter_frontier.reproduce
+          python -m results.shadow_rider_path_counter_frontier.robustness

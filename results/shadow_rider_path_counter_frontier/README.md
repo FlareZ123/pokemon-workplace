@@ -48,4 +48,33 @@ Four Cologne has less restricted Path-present access than two Cologne and the re
 
 The [source](reproduce.py) keeps physical Prize allocations of Radiant, VMAX, Cologne, Field Blower and usable Stadiums exact. It marginalizes irrelevant Prize classes and uses a provably equivalent order for the natural draw and Prize assignment after selecting the opener. A separate **41,328-world labeled-card oracle** deals opening → Prizes → draw chronologically, independently checking the resulting exact rational probabilities. Eight full 60-card print lists are adjudicated under the 2026-10-12 conservative Expanded snapshot.
 
-The assumption of Path already being in play during Shadow Rider's first going-second turn is intentionally counterfactual; the opponent must first have had a legal opportunity to place it. Results describe a particular matched action window, independent of that state's frequency. Path, Item or Tool locks, alternate Standard/Expanded card interpretations, opposing counterplay, Bench congestion, K1 search information, future turns and actual match win rates all need additional modeling. In particular, this solver assumes no additional Item or Tool lock, and no effect removing Flutter's Ability.
+The opponent going first can legally put a Stadium into play during its first turn, so this Path-present state can arise before Shadow Rider's first going-second turn. Results still condition on that specific opponent choice and do not estimate its frequency. Path, Item or Tool locks, alternate Standard/Expanded card interpretations, opposing counterplay, Bench congestion, K1 search information, future turns and actual match win rates all need additional modeling. In particular, this solver assumes no additional Item or Tool lock, and no effect removing Flutter's Ability.
+
+
+## Extension: exhaustive two-counter mixtures for every 0–4-slot package
+
+[Robustness reproducer](robustness.py) enumerates all **15** combinations of Cologne (C) and Flutter (F) consuming up to four slots under the same sequential cut rule. Every complete 60-card variant passes the exact-print construction and legality checks. All exact rational endpoint values are independently recomputed.
+
+| Total slots spent | Mix C / F | Replacement Stadiums left | Path-present access |
+| ---: | --- | ---: | ---: |
+| 0 | 0 / 0 | 3 | 0.000000% |
+| 1 | 1 / 0 | 2 | **1.974084%** |
+| 1 | 0 / 1 | 2 | 1.841655% |
+| 2 | 2 / 0 | 1 | 2.490177% |
+| 2 | **1 / 1** | 1 | **2.622360%** |
+| 2 | 0 / 2 | 1 | 2.507258% |
+| 3 | 3 / 0 | 0 | 1.974084% |
+| 3 | 2 / 1 | 0 | 2.045828% |
+| 3 | **1 / 2** | 0 | **2.089297%** |
+| 3 | 0 / 3 | 0 | 2.017595% |
+| 4 | 4 / 0 | 0 | 2.479023% |
+| 4 | 3 / 1 | 0 | 2.546091% |
+| 4 | 2 / 2 | 0 | 2.598020% |
+| 4 | **1 / 3** | 0 | **2.626431%** |
+| 4 | 0 / 4 | 0 | 2.550910% |
+
+The best **three-slot** package is **worse** than the best two-slot package: 2.089297% versus 2.622360%. Any third swap spends the deck's final replacement Stadium, leaving only Field Blower as the Path answer.
+
+Four-card packages sometimes recover the loss through increased counter redundancy, yet the best four-card result, one Cologne plus three Flutter, gains only **0.004071 percentage points** over the best two-card package. That is an extremely small improvement in this specific launch-access endpoint for spending two additional deck slots, including Dimension Valley and Night Stretcher. Their other strategic functions were excluded.
+
+This is a reproducible, exact **nonmonotonic optimization frontier with mutually dependent search roles**. It is a counterexample to a heuristic that keeps adding cards because one marginal access metric improves when considered without the displacement effects.
