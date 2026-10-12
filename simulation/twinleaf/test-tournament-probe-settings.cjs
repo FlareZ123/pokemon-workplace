@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('node:assert/strict');
 const {parseProbeSettings, MAX_SEED_PAIRS} = require('./tournament-probe-settings.cjs');
-const ids = ['vileplume', 'shadow_rider', 'regidrago', 'mew_genesect'];
+const ids = ['vileplume', 'shadow_rider', 'regidrago', 'mew_genesect', 'mew_genesect_vip4'];
 const original = parseProbeSettings({}, ids);
 assert.deepEqual(original, {deckAId: 'vileplume', deckBId: 'mew_genesect', seeds: [20261012], tacticOrder: 'native'});
 const swapped = parseProbeSettings({
@@ -11,6 +11,13 @@ const swapped = parseProbeSettings({
 }, ids);
 assert.deepEqual(swapped, {
   deckAId: 'shadow_rider', deckBId: 'regidrago', seeds: [0, 20261012, 4294967295], tacticOrder: 'native'
+});
+assert.deepEqual(parseProbeSettings({
+  TWINLEAF_DECK_A:'mew_genesect',
+  TWINLEAF_DECK_B:'mew_genesect_vip4',
+  TWINLEAF_SEEDS:'20261012'
+},ids), {
+  deckAId:'mew_genesect', deckBId:'mew_genesect_vip4', seeds:[20261012], tacticOrder:'native'
 });
 assert.equal(MAX_SEED_PAIRS, 3);
 assert.equal(parseProbeSettings({TWINLEAF_TACTIC_ORDER:'attack_before_retreat'},ids).tacticOrder,
