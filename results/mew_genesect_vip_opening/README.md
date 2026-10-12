@@ -112,6 +112,27 @@ This is a **different endpoint** from the first-turn Mew/Genesect source-access 
 
 The early VIP improvement and late Special Red availability loss have no common win-probability conversion established. The fourth VIP may be promising, but the exact card cut is an unresolved optimization choice. Other non-Basic cuts can preserve both Special Red copies while sacrificing different tactical effects, which requires matchup-aware comparison.
 
+## Sixth-variant slot-cut sensitivity (legal 60-card candidate frontier)
+
+The precise fourth-VIP cut matters. [vip_slot_cut_frontier.py](vip_slot_cut_frontier.py) tests six complete exact-print and conservatively paper Expanded-eligible 60-card alternatives: published three-VIP list; fourth VIP at the expense of one Special Red Card, Trainers' Mail, Quick Ball, Ultra Ball, or Karen. All preserve the original 11 opening Basic Pokémon and one Secret Box ACE SPEC.
+
+The shared, exact paid-Ball → Mail → VIP first-turn **Mew V + 2 Genesect V** benchmark distinguishes cuts of cards that directly contribute to the modeled setup:
+
+| Full 60-card candidate | D=6 joint setup | D=12 joint setup |
+| --- | ---: | ---: |
+| Published 3 VIP | 43.036318802% | 48.695370189% |
+| +1 VIP, −1 Special Red Card | **51.414233600%** | **56.737992550%** |
+| +1 VIP, −1 Trainers' Mail | 49.624790597% | 55.019725095% |
+| +1 VIP, −1 Quick Ball | 50.346499309% | 54.889753885% |
+| +1 VIP, −1 Ultra Ball | 51.228134805% | 56.061337026% |
+| +1 VIP, −1 Karen | **51.414233600%** | **56.737992550%** |
+
+The Mew V + 3 Genesect V endpoint at D=6 is 19.816099967% for the published list, 26.602450225% for −Red or −Karen, 25.148701796% for −Mail, 25.522444430% for −Quick, and 26.412245932% for −Ultra.
+
+Cutting Ultra Ball rather than Special Red Card sacrifices only **0.186098795 percentage points** of the narrowly modeled D6 two-Genesect opening access. However, Ultra Ball also retrieves **Mew VMAX**, a non-Basic Evolution target that Battle VIP Pass and Quick Ball cannot find. This model does not score Stage-1 access, evolution timing, late-game Special Red disruption, Karen's discard-control value, or matchups. Similarly, the −Red and −Karen access tie reflects their identical retained source counts, and says nothing about whether those tactical effects are equivalent.
+
+Four newly varied physical ten-card source distributions, each evaluated with two target requirements, agree with an independent labeled-card setup/Prize/Mail-inspection oracle. Printed card identities and all 60-card candidate constructions are validated by the shared paper Expanded checker.
+
 ## Strategic interpretation and limitations
 
 This is a **narrow first-turn source-access study**. The all-VIP table omits the Ball routes; the paid-Ball extension adds Quick Ball and Ultra Ball with explicit hypothetical discharge policies. Both models omit Trainers' Mail, Secret Box, Dedenne-GX, Crobat V, Genesect V's Fusion Strike System, Forest Seal Stone, further natural turns, Energy attachments, VMAX evolution, and opponent interaction. It does not model match wins. Genesect's Ability draw size also depends on hand size and the number of Fusion Strike Pokémon in play, so an extra Genesect is not a fixed card-draw reward.
