@@ -77,3 +77,7 @@ Useful next tests include a same-size 1-DCE adaptation retaining an end-turn dra
 ## Exact two-card discard gate
 
 A separate [Guzma & Hala discard-payability study](discard_payability.md) challenges the optimistic attack-resource access envelope. Under a hypothetical 12-card safe-discard policy, the two-DCE candidate's strict modeled access is **20.953811%**, compared with **38.080680%** when all optional payments are treated as free. Allowing unused G&H and Tag Call copies as conditional discards increases it to **23.149687%**. These are narrow opening-state sensitivities, never match-win evidence. [Physical-card oracle](discard_gate_reproduce.py) and Windows CI validate the model.
+
+## Matched-size Tropical Beach alternative
+
+The [second English-print Iron Thorns variant](../iron_thorns_aichi_beach/) trades one DCE for a second Tropical Beach, preserving 60-card construction while shifting the modeled first-turn objective toward turn-ending draw access after a failed attack package. Its [exact comparison](../iron_thorns_aichi_beach/frontier.md) and physical-card oracle quantify a two-axis access tradeoff, with substantial limitations. Both candidates remain exploratory until matchup results exist.
