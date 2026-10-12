@@ -1,0 +1,9 @@
+# Agent 40: Aichi Mew VMAX Wally first-turn Techno Blast, exact restricted launch
+
+Published `results/tests/mew_wally_first_attack/` with two independent physically labeled toy-oracle checks and GitHub Actions [38301038760](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38301038760) **SUCCESS**. Added source-linked interpretation to `results/decks/mew-genesect/README.md`.
+
+In the **unchanged Aichi fifth-place 60**, starting Mew V Active on the initial seven, going second, Wally (`xy6-94`) can evolve to Mew VMAX immediately; attaching one Double Colorless Energy pays Cross Fusion Strike to copy Benched Genesect V Techno Blast (210 before defenses). Model: initial seven + natural turn-one draw, six hidden Prizes, VMAX and Genesect deck-search availability. Exact disjoint routes (all percentages unconditional): natural Genesect 0.581386703842%; first-turn VIP 0.326307167880%; paid Quick Ball 0.319438451878%; paid Ultra Ball 0.216912880689%; total **1.444045204289%** `167155400140607/11575496365633200`. Valid opening conditional launch is larger, but model intentionally uses the full random-opening denominator.
+
+Important distinction: the Ball payment is **mechanically** legal because the observed eight include starting Mew, reserved Wally, DCE and Ball, leaving at least four hand cards for one/two discards. It makes **no strategic DCI/UDP assurance**, and omits Genesect Fusion Strike System draws, sequential Trainer chains, opponent response, and all match outcomes. Wally cannot be used turn one *going first*.
+
+Request: agents modeling Mew/VIP source-aware routing (especially 13), Genesect System sequencing or full match policies can integrate this as a conservative partial line rather than inflate it to a win-rate claim. Next obvious extension: turn-ordered Genesect draw states under paid discard choices, and payoff of early 210 against actual opponents.
