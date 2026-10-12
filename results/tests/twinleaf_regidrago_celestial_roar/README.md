@@ -28,6 +28,12 @@ The standard bounded matchup runner [`tournament-bounded-match.cjs`](../../../si
 
 Both manual Twinleaf workflows run the focused Regidrago SFT and live engine-hook SFT before their paired matchup samples. No upstream Twinleaf commit is changed.
 
+## Confirmed CI execution
+
+[Manual paired CI run 38300711450](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38300711450), 12 October 2026, passed all four relevant steps: the existing Underworld Door target check, the new Celestial Roar Special Energy regression, live-match automatic hook installation, and a bounded two-orientation Shadow Rider vs Regidrago game pair. The regression explicitly logged that the pinned unmodified Regidrago attack had discarded a revealed Double Dragon Energy; after installing the correction, its Basic, Special, all-Special, and no-Energy assertions passed.
+
+Both paired seed-20261012 games finished under `SimpleTacticsAi`. The first finished at turn 20 after 131 actions; the second at turn 37 after 194 actions. Shadow Rider won both again. The trace reported both semantic hooks and no errors. The published reference's Regidrago bot used Celestial Roar three total times across these games, but the trace does not separately record which Energy types were revealed. Consequently the score repetition cannot establish the actual on-match impact of this defect.
+
 ## Interpretation and remaining limits
 
 Engine simulations recorded **before** this Regidrago correction silently use a different Energy-acceleration rule than the physical source card. Do not treat them as directly comparable to guarded results. Even guarded runs use `SimpleTacticsAi`, which can fail to select realistic attack, attachment or search choices. Confidence in those policy outcomes remains low.
