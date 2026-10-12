@@ -123,3 +123,28 @@ Broadcast: `communications/broadcast/20261007T083800Z_agent43_k0-discard-reacqui
 
 Quantify the deck-level size of this bias in the Aichi Secret Box simulation. Group hidden physical worlds by the information available before the first full deck search, derive a shared K0 action policy for each group, and compare that policy with the current omniscient upper bound. Coordinate with agent37's Aichi discard-surface audit and agent33's hidden-state search work.
 
+
+## 2026-10-12 incarnation: headless engine semantics and source deck competitiveness
+
+Claimed agent43 on `2026-10-12T19:41:45.145Z` with run ID `gpt6-agent43-20261012T194145145Z-expanded-research`, after last Oct 7 lease aged out. This incarnation began by inspecting the curated deck-first `results/README.md` and 2026 Aichi published 60-card deck pages. The separate Aichi K0 Secret Box and direct G&H studies by other agents already found zero decision-information gaps in their respective clean real-deck subsets, so I pivoted to immediately consequential headless engine correctness.
+
+### Underworld Door
+Source-pinned Twinleaf `3348ebdc898f175a2ed8f999133cd13d1afd01f5` incorrectly accepts non-Psychic Bench targets for Shadow Rider VMAX Underworld Door. An existing fix `simulation/twinleaf/hooks/shadow-rider-underworld-door.cjs` and SFT were present, but the main `tournament-bounded-match.cjs` **never installed the patch**. I added `ensureResearchEngineHooks` in the live `runOne` entry point, explicit `engine_hooks` trace/report metadata, a real-Store installation SFT `simulation/twinleaf/test-tournament-engine-hooks.cjs`, and pre-match CI gates in both manual Twinleaf workflows. I further strengthened the underlying hook to reject activating Underworld Door when the Bench has no eligible Psychic Pokémon, and added that zero-target regression to `test-underworld-door-targets.cjs`. The initial two-orientation run [38299641617](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38299641617) passed. Full validator [38300015179](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38300015179) passed an earlier stage.
+
+Result: `results/tests/twinleaf_underworld_live_hook/README.md`. Integration broadcast: `communications/broadcast/20261012T1947Z_agent43_underworld_guard_live_match.md`. Earlier unguarded Shadow Rider match traces used different engine semantics and are not equivalent replications.
+
+### Regidrago V Celestial Roar
+New pinned source bug: `ptcg-server/src/sets/09-sword-and-shield/set-silver-tempest/regidrago-v.ts` filters attack-revealed Energy to `energyType===BASIC`. Physical Celestial Roar (`swsh12-135`) says attach **Energy cards** without that qualifier. Regidrago V is Dragon and the published tenth-place Regidrago list has four attachable `xy6-97` Special Double Dragon Energy.
+
+Created research-owned idempotent `simulation/twinleaf/hooks/regidrago-celestial-roar.cjs`, which physically moves the top 3 cards to a temporary zone, attaches every EnergyCard to the Dragon Active, and discards each non-Energy. Non-Celestial attacks delegate upstream. Regression `simulation/twinleaf/test-regidrago-celestial-roar.cjs` checks that pinned original incorrectly discards Double Dragon, then new implementation attaches Basic/Special together, three Specials alone, and handles short deck/no Energy, conserves physical cards and is idempotent. Integrated live-runner auto-install and hook labeling into both manual workflows. **Passing latest full paired CI [38300711450](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38300711450)** includes all targeted SFTs and two finished full 60-card games (seed 20261012, both seats, no errors). Results are in `results/tests/twinleaf_regidrago_celestial_roar/README.md`. Informed agent17 in `communications/agent17/20261012T1958Z_agent43_regidrago_celestial_roar_patch.md`.
+
+Both corrected seed 20261012 native bot games still ended Shadow Rider wins; this is not evidence about genuine match win probabilities or that the old bugs fired in those traces. Bot only used Apex Dragon once over the pair. The currently valid hook labels: `shadow_rider_underworld_door_guard_v1`, `regidrago_celestial_roar_any_energy_v1`.
+
+### Next actions
+1. Recheck latest full validator after both hook changes; a CI run was manually dispatched around 19:56 UTC.
+2. Add a true pinned-Store physical execution fixture revealing Double Dragon through Celestial Roar, beyond the focused `StoreLike` move-effect test, to exercise Special Energy triggers.
+3. Compare prior unguarded vs guarded trace action and physical Energy counts under fixed seed only as simulator diagnostics.
+4. Review other exact source/engine semantics in paper Expanded top finishers, prioritizing attack-copying, energy and Ability interactions, while not duplicating other agents' large atomic test corpus.
+5. Keep the root `results/README.md` deck-focused and concise per the repository owner; all new atomic evidence belongs under `results/tests/`.
+
+Original lease timestamp is authoritative. Do not refresh it; check actual runtime wall clock and release only after 70 min.
