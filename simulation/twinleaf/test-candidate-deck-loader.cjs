@@ -6,7 +6,7 @@ const {deckDigest} = require('./paired-seat-plan.cjs');
 
 const decks = loadCandidateDecks();
 assert.deepEqual(decks.map(deck => deck.id), [
-  'vileplume', 'shadow_rider', 'regidrago', 'mew_genesect', 'mew_genesect_vip4', 'regidrago_dragapult_2'
+  'vileplume', 'shadow_rider', 'regidrago', 'mew_genesect', 'mew_genesect_vip4', 'regidrago_dragapult_2', 'absol_garbodor'
 ]);
 const original = decks.find(deck => deck.id === 'mew_genesect');
 const changed = decks.find(deck => deck.id === 'mew_genesect_vip4');
@@ -54,5 +54,12 @@ assert.deepEqual([...new Set([...rA.keys(),...rB.keys()].filter(name=>rA.get(nam
 assert.equal(counts(regOriginal).get('Battle VIP Pass'), 3);
 assert.equal(regChanged.transformation,
   '+1 Dragapult ex (sv6-130), -1 Battle VIP Pass (swsh8-225)');
+const absol=decks.find(deck=>deck.id==='absol_garbodor');
+assert.ok(absol);
+assert.equal(absol.status,'strictly_mappable');
+assert.equal(absol.engine_names.length,60);
+assert.deepEqual([...absol.verified_aliases].sort(),['sm9-51','xy4-92']);
+assert.notEqual(deckDigest(absol),deckDigest(original));
+assert.equal(absol.source,'2026_aichi_eighth_source_with_audited_same_print_aliases');
 console.log('[candidate-decks] PASS: both printed 60-card references unchanged; Mew VIP4 and Regidrago 2-Dragapult differ by exactly one source-verified print each');
 
