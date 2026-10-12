@@ -36,6 +36,21 @@ The denominator conditions on a valid seven-card opening hand, with unconditiona
 - The reproduction calls the project's authoritative snapshot print checker for both 60-card lists, including the counterfactual four VIP and remaining one Special Red Card. It requires construction validity and conservative paper Expanded eligibility as of October 12, 2026.
 - GitHub Actions Windows regression: validate-mew-genesect-vip-frontier.yml. Run from repository root using: python -m results.mew_genesect_vip_opening.reproduce.
 
+## Naturally held Trainers' Mail finding VIP Pass
+
+[trainers_mail_vip_bridge.py](trainers_mail_vip_bridge.py) adds the published list's **three Trainers' Mail** (xy6-92). Each playable Mail inspects the top four cards of the remaining deck. It takes one Battle VIP Pass when seen and shuffles the other cards back into the deck; Mail cannot retrieve another Mail under its printed card text. Several naturally held Mail copies may each perform this search sequentially, and several retrieved or held VIP Passes may each Bench up to two unprized Basics.
+
+| Required first-turn board | Published VIP3 with Mail | Experimental VIP4 with Mail | +Fourth VIP |
+| --- | ---: | ---: | ---: |
+| Mew V + 2 Genesect V | **37.120816259%** | **45.728999471%** | **+8.608183212 pp** |
+| Mew V + 3 Genesect V | **14.602422392%** | **20.566011923%** | **+5.963589530 pp** |
+
+The bridge includes the same Basic-valid initial seven-card condition, six hidden Prizes, and first natural draw. Every Mail inspection is integrated analytically over the *unprized* remaining deck. A Mail hit physically removes one VIP from the deck; a miss leaves the deck size unchanged. Subsequent inspections are sampled after the mandated shuffle. Top-four draws are random under the shuffled-deck assumption, and the policy always selects VIP when available.
+
+The independent oracle exhausts **10,500 labeled valid starting-hand / Prize / natural-draw deals** of a ten-card two-Mail toy deck, then enumerates all top-two inspection choices after each Mail branch. Its exact probabilities match the grouped calculation for two separate target requirements. Disabling Mail reproduces the earlier all-held-VIP exact model identically.
+
+This study intentionally excludes Mail's alternative Trainer choices and does not combine the Mail route with payable Quick Ball/Ultra Ball or with Genesect draws. Thus the three source-only, paid-Ball, and Mail tables quantify different restricted windows; their percentages must not be added together. Neither the improved setup access nor its hypothetical card swap is a demonstrated match-win advantage.
+
 ## Paid Quick Ball and Ultra Ball extension
 
 The published deck and variant each retain **four Quick Ball and four Ultra Ball**, in addition to the Battle VIP Pass copies. [paid_ball_frontier.py](paid_ball_frontier.py) adds these sources with their actual printed costs: Quick Ball consumes one other hand card for one Basic Pokémon; Ultra Ball consumes two other hand cards for one Pokémon. Both may acquire a missing Mew V or Genesect V from the unprized deck. All naturally exposed Pass, Quick Ball, and Ultra Ball copies are shared physical resources and each copy is usable at most once. Quick Ball is allocated before Ultra Ball when maximizing only the number of Basic searches from the same approved discard pool.
