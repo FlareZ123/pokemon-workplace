@@ -93,7 +93,7 @@ def main() -> None:
     assert sum(POKEMON.values()) + sum(TRAINERS.values()) + sum(ENERGY.values()) == 60
     assert TRAINERS["Mysterious Treasure"] == 4
     assert TRAINERS["Hisuian Heavy Ball"] == 1
-    assert ENERGY["Basic Psychic Energy"] == 11
+    assert ENERGY["Psychic Energy"] == 11
 
     physical_toy_oracle()
     buckets = treasure_two_vmax_hand_buckets()
