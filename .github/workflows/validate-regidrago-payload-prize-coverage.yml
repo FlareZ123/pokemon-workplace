@@ -1,0 +1,17 @@
+name: Validate Regidrago payload Prize coverage
+
+on:
+  push:
+    paths:
+      - tools/prize_payload_frontier.py
+      - results/regidrago_payload_prize_coverage/**
+      - .github/workflows/validate-regidrago-payload-prize-coverage.yml
+  workflow_dispatch:
+
+jobs:
+  exact-payload-coverage:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify exact probabilities and labeled-card oracle
+        run: python results/regidrago_payload_prize_coverage/reproduce.py
