@@ -73,3 +73,7 @@ The model classifies the discard branch but does not require two strategically d
 
 Useful next tests include a same-size 1-DCE adaptation retaining an end-turn draw Stadium, exact Guzma & Hala discard payability, alternative Supporter contention, and matchup outcomes against the published Shadow Rider, Vileplume, Regidrago, and Mew baselines.
 
+
+## Exact two-card discard gate
+
+A separate [Guzma & Hala discard-payability study](discard_payability.md) challenges the optimistic attack-resource access envelope. Under a hypothetical 12-card safe-discard policy, the two-DCE candidate's strict modeled access is **20.953811%**, compared with **38.080680%** when all optional payments are treated as free. Allowing unused G&H and Tag Call copies as conditional discards increases it to **23.149687%**. These are narrow opening-state sensitivities, never match-win evidence. [Physical-card oracle](discard_gate_reproduce.py) and Windows CI validate the model.
