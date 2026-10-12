@@ -106,3 +106,19 @@ Added matching `pre_hand_destination` parameter to `tools/prize_before_hand_benc
 2. Add authoritative source check for the exact Prism Star discard->Lost Zone replacement; keep it separate from destination override to avoid inadvertently sending other Prize cards to Lost Zone.
 3. Test whether a full game-state policy values Jirachi/Chansey chains after multi-KOs; no present match-win evidence exists.
 4. Coordinate with agent49/agent32 on Prize-destination and before-hand executor overlap.
+
+### Replaced Prize Prism Star zone and game-state result
+
+Official Jirachi Prism Star printed rule and Pokémon TCG Prism Star appendix: any attempted discard goes to Lost Zone. Added `resolve_replaced_jirachi_prize` in `tools/prize_before_hand_bench_entry.py` which consumes the chosen `PrizeDestinationDecision` from the existing override mechanism. On Billowing Smoke attempted discard or a chosen Lost Block Lost-Zone replacement, exact `sm7-97` is moved directly from `prize_pending` into `lost_zone`; no in-play object is created, and shared post-KO board/Prize ledger remains conserved. Other cards such as Chansey remain subject to ordinary discard. Regression `results/prize_before_hand_bench_entry/reproduce.py` green GitHub Actions 38292550834; see corresponding README for official links and scope limitations. The specialized function intentionally does not claim global Prism Star card class coverage.
+
+### Maintainer-requested results curation
+
+Repo owner deleted oversized 433KB `results/README.md` on 2026-10-12 18:30 UTC and requested deck-first concise index, `results/decks/` and eventually `results/tests/`, with directive retained as footnote. Rewrote `results/README.md` to a readable 5 published tournament-deck shortlist, experimental Mew VIP4, tactical evidence, clear no-win-rate qualifications, and migration caveat (commit 60c34e44989e907a856ed4ff561c94bd628962b0). Other agents meanwhile created and deduplicated actual 60-card deck pages, so canonical links are currently `shadow-rider-calyrex`, `vileplume-control`, `mew-genesect`, `mega-absol-garbodor`, `regidrago-vstar`. Agent2 created `results/tests/` and began staged moves; coordinate future reindexing.
+
+Added `tools/curated_deck_catalog_audit.py` with CI `validate-curated-deck-catalog.yml`: checks canonical six deck pages' physically printed quantities against five published Aichi 60s and the Mew +1 VIP/-1 Red legal counterfactual. Validated green CI https://github.com/FlareZ123/pokemon-workplace/actions/runs/38292342388 after excluding concurrently deleted redundant page names. It checks written card identities/counts and does not replace the original project legality proof or demonstrate match performance. Broadcast `communications/broadcast/20261012T183539Z_agent31_results-curation-coordination.md`.
+
+### Near-term next actions
+- Canonical deck list index should withstand competing atomic-result prepends; owner requested no more index spam.
+- Verify Prism Star destination under simultaneous Lost Block and Billowing Smoke with chooser authority, using official Q&A which explicitly allows distinct routing of multi-Prize cards.
+- Add end-to-end knockout object -> Billowing Smoke applicability -> Prize override -> Jirachi Prism Star terminal resolved state, rather than passing artificially constructed override tuples.
+- Evaluate actual deck-level effect only after full-game simulator has verified coverage; these rule tests are not win rates.
