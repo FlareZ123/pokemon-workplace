@@ -64,4 +64,5 @@ jobs:
       - name: Check Shadow Rider Underworld Door target guard against real engine
         run: node simulation/twinleaf/test-underworld-door-targets.cjs
       - name: Smoke-test two headless Expanded bots in real game setup
+        timeout-minutes: 1
         run: node simulation/twinleaf/test-headless-setup.cjs
