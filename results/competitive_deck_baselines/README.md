@@ -4,7 +4,7 @@ Goal: supply fully specified human-playable 60-card deck candidates with exact p
 
 ## 2026 Aichi Open League runner-up: Vileplume control
 
-**Status:** tournament-derived reference, not independently optimized or head-to-head tested by the project. Card-name counts reproduce the runner-up list transcription in [the ALS source](../../tools/aichi_vileplume_als.py). These exact English print IDs provide a practical playable realization of the card-name counts; they do not assert the player's original artwork/print choices.
+**Status:** tournament-derived reference, not independently optimized or head-to-head tested by the project. The original [926-player CL Aichi Open League standings and decklist](https://www.limitlesstcg.com/tournaments/566/decklists) identify Takahiro Ando as runner-up on May 10, 2026. Card-name counts reproduce the runner-up list transcription in [the ALS source](../../tools/aichi_vileplume_als.py). These exact English print IDs provide a practical playable realization of the card-name counts; they do not assert the player's original artwork/print choices.
 
 ### Pokémon (26)
 
