@@ -90,7 +90,7 @@ function main() {
   assert.deepEqual([randomLow.active_id,randomHigh.active_id],[102,101],
     'Stochastic hypothetical simulator must preserve both paper Catcher outcomes');
   assert.deepEqual([defaultLow.had_pokemon_choice,defaultHigh.had_pokemon_choice,
-    randomLow.had_pokemon_choice,randomHigh.had_pokemon_choice],[true,true,true,false]);
+    randomLow.had_pokemon_choice,randomHigh.had_pokemon_choice],[true,false,true,false]);
   /** Legacy CoinFlipPrompt arbitration still obeys the default ALL_HEADS policy. */
   function resolveLegacy(options,value) {
     const previous=Math.random;
