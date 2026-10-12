@@ -36,4 +36,4 @@ Map the Aichi championship paper Expanded decklists' exact print IDs to actual i
 - [Full legal deck baselines](../competitive_deck_baselines/)
 - Twinleaf upstream pinned source: https://github.com/twinleafgg/twinleafgg/tree/3348ebdc898f175a2ed8f999133cd13d1afd01f5
 
-**Run status at initial commit:** CI manually queued, run [38242738965](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38242738965). Link reports its actual outcome.
+**Validation:** First CI attempt [38242738965](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38242738965) failed during checkout because upstream contains a nested gitlink without usable `.gitmodules` metadata. The research workflow was corrected to initialize only the pinned top-level Twinleaf submodule. The second manually triggered run [38242858986](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38242858986) **passed**, including server TypeScript CommonJS compilation and the fixed-deck SFT. This is a source/adapter proof, not a completed-match test.
