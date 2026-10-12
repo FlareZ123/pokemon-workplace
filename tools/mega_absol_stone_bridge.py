@@ -33,6 +33,7 @@ CATEGORIES = (
 POLICIES = (
     "named_paid", "stone_held_crobat", "stone_prize_crobat",
     "stone_any", "named_or_stone", "crobat_held", "stone_ready",
+    "item_locked", "ability_locked", "both_locked",
 )
 
 
@@ -89,6 +90,13 @@ def route_flags(
         "named_or_stone": named_paid or held or prize,
         "crobat_held": full["crobat"] > 0,
         "stone_ready": stone_ready,
+        # Item lock alone leaves Pokemon Tools playable under current rules.
+        # It removes Adventure Bag, Heavy Ball and all named Item routes.
+        "item_locked": full["mega"] > 0 or (
+            mega_in_deck and full["crobat"] > 0 and full["stone"] > 0
+        ),
+        "ability_locked": named_paid,
+        "both_locked": full["mega"] > 0,
     }
 
 
