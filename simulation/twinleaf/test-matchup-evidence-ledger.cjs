@@ -85,5 +85,18 @@ const noRevision=makeReport(16,[0,1]);
 delete noRevision.research_revision;
 assert.throws(()=>mergeTournamentReports([noRevision]),
   /Research code revision required/);
+const withFirstTurn=makeReport(17,[0,0]);
+for(let i=0;i<2;i++){
+  withFirstTurn.traces[i].first_actor=2;
+  withFirstTurn.paired_results.games[i].first_actor=2;
+}
+const actualFirst=mergeTournamentReports([withFirstTurn],ids[0]);
+assert.deepEqual(actualFirst.score_bounds.sample_score_bounds.first_seat,{lower:1,upper:1});
+assert.deepEqual(actualFirst.score_bounds.sample_score_bounds.moving_first,{lower:0,upper:0});
+const corruptedFirst=makeReport(18,[0,0]);
+corruptedFirst.traces[0].first_actor=1;
+assert.throws(()=>mergeTournamentReports([corruptedFirst]),
+  /Raw and attributed first-turn actor mismatch/);
+console.log('[matchup-ledger] First-moving player is verified from raw traces and separated from engine seat.');
 console.log('[matchup-ledger] Source trace integrity and explicit research pin are mandatory.');
 console.log('[matchup-ledger] PASS: pooled seed pairs, censoring, comparability, and trace consistency');
