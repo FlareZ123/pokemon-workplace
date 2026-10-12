@@ -63,3 +63,45 @@ def attack_ready_probability(window: EnergyWindow, cost: int) -> Fraction:
         probability for (hand, _, _, attached), probability in states.items()
         if attached + int(window.manual_attachment and hand > 0) >= cost
     ), Fraction())
+
+
+def attack_and_pivot_ready_probability(
+    window: EnergyWindow, cost: int, *, pivots_in_deck: int, pivots_in_hand: int = 0
+) -> Fraction:
+    """Joint chance of attack Energy and a Float Stone-like pivot card.
+
+    The pivot is assumed to be a playable Tool sufficient to retreat the
+    starting Active Pokémon after charging. Locks, occupied Tool slots,
+    promotion restrictions and alternate pivot routes are not modeled.
+    """
+    if cost < 0 or pivots_in_hand < 0 or not 0 <= pivots_in_deck <= window.deck_size - window.deck_energy:
+        raise ValueError("invalid cost or pivot counts")
+    states = {(window.hand_energy, pivots_in_hand, window.deck_energy,
+               pivots_in_deck, window.deck_size, 0): Fraction(1)}
+    for _ in range(window.doors):
+        following = {}
+        for (hand, pivots, e, p, n, attached), mass in states.items():
+            if not hand:
+                key = (hand, pivots, e, p, n, attached)
+                following[key] = following.get(key, Fraction()) + mass
+                continue
+            drawn = min(window.cards_per_draw, n)
+            for de in range(drawn + 1):
+                for dp in range(drawn - de + 1):
+                    other = drawn - de - dp
+                    if de > e or dp > p or other > n - e - p:
+                        continue
+                    chance = Fraction(
+                        comb(e, de) * comb(p, dp) * comb(n - e - p, other),
+                        comb(n, drawn),
+                    )
+                    key = (hand - 1 + de, pivots + dp, e - de, p - dp,
+                           n - drawn, attached + 1)
+                    following[key] = following.get(key, Fraction()) + mass * chance
+        states = following
+    assert sum(states.values(), Fraction()) == 1
+    return sum(
+        (mass for (h, pivot_h, _, _, _, attached), mass in states.items()
+         if attached + int(window.manual_attachment and h > 0) >= cost and pivot_h > 0),
+        Fraction(),
+    )
