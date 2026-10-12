@@ -22,6 +22,27 @@ function run() {
   const valid = matchPaperPrint({ qty: 3, name: 'Shadow Rider Calyrex V', printId: 'swsh6-74' }, paperSets, examples);
   assert.equal(valid.status, 'exact');
   assert.equal(valid.matches[0].fullName, examples[0].fullName);
+  const promoSets = new Map([['xyp', 'XYP'], ['smp', 'SMP']]);
+  const promoCards = [
+    { set: 'XYP', setNumber: '177', name: 'Karen', fullName: 'Karen XYP' },
+    { set: 'SMP', setNumber: '217', name: 'Trevenant & Dusknoir-GX',
+      fullName: 'Trevenant & Dusknoir-GX SMP' }
+  ];
+  assert.equal(matchPaperPrint(
+    { qty: 1, name: 'Karen', printId: 'xyp-XY177' }, promoSets, promoCards
+  ).status, 'exact');
+  assert.equal(matchPaperPrint(
+    { qty: 1, name: 'Trevenant & Dusknoir-GX', printId: 'smp-SM217' },
+    promoSets, promoCards
+  ).status, 'exact');
+  assert.equal(matchPaperPrint(
+    { qty: 1, name: 'Karen', printId: 'xyp-XY178' }, promoSets, promoCards
+  ).status, 'missing_print');
+  assert.equal(matchPaperPrint(
+    { qty: 1, name: 'Karen', printId: 'xyp-XY177' },
+    new Map([['xyp', 'ABC']]), promoCards
+  ).status, 'missing_print');
+
   const wrongName = matchPaperPrint({ qty: 3, name: 'Mewtwo', printId: 'swsh6-74' }, paperSets, examples);
   assert.equal(wrongName.status, 'name_mismatch_review');
   const unknown = matchPaperPrint({ qty: 1, name: 'Unknown', printId: 'foo-74' }, paperSets, examples);
@@ -45,6 +66,12 @@ function run() {
 
   const shadow = decks.shadow_rider;
   const v = shadow.find(entry => entry.printId === 'swsh6-74');
+  const karen = decks.vileplume.find(entry => entry.printId === 'xyp-XY177');
+  const trevenant = shadow.find(entry => entry.printId === 'smp-SM217');
+  assert.equal(karen.status, 'exact');
+  assert.equal(karen.matches[0].fullName, 'Karen XYP');
+  assert.equal(trevenant.status, 'exact');
+  assert.equal(trevenant.matches[0].fullName, 'Trevenant & Dusknoir-GX SMP');
   const vmax = shadow.find(entry => entry.printId === 'swsh6-75');
   assert.equal(v.status, 'exact');
   assert.equal(v.matches[0].fullName, 'Shadow Rider Calyrex V CRE');
