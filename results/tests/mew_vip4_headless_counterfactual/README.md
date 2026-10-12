@@ -30,6 +30,23 @@ More fundamentally, the per-seat `cards_played` and `abilities` counters collect
 
 Thus, the headless mirror demonstrates that the exact physical variant can be loaded and played in a full native engine game. **It does not meaningfully discriminate the advantage of one additional first-turn Battle VIP Pass**, and the 2–2 score should not decide which deck is stronger.
 
+## Explicit VIP-first research intervention
+
+The first-turn research tactic `simulation/twinleaf/vip-first-tactic.cjs` returns a normal upstream `PlayCardAction` for Battle VIP Pass when it is in hand, `state.turn` is 1 or 2, and the Bench has space. It leaves legality, choosing Basic Pokémon, and shuffling to pinned Twinleaf. The module and the immutable research tactic composition have independent SFTs. [Manual run 38295777260](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38295777260) passed these SFTs and replayed both source decks with the `vip_first` policy and the same two seeds as the native run.
+
+| Seed | Seat 1 | Seat 2 | VIP-first outcome | VIP Pass plays by seat 1 / 2 |
+| --- | --- | --- | --- | --- |
+| 20261012 | Published Mew | VIP4 Mew | Published Mew won, turn 14 | 1 / 0 |
+| 20261012 | VIP4 Mew | Published Mew | VIP4 Mew won, turn 14 | 1 / 0 |
+| 20261013 | Published Mew | VIP4 Mew | VIP4 Mew won, turn 43 | 1 / 1 |
+| 20261013 | VIP4 Mew | Published Mew | Wall capped, turn 77 | 1 / 1 |
+
+The policy produced **six real Battle VIP Pass plays** and **three recorded Fusion Strike System uses** across the four games. At the start of the first player action, seed 20261012 had a VIP Pass in the player-1 hand; seed 20261013 had one in both players' first-turn hands. The exact source-mapped decks and engine remained fixed. The native policy had recorded no VIP Pass plays for the same two seeds, supporting a specific conclusion that its Trainer scoring can miss first-turn setup opportunities.
+
+Three alternative-policy games finished with a winner (published Mew one, VIP4 two). The fourth hit its 25-second cap and is **censored**: it is neither a loss nor a win for either deck, even though the reported Prize positions were 3 and 1 at interruption. Censoring and post-selection bias preclude interpreting the decided-only split as an estimated advantage.
+
+The run demonstrates policy access to the targeted effect, and the source opening-probability analysis still provides clearer evidence of how a fourth copy changes naturally available first-turn material. An attack-policy, Bench-choice and mirror-match experiment with stronger strategic play is needed for a credible full-game comparison.
+
 ## Stronger relevant existing evidence
 
 The independent [Mew VIP opening access model](../../mew_genesect_vip_opening/) assesses a narrowly defined first-turn access endpoint with the two source quantities, without asking an unskilled full-game policy to use the cards. That targeted calculation is the more informative evidence at present. Its constraints and omitted opponent disruption still matter; a stronger policy and diverse full-game opponent field are necessary before claiming the variant improves match wins.
