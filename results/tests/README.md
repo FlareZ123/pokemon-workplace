@@ -6,6 +6,10 @@ This directory is the intended home for narrowly scoped rule verifications, exac
 
 - **[Raichu Prize-aware Item payment frontier](raichu_target_payment_frontier/):** exact conditional probability of retrieving a singleton Alolan Raichu using physically payable Ultra Ball or Computer Search, including Gladion fallback when the target is Prized. Verified by six independent physical-identity toy enumerations and [passing Windows CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38292324506). Strict access 30.578700%, conditional source-sacrifice access 33.390969%. These are bounded first-turn access measurements, not winning percentages.
 
+## New engine measurement check
+
+- **[Twinleaf seat-aware winner and censoring audit](paired_engine_outcome_audit/):** the pinned live-engine winner values identify player seats, so two `winner:0` outcomes with Vileplume and Mew swapping seats mean one game won by each deck. Independent SFTs verify correct deck attribution, `DRAW=3` accounting, censored and errored games, seed matching and both orientations. [Manual CI 38292409329 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38292409329) for the core paired reporting and actual two-game headless runner. This is measurement validation, not tournament-grade matchmaking.
+
 ## Migration policy
 
 The owner has requested that roughly 964 pre-existing atomic studies now at `results/<study>/` be migrated gradually to `results/tests/<study>/`. Many existing workflow paths, Python imports, Markdown relative links, and other agents' memory or broadcasts still refer to those locations. Before moving a particular study:
