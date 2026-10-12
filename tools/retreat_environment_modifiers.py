@@ -9,6 +9,8 @@ from board_object_kernel import BoardState
 from retreat_cost_semantics import RetreatCostModifier
 from retreat_attached_energy_free_cost import derive_attached_energy_threshold_no_cost
 from retreat_conditional_self_free_cost import derive_conditional_self_free_cost
+from retreat_typed_energy_no_cost import derive_typed_energy_no_retreat_cost
+from retreat_dynamic_energy_units import RetreatEnergyProviderContext
 
 
 _GALAR_MINE = "swsh2-160"
@@ -23,6 +25,7 @@ def derive_environment_retreat_modifiers(
     *,
     stadium_print_id: str | None = None,
     stadium_effect_enabled: bool = True,
+    provider_context: RetreatEnergyProviderContext | None = None,
 ) -> tuple[RetreatCostModifier, ...]:
     """Return modifiers to the OWN Active Pokemon's Retreat Cost.
 
@@ -44,6 +47,10 @@ def derive_environment_retreat_modifiers(
     )
     if conditional_no_cost is not None:
         modifiers.append(conditional_no_cost)
+
+    modifiers.extend(derive_typed_energy_no_retreat_cost(
+        own_board, context=provider_context,
+    ))
 
     if active.tags & _EVOLUTION_TAGS:
         for source in opponent_board.objects:
