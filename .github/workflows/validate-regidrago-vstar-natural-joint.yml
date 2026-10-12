@@ -1,0 +1,15 @@
+name: Validate Regidrago natural VSTAR and Energy joint
+
+on:
+  workflow_dispatch:
+
+jobs:
+  labeled-oracle:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Verify four-channel physical source oracle
+        run: python -m results.decks.regidrago_dragapult_2.vstar_natural_reproduce
