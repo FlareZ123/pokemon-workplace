@@ -1,0 +1,17 @@
+name: Verify Aichi Quad Thorns international decks
+on:
+  push:
+    paths:
+      - 'tools/iron_thorns_quad_opening.py'
+      - 'results/iron_thorns_international_adaptation/**'
+      - '.github/workflows/validate-iron-thorns-international.yml'
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python results/iron_thorns_international_adaptation/reproduce.py
