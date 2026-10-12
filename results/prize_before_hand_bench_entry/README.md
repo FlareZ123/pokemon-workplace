@@ -96,6 +96,19 @@ The remaining rows are executable consequences of the same KO disposal order, ph
 
 These are deterministic conditional transition tests. They do not estimate the frequency of such multi-Knock-Out states or show that a Jirachi/Chansey inclusion improves match win rates.
 
+## Prize-destination replacement gate: Billowing Smoke
+
+Jirachi Prism Star and Chansey require the face-down Prize to be on the normal path into hand before their optional self-to-Bench effect can run. **Billowing Smoke** (`swsh3-158`) replaces the opponent's hand entry for Prize cards earned by attacking and Knocking Out its holder with a discard. The official Japanese Q&A rules that Wish Upon a Star cannot activate in this situation; the same answer is given for Treasure Energy's before-hand trigger.
+
+Sources:
+
+- Billowing Smoke text: https://pkmncards.com/card/billowing-smoke-darkness-ablaze-daa-158/
+- Official Jirachi/Treasure Energy rulings: https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%82%82%E3%81%8F%E3%82%82%E3%81%8F%E3%82%B9%E3%83%A2%E3%83%BC%E3%82%AF
+
+The specialized executors now accept a `pre_hand_destination` keyword and reject the optional Bench entry when its value is not `hand`. This follows the existing `before_hand_prize_executor` contract and uses the upstream `prize_destination_applicability` / `prize_destination_overrides` layers to determine replacements. The regression checks both Jirachi and Chansey with a Billowing Smoke destination decision, and physically resolves the ordinary Chansey case into discard without inventing a Bench object.
+
+The Jirachi case validates trigger ineligibility only. Its Prism Star Lost-Zone replacement after a forced discard is outside the present specialized executor's scope; callers must not treat an ordinary `discard` material transition as correct for that Prism Star card. The default argument remains `hand` for existing hand-bound callers, so any integration that evaluates a replaced Prize destination must explicitly pass that decision to the specialized executor.
+
 ## Limits
 
 The current executable island does not yet cover:
