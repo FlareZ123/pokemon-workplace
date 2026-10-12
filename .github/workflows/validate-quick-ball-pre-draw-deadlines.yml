@@ -1,0 +1,20 @@
+name: Validate Quick Ball deadlines
+
+on:
+  push:
+    paths:
+      - 'tools/quick_ball_pre_draw_deadlines.py'
+      - 'results/quick_ball_pre_draw_deadlines/**'
+      - '.github/workflows/validate-quick-ball-pre-draw-deadlines.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python results/quick_ball_pre_draw_deadlines/reproduce.py
+      - run: python results/quick_ball_pre_draw_option/reproduce.py
