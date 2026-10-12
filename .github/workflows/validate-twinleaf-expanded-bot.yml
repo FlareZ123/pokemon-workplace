@@ -13,6 +13,7 @@ on:
           - shadow_rider
           - regidrago
           - mew_genesect
+          - absol_garbodor
       deck_b:
         description: Tournament deck in player seat B
         type: choice
@@ -23,6 +24,7 @@ on:
           - shadow_rider
           - regidrago
           - mew_genesect
+          - absol_garbodor
       seeds:
         description: One to three unique unsigned 32-bit seeds, separated by commas
         type: string
