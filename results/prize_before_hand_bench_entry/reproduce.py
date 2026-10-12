@@ -19,6 +19,11 @@ from prize_before_hand_bench_entry import (
     use_wish_upon_a_star,
 )
 from prize_pending_take import resolve_next_pending_prize, stage_prize_takes
+from prize_destination_overrides import (
+    PrizeDestinationOverride,
+    decide_prize_destination,
+    resolve_pending_prize_with_overrides,
+)
 from promotion_pending_conservation import dispose_pending_before_promotion
 from simultaneous_knockout_conservation import prepare_knock_out_batch
 from stack_knockout_conservation import StackBoardMaterialState
@@ -221,6 +226,68 @@ def validate_jirachi_knockout_slot_geometry() -> None:
         assert_conserved(initial, final_board.ledger)
 
 
+
+def validate_billowing_smoke_destination_gate() -> None:
+    """Prize-to-discard replacements block a self-to-Bench E-31 trigger.
+
+    The KO-trigger applicability of Billowing Smoke is resolved by the
+    existing prize_destination_applicability layer. This test begins with
+    that layer's authoritative Prize-destination decision.
+    """
+    overrides = (PrizeDestinationOverride("Billowing Smoke:holder", "discard"),)
+    decision = decide_prize_destination(overrides)
+    assert decision.destination_zone == "discard"
+
+    for name, card_class in (
+        ("jirachi", "sm7-97"),
+        ("chansey", "sv3pt5-113"),
+    ):
+        prefix = f"billowing-{name}"
+        card_name = "Jirachi ◇" if name == "jirachi" else "Chansey"
+        initial, board, physical = build_state(
+            prefix=prefix,
+            bench_count=0,
+            prize_classes=((card_class, card_name),),
+        )
+        post_ko = after_active_ko(board)
+        staged = stage_prize_takes(sync_physical(physical, post_ko), positions=(0,))
+        post_ko = post_ko.with_ledger(staged.physical.ledger)
+        assert post_ko.open_bench_slots == 5
+
+        if name == "jirachi":
+            triggered = use_wish_upon_a_star(
+                staged,
+                post_ko,
+                pokemon_id=f"{prefix}-jirachi",
+                during_your_turn=True,
+                pre_hand_destination=decision.destination_zone,
+            )
+        else:
+            triggered = use_lucky_bonus(
+                staged,
+                post_ko,
+                pokemon_id=f"{prefix}-chansey",
+                coin_heads=True,
+                during_your_turn=True,
+                pre_hand_destination=decision.destination_zone,
+            )
+        assert triggered is None
+        assert staged.pending[0].instance_id == f"{prefix}-prize-0"
+        assert_conserved(initial, post_ko.ledger)
+
+        if name == "chansey":
+            # Chansey is not a Prism Star: the Smoke replacement can
+            # physically finish as an ordinary discard.
+            resolved = resolve_pending_prize_with_overrides(staged, overrides)
+            assert resolved.resolution is not None
+            assert resolved.resolution.after.pending == ()
+            final_ledger = resolved.resolution.after.physical.ledger
+            assert final_ledger.instance(f"{prefix}-prize-0").zone == "discard"
+            assert_conserved(initial, final_ledger)
+        # Jirachi's Prism Star Lost-Zone replacement requires its own
+        # separate transition; this test checks the no-trigger gate only.
+
+
 def main() -> None:
     initial_c, board_c, physical_c = build_state(
         prefix="c",
@@ -328,6 +395,7 @@ def main() -> None:
     assert_conserved(initial_j, chained_lucky.after_board.ledger)
 
     validate_jirachi_knockout_slot_geometry()
+    validate_billowing_smoke_destination_gate()
     print("before-hand Prize Bench-entry regressions passed")
 
 
