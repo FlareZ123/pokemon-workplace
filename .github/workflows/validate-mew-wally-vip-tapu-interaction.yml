@@ -1,0 +1,23 @@
+name: Validate exact Mew VIP and Tapu Wally interaction
+
+on:
+  push:
+    paths:
+      - "results/tests/mew_wally_vip_tapu_interaction/**"
+      - ".github/workflows/validate-mew-wally-vip-tapu-interaction.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  interaction-and-print-proof:
+    runs-on: windows-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Validate all four physical decks, toy oracles and VIP/Lele synergy
+        run: python results/tests/mew_wally_vip_tapu_interaction/reproduce.py
