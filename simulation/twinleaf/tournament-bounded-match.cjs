@@ -7,6 +7,7 @@ const {loadTournamentDecks}=require('./tournament-deck-loader.cjs');
 const {makeSeatPairs,deckDigest}=require('./paired-seat-plan.cjs');
 const {summarizePairedTraces}=require('./paired-result-summary.cjs');
 const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
+const {makeMatchActionTelemetry}=require('./match-action-telemetry.cjs');
 const {loadImplementedCards}=require('./print-coverage.cjs');
 const {CardManager}=engine('game/cards/card-manager');
 const {Store}=engine('game/store/store');
@@ -39,6 +40,7 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
   Math.random=ledger.random;
   const trackRandom=ledger.track;
   const started=Date.now();
+  const telemetry=makeMatchActionTelemetry();
   try {
     const store=new Store({onStateChange:()=>{}});
     store.state.gameSettings.format=Format.EXPANDED;
@@ -68,8 +70,15 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
       }
       catch(e){status='policy_error';error=String(e);break;}
       if(!move){status='no_action';break;}
-      try {trackRandom('dispatch',()=>store.dispatch(move));}
-      catch(e){status='dispatch_error';error='step '+actions+' '+move.constructor.name+': '+String(e);break;}
+      try {
+        const before=telemetry.capture(move,store.state);
+        trackRandom('dispatch',()=>store.dispatch(move));
+        telemetry.observe(move,before,store.state,actions);
+      } catch(e) {
+        status='dispatch_error';
+        error='step '+actions+' '+move.constructor.name+': '+String(e);
+        break;
+      }
       if(move.type==='ATTACK_ACTION')attacks++;
       actions++;
     }
@@ -81,7 +90,7 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
       game_random_calls:rng.gameCalls,policy_random_calls:rng.policyCalls,
       random_sources:rng.bySource,turn:state.turn,phase:GamePhase[state.phase],
       winner:state.winner,prizes:state.players.map(p=>p.getPrizeLeft()),
-      elapsed_ms:Date.now()-started,error};
+      elapsed_ms:Date.now()-started,error,telemetry:telemetry.snapshot()};
   } finally {Math.random=prior;}
 }
 function main() {
