@@ -26,3 +26,5 @@ jobs:
           python-version: "3.13"
       - name: Verify rational frontier, physical oracle, and print legality
         run: python -m results.mew_genesect_vip_opening.reproduce
+      - name: Verify paid Quick Ball and Ultra Ball frontier with labeled oracle
+        run: python -m results.mew_genesect_vip_opening.paid_ball_frontier
