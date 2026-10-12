@@ -17,6 +17,8 @@ SCENARIOS = {
     "Supporter locked, behind": Turn2(supporter=False, behind=True),
     "Supporter locked, tied": Turn2(supporter=False),
     "Item locked, tied": Turn2(item=False),
+    "Legacy Star ready, Item locked, behind": Turn2(item=False, behind=True, legacy_ready=True),
+    "Legacy Star ready, Supporter locked, behind": Turn2(supporter=False, behind=True, legacy_ready=True),
 }
 
 
@@ -46,7 +48,8 @@ def physical_oracle(basics: int, guzma: int, seekers: int, prime: int,
                 hand1.append(cards[draw2])
                 source = (
                     (turn2.supporter and
-                     ("G" in hand1 or (turn2.item and "S" in hand1))) or
+                     (turn2.legacy_ready or "G" in hand1 or
+                      (turn2.item and "S" in hand1))) or
                     (turn2.item and
                      ("P" in hand1 or (turn2.behind and "C" in hand1)))
                 )
@@ -64,20 +67,28 @@ def verify() -> None:
     assert seeker["name"] == "VS Seeker"
     assert "Item" in seeker["subtypes"]
     assert "Supporter card from your discard pile" in seeker["rules"][0]
+    drago_raw = json.loads((root / "resources" / "cards" / "en" / "swsh12.json")
+                           .read_text(encoding="utf-8"))
+    regidrago = next(c for c in drago_raw if c["id"] == "swsh12-136")
+    assert any(a["name"] == "Legacy Star" and
+               "up to 2 cards from your discard pile" in a["text"]
+               for a in regidrago["abilities"])
 
     for guzma, seeker_count, prime, counter in (
         (2, 2, 1, 0), (1, 2, 1, 1), (2, 1, 0, 1), (1, 1, 1, 0)
     ):
         for condition in (
             Turn2(), Turn2(behind=True), Turn2(item=False, behind=True),
-            Turn2(supporter=False, behind=True)
+            Turn2(supporter=False, behind=True),
+            Turn2(item=False, behind=True, legacy_ready=True),
+            Turn2(supporter=False, behind=True, legacy_ready=True)
         ):
             exact = chain(2, guzma, seeker_count, prime, counter,
                           condition, total=9, hand_size=3, prize_count=2)
             oracle = physical_oracle(2, guzma, seeker_count, prime,
                                      counter, condition)
             assert exact == oracle, (guzma, seeker_count, condition, exact, oracle)
-    print("PASS: 16 independent labeled toy hands + Prizes + two ordered draws")
+    print("PASS: 24 independent labeled toy hands + Prizes + two ordered draws")
     first_orig = first_swap = None
     for label, condition in SCENARIOS.items():
         original = chain(15, 2, 3, 1, 0, condition)
@@ -95,6 +106,11 @@ def verify() -> None:
             f"delta unconditional={float((variant[1]-original[1])*100):+.6f} pp"
         )
     assert original[0] > variant[0]
+    for condition in (Turn2(legacy_ready=True),
+                      Turn2(item=False, behind=True, legacy_ready=True)):
+        old = chain(15, 2, 3, 1, 0, condition)
+        swapped = chain(15, 1, 3, 1, 1, condition)
+        assert old[1] == old[0] and swapped[1] == swapped[0]
     print("PASS: exact 60-card tandem gust probabilities and card-source proof")
 
 
