@@ -15,3 +15,5 @@ jobs:
         run: python -m results.competitive_deck_baselines.absol_garbodor_reproduce
       - name: Validate exact opening and prize-swap frontier
         run: python -m results.absol_garbodor_mega_count_frontier.reproduce
+      - name: Validate physical named-Item search frontier
+        run: python -m results.absol_garbodor_named_item_frontier.reproduce
