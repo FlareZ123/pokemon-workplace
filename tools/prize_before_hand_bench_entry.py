@@ -49,9 +49,10 @@ def _put_next_pending_basic_on_bench(
     retreat_cost: int,
     take_extra_prize: bool,
     during_your_turn: bool,
+    pre_hand_destination: str = "hand",
     extra_prize_position: int = 0,
 ) -> PrizeBenchEntryTransition | None:
-    if not during_your_turn:
+    if not during_your_turn or pre_hand_destination != "hand":
         return None
     if prizes.physical.ledger != board.ledger:
         raise ValueError("Prize and board states must share the same physical ledger")
@@ -110,6 +111,7 @@ def use_lucky_bonus(
     pokemon_id: str,
     coin_heads: bool,
     during_your_turn: bool,
+    pre_hand_destination: str = "hand",
     extra_prize_position: int = 0,
 ) -> PrizeBenchEntryTransition | None:
     """Use Chansey's Lucky Bonus on the next face-down pending Prize."""
@@ -123,6 +125,7 @@ def use_lucky_bonus(
         retreat_cost=2,
         take_extra_prize=coin_heads,
         during_your_turn=during_your_turn,
+        pre_hand_destination=pre_hand_destination,
         extra_prize_position=extra_prize_position,
     )
 
@@ -133,6 +136,7 @@ def use_wish_upon_a_star(
     *,
     pokemon_id: str,
     during_your_turn: bool,
+    pre_hand_destination: str = "hand",
     extra_prize_position: int = 0,
 ) -> PrizeBenchEntryTransition | None:
     """Use Jirachi Prism Star's Wish Upon a Star on the next pending Prize."""
@@ -146,5 +150,6 @@ def use_wish_upon_a_star(
         retreat_cost=1,
         take_extra_prize=True,
         during_your_turn=during_your_turn,
+        pre_hand_destination=pre_hand_destination,
         extra_prize_position=extra_prize_position,
     )
