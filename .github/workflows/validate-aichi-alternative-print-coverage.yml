@@ -1,0 +1,62 @@
+name: Audit additional Aichi Expanded English deck prints
+
+on:
+  push:
+    paths:
+      - 'simulation/twinleaf/alternate-deck-print-audit.cjs'
+      - 'simulation/twinleaf/test-alternate-deck-print-audit.cjs'
+      - '.github/workflows/validate-aichi-alternative-print-coverage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aichi-alternative-print-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - name: Initialize pinned Twinleaf first-level Gitlink
+        run: git submodule update --init --depth=1 vendor/twinleafgg
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: vendor/twinleafgg/.nvmrc
+          cache: npm
+          cache-dependency-path: vendor/twinleafgg/ptcg-server/package-lock.json
+      - name: Install immutable server dependencies
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - uses: actions/cache/restore@v4
+        id: cjs
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
+      - name: Compile engine when no prior identical build is cached
+        if: steps.cjs.outputs.cache-hit != 'true'
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: ./node_modules/.bin/tsc --project tsconfig.json
+      - uses: actions/cache/save@v4
+        if: steps.cjs.outputs.cache-hit != 'true'
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
+      - name: Inspect Iron Thorns, Snorlax Stall and Raichu/Electrode 60-card print support
+        run: node simulation/twinleaf/test-alternate-deck-print-audit.cjs
+      - name: Save exact per-print blockers for follow-on adapters
+        run: node simulation/twinleaf/alternate-deck-print-audit.cjs
+        env:
+          TWINLEAF_ALTERNATE_COVERAGE_PATH: aichi-alternative-print-coverage.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aichi-alternative-paper-print-coverage
+          path: aichi-alternative-print-coverage.json
+          if-no-files-found: warn
+          retention-days: 14
