@@ -4,6 +4,7 @@ const path=require('node:path');
 const base=path.resolve(__dirname,'../../vendor/twinleafgg/ptcg-server/output');
 const engine=p=>require(path.join(base,p));
 const {loadTournamentDecks}=require('./tournament-deck-loader.cjs');
+const {makeSeatPairs,deckDigest}=require('./paired-seat-plan.cjs');
 const {loadImplementedCards}=require('./print-coverage.cjs');
 const {CardManager}=engine('game/cards/card-manager');
 const {Store}=engine('game/store/store');
