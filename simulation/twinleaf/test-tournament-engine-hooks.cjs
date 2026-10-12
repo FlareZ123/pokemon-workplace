@@ -9,13 +9,17 @@ const base=path.resolve(__dirname,'../../vendor/twinleafgg/ptcg-server/output');
 const load=name=>require(path.join(base,name));
 const {CardManager}=load('game/cards/card-manager');
 const {RegidragoV}=load('sets/09-sword-and-shield/set-silver-tempest/regidrago-v');
+const {Stoutland}=load('sets/06-black-and-white/set-boundaries-crossed/stoutland');
 const {GrassEnergy,FireEnergy}=load('sets/06-black-and-white/set-black-and-white/basic-energies');
 const {ShadowRiderCalyrexVMAX}=load('sets/09-sword-and-shield/set-chilling-reign/shadow-rider-calyrex-vmax');
 const {runOne,ensureResearchEngineHooks}=require('./tournament-bounded-match.cjs');
 const hookKey=Symbol.for('pokemon-research.shadow-rider-underworld-door-guard');
 const celestialKey=Symbol.for('pokemon-research.regidrago-celestial-roar-energy-guard');
-const hookLabels=['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1'];
+const stoutlandKey=Symbol.for('pokemon-research.stoutland-wild-tackle-self-damage');
+const hookLabels=['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1',
+  'stoutland_wild_tackle_self20_v1'];
 function run() {
+  assert.equal(Stoutland.prototype[stoutlandKey],undefined);
   assert.equal(RegidragoV.prototype[celestialKey],undefined);
   assert.equal(ShadowRiderCalyrexVMAX.prototype[hookKey],undefined,
     'No hook should have been installed just by loading the runner');
@@ -29,6 +33,8 @@ function run() {
   assert.equal(deck.length,60);
   const trace=runOne(deck,deck,20261012,2,5000);
   assert.deepEqual(trace.engine_hooks,hookLabels);
+  assert.equal(Stoutland.prototype[stoutlandKey],true,
+    'Live match path failed to install the Stoutland self-damage guard');
   assert.equal(RegidragoV.prototype[celestialKey],true,
     'Live match path failed to install the Celestial Roar guard');
   assert.equal(ShadowRiderCalyrexVMAX.prototype[hookKey],true,
