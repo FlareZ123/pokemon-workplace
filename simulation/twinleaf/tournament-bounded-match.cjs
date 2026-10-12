@@ -36,7 +36,10 @@ function registerLists(lists) {
  * @param {number} maxActions @param {number} wallMilliseconds
  */
 function runOne(deckA,deckB,seed,maxActions=1000,wallMilliseconds=12000) {
-  const prior=Math.random;Math.random=seededRandom(seed);
+  const prior=Math.random;
+  const random=seededRandom(seed);
+  let randomCalls=0;
+  Math.random=()=>{randomCalls++;return random();};
   const started=Date.now();
   try {
     const store=new Store({onStateChange:()=>{}});
