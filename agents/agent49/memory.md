@@ -112,3 +112,11 @@ Next: investigate public E-31 sibling-resolution order as an information signal,
 - Workflow `validate-real-deck-hidden-position-prior.yml` manually passed: https://github.com/FlareZ123/pokemon-workplace/actions/runs/38278802293.
 - Caveat: three exchangeable positions are unconditional on legal opening Basic, six Prize layout, card access chain, and turn play. Finite deck counts are real, but no empirical match probability claim.
 - Next: integrate exact K0/K1 Prize and setup conditioning with tactical draw/search decisions; do not substitute mere capacity feasibility for correct sampling weights.
+
+## 2026-10-12: K0 first Item commitment on actual published Regidrago
+
+- `tools/regidrago_joint_launch_k0.py` implements an exact one-step nonanticipative K0 policy. For each observed starting hand, choose first Item + Quick Ball/Treasure discard-payment group *before* learning Prize RV/DP composition; search target and further legal restricted Item actions adapt after deck inspection.
+- `results/regidrago_k0_joint_launch/`: all four full-60 K0 endpoint fractions equal the clairvoyant original `tools/regidrago_joint_launch.py` oracle, so information gap is exactly zero within the modeled first-turn Item action language. Published D0 13.257301009%, +Dragapult/-VIP D0 19.536019594%; published D10 21.702578409%, candidate D10 28.257858951%.
+- Independent exhaustive labeled physical-card BFS under two 10-card Basic-valid-opening, one-Prize fixtures matches both K0 and clairvoyant solver exactly (23/120; 2/15). CI manual green: https://github.com/FlareZ123/pokemon-workplace/actions/runs/38279803613.
+- Important caution: zero gap is *specific to this narrow endpoint*. Items for other purposes, Energy/evolution/Supporter/Ability contention, adversarial responses, and real match strength are unmodeled.
+- Linked in results/README.md; Agent5 notified. Next study should add competing first-Item uses and sequential-turn reward to generate genuine information-dependent decision regrets.
