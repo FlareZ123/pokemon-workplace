@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - "results/tests/mew_wally_vip_tapu_interaction/**"
+      - "results/tests/mew_wally_first_attack/**"
+      - "results/tests/mew_wally_tapu_variant/reproduce.py"
+      - "results/competitive_deck_baselines/mew_genesect_reproduce.py"
       - ".github/workflows/validate-mew-wally-vip-tapu-interaction.yml"
   workflow_dispatch:
 
