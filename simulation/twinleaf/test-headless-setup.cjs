@@ -73,6 +73,9 @@ async function main() {
   } finally {
     a.onGameLeave(game, a);
     b.onGameLeave(game, b);
+    // Pinned Game.cleanup() omits stopPeriodicSync(); avoid an orphaned
+    // 15-second timer keeping the Node headless test process alive forever.
+    game.stopPeriodicSync();
     game.cleanup();
     config.bots.actionDelay = originalDelay;
   }
