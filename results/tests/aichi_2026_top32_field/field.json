@@ -1,0 +1,87 @@
+{
+  "snapshot": "CL Aichi Open League, 2026-05-10: top-32 most-successful archetypes",
+  "source": "https://limitlesstcg.com/tournaments/566/statistics",
+  "registered_players": 926,
+  "successful_list_total": 32,
+  "interpretation": "Distribution among published top-32 finishes, a selection-biased result sample; NOT 926-player entrant shares nor population weights, and source deck-name group counts are NOT match-win performance.",
+  "groups": [
+    {
+      "archetype": "Regidrago",
+      "count": 11,
+      "proxy_dir": "regidrago-vstar",
+      "proxy_scope": "published_10th_place_proxy"
+    },
+    {
+      "archetype": "Mega Absol Box",
+      "count": 5,
+      "proxy_dir": "mega-absol-garbodor",
+      "proxy_scope": "published_8th_place_proxy"
+    },
+    {
+      "archetype": "Raichu Electrode Combo",
+      "count": 3,
+      "proxy_dir": "raichu-electrode-aichi-2026",
+      "proxy_scope": "published_4th_place_proxy"
+    },
+    {
+      "archetype": "Iron Thorns",
+      "count": 3,
+      "proxy_dir": "iron_thorns_aichi_english",
+      "proxy_scope": "english_adaptation_of_japanese_6th_place"
+    },
+    {
+      "archetype": "Snorlax Stall",
+      "count": 2,
+      "proxy_dir": null,
+      "proxy_scope": "no_verified_english_print_proxy"
+    },
+    {
+      "archetype": "Shadow Rider Calyrex",
+      "count": 1,
+      "proxy_dir": "shadow-rider-calyrex",
+      "proxy_scope": "published_champion"
+    },
+    {
+      "archetype": "Vileplume Control",
+      "count": 1,
+      "proxy_dir": "vileplume-control",
+      "proxy_scope": "published_runner_up"
+    },
+    {
+      "archetype": "Mew Genesect",
+      "count": 1,
+      "proxy_dir": "mew-genesect",
+      "proxy_scope": "published_5th_place_proxy"
+    },
+    {
+      "archetype": "Mega Lopunny",
+      "count": 1,
+      "proxy_dir": null,
+      "proxy_scope": "no_verified_english_print_proxy"
+    },
+    {
+      "archetype": "Raging Bolt",
+      "count": 1,
+      "proxy_dir": null,
+      "proxy_scope": "no_verified_english_print_proxy"
+    },
+    {
+      "archetype": "Lillie's Clefairy",
+      "count": 1,
+      "proxy_dir": null,
+      "proxy_scope": "no_verified_english_print_proxy"
+    },
+    {
+      "archetype": "Meloetta Donk",
+      "count": 1,
+      "proxy_dir": null,
+      "proxy_scope": "no_verified_english_print_proxy"
+    },
+    {
+      "archetype": "Dusknoir Chimecho",
+      "count": 1,
+      "proxy_dir": null,
+      "proxy_scope": "no_verified_english_print_proxy"
+    }
+  ]
+}
