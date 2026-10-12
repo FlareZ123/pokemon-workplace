@@ -1,44 +1,41 @@
-# Aichi 2026 Regidrago: Grass versus Fire expenditure before Trifrost
+# Aichi 2026 Regidrago: conditioned Grass/Fire stock, with causal caveat
 
-**Evidence class:** exact source-backed, conditional finite-deck combinatorics with an independent small-deck physical-card oracle. No win rates, turn-access rates, or actual opponent frequencies are estimated.
+**Evidence:** Exact conditional combinatorics over a published 60-card deck, with a 2,424-case independent physical-card oracle. The two columns compare **different information states**. They cannot be interpreted as two actions available in one identical hand.
 
-## Printed-list question
+## Source state and printed action
 
-The published tenth-place CL2026 Aichi Regidrago list by Haruku Yoshioka has **four Grass Energy, two Fire Energy, four Double Dragon Energy, one Crispin, and one Kyurem**. Regidrago VSTAR (`swsh12-136`) uses the Grass/Grass/Fire Apex Dragon attack. On this Dragon, one Double Dragon Energy (`xy6-97`) and a Basic of *either* Grass or Fire provides the three typed units necessary to attack. Kyurem's (`sv6pt5-47`) copied Trifrost discards all Energy from the acting Regidrago.
+The published tenth-place Aichi Regidrago deck contains four Double Dragon Energy, four Basic Grass, two Basic Fire, one Kyurem, and one Crispin. Regidrago VSTAR's Apex Dragon costs Grass/Grass/Fire; DDE and either one Basic Grass or Fire meets the cost. Copied Kyurem's Trifrost discards all attached Energy. Crispin searches up to two differently typed Basic Energy cards from deck and can attach one of them if two are found.
 
-Crispin (`sv7-133`) searches **up to two Basic Energy cards of different types** and can attach one to a Pokémon while putting the other into hand. This study asks: after discarding DDE and **either** one Grass or one Fire with Trifrost, how often can the deck still provide **both** Basic types for that full two-card Crispin search? This is a necessary stock condition for this specific two-type route, not proof the Supporter can or will be played.
+**The calculation's conditions differ:** in one scenario, one DDE and one Grass have become known outside the unknown pool, leaving 3 Grass/2 Fire among 58 cards; in another, one DDE and one Fire have become known outside, leaving 4 Grass/1 Fire among 58. Six Prize cards and an optional specified number of other cards outside the searchable deck are uniformly sampled from those remaining 58. The player is *not* assumed to be holding both Grass and Fire and choosing between them.
 
-## Defined probability model
+## Exact conditional probability of both types remaining in deck
 
-Condition on the player having acquired and attached one DDE and one Basic Grass **or** Fire, which are subsequently discarded through Trifrost and are therefore outside the remaining unknown card pool. The other **58 physical cards** are initially unlocated. Place six Prize cards and an optional specified number of additional non-deck cards uniformly without replacement from those 58. The rest is treated as searchable deck.
-
-After a Grass attachment, **3 Grass and 2 Fire** remain among the unknown 58. After a Fire attachment, **4 Grass and 1 Fire** remain. For total number `m` of unknown cards outside the searchable deck, and unknown type counts `g,f`, exact inclusion-exclusion gives:
-
-`P(both types remain) = 1 - C(58-g,m-g)/C(58,m) - C(58-f,m-f)/C(58,m) + C(58-g-f,m-g-f)/C(58,m)`.
-
-An impossible binomial choice has value zero.
-
-| Additional uniformly placed non-deck cards | Place Grass first | Place Fire first | Grass advantage |
+| Additional unknown cards outside deck, beyond six Prizes | Known Grass outside | Known Fire outside | Composition-conditioned gap |
 | ---: | ---: | ---: | ---: |
-| 0 (only six Prizes) | 99.0279% | 89.6518% | +9.3761 pp |
-| 3 | 97.5527% | 84.4558% | +13.0968 pp |
-| 7 | 94.3825% | 77.4458% | +16.9367 pp |
-| 10 | 91.0209% | 72.0801% | +18.9408 pp |
-| 15 | 83.4296% | 62.8265% | +20.6030 pp |
+| 0 | 99.0279% | 89.6518% | 9.3761 pp |
+| 3 | 97.5527% | 84.4558% | 13.0968 pp |
+| 7 | 94.3825% | 77.4458% | 16.9367 pp |
+| 10 | 91.0209% | 72.0801% | 18.9408 pp |
+| 15 | 83.4296% | 62.8265% | 20.6030 pp |
 
-The first row's exact probabilities are `13039/13167` (Grass) and `342329/381843` (Fire). The 13-card-outside case is `10921/11571` and `35845/46284`. For all 59 outside counts from 0 through 58, Grass-first weakly preserves two-type deck supply; it is strictly better at **56 of 59** counts, tied when `m=0,57,58`.
+Exact Prizes-only probabilities are `13039/13167` and `342329/381843`. With 13 unknown cards outside deck, the exact values are `10921/11571` and `35845/46284`. The first conditional population has at least as much dual-type supply as the second for all 59 possible unknown exclusion counts, with 56 strictly different.
 
-**These artificial cases are not actual gameplay rates.** The event of establishing DDE and a chosen Basic has not been given a probability. The model does not sample a real hand, real search decisions, prior Prize knowledge, turn sequencing, or observed zone states. It conditions on a uniform allocation of the remaining physically distinct cards, which actual play can select nonuniformly.
+For `N=58`, `g` unknown Grass, `f` unknown Fire, and `m` random outside cards, the calculation is exact inclusion-exclusion:
 
-## Tactical significance and limits
+`P(both types in deck) = 1 - C(N-g,m-g)/C(N,m) - C(N-f,m-f)/C(N,m) + C(N-g-f,m-g-f)/C(N,m)`,
 
-The result gives a specific resource-conservation reason to prefer Grass over Fire when an otherwise interchangeable Basic Energy is used to pay Apex Dragon before a planned Trifrost. With only two Basic Fire Energy in the whole Aichi deck, discarding a Fire earlier can leave the later full Crispin search without its second type. In practice, preserving Fire may have other costs. Crispin **can still search one Basic Energy when only one type remains**, and alternative recovery/acceleration routes exist. The model explicitly prices none of these tradeoffs and does not suggest any 60-card slot changes.
+with impossible binomial choices interpreted as zero.
+
+## Matched causal comparison changes the interpretation
+
+**When both Basic Grass and Basic Fire are already available in the same player's hand, both are already absent from the deck.** Attaching Grass or Fire and later discarding it with Trifrost leaves the deck and Prize identities unchanged. Thus the impact of that hand-matched choice on Crispin's *immediate two-type deck stock* is **exactly zero**. The player's remaining hand and discard pile do differ. Subsequent Super Rod, retrieval, manual attachments and other plays can therefore give the choices different continuation values.
+
+The [paired causal test](../aichi_regidrago_crispin_paired_causal/) explicitly checks this invariant and finds the same **84.716276%** dual-type deck-stock probability for either choice, conditional on a naturally observed first-eight hand containing Regidrago V, DDE, Grass and Fire. This corrects an earlier claim that choosing Grass in a shared hand increased deck stock by the composition-conditioned gap above.
+
+These tables describe distinct state-conditioned risks, which can matter when only one Basic type was originally available. They are **not action-selection advantages**, observed in-game state frequencies, or match win-rate changes. They neither price the discarded resource nor include other possible Crispin routes.
 
 ## Reproduction
 
-- [Source-verified calculator](../../../tools/aichi_regidrago_crispin_energy_supply.py) uses the complete published English-print Aichi manifest at `results/regidrago_aichi_top10_playable/yoshioka_regidrago_2026.json`.
-- [Reproducer](reproduce.py) checks card texts and exact 60-count, validates all source figures, and independently enumerates **2,424** miniature physical-card deck/outside configurations against the formula.
-- Command from repository root: `python -m results.tests.aichi_regidrago_crispin_post_trifrost.reproduce`.
-- Tournament list: https://limitlesstcg.com/decks/list/26816 .
+Run `python -m results.tests.aichi_regidrago_crispin_post_trifrost.reproduce` from the repository root. It uses `tools/aichi_regidrago_crispin_energy_supply.py`, the source list at `results/regidrago_aichi_top10_playable/yoshioka_regidrago_2026.json`, and the exact printed card texts. An independent physical-card subset enumerator validates 2,424 miniature configurations. Windows CI exercises this and the paired comparison.
 
-This is one narrowly conditioned decision feature for a realistic deck policy. Measuring how often the relevant game state occurs, whether Crispin can be accessed, and whether Grass conservation beats its competing uses requires a fuller sequential model.
+Tournament source: https://limitlesstcg.com/decks/list/26816 .
