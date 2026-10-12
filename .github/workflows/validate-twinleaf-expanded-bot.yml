@@ -11,11 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout pinned Twinleaf submodule
+      - name: Checkout research repository
         uses: actions/checkout@v4
         with:
-          submodules: true
+          submodules: false
           persist-credentials: false
+      - name: Initialize only pinned Twinleaf gitlink
+        run: git submodule update --init --depth=1 vendor/twinleafgg
       - name: Set up pinned Node.js runtime
         uses: actions/setup-node@v4
         with:
