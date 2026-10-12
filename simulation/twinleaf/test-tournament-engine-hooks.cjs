@@ -13,7 +13,10 @@ const {GrassEnergy,FireEnergy}=load('sets/06-black-and-white/set-black-and-white
 const {ShadowRiderCalyrexVMAX}=load('sets/09-sword-and-shield/set-chilling-reign/shadow-rider-calyrex-vmax');
 const {runOne,ensureResearchEngineHooks}=require('./tournament-bounded-match.cjs');
 const hookKey=Symbol.for('pokemon-research.shadow-rider-underworld-door-guard');
+const celestialKey=Symbol.for('pokemon-research.regidrago-celestial-roar-energy-guard');
+const hookLabels=['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1'];
 function run() {
+  assert.equal(RegidragoV.prototype[celestialKey],undefined);
   assert.equal(ShadowRiderCalyrexVMAX.prototype[hookKey],undefined,
     'No hook should have been installed just by loading the runner');
   const manager=CardManager.getInstance();
@@ -25,7 +28,9 @@ function run() {
     ...Array(28).fill('Fire Energy BLW')];
   assert.equal(deck.length,60);
   const trace=runOne(deck,deck,20261012,2,5000);
-  assert.deepEqual(trace.engine_hooks,['shadow_rider_underworld_door_guard_v1']);
+  assert.deepEqual(trace.engine_hooks,hookLabels);
+  assert.equal(RegidragoV.prototype[celestialKey],true,
+    'Live match path failed to install the Celestial Roar guard');
   assert.equal(ShadowRiderCalyrexVMAX.prototype[hookKey],true,
     'Live match path failed to install the Underworld Door guard');
   assert.deepEqual(ensureResearchEngineHooks(),trace.engine_hooks,
