@@ -745,3 +745,17 @@ Implementation tools/regidrago_basic_search_frontier.py (exact integers/Fraction
 Under valid 7-card Basic opener, six Prizes and one turn draw, published 3 VIP/1 Dragapult vs candidate 2 VIP/2 Dragapult: held or VIP Regidrago access 67.616195180% vs 62.304141739% (-5.312053441 pp). With no exogenous safe filler but held Dragapult allowed to pay QB/MT: 70.297724396% vs 68.000861205% (-2.296863191 pp). With D20 safe filler: 87.538656769% vs 85.241793577%, same net difference. Unique Regidrago path requiring payload as discard payment increases 2.681529216% to 5.696719466% (+3.015190250 pp) in D0. Separately, preserving Compressor and existing QB/MT while adding Dragapult increases direct Dragapult discard-loading 16.845955% to 24.042923% (+7.196967 pp). These correlated probabilities cannot produce win rate or full attack setup.
 
 Next high-value: execute joint model of both required conditions, actual Regidrago V accessible *and* Dragapult loaded by the relevant attack turn, using a combined action policy. Compare the candidate against published and model Action/Supporter/Bench contention. Tweak discard category to count energy and dead Battle VIP after first turn state-dependently. Avoid conflating simulated access with actual match success.
+
+## 2026-10-12 fourth checkpoint: joint source+attacker access with shared Item capacity
+
+Created tools/regidrago_joint_launch.py, results/regidrago_joint_launch/{README.md,reproduce.py}, and workflow validate-regidrago-joint-launch.yml; research commit 134d936b04f1429d17beca42414205e2c03ea506; Windows Actions 38246869222 **passed**. Exact integer/rational eight-card valid-open/6-Prize enumerator plus lru_cache finite Item state search; four independently labeled physical-card BFS oracles matched **eight output probabilities** each. Models VIP Basic to Bench, Compressor Dragon source to discard, QB/Treasure discard cost paid by held Dragapult or exogenous safe filler, Treasure deck->hand Dragapult then another Item->discard, and one-use Items. K1-like perfect hidden Prize knowledge for choosing actions: **a restricted full-information line-existence envelope**, not an implementable K0 strategy.
+
+Conditional on valid 7-card opener, six Prizes, and first natural draw:
+- Published 3 VIP/1 Dragapult/1 Compressor, joint Regidrago V accessible and Dragapult discarded: D0 13.257301009%, D5 18.518416265%, D10 21.702578409%, D20 24.431455451%, D30 25.023988851%.
+- Concrete legal +Dragapult/-VIP 2 VIP/2 Dragapult: D0 19.536019594%, D5 24.990951991%, D10 28.257858951%, D20 31.002058187%, D30 31.569307182%. Gains +6.278718584 pp (D0) to +6.570602736 pp (D20) despite lower marginal Basic Regidrago V access.
+- +Dragapult/-Compressor D0 only 12.893229%, lower than published; D20 23.119384% vs original 24.431455%.
+- +Dragapult/-QB D0 18.584922%, D20 27.634480%; -Treasure same D0, lower D20 26.123156% because Treasure can tutor DP from deck.
+- Compressor causally required for original D0 joint states on 6.470623661% of valid openings; for proposed VIP cut 6.642790310%.
+- Naively multiplying independently computed marginal access underestimates correlated joint success: baseline D0 11.849522% product vs 13.257301% true; candidate D0 16.361879% product vs 19.536020% true.
+
+This is closer to ALS/AMR than separate access graphs, but still omits presearch K0 payment/choice information, full board/evolution/attachment, draw engines, opposing locks and matchup. Next step: quantify K0 presearch choice loss, or add time/attack Energy gates. Do not infer match superiority.

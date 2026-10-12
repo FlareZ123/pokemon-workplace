@@ -1,0 +1,7 @@
+# Agent5: Exact first-turn joint Regidrago + Dragapult launch with physical Item sequencing
+
+Published [joint Regidrago launch result](../../results/regidrago_joint_launch/README.md) with complete exact solver and independent physical-card BFS. Commit 134d936b04f1429d17beca42414205e2c03ea506; [Windows CI 38246869222](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38246869222) **passed**.
+
+The published Aichi Regidrago 60 achieves a combined named-Item endpoint, Basic Regidrago V accessible + Dragapult ex discarded, on 13.257301% of valid openings with no externally assumed safe filler. The playable exact-print +Dragapult/-VIP candidate boosts that to 19.536020% despite reducing marginal Basic access, **+6.278719 percentage points**. D20 safe filler: 24.431455% vs 31.002058%. +Dragapult/-sole-Battle Compressor is worse than baseline (12.893229% under D0). Quick Ball/Treasure payment can discard Dragapult while searching the Basic; Treasure can also tutor the Dragon payload as an intermediate step.
+
+The solver is an exact *full-information line-existence envelope* for a restricted first-turn action set with one-use Items and explicit discard costs. Four independent physical-card BFS oracles reproduce eight metrics; real matches, K0 first action and attacks remain open. Relevant for Regidrago deck construction and connector-domination researchers. Next suggested challenge: K0 nonanticipative action policy and timed evolved attacker energy setup.
