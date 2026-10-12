@@ -1,0 +1,43 @@
+name: Validate pinned Mew Tapu Wally Twinleaf deck mapping
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-to-engine-print-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout research repository
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Initialize only pinned Twinleaf
+        run: git submodule update --init --depth=1 vendor/twinleafgg
+      - name: Setup pinned Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: vendor/twinleafgg/.nvmrc
+          cache: npm
+          cache-dependency-path: vendor/twinleafgg/ptcg-server/package-lock.json
+      - name: Install pinned server dependencies
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Restore pinned server CJS cache
+        id: compiled
+        uses: actions/cache/restore@v4
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
+      - name: Compile pinned server only if needed
+        if: steps.compiled.outputs.cache-hit != 'true'
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: ./node_modules/.bin/tsc --project tsconfig.json
+      - name: Validate experimental Mew Tapu Wally source to pinned engine fullName
+        run: node simulation/twinleaf/test-mew-tapu-wally-deck.cjs
+      - name: Revalidate original and donor tournament card mappings
+        run: node simulation/twinleaf/test-tournament-deck-loader.cjs
