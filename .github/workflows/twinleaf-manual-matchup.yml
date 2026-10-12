@@ -85,6 +85,8 @@ jobs:
           key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
       - name: Verify seat attribution, draws and censored outcomes
         run: node simulation/twinleaf/test-paired-result-summary.cjs
+      - name: Verify seat-paired censor bounds and dependence units
+        run: node simulation/twinleaf/test-paired-score-bounds.cjs
       - name: Verify deck and seed limits
         run: node simulation/twinleaf/test-tournament-probe-settings.cjs
       - name: Verify action telemetry under in-place game-state mutation
