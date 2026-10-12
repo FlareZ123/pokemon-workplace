@@ -81,7 +81,10 @@ async function main() {
   }
 }
 
-main().catch(error => {
-  console.error('[headless-setup] FAIL:', error);
-  process.exitCode = 1;
-});
+main().then(
+  () => process.stdout.write('', () => process.exit(0)),
+  error => {
+    console.error('[headless-setup] FAIL:', error);
+    process.stderr.write('', () => process.exit(1));
+  }
+);
