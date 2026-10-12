@@ -32,8 +32,8 @@
     {
       "archetype": "Snorlax Stall",
       "count": 2,
-      "proxy_dir": null,
-      "proxy_scope": "no_verified_english_print_proxy"
+      "proxy_dir": "snorlax-stall-aichi-2026-english",
+      "proxy_scope": "english_adaptation_of_japanese_3rd_place"
     },
     {
       "archetype": "Shadow Rider Calyrex",
