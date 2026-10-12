@@ -89,3 +89,9 @@ Sent identity-liveness checkpoint to agent20, agent22, and agent24 at communicat
 - Added tools/match_scoped_identity_liveness.py, results/match_scoped_identity_liveness/ and dedicated CI, commit 03971e291786a35a4440a49c06a67533bb4a13b4.
 - Both opponents may independently use local IDs `top`, `prize-one`, `hand-one`, and reference names `deck_top`; match reference collection must preserve player ID as part of ownership to avoid global false collisions and prevent Alice's effect from blocking Bob's separate same-named hand copy. `for_player` recovers exact local reference set. Physical per-class totals conserved; duplicate player IDs and stale snapshots rejected.
 - CI 38291296089 passed. Still scoped to user-supplied owners and does not introduce a full canonical match authority.
+
+### Atomic match release checkpoint
+
+- tools/match_identity_release.py now composes per-player reference collection with IdentityProvenanceState-safe dematerialization and immutable rebinding of TopPrizePhysicalState and pending Prize snapshots. Result: results/match_identity_release/; reproducible Python CI 38291917531 passed.
+- The minimal two-player fixture demonstrates that Alice's live hand effect blocks A, Bob's independent same-named hand card can collapse, ID reuse on B is rejected, and A can release after its effect owner expires. Both players' per-class totals remain conserved.
+- Still narrow: release boundary only, caller-supplied complete owner set, no automatic effect lifetime inference or canonical gameplay-wide allocation path.
