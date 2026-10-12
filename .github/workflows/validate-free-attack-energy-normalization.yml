@@ -1,0 +1,20 @@
+name: Validate zero-Energy attack cost normalization
+
+on:
+  push:
+    paths:
+      - tools/free_attack_energy_normalizer.py
+      - results/free_attack_cost_normalization/**
+      - .github/workflows/validate-free-attack-energy-normalization.yml
+  workflow_dispatch:
+
+jobs:
+  printed-cost-audit:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify cost glyph normalization
+        run: python results/free_attack_cost_normalization/reproduce.py
