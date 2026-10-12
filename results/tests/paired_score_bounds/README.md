@@ -21,6 +21,8 @@ Each random seed generates two games, one in each deck-to-seat assignment. Avera
 
 Additionally compute the **player-one engine-seat score interval** from the same outcomes. This describes seat-index asymmetry and is not automatically an estimate of the advantage of taking the first turn; the pinned engine can determine turn order separately.
 
+The scorer now separately computes the **actual moving-first score interval** using `first_actor` recorded by the live Store runner. `first_actor=1` identifies player ID 1, `first_actor=2` identifies player ID 2. When older reports omit that field, a decided game's first-mover score is only identifiable as [0,1]; a true draw remains [0.5,0.5]. This preserves missing-information uncertainty rather than substituting the player-one engine seat. Synthetic regression proves the distinction: player-one seat wins both games yet actual first actor is player two in each, so the first-seat score is [1,1] and moving-first score is [0,0].
+
 The optional simultaneous 95% Hoeffding band uses seed pairs as independent bounded observations, never two games as independent replicates. With N genuinely independent identically sampled seed pairs and confidence 0.95, each endpoint radius is:
 
     sqrt(log(40) / (2 * N))
