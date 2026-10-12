@@ -77,6 +77,8 @@ jobs:
         timeout-minutes: 2
       - name: Reproduce pinned native shuffle bias and validate research-only hook
         run: node simulation/twinleaf/test-native-shuffle-bias.cjs
+      - name: Verify physical game RNG is isolated from speculative policy evaluation
+        run: node simulation/twinleaf/test-random-stream-ledger.cjs
       - name: Check Shadow Rider Underworld Door target guard against real engine
         run: node simulation/twinleaf/test-underworld-door-targets.cjs
       - name: Collect bounded, seeded Aichi Vileplume vs Mew self-play diagnostics
