@@ -5,6 +5,7 @@ const base=path.resolve(__dirname,'../../vendor/twinleafgg/ptcg-server/output');
 const engine=p=>require(path.join(base,p));
 const {loadTournamentDecks}=require('./tournament-deck-loader.cjs');
 const {makeSeatPairs,deckDigest}=require('./paired-seat-plan.cjs');
+const {summarizePairedTraces}=require('./paired-result-summary.cjs');
 const {loadImplementedCards}=require('./print-coverage.cjs');
 const {CardManager}=engine('game/cards/card-manager');
 const {Store}=engine('game/store/store');
@@ -72,6 +73,8 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
       actions++;
     }
     const state=store.state;
+    if(state.phase===GamePhase.FINISHED && (status==='action_cap' || status==='wall_cap'))
+      status='finished';
     const rng=ledger.snapshot();
     return {seed,status,actions,attacks,first_actor:firstActor,random_calls:rng.calls,
       game_random_calls:rng.gameCalls,policy_random_calls:rng.policyCalls,
@@ -87,15 +90,18 @@ function main() {
   registerLists([a.engine_names,b.engine_names]);
   const seatPairs=makeSeatPairs(a,b,[20261012]);
   const traces=seatPairs.map(p=>runOne(p.seat1.engine_names,p.seat2.engine_names,p.seed));
+  const pairedResults=summarizePairedTraces(seatPairs,traces);
   const report={scope:'bounded engine self-play diagnostics only, SimpleTacticsAi policy unvalidated',
     twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
     shuffle_policy:'research_uniform_fisher_yates_v1',
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
-    max_actions:350,wall_ms:25000,traces};
+    max_actions:350,wall_ms:25000,paired_results:pairedResults,traces};
   console.log('[tournament-probe] '+JSON.stringify(report));
   assert.ok(traces.every(t=>t.turn>=1),'Both games must enter actual turn one');
+  assert.equal(pairedResults.error_games,0,'Engine or bot error must not silently pass as a match');
+  assert.equal(pairedResults.terminal_unresolved_games,0,'Uninterpretable terminal winner requires engine investigation');
   console.log('[tournament-probe] PASS: paired bounded headless traces emitted with explicit limitations');
 }
 if(require.main===module){try{main();}catch(error){console.error('[tournament-probe] FAIL',error);process.exitCode=1;}}
