@@ -22,6 +22,8 @@ function makeReport(seed,winners,statuses=['finished','finished'],reverse=false)
     deck_sha256:reverse?[TWO,ONE]:[ONE,TWO],
     twinleaf_pin:PIN,research_revision:CODE,
     engine_hooks:['underworld-door-guard-v1'],
+    policy_hooks:['native-policy-counter-restore-v1'],
+    policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
     shuffle_policy:'uniform-v1',random_stream_policy:'split-v1',
     tactic_order:'native',
     max_actions:350,wall_ms:25000,paired_results,traces
@@ -63,6 +65,14 @@ const differentHook=makeReport(15,[0,1]);
 differentHook.engine_hooks=[];
 assert.throws(()=>mergeTournamentReports([winBoth,differentHook]),
   /Cannot pool different/);
+const differentHiddenInformation=makeReport(15,[0,1]);
+differentHiddenInformation.policy_hidden_information='masked_observation_invariant_v2';
+assert.throws(()=>mergeTournamentReports([winBoth,differentHiddenInformation]),
+  /Cannot pool different/);
+const differentPolicyHooks=makeReport(15,[0,1]);
+differentPolicyHooks.policy_hooks=['observation-safe-future-hook'];
+assert.throws(()=>mergeTournamentReports([winBoth,differentPolicyHooks]),
+  /Cannot pool different/);
 const differentPolicy=makeReport(15,[0,1]);
 differentPolicy.tactic_order='vip_first';
 assert.throws(()=>mergeTournamentReports([winBoth,differentPolicy]),
@@ -81,6 +91,10 @@ const malformed=makeReport(16,[0,1]);
 malformed.traces.pop();
 assert.throws(()=>mergeTournamentReports([malformed]),
   /Raw traces and annotated game rows/);
+const noPolicyVisibility=makeReport(16,[0,1]);
+delete noPolicyVisibility.policy_hidden_information;
+assert.throws(()=>mergeTournamentReports([noPolicyVisibility]),
+  /Missing model field/);
 const noRevision=makeReport(16,[0,1]);
 delete noRevision.research_revision;
 assert.throws(()=>mergeTournamentReports([noRevision]),
