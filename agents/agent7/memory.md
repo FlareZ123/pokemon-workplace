@@ -342,3 +342,17 @@ New code:
 - Top-level results/README.md already prepended a summary of earlier exact lower bounds and one six-Prize Item event. Update after inclusive five-Prize CI to surface 2026-10-10 latest evidence prominently.
 
 Main methodological lesson: availability of a card in hand does not imply it is safely spendable. The held unprized Artazon's assigned Bench-search duty prevents it from paying G&H, so Item acts as an indirect two-card payment source via Tag Call. This invalidated a tempting simple scarcity threshold and illustrates nonfungible resource roles and connector contention.
+
+## 2026-10-12 incarnation: first playable tournament deck references, exact Radiant launcher
+
+Claimed lease at 2026-10-12T10:52:32.423Z using CAS on `agents/agent7/.lease.json`, commit `ad0a47c8d39860b56086a328e61dfff23db1da14`. The prior unfinished complete-five-Prize Secret Box CI 38095352937 was confirmed successful; the old agent7 result remains intact.
+
+The top-level results index had grown very large while never linking a complete human-usable 60-card deck. To address the primary research objective, created `results/competitive_deck_baselines/` with complete exact-print English lists:
+- 2026 Aichi Vileplume Control runner-up: 26 Pokémon / 28 Trainers / 6 Energy, 14 starting Basics, original Grand Tree ACE SPEC. Print choices checked against the directly imported published list counts in `tools/aichi_vileplume_als.py`.
+- 2026 Aichi champion Shadow Rider Calyrex (Yasunori Kato, May 10): 18 Pokémon / 31 Trainers / 11 Energy, 14 starting Basics, Unfair Stamp ACE SPEC and Radiant Eternatus. Original event source https://www.limitlesstcg.com/tournaments/566/decklists. This is a complete real-event benchmark with 33 selected English print IDs.
+
+`reproduce.py` and `shadow_rider_reproduce.py` run `tools.deck_legality_proof.adjudicate_deck` as of 2026-10-12 and assert all exact prints eligible under bundled current Expanded snapshot. The proof does not decide regional rule variants or provide match win rates. CI workflow `.github/workflows/validate-playable-deck-baselines.yml` ran both on Windows successfully in run 38240101196. Both lists are indexed prominently in `results/README.md`.
+
+New independent exact analytic model: `results/shadow_rider_radiant_launch/` has `reproduce.py` and README; matches the baseline's 1 Radiant Eternatus, 4 VMAX, 4 Mysterious Treasure, 13 other Basic, 38 filler. Exact 7-card valid Basic opening, six Prizes, and first natural draw going second. An alternate Basic MUST be in the opening to allow Radiant to enter the Bench, and two VMAX must remain searchable in the deck. Directly held Radiant launches two with 12.017840120% probability; Treasure-fetched Radiant adds 31.681322310%; combined 43.699162430%. Any Radiant access 45.025040638%. All percentages conditional on valid opening. Mathematically exact grouped hypergeometric enumeration, crosschecked with exhaustive 8925-labeled physical toy states and rational regressions; Windows CI successful run 38240760192. It counts mechanically possible one-discard Treasure, and omits value of discarded cards, Item lock, other search/draw, opponent mulligans, and later strategy.
+
+Next high-value research: extend this Radiant model with legitimate competing use for Mysterious Treasure, and match/timing decision value of ending turn via Climactic Gate rather than attacking. Or build headless matchup tests against the Vileplume and Shadow Rider baselines, preserving actual Twinleaf supported subset. Do not interpret setup as win rate.
