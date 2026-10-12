@@ -86,7 +86,7 @@ def physical_oracle(
 
 def verify_prints() -> None:
     expected = {
-        "swsh8-185": ("Genesect V", "Fusion Strike System"),
+        "swsh8-185": ("Genesect V", "Fusion Strike Pokémon in play"),
         "swsh6-148": ("Path to the Peak", "have no Abilities"),
         "xy6-89": ("Sky Field", "8 Pokémon on his or her Bench"),
         "sm2-125": ("Field Blower", "Stadium cards"),
@@ -106,6 +106,8 @@ def verify_prints() -> None:
             [a.get("text", "") for a in printed.get("abilities", [])]
         )
         assert signature in text, (print_id, text)
+        if print_id == "swsh8-185":
+            assert any(a["name"] == "Fusion Strike System" for a in printed["abilities"])
 
     assert POKEMON["Genesect V"] == 4
     assert TRAINERS["Sky Field"] == 2
