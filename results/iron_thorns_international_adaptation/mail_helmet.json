@@ -1,0 +1,213 @@
+{
+  "source": {
+    "derived_from": "2026-05-10 Aichi Open League, sixth-place Kazuma Kashi (JP format)",
+    "url": "https://limitlesstcg.com/tournaments/566/decklists",
+    "regional_scope": "English-snapshot paper Expanded adaptation, differs from original Japanese tournament deck",
+    "changes_for_jp_only_cards": {
+      "Palace Book": "4th Trainers' Mail",
+      "Palace Belt": "Lucky Helmet",
+      "Player's Ceremony": "2nd Tropical Beach"
+    },
+    "confidence": "Legal candidate, no head-to-head test or competitive improvement claim"
+  },
+  "cards": [
+    {
+      "category": "Pokémon",
+      "quantity": 4,
+      "name": "Iron Thorns ex",
+      "print_id": "sv6-77"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 4,
+      "name": "Plumeria",
+      "print_id": "sm3-120"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 3,
+      "name": "Guzma",
+      "print_id": "sm3-115"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Guzma & Hala",
+      "print_id": "sm12-193"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Team Flare Grunt",
+      "print_id": "xy1-129"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Lusamine",
+      "print_id": "sm4-96"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Cynthia & Caitlin",
+      "print_id": "sm12-189"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Team Skull Grunt",
+      "print_id": "sm1-133"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Faba",
+      "print_id": "sm8-173"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Eri",
+      "print_id": "sv5-146"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Sidney",
+      "print_id": "swsh8-241"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Gladion",
+      "print_id": "sm4-95"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Lillie's Determination",
+      "print_id": "me1-119"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Team Rocket's Handiwork",
+      "print_id": "xy10-112"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 4,
+      "name": "Crushing Hammer",
+      "print_id": "swsh1-159"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 4,
+      "name": "Trainers' Mail",
+      "print_id": "xy6-92"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 3,
+      "name": "VS Seeker",
+      "print_id": "xy6-110"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Tag Call",
+      "print_id": "sm12-206"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Enhanced Hammer",
+      "print_id": "sv6-148"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Camping Gear",
+      "print_id": "swsh5-122"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Captivating Poké Puff",
+      "print_id": "xy11-99"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Echoing Horn",
+      "print_id": "swsh6-136"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Megaton Blower",
+      "print_id": "sv8-182"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Handheld Fan",
+      "print_id": "sv6-150"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Tool Jammer",
+      "print_id": "swsh5-136"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Tropical Beach",
+      "print_id": "bwp-BW28"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Thunder Mountain ◇",
+      "print_id": "sm8-191"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Wondrous Labyrinth ◇",
+      "print_id": "sm9-158"
+    },
+    {
+      "category": "Energy",
+      "quantity": 4,
+      "name": "Speed Lightning Energy",
+      "print_id": "swsh2-173"
+    },
+    {
+      "category": "Energy",
+      "quantity": 2,
+      "name": "Capture Energy",
+      "print_id": "swsh2-171"
+    },
+    {
+      "category": "Energy",
+      "quantity": 1,
+      "name": "Spiky Energy",
+      "print_id": "sv9-159"
+    },
+    {
+      "category": "Energy",
+      "quantity": 1,
+      "name": "Double Colorless Energy",
+      "print_id": "sm1-136"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Lucky Helmet",
+      "print_id": "sv6-158"
+    }
+  ]
+}
