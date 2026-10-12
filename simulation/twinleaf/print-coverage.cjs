@@ -75,6 +75,31 @@ function cleanName(value) {
 }
 
 /**
+ * Confirm role labels in the baseline's display names against the engine card.
+ * Labels never override the set/collector-number identity gate.
+ * @param {string} printedName
+ * @param {EngineCard & {attacks?:{name:string}[], powers?:{name:string}[], tags?:string[], energyType?:number}} card
+ * @returns {'literal'|'qualified'|null}
+ */
+function comparePrintedName(printedName, card) {
+  if (cleanName(printedName) === cleanName(card.name)) return 'literal';
+
+  const basicEnergy = /^Basic (.+ Energy)$/i.exec(printedName);
+  if (basicEnergy && cleanName(basicEnergy[1]) === cleanName(card.name) && card.energyType === 0) {
+    return 'qualified';
+  }
+
+  const annotated = /^(.*) \(([^()]+)\)$/.exec(printedName);
+  if (annotated && cleanName(annotated[1]) === cleanName(card.name)) {
+    const qualifier = cleanName(annotated[2]);
+    if (qualifier === 'ace spec' && card.tags?.includes('Ace Spec')) return 'qualified';
+    if (card.attacks?.some(attack => cleanName(attack.name) === qualifier)) return 'qualified';
+    if (card.powers?.some(power => cleanName(power.name) === qualifier)) return 'qualified';
+  }
+  return null;
+}
+
+/**
  * Return a conservative inventory of exact-print implementations. No
  * alias/substitution can become an exact match without the same set number.
  *
@@ -86,7 +111,8 @@ function matchPaperPrint(entry, paperSetCodes, cards) {
   const dash = entry.printId.lastIndexOf('-');
   if (dash < 1) throw new Error(`Unrecognized print ID: ${entry.printId}`);
   const sourceSetId = entry.printId.slice(0, dash);
-  const sourceSetCode = paperSetCodes.get(sourceSetId);
+  const promoCode = { xyp: 'XYP', smp: 'SMP' }[sourceSetId];
+  const sourceSetCode = promoCode ?? paperSetCodes.get(sourceSetId);
   const sourceNumber = sourceSetCode
     ? normalizePromoPrintNumber(entry.printId.slice(dash + 1), sourceSetCode)
     : cleanNumber(entry.printId.slice(dash + 1));
@@ -97,9 +123,10 @@ function matchPaperPrint(entry, paperSetCodes, cards) {
   const samePrint = cards.filter(card =>
     String(card.set).toUpperCase() === sourceSetCode.toUpperCase() &&
     cleanNumber(card.setNumber) === sourceNumber);
-  const exact = samePrint.filter(card => cleanName(card.name) === cleanName(entry.name));
+  const exact = samePrint.filter(card => comparePrintedName(entry.name, card));
   const matches = exact.length ? exact : samePrint;
-  const status = exact.length === 1 ? 'exact' :
+  const relation = exact.length === 1 ? comparePrintedName(entry.name, exact[0]) : null;
+  const status = exact.length === 1 ? (relation === 'literal' ? 'exact' : 'qualified_exact') :
     exact.length > 1 ? 'ambiguous_exact' :
     samePrint.length ? 'name_mismatch_review' : 'missing_print';
 
@@ -140,6 +167,6 @@ function auditAichiBaselines() {
 }
 
 module.exports = {
-  parseBaselineDecks, cleanNumber, normalizePromoPrintNumber, cleanName,
+  parseBaselineDecks, cleanNumber, normalizePromoPrintNumber, cleanName, comparePrintedName,
   matchPaperPrint, loadImplementedCards, auditAichiBaselines
 };
