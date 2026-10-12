@@ -168,6 +168,22 @@ The model exhaustively integrates the first eight seen card identities and all s
 
 This is a first-turn **material-acquisition** endpoint. It requires the Mew VMAX to be obtainable in hand; it does not assume the Pokémon can evolve on the first turn, survive for its next evolution window, attach attacks' Energy, or exploit real Genesect draws. The separate value of the removed Trainer's disruption/recovery/attack flexibility and the metagame remain unresolved.
 
+## Another function of Trainers' Mail: fetch an Ultra Ball for Mew VMAX
+
+The joint stage model above conservatively directs all naturally held Trainers' Mail selections toward VIP Pass. However, the printed Mail can reveal and take **Ultra Ball** as another legal Trainer target. [trainer_mail_ultra_stage_frontier.py](trainer_mail_ultra_stage_frontier.py) isolates that competing option: when Mew VMAX is missing from the visible eight cards but remains unprized, and two hypothetically safe discards are in hand, any held Ultra Ball provides direct search. Otherwise, each naturally held Mail may inspect the top four for an unprized Ultra Ball, shuffle after a miss, and retrieve one for the stage search. No Mail is reused as both a VIP and Ultra connector.
+
+| Hypothetically safe discards | 4 Ultra, direct or Mail-retrieved Stage access | 3 Ultra, direct or Mail-retrieved Stage access | Reduction from cutting Ultra |
+| ---: | ---: | ---: | ---: |
+| 0 | 33.759100285% | 33.759100285% | 0 pp |
+| 4 | 35.997792243% | 35.533351972% | 0.464440271 pp |
+| 6 | **38.731663162%** | **37.705356937%** | **1.026306225 pp** |
+| 12 | 48.951104030% | 45.866040524% | 3.085063506 pp |
+| 20 | 60.234750471% | 54.975262477% | 5.259487994 pp |
+
+For D6, accounting for naturally held Mail's ability to search Ultra increases the marginal cost of an Ultra cut from **0.9269** to **1.0263** points on this Stage-specific event. The source counts are the tournament list's 11 Basic starters, three Mew VMAX, three naturally held Mail candidates, and three or four Ultra Ball. The model integrates all six Prize cards and a Basic-valid opener. Three independent 34,272-world physical-card oracles check the grouped top-card probabilities and exact card-zone conservation.
+
+Mail search opportunities also have competing VIP Pass and other Trainer uses; this Stage-only table cannot be added to the Basic-board and joint-Stage tables. A comprehensive adaptive Mail policy deciding whether to take VIP or Ultra based on observed state is the next natural research problem.
+
 ## Strategic interpretation and limitations
 
 This is a **narrow first-turn source-access study**. The all-VIP table omits the Ball routes; the paid-Ball extension adds Quick Ball and Ultra Ball with explicit hypothetical discharge policies. Both models omit Trainers' Mail, Secret Box, Dedenne-GX, Crobat V, Genesect V's Fusion Strike System, Forest Seal Stone, further natural turns, Energy attachments, VMAX evolution, and opponent interaction. It does not model match wins. Genesect's Ability draw size also depends on hand size and the number of Fusion Strike Pokémon in play, so an extra Genesect is not a fixed card-draw reward.
