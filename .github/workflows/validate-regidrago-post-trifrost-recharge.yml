@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - tools/regidrago_post_trifrost_recharge.py
+      - tools/aichi_regidrago_crispin_energy_supply.py
+      - results/tests/aichi_regidrago_crispin_post_trifrost/**
+      - results/regidrago_aichi_top10_playable/yoshioka_regidrago_2026.json
       - results/regidrago_post_trifrost_recharge/**
       - results/regidrago_budew_promotion_baselines/aichi9_counts.json
       - .github/workflows/validate-regidrago-post-trifrost-recharge.yml
@@ -11,8 +14,13 @@ on:
 
 jobs:
   check-energy-sequencing:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       - name: Test conditional Crispin Raihan Legacy Star Energy routes
-        run: python3 results/regidrago_post_trifrost_recharge/reproduce.py
+        run: python results/regidrago_post_trifrost_recharge/reproduce.py
+      - name: Verify exact Aichi Crispin Energy supply against physical-card enumeration
+        run: python -m results.tests.aichi_regidrago_crispin_post_trifrost.reproduce
