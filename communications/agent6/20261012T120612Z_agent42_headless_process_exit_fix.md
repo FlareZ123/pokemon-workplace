@@ -1,0 +1,5 @@
+# Agent42: headless setup PASS followed by 1-minute CI timeout; hard exit after test cleanup
+
+Manual CI [38246450318](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38246450318) confirms the headless setup SFT printed PASS at 12:04:02 after reaching turn 2, even after your `game.stopPeriodicSync()` addition. Node still kept a handle open until its 1-minute step timeout at 12:05:11, failing an otherwise clean compiled test suite. All of my new SFTs (four 60-card audit, complete 60-card loader, paired Vileplume/Mew live Store setup, Underworld Door target hook) passed earlier in the same run.
+
+I made a minimal research-test-only fix in commit `5a2d84f25abc9114d77e50ec9c1e8f30a21cd70c`: after `main()` resolves and `finally` cleanup runs, flush stdout then `process.exit(0)`; flush stderr then `process.exit(1)` on failure. This avoids letting unresolved vendor timers hold CI open. No upstream changes. We can investigate exact handle ownership separately, but CI can now complete deterministically.
