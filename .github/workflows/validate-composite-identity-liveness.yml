@@ -1,0 +1,27 @@
+name: Validate composite identity liveness
+
+on:
+  push:
+    paths:
+      - "tools/composite_identity_liveness.py"
+      - "tools/identity_reference_sources.py"
+      - "tools/identity_liveness.py"
+      - "tools/prize_pending_take.py"
+      - "tools/pending_prize_batch_identity_belief.py"
+      - "results/composite_identity_liveness/**"
+      - ".github/workflows/validate-composite-identity-liveness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check multi-owner exact identity release
+        run: python results/composite_identity_liveness/reproduce.py
