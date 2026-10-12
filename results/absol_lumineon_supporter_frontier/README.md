@@ -17,13 +17,13 @@ The conditional world has one Basic-valid seven-card opening, an Active Basic ch
 
 | Material-access event | Published Crobat | +Mega / −Temple, Crobat | +Mega / −Temple, Lumineon |
 | --- | ---: | ---: | ---: |
-| Crispin physically held by first draw | 12.598308% | 12.598308% | 12.598308% |
-| Supporter-search Pokémon directly held and legally benchable | 9.413183% | 9.413183% | 17.349271% |
-| Quick / Ultra / Communication payable bridge into a search Pokémon | 20.405680% | 20.405680% | 25.869346% |
-| Heavy Ball recovering a Prized search Pokémon | 0.983808% | 0.983808% | 1.885517% |
-| **Union: named singleton Supporter possession** | **43.400979%** | **43.400979%** | **52.536630%** |
+| Crispin physically held by first draw | 12.534702% | 12.598308% | 12.598308% |
+| Supporter-search Pokémon directly held and legally benchable | 9.282334% | 9.413183% | 17.349271% |
+| Quick / Ultra / Communication payable bridge into a search Pokémon | 19.873763% | 20.405680% | 25.869346% |
+| Heavy Ball recovering a Prized search Pokémon | 0.970841% | 0.983808% | 1.885517% |
+| **Union: named singleton Supporter possession** | **42.661639%** | **43.400979%** | **52.536630%** |
 
-The first two cases have the same role counts relevant to this particular mathematical target, so their probabilities are equal even though their actual cards and broad strategic prospects differ. The source-route rows overlap, so their probabilities must not be added. The last line counts a target already in hand as success.
+The published deck has ten eligible Basic starters; replacing a Temple with a third Basic Mega Absol creates eleven. This alters the valid-opening conditioning and the first column's access probabilities. The two third-Mega cases retain identical role counts in this target model, allowing the Lumineon-versus-Crobat effect to be isolated. The source-route rows overlap, so their probabilities must not be added. The last line counts a target already in hand as success.
 
 Under this **Supporter-specific material-access proxy**, the Lumineon substitution adds **9.135651 percentage points** over the Crobat version of the +Mega/−Temple list. This is a genuine incremental result after accounting for the printed **Tapu Lele-GX Wonder Tag** alternative. It is not an estimate of game wins, and it excludes generic Crobat card draws and Forest Seal Stone's independent ability to fetch any one card, both of which may narrow or reverse the practical difference.
 
