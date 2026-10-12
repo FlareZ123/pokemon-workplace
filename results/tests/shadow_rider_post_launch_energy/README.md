@@ -35,3 +35,23 @@ Dimension Valley can enable an earlier attack while leaving fewer total Psychic 
 The library at [tools/shadow_rider_post_launch_energy.py](../../../tools/shadow_rider_post_launch_energy.py) computes exact rational probabilities by dynamic programming over hand Energy, deck Energy, deck size and target attachments. The [reproducer](reproduce.py) independently enumerates all placements of Psychic cards for deck sizes 0..8, all count splits, h=0..3, and attack costs 0..4. It also checks closed-form cases and the printed card texts. Offline mathematical tests passed on 12 October 2026. No GitHub Actions run or head-to-head match simulation is claimed.
 
 This conditional computation does not price launch probability, search discards, Prize cards, Energy already in play, pivot resources, remaining Bench positions, Stadium access, opponent's intervening turn, Ability lock, damage thresholds, Supporter contention or real match outcomes. The next step is to integrate this Energy continuation with agent7/12/35 source-aware launch distributions, retaining joint card-zone information instead of multiplying marginal percentages. The overall goal remains full-game competition across validated playable 60-card decks.
+
+
+## Joint Float Stone pivot and Energy extension
+
+The exact model also tracks a separate one-copy pivot Tool. The published champion list has **one Float Stone (xy8-137)**; its printed effect gives the attached Pokémon no Retreat Cost. If the starting Active needs a Tool-based retreat and there is no available alternative such as Latias ex's Skyliner or Guzma, attack readiness requires the same Underworld Door draw stream to produce sufficient Psychic Energy **and** Float Stone. This restricted branch assumes an empty usable Tool slot, no Tool lock, and that Float Stone can be played to permit the needed retreat.
+
+For the same conditional state, h=1 Psychic initially in hand, e=8 Psychic plus one Float Stone in n=41 remaining deck cards, with Float Stone initially missing from hand:
+
+| Attack cost | Energy-only readiness | Joint Energy plus drawn Float Stone |
+| ---: | ---: | ---: |
+| Normal Max Geist, 3 Energy | 14.059445% | **0.792601%** |
+| Dimension Valley, 2 Energy | 35.609756% | **2.751720%** |
+
+For h=2, the respective joint rates are 4.858300% at the unreduced 3-Energy cost and 9.756098% at the reduced 2-Energy cost. The h=1 normal joint value is exactly 1204/151905.
+
+Multiplying the Energy-only 14.059445% chance by 4/41, the probability of a single Tool among four **unconditional** draws, incorrectly predicts approximately 1.3717% rather than the exact 0.792601%. That shortcut exceeds the exact joint probability by 73.06% relative to the latter. The two needs use the same conditionally accessed draw stream: if the first Ability fails to draw Psychic Energy, the second Underworld Door can become unusable and the second pair of cards will not be drawn.
+
+The joint function uses multivariate-hypergeometric branching over Psychic Energy, Float Stone and filler. Its independent brute-force oracle checks **960** small-deck/hand/cost configurations, including all viable Energy/pivot splits for deck sizes zero through seven and h=0..3. A source-print test verifies Float Stone, and a held-pivot test shows the joint probability reduces to the original Energy probability when the Tool is already accessible.
+
+This tests one specific pivot route rather than the champion's complete pivot engine. Other search, free-retreat, switching and recovery effects, Ability lock, the opponent's intervening turn and actual attack KO utility remain to be modeled.
