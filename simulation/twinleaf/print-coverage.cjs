@@ -101,25 +101,6 @@ function comparePrintedName(printedName, card) {
 }
 
 /**
- * Exact-print name alias, audited against the bundled paper source rule:
- * xy4-92 is the Item "Battle Compressor Team Flare Gear", whose printed
- * effect searches for up to three cards to discard and then shuffles.
- * Pinned Twinleaf labels that same PHF 92 implementation "Battle Compressor".
- * This is print/name correspondence only, not effect-behavior certification.
- *
- * @param {PrintedEntry} entry
- * @param {EngineCard} card
- * @returns {boolean}
- */
-function isVerifiedPrintNameAlias(entry, card) {
-  return entry.printId === 'xy4-92' &&
-    cleanName(entry.name) === 'battle compressor team flare gear' &&
-    cleanName(card.name) === 'battle compressor' &&
-    String(card.set).toUpperCase() === 'PHF' &&
-    cleanNumber(card.setNumber) === '92';
-}
-
-/**
  * Return a conservative inventory of exact-print implementations. No
  * alias/substitution can become an exact match without the same set number.
  *
@@ -142,13 +123,9 @@ function matchPaperPrint(entry, paperSetCodes, cards) {
   const samePrint = cards.filter(card =>
     String(card.set).toUpperCase() === sourceSetCode.toUpperCase() &&
     cleanNumber(card.setNumber) === sourceNumber);
-  const exact = samePrint.filter(card =>
-    comparePrintedName(entry.name, card) || isVerifiedPrintNameAlias(entry, card));
+  const exact = samePrint.filter(card => comparePrintedName(entry.name, card));
   const matches = exact.length ? exact : samePrint;
-  const relation = exact.length === 1 ? (
-    comparePrintedName(entry.name, exact[0]) ||
-    (isVerifiedPrintNameAlias(entry, exact[0]) ? 'qualified' : null)
-  ) : null;
+  const relation = exact.length === 1 ? comparePrintedName(entry.name, exact[0]) : null;
   const status = exact.length === 1 ? (relation === 'literal' ? 'exact' : 'qualified_exact') :
     exact.length > 1 ? 'ambiguous_exact' :
     samePrint.length ? 'name_mismatch_review' : 'missing_print';
@@ -213,6 +190,6 @@ function auditAichiBaselines() {
 
 module.exports = {
   parseBaselineDecks, cleanNumber, normalizePromoPrintNumber, cleanName,
-  makePaperSetCodes, comparePrintedName, isVerifiedPrintNameAlias,
+  makePaperSetCodes, comparePrintedName,
   matchPaperPrint, loadImplementedCards, auditAichiBaselines
 };
