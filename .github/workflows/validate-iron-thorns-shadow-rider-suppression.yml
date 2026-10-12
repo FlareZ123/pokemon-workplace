@@ -1,0 +1,25 @@
+name: validate Iron Thorns Aichi matchup suppression
+
+on:
+  push:
+    paths:
+      - "results/iron_thorns_shadow_rider_suppression/**"
+      - "results/competitive_deck_baselines/shadow_rider_reproduce.py"
+      - ".github/workflows/validate-iron-thorns-shadow-rider-suppression.yml"
+  pull_request:
+    paths:
+      - "results/iron_thorns_shadow_rider_suppression/**"
+      - "results/competitive_deck_baselines/shadow_rider_reproduce.py"
+      - ".github/workflows/validate-iron-thorns-shadow-rider-suppression.yml"
+  workflow_dispatch:
+
+jobs:
+  matchup-lock-source-audit:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate active rule-box lock against champion source
+        run: python -m results.iron_thorns_shadow_rider_suppression.reproduce
