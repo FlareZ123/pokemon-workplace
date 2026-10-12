@@ -6,7 +6,7 @@ const {deckDigest} = require('./paired-seat-plan.cjs');
 
 const decks = loadCandidateDecks();
 assert.deepEqual(decks.map(deck => deck.id), [
-  'vileplume', 'shadow_rider', 'regidrago', 'mew_genesect', 'mew_genesect_vip4'
+  'vileplume', 'shadow_rider', 'regidrago', 'mew_genesect', 'mew_genesect_vip4', 'regidrago_dragapult_2'
 ]);
 const original = decks.find(deck => deck.id === 'mew_genesect');
 const changed = decks.find(deck => deck.id === 'mew_genesect_vip4');
@@ -37,4 +37,22 @@ const changedNames = new Set([...a.keys(), ...b.keys()].filter(name => a.get(nam
 assert.deepEqual([...changedNames].sort(), ['Battle VIP Pass', 'Special Red Card']);
 assert.equal(counts(original).get('Battle VIP Pass'), 3, 'Source tournament baseline must remain unchanged');
 assert.equal(changed.transformation, '+1 Battle VIP Pass (swsh8-225), -1 Special Red Card (me4-82)');
-console.log('[candidate-decks] PASS: source 60 unchanged; strictly-mapped paper Expanded VIP4 counterfactual differs by precisely one printed card');
+const regOriginal = decks.find(deck => deck.id === 'regidrago');
+const regChanged = decks.find(deck => deck.id === 'regidrago_dragapult_2');
+assert.ok(regOriginal && regChanged);
+assert.equal(regOriginal.engine_names.length, 60);
+assert.equal(regChanged.engine_names.length, 60);
+assert.equal(regChanged.status, 'strictly_mappable');
+assert.notEqual(deckDigest(regOriginal), deckDigest(regChanged));
+const rA=counts(regOriginal), rB=counts(regChanged);
+assert.equal(rA.get('Battle VIP Pass'), 3);
+assert.equal(rA.get('Dragapult ex'), 1);
+assert.equal(rB.get('Battle VIP Pass'), 2);
+assert.equal(rB.get('Dragapult ex'), 2);
+assert.deepEqual([...new Set([...rA.keys(),...rB.keys()].filter(name=>rA.get(name)!==rB.get(name)))].sort(),
+  ['Battle VIP Pass','Dragapult ex']);
+assert.equal(counts(regOriginal).get('Battle VIP Pass'), 3);
+assert.equal(regChanged.transformation,
+  '+1 Dragapult ex (sv6-130), -1 Battle VIP Pass (swsh8-225)');
+console.log('[candidate-decks] PASS: both printed 60-card references unchanged; Mew VIP4 and Regidrago 2-Dragapult differ by exactly one source-verified print each');
+
