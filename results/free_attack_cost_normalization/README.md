@@ -43,3 +43,9 @@ This is a reproducible **data-quality and rules-semantics finding**, backed
 by source-card print records and matching rendered zero-Energy attacks.
 It does not show that the current Twinleaf engine has this bug; that requires
 inspection of its actual attack-cost parser, which is a separate action.
+
+## Integrated exact Energy readiness check
+
+The original exact `tools/energy_action_budget.py` route evaluator rejected an empty printed cost with `ValueError`, even though an empty cost means an Energy-free attack under the rules. This blocked even a correctly normalized Budew. Commit (2026-10-12) removes that nonempty precondition while preserving all type/capacity checks. For a zero-Energy input and zero routes, the evaluator already correctly derives `exact_feasible=True`, `typed_resource_ignorant_feasible=True`, `raw_unit_count_reachable=True`, `minimum_unmet_symbols=0` and an empty executable witness.
+
+[The integrated regression](energy_readiness_reproduce.py) verifies both variants of Budew, Tyrogue, optional surplus Energy actions and negative Regidrago Apex Dragon readiness. The integration's GitHub Actions workflow runs the **pre-existing full Energy action budget SFT** as an additional regression. This is a narrow extension of a proven deterministic route evaluator, rather than a claim that all game-engine attack-cost paths already use this helper.

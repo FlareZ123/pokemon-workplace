@@ -1,0 +1,23 @@
+name: Validate zero-Energy readiness in shared route evaluator
+
+on:
+  push:
+    paths:
+      - tools/energy_action_budget.py
+      - tools/free_attack_energy_normalizer.py
+      - results/free_attack_cost_normalization/**
+      - .github/workflows/validate-zero-attack-energy-readiness.yml
+  workflow_dispatch:
+
+jobs:
+  exact-zero-cost-and-existing-positive-cost:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Existing energy-route budget regression
+        run: python results/energy_action_budget/reproduce.py
+      - name: Free-encoded printed attacks and zero-cost energy-route extension
+        run: python results/free_attack_cost_normalization/energy_readiness_reproduce.py

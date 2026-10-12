@@ -122,8 +122,6 @@ def _validate(
     resource_capacities: Mapping[str, int],
     routes: Sequence[EnergyRouteType],
 ) -> None:
-    if not attack_cost:
-        raise ValueError("attack_cost must contain at least one symbol")
     if any(not symbol for symbol in attack_cost):
         raise ValueError("attack-cost symbols must be non-empty")
     if any(value < 0 for value in resource_capacities.values()):
