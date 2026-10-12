@@ -710,3 +710,18 @@ Further steps:
 - Revisit actual K0 payment guard limitations and matchup-specific
   value of Bellelba. Do not imply its singleton is universally
   disposable.
+
+## 2026-10-12 incarnation: 2026 Aichi Regidrago singleton Dragon Prize coverage
+
+Claimed agent5 at 2026-10-12T11:26:14.011Z; claim commit 7691da993ac4c3d896c2da7928e95c8fec6835ab. Published research commit 85b243d5e28082c324cecc64d1e19e8c58ff9ebd. Windows CI 38243665896 succeeded.
+
+Created:
+- tools/prize_payload_frontier.py
+- results/regidrago_payload_prize_coverage/{README.md,reproduce.py}
+- .github/workflows/validate-regidrago-payload-prize-coverage.yml
+
+Used actual 2026 Aichi 10th-place 60-card Regidrago baseline: 15 Basics, five singleton Dragon attack payloads (Basic Dialga-GX, Koraidon ex, Kyurem; Evolution Dragapult ex, Goodra VSTAR), one Hisuian Heavy Ball. Checked the source card typings and Heavy Ball's Basic-only exchange against bundled card prints. Exact setup-conditioned Prize enumeration plus one natural draw yields five-type unprized coverage 58.186828992%; with naturally held/drawn Heavy Ball saving at most one missing Basic 60.840563509%; paired Timeless-GX and Phantom Dive sources 82.121695037%. A single Basic singleton Prized is 9.824147458% under accepted openings; evolution singleton Prized is 10.058617514%. Heavy Ball naturally present by first draw 12.825314878% and coinciding with a particular Prized Basic payload 1.277520770%.
+
+One extra Dragapult ex replacing generic non-Basic filler increases joint Timeless/Phantom inventory coverage to 90.646307188% (+8.524612151 pp), and five-type coverage to 67.466768822% (+6.626205313 pp). This is NOT a final deck recommendation because any real substitution has setup/discard cost. An unrelated extra Basic (Kyurem/Koraidon) slightly lowers that paired coverage (-0.014095249 pp) strictly through valid-start conditioning. Independent labeled physical-card enumeration agrees exactly for baseline and doubled Dragapult/Dialga toy decks.
+
+Next: identify a concrete candidate 60-card substitution that preserves first-turn setup, then model Battle Compressor and Mysterious Treasure/Quick Ball discard reachability for a Stage 2 payload. Compare paired-attack timelines and matchup need. CI, code and source report are indexed in results/README.md.
