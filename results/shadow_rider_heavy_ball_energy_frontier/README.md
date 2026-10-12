@@ -21,7 +21,7 @@ Reproducer: `results/shadow_rider_heavy_ball_energy_frontier/reproduce.py`
 
 ## Five exact-print, conservatively legal 60-card variants
 
-The variants keep **all other 58 unique card-name quantities unchanged**
+The variants keep **all other card-name quantities unchanged**
 except the two displayed names (baseline has H=1/E=11). If H=0,
 the replaced Ball slot becomes a twelfth Psychic Energy; if H=2/3/4,
 one/two/three Energy slots respectively become additional Heavy Ball
