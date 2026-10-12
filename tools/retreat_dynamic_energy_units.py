@@ -55,6 +55,10 @@ _POKEMON_V_TAGS = frozenset({
     "Pokémon VMAX",
     "Pokemon VSTAR",
     "Pokémon VSTAR",
+    # An assembled V-UNION is a Pokémon V with a Rule Box while in play.
+    "V-UNION",
+    "Pokemon V-UNION",
+    "Pokémon V-UNION",
 })
 _POKEMON_GX_TAGS = frozenset({"Pokemon-GX", "Pokémon-GX"})
 _POKEMON_EX_TAGS = frozenset({"Pokemon-EX", "Pokémon-EX"})
