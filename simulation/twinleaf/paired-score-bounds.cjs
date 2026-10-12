@@ -7,17 +7,21 @@ const assert = require('node:assert/strict');
  * is left genuinely unidentified. No censoring is imputed as a loss.
  * @param {object} game Row from summarizePairedTraces().games
  * @param {string} deckId
- * @returns {{low:number,high:number,seatLow:number,seatHigh:number}}
+ * @returns {{low:number,high:number,seatLow:number,seatHigh:number,turnLow:number,turnHigh:number}}
  */
 function scoreBounds(game, deckId) {
   if (game.outcome === 'decided') {
     const point = Number(game.winner_deck === deckId);
     const seat = Number(game.winner_deck === game.seat1);
-    return {low:point,high:point,seatLow:seat,seatHigh:seat};
+    const firstTurn = game.first_actor === 1 ? game.seat1 :
+      game.first_actor === 2 ? game.seat2 : null;
+    const turn = firstTurn === null ? null : Number(game.winner_deck === firstTurn);
+    return {low:point,high:point,seatLow:seat,seatHigh:seat,
+      turnLow:turn ?? 0,turnHigh:turn ?? 1};
   }
   if (game.outcome === 'draw')
-    return {low:0.5,high:0.5,seatLow:0.5,seatHigh:0.5};
-  return {low:0,high:1,seatLow:0,seatHigh:1};
+    return {low:0.5,high:0.5,seatLow:0.5,seatHigh:0.5,turnLow:0.5,turnHigh:0.5};
+  return {low:0,high:1,seatLow:0,seatHigh:1,turnLow:0,turnHigh:1};
 }
 
 /**
@@ -62,7 +66,9 @@ function summarizeScoreBounds(summary, deckA, confidence = 0.95) {
       deck_a_lower: (values[0].low+values[1].low)/2,
       deck_a_upper: (values[0].high+values[1].high)/2,
       first_seat_lower: (values[0].seatLow+values[1].seatLow)/2,
-      first_seat_upper: (values[0].seatHigh+values[1].seatHigh)/2
+      first_seat_upper: (values[0].seatHigh+values[1].seatHigh)/2,
+      moving_first_lower: (values[0].turnLow+values[1].turnLow)/2,
+      moving_first_upper: (values[0].turnHigh+values[1].turnHigh)/2
     };
   });
   assert.ok(seeds.length > 0, 'No seed pairs');
@@ -71,6 +77,7 @@ function summarizeScoreBounds(summary, deckA, confidence = 0.95) {
   const average = key => seeds.reduce((total,row) => total+row[key],0)/seeds.length;
   const low=average('deck_a_lower'),high=average('deck_a_upper');
   const firstLow=average('first_seat_lower'),firstHigh=average('first_seat_upper');
+  const movingLow=average('moving_first_lower'),movingHigh=average('moving_first_upper');
   const radius=Math.sqrt(Math.log(2/(1-confidence))/(2*seeds.length));
   return {
     deck_a:deckA,deck_b:deckB,
@@ -80,7 +87,8 @@ function summarizeScoreBounds(summary, deckA, confidence = 0.95) {
     sample_score_bounds:{
       [deckA]:{lower:low,upper:high},
       [deckB]:{lower:1-high,upper:1-low},
-      first_seat:{lower:firstLow,upper:firstHigh}
+      first_seat:{lower:firstLow,upper:firstHigh},
+      moving_first:{lower:movingLow,upper:movingHigh}
     },
     conditional_hoeffding:{
       confidence,unit:'independently sampled paired seeds',
@@ -89,7 +97,7 @@ function summarizeScoreBounds(summary, deckA, confidence = 0.95) {
       [deckB]:{lower:Math.max(0,1-high-radius),upper:Math.min(1,1-low+radius)}
     },
     seed_pairs:seeds,
-    interpretation:'Sample bounds give every unresolved game a possible score from 0 to 1. Hoeffding bounds require iid seed pairs, immutable policy and engine, and still describe only the simulator. Neither supplies a paper Expanded win rate.'
+    interpretation:'Sample bounds give every unresolved game a possible score from 0 to 1. Engine first-seat and actual first-turn effects are distinct; missing first_actor makes moving-first score unidentified. Hoeffding bounds require iid seed pairs, immutable policy and engine, and still describe only the simulator. Neither supplies a paper Expanded win rate.'
   };
 }
 
