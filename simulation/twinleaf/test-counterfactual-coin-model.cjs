@@ -3,8 +3,6 @@ const assert=require('node:assert/strict');
 const path=require('node:path');
 const ROOT=path.resolve(__dirname,'../../vendor/twinleafgg/ptcg-server/output');
 const engine=p=>require(path.join(ROOT,p));
-const {PokemonCatcher}=engine('sets/10-scarlet-and-violet/set-scarlet-and-violet/pokemon-catcher');
-const {RegidragoV}=engine('sets/09-sword-and-shield/set-silver-tempest/regidrago-v');
 const {Simulator}=engine('game/bots/simulator');
 const {State,GamePhase}=engine('game/store/state/state');
 const {Player}=engine('game/store/state/player');
@@ -14,6 +12,8 @@ const {PlayCardAction,PlayerType,SlotType}=engine('game/store/actions/play-card-
 const {ResolvePromptAction}=engine('game/store/actions/resolve-prompt-action');
 const {ChoosePokemonPrompt}=engine('game/store/prompts/choose-pokemon-prompt');
 const {BotFlipMode,BotShuffleMode}=engine('game/bots/bot-arbiter');
+const {PokemonCatcher}=engine('sets/10-scarlet-and-violet/set-scarlet-and-violet/pokemon-catcher');
+const {RegidragoV}=engine('sets/09-sword-and-shield/set-silver-tempest/regidrago-v');
 
 /** A source-card-grounded active/bench board with one usable Pokémon Catcher.
  * @returns {any} Native Twinleaf State in the active player's own turn.
