@@ -1,0 +1,28 @@
+name: Validate conditional self free-Retreat Ability sources
+
+on:
+  push:
+    paths:
+      - "tools/retreat_conditional_self_free_cost.py"
+      - "tools/retreat_environment_modifiers.py"
+      - "results/retreat_conditional_self_free_cost/**"
+      - ".github/workflows/validate-retreat-conditional-self-free-cost.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify exact source coverage and live Retreat frontiers
+        run: |
+          python results/retreat_conditional_self_free_cost/source_audit.py
+          python results/retreat_conditional_self_free_cost/reproduce.py
+          python results/retreat_low_energy_no_cost/reproduce.py
+          python results/retreat_environment_modifiers/reproduce.py
