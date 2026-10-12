@@ -1,0 +1,28 @@
+name: Validate HP-bounded direct Bench transactions
+
+on:
+  push:
+    paths:
+      - "tools/hp_bounded_direct_bench_transaction.py"
+      - "tools/direct_bench_trainer_transaction.py"
+      - "tools/direct_bench_search_execution.py"
+      - "tools/direct_bench_search_profile_compiler.py"
+      - "tools/pokemon_board_metadata.py"
+      - "tools/pokemon_card_profile.py"
+      - "results/hp_bounded_direct_bench_transaction/**"
+      - ".github/workflows/validate-hp-bounded-direct-bench.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check exact printed-HP eligibility and physical Item lifecycle
+        run: python results/hp_bounded_direct_bench_transaction/reproduce.py
