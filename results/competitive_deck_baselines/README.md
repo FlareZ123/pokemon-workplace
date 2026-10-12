@@ -284,3 +284,71 @@ The current fully specified Aichi baselines here (champion Shadow Rider, runner-
 - [Experimental one-slot Path-to-the-Peak Regidrago swap](../regidrago_path_ability_counterfactual/) preserves 59 of the original 60 card choices and replaces Parallel City with Path to the Peak, verified Expanded-legal in the print snapshot. Path's Rule Box lock would suppress ten of the champion's eleven printed Ability-bearing copies, including four Underworld Door VMAX; it also suppresses eight of Regidrago's own eleven. Path disables Psychic Latias ex Skyliner, so a Wobbuffet zero-retreat pivot requires different sequencing or stadium replacement. This is a **counterfactual test candidate**, with zero project-measured match win-rate superiority evidence.
 
 These files supply realistic mutual deck identities and exact local policy constraints for subsequent head-to-head simulation. They do not change the empirical placements of the published lists or establish a modern field-wide deck ranking.
+
+---
+
+## 2026 Aichi Open League 8th place: Mega Absol ex / Garbodor
+
+**Status:** published top-eight tournament reference, fully transcribed into a 60-card exact-print English realization, not a project-optimized or simulator-tested deck. The [CL Aichi Open League decklists](https://limitlesstcg.com/tournaments/566/decklists) identify **Yusuke Kobayashi** as eighth place among 926 entrants on **May 10, 2026**. Original card-name counts are preserved. The exact English print selection reproduces key gameplay roles and does not claim the player used these physical artwork variants.
+
+#### Pokémon (12)
+
+| Qty | Card | English print ID |
+| ---: | --- | --- |
+| 2 | Mega Absol ex | `me1-86` |
+| 2 | Trubbish | `bw11-67` |
+| 2 | Garbodor | `bw11-68` |
+| 1 | Tapu Koko ◇ | `sm9-51` |
+| 1 | Dedenne-GX | `sm10-57` |
+| 1 | Crobat V | `swsh3-104` |
+| 1 | Squawkabilly ex | `sv2-169` |
+| 1 | Tapu Lele-GX | `sm2-60` |
+| 1 | Budew | `sv8pt5-4` |
+
+#### Trainer (41)
+
+| Qty | Card | English print ID |
+| ---: | --- | --- |
+| 1 | Lillie's Determination | `me1-119` |
+| 1 | Carmine | `sv6-145` |
+| 1 | Iono | `sv2-185` |
+| 1 | Roxanne | `swsh10-150` |
+| 1 | Guzma | `sm3-115` |
+| 1 | Crispin | `sv7-133` |
+| 1 | Wally | `xy6-94` |
+| 1 | Karen | `xyp-XY177` |
+| 4 | Quick Ball | `swsh1-179` |
+| 4 | Dark Patch | `swsh10-139` |
+| 3 | VS Seeker | `xy6-110` |
+| 2 | Battle Compressor Team Flare Gear | `xy4-92` |
+| 2 | Ultra Ball | `swsh9-150` |
+| 2 | Battle VIP Pass | `swsh8-225` |
+| 1 | Boost Shake | `swsh7-142` |
+| 1 | Secret Box | `sv6-163` |
+| 1 | Night Stretcher | `sv6pt5-61` |
+| 1 | Super Rod | `sv2-188` |
+| 1 | Pokémon Communication | `sm9-152` |
+| 1 | Hisuian Heavy Ball | `swsh10-146` |
+| 1 | Field Blower | `sm2-125` |
+| 1 | Adventure Bag | `sm8-167` |
+| 4 | Float Stone | `xy8-137` |
+| 1 | Muscle Band | `xy1-121` |
+| 1 | Forest Seal Stone | `swsh12-156` |
+| 2 | Temple of Sinnoh | `swsh10-155` |
+
+#### Energy (7)
+
+| Qty | Card | English print ID |
+| ---: | --- | --- |
+| 5 | Darkness Energy | `bw1-111` |
+| 2 | Lightning Energy | `bw1-108` |
+
+**Totals:** 60 cards: **12 Pokémon / 41 Trainers / 7 Energy**. Exactly ten Basic Pokémon, one ACE SPEC (**Secret Box**), and one Prism Star (**Tapu Koko ◇**). The full exact-print [JSON manifest](absol_garbodor_kobayashi_2026.json) and [source-count/legality reproducer](absol_garbodor_reproduce.py) are available for reuse.
+
+### Competitive role and unresolved questions
+
+Mega Absol ex uses **Terminal Period**, which Knock Outs the opposing Active Pokémon if it has exactly six damage counters, and **Claw of Darkness**, which does damage and removes a revealed hand card. The selected **Garbodor (bw11-68)** is the *Garbotoxin* version from Legendary Treasures, consistent with the linked source printing. When a Tool is attached, Garbotoxin suppresses Pokémon Abilities for both sides. The list has four Float Stone and uses Dedenne-GX, Crobat V, Squawkabilly ex, and Tapu Lele-GX as support Abilities, so Tool attachment timing and search sequencing are especially important. Tapu Koko ◇ and two Lightning Energy provide a potential Energy acceleration line. Budew gives an early Item-lock option.
+
+The list also includes Dark Patch, Battle Compressor, Secret Box and several Item search lines. Realistic discarded-card payability, Energy attachment timing, three-Prize Mega Absol exposure, Garbotoxin self-interference, and the effect of opponent Item/Ability locks require explicit game-state study. This deck's top-eight finish is real competitive evidence for the published environment; neither its matchup win rate nor superiority over the other baselines has been measured here.
+
+The [reproducer](absol_garbodor_reproduce.py) checks all **37 named quantities** against the published list, selected exact English print identity, critical attack and Ability names, starter count, deck constraints and conservative paper Expanded snapshot eligibility as of October 12, 2026. Its source scope and limitations are recorded in the manifest. Any future variant should preserve a separate source baseline and list its changes explicitly.
