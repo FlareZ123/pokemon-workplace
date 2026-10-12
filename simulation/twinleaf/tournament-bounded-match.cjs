@@ -6,6 +6,7 @@ const engine=p=>require(path.join(base,p));
 const {loadCandidateDecks}=require('./candidate-deck-loader.cjs');
 const {makeSeatPairs,deckDigest}=require('./paired-seat-plan.cjs');
 const {summarizePairedTraces}=require('./paired-result-summary.cjs');
+const {summarizeScoreBounds}=require('./paired-score-bounds.cjs');
 const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
 const {makeMatchActionTelemetry}=require('./match-action-telemetry.cjs');
 const {makeTacticOrder}=require('./tactic-order-policy.cjs');
@@ -125,6 +126,7 @@ function main() {
   const traces=seatPairs.map(p=>runOne(p.seat1.engine_names,p.seat2.engine_names,p.seed,
     350,25000,config.tacticOrder));
   const pairedResults=summarizePairedTraces(seatPairs,traces);
+  const pairedScoreBounds=summarizeScoreBounds(pairedResults,a.id);
   const report={scope:'bounded engine self-play diagnostics only, SimpleTacticsAi policy unvalidated',
     twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
     shuffle_policy:'research_uniform_fisher_yates_v1',
@@ -134,7 +136,8 @@ function main() {
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
     deck_sources:[a.source||'aichi_reference',b.source||'aichi_reference'],
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
-    max_actions:350,wall_ms:25000,paired_results:pairedResults,traces};
+    max_actions:350,wall_ms:25000,paired_results:pairedResults,
+    paired_score_bounds:pairedScoreBounds,traces};
   console.log('[tournament-probe] '+JSON.stringify(report));
   assert.ok(traces.every(t=>t.turn>=1),'Both games must enter actual turn one');
   assert.equal(pairedResults.error_games,0,'Engine or bot error must not silently pass as a match');
