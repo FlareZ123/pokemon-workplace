@@ -21,7 +21,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          submodules: true
+          submodules: false
+      - name: Initialize only pinned Twinleaf submodule
+        run: git -c protocol.version=2 submodule update --init --depth=1 vendor/twinleafgg
       - uses: actions/setup-node@v4
         with:
           node-version-file: vendor/twinleafgg/.nvmrc
