@@ -52,7 +52,7 @@ function runOne(deckA,deckB,seed,maxActions=1000,wallMilliseconds=12000) {
     const arbiter=new BotArbiter({flipMode:BotFlipMode.RANDOM,shuffleMode:BotShuffleMode.RANDOM});
     store.dispatch(new AddPlayerAction(1,'Aichi A',deckA));
     store.dispatch(new AddPlayerAction(2,'Aichi B',deckB));
-    let actions=0,attacks=0,status='action_cap',error=null;
+    let actions=0,attacks=0,status='action_cap',error=null,firstActor=null;
     while(actions<maxActions) {
       if(Date.now()-started>wallMilliseconds){status='wall_cap';break;}
       const state=store.state;
