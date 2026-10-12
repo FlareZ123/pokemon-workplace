@@ -56,6 +56,8 @@ function runOne(deckA,deckB,seed,maxActions=1000,wallMilliseconds=12000) {
     while(actions<maxActions) {
       if(Date.now()-started>wallMilliseconds){status='wall_cap';break;}
       const state=store.state;
+      if(firstActor===null && state.phase===GamePhase.PLAYER_TURN)
+        firstActor=state.players[state.activePlayer]?.id ?? null;
       if(state.phase===GamePhase.FINISHED){status='finished';break;}
       const prompt=state.prompts.find(p=>p.result===undefined);
       const id=prompt?prompt.playerId:state.players[state.activePlayer]?.id;
