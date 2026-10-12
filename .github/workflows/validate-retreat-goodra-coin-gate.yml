@@ -1,0 +1,26 @@
+name: Validate Goodra coin-gated Retreat outcomes
+
+on:
+  push:
+    paths:
+      - "tools/retreat_goodra_coin_gate.py"
+      - "results/retreat_goodra_coin_gate/**"
+      - ".github/workflows/validate-retreat-goodra-coin-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify coin outcomes, quota, Energy conservation and switching
+        run: |
+          python results/retreat_goodra_coin_gate/reproduce.py
+          python results/retreat_energy_transaction/reproduce.py
+          python results/retreat_action_enumeration/reproduce.py
