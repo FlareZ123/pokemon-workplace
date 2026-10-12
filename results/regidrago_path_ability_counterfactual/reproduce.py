@@ -114,7 +114,7 @@ assert bool(printed["sv8-76"].get("rules"))
 assert "Sky Field" in named_counts(champion)
 assert "Dimension Valley" in named_counts(champion)
 assert "Field Blower" in named_counts(champion)
-assert "Marshadow" in named_counts(champion)["Marshadow"] and "Marshadow" in named_counts(candidate)
+assert named_counts(champion)["Marshadow"] == named_counts(candidate)["Marshadow"] == 1
 
 print("PASS: exactly one published-slot replacement, snapshot eligibility,")
 print("      typed Rule Box and Psychic suppression, and removal counterplay sources.")
