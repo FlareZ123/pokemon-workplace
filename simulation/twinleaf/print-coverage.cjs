@@ -154,19 +154,42 @@ function loadImplementedCards() {
 }
 
 /**
+ * Printed promos use PTCGO labels PR-XY / PR-SM, while Twinleaf names their
+ * actual implemented sets XYP / SMP. Both overrides are checked against the
+ * printed set IDs rather than broad fuzzy card-name matching.
+ *
+ * @param {{id:string,ptcgoCode?:string}[]} sets
+ * @returns {Map<string,string>}
+ */
+function makePaperSetCodes(sets) {
+  const byId = new Map(sets.filter(s => s.ptcgoCode)
+    .map(s => [s.id, s.ptcgoCode]));
+  for (const [id, sourceCode, engineCode] of [
+    ['xyp', 'PR-XY', 'XYP'],
+    ['smp', 'PR-SM', 'SMP']
+  ]) {
+    if (byId.get(id) === sourceCode) {
+      byId.set(id, engineCode);
+    }
+  }
+  return byId;
+}
+
+/**
  * @returns {Record<string, ReturnType<typeof matchPaperPrint>[]>}
  */
 function auditAichiBaselines() {
   const markdown = fs.readFileSync(path.join(ROOT, 'results/competitive_deck_baselines/README.md'), 'utf8');
   const decks = parseBaselineDecks(markdown);
   const sets = JSON.parse(fs.readFileSync(path.join(ROOT, 'resources/sets/en.json'), 'utf8'));
-  const paperSetCodes = new Map(sets.filter(set => set.ptcgoCode).map(set => [set.id, set.ptcgoCode]));
+  const paperSetCodes = makePaperSetCodes(sets);
   const implemented = loadImplementedCards();
   return Object.fromEntries(Object.entries(decks).map(([name, entries]) =>
     [name, entries.map(entry => matchPaperPrint(entry, paperSetCodes, implemented))]));
 }
 
 module.exports = {
-  parseBaselineDecks, cleanNumber, normalizePromoPrintNumber, cleanName, comparePrintedName,
+  parseBaselineDecks, cleanNumber, normalizePromoPrintNumber, cleanName,
+  makePaperSetCodes, comparePrintedName,
   matchPaperPrint, loadImplementedCards, auditAichiBaselines
 };
