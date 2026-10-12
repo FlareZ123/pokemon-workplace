@@ -73,7 +73,7 @@ function runOne(deckA,deckB,seed,maxActions=1000,wallMilliseconds=12000) {
       actions++;
     }
     const state=store.state;
-    return {seed,status,actions,attacks,turn:state.turn,phase:GamePhase[state.phase],
+    return {seed,status,actions,attacks,first_actor:firstActor,random_calls:randomCalls,turn:state.turn,phase:GamePhase[state.phase],
       winner:state.winner,prizes:state.players.map(p=>p.getPrizeLeft()),
       elapsed_ms:Date.now()-started,error};
   } finally {Math.random=prior;}
