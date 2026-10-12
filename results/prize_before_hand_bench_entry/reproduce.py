@@ -18,7 +18,7 @@ from prize_before_hand_bench_entry import (
     use_lucky_bonus,
     use_wish_upon_a_star,
 )
-from prize_pending_take import stage_prize_takes
+from prize_pending_take import resolve_next_pending_prize, stage_prize_takes
 from promotion_pending_conservation import dispose_pending_before_promotion
 from simultaneous_knockout_conservation import prepare_knock_out_batch
 from stack_knockout_conservation import StackBoardMaterialState
@@ -137,6 +137,90 @@ def after_active_ko(
     return dispose_pending_before_promotion(pending)
 
 
+
+def validate_jirachi_knockout_slot_geometry() -> None:
+    """Official Jirachi full-Bench Q&A and a derived sequential Prize chain.
+
+    The opposing Active Knock Out that awards the initial Prize is assumed
+    upstream. These four cases differ only in which of our own Pokemon are
+    removed by the same resolution batch.
+    """
+    cases = (
+        ("active_only", ("active",), False, False, 5),
+        ("bench_only", ("bench-0",), True, False, 5),
+        ("active_one_bench", ("active", "bench-0"), True, False, 5),
+        ("active_two_benches", ("active", "bench-0", "bench-1"), True, True, 4),
+    )
+    for case, removed_roles, can_wish, can_lucky, wish_bench_size in cases:
+        prefix = f"geometry-{case}"
+        initial, board, physical = build_state(
+            prefix=prefix,
+            bench_count=5,
+            prize_classes=(
+                ("sm7-97", "Jirachi Prism Star"),
+                ("sv3pt5-113", "Chansey"),
+                (f"{prefix}-other-class", "Other"),
+            ),
+        )
+        knocked_out = tuple(f"{prefix}-{role}" for role in removed_roles)
+        batch = prepare_knock_out_batch(board, knocked_out)
+        assert batch is not None
+        post_ko = dispose_pending_before_promotion(batch)
+        assert post_ko.active_id is None if "active" in removed_roles else post_ko.active_id == f"{prefix}-active"
+
+        stage = stage_prize_takes(
+            sync_physical(physical, post_ko),
+            positions=(0,),
+        )
+        post_ko = post_ko.with_ledger(stage.physical.ledger)
+        wish = use_wish_upon_a_star(
+            stage,
+            post_ko,
+            pokemon_id=f"{prefix}-jirachi",
+            during_your_turn=True,
+        )
+        assert (wish is not None) == can_wish, case
+
+        if wish is None:
+            assert post_ko.bench_occupancy == 5
+            assert_conserved(initial, post_ko.ledger)
+            continue
+
+        assert wish.extra_prize_staged
+        assert wish.after_board.bench_occupancy == wish_bench_size
+        assert wish.after_prizes.pending[0].instance_id == f"{prefix}-prize-1"
+
+        lucky = use_lucky_bonus(
+            wish.after_prizes,
+            wish.after_board,
+            pokemon_id=f"{prefix}-chansey",
+            coin_heads=True,
+            during_your_turn=True,
+        )
+        assert (lucky is not None) == can_lucky, case
+
+        if lucky is None:
+            # Jirachi took the final Bench slot. The extra Prize still
+            # reaches hand, but Chansey cannot enter after that decision.
+            hand = resolve_next_pending_prize(wish.after_prizes)
+            final_board = wish.after_board.with_ledger(hand.after.physical.ledger)
+            assert hand.after.pending == ()
+            assert final_board.ledger.instance(f"{prefix}-prize-1").zone == "hand"
+            assert final_board.bench_occupancy == 5
+        else:
+            # Two prior Bench Knock Outs leave room for both Prize effects.
+            # Heads on Lucky Bonus now stages a third face-down Prize.
+            assert lucky.extra_prize_staged
+            assert lucky.after_board.bench_occupancy == 5
+            assert lucky.after_prizes.pending[0].instance_id == f"{prefix}-prize-2"
+            third = resolve_next_pending_prize(lucky.after_prizes)
+            assert third.after.pending == ()
+            final_board = lucky.after_board.with_ledger(third.after.physical.ledger)
+            assert final_board.ledger.instance(f"{prefix}-prize-2").zone == "hand"
+
+        assert_conserved(initial, final_board.ledger)
+
+
 def main() -> None:
     initial_c, board_c, physical_c = build_state(
         prefix="c",
@@ -243,6 +327,7 @@ def main() -> None:
     }
     assert_conserved(initial_j, chained_lucky.after_board.ledger)
 
+    validate_jirachi_knockout_slot_geometry()
     print("before-hand Prize Bench-entry regressions passed")
 
 
