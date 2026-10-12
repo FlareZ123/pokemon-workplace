@@ -46,5 +46,7 @@ jobs:
           path: twinleaf-print-coverage.json
           if-no-files-found: error
           retention-days: 14
+      - name: Validate both Aichi tournament baselines as 60-card engine lists
+        run: node simulation/twinleaf/test-baseline-decks.cjs
       - name: Smoke-test two headless Expanded bots in real game setup
         run: node simulation/twinleaf/test-headless-setup.cjs
