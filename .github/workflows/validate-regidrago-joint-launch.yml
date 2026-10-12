@@ -1,0 +1,20 @@
+name: Validate Regidrago joint item-access launch
+
+on:
+  push:
+    paths:
+      - tools/regidrago_joint_launch.py
+      - results/regidrago_joint_launch/**
+      - .github/workflows/validate-regidrago-joint-launch.yml
+  workflow_dispatch:
+
+jobs:
+  exact-physical-item-lines:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate exact first-turn joint objective and physical oracle
+        run: python results/regidrago_joint_launch/reproduce.py
