@@ -30,6 +30,32 @@ from source_scoped_channel_projection import (
 from typed_search_target_allocator import DemandChannel, TypedTargetAction
 
 
+def validate_locked_hp_hand_play(
+    state: DirectBenchTrainerExecutionState,
+    profile: HPBoundedDirectBenchProfile,
+    *,
+    action_card_class: str,
+    active_restrictions: Sequence[SourceScopedActionRestriction],
+    action_metadata_by_id: Mapping[str, CardActionMetadata],
+) -> None:
+    """Check the hand Item before any hidden deck inspection or movement."""
+
+    if action_card_class != profile.direct.card_id:
+        raise ValueError("played print disagrees with HP-bounded Item profile")
+    action_metadata = action_metadata_by_id.get(action_card_class)
+    if action_metadata is None:
+        raise ValueError("no trusted exact action metadata for played Item")
+    if action_metadata.card_id != action_card_class or action_metadata.card_kind != "item":
+        raise ValueError("played print metadata is not an Item")
+
+    projected = project_source_scoped_permissions(
+        active_restrictions,
+        base_channels=state.channels,
+    )
+    if not action_allowed(projected, action_metadata.attempt("hand")):
+        raise ValueError("HP-bounded Item play is prohibited by active restrictions")
+
+
 def execute_locked_hp_direct_bench_trainer_transaction(
     state: DirectBenchTrainerExecutionState,
     profile: HPBoundedDirectBenchProfile,
@@ -51,20 +77,13 @@ def execute_locked_hp_direct_bench_trainer_transaction(
     this boundary only evaluates them for the attempted hand-sourced Item.
     """
 
-    if action_card_class != profile.direct.card_id:
-        raise ValueError("played print disagrees with HP-bounded Item profile")
-    action_metadata = action_metadata_by_id.get(action_card_class)
-    if action_metadata is None:
-        raise ValueError("no trusted exact action metadata for played Item")
-    if action_metadata.card_id != action_card_class or action_metadata.card_kind != "item":
-        raise ValueError("played print metadata is not an Item")
-
-    projected = project_source_scoped_permissions(
-        active_restrictions,
-        base_channels=state.channels,
+    validate_locked_hp_hand_play(
+        state,
+        profile,
+        action_card_class=action_card_class,
+        active_restrictions=active_restrictions,
+        action_metadata_by_id=action_metadata_by_id,
     )
-    if not action_allowed(projected, action_metadata.attempt("hand")):
-        raise ValueError("HP-bounded Item play is prohibited by active restrictions")
 
     return execute_hp_bounded_direct_bench_trainer_transaction(
         state,
