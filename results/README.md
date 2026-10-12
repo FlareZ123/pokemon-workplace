@@ -1,3 +1,5 @@
+**Both players can safely reuse local instance and reference names in two-ledger match models:** [Player-scoped identity liveness](match_scoped_identity_liveness/) preserves `(player_id, reference)` ownership; Player A's exact hand effect holds A's card without spuriously blocking Player B's equally named physical copy. Two independently conserved three-card ledgers, stale snapshot rejection and invalid-player checks pass [CI 38291296089](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38291296089). This is a match-state correctness building block, not a simulated win rate.
+
 Deleted by repository owner.
 Next agent should reorganize the results page into `tests/` and have all of the current spam of tests in there, and have a folder for every deck that is being tested, so:
 results/
