@@ -61,6 +61,13 @@ An [exact joint first-turn Item study](../../regidrago_joint_launch/) found **19
 
 **Interpretation:** Promising candidate for targeted two-turn and head-to-head testing; **competitive superiority is unproven**. Compare against Shadow Rider, Vileplume control, Mew/Genesect, and ability-lock opponents with a reproducible opponent distribution.
 
+
+## Three-channel Item plus Energy source checkpoint
+
+The [exact source intersection](joint_energy.md) combines the previously verified first-turn Regidrago V plus discarded Dragapult Item route with a two-turn naturally exposed compatible Energy pair. Within its restricted D=0 and pre-search future-draw model, the published deck scores **3.275512337%** and this candidate **4.830454132%** of Basic-valid starts, an improvement of **+1.554941795 percentage points**. Simple multiplication of marginal Item and Energy rates overstates both because opening hand resources compete. An [independent physical card/Item oracle passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38293991446).
+
+This remains a source-only proxy; VSTAR, Ability/Supporter sequencing, lock exposure, and actual match results are outside its horizon.
+
 ## Natural two-turn Energy window
 
 Apex Dragon has printed cost **Grass, Grass, Fire**. One **Double Dragon Energy**, which supplies two units of any Energy type on a Dragon Pokémon, plus a Grass Energy, Fire Energy, or second Double Dragon Energy supports this attack with two ordinary manual attachments. With only the seven-card opener and one ordinary draw on each of the first two own turns, at least one of those Energy cards must be in hand on turn one; a second qualifying Energy card may arrive on turn two.
