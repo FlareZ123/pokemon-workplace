@@ -107,7 +107,19 @@ def main() -> None:
         assert sum(actual.values()) == 60, directory
         print(f"PASS {directory}: 60 cards, {len(actual)} prints, source={family}")
 
+    index = (ROOT / "results" / "README.md").read_text(encoding="utf-8")
+    if not index.startswith("# Competitive paper Expanded: playable decks and research"):
+        raise AssertionError("results index must open with curated playable decks")
+    if "Repository maintainer directive" not in index:
+        raise AssertionError("results index lost the maintainer directive footnote")
+    if len(index.split()) > 13000:
+        raise AssertionError("results index exceeds maintainer's 13K-word ceiling")
+    for directory in PAGES:
+        if f"](decks/{directory}/)" not in index:
+            raise AssertionError(f"results index does not link {directory}")
+
     print(f"All {len(PAGES)} canonical deck pages match verified source inventories.")
+    print("Results index is deck-first, linked, and retains maintainer footnote.")
 
 
 if __name__ == "__main__":
