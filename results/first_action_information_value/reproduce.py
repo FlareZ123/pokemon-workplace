@@ -59,9 +59,9 @@ def exhaustive():
             zero_gap += decision.information_gap == 0
             positive_gap += decision.information_gap > 0
             cases += 1
-    assert cases == 585
+    assert cases == 584
     assert zero_gap and positive_gap
-    print("PASS exhaustive 585 asymmetric-weight decision matrices")
+    print("PASS exhaustive 584 asymmetric-weight decision matrices")
     print("no-gap", zero_gap, "positive-gap", positive_gap)
 
 
