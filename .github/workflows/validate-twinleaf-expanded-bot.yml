@@ -63,6 +63,9 @@ jobs:
         run: node simulation/twinleaf/test-baseline-decks.cjs
       - name: Check strict, complete Aichi 60-card Twinleaf deck materialization
         run: node simulation/twinleaf/test-tournament-deck-loader.cjs
+      - name: Enter a real Twinleaf turn with Aichi Vileplume and Mew exact 60-card lists
+        run: node simulation/twinleaf/test-tournament-headless-setup.cjs
+        timeout-minutes: 2
       - name: Check Shadow Rider Underworld Door target guard against real engine
         run: node simulation/twinleaf/test-underworld-door-targets.cjs
       - name: Smoke-test two headless Expanded bots in real game setup
