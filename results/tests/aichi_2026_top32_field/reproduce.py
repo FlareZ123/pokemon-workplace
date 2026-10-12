@@ -75,6 +75,6 @@ for candidate in proxies:
         for row in plan:
             assert (ROOT / "results/decks" / row["seat1_proxy"] / "README.md").is_file()
             assert (ROOT / "results/decks" / row["seat2_proxy"] / "README.md").is_file()
-print("PASS: 14 deterministic two-seat scenario schedules with faithful category multiplicities")
+print("PASS: 16 deterministic two-seat scenario schedules with faithful category multiplicities")
 print("PASS: each observed schedule=27 source-finish proxies x 2 seats; equal scenario=8 x 2")
 print("LIMIT: eight 60-card proxy archetypes only, 5 missing finishers; no simulation or match rate")
