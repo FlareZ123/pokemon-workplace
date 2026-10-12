@@ -38,6 +38,7 @@ def after_draw_success(
     deck: tuple[int, ...],
     preserved_support: bool,
     pre_choice: str | None,
+    allow_search_fallback: bool = False,
 ) -> float:
     """Probability both targets can be completed after one random draw.
 
@@ -52,14 +53,26 @@ def after_draw_success(
         assert h[4] > 0 and h[5] > 0
         h[4] -= 1
         h[5] -= 1
-        if pre_choice == "attacker" and d[3] > 0:
-            d[3] -= 1
-            attacker_established = True
-        if pre_choice == "rescue" and d[2] > 0:
-            d[2] -= 1
-            if d[1] > 0:
+        if pre_choice == "attacker":
+            if d[3] > 0:
+                d[3] -= 1
+                attacker_established = True
+            elif allow_search_fallback and d[2] > 0 and d[1] > 0:
+                # Searching reveals deck contents; choose another live Basic
+                # when the original attacker target was Prized.
+                d[2] -= 1
                 d[1] -= 1
                 rescue_held = True
+        elif pre_choice == "rescue":
+            if d[2] > 0:
+                d[2] -= 1
+                if d[1] > 0:
+                    d[1] -= 1
+                    rescue_held = True
+            elif allow_search_fallback and not attacker_established and d[3] > 0:
+                # K1 fallback after seeing that Tapu Lele-GX is Prized.
+                d[3] -= 1
+                attacker_established = True
 
     total = sum(d)
     if not total:
@@ -98,6 +111,7 @@ def opening_option_probability(
     quick_ball_copies: int,
     disposable_nonstarter: int,
     opening_hand_size: int = 7,
+    allow_search_fallback: bool = False,
 ) -> Result:
     """Exactly enumerate valid opening, six Prizes, and one later draw.
 
@@ -180,11 +194,11 @@ def opening_option_probability(
                 eager_possible += weight
             eager_a += weight * after_draw_success(
                 held, remaining_deck, preserved,
-                first_a if payable else None,
+                first_a if payable else None, allow_search_fallback,
             )
             eager_g += weight * after_draw_success(
                 held, remaining_deck, preserved,
-                first_g if payable else None,
+                first_g if payable else None, allow_search_fallback,
             )
 
     if not mass:
