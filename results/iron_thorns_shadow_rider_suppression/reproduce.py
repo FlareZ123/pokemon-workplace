@@ -43,7 +43,7 @@ def ability_names(card: dict) -> set[str]:
 
 
 def has_rule_box(card: dict) -> bool:
-    return any(" Rule:" in rule or " rule:" in rule for rule in card["rules"])
+    return any(" Rule:" in rule or " rule:" in rule for rule in card.get("rules") or ())
 
 
 def thorns_suppresses(target: dict, thorns_active: bool = True) -> bool:
