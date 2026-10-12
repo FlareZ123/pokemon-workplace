@@ -117,10 +117,6 @@ def verify() -> None:
     assert results["published"]["energy_paid"] < (
         results["third_mega_cut_temple"]["energy_paid"]
     ) < results["third_mega_cut_crobat"]["energy_paid"]
-    assert results["published"]["direct"] == (
-        results["third_mega_cut_temple"]["valid_opening"] * 0
-        + results["published"]["direct"]
-    )
     print("PASS: three full legal 60-card lists, five route metrics")
     print("PASS: three independent exhaustive labeled toy worlds")
     print("LIMIT: named one-step Item access with assumed Energy-only payments")
