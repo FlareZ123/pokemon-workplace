@@ -5,8 +5,10 @@ One Double Dragon plus either Basic pays Apex Dragon. Copied Kyurem's
 Trifrost discards all the actor's attached Energy. Conditionally fix the
 DDE and one Basic of the stated type outside the unknown pool; then
 randomly allocate Prizes and other non-deck cards from the remaining 58.
-This models only presence of both Basic types in the deck, not Supporter
-access, player choice, actual known hand, deck searches, or game outcomes.
+This compares two DIFFERENT conditioned source-card populations. It models
+only two-type stock, not action-selection value: if both Basics are already
+held in one hand, choosing which to attach leaves deck stock unchanged.
+See tools/aichi_regidrago_crispin_paired_causal.py.
 """
 from __future__ import annotations
 
@@ -99,7 +101,8 @@ def build(repository_root: Path) -> dict[str, Any]:
         "grass_placement_weak_dominance_m": unknown + 1,
         "strict_advantage_m_count": sum(x > 0 for x in all_m),
         "tie_m_values": [m for m, x in enumerate(all_m) if x == 0],
-        "claim_scope": "Crispin two-Basic-type presence in the remaining deck only",
+        "claim_scope": "Two distinct conditioned populations; NOT matched player actions",
+        "paired_causal_correction": "An identical hand holding Grass and Fire has zero deck-stock difference between attaching either Basic",
     }
 
 
