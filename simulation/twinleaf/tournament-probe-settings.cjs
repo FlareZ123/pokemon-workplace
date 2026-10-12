@@ -2,13 +2,14 @@
 const assert = require('node:assert/strict');
 
 const MAX_SEED_PAIRS = 3;
+const {MODES} = require('./tactic-order-policy.cjs');
 
 /**
  * A manual-only configuration surface for bounded Twinleaf diagnostics.
  * Prevents malformed seeds and open-ended shared-CI match workloads.
  * @param {Record<string, string|undefined>} env
  * @param {string[]} availableIds Exact, validated engine-mappable tournament list IDs
- * @returns {{deckAId:string,deckBId:string,seeds:number[]}}
+ * @returns {{deckAId:string,deckBId:string,seeds:number[],tacticOrder:string}}
  */
 function parseProbeSettings(env, availableIds) {
   const deckAId = env.TWINLEAF_DECK_A || 'vileplume';
@@ -28,7 +29,9 @@ function parseProbeSettings(env, availableIds) {
     return seed;
   });
   assert.equal(new Set(seeds).size, seeds.length, 'Seed pairs must be distinct');
-  return {deckAId, deckBId, seeds};
+  const tacticOrder=env.TWINLEAF_TACTIC_ORDER || 'native';
+  assert.ok(MODES.includes(tacticOrder), 'Unknown tactic order: ' + tacticOrder);
+  return {deckAId, deckBId, seeds, tacticOrder};
 }
 
 module.exports = {MAX_SEED_PAIRS, parseProbeSettings};
