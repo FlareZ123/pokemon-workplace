@@ -59,7 +59,9 @@ function replay(options,randomValue) {
     sim.dispatch(action);
     const prompt=sim.store.state.prompts.find(p=>p.result===undefined);
     if(prompt){
-      assert.ok(prompt instanceof ChoosePokemonPrompt);
+      assert.ok(prompt instanceof ChoosePokemonPrompt,
+        'Unexpected prompt '+prompt.constructor.name+' id='+prompt.id+
+        ' owned='+prompt.playerId+' unresolved='+sim.store.state.prompts.map(p=>p.constructor.name).join(','));
       sim.dispatch(new ResolvePromptAction(prompt.id,[sim.store.state.players[1].bench[0]]));
     }
     const state=sim.store.state;
