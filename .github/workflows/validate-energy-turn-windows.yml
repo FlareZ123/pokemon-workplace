@@ -1,0 +1,21 @@
+name: Validate Energy turn-window timing
+on:
+  push:
+    paths:
+      - 'tools/energy_turn_windows.py'
+      - 'tools/typed_energy_access.py'
+      - 'tools/energy_action_budget.py'
+      - 'tools/turn_action_budget.py'
+      - 'results/tests/energy_turn_windows/**'
+      - '.github/workflows/validate-energy-turn-windows.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run turn-window regression
+        run: python results/tests/energy_turn_windows/reproduce.py
