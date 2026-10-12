@@ -1,0 +1,17 @@
+name: Verify reactive counter lock profiles
+on:
+  push:
+    paths:
+      - 'tools/reactive_counter_lock_profiles.py'
+      - 'results/reactive_counter_lock_profiles/**'
+      - '.github/workflows/validate-reactive-counter-lock-profiles.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python results/reactive_counter_lock_profiles/reproduce.py
