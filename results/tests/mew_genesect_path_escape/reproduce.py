@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 import sys
 from collections import Counter
 from datetime import date
@@ -142,10 +141,11 @@ def verify_candidate_manifest() -> None:
     assert {card["print_id"]: card["quantity"] for card in entries} == by_print
 
     readme = (folder/"README.md").read_text(encoding="utf-8")
-    rows = re.findall(
-        r"^\\|\\s*(\\d+)\\s*\\|[^|\\n]+\\|\\s*([a-z0-9]+-[A-Za-z0-9]+)\\s*\\|$",
-        readme, flags=re.MULTILINE,
-    )
+    rows = []
+    for line in readme.splitlines():
+        fields = [field.strip() for field in line.strip("|").split("|")]
+        if len(fields) == 3 and fields[0].isdigit() and fields[2] in by_print:
+            rows.append((fields[0], fields[2]))
     documented = {print_id: int(qty) for qty, print_id in rows}
     assert len(rows) == len(entries)
     assert documented == by_print
