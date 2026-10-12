@@ -63,7 +63,7 @@ function normalizePromoPrintNumber(sourceNumber, sourceSetCode) {
   const prefixBySet = { XYP: 'XY', SMP: 'SM', BWP: 'BW', SWSHP: 'SWSH' };
   const prefix = prefixBySet[String(sourceSetCode).toUpperCase()];
   if (prefix && cleaned.startsWith(prefix) &&
-      /^\\d+$/.test(cleaned.slice(prefix.length))) {
+      /^\d+$/.test(cleaned.slice(prefix.length))) {
     return cleanNumber(cleaned.slice(prefix.length));
   }
   return cleaned;
