@@ -89,7 +89,7 @@ function main() {
     twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
-    max_actions:1000,wall_ms:12000,traces};
+    max_actions:350,wall_ms:45000,traces};
   console.log('[tournament-probe] '+JSON.stringify(report));
   assert.ok(traces.every(t=>t.turn>=1),'Both games must enter actual turn one');
   console.log('[tournament-probe] PASS: paired bounded headless traces emitted with explicit limitations');
