@@ -1,0 +1,45 @@
+name: Twinleaf matchup evidence integrity
+
+on:
+  push:
+    paths:
+      - 'simulation/twinleaf/paired-result-summary.cjs'
+      - 'simulation/twinleaf/paired-score-bounds.cjs'
+      - 'simulation/twinleaf/test-paired-score-bounds.cjs'
+      - 'simulation/twinleaf/matchup-evidence-ledger.cjs'
+      - 'simulation/twinleaf/test-matchup-evidence-ledger.cjs'
+      - 'simulation/twinleaf/report-atomic.cjs'
+      - 'simulation/twinleaf/test-report-atomic.cjs'
+      - '.github/workflows/twinleaf-evidence-integrity.yml'
+  pull_request:
+    paths:
+      - 'simulation/twinleaf/paired-result-summary.cjs'
+      - 'simulation/twinleaf/paired-score-bounds.cjs'
+      - 'simulation/twinleaf/test-paired-score-bounds.cjs'
+      - 'simulation/twinleaf/matchup-evidence-ledger.cjs'
+      - 'simulation/twinleaf/test-matchup-evidence-ledger.cjs'
+      - 'simulation/twinleaf/report-atomic.cjs'
+      - 'simulation/twinleaf/test-report-atomic.cjs'
+      - '.github/workflows/twinleaf-evidence-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+      - name: Check seat attributions and true draws
+        run: node simulation/twinleaf/test-paired-result-summary.cjs
+      - name: Check conservative seat-paired score bounds
+        run: node simulation/twinleaf/test-paired-score-bounds.cjs
+      - name: Refuse incompatible evidence and repeated seeds
+        run: node simulation/twinleaf/test-matchup-evidence-ledger.cjs
+      - name: Check lock-guarded atomic artifact writer
+        run: node simulation/twinleaf/test-report-atomic.cjs
