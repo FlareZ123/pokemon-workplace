@@ -104,11 +104,21 @@ console.log('[supporter-mutation] '+JSON.stringify({
 }));
 assert.equal(mutatedCounter,state.turn,
   'Pinned PlaySupporterTactic must reproduce premature live counter mutation');
-assert.ok(dispatchError,
-  'Premature counter must reject the legal Supporter on live dispatch');
-actor.supporterTurn=0;
-store.dispatch(action);
-assert.ok(actor.supporterTurn > 0,'Successfully played Supporter must increment actual usage');
-assert.equal(actor.hand.cards.some(card=>card.name==="Boss's Orders"),false,
+assert.equal(dispatchError?.message, 'SUPPORTER_ALREADY_PLAYED',
+  'Native counter mutation must produce the engine Supporter-already-played error');
+// A throwing Store dispatch need not roll back intermediate card movements,
+// so retry the same policy in an independent, otherwise identical game state.
+const recovered=makeState();
+const recoveredActor=recovered.players[0];
+const recoveredAction=new PlaySupporterTactic(opts).useTactic(recovered,recoveredActor);
+assert.equal(recoveredAction?.type, action.type);
+assert.equal(recoveredAction?.handIndex, action.handIndex);
+recoveredActor.supporterTurn=0;
+const recoveredStore=new Store({onStateChange:()=>{}});
+recoveredStore.state=recovered;
+recoveredStore.dispatch(recoveredAction);
+assert.ok(recoveredActor.supporterTurn > 0,
+  'Successfully played Supporter must increment actual usage');
+assert.equal(recoveredActor.hand.cards.some(card=>card.name==="Boss's Orders"),false,
   'Successful dispatch must move played Supporter out of hand');
 console.log('[supporter-mutation] PASS: policy-mutated live counter illegally blocks Supporter; restoring counter permits native engine play');
