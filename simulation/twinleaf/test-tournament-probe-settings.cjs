@@ -3,16 +3,18 @@ const assert = require('node:assert/strict');
 const {parseProbeSettings, MAX_SEED_PAIRS} = require('./tournament-probe-settings.cjs');
 const ids = ['vileplume', 'shadow_rider', 'regidrago', 'mew_genesect'];
 const original = parseProbeSettings({}, ids);
-assert.deepEqual(original, {deckAId: 'vileplume', deckBId: 'mew_genesect', seeds: [20261012]});
+assert.deepEqual(original, {deckAId: 'vileplume', deckBId: 'mew_genesect', seeds: [20261012], tacticOrder: 'native'});
 const swapped = parseProbeSettings({
   TWINLEAF_DECK_A: 'shadow_rider',
   TWINLEAF_DECK_B: 'regidrago',
   TWINLEAF_SEEDS: ' 0, 20261012, 4294967295 '
 }, ids);
 assert.deepEqual(swapped, {
-  deckAId: 'shadow_rider', deckBId: 'regidrago', seeds: [0, 20261012, 4294967295]
+  deckAId: 'shadow_rider', deckBId: 'regidrago', seeds: [0, 20261012, 4294967295], tacticOrder: 'native'
 });
 assert.equal(MAX_SEED_PAIRS, 3);
+assert.equal(parseProbeSettings({TWINLEAF_TACTIC_ORDER:'attack_before_retreat'},ids).tacticOrder,
+  'attack_before_retreat');
 for (const env of [
   {TWINLEAF_DECK_A: 'invalid'},
   {TWINLEAF_DECK_B: 'invalid'},
@@ -24,5 +26,6 @@ for (const env of [
   {TWINLEAF_SEEDS: '2.4'},
   {TWINLEAF_SEEDS: '4e2'},
   {TWINLEAF_SEEDS: '4294967296'},
+  {TWINLEAF_TACTIC_ORDER: 'skip_all_actions'},
 ]) assert.throws(() => parseProbeSettings(env, ids), undefined, JSON.stringify(env));
 console.log('[tournament-settings] PASS: verified defaults, four source decks, distinct uint32 seed pairs and CI workload ceiling');
