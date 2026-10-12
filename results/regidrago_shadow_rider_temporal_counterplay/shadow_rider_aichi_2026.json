@@ -1,0 +1,178 @@
+{
+  "source": "https://limitlesstcg.com/decks/list/26807",
+  "event": "2026 CL Aichi May Open League, 1st place, Yasunori Kato",
+  "print_note": "Representative Expanded-legal English print IDs. Mechanically distinct core prints match the Limitless card links. Other artwork/edition choices are not asserted as the player's physical prints.",
+  "groups": {
+    "Pokémon": [
+      {
+        "count": 3,
+        "name": "Shadow Rider Calyrex V",
+        "print_id": "swsh6-74"
+      },
+      {
+        "count": 4,
+        "name": "Shadow Rider Calyrex VMAX",
+        "print_id": "swsh6-75"
+      },
+      {
+        "count": 2,
+        "name": "Lillie's Clefairy ex",
+        "print_id": "sv9-56"
+      },
+      {
+        "count": 2,
+        "name": "Tapu Lele-GX",
+        "print_id": "sm2-60"
+      },
+      {
+        "count": 1,
+        "name": "Trevenant & Dusknoir-GX",
+        "print_id": "smp-SM217"
+      },
+      {
+        "count": 1,
+        "name": "Latias ex",
+        "print_id": "sv8-76"
+      },
+      {
+        "count": 1,
+        "name": "Dialga-GX",
+        "print_id": "sm5-100"
+      },
+      {
+        "count": 1,
+        "name": "Mimikyu",
+        "print_id": "sm2-58"
+      },
+      {
+        "count": 1,
+        "name": "Girafarig",
+        "print_id": "sm8-94"
+      },
+      {
+        "count": 1,
+        "name": "Marshadow",
+        "print_id": "sm10-81"
+      },
+      {
+        "count": 1,
+        "name": "Radiant Eternatus",
+        "print_id": "swsh12pt5-105"
+      }
+    ],
+    "Trainer": [
+      {
+        "count": 2,
+        "name": "Lillie's Determination",
+        "print_id": "me1-119"
+      },
+      {
+        "count": 1,
+        "name": "Carmine",
+        "print_id": "sv6-145"
+      },
+      {
+        "count": 1,
+        "name": "Iono",
+        "print_id": "sv2-185"
+      },
+      {
+        "count": 1,
+        "name": "Teammates",
+        "print_id": "xy5-141"
+      },
+      {
+        "count": 1,
+        "name": "Raihan",
+        "print_id": "swsh7-152"
+      },
+      {
+        "count": 1,
+        "name": "Acerola",
+        "print_id": "sm3-112"
+      },
+      {
+        "count": 1,
+        "name": "Guzma",
+        "print_id": "sm3-115"
+      },
+      {
+        "count": 1,
+        "name": "Tulip",
+        "print_id": "sv4-181"
+      },
+      {
+        "count": 4,
+        "name": "Mysterious Treasure",
+        "print_id": "sm6-113"
+      },
+      {
+        "count": 4,
+        "name": "Fog Crystal",
+        "print_id": "swsh6-140"
+      },
+      {
+        "count": 3,
+        "name": "VS Seeker",
+        "print_id": "xy4-109"
+      },
+      {
+        "count": 1,
+        "name": "Quick Ball",
+        "print_id": "swsh1-179"
+      },
+      {
+        "count": 1,
+        "name": "Hisuian Heavy Ball",
+        "print_id": "swsh10-146"
+      },
+      {
+        "count": 1,
+        "name": "Battle Compressor",
+        "print_id": "xy4-92"
+      },
+      {
+        "count": 1,
+        "name": "Field Blower",
+        "print_id": "sm2-125"
+      },
+      {
+        "count": 1,
+        "name": "Night Stretcher",
+        "print_id": "sv6pt5-61"
+      },
+      {
+        "count": 1,
+        "name": "Unfair Stamp",
+        "print_id": "sv6-165"
+      },
+      {
+        "count": 1,
+        "name": "Float Stone",
+        "print_id": "xy8-137"
+      },
+      {
+        "count": 1,
+        "name": "Forest Seal Stone",
+        "print_id": "swsh12-156"
+      },
+      {
+        "count": 2,
+        "name": "Sky Field",
+        "print_id": "xy6-89"
+      },
+      {
+        "count": 1,
+        "name": "Dimension Valley",
+        "print_id": "xy4-93"
+      }
+    ],
+    "Energy": [
+      {
+        "count": 11,
+        "name": "Psychic Energy",
+        "print_id": "bw1-109"
+      }
+    ]
+  }
+}

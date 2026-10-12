@@ -1,0 +1,19 @@
+name: Validate Aichi Shadow Rider champion and counterplay synthesis
+
+on:
+  push:
+    paths:
+      - results/regidrago_shadow_rider_temporal_counterplay/**
+      - .github/workflows/validate-aichi-shadow-rider-champion.yml
+  workflow_dispatch:
+
+jobs:
+  verify-deck-print-snapshot:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify 60-card reference and identities
+        run: python results/regidrago_shadow_rider_temporal_counterplay/reproduce.py
