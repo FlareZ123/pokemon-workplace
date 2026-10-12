@@ -1,0 +1,26 @@
+name: Validate identity instance provenance
+
+on:
+  push:
+    paths:
+      - "tools/identity_instance_provenance.py"
+      - "tools/composite_identity_liveness.py"
+      - "tools/identity_liveness.py"
+      - "tools/identity_materialization.py"
+      - "results/identity_instance_provenance/**"
+      - ".github/workflows/validate-identity-instance-provenance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check lifetime uniqueness of physical card IDs
+        run: python results/identity_instance_provenance/reproduce.py
