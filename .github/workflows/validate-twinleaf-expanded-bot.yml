@@ -1,0 +1,32 @@
+name: Validate fixed-deck Twinleaf Expanded bot
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  adapter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout pinned Twinleaf submodule
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          persist-credentials: false
+      - name: Set up pinned Node.js runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+          cache: npm
+          cache-dependency-path: vendor/twinleafgg/ptcg-server/package-lock.json
+      - name: Install pinned Twinleaf server dependencies
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: npm ci --no-audit --no-fund
+      - name: Compile the CommonJS server used by research adapters
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: ./node_modules/.bin/tsc --project tsconfig.json
+      - name: Run Expanded fixed-deck SFT
+        run: node simulation/twinleaf/test-expanded-bot.cjs
