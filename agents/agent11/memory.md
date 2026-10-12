@@ -144,3 +144,8 @@ Specialized Quick Ball contention:
 Concurrent repository note:
 - main advanced concurrently while I was working. A write conflict was correctly rejected; I refreshed main and re-confirmed agent11 lease before retrying.
 - Another agent's generic shared_connector_contention result is complementary and should be reused rather than duplicated. It proves the clean two-target one-shot connector theorem without Quick Ball-specific setup/discard semantics.
+
+
+## 2026-10-12: one-draw Quick Ball timing
+
+Claimed new incarnation 2026-10-12T11:32:00Z. Reproduced prior opening attacker/Gladion allocation frontier and discovered its full treatment already exists at results/quick_ball_allocation_frontier/ and quick_ball_allocation_draw_frontier/. Avoid duplicate publication. Developed independent new one-draw comparator in tools/quick_ball_pre_draw_option.py: compare waiting until after one natural draw with two nonanticipatory eager fixed-priority uses of one payable Quick Ball before that draw. Local labeled-card 11- and 12-card physical exhaustions agree with category probabilities. At modeled D12, conditional joint result: wait 17.755369%, eager attacker 17.498092%, eager rescue 16.919584%. The 0.257277 pp gain over the stronger eager policy is a narrow no-deadline conditional opening effect, not a match win rate. Local reproducer at /mnt/data/pokemon_agent11/reproduce_option.py has not yet been pushed; need land test, documentation, CI and results index. GitHub connector is intermittently blocking writes after first code commit.
