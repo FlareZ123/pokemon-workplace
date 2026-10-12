@@ -85,5 +85,62 @@ class ShadowRiderEnergyTests(unittest.TestCase):
             attack_ready_probability(EnergyWindow(1, 8, 41), -1)
 
 
+    def test_joint_pivot_exhaustive(self) -> None:
+        from tools.shadow_rider_post_launch_energy import attack_and_pivot_ready_probability
+
+        for n in range(8):
+            for e in range(n + 1):
+                for p in range(n - e + 1):
+                    for h in range(4):
+                        for cost in (2, 3):
+                            w = EnergyWindow(h, e, n)
+                            success = 0
+                            total = 0
+                            for e_indices in combinations(range(n), e):
+                                energy = set(e_indices)
+                                available = [i for i in range(n) if i not in energy]
+                                for p_indices in combinations(available, p):
+                                    pivots = set(p_indices)
+                                    hand, held_pivots, offset, attached = h, 0, 0, 0
+                                    total += 1
+                                    for _ in range(w.doors):
+                                        if hand == 0:
+                                            continue
+                                        hand -= 1
+                                        attached += 1
+                                        count = min(w.cards_per_draw, n - offset)
+                                        hand += sum(i in energy for i in range(offset, offset + count))
+                                        held_pivots += sum(i in pivots for i in range(offset, offset + count))
+                                        offset += count
+                                    success += (attached + int(w.manual_attachment and hand > 0) >= cost
+                                                and held_pivots > 0)
+                            expected = Fraction(success, total)
+                            self.assertEqual(
+                                attack_and_pivot_ready_probability(w, cost, pivots_in_deck=p),
+                                expected,
+                                (h, e, p, n, cost),
+                            )
+
+    def test_float_stone_print_and_dependency(self) -> None:
+        from tools.shadow_rider_post_launch_energy import attack_and_pivot_ready_probability
+
+        root = Path(__file__).resolve().parents[3] / "resources" / "cards" / "en"
+        cards = json.loads((root / "xy8.json").read_text(encoding="utf-8"))
+        float_stone = next(c for c in cards if str(c["number"]) == "137")
+        self.assertEqual(float_stone["name"], "Float Stone")
+        self.assertTrue(any("no Retreat Cost" in line for line in float_stone["rules"]))
+
+        window = EnergyWindow(1, 8, 41)
+        energy = attack_ready_probability(window, 3)
+        joint = attack_and_pivot_ready_probability(window, 3, pivots_in_deck=1)
+        self.assertEqual(joint, Fraction(1204, 151905))
+        self.assertGreater(energy * Fraction(4, 41), joint)
+        self.assertEqual(
+            attack_and_pivot_ready_probability(window, 3, pivots_in_deck=0, pivots_in_hand=1),
+            energy,
+        )
+
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
