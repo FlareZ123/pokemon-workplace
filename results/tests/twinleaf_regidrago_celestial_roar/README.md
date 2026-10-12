@@ -66,6 +66,8 @@ The exact category solver enumerates all opening seven-card compositions, then c
 
 Thus, across the **restricted naturally ready** turn-one Celestial Roar windows, **18.4476%** would reveal a Double Dragon Energy that the original engine incorrectly discards. This quantifies how frequently the confirmed semantic defect can affect a *physically available direct early attack*, not its probability in a played match or its effect on winning. The player might intentionally use a stronger line instead, and opponent-specific disruption can prevent the attack.
 
+[Manual paired CI run 38302627740](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38302627740) passed this new exact model against both physical 10-card toy oracles (50,400 worlds each) and independently passed the older blind-three census, Stoutland and Underworld Door tests, native Regidrago Store integration, and two seed-20261013 headless games. Both traces include all three engine-rule labels. In one game the bot used Celestial Roar once. The results do not record whether that attack happened to reveal Double Dragon Energy, and the native bot was independently shown to have a hidden-card-order oracle.
+
 ## Interpretation and remaining limits
 
 Engine simulations recorded **before** this Regidrago correction silently use a different Energy-acceleration rule than the physical source card. Do not treat them as directly comparable to guarded results. Even guarded runs use `SimpleTacticsAi`, which can fail to select realistic attack, attachment or search choices. Confidence in those policy outcomes remains low.
