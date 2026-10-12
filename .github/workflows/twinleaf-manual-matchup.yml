@@ -38,6 +38,8 @@ on:
         options:
           - native
           - attack_before_retreat
+          - vip_first
+          - vip_attack_before_retreat
 
 permissions:
   contents: read
@@ -87,6 +89,8 @@ jobs:
         run: node simulation/twinleaf/test-match-action-telemetry.cjs
       - name: Verify research bot tactic reorder and pinned assumptions
         run: node simulation/twinleaf/test-tactic-order-policy.cjs
+      - name: Verify first-turn VIP research tactic uses native legal action
+        run: node simulation/twinleaf/test-vip-first-tactic.cjs
       - name: Validate exact Mew VIP4 candidate mapping and published 60-card reference
         run: node simulation/twinleaf/test-candidate-deck-loader.cjs
       - name: Probe complete 60-card tournament decks through pinned live engine
