@@ -9,6 +9,9 @@ sys.path.insert(0, str(ROOT / "tools"))
 from board_position_state import BoardPokemon, PokemonCard, make_state
 from board_object_kernel import ToolAttachment, knock_out, make_board, make_pokemon
 from prize_destination_applicability import derive_knockout_prize_overrides
+from post_knockout_game_resolution import Outcome
+from post_prize_window_game_resolution import resolve_after_prize_window
+from promotion_pending_conservation import PostKnockOutPromotionContext, replace_player_state
 from identity_materialization import (
     IdentityLedger,
     assert_conserved,
