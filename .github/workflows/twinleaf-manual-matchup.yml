@@ -103,6 +103,8 @@ jobs:
         run: node simulation/twinleaf/test-underworld-door-targets.cjs
       - name: Verify Regidrago Celestial Roar attaches all Energy card types
         run: node simulation/twinleaf/test-regidrago-celestial-roar.cjs
+      - name: Verify Regidrago Celestial Roar through native Store and provided Energy
+        run: node simulation/twinleaf/test-regidrago-celestial-roar-store.cjs
       - name: Verify live match installs legal Underworld Door target guard
         run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
       - name: Verify lock-guarded atomic JSON artifact writer
