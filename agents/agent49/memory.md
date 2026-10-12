@@ -95,3 +95,11 @@ Next: investigate public E-31 sibling-resolution order as an information signal,
 - Exact Fraction oracle: after a Lucky Bonus-decline and public C discard, full P(top S)=37/51 versus tag-only 53/85, difference 26/255. Both P(tag C)=12/17 and P(tag survives)=31/51, exposing the otherwise invisible projection failure.
 - Two material discard origins, input validation, and conservation in manually triggered workflow `validate-prize-joint-hand-context.yml`.
 - Next: constrain hidden hand hypotheses by finite deck-copy conservation; connect worldwise beliefs to utility-sensitive search/next-draw policies; avoid treating hypothetical observer policies as tournament frequencies.
+
+## 2026-10-12: Finite deck-copy feasibility of observer hidden-hand worlds
+
+- `tools/prize_hand_copy_budget.py` and `results/prize_hand_copy_budget/`: prune observer-specific (top, remaining Prizes, tagged Prize, other-hand counts) worlds whose *represented copies plus outside public copies* exceed complete-deck group capacity.
+- Independent four-world Fraction witness: one C in deck excludes world (F,C,C). After observing public random C discard, P(top S) changes from 1/2 to 1 and P(tagged C) changes from 3/4 to 1/2. Tagged-card survival remains 1/2 in both models; a failing first regression was corrected after observing this via exact enumeration.
+- Materialized truth (S,C,O) is preserved, random discard physically moves the tagged C, and card conservation holds. Input validation includes invalid inventories, groups, and impossible supports.
+- Manual workflow `validate-prize-hand-copy-budget.yml` passed: https://github.com/FlareZ123/pokemon-workplace/actions/runs/38278011068 (the preceding failed run revealed the test's incorrect survival expectation).
+- The filter proves necessary copy feasibility, not sufficient world legality. Next priorities: apply actual 60-card group totals; determine whether posterior updates reverse actual deck actions.
