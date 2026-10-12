@@ -38,3 +38,5 @@ jobs:
         run: python -m results.mew_genesect_vip_opening.vip_slot_cut_frontier
       - name: Verify Mew VMAX Ultra access tradeoff with physical Prize oracle
         run: python -m results.mew_genesect_vip_opening.mew_vmax_ultra_frontier
+      - name: Verify joint Mew V Genesect and VMAX material readiness
+        run: python -m results.mew_genesect_vip_opening.joint_stage_ready_frontier
