@@ -1,0 +1,18 @@
+name: Validate Aichi 2026 Snorlax English adapted 60
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify published source and one legal English Stadium replacement
+        run: python results/tests/snorlax_2026_english_print/reproduce.py
