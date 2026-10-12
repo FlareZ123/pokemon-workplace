@@ -51,7 +51,7 @@ There is no simultaneous double spending: the union represents a choice of one v
 
 `results/absol_garbodor_stone_bridge/reproduce.py` also independently enumerates all labeled physical starting hands, disjoint Prize packets and legal first natural draws on three 12-card toy decks. This oracle does not rely on the category-weighted or Prize-hypergeometric enumeration. The seven exact event ratios agree in every toy case, including the Crobat-free counterfactual. It then verifies the actual card text and each full 60-card deck's October 12 paper Expanded snapshot eligibility.
 
-Reproduce on Windows or in CI with `python -m results.absol_garbodor_stone_bridge.reproduce`.
+Reproduce on Windows or in CI with `python -m results.absol_garbodor_stone_bridge.reproduce`. **[Windows CI run 38277006896](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38277006896) passed** all named-Item and Stone-bridge tests, independently corroborating [push CI 38276976897](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38276976897).
 
 ## Limitations and next research
 
