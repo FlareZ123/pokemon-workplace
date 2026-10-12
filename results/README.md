@@ -36,6 +36,7 @@ Current priority is reproducible full-game headless match evaluation between the
 - **[Regidrago K0 launch](regidrago_k0_joint_launch/):** information-constrained opening sequence with explicit discard costs.
 - **[Mega Absol lock-state lattice](absol_garbodor_lock_lattice/):** source-access changes under Item and Ability locks.
 - **[Prize-to-Bench E-31 execution](prize_before_hand_bench_entry/):** official-ruling-backed KO Bench geometry, recursive Jirachi/Chansey Prize chain and Billowing Smoke hand-destination gate; verified by [CI run 38291234939](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38291234939).
+- **[Raichu physical Item payment](tests/raichu_target_payment_frontier/):** exact one-turn Alolan Raichu search through Ultra Ball/Computer Search with six hidden Prizes, Gladion fallback and mutually competing two-card discard costs; restricted access **30.578700%** under strict payment and **33.390969%** under an Ultra-for-Computer-sacrifice policy. [Migrated Windows CI 38292324506 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38292324506); this is card access, not wins.
 - **[First-action information value](first_action_information_value/):** exact information value under hidden-Prize decisions, with restricted Regidrago cases.
 - **[Two-player identity conservation](match_scoped_identity_liveness/):** reusable exact physical-card invariant for joint match modeling.
 - **[Partial Prize observability](gnh_partial_prize_information/):** narrow decision-dependent value of Prized card knowledge.
