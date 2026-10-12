@@ -22,9 +22,13 @@ The SFT uses 60 **synthetic** labels, never dispatches a game, and requires no g
 
 A **manual-only** [GitHub Actions workflow](../../.github/workflows/validate-twinleaf-expanded-bot.yml) installs the pinned submodule dependencies, compiles the exact pinned server, and executes the SFT. It intentionally has no push trigger to control CI budget.
 
+## Print-level coverage diagnostic
+
+[Conservative print matcher](print-coverage.cjs) and its [SFT](test-print-coverage.cjs) read both published 2026 Aichi 60-card baselines directly from the results entry point and the `resources/sets/en.json` print-to-PTCGO code catalog. They compare each paper (set, collector number, printed name) triple with the card metadata that the **pinned compiled Twinleaf registry** exports. An exact match yields the engine `fullName`. A matching set/number with a differing name is flagged for review, while missing print IDs and unresolved set codes are reported separately. No replacement print is silently treated as equivalent. This detects existence and basic print identity only; effects and legality still require separate verification.
+
 ## Next integration stages
 
-1. Build a reliable mapping from each legal paper Expanded exact-print decklist to existing Twinleaf `fullName` implementations, and report missing or semantically divergent cards before constructing matches.
+1. Resolve the coverage diagnostic's unmatched and name-mismatched Aichi prints, including explicit source reviews of semantically equivalent reprints where appropriate, before constructing actual game decks.
 2. Add research-owned game/client orchestration using pinned `Core.createGameWithDecks`, explicit `GameSettings.format = Format.EXPANDED`, two controlled clients, termination checks through `State.phase` and `State.winner`, and deterministic experiment metadata. The `SimpleBot` policy's tactics and prompts need explicit legality/error auditing.
 3. Execute and archive complete headless matches with paired seeds, both starting-player orientations, action traces, error flags, engine pin, bot policy and decklist hashes. Test reproducibility and edge cases before treating results as comparative evidence.
 4. Implement periodic reviewable submodule update checks and regression gating without silently updating the submodule in live experiments.
