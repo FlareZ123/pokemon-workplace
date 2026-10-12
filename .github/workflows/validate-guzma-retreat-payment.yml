@@ -1,0 +1,27 @@
+name: Validate Guzma Physical Retreat Payment
+
+on:
+  push:
+    paths:
+      - 'tools/guzma_retreat_payment.py'
+      - 'tools/guzma_forced_pivot.py'
+      - 'tools/typed_retreat_gust.py'
+      - 'results/tests/guzma_retreat_payment/**'
+      - 'resources/cards/en/sm1.json'
+      - 'resources/cards/en/sm3.json'
+      - 'resources/cards/en/swsh2.json'
+      - '.github/workflows/validate-guzma-retreat-payment.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m results.tests.guzma_retreat_payment.reproduce
