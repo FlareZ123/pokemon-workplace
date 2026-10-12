@@ -16,8 +16,8 @@
 
 | Strict success event | Unconditional over shuffled initial seven | Conditional on valid initial seven |
 | --- | ---: | ---: |
-| Genesect already in hand by first natural draw, Mew V starter + Wally + DCE + VMAX in deck | 0.581386703842% | 0.747689641...% |
-| Additional exclusive VIP route: no Genesect held, VIP held and Genesect remains in deck | 0.326307167880% | 0.419643885...% |
+| Genesect already in hand by first natural draw, Mew V starter + Wally + DCE + VMAX in deck | 0.581386703842% | 0.747688414473% |
+| Additional exclusive VIP route: no Genesect held, VIP held and Genesect remains in deck | 0.326307167880% | 0.419645112918% |
 | **Union (disjoint)** | **0.907693871722%** | **1.167333527391%** |
 
 The exact unconditional union is `18541777258637/2042734652758800`. Opening seven has a valid Basic with probability **77.757885850414%** (11 eligible Basics). Conditional on **at least one Mew V in the initial seven**, the strict union rate is **2.272076901274%**.
