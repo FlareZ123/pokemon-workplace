@@ -1,0 +1,25 @@
+name: Validate match scoped identity liveness
+
+on:
+  push:
+    paths:
+      - "tools/match_scoped_identity_liveness.py"
+      - "tools/composite_identity_liveness.py"
+      - "tools/identity_instance_provenance.py"
+      - "results/match_scoped_identity_liveness/**"
+      - ".github/workflows/validate-match-scoped-identity-liveness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Test two-player identity namespace boundaries
+        run: python results/match_scoped_identity_liveness/reproduce.py
