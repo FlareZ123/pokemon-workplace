@@ -7,6 +7,7 @@ from typing import Iterable, Literal
 
 from tools.build_expanded_legality_baseline import classify_effective_legality, load_json
 from tools.verified_stage_metadata_repairs import KNOWN_STAGE_REPAIRS, normalize_verified_stage_metadata
+from tools.verified_tera_metadata_repairs import CARD_ID as TERAPAGOS_TERA_PRINT_ID, normalize_verified_tera_metadata
 
 Severity = Literal["error", "warning"]
 
@@ -65,6 +66,8 @@ def _card_record(raw: dict) -> CardRecord:
     # Apply audited print-local stage/rule corrections without mutating archive data.
     if raw["id"] in KNOWN_STAGE_REPAIRS:
         raw = normalize_verified_stage_metadata(raw)
+    if raw["id"] == TERAPAGOS_TERA_PRINT_ID:
+        raw = normalize_verified_tera_metadata(raw)
     status, source = classify_effective_legality(raw)
     return CardRecord(
         card_id=raw["id"],
