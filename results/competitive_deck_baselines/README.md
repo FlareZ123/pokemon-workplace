@@ -1,3 +1,9 @@
+## 2026 Aichi sixth place: Quad Iron Thorns international adaptations
+
+**Status:** two source-frozen, 60-card **English Expanded-snapshot legal** builds, derived from sixth-place Kazuma Kashi's 926-player Japanese tournament list. The exact Japanese 60 includes Palace Book, Palace Belt, and Player's Ceremony, three Japanese-only cards absent from the bundled international card pool. [The two complete adaptations, source counts and independently verified physical opening calculation](../iron_thorns_international_adaptation/) substitute exactly three print-identified English cards. One uses 4 Trainers' Mail, Lucky Helmet and 2 Tropical Beach. The other uses 3 Camping Gear, Bravery Charm and 2 Tropical Beach. Both preserve four Iron Thorns ex, a singleton Megaton Blower ACE SPEC, the 8 Energy and both Prism Star Stadiums. They pass the conservative deck-construction/print proof on 2026-10-12; [Windows CI 38293543104](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38293543104) passed. The source list's sixth-place finish provides **Japanese-version empirical context**, not measured win-rate evidence for the adapted English lists. The first seven cards are Basic-valid only 39.9499625745% of the time with four Basics; the source-only Tag Call/Guzma & Hala/Double Colorless/Thunder Mountain package has a 29.0751478452% joint-hand/Prize *access* endpoint conditional on a Basic-valid opener, excluding discard payments and first-turn draw.
+
+---
+
 # Competitive paper Expanded reference decks
 
 Goal: supply fully specified human-playable 60-card deck candidates with exact print IDs, legality evidence, and honest confidence labels.
