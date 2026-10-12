@@ -66,6 +66,8 @@ function summarizeScoreBounds(summary, deckA, confidence = 0.95) {
     };
   });
   assert.ok(seeds.length > 0, 'No seed pairs');
+  assert.equal(new Set(seeds.map(row => row.seed)).size,seeds.length,
+    'Seed labels must be unique across independent pairs');
   const average = key => seeds.reduce((total,row) => total+row[key],0)/seeds.length;
   const low=average('deck_a_lower'),high=average('deck_a_upper');
   const firstLow=average('first_seat_lower'),firstHigh=average('first_seat_upper');
