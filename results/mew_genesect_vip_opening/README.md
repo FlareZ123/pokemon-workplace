@@ -72,6 +72,27 @@ Because the real discardability of other cards depends on state and matchup, thi
 
 The calculation conditions on Basic-valid seven-card starts, considers the first natural draw, and integrates all six Prizes. It marginalizes non-target Prize categories only after demonstrating that this endpoint depends on Prize placement solely through the remaining Mew and Genesect counts. Four independent twelve-card exhaustive physical deal tests, each comprising 46,620 valid labeled worlds, reproduce the grouped direct, VIP-only and paid-Ball counts. A separate brute-force paid-Item allocation oracle checks every Quick/Ultra payment combination across 250 small hand-resource configurations. The D=0 case provably reduces to the all-VIP source-only result.
 
+## Exact joint Ball-first → Trainers' Mail → VIP Pass sequence
+
+The separate paid-Ball and Mail results are strongly overlapping. [combined_mail_ball_frontier.py](combined_mail_ball_frontier.py) constructs the **joint first-turn sequence** under one physical approved-discard pool: perform paid Quick Ball/Ultra Ball searches for missing Mew/Genesect targets, shuffle the smaller remaining deck, inspect its top four with each naturally held Trainers' Mail, take VIP Pass if present, and play the held/fetched VIP Passes for any remaining Basic targets. Each source can act once per physically held copy. Quick Ball costs one approved hand card and Ultra Ball costs two; only the exogenous D designated otherwise-unused other cards may fund these searches.
+
+| Board target | D protected-policy safe cards | Published VIP3 + paid Ball + Mail | VIP4 candidate + paid Ball + Mail | Fourth VIP gain |
+| --- | ---: | ---: | ---: | ---: |
+| Mew V + 2 Genesect V | 0 | 37.120816259% | 45.728999471% | +8.608183212 pp |
+| Mew V + 2 Genesect V | 6 | **43.036318802%** | **51.414233600%** | **+8.377914798 pp** |
+| Mew V + 2 Genesect V | 12 | 48.695370189% | 56.737992550% | +8.042622360 pp |
+| Mew V + 2 Genesect V | 24 | 57.596988300% | 64.784901514% | +7.187913214 pp |
+| Mew V + 3 Genesect V | 0 | 14.602422392% | 20.566011923% | +5.963589530 pp |
+| Mew V + 3 Genesect V | 6 | 19.816099967% | 26.602450225% | +6.786350258 pp |
+| Mew V + 3 Genesect V | 12 | 24.274709384% | 31.649058552% | +7.374349168 pp |
+| Mew V + 3 Genesect V | 24 | 30.439123780% | 38.268255407% | +7.829131627 pp |
+
+**Why Ball-first?** When a Ball can physically pay using only designated safe cards and retrieve a needed unprized Basic, removing that Basic from the deck shrinks Mail's search population while retaining every remaining VIP Pass. This weakly improves the chance of Mail seeing a VIP compared with resolving Mail first, for this narrow all-or-nothing setup objective. No discard opportunity cost is assigned inside the permitted D pool, and the model does not reward preserving unused Balls for later turns.
+
+The solver conditions on a Basic-valid opening, exactly six Prizes, the first natural draw, the actual card counts, and deck-card conservation after each search. Three ten-card toy populations, with Mew/Genesect goals of one or two, each undergo an exhaustive independent 10,500-deal physical hand/Prize/draw oracle plus every random Mail-inspection branch, six independently verified cases. Algebraic reductions prove that D=0 equals the Mail-only model, disabling Mail equals the paid-Ball-only model, and the union result weakly dominates both for each tested state.
+
+The D marker is a **policy hypothesis**, not a factual designation of which actual tournament-list cards are discardable. Real hands contain protected Supporters, search pieces, and tactical singletons; opponent lock effects and draw Ability sequencing may reverse a specific card-choice policy. These probabilities still measure a sharply restricted setup event rather than games won.
+
 ## Strategic interpretation and limitations
 
 This is a **narrow first-turn source-access study**. The all-VIP table omits the Ball routes; the paid-Ball extension adds Quick Ball and Ultra Ball with explicit hypothetical discharge policies. Both models omit Trainers' Mail, Secret Box, Dedenne-GX, Crobat V, Genesect V's Fusion Strike System, Forest Seal Stone, further natural turns, Energy attachments, VMAX evolution, and opponent interaction. It does not model match wins. Genesect's Ability draw size also depends on hand size and the number of Fusion Strike Pokémon in play, so an extra Genesect is not a fixed card-draw reward.
