@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "tools/mew_path_escape_frontier.py"
-      - "results/mew_genesect_path_escape/**"
+      - "results/tests/mew_genesect_path_escape/**"
       - "results/competitive_deck_baselines/mew_genesect_reproduce.py"
       - ".github/workflows/validate-mew-genesect-path-escape.yml"
   workflow_dispatch:
@@ -21,4 +21,4 @@ jobs:
         with:
           python-version: "3.13"
       - name: Check exact Prize-aware Path exit access
-        run: python results/mew_genesect_path_escape/reproduce.py
+        run: python results/tests/mew_genesect_path_escape/reproduce.py
