@@ -1,0 +1,24 @@
+name: Validate Mew Genesect Path escape frontier
+
+on:
+  push:
+    paths:
+      - "tools/mew_path_escape_frontier.py"
+      - "results/mew_genesect_path_escape/**"
+      - "results/competitive_deck_baselines/mew_genesect_reproduce.py"
+      - ".github/workflows/validate-mew-genesect-path-escape.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check exact Prize-aware Path exit access
+        run: python results/mew_genesect_path_escape/reproduce.py
