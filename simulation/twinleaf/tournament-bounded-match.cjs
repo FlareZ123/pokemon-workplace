@@ -10,6 +10,7 @@ const {summarizePairedTraces}=require('./paired-result-summary.cjs');
 const {summarizeScoreBounds}=require('./paired-score-bounds.cjs');
 const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
 const {makeMatchActionTelemetry}=require('./match-action-telemetry.cjs');
+const {makeSupporterSelectionGuard}=require('./supporter-selection-guard.cjs');
 const {writeReportAtomic}=require('./report-atomic.cjs');
 const {makeTacticOrder}=require('./tactic-order-policy.cjs');
 const {makeVipFirstTactic}=require('./vip-first-tactic.cjs');
@@ -63,6 +64,7 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
   const trackRandom=ledger.track;
   const started=Date.now();
   const telemetry=makeMatchActionTelemetry();
+  const supporterSelectionGuard=makeSupporterSelectionGuard();
   try {
     const store=new Store({onStateChange:()=>{}});
     store.state.gameSettings.format=Format.EXPANDED;
@@ -93,7 +95,7 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
       let move;
       try {
         move=prompt?trackRandom('arbiter',()=>arbiter.resolvePrompt(state,prompt)):undefined;
-        if(!move)move=trackRandom('policy',()=>bot.decodeNextAction(state));
+        if(!move)move=trackRandom('policy',()=>supporterSelectionGuard.decode(bot,state,id));
       }
       catch(e){status='policy_error';error=String(e);break;}
       if(!move){status='no_action';break;}
@@ -116,6 +118,8 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     return {seed,status,actions,attacks,engine_hooks:engineHooks,first_actor:firstActor,
       first_turn_hands:openingHands,
       policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
+      policy_hooks:['supporter_selection_live_counter_restore_v1'],
+      policy_repair_stats:supporterSelectionGuard.snapshot(),
       random_calls:rng.calls,
       game_random_calls:rng.gameCalls,policy_random_calls:rng.policyCalls,
       random_sources:rng.bySource,turn:state.turn,phase:GamePhase[state.phase],
@@ -153,6 +157,7 @@ function main() {
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
     policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
     policy_hidden_information_evidence:'results/tests/twinleaf_hidden_topdeck_oracle/README.md',
+    policy_hooks:['supporter_selection_live_counter_restore_v1'],
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
     tactic_order:config.tacticOrder,
     engine_hooks:['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1',
