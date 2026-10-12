@@ -1,0 +1,24 @@
+name: Validate Aichi Heavy Ball Energy tradeoff
+
+on:
+  push:
+    paths:
+      - 'tools/shadow_rider_ball_energy_frontier.py'
+      - 'tools/shadow_rider_heavy_ball_launch.py'
+      - 'results/shadow_rider_heavy_ball_energy_frontier/**'
+      - '.github/workflows/validate-shadow-rider-ball-energy-frontier.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Verify five legal deck swaps and exact paired access frontier
+        run: python -m results.shadow_rider_heavy_ball_energy_frontier.reproduce
