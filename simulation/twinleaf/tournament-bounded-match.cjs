@@ -10,6 +10,7 @@ const {summarizePairedTraces}=require('./paired-result-summary.cjs');
 const {summarizeScoreBounds}=require('./paired-score-bounds.cjs');
 const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
 const {makeMatchActionTelemetry}=require('./match-action-telemetry.cjs');
+const {writeReportAtomic}=require('./report-atomic.cjs');
 const {makeTacticOrder}=require('./tactic-order-policy.cjs');
 const {makeVipFirstTactic}=require('./vip-first-tactic.cjs');
 const {loadImplementedCards}=require('./print-coverage.cjs');
@@ -153,6 +154,8 @@ function main() {
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
     max_actions:350,wall_ms:25000,paired_results:pairedResults,
     paired_score_bounds:pairedScoreBounds,traces};
+  if(process.env.TWINLEAF_REPORT_PATH)
+    writeReportAtomic(process.env.TWINLEAF_REPORT_PATH,report);
   console.log('[tournament-probe] '+JSON.stringify(report));
   assert.ok(traces.every(t=>t.turn>=1),'Both games must enter actual turn one');
   assert.equal(pairedResults.error_games,0,'Engine or bot error must not silently pass as a match');
