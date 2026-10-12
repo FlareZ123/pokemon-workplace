@@ -1,0 +1,22 @@
+name: Validate Mew Wally conditional lock matrix
+
+on:
+  push:
+    paths:
+      - "results/tests/mew_wally_lock_matrix/**"
+      - ".github/workflows/validate-mew-wally-lock-matrix.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-lock-matrix:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Validate 32 toy physical scenarios, printed locks and full-60 fractions
+        run: python results/tests/mew_wally_lock_matrix/reproduce.py
