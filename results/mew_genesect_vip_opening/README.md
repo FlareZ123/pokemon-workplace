@@ -6,22 +6,33 @@
 
 ## Exact first-turn source-access probabilities
 
-A legal seven-card opener contains at least one Basic. Six cards then occupy the hidden Prize zone and the turn's first natural draw supplies one additional visible card. The player may put naturally held Basic Pokémon into play and may resolve one naturally held Battle VIP Pass for at most two *unprized* Basic Pokémon from the deck. The Mew V and requested number of Genesect V may occupy the Active Spot or Bench. The target fits ordinary Bench capacity, even if a different Basic must start Active.
+A legal seven-card opener contains at least one Basic. Six cards occupy the hidden Prize zone and the first turn's natural draw supplies one additional visible card. The player may put naturally held Basics into play. Every naturally held Battle VIP Pass can be played on this first turn, retrieving up to two *unprized* Basic Pokémon directly onto the Bench per use. The requested Pokémon may occupy the Active Spot or Bench. Unneeded naturally held Basics need not be Benched, and both objectives fit ordinary Bench capacity even when another Basic starts Active.
 
-| First-turn board endpoint | Published 3 VIP: direct only | Published 3 VIP: extra VIP lines | Published 3 VIP: union | Four-VIP candidate: union | Gain |
-|---|---:|---:|---:|---:|---:|
-| Mew V + at least 2 Genesect V | 3.902404359% | 27.714175847% | **31.616580206%** | **38.866894354%** | **+7.250314147 pp** |
-| Mew V + at least 3 Genesect V | 0.250309888% | 8.794307451% | **9.044617339%** | **11.433180079%** | **+2.388562740 pp** |
+### All held VIP Passes may resolve (rules-faithful source-only model)
 
-The VIP-only contributions for the four-VIP candidate are 34.964489994% and 11.182870191%, respectively. Direct access is invariant under this swap because all Basic-Pokémon counts remain fixed.
+| Required first-turn board | Published 3 VIP: direct | Published 3 VIP: VIP extra | Published 3 VIP: combined | Four VIP: combined | Fourth VIP gain |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Mew V + 2 Genesect V | 3.902404359% | 28.354476423% | **32.256880782%** | **40.058393597%** | **+7.801512815 pp** |
+| Mew V + 3 Genesect V | 0.250309888% | 11.663533105% | **11.913842993%** | **16.791066902%** | **+4.877223909 pp** |
 
-The denominator conditions on a valid seven-card starting hand, with unconditional probability 1 − C(49,7)/C(60,7). For each eight-card visible multiset, the calculation accounts for which card could have been the one-card turn draw while preserving a valid opener. All six-Prize compositions are explicitly allocated from the unseen cards, with card identities conserved. VIP cannot rescue a Prized target.
+The four-VIP version's VIP-only additions are **36.155989238%** and **16.540757014%**. These rows permit two or more naturally held Battle VIP Passes to be played sequentially, subject to unprized search targets and Bench capacity.
+
+### One VIP Pass maximum (controlled ablation)
+
+| Required first-turn board | Published 3 VIP: union | Four VIP: union | Fourth VIP gain |
+| --- | ---: | ---: | ---: |
+| Mew V + 2 Genesect V | 31.616580206% | 38.866894354% | +7.250314147 pp |
+| Mew V + 3 Genesect V | 9.044617339% | 11.433180079% | +2.388562740 pp |
+
+The one-Pass cap is an experimental restriction, and its smaller result illustrates the importance of jointly modeling multiple Item activations. Direct naturally held Mew and Genesect access remains invariant under the swap because all Basic-Pokémon counts are unchanged.
+
+The denominator conditions on a valid seven-card opening hand, with unconditional probability 1 − C(49,7)/C(60,7). For every eight-card visible multiset, the exact calculation accounts for which one card could be the natural turn draw while leaving a Basic-valid opener. Each Prize composition is enumerated from the remaining deck; no Prized target can be retrieved.
 
 ## Reproduction and validation
 
 - [reproduce.py](reproduce.py) returns exact rational weighted counts with integer combinatorial weights for each event.
-- A separately implemented labeled-card oracle exhaustively enumerates 46,620 valid hand/Prize/turn-draw worlds from a twelve-card toy deck. The exact solver agrees for direct, VIP-only, and combined access under both one- and two-Genesect requirements.
-- Fixed-seed 100,000-shuffle tests for each 60-card composition independently check the grouped calculation; each produces 77,832 accepted Basic-valid openings and agrees within 0.6 percentage points.
+- A separately implemented labeled-card oracle exhaustively enumerates 46,620 valid hand/Prize/turn-draw worlds for each of two twelve-card toy decks containing one or two VIP Passes. The exact solver agrees for direct, VIP-only, and combined access with both one- and two-Genesect demands, and with either one or every held VIP allowed.
+- Fixed-seed 100,000-shuffle tests for both 60-card compositions and both VIP-play limits independently check the grouped calculation; each produces 77,832 accepted Basic-valid openings and agrees within 0.6 percentage points.
 - The reproduction calls the project's authoritative snapshot print checker for both 60-card lists, including the counterfactual four VIP and remaining one Special Red Card. It requires construction validity and conservative paper Expanded eligibility as of October 12, 2026.
 - GitHub Actions Windows regression: validate-mew-genesect-vip-frontier.yml. Run from repository root using: python -m results.mew_genesect_vip_opening.reproduce.
 
