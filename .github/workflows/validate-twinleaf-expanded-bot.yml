@@ -52,6 +52,15 @@ jobs:
 
       - name: Audit exact-paper tournament print coverage against pinned Twinleaf
         run: node simulation/twinleaf/test-tournament-print-audit.cjs twinleaf-print-coverage.json
+      - name: Audit exact 2026 Aichi Mega Absol ex/Garbodor print and attack signatures
+        run: node simulation/twinleaf/test-absol-print-audit.cjs twinleaf-absol-print-coverage.json
+      - name: Preserve Mega Absol exact-print engine blockers
+        uses: actions/upload-artifact@v4
+        with:
+          name: twinleaf-absol-print-coverage
+          path: twinleaf-absol-print-coverage.json
+          if-no-files-found: error
+          retention-days: 14
       - name: Preserve detailed engine print blockers
         uses: actions/upload-artifact@v4
         with:
