@@ -1,0 +1,36 @@
+name: Twinleaf pinned headless Store smoke
+
+on:
+  push:
+    paths:
+      - "simulation/twinleaf/**"
+      - ".github/workflows/twinleaf-headless-smoke.yml"
+  pull_request:
+    paths:
+      - "simulation/twinleaf/**"
+      - ".github/workflows/twinleaf-headless-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  headless:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: false
+      - name: Initialize only pinned Twinleaf submodule
+        run: git -c protocol.version=2 submodule update --init --depth=1 vendor/twinleafgg
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: vendor/twinleafgg/.nvmrc
+          cache: npm
+          cache-dependency-path: vendor/twinleafgg/ptcg-server/package-lock.json
+      - name: Install pinned Twinleaf server dependencies
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Execute deterministic in-memory two-player engine smoke
+        run: node simulation/twinleaf/headless-smoke.cjs
