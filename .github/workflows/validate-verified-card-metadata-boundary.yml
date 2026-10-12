@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - "tools/verified_card_metadata.py"
+      - "tools/export_verified_card_metadata.py"
+      - "simulation/twinleaf/verified-card-metadata.cjs"
+      - "simulation/twinleaf/test-verified-card-metadata.cjs"
       - "tools/current_card_semantics.py"
       - "tools/deck_validator.py"
       - "results/verified_card_metadata_boundary/**"
@@ -21,6 +24,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
       - name: Shared metadata integration
         run: python -m results.verified_card_metadata_boundary.reproduce
       - name: Audited Stage repair
@@ -35,3 +41,7 @@ jobs:
         run: python -m results.deck_validator.reproduce
       - name: Historical reprint resolver
         run: python -m results.reprint_errata_resolution.reproduce
+      - name: Rebuild cross-language JSON card repairs
+        run: python -m results.verified_card_metadata_boundary.reproduce_export
+      - name: Test CJS metadata patch consumer
+        run: node simulation/twinleaf/test-verified-card-metadata.cjs
