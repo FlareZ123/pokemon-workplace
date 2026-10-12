@@ -34,3 +34,5 @@ jobs:
         run: python -m results.mew_genesect_vip_opening.combined_mail_ball_frontier
       - name: Verify Special Red Card late natural-access tradeoff
         run: python -m results.mew_genesect_vip_opening.special_red_access_frontier
+      - name: Verify paper Expanded slot-cut candidates and physical policy
+        run: python -m results.mew_genesect_vip_opening.vip_slot_cut_frontier
