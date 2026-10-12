@@ -69,5 +69,15 @@ assert.throws(()=>summarizeScoreBounds(summarizePairedTraces(plan([77]),[
 assert.throws(()=>evaluate([77,77],[
   trace(77,0),trace(77,1),trace(77,0),trace(77,1)
 ]),/Seed labels must be unique/);
+const firstTurnKnown=summarizeScoreBounds(summarizePairedTraces(plan([77]),[
+  {...trace(77,0),first_actor:2},
+  {...trace(77,0),first_actor:2}
+]),deckA.id);
+assert.deepEqual(firstTurnKnown.sample_score_bounds.first_seat,{lower:1,upper:1});
+assert.deepEqual(firstTurnKnown.sample_score_bounds.moving_first,{lower:0,upper:0});
+assert.deepEqual(seatOnly.sample_score_bounds.moving_first,{lower:0,upper:1});
+assert.throws(()=>summarizePairedTraces(plan([77]),[
+  {...trace(77,0),first_actor:99},trace(77,1)]),/First-turn actor/);
+console.log('[paired-score] Actual first mover can lose both games even if engine player-one seat always wins.');
 console.log('[paired-score] Repeated seed labels cannot be counted as independent evidence.');
 console.log('[paired-score] PASS: seat attribution, draws, adversarial censoring, dependence and small-sample uncertainty');
