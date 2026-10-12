@@ -40,6 +40,21 @@ The 60-card exact calculation independently agrees with the prior study's `analy
 
 **CI:** [manual validation run 38279803613, success](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38279803613). Both full 60-card regressions and the physical-card BFS oracle execute in the same workflow.
 
+## Hand-by-hand proof of the null information gap
+
+A separate [universal-action witness enumerator](universal_witness.py) uses the generic [first-action value-of-information operator](../first_action_information_value/) and tests **every positive-mass hidden Prize class for every observable hand** under D=0. Every winnable hand has at least one first action that succeeds for all Prize configurations in which any action could achieve the objective.
+
+| Exact D=0 hand-class audit | Published | +Dragapult/−VIP |
+| --- | ---: | ---: |
+| Legal Basic-valid hand classes with at least one modeled Item action | 1,884 | 2,119 |
+| Hand classes with the goal attainable in at least one Prize world | 1,209 | 1,543 |
+| Universal first action: Battle Compressor | 752 | 870 |
+| Universal first action: discard Dragapult using Mysterious Treasure | 57 | 99 |
+| Universal first action: discard Dragapult using Quick Ball | 143 | 236 |
+| Universal first action: Battle VIP Pass | 257 | 338 |
+
+These are counts of distinct *grouped hand classes*, with each class having very different physical probability; they are not percentages of matches. The action shown is the earliest one in a predetermined tie-break order among universally successful actions. The audit compares the exact rational hand-weighted total with both the K0 and full-information original solver, and all three agree. It passed [manual CI 38280744737](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38280744737). This supplies a stronger structural certificate than numerical equality alone.
+
 ## Implications and next actions
 
 The specific original concern, overvaluation caused solely by assuming a different first Item when key cards are Prized, does not distort these four endpoints. The swap remains a candidate for further testing against actual match goals. The next useful extension should add at least one genuinely competing first-Item use, e.g. reserving Mysterious Treasure for a separate Dragon attacker or seeking another Basic, and apply a two-turn continuation objective. First-turn launch alone cannot establish higher match-win probability.
