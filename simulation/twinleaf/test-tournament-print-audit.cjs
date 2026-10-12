@@ -35,7 +35,7 @@ function main() {
   assert.equal(mock[0].matching_copies,1);
   const missing=audit([{id:'test',cards:[{quantity:1,name:'Shadow Rider Calyrex VMAX',print_id:'swsh6-75'}]}],
     [{id:'swsh6',ptcgoCode:'CRE'}],[],()=>[{id:'swsh6-75',name:'Shadow Rider Calyrex VMAX'}]);
-  assert.equal(missing[0].cards[0].status,'missing_engine_print');
+  assert.equal(missing[0].cards[0].status,'missing_print');
   const implemented=implementedCards();
   const report={twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
     scope:'Exact print availability and attack/Ability names only; no behavioral parity or win rates',
