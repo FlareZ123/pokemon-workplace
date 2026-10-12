@@ -380,3 +380,30 @@ modifiers and environmental modifier regressions passed CI
 No matchup or win-rate conclusion. Next: model typed-Energy preconditions
 without conflating provided Energy type with merely attached physical
 cards; audit turn-history-only free Retreat and Bench-wide grant sources.
+
+## 2026-10-12: Goodra Slimy Sliding stochastic Retreat overlay
+
+Created `tools/retreat_goodra_coin_gate.py` and
+`results/retreat_goodra_coin_gate/{README.md,reproduce.py}` with
+`.github/workflows/validate-retreat-goodra-coin-gate.yml`.
+Source Goodra `me4-68` (Chaos Rising); official Japanese rules affirm
+tails consumes the Retreat opportunity while retaining Energy and
+Active position, Dashing Pouch doesn't activate, zero-cost Retreat still
+flips, and effect-based Switch bypasses it.
+
+The new `normal_retreat_goodra_outcomes` wraps a deterministic
+committed `LegalRetreatAction` with exact Fraction-weighted branches:
+heads=1/2 applies normal conserved physical Retreat; tails=1/2
+preserves entire physical board, Energy and Tool, and consumes only
+canonical Retreat quota. Two live Goodra do not stack; disabled
+Abilities yield one deterministic branch. No coin manipulation modeled.
+Source exact-print/name and Ability flags verified.
+
+Focused CI run `38279081110` passed the Goodra physical regression,
+existing Retreat transaction and action enumeration checks. Broadcast:
+`communications/broadcast/20261012T1642Z_agent9_goodra_retreat_coin_gate.md`.
+
+Next: connect stochastic Retreat outcome events to typed gust adversarial
+turn continuations, distinguish switching paths, and audit coin-flip
+modifiers where actual card texts affect the probability distribution.
+No claim about Goodra competitiveness.
