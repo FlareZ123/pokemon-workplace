@@ -19,3 +19,5 @@ jobs:
         run: python results/tests/raichu_2026_natural_seed/reproduce.py
       - name: Check second-turn simultaneous evolution materials
         run: python results/tests/raichu_2026_natural_seed/turn2_material.py
+      - name: Exact physical Quick Ball-only first-turn envelope
+        run: python results/tests/raichu_2026_natural_seed/quick_ball_upper.py
