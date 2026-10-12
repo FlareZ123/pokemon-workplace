@@ -59,6 +59,21 @@
 - **Prize and evolution resilience:** two Alolan Raichu, one Pikachu and Ditto ◇ provide two Basic evolution paths; four Rescue Stretcher and two Hisuian Heavy Ball provide zone-dependent recovery. Extra Energy Bomb's self-Knock-Out changes timing of which Special Energy effects are active.
 - **Control and draw concessions:** Klefki's Active Mischievous Lock can disable the deck's own Basic support Abilities while stopping the opponent's Basic Abilities. Four Battle Compressor, four Quick Ball, one Ultra Ball, singleton Secret Box and two Heavy Ball have sharply different discard, Prize and search prerequisites.
 
+## Critical Energy and Prize timing
+
+In this list, the order of prize-taking and attack declaration changes Electro Rain's effective damage. Electrode-GX's Extra Energy Bomb attaches **five physical Energy cards from the discard pile** and then Knocks Out Electrode-GX, granting the opponent **two Prize cards**. The Reversal and Counter Energy conditions are evaluated on the resulting Prize state. The attacker must be an ordinary evolved, non-Rule-Box Alolan Raichu.
+
+| Prizes remaining before Electrode's self-KO (ours / theirs) | Afterwards (ours / theirs) | Conditional Lightning units available from five attached cards | Unmodified Electro Rain |
+| --- | --- | --- | ---: |
+| 6 / 6 | 6 / 4, now behind | 4 Reversal × 3 + 1 Counter × 2 = **14** | **420 distributed damage** |
+| 4 / 6 | 4 / 4, tied | At most 4 Unit LPM × 1 = **4** | **120 distributed damage** |
+| 2 / 6 | 2 / 4, ahead | At most 4 Unit LPM × 1 = **4** | **120 distributed damage** |
+| 6 / 2 | 6 / 0, opponent immediately wins | No attack possible | — |
+
+This is a **conditional five-card ceiling**, assuming the correct five Energy cards are in the discard pile, one Alolan Raichu receives them, its attack can be used, and no further modifiers apply. Reversal Energy provides three Lightning units **only if behind in Prizes and attached to a no-Rule-Box Evolution**; Counter Energy provides two Lightning units only if behind and attached to a non-GX/non-EX Pokémon. Unit Energy LPM provides one Lightning unit at all Prize counts. Electro Rain measures each **Energy**, unlike attacks that explicitly count discarded Energy *cards*. The attached cards themselves are always discarded as whole cards. Additional Tools, damage prevention, or timing constraints can change actual results. The [source-text regression](../../tests/raichu_2026_print_validation/prize_energy_modes.py) verifies all three printed Energy conditions and the immediate self-KO consequences against the bundled card archive.
+
+A tactical consequence: an Electrode Bomb can activate triple/double Energy when the starting Prize count is tied, but it may fail to do so when the Raichu player was **ahead** before the Bomb. If the opponent has two or fewer Prizes left, voluntarily knocking out Electrode-GX hands them the game before an attack can occur. A practical optimizer must evaluate the transition itself.
+
 ## Why this list belongs on the competitive shortlist
 
 It is an additional fourth-place 2026 Aichi archetype missing from the initial five-deck print-verified shortlist. Its deliberately self-Knock-Out-driven tempo and spreading attack create different win conditions from the main VMAX, Item-lock and Regidrago decks. Its published placement is meaningful tournament evidence, with no modeled matchup table, best-of-three rate or validated match simulator coverage currently established.
