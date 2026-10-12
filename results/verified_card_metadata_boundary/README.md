@@ -28,6 +28,14 @@ Run `python -m results.verified_card_metadata_boundary.reproduce` to check exact
 
 Windows CI in `.github/workflows/validate-verified-card-metadata-boundary.yml` runs this compatibility suite and all source-specific corrections plus reprint and deck-validator regressions.
 
+## Cross-language manifest for JavaScript research
+
+The deterministic JSON artifact [`overrides.json`](overrides.json) enumerates all 72 source-print field corrections as exact `before` and `after` pairs, with immutable print IDs. This permits the Node-based Twinleaf research adapters to consume the same provenance-guarded corrections without porting the underlying Python normalizers.
+
+The canonical generator is `tools/export_verified_card_metadata.py`. Run `python -m results.verified_card_metadata_boundary.reproduce_export` to assert that the checked-in artifact is byte-for-byte regenerable from the bundled archive and audited Python repair functions. The Node CommonJS consumer `simulation/twinleaf/verified-card-metadata.cjs` uses deep equality checks and copies only changed arrays. Its runnable SFT is `node simulation/twinleaf/test-verified-card-metadata.cjs`.
+
+These interfaces only correct source card records. They do not add cards to Twinleaf's implemented card registry or patch any upstream game-engine behavior.
+
 ## Limits
 
 The 72 audited identities are a **coverage set**, rather than a claim that the rest of the 20,000-plus-card archive has no anomalies. The shared boundary does not automatically modify unrelated print IDs and is deliberately separate from official tournament legality and competitive win-rate estimation.
