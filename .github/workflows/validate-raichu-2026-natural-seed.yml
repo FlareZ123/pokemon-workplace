@@ -1,0 +1,19 @@
+name: Validate Raichu Aichi natural evolution seed
+on:
+  push:
+    paths:
+      - 'results/tests/raichu_2026_natural_seed/**'
+      - 'results/decks/raichu-electrode-aichi-2026/manifest.json'
+      - 'resources/manual/EN_advanced_manual-2025-transcription-structured.md'
+      - '.github/workflows/validate-raichu-2026-natural-seed.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check physical combinatorics and exact-print source
+        run: python results/tests/raichu_2026_natural_seed/reproduce.py
