@@ -1,0 +1,15 @@
+name: Validate Regidrago double-gust source chain
+on:
+  workflow_dispatch:
+
+jobs:
+  double-gust:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact conditional chain, prints, legality, and independent physical checks
+        run: python -m results.regidrago_double_gust_access.reproduce
