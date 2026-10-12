@@ -14,11 +14,48 @@ const assert = require('node:assert/strict');
  *
  * @returns {{
  *   decode:(bot:{decodeNextAction:(state:object)=>object|undefined},state:object,playerId:number)=>object|undefined,
+ *   wrapTactic:(NativeTactic:Function)=>Function,
  *   snapshot:()=>{restored_live_supporter_counters:number}
  * }}
  */
 function makeSupporterSelectionGuard() {
   let corrections = 0;
+
+  /**
+   * Undo only the known native PlaySupporterTactic preplay side effect.
+   * @param {{supporterTurn:number}} actor
+   * @param {number} original
+   * @param {number} turn
+   */
+  function restore(actor, original, turn) {
+    if (actor.supporterTurn !== original) {
+      const speculativeCounter = actor.supporterTurn;
+      actor.supporterTurn = original;
+      assert.equal(speculativeCounter, turn,
+        'Unexpected native Supporter counter side effect; re-audit pinned source');
+      corrections++;
+    }
+  }
+
+  /**
+   * Restore immediately after the native tactic, BEFORE SimpleTacticsAi
+   * validates its proposed action by cloning the current State.
+   * @param {Function} NativeTactic Pinned PlaySupporterTactic class
+   * @returns {Function} Drop-in native tactic constructor
+   */
+  function wrapTactic(NativeTactic) {
+    assert.equal(typeof NativeTactic, 'function');
+    return class ResearchSafeSupporterTactic extends NativeTactic {
+      useTactic(state, actor) {
+        const previous = actor.supporterTurn;
+        try {
+          return super.useTactic(state, actor);
+        } finally {
+          restore(actor, previous, state.turn);
+        }
+      }
+    };
+  }
 
   /**
    * @param {{decodeNextAction:(state:object)=>object|undefined}} bot
@@ -33,18 +70,13 @@ function makeSupporterSelectionGuard() {
     try {
       return bot.decodeNextAction(state);
     } finally {
-      if (actor.supporterTurn !== original) {
-        const speculativeCounter = actor.supporterTurn;
-        actor.supporterTurn = original;
-        assert.equal(speculativeCounter, state.turn,
-          'Unexpected native Supporter counter side effect; re-audit pinned source');
-        corrections++;
-      }
+      restore(actor, original, state.turn);
     }
   }
 
   return {
     decode,
+    wrapTactic,
     snapshot() {
       return {restored_live_supporter_counters: corrections};
     }
