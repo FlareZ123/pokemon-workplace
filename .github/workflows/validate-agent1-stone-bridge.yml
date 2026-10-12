@@ -1,0 +1,22 @@
+name: Validate Aichi Mega Absol Stone bridge
+
+on:
+  push:
+    paths:
+      - "tools/mega_absol_stone_bridge.py"
+      - "results/absol_garbodor_stone_bridge/**"
+      - ".github/workflows/validate-agent1-stone-bridge.yml"
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce existing named-Item physical frontier
+        run: python -m results.absol_garbodor_named_item_frontier.reproduce
+      - name: Reproduce Crobat Forest Seal Stone bridge and physical oracles
+        run: python -m results.absol_garbodor_stone_bridge.reproduce
