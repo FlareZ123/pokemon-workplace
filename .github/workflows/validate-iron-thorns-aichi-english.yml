@@ -1,0 +1,20 @@
+name: validate English Iron Thorns deck candidate
+
+on:
+  push:
+    paths:
+      - "results/decks/iron_thorns_aichi_english/**"
+      - "tools/iron_thorns_gnh_side_payload.py"
+      - "tools/deck_legality_proof.py"
+      - ".github/workflows/validate-iron-thorns-aichi-english.yml"
+  workflow_dispatch:
+
+jobs:
+  print-legality-and-opening:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.decks.iron_thorns_aichi_english.reproduce
