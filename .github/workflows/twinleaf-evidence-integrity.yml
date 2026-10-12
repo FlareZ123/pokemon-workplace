@@ -8,6 +8,8 @@ on:
       - 'simulation/twinleaf/test-paired-score-bounds.cjs'
       - 'simulation/twinleaf/matchup-evidence-ledger.cjs'
       - 'simulation/twinleaf/test-matchup-evidence-ledger.cjs'
+      - 'tools/uncertain_metagame_field.cjs'
+      - 'tools/test-uncertain-metagame-field.cjs'
       - 'simulation/twinleaf/report-atomic.cjs'
       - 'simulation/twinleaf/test-report-atomic.cjs'
       - '.github/workflows/twinleaf-evidence-integrity.yml'
@@ -18,6 +20,8 @@ on:
       - 'simulation/twinleaf/test-paired-score-bounds.cjs'
       - 'simulation/twinleaf/matchup-evidence-ledger.cjs'
       - 'simulation/twinleaf/test-matchup-evidence-ledger.cjs'
+      - 'tools/uncertain_metagame_field.cjs'
+      - 'tools/test-uncertain-metagame-field.cjs'
       - 'simulation/twinleaf/report-atomic.cjs'
       - 'simulation/twinleaf/test-report-atomic.cjs'
       - '.github/workflows/twinleaf-evidence-integrity.yml'
@@ -45,5 +49,7 @@ jobs:
         run: node simulation/twinleaf/test-paired-score-bounds.cjs
       - name: Refuse incompatible evidence and repeated seeds
         run: node simulation/twinleaf/test-matchup-evidence-ledger.cjs
+      - name: Validate box-constrained opponent-field bounds against exhaustive oracle
+        run: node tools/test-uncertain-metagame-field.cjs
       - name: Check lock-guarded atomic artifact writer
         run: node simulation/twinleaf/test-report-atomic.cjs
