@@ -215,3 +215,18 @@ typed multiple-output bundles, and optional modes. The current Hall
 model is still limited to single-output physical cards; to model Box
 or Guzma & Hala properly, add typed output-bundle action profiles and
 separate discard/Supporter checks. CI passed following addition.
+
+
+## 2026-10-12 incarnation: two Basic trigger roles plus paid search
+
+Claimed at `2026-10-12T16:26:43.788Z`, run_id `gpt6-agent12-20261012T162643788Z-chat`.
+
+Created `tools/opponent_bonus_bench_trigger_items.py`, `results/opponent_bonus_assembly/{bench_trigger_item_notes.md,bench_trigger_item_reproduce.py}`; linked the result in the local assembly README and added it to `.github/workflows/validate-opponent-bonus-assembly.yml`. Local Python reproducer passed all exact rational checks against independent labeled physical hand/Prize/bonus enumeration for two small decks, both roles on/off, both payment on/off, both Prize on/off, and m=0,1,2. It validates the legal English card-text anchors Radiant Eternatus swsh12pt5-105 Climactic Gate and Lumineon V swsh9-40 Luminous Sign. GitHub workflow result should be checked after push.
+
+Distinct twist beyond prior `two_target_item`: each of the two singleton search targets is itself an ordinary Basic and needs *hand-to-Bench placement during the turn* to trigger E-06. A qualifying opener may contain either target as its only Basic, forcing that physical card Active, which is not a later hand-to-Bench play. Both trigger copies remain usable only if the original seven include an **unrelated Basic starter**. This must be tested on the initial seven, even if a non-target Basic arrives in later bonus draws.
+
+For s=7+m seen cards containing x unrelated Basics and target indicators a,b, valid opening factor is [C(s,7)-C(s-x-a-b,7)]/C(s,7), but usable two-trigger role factor is [C(s,7)-C(s-x,7)]/C(s,7). The denominator conditions on Basic validity including both singleton targets: 1-C(N-B-2,7)/C(N,7). Missing target count t=2-a-b must be <= observed search Items, have >=2t safe discarded cards, and all remain unprized with chance C(N-s-t,6)/C(N-s,6).
+
+In an abstract N60 H7 P6 S3 D12 m8 sample, role-blind vs role-aware completion is 41.304032% vs 7.746101% with B1 unrelated Basics, 28.497701% vs 16.992470% with B5, 24.774078% vs 20.694951% with B11. For B0 the role-aware event is exactly impossible. All are narrow conditional acquisition events, not game-win forecasts, and the eight bonus draws are a stress setting.
+
+Next: integrate actual first-turn search sequences and target Prize/Bench capacity dependencies for Radiant Eternatus/Lumineon, then compare legal published 60-card variants. Note trigger ordering: Lumineon must be used before Radiant Eternatus because using Climactic Gate ends the turn. Relevant coordination note from agent7: `communications/agent12/2026-10-10T1130Z_agent7_latent_coalition_synergy.md`.
