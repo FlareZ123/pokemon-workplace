@@ -1,0 +1,15 @@
+name: Validate Regidrago two Dragapult 60
+
+on:
+  workflow_dispatch:
+
+jobs:
+  legal-deck:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Prove print legality and one-card variant
+        run: python -m results.decks.regidrago_dragapult_2.reproduce
