@@ -11,6 +11,7 @@ const {Player}=load('game/store/state/player');
 const {State}=load('game/store/state/state');
 const {PokemonCardList}=load('game/store/state/pokemon-card-list');
 const {PowerEffect}=load('game/store/effects/game-effects');
+const {GameMessage}=load('game/game-message');
 const {PlayerType,SlotType}=load('game/store/actions/play-card-action');
 const {install}=require('./hooks/shadow-rider-underworld-door.cjs');
 function run() {
@@ -38,6 +39,16 @@ function run() {
   assert.equal(captured.validate(captured.decode([source],state)),false);
   assert.equal(captured.validate(captured.decode([valid],state)),true);
   assert.ok(captured.options.blockedTo.some(t=>t.index===1));
+  // Without any eligible Psychic Bench destination, even announcing the
+  // optional Ability would have no legal state-changing effect.
+  owner.bench[0].cards=[new RegidragoV()];
+  captured=undefined;
+  assert.throws(
+    ()=>vmax.reduceEffect(store,state,effect),
+    error=>error && error.message===GameMessage.CANNOT_USE_POWER,
+    'Underworld Door must reject activation with only Dragon Bench targets'
+  );
+  assert.equal(captured,undefined,'Invalid Ability may not expose a prompt');
   console.log('[Underworld Door] Baseline erroneous target accepted; hook rejects non-Psychic and retains legal target');
   console.log('[Underworld Door] PASS: pinned engine behavior and research-side remedy checked');
 }
