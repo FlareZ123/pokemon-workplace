@@ -45,7 +45,8 @@ def main() -> None:
         "missed_double_dragon_units_mean": Fraction(2, 5),
     }
     for key, fraction in result.items():
-        print(f"{key}: {fraction} ({float(fraction):.9%})")
+        formatted = f"{float(fraction):.9%}" if key.startswith("at_least") else f"{float(fraction):.9f}"
+        print(f"{key}: {fraction} ({formatted})")
     print("PASS: source-60 exact blind-three Special Energy risk verified")
 
 
