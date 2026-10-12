@@ -31,11 +31,12 @@ const {GrassEnergy} = engine('sets/06-black-and-white/set-black-and-white/basic-
  * Construct two physically possible engine states with identical known
  * information and deck multiset. The only change is the secret position of
  * Boss's Orders inside the player's deck.
- * @param {boolean} supporterInTopSeven
+ * @param {number} supporterPosition Zero-based, 0 through 45
  * @param {'pokegear'|'mail'} [searchItem]
  * @returns {any}
  */
-function fixture(supporterInTopSeven, searchItem = 'pokegear') {
+function fixture(supporterPosition, searchItem = 'pokegear') {
+  assert.ok(Number.isSafeInteger(supporterPosition) && supporterPosition >= 0 && supporterPosition < 46);
   const manager = CardManager.getInstance();
   for (const card of [new Pokegear30(), new TrainersMail(), new BossOrders(), new RegidragoV(), new GrassEnergy()]) {
     if (!manager.isCardDefined(card.fullName)) manager.defineCard(card);
@@ -55,7 +56,7 @@ function fixture(supporterInTopSeven, searchItem = 'pokegear') {
   player.active.pokemonPlayedTurn = 1;
   player.deck.cards = Array.from({length: 45}, () => new GrassEnergy());
   const supporter = new BossOrders();
-  player.deck.cards.splice(supporterInTopSeven ? 0 : 10, 0, supporter);
+  player.deck.cards.splice(supporterPosition, 0, supporter);
   player.prizes = Array.from({length: 6}, () => {
     const slot = new (engine('game/store/state/card-list.ts').CardList)();
     slot.cards.push(new GrassEnergy());
@@ -90,8 +91,8 @@ const settings = {
   promptResolvers: allPromptResolvers,
 };
 const tactic = new PlayTrainerTactic(settings);
-const hit = fixture(true);
-const miss = fixture(false);
+const hit = fixture(0);
+const miss = fixture(10);
 const visibleSnapshot = state => JSON.stringify({
   turn: state.turn,
   active: state.activePlayer,
@@ -123,8 +124,8 @@ assert.equal(hitAction?.type, 'PLAY_CARD_ACTION',
   'Native tactic should prefer Pokégear when the hidden top seven contain a Supporter');
 assert.equal(missAction, undefined,
   'Native tactic should decline Pokégear after secretly peeking at a seven-card whiff');
-const mailHit = fixture(true, 'mail');
-const mailMiss = fixture(false, 'mail');
+const mailHit = fixture(0, 'mail');
+const mailMiss = fixture(10, 'mail');
 assert.equal(visibleSnapshot(mailHit), visibleSnapshot(mailMiss));
 assert.deepEqual(deckInventory(mailHit), deckInventory(mailMiss));
 const mailHitAction = tactic.useTactic(mailHit, mailHit.players[0]);
@@ -141,4 +142,23 @@ assert.equal(mailHitAction?.type, 'PLAY_CARD_ACTION',
   'Native tactic should play Trainers Mail when one of its secret top four is a Trainer');
 assert.equal(mailMissAction, undefined,
   'Native tactic should decline Trainers Mail after seeing the hidden top-four whiff');
-console.log('[hidden-order-audit] PASS: Pokégear and Aichi Mew Trainers Mail decisions depend on unrevealed deck order');
+for (const {item, searchItem, window} of [
+  {item: 'Pokegear SVI', searchItem: 'pokegear', window: 7},
+  {item: 'Trainers Mail ROS', searchItem: 'mail', window: 4},
+]) {
+  let playedPositions = 0;
+  for (let position = 0; position < 46; position++) {
+    const world = fixture(position, searchItem);
+    const action = tactic.useTactic(world, world.players[0]);
+    assert.equal(action?.type === 'PLAY_CARD_ACTION', position < window,
+      item + ' native choice differed from exact secret search window at position ' + position);
+    if (action) playedPositions++;
+  }
+  assert.equal(playedPositions, window);
+  console.log('[hidden-order-audit] ' + JSON.stringify({
+    item, full_hidden_positions: 46, played_positions: playedPositions,
+    held_on_hidden_miss: 46 - playedPositions,
+    exact_play_probability_uniform_shuffle: window + '/46'
+  }));
+}
+console.log('[hidden-order-audit] PASS: all 92 private deck placements mapped to the native oracle choices');
