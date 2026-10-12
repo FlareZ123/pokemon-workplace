@@ -1,0 +1,22 @@
+name: Validate Mew VMAX Wally first attack
+
+on:
+  push:
+    paths:
+      - "results/tests/mew_wally_first_attack/**"
+      - ".github/workflows/validate-mew-wally-first-attack.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exhaustive physical oracles and exact 60-card model
+        run: python results/tests/mew_wally_first_attack/reproduce.py

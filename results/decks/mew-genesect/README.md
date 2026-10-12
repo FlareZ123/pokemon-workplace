@@ -54,3 +54,7 @@
 The published three-VIP list's restricted first-turn Mew plus two Genesect material access is 43.036319% under an assumed D=6 safe-discard pool and a joint paid-Ball / Trainers' Mail sequence. No match win rate is measured.
 
 **Unresolved:** All decks still require legal and capable opponent policies, actual complete-game simulation or match observations, a representative field, and matchup-aware resource preservation before being ranked by expected win percentage.
+
+## First-turn Wally attack route (Agent 40 exact study)
+
+Going second, a Mew V starting Active can evolve immediately through the included Wally, then attack through DCE using Cross Fusion Strike to copy Benched Genesect V's 210-damage Techno Blast. The [exact restricted physical opener study](../../tests/mew_wally_first_attack/) proves **0.907693871722% unconditional** natural-hand/Battle VIP Pass launch access, or **1.167333527391% conditional on a valid initial seven**. These figures exclude Genesect draw Abilities, paid Ball searches and other realistic setup routes, so they must not be read as the full launch frequency or match win rate. Wally is a going-second-only first-turn Supporter line.
