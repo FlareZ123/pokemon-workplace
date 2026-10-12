@@ -22,6 +22,7 @@ const {PlayTrainerTactic} = engine('simple-bot/simple-tactics/play-trainer-tacti
 const {defaultStateScores, defaultArbiterOptions, allPromptResolvers} =
   engine('simple-bot/simple-bot-definitions.ts');
 const {Pokegear30} = engine('sets/10-scarlet-and-violet/set-scarlet-and-violet/pokegear-30.ts');
+const {TrainersMail} = engine('sets/07-x-and-y/set-roaring-skies/trainers-mail.ts');
 const {BossOrders} = engine('sets/10-scarlet-and-violet/set-paldea-evolved/boss-orders.ts');
 const {RegidragoV} = engine('sets/09-sword-and-shield/set-silver-tempest/regidrago-v.ts');
 const {GrassEnergy} = engine('sets/06-black-and-white/set-black-and-white/basic-energies.ts');
@@ -31,11 +32,12 @@ const {GrassEnergy} = engine('sets/06-black-and-white/set-black-and-white/basic-
  * information and deck multiset. The only change is the secret position of
  * Boss's Orders inside the player's deck.
  * @param {boolean} supporterInTopSeven
+ * @param {'pokegear'|'mail'} [searchItem]
  * @returns {any}
  */
-function fixture(supporterInTopSeven) {
+function fixture(supporterInTopSeven, searchItem = 'pokegear') {
   const manager = CardManager.getInstance();
-  for (const card of [new Pokegear30(), new BossOrders(), new RegidragoV(), new GrassEnergy()]) {
+  for (const card of [new Pokegear30(), new TrainersMail(), new BossOrders(), new RegidragoV(), new GrassEnergy()]) {
     if (!manager.isCardDefined(card.fullName)) manager.defineCard(card);
   }
 
@@ -47,7 +49,7 @@ function fixture(supporterInTopSeven) {
   const player = new Player();
   player.id = 1;
   player.name = 'Decision player';
-  player.hand.cards = [new Pokegear30()];
+  player.hand.cards = [searchItem === 'mail' ? new TrainersMail() : new Pokegear30()];
   player.active.cards = [new RegidragoV()];
   player.active.pokemonPlayedTurn = 1;
   player.deck.cards = Array.from({length: 44}, () => new GrassEnergy());
@@ -112,4 +114,22 @@ assert.equal(hitAction?.type, 'PLAY_CARD_ACTION',
   'Native tactic should prefer Pokégear when the hidden top seven contain a Supporter');
 assert.equal(missAction, undefined,
   'Native tactic should decline Pokégear after secretly peeking at a seven-card whiff');
-console.log('[hidden-order-audit] PASS: native Item decision depends on unrevealed deck order');
+const mailHit = fixture(true, 'mail');
+const mailMiss = fixture(false, 'mail');
+assert.equal(visibleSnapshot(mailHit), visibleSnapshot(mailMiss));
+assert.deepEqual(deckInventory(mailHit), deckInventory(mailMiss));
+const mailHitAction = tactic.useTactic(mailHit, mailHit.players[0]);
+const mailMissAction = tactic.useTactic(mailMiss, mailMiss.players[0]);
+console.log('[hidden-order-audit] ' + JSON.stringify({
+  print: 'Trainers Mail ROS 92',
+  paper_deck: 'Aichi 2026 fifth-place Mew VMAX / Genesect V',
+  same_observation: true,
+  same_deck_multiset: true,
+  hit_action: mailHitAction ? mailHitAction.type : null,
+  miss_action: mailMissAction ? mailMissAction.type : null,
+}));
+assert.equal(mailHitAction?.type, 'PLAY_CARD_ACTION',
+  'Native tactic should play Trainers Mail when one of its secret top four is a Trainer');
+assert.equal(mailMissAction, undefined,
+  'Native tactic should decline Trainers Mail after seeing the hidden top-four whiff');
+console.log('[hidden-order-audit] PASS: Pokégear and Aichi Mew Trainers Mail decisions depend on unrevealed deck order');
