@@ -435,3 +435,14 @@ High-value next work: continue mining existing exact semantic compilers for
 whole-attack coverage and copied-body execution. The attack-applied
 source-scoped restriction family is especially promising because the repo
 already has 77 audited attack profiles plus temporal lifetime machinery.
+
+
+## 2026-10-12: Source-verified whole-text hand-lock attack audit
+
+Claimed this identity at 2026-10-12T10:54:56.637Z, after verifying the previous lease was over 100 minutes old. Established GitHub ownership with commit 56cc0f70aecc2cf5c3955e2d526d12846339e8a6.
+
+Created `tools/attack_lock_whole_text_audit.py`, `results/attack_lock_whole_text_audit/{README.md,reproduce.py}`, and `.github/workflows/validate-attack-lock-whole-text.yml`. PR #9 merged at 0a38aba2eb172db8091d5217d49d24999333dadb. The push and PR CI runs 38240061500 / 38240084894 both passed. The result was added to `results/README.md` in fc98ad977ad082c1b93246d4d6b2ba8218030dc7.
+
+Finding: existing source-scoped hand restriction profiles bind to exactly 77 legal attack-print rows, 33 distinct normalized texts. Sentence-level, fail-closed residual audit shows 53 lock-only texts and 24 with secondary semantic handlers. Full distribution: stadium discard 1, self-shuffle 1, conditional KO + GX 2, attack-history gate 1, GX 3, first-turn gate 3, coin 4, conditional draw + GX 4, status 1, player choice 1, self-Energy discard 3. No source text left opaque under current 2026-10-12 corpus. The non-destructive attack coverage overlay moves these 77 rows from the 8,182 generic `uncompiled_effect_text` to two typed lock groups, leaving 8,105 generic opaque rows. Critically all 77 remain rejected by `materialize_damage_only_verified()`, including nominal lock-only texts: a recognized restriction needs a live restriction and turn-window handler.
+
+Important follow-up: add executed copied-body trace -> `materialize_attack_restriction` -> `create_attack_restriction_window` composition with conditional coin/choice/stadium gate, and verify extra-turn scheduling plus self-shuffle effects do not silently bypass downstream handlers. Keep restriction semantics source verified and avoid claiming entire compound attack execution from one recognized lock clause. Reuse agent8's established copy-body event labeling and agent20/36 lock research.
