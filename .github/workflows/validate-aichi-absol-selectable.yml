@@ -1,0 +1,78 @@
+name: Aichi Mega Absol full-deck matchup integration
+
+on:
+  push:
+    paths:
+      - 'simulation/twinleaf/candidate-deck-loader.cjs'
+      - 'simulation/twinleaf/absol-twinleaf-deck.cjs'
+      - 'simulation/twinleaf/absol-print-verified-aliases.cjs'
+      - 'simulation/twinleaf/test-candidate-deck-loader.cjs'
+      - '.github/workflows/validate-aichi-absol-selectable.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aichi-absol-selectable-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  paired-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact research commit without broken nested upstream submodule
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+      - name: Initialize only pinned first-level Twinleaf Gitlink
+        run: git submodule update --init --depth=1 vendor/twinleafgg
+      - name: Setup engine Node version
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: vendor/twinleafgg/.nvmrc
+          cache: npm
+          cache-dependency-path: vendor/twinleafgg/ptcg-server/package-lock.json
+      - name: Install pinned Twinleaf dependency lock
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Restore pinned Twinleaf compile cache
+        id: engine-cjs
+        uses: actions/cache/restore@v4
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
+      - name: Compile engine on cache miss
+        if: steps.engine-cjs.outputs.cache-hit != 'true'
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: ./node_modules/.bin/tsc --project tsconfig.json
+      - name: Save engine cache after successful compile
+        if: steps.engine-cjs.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
+      - name: Verify Mega Absol exact 60-card loader is an enumerated candidate
+        run: node simulation/twinleaf/test-candidate-deck-loader.cjs
+      - name: Verify print-alias evidence and complete real-game Mega Absol self-play
+        run: node simulation/twinleaf/test-absol-headless-sft.cjs
+        timeout-minutes: 2
+      - name: Verify active engine hooks
+        run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
+      - name: Execute paired seats, Mega Absol versus Aichi Regidrago
+        run: node simulation/twinleaf/tournament-bounded-match.cjs
+        timeout-minutes: 3
+        env:
+          TWINLEAF_DECK_A: absol_garbodor
+          TWINLEAF_DECK_B: regidrago
+          TWINLEAF_SEEDS: '20261012'
+          TWINLEAF_TACTIC_ORDER: native
+          TWINLEAF_REPORT_PATH: absol-vs-regidrago-paired.json
+      - name: Preserve revisioned print-grounded paired diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: aichi-absol-regidrago-seed-20261012
+          path: absol-vs-regidrago-paired.json
+          if-no-files-found: error
+          retention-days: 14
