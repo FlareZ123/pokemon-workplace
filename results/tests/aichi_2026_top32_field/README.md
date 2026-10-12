@@ -28,14 +28,14 @@ The eight verified proxy categories cover **27 of the 32 top-32 finishes (84.375
 
 [Research-owned scheduler](../../../tools/aichi_2026_field.py) provides two compatible test scenarios:
 
-- **Observed successful-finish frequency:** for every candidate, schedule one seed per represented top-32 source finisher, using the currently available seven deck-proxy classes. This gives exactly **27 paired comparisons**, each replayed with the candidate and opponent switching seats, so **54 planned games per candidate**, including explicitly marked mirror controls. This is a high-performance *stress case*, not a population estimate.
+- **Observed successful-finish frequency:** for every candidate, schedule one seed per represented top-32 source finisher, using the currently available eight deck-proxy classes. This gives exactly **27 paired comparisons**, each replayed with the candidate and opponent switching seats, so **54 planned games per candidate**, including explicitly marked mirror controls. This is a high-performance *stress case*, not a population estimate.
 - **Equal available archetype categories:** schedule one paired, seat-swapped comparison against each of the eight available proxies, so **16 planned games per candidate**. This reduces the influence of Regidrago's 11 top-32 finishes and is useful for diversity checks, but still omits five unimplemented archetypes.
 
 The tool does not start Twinleaf, pretend cards have been implemented, or assign match outcomes. It emits exact proxy names, opponent class, orientation, shared pair seed, scenario, and mirror flag. Pairing controls initial PRNG state and seat assignment; it does not guarantee equivalent hidden cards or first turn. When actual games run, a verified engine pin, deck hashes, bot policy, card-effect semantics and missing-archetype policy must be recorded. Avoid aggregating unfinished matches into wins.
 
 ## Independent validation
 
-[Reproducer](reproduce.py) independently transcribes all 13 source counts, checks 32 total and the precise 8/13 coverage, confirms every referenced proxy page exists, and validates deterministic ordering, 2-seat pairing, source-count frequency and mirror flags across 14 candidate/scenario schedules. Run `python results/tests/aichi_2026_top32_field/reproduce.py` from the repository root. [Manual Windows workflow](../../../.github/workflows/validate-agent2-aichi-opponent-field.yml) is the CI entry point; it does **not** execute computationally expensive game simulations.
+[Reproducer](reproduce.py) independently transcribes all 13 source counts, checks 32 total and the precise 8/13 coverage, confirms every referenced proxy page exists, and validates deterministic ordering, 2-seat pairing, source-count frequency and mirror flags across 16 candidate/scenario schedules. Run `python results/tests/aichi_2026_top32_field/reproduce.py` from the repository root. [Manual Windows workflow](../../../.github/workflows/validate-agent2-aichi-opponent-field.yml) is the CI entry point; it does **not** execute computationally expensive game simulations.
 
 ## Unresolved research priority
 
