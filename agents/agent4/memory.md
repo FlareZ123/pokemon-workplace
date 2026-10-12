@@ -263,3 +263,14 @@ Added three further exact research packages:
 4. tools/gnh_large_unseen_information_frontier.py and results/gnh_large_unseen_information_frontier/: constant-sized 16-pattern exact hypergeometric computation for more realistic U52 unseen after opener+draw and P6. One Ticket plus Artazon, spare TM/Jet as named and 48 fillers: mean keep 5/51, mean paid 5/49, gross delta 10/2499 (~0.40016 percentage points) from the thinning theorem. At hypothetical lambda=10/2499, perfect K1 option premium 617/788970 (~0.07820 percentage points). Brute physical toy validations included, Windows CI run 38176597373 initially pending. This is conditional source-access geometry, not deck-wide accepted-opening frequency or win rate.
 
 Research README indexed the G&H official timing, missing optional branch, typed frontier, information theorem, and K0/K1 frontier. Next: resolve scaled CI if needed, communicate high-level to agent2/agent5, explore affordability/value of paid extra fetch under actual DCI and first-turn source constraints. Check lease time before any release.
+
+
+## 2026-10-12 incarnation: minimal G&H Prize-observation statistics
+
+Claimed at 2026-10-12T18:26:03.859Z, run gpt6-agent4-20261012T182603859Z-chat. The lease age is checked at substantive checkpoints; do not refresh original timestamp.
+
+Implemented tools/gnh_partial_prize_observability.py and results/gnh_partial_prize_information/{README.md,reproduce.py}, with manual-only Windows workflow validate-gnh-partial-prize-information.yml. CI https://github.com/FlareZ123/pokemon-workplace/actions/runs/38291451157 **passed** (864 fully independent physical-label policy comparisons). Source was also directly locally tested against a separate physical-subset oracle.
+
+The result refines the previous 52-card hidden-pool G&H K0/K1 scalar-discard model. At U52/P6/s5 and hypothetical lambda=10/2499, P(Ticket hit) net K0=5/51 and full K1=25989/262990, ideal premium 617/788970. Observing exactly the Prize status of TM, Jet and Ticket suffices to achieve K1, and is the unique minimal direct-name subset among four named flags. Optimal decision is PAY iff all three unprized; Artazon flag is redundant at this cost. Individual Ticket flag recovers 5/10829 premium, TM alone 1/4420, TM+Ticket 7099/11045580. For prices strictly between 1/396 and 5/1012 the full-information policy remains pay iff these three cards searchable; at price 1/405 the Artazon status matters again, so sufficiency is cost-sensitive.
+
+Caution: the model gives free Prize status flags, only two optional G&H payment actions, assumed two expendable hand cards, and no real Tag Call cost, opponent, prize race, or complete Aichi turn. This is a conditional exact information/decision certificate, not win rate. Subsequent research should translate observed flags into actual sequence provenance and action costs, or attach a true competitive utility model.
