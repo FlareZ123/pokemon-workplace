@@ -25,14 +25,10 @@ BASELINE_SECTIONS = {
     "mew": "2026 Aichi fifth place: Mew Genesect",
 }
 PAGES = {
-    "shadow-rider-aichi-2026": "shadow_rider",
     "shadow-rider-calyrex": "shadow_rider",
-    "vileplume-control-aichi-2026": "vileplume",
     "vileplume-control": "vileplume",
-    "mew-genesect-aichi-2026": "mew",
     "mew-genesect": "mew",
     "mew-genesect-vip4-aichi-counterfactual": "mew_vip4",
-    "regidrago-aichi-2026": "regidrago",
     "regidrago-vstar": "regidrago",
     "mega-absol-garbodor": "absol",
 }
@@ -105,7 +101,7 @@ def main() -> None:
         assert sum(actual.values()) == 60, directory
         print(f"PASS {directory}: 60 cards, {len(actual)} prints, source={family}")
 
-    print(f"All {len(PAGES)} curated deck pages match verified source inventories.")
+    print(f"All {len(PAGES)} canonical deck pages match verified source inventories.")
 
 
 if __name__ == "__main__":
