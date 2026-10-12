@@ -33,7 +33,7 @@ function checkOpening(left,right,seed) {
       scores:defaultStateScores,arbiter:defaultArbiterOptions};
     const bots=new Map([[1,new SimpleTacticsAi({id:1,name:'Aichi A'},opts,left)],
       [2,new SimpleTacticsAi({id:2,name:'Aichi B'},opts,right)]]);
-    const arbiter=new BotArbiter({flipMode:BotFlipMode.RANDOM,shuffleMode:BotShuffleMode.RANDOM});
+    const arbiter=new UniformBotArbiter({flipMode:BotFlipMode.RANDOM,shuffleMode:BotShuffleMode.RANDOM});
     store.dispatch(new AddPlayerAction(1,'Aichi A',left));
     store.dispatch(new AddPlayerAction(2,'Aichi B',right));
     let actions=0;
