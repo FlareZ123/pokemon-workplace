@@ -51,7 +51,7 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
       scores:defaultStateScores,arbiter:defaultArbiterOptions};
     const players=new Map([[1,new SimpleTacticsAi({id:1,name:'Aichi A'},settings,deckA)],
       [2,new SimpleTacticsAi({id:2,name:'Aichi B'},settings,deckB)]]);
-    const arbiter=new BotArbiter({flipMode:BotFlipMode.RANDOM,shuffleMode:BotShuffleMode.RANDOM});
+    const arbiter=new UniformBotArbiter({flipMode:BotFlipMode.RANDOM,shuffleMode:BotShuffleMode.RANDOM});
     store.dispatch(new AddPlayerAction(1,'Aichi A',deckA));
     store.dispatch(new AddPlayerAction(2,'Aichi B',deckB));
     let actions=0,attacks=0,status='action_cap',error=null,firstActor=null;
