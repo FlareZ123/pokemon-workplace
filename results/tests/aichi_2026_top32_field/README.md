@@ -26,7 +26,7 @@ The seven verified proxy categories cover **25 of the 32 top-32 finishes (78.125
 
 ## Reproducible and deliberately incomplete test plans
 
-[Research-owned scheduler](../../tools/aichi_2026_field.py) provides two compatible test scenarios:
+[Research-owned scheduler](../../../tools/aichi_2026_field.py) provides two compatible test scenarios:
 
 - **Observed successful-finish frequency:** for every candidate, schedule one seed per represented top-32 source finisher, using the currently available seven deck-proxy classes. This gives exactly **25 paired comparisons**, each replayed with the candidate and opponent switching seats, so **50 planned games per candidate**, including explicitly marked mirror controls. This is a high-performance *stress case*, not a population estimate.
 - **Equal available archetype categories:** schedule one paired, seat-swapped comparison against each of the seven available proxies, so **14 planned games per candidate**. This reduces the influence of Regidrago's 11 top-32 finishes and is useful for diversity checks, but still omits six unimplemented archetypes.
