@@ -13,6 +13,7 @@ on:
           - shadow_rider
           - regidrago
           - mew_genesect
+          - mew_genesect_vip4
       deck_b:
         description: Distinct second tournament reference deck
         type: choice
@@ -23,6 +24,7 @@ on:
           - shadow_rider
           - regidrago
           - mew_genesect
+          - mew_genesect_vip4
       seeds:
         description: One to three distinct unsigned 32-bit seeds, comma-separated
         type: string
@@ -85,6 +87,8 @@ jobs:
         run: node simulation/twinleaf/test-match-action-telemetry.cjs
       - name: Verify research bot tactic reorder and pinned assumptions
         run: node simulation/twinleaf/test-tactic-order-policy.cjs
+      - name: Validate exact Mew VIP4 candidate mapping and published 60-card reference
+        run: node simulation/twinleaf/test-candidate-deck-loader.cjs
       - name: Probe complete 60-card tournament decks through pinned live engine
         timeout-minutes: 4
         env:
