@@ -37,3 +37,25 @@ Run `python results/tests/raichu_2026_natural_seed/reproduce.py`, or the reposit
 **What this estimate does not measure:** actual opening success with 4 Quick Ball, 1 Ultra Ball, 1 Battle VIP Pass, Secret Box, supporter draw, Ability draw, mulligan-bonus draws, and Prize searches. It excludes opponent interaction, turn-two Stage 1 access, five Energy cards reaching discard, Electrode's self-Knock-Out Prize consequences, and Electro Rain attack permission. It cannot be interpreted as full combo setup rate, deck win rate, or a reliable assessment of the deck's tournament strength.
 
 **Next experiment:** couple these physical base identities to a joint search/discard and draw policy, then model turn-two evolution plus the Prize-state-dependent five-Energy Bomb action without double-spending connectors.
+
+
+## Natural turn-two dual evolution material
+
+The companion SFT `turn2_material.py` includes the two printed Stage 1 counts: **three Electrode-GX and two Alolan Raichu**, in addition to the starting Basic source counts. It tests a stricter natural event:
+
+1. by the end of own turn one, the first eight observed cards contain two different Basic source roles sufficient for Voltorb/Pikachu/Ditto evolution;
+2. by the start of own turn two, the first nine observed cards contain **at least one Electrode-GX and one Alolan Raichu**.
+
+This is a prerequisite for the natural turn-two double evolution. Its chronological condition prevents a Basic drawn on own turn two from being incorrectly counted as evolution-eligible. The model assumes the player benches the necessary Basics on turn one and neither player removes them.
+
+| Natural turn-two material condition, given valid starting seven | Exact fraction | Percentage |
+| --- | --- | ---: |
+| Both source Basics by own T1 and both Stage 1 evolutions by own T2 | `1269021526/222764325069` | **0.569670%** |
+| Same with native Voltorb and Pikachu bases | `41327540/17135717313` | **0.241178%** |
+| Same relying on Ditto for a source Basic | Difference between fractions | **0.328492%** |
+
+Of naturally complete turn-two evolution-material states, **57.663601% depend on Ditto** for one of the two evolution sources. This makes a live Klefki Active Ability lock a relevant caveat even after both Stage 1 cards are naturally available.
+
+Independent exact oracles agree: one enumerates every legal seven-card hand and two chronological draws; the other enumerates every qualifying first-eight multiset and the physical identities of the possible ninth card. Both marginalize unknown Prizes. The sample space remains a valid initial seven, with no search or draw effects.
+
+**Do not treat 0.569670% as the deck's turn-two attack rate.** The published deck has Quick Balls, Battle Compressor, multiple draw Abilities, search and recovery, and twelve Special Energy. The attack also needs Energy available and Electrode-GX to be activated in a compatible Prize state. The statistic shows how strongly the list depends on those action channels to assemble the target state.
