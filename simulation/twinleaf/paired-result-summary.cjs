@@ -18,7 +18,7 @@ function summarizePairedTraces(pairs, traces) {
   assert.ok(Array.isArray(traces) && traces.length === pairs.length, 'Exactly one trace per seat assignment required');
   const ids = [...new Set(pairs.flatMap(p => [p.seat1.id, p.seat2.id]))];
   assert.equal(ids.length, 2, 'Expected exactly two distinct deck identities');
-  const byDeck = Object.fromEntries(ids.map(id => [id, {wins: 0, losses: 0, unresolved: 0}]));
+  const byDeck = Object.fromEntries(ids.map(id => [id, {wins: 0, losses: 0, draws: 0, unresolved: 0}]));
   const byPair = new Map();
 
   const games = pairs.map((pair, index) => {
@@ -41,6 +41,10 @@ function summarizePairedTraces(pairs, traces) {
       const loserDeck = trace.winner === 0 ? pair.seat2.id : pair.seat1.id;
       byDeck[winnerDeck].wins++;
       byDeck[loserDeck].losses++;
+    } else if (completed && trace.winner === 3) {
+      outcome = 'draw';
+      byDeck[pair.seat1.id].draws++;
+      byDeck[pair.seat2.id].draws++;
     } else {
       byDeck[pair.seat1.id].unresolved++;
       byDeck[pair.seat2.id].unresolved++;
@@ -67,10 +71,10 @@ function summarizePairedTraces(pairs, traces) {
   const count = outcome => games.filter(game => game.outcome === outcome).length;
   return {games, by_deck: byDeck, paired_seed_count: pairsSummary.length,
     fully_decided_pairs: pairsSummary.filter(p => p.both_decided).length,
-    completed_decisions: count('decided'), censored_games: count('censored'),
+    completed_decisions: count('decided'), drawn_games: count('draw'), censored_games: count('censored'),
     error_games: count('error'), terminal_unresolved_games: count('terminal_unresolved'),
     pairs: pairsSummary,
-    interpretation: 'Raw winners are player indices (seat 1=0, seat 2=1); censored and errored games are not wins. Counts are diagnostics, not win-rate estimates.'};
+    interpretation: 'Pinned Twinleaf GameWinner enum: 0 is seat 1, 1 is seat 2, 3 is DRAW. Censored, unresolved and errored games are not wins. Counts are diagnostics, not win-rate estimates.'};
 }
 
 module.exports = {summarizePairedTraces};
