@@ -15,4 +15,4 @@ jobs:
         with:
           python-version: "3.13"
       - name: Reproduce target access and physical Prize oracle
-        run: python results/raichu_target_payment_frontier/reproduce.py
+        run: python results/tests/raichu_target_payment_frontier/reproduce.py
