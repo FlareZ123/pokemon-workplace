@@ -78,7 +78,7 @@ function main() {
   assert.equal(a.status,'strictly_mappable');assert.equal(b.status,'strictly_mappable');
   registerLists([a.engine_names,b.engine_names]);
   const traces=[runOne(a.engine_names,b.engine_names,20261012),
-    runOne(b.engine_names,a.engine_names,20261013)];
+    runOne(b.engine_names,a.engine_names,20261012)];
   const report={scope:'bounded engine self-play diagnostics only, SimpleTacticsAi policy unvalidated',
     twinleaf_pin:'3348ebdc898f175a2ed8f999133cd13d1afd01f5',
     decks:['aichi_vileplume','aichi_mew_genesect'],max_actions:1000,wall_ms:12000,traces};
