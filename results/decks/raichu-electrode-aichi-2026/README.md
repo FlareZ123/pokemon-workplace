@@ -74,6 +74,20 @@ This is a **conditional five-card ceiling**, assuming the correct five Energy ca
 
 A tactical consequence: an Electrode Bomb can activate triple/double Energy when the starting Prize count is tied, but it may fail to do so when the Raichu player was **ahead** before the Bomb. If the opponent has two or fewer Prizes left, voluntarily knocking out Electrode-GX hands them the game before an attack can occur. A practical optimizer must evaluate the transition itself.
 
+## Quantified 2024-to-2026 structural change
+
+The prior [Harto Miki 2024 Aichi Raichu/Electrode list](https://limitlesstcg.com/decks/list/11221) contained **one Alolan Raichu and 16 opening-eligible Basic Pokémon**; this [Shu Hosoda 2026 list](https://limitlesstcg.com/decks/list/26812) contains **two Alolan Raichu and 13 opening-eligible Basics**. In the narrower, exact physical-zone model conditional on an initially valid Basic-containing seven, drawing one natural card on the first turn and setting six Prizes:
+
+| Physical event | 2024 list | 2026 list |
+| --- | ---: | ---: |
+| Valid initial seven (unconditional) | **90.077711%** | **83.715595%** |
+| All Alolan Raichu copies Prized (conditional valid seven) | **10.052903%** | **0.859522%** |
+| At least one Alolan Raichu held after first natural draw (conditional valid seven) | **12.874837%** | **24.018250%** |
+
+These rational counts are verified against three independent, fully labeled physical-card toy oracles in the [exact 2024–2026 comparer](../../tests/raichu_2026_print_validation/compare_2024.py). The 2026 extra Raichu substantially reduces **total Prize collapse** and nearly doubles naturally held Raichu material, while fewer Basics increase mulligan likelihood. One plausible explanation for reducing Gladion from two copies in 2024 to one in 2026 is this lower all-Prized risk, but that is a **hypothesis** rather than a proved causal motive.
+
+Other major list changes are 2024 Computer Search to 2026 Secret Box, four Battle VIP Pass to one, two Quick Ball to four, three Ultra Ball to one, three Rescue Stretcher to four, and eleven Special Energy to twelve. Expanded matchup conditions, access chains, and whether any of these changes improved actual win probability remain unquantified. The full three-part validation workflow [passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38294006453).
+
 ## Why this list belongs on the competitive shortlist
 
 It is an additional fourth-place 2026 Aichi archetype missing from the initial five-deck print-verified shortlist. Its deliberately self-Knock-Out-driven tempo and spreading attack create different win conditions from the main VMAX, Item-lock and Regidrago decks. Its published placement is meaningful tournament evidence, with no modeled matchup table, best-of-three rate or validated match simulator coverage currently established.
