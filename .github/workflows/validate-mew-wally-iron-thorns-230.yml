@@ -1,0 +1,22 @@
+name: Validate Mew Wally Iron Thorns 230 damage access
+
+on:
+  push:
+    paths:
+      - "results/tests/mew_wally_iron_thorns_230/**"
+      - ".github/workflows/validate-mew-wally-iron-thorns-230.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-muscle-band-threshold:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Physical six-Prize and card-print 230 damage threshold
+        run: python results/tests/mew_wally_iron_thorns_230/reproduce.py
