@@ -32,3 +32,5 @@ jobs:
         run: ./node_modules/.bin/tsc --project tsconfig.json
       - name: Run Expanded fixed-deck SFT
         run: node simulation/twinleaf/test-expanded-bot.cjs
+      - name: Audit Aichi baseline exact-print coverage
+        run: node simulation/twinleaf/test-print-coverage.cjs
