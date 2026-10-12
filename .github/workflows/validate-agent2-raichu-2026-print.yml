@@ -16,3 +16,5 @@ jobs:
           python-version: "3.13"
       - name: Validate complete Raichu 60 and paper Expanded eligibility
         run: python results/tests/raichu_2026_print_validation/reproduce.py
+      - name: Verify Energy-unit and Prize-state burst ceilings
+        run: python results/tests/raichu_2026_print_validation/prize_energy_modes.py
