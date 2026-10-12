@@ -228,6 +228,18 @@ that identity. Stale physical snapshots, ambiguous reference IDs, and orphan
 references are rejected. This collector covers owners explicitly supplied by
 its caller, so omitted pending-effect references remain a real integration risk.
 
+[single_pending_identity_binding/](../single_pending_identity_binding/) also
+binds the original one-card observer pending belief to its exact Prize instance.
+Its group-only belief representation previously lacked a physical ID, even
+while the pending card could already have moved into hand.
+
+[identity_instance_provenance/](../identity_instance_provenance/) exposes a
+distinct lifetime hazard: a bare IdentityLedger can reissue an ID after the
+first instance is dematerialized, allowing an old reference to alias a different
+card. The opt-in provenance state retains issued-ID tombstones and prevents
+reuse on its guarded transition path. Legacy materialization callers remain
+untracked, so the canonical match authority still needs to own ID allocation.
+
 Reference collection is therefore partly automatic. Pending effects and other
 history-bearing subsystems still need corresponding ownership adapters.
 
@@ -323,6 +335,8 @@ Core detailed results:
 - [ko_redirection_authorized_order/](../ko_redirection_authorized_order/)
 - [identity_liveness/](../identity_liveness/)
 - [zone_exit_identity_release/](../zone_exit_identity_release/)\n- [composite_identity_liveness/](../composite_identity_liveness/)
+- [single_pending_identity_binding/](../single_pending_identity_binding/)
+- [identity_instance_provenance/](../identity_instance_provenance/)
 - [identity_reference_sources/](../identity_reference_sources/)
 - [belief_identity_liveness/](../belief_identity_liveness/)
 - [materialized_hand_size_continuation/](../materialized_hand_size_continuation/)
