@@ -157,7 +157,7 @@ def validate_jirachi_knockout_slot_geometry() -> None:
             prefix=prefix,
             bench_count=5,
             prize_classes=(
-                ("sm7-97", "Jirachi Prism Star"),
+                ("sm7-97", "Jirachi ◇"),
                 ("sv3pt5-113", "Chansey"),
                 (f"{prefix}-other-class", "Other"),
             ),
