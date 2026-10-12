@@ -14,6 +14,7 @@ on:
           - regidrago
           - mew_genesect
           - mew_genesect_vip4
+          - regidrago_dragapult_2
       deck_b:
         description: Distinct second tournament reference deck
         type: choice
@@ -25,6 +26,7 @@ on:
           - regidrago
           - mew_genesect
           - mew_genesect_vip4
+          - regidrago_dragapult_2
       seeds:
         description: One to three distinct unsigned 32-bit seeds, comma-separated
         type: string
