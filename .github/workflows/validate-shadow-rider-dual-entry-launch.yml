@@ -1,0 +1,26 @@
+name: Validate Shadow Rider dual entry launch
+
+on:
+  push:
+    paths:
+      - "tools/shadow_rider_dual_entry_launch.py"
+      - "results/shadow_rider_dual_entry_launch/**"
+      - "tools/opponent_bonus_matching.py"
+      - "results/competitive_deck_baselines/shadow_rider_reproduce.py"
+      - ".github/workflows/validate-shadow-rider-dual-entry-launch.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check legal print texts, analytic access and physical toy oracles
+        run: python results/shadow_rider_dual_entry_launch/reproduce.py
