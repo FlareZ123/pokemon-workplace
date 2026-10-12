@@ -112,3 +112,22 @@ Caution from independent inspection of other results: current two-sided engines 
 ### October 10 sixth result: Boss and defender Switch complementarity
 
 Created `results/gust_switch_critical_window/{README.md,reproduce.py}`, `validate-gust-switch-critical-window.yml`, root index. CI passed https://github.com/FlareZ123/pokemon-workplace/actions/runs/38058889696 . On Active(3Prize,2hits), Bench(2Prize,2hits)+(3Prize,2hits), exactly one Boss among A>=6 attacker draws and S Switch among D>=5 opponent draws: E=6−(6/A)*C(D−3,S)/C(D,S)−(1/A)*C(D−4,S)/C(D,S). With no Boss, any Switch copies yields six attacks; without Switch, one Boss yields E=6−7/A. Exact hypergeometric timing proof: Boss in first3 and Switch absent first3 saves2 attacker turns; Boss first appears draw4 and Switch absent first4 saves1, later Boss no gain. With A=D12 Boss1/Switch1 E=401/72 versus 65/12 without Switch; Switch marginal11/72, confirmed by 450 exact DP configurations and 3576 physically ordered paired deck worlds S1..3. One-Switch marginal effect with Boss copies0..4 in attacker 12-card draw pile: [0,11/72,5/24,9/44,28/165]; peaks at Boss2 and decreases for extra Boss copies, proving non-monotone cross-card value under controlled game. Source checks Boss swsh2-154 Supporter, Switch sv1-194 Item. This precisely reintroduces escape value after low-Prize domination and shows alternate card package interactions. Future work: Item lock source timing, realistic searches, attacker draw supporter contention, opponent draw privacy. 
+
+
+## 2026-10-12 incarnation: forced Guzma own-switch tactical frontier
+
+Claimed identity 2026-10-12T19:42:05.798Z (run ID chat-gpt6-agent44-2026-10-12T19:42:05.798Z) and confirmed lease push. Do not refresh this timestamp.
+
+New source-grounded study:
+- tools/guzma_forced_pivot.py, results/tests/guzma_forced_pivot_frontier/{README.md,reproduce.py}, and .github/workflows/validate-guzma-forced-pivot-frontier.yml.
+- Exact enumeration across 49,140 arbitrary one-turn attack-capability / opponent Prize geometry combinations (own board 1..6, opponent exactly Active+Bench, 4 KO masks/own Pokemon, 1..3 Prizes/opp Pokemon).
+- With no extra own-switch action, Boss higher immediate payout in 744, Guzma in 15,624, tied 32,772. Both directions have 3-Prize witnesses because Guzma's first opposing switch *forces* an own Active switch if possible.
+- With one Switch Item freely playable before/after Supporter, maximum immediate Prize payoffs coincide in all 49,140 states; under Item lock a held Switch has no effect.
+- Independent algebraic oracle compared with event-order DFS in every state, and the three print texts sm3-115, swsh2-154, sv1-194 checked from resources/cards/en. Local Python reproduction succeeded.
+- Windows CI success, run https://github.com/FlareZ123/pokemon-workplace/actions/runs/38300164719 .
+- Broadcast communications/broadcast/20261012T1952Z_agent44_guzma-forced-pivot-frontier.md.
+- Followed repo owner's 2026-10-12 deck-first curation directive: new atomic test under results/tests; did not append to results/README.md or change tournament lists.
+
+Limitations: one-turn Prize payout conditional on arbitrary instant-KO capability; no multi-turn attacking, energy/card cost, lock persistence, opponent action, damage carryover, Prize acquisition or match win rates. Do not treat structural case counts as metagame frequencies.
+
+Next highest-value research: match Guzma's mandatory own switch to actual attacker Energy/attack costs, legal retreat effects and persistent Active-only locks; test card-swap consequence in real tournament deck snapshots. Refine the model's immediate knockout abstraction before using it for deck construction.
