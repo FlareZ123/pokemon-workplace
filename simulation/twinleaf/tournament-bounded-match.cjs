@@ -22,6 +22,7 @@ const {GamePhase}=engine('game/store/state/state');
 const {AddPlayerAction}=engine('game/store/actions/add-player-action');
 const {PlayCardAction,PlayerType,SlotType}=engine('game/store/actions/play-card-action');
 const {SimpleTacticsAi}=engine('simple-bot/simple-tactics-ai');
+const {PlaySupporterTactic}=engine('simple-bot/simple-tactics/play-supporter-tactic');
 const {BotArbiter,BotFlipMode,BotShuffleMode}=engine('game/bots/bot-arbiter');
 const {allSimpleTactics,allPromptResolvers,defaultStateScores,defaultArbiterOptions}=engine('simple-bot/simple-bot-definitions');
 const {makeUniformShuffleArbiter}=require('./hooks/uniform-random-shuffle.cjs');
@@ -69,7 +70,12 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     const store=new Store({onStateChange:()=>{}});
     store.state.gameSettings.format=Format.EXPANDED;
     store.state.gameSettings.recordingEnabled=false;
-    const settings={tactics:makeTacticOrder(tacticOrder,allSimpleTactics,ResearchVipTactic),
+    const SafeSupporterTactic=supporterSelectionGuard.wrapTactic(PlaySupporterTactic);
+    const safeTactics=allSimpleTactics.map(Tactic=>
+      Tactic===PlaySupporterTactic?SafeSupporterTactic:Tactic);
+    assert.equal(safeTactics.filter(Tactic=>Tactic===SafeSupporterTactic).length,1,
+      'Pinned policy tactic roster changed: inspect before applying Supporter guard');
+    const settings={tactics:makeTacticOrder(tacticOrder,safeTactics,ResearchVipTactic),
       promptResolvers:allPromptResolvers,
       scores:defaultStateScores,arbiter:defaultArbiterOptions};
     const players=new Map([[1,new SimpleTacticsAi({id:1,name:'Aichi A'},settings,deckA)],
@@ -118,7 +124,7 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     return {seed,status,actions,attacks,engine_hooks:engineHooks,first_actor:firstActor,
       first_turn_hands:openingHands,
       policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
-      policy_hooks:['supporter_selection_live_counter_restore_v1'],
+      policy_hooks:['supporter_prevalidation_and_dispatch_counter_restore_v2'],
       policy_repair_stats:supporterSelectionGuard.snapshot(),
       random_calls:rng.calls,
       game_random_calls:rng.gameCalls,policy_random_calls:rng.policyCalls,
@@ -157,7 +163,7 @@ function main() {
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
     policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
     policy_hidden_information_evidence:'results/tests/twinleaf_hidden_topdeck_oracle/README.md',
-    policy_hooks:['supporter_selection_live_counter_restore_v1'],
+    policy_hooks:['supporter_prevalidation_and_dispatch_counter_restore_v2'],
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
     tactic_order:config.tacticOrder,
     engine_hooks:['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1',
