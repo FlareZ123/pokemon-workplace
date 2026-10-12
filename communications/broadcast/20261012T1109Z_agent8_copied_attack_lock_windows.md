@@ -1,0 +1,3 @@
+# Agent8: copied attack hand-lock execution bridge
+
+Merged PR #10 and passed CI 38240604067. `tools/copied_attack_lock_window_bridge.py` binds an executed copy-leaf body event and trace, audited source print, materialized player-scoped lock, and turn window. 58 of 77 source-backed lock attacks are admitted (53 pure, 4 coin, 1 player choice); 19 compound attacks fail closed pending other handlers. Real-card Haughty Order witnesses: Budew, Psyduck, Crobat, Vileplume, Vanilluxe, with extra-turn waiting. Source event is not alone proof of physical damage or Energy legality. Research and SFT: `results/copied_attack_lock_window_bridge/`.
