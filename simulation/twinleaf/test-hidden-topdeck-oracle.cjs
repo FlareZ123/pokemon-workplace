@@ -49,10 +49,11 @@ function fixture(supporterInTopSeven, searchItem = 'pokegear') {
   const player = new Player();
   player.id = 1;
   player.name = 'Decision player';
-  player.hand.cards = [searchItem === 'mail' ? new TrainersMail() : new Pokegear30()];
+  player.hand.cards = [searchItem === 'mail' ? new TrainersMail() : new Pokegear30(),
+    ...Array.from({length: 6}, () => new GrassEnergy())];
   player.active.cards = [new RegidragoV()];
   player.active.pokemonPlayedTurn = 1;
-  player.deck.cards = Array.from({length: 44}, () => new GrassEnergy());
+  player.deck.cards = Array.from({length: 45}, () => new GrassEnergy());
   const supporter = new BossOrders();
   player.deck.cards.splice(supporterInTopSeven ? 0 : 10, 0, supporter);
   player.prizes = Array.from({length: 6}, () => {
@@ -65,6 +66,8 @@ function fixture(supporterInTopSeven, searchItem = 'pokegear') {
   opponent.id = 2;
   opponent.name = 'Same opponent';
   opponent.active.cards = [new RegidragoV()];
+  opponent.hand.cards = Array.from({length: 7}, () => new GrassEnergy());
+  opponent.deck.cards = Array.from({length: 46}, () => new GrassEnergy());
   opponent.active.pokemonPlayedTurn = 1;
   opponent.prizes = Array.from({length: 6}, () => {
     const slot = new (engine('game/store/state/card-list.ts').CardList)();
@@ -72,6 +75,12 @@ function fixture(supporterInTopSeven, searchItem = 'pokegear') {
     return slot;
   });
   state.players = [player, opponent];
+  for (const participant of state.players) {
+    const count = participant.hand.cards.length + participant.deck.cards.length +
+      participant.discard.cards.length + participant.active.cards.length +
+      participant.prizes.reduce((sum, slot) => sum + slot.cards.length, 0);
+    assert.equal(count, 60, 'Each constructed game state must conserve 60 physical cards');
+  }
   return state;
 }
 
