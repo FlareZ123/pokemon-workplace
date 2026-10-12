@@ -89,3 +89,41 @@ treats the existence of a legal Retreat action as guaranteed board
 movement will overstate escape against Goodra. A switch-based line
 can be worth more than an apparently cheap ordinary Retreat, even
 when the latter costs zero Energy.
+
+## Goodra × Dashing Pouch × Ultra Ball chance-node composition
+
+The supplemental `ultra_ball_reproduce.py` reuses the exact physical
+state and typed paid-Ultra-Ball transaction from
+[Retreat overpayment's Ultra Ball bridge](../retreat_ultraball_payment_bridge/).
+Initially, one DCE and one Basic Psychic Energy are attached to a
+Stage 1 Active with Dashing Pouch. Only Ultra Ball is held, a
+searchable Basic target is in the deck, and there is a Bench Pivot.
+
+The normalized successful Retreat options pay DCE only or DCE plus
+Basic. Under active Goodra Slimy Sliding, each Retreat has 50% heads
+and 50% tails; on tails, nothing enters the hand and Retreat quota
+is spent. The resulting exact probabilities of **immediately paying
+Ultra Ball's two required other-card discards and retrieving the
+target Pokémon** are:
+
+| Starting extra safe hand cards | DCE-only Retreat | DCE + Basic Retreat |
+| --- | ---: | ---: |
+| 0, Goodra absent | 0% | 100% |
+| 0, one Goodra | 0% | 50% |
+| 0, two Goodra | 0% | 50% |
+| 1, one Goodra | 50% | 50% |
+| 2, one Goodra | 100% | 100% |
+
+The two-spare-card case can execute Ultra Ball even without Retreat;
+it is a controls-only line showing that access is no longer caused
+by the Retreat or its Tool. The probabilities therefore describe
+**continuation reachability after selecting that Retreat action**,
+not causal gains, unconditional deck consistency or match wins.
+
+These tests compose physical Retreat branches and exact typed
+Trainer payments from one conserved zone-count ledger; they assert
+the target's actual resulting hand zone, discarded Ultra Ball,
+consumed Retreat quota and unchanged total physical-copy counts.
+The dedicated CI run
+[38279403233](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38279403233)
+passed this extension and both parent transaction tests.
