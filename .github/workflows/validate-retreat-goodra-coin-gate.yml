@@ -22,5 +22,7 @@ jobs:
       - name: Verify coin outcomes, quota, Energy conservation and switching
         run: |
           python results/retreat_goodra_coin_gate/reproduce.py
+          python results/retreat_goodra_coin_gate/ultra_ball_reproduce.py
+          python results/retreat_ultraball_payment_bridge/reproduce.py
           python results/retreat_energy_transaction/reproduce.py
           python results/retreat_action_enumeration/reproduce.py
