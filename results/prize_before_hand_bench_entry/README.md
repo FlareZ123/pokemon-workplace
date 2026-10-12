@@ -77,6 +77,25 @@ Lucky Bonus then resolves from that new pending card and puts the same Chansey i
 
 This is an executable example of E-31 effects creating further E-31 work before the Prize window closes.
 
+## Knock-Out location and sequential Bench-capacity contention
+
+The expanded regression separates four same-turn own-board disposal patterns while assuming that an opposing Active Knock Out has already earned the initial face-down Prize. All four begin with five Benched Pokémon and the same ordered Jirachi, Chansey, Other Prize identities.
+
+| Own Pokémon simultaneously Knocked Out | Bench before Prize effects | Jirachi enters? | Chansey enters from Jirachi's extra Prize? |
+| --- | ---: | --- | --- |
+| Active only | 5 | No | No extra Prize |
+| One Benched only | 4 | Yes | No, Jirachi fills the Bench |
+| Active and one Benched | 4 | Yes | No, Jirachi fills the Bench |
+| Active and two Benched | 3 | Yes | Yes, the next open Bench slot remains |
+
+The official Japanese Jirachi Prism Star Q&A explicitly distinguishes simultaneous own-Active versus own-Benched Knock Outs with a full starting Bench: the former refuses Wish Upon a Star, while the latter permits it. This validates the first two rows as an actual game rule.
+
+Official source: https://www.pokemon-card.com/rules/faq/search.php?freeword=%E3%81%BB%E3%81%97%E3%81%AB%E3%81%AD%E3%81%8C%E3%81%84%E3%82%92&regulation_faq_main_item1=BW
+
+The remaining rows are executable consequences of the same KO disposal order, physical Bench capacity, and two card texts. In the four-Bench cases, Jirachi's own entry consumes the single opening; the additional Chansey Prize still reaches hand because Lucky Bonus cannot place it on the full Bench. In the three-Bench case, both enter; a heads result on Chansey stages the third face-down Prize, which then reaches hand. Every path verifies exact physical-card conservation.
+
+These are deterministic conditional transition tests. They do not estimate the frequency of such multi-Knock-Out states or show that a Jirachi/Chansey inclusion improves match win rates.
+
 ## Limits
 
 The current executable island does not yet cover:
@@ -85,7 +104,6 @@ The current executable island does not yet cover:
 - Treasure Energy;
 - Greedy Dice;
 - observer-belief updates for an additional Prize staged from inside an E-31 effect;
-- card-text compilation from the atom catalog into these executable functions;
 - general card-text compilation from the atom catalog into these executable functions.
 
 Those are separate semantic layers rather than assumptions hidden inside this transition.
