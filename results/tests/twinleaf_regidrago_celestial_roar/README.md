@@ -42,6 +42,30 @@ The reproducible exact blind-three composition census is [`reproduce.py`](reprod
 
 **Scope:** an untouched 60-card blind draw is a diagnostic null model. An actual Celestial Roar happens after a Basic-containing opening, six Prizes, card draw/search, and usually other setup decisions. The conditional probability of the bug affecting a *played* Celestial Roar depends on the resulting live deck composition and the policy's decision to attack. Neither the 18.99% nor the expected 0.4 units is a match win-rate estimate.
 
+## Natural first-turn attack exposure with hand and Prize constraints
+
+The basic 18.9947% blind-three composition figure above does not condition on an attack being legal. [`natural_first_attack.py`](natural_first_attack.py) models a stricter physical opening for the **published unchanged 60**, going second:
+
+1. Seven random opening cards contain at least one Regidrago V, chosen as the starting Active. Other Basics may also be held.
+2. Six Prize cards are set aside. The player draws one natural card at the start of their first turn.
+3. At least one Energy card (four Double Dragon, four Basic Grass, or two Basic Fire) appears in the first eight exposed hand cards and may be manually attached to Regidrago V to pay Celestial Roar's Colorless cost.
+4. Celestial Roar reveals the next three deck cards. Its corrected-versus-buggy outcome differs if at least one Double Dragon Energy appears among them.
+
+No Switch, Ball, Supporter, mulligan bonus draw, Ability draw, Item action, opponent lock, attack policy or prior information is granted. The player has no need to perform a first deck search. This is a **natural, executable source-availability event** for one particular first-turn going-second line, without modeling the choice to take that line or its strategic utility.
+
+The exact category solver enumerates all opening seven-card compositions, then conditions on the first natural draw. Six random Prize identities are *marginalized*, preserving their physical unavailability. Exchangeability makes the following three unknown cards a hypergeometric sample from the remaining 52 cards after the first draw, even though six of the 52 are Prized. An independent `labeled_physical_oracle` enumerates explicit original physical-card identities, 2-card Prize sets, first draws and 3-card reveals in two 10-card toy configurations; both exact events agree with the category solution.
+
+| Event | Exact result | Percentage |
+| --- | --- | ---: |
+| Basic-valid opening, before mulligan conditioning | `172135/195054` | **88.249920535%** |
+| Regidrago starting Active + Energy available for T1 Celestial Roar, unconditional | `1561585/5168931` | **30.210985598%** |
+| Same turn-one source event, conditional on Basic-valid opening | `624634/1824631` | **34.233442269%** |
+| Source event AND revealed Double Dragon Energy, unconditional | `315139423777/5654552067450` | **5.573198726%** |
+| Source event AND revealed Double Dragon, conditional on Basic-valid opening | `315139423777/4990137706125` | **6.315245036%** |
+| Revealed Double Dragon, conditional on the natural T1 source event | `315139423777/1708295910750` | **18.447589893%** |
+
+Thus, across the **restricted naturally ready** turn-one Celestial Roar windows, **18.4476%** would reveal a Double Dragon Energy that the original engine incorrectly discards. This quantifies how frequently the confirmed semantic defect can affect a *physically available direct early attack*, not its probability in a played match or its effect on winning. The player might intentionally use a stronger line instead, and opponent-specific disruption can prevent the attack.
+
 ## Interpretation and remaining limits
 
 Engine simulations recorded **before** this Regidrago correction silently use a different Energy-acceleration rule than the physical source card. Do not treat them as directly comparable to guarded results. Even guarded runs use `SimpleTacticsAi`, which can fail to select realistic attack, attachment or search choices. Confidence in those policy outcomes remains low.
