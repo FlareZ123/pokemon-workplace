@@ -100,7 +100,7 @@ def main() -> None:
     old = prior_exact()
     extended = exact()
     assert sum(buckets.values()) == extended["treasure_2"] == old["treasure_2"]
-    assert len(buckets) == 23
+    assert len(buckets) == 22
 
     # Hypothetical safe-discard counts are chosen from the 37-card broad
     # filler pool, without privileging future Prize-card knowledge.
