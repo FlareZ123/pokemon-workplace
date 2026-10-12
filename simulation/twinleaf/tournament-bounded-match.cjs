@@ -35,7 +35,7 @@ function registerLists(lists) {
  * @param {string[]} deckA @param {string[]} deckB @param {number} seed
  * @param {number} maxActions @param {number} wallMilliseconds
  */
-function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=45000) {
+function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000) {
   const prior=Math.random;
   const random=seededRandom(seed);
   let randomCalls=0;
