@@ -17,6 +17,15 @@ TOYS = (
          filler=2, opening=4, prizes=2),
     dict(deck_size=11, basics=2, quick=1, ultra=1, secret=1,
          filler=3, opening=3, prizes=2),
+    # Nonzero sequential Quick+Ultra payment.
+    dict(deck_size=11, basics=2, quick=1, ultra=1, secret=1,
+         filler=3, opening=5, prizes=2),
+    # Nonzero Ultra+Secret sequential payment.
+    dict(deck_size=12, basics=2, quick=1, ultra=1, secret=1,
+         filler=5, opening=7, prizes=2),
+    # Nonzero all-three sequential payment in a larger-hand toy.
+    dict(deck_size=13, basics=2, quick=1, ultra=1, secret=1,
+         filler=6, opening=9, prizes=1),
 )
 for params in TOYS:
     exact = joint_item_payment(**params)
