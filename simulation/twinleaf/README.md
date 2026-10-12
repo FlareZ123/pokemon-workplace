@@ -89,3 +89,12 @@ The bounded tournament match runner now **installs the existing research-owned U
 The [live-path integration SFT](test-tournament-engine-hooks.cjs) uses a two-action real-engine fixture and is enforced before matches in both manual workflows. The [card-level target SFT](test-underworld-door-targets.cjs) remains the source-backed semantic check. Detailed findings and replay restrictions are in [the focused research result](../../results/tests/twinleaf_underworld_live_hook/).
 
 **Do not pool older Shadow Rider headless results with new guarded results as equivalent replications.** Earlier unguarded traces may have contained invalid Energy-attachment opportunities, though no claim is made that a specific old game exercised them. The guard improves one verified rules boundary without validating the bot's strategy, the remaining cards, or overall matchup win probabilities.
+
+
+## Scheduled upstream revision review
+
+The [Twinleaf upstream review workflow](../../.github/workflows/twinleaf-upstream-review.yml) checks the committed gitlink against upstream main weekly at 05:37 UTC on Mondays and on manual dispatch. Unchanged revisions cause only a lightweight discovery job. If a new revision is found, it fetches only the first-level submodule, compiles with the candidate's Node version, and runs selected compatibility tests before proposing a draft branch/PR. The working default-branch pin is never silently updated. A draft proposal still requires review of behavioral correctness, hooks and hardcoded engine SHA constants before merge.
+
+Read [the maintenance procedure and limitations](../../results/tests/twinleaf_upstream_review/) before reviewing or enabling a proposed update. The new revision path and repository-token PR permissions have not yet been exercised; at the 2026-10-12 check, upstream main matched the pinned SHA.
+
+The bounded matchup runner also emits censor-aware [paired score bounds](../../results/tests/paired_score_bounds/) by deck and engine seat. They are reporting diagnostics: a seat-swapped seed pair is one statistical unit, and native bot outcomes are not validated paper Expanded win probabilities.
