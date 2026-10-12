@@ -101,6 +101,8 @@ jobs:
         run: node simulation/twinleaf/test-candidate-deck-loader.cjs
       - name: Check legal Underworld Door target and zero-target rejection
         run: node simulation/twinleaf/test-underworld-door-targets.cjs
+      - name: Verify Regidrago Celestial Roar attaches all Energy card types
+        run: node simulation/twinleaf/test-regidrago-celestial-roar.cjs
       - name: Verify live match installs legal Underworld Door target guard
         run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
       - name: Probe complete 60-card tournament decks through pinned live engine
