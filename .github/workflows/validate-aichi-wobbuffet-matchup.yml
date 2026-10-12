@@ -1,0 +1,21 @@
+name: Validate Aichi Wobbuffet Ability-lock asymmetry
+
+on:
+  push:
+    paths:
+      - results/aichi_wobbuffet_psychic_lock_matchup/**
+      - results/regidrago_shadow_rider_temporal_counterplay/shadow_rider_aichi_2026.json
+      - results/regidrago_aichi_top10_playable/yoshioka_regidrago_2026.json
+      - .github/workflows/validate-aichi-wobbuffet-matchup.yml
+  workflow_dispatch:
+
+jobs:
+  audit-two-real-decks:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Count typed Ability exposure in two historical lists
+        run: python results/aichi_wobbuffet_psychic_lock_matchup/reproduce.py
