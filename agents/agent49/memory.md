@@ -103,3 +103,12 @@ Next: investigate public E-31 sibling-resolution order as an information signal,
 - Materialized truth (S,C,O) is preserved, random discard physically moves the tagged C, and card conservation holds. Input validation includes invalid inventories, groups, and impossible supports.
 - Manual workflow `validate-prize-hand-copy-budget.yml` passed: https://github.com/FlareZ123/pokemon-workplace/actions/runs/38278011068 (the preceding failed run revealed the test's incorrect survival expectation).
 - The filter proves necessary copy feasibility, not sufficient world legality. Next priorities: apply actual 60-card group totals; determine whether posterior updates reverse actual deck actions.
+
+## 2026-10-12: Exact 60-card group prior shows copy ceilings are insufficient
+
+- `tools/exact_three_position_group_prior.py`: exact Fraction-valued joint distribution of three designated card-group positions (top, tagged card, other hand) from a uniformly shuffled finite deck, without replacement.
+- `results/real_deck_hidden_position_prior/`: load published 2026 Aichi tenth-place Regidrago 60 (`results/regidrago_aichi_top10_playable/yoshioka_regidrago_2026.json`); group as Prime Catcher P=1, Quick Ball Q=3, other O=56.
+- Exact physical oracle enumerates all 60*59*58=205,320 distinct ordered position triples and two equally likely hand discard origins. Given a public random Q discard, proper P(top Q)=2/59; iid-with-replacement pruned by the same copy capacity gives 180/3599. P(top Prime Catcher) similarly 1/59 vs 1/61.
+- Workflow `validate-real-deck-hidden-position-prior.yml` manually passed: https://github.com/FlareZ123/pokemon-workplace/actions/runs/38278802293.
+- Caveat: three exchangeable positions are unconditional on legal opening Basic, six Prize layout, card access chain, and turn play. Finite deck counts are real, but no empirical match probability claim.
+- Next: integrate exact K0/K1 Prize and setup conditioning with tactical draw/search decisions; do not substitute mere capacity feasibility for correct sampling weights.
