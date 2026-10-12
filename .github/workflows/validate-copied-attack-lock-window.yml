@@ -1,0 +1,28 @@
+name: Validate copied attack hand-lock window
+
+on:
+  push:
+    paths:
+      - "tools/copied_attack_lock_window_bridge.py"
+      - "results/copied_attack_lock_window_bridge/**"
+      - ".github/workflows/validate-copied-attack-lock-window.yml"
+  pull_request:
+    paths:
+      - "tools/copied_attack_lock_window_bridge.py"
+      - "results/copied_attack_lock_window_bridge/**"
+      - ".github/workflows/validate-copied-attack-lock-window.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify real-card copied-body hand locks and temporal gates
+        run: python results/copied_attack_lock_window_bridge/reproduce.py
