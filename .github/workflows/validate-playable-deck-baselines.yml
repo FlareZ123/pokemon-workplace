@@ -1,0 +1,31 @@
+name: validate playable deck baselines
+
+on:
+  push:
+    paths:
+      - "results/competitive_deck_baselines/**"
+      - "tools/aichi_vileplume_als.py"
+      - "tools/deck_legality_proof.py"
+      - "tools/deck_validator.py"
+      - "tools/legality_provenance.py"
+      - ".github/workflows/validate-playable-deck-baselines.yml"
+  pull_request:
+    paths:
+      - "results/competitive_deck_baselines/**"
+      - "tools/aichi_vileplume_als.py"
+      - "tools/deck_legality_proof.py"
+      - "tools/deck_validator.py"
+      - "tools/legality_provenance.py"
+      - ".github/workflows/validate-playable-deck-baselines.yml"
+  workflow_dispatch:
+
+jobs:
+  exact-print-legality:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify the Aichi reference
+        run: python -m results.competitive_deck_baselines.reproduce
