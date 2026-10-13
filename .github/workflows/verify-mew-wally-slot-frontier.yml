@@ -28,3 +28,5 @@ jobs:
         run: python results/tests/mew_wally_slot_frontier/heavy_ball_connector_preservation.py
       - name: Verify Mew Techno Blast attack reuse over two turns
         run: python results/tests/mew_wally_slot_frontier/two_turn_reuse.py
+      - name: Compare first-turn Wally access versus retained Red Card
+        run: python results/tests/mew_wally_slot_frontier/red_card_pareto.py
