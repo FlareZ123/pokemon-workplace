@@ -44,3 +44,23 @@ Card-specific changes are confined to research-owned hooks. They are source-pinn
 The headless SimpleTacticsAi policy has independently documented hidden deck-order observation weaknesses and insufficient competitive playing strength. This repair closes a real stochastic fairness gap in one Aichi list and contributes to future engine-valid match data, while matchup results remain policy- and coverage-dependent.
 
 **Live SFT CI:** [38331907995](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331907995) **PASSED** against the pinned compiled Twinleaf engine, including actual reducer/card-move/reveal/shuffle fixture and live runner hook marker test.
+
+
+## Quantifying the random-vs-choice selection difference
+
+For an opposing hand of n physical cards containing k distinct strategically critical cards, a uniform two-card Night Watch subset hits at least one critical card with exactly:
+
+P(hit) = 1 - C(n-k, 2) / C(n, 2), for n>=2, treating C(a,2)=0 if a<2.
+
+In an idealized chooser model that knows the hidden identities, an attacker could guarantee hitting a critical card whenever k>=1. The difference can be large:
+
+| Hand size | Critical cards in hand | Proper random chance of hitting at least one | Hypothetical fully informed chooser |
+| ---: | ---: | ---: | ---: |
+| 3 | 1 | 2/3 = 66.666667% | 100% |
+| 5 | 1 | 2/5 = 40.000000% | 100% |
+| 7 | 1 | 2/7 = 28.571429% | 100% |
+| 7 | 2 | 11/21 = 52.380952% | 100% |
+
+This is an **effect-size bound under a hypothetical omniscient choice policy**, not an empirical estimate of old bot advantage. The actual bot's decision rule and available information determine how far its unpatched behavior deviated from fair random selection.
+
+The focused SFT has been strengthened to exhaustively cover every two-of-five and two-of-seven physical-card pair: all 10 and 21 unordered pairs occur exactly twice across their 20 and 42 equiprobable ordered RNG bins, respectively. For a single designated card, precisely 2(n-1) of n(n-1) ordered outcomes include it, recovering the 2/n theorem. These cases test more hand sizes than the initial three-card witness.
