@@ -64,3 +64,10 @@ In an idealized chooser model that knows the hidden identities, an attacker coul
 This is an **effect-size bound under a hypothetical omniscient choice policy**, not an empirical estimate of old bot advantage. The actual bot's decision rule and available information determine how far its unpatched behavior deviated from fair random selection.
 
 The focused SFT has been strengthened to exhaustively cover every two-of-five and two-of-seven physical-card pair: all 10 and 21 unordered pairs occur exactly twice across their 20 and 42 equiprobable ordered RNG bins, respectively. For a single designated card, precisely 2(n-1) of n(n-1) ordered outcomes include it, recovering the 2/n theorem. These cases test more hand sizes than the initial three-card witness.
+
+
+## Follow-up paired champion/Regidrago live-run diagnostics
+
+[Manual two-seat Aichi matchup workflow 38332144966](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38332144966) completed **successfully** at research revision a221298dd3659dd099ead081c01fa8b6f80f1a7e, engine pin 3348ebdc898f175a2ed8f999133cd13d1afd01f5, paired seed 20261013, native tactic ordering. Both seat orientations completed without reported engine or bot errors, at 187 and 114 actions and 7 and 5 attacks. All traces and aggregate report recorded night_watch_uniform_discard_v1 alongside the three earlier engine guards.
+
+Under the explicitly weak and hidden-information-leaking native SimpleTacticsAi policy, Shadow Rider won both completed traces. There was **only one independent paired seed**, and the new stochastic selection was **not actually exercised in either trace** (per attack telemetry). Therefore this run establishes runner integration and compatibility with two 60-card source deck mappings under the fixed hook set; it is not a test of Night Watch's actual battle-trigger behavior or a credible competitive win-rate estimate. Detailed game report artifact is stored by the workflow as twinleaf-matchup-report (artifact ID 11783426847).
