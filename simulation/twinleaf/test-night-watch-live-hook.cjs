@@ -100,7 +100,8 @@ function run() {
     'shadow_rider_underworld_door_guard_v1',
     'regidrago_celestial_roar_any_energy_v1',
     'stoutland_wild_tackle_self20_v1',
-    'night_watch_uniform_discard_v1'
+    'night_watch_uniform_discard_v1',
+    'random_hand_ten_single_card_prints_v1'
   ]);
   const bins = [1 / 6, 3 / 6, 5 / 6];
   const tails = [1 / 4, 3 / 4];
@@ -155,7 +156,8 @@ function run() {
     'shadow_rider_underworld_door_guard_v1',
     'regidrago_celestial_roar_any_energy_v1',
     'stoutland_wild_tackle_self20_v1',
-    'night_watch_uniform_discard_v1'
+    'night_watch_uniform_discard_v1',
+    'random_hand_ten_single_card_prints_v1'
   ], 'Repeated hook installation must be idempotent');
   console.log('[night-watch-live-hook] PASS: real reducer selects exactly two random physical cards');
   console.log('[night-watch-live-hook] PASS: all three unordered two-of-three pairs have 2/6 weight');
