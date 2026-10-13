@@ -30,6 +30,10 @@ const {makeRandomStreamLedger}=require('./random-stream-ledger.cjs');
 const {install:installUnderworldDoorGuard}=require('./hooks/shadow-rider-underworld-door.cjs');
 const {install:installCelestialRoarGuard}=require('./hooks/regidrago-celestial-roar.cjs');
 const {install:installStoutlandWildTackleGuard}=require('./hooks/stoutland-wild-tackle.cjs');
+const {installNightWatchRandomHook}=require('./night-watch-random-hook.cjs');
+const {TrevenantDusknoirGX}=engine('sets/08-sun-and-moon/set-sun-and-moon-promos/trevenant-dusknoir-gx');
+const {AttackEffect}=engine('game/store/effects/game-effects');
+const {ChooseCardsPrompt}=engine('game/store/prompts/choose-cards-prompt');
 const UniformBotArbiter=makeUniformShuffleArbiter(BotArbiter);
 const ResearchVipTactic=makeVipFirstTactic(PlayCardAction,PlayerType,SlotType);
 /** Install verified rules-correctness hooks for every live match, including direct runOne callers.
@@ -39,8 +43,14 @@ function ensureResearchEngineHooks() {
   installUnderworldDoorGuard();
   installCelestialRoarGuard();
   installStoutlandWildTackleGuard();
+  // Deferred RNG binding is essential: runOne installs hooks before swapping
+  // Math.random to its seeded physical-game ledger.
+  installNightWatchRandomHook({
+    TrevenantDusknoirGX,AttackEffect,ChooseCardsPrompt,
+    random:()=>Math.random()
+  });
   return ['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1',
-    'stoutland_wild_tackle_self20_v1'];
+    'stoutland_wild_tackle_self20_v1','night_watch_uniform_discard_v1'];
 }
 /** Register every exact implementation used by the two source lists once. @param {string[][]} lists */
 function registerLists(lists) {
@@ -167,7 +177,7 @@ function main() {
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
     tactic_order:config.tacticOrder,
     engine_hooks:['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1',
-      'stoutland_wild_tackle_self20_v1'],
+      'stoutland_wild_tackle_self20_v1','night_watch_uniform_discard_v1'],
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
     deck_sources:[a.source||'aichi_reference',b.source||'aichi_reference'],
     seat_assignments:seatPairs.map(p=>[p.pair_id,p.seed,p.seat1.id,p.seat2.id]),
