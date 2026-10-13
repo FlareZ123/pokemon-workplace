@@ -16,3 +16,5 @@ jobs:
           python-version: "3.13"
       - name: Check card legality and exact prize/opening frontier
         run: python results/tests/mew_wally_slot_frontier/reproduce.py
+      - name: Compare conditional Path, Item and Ability lock states
+        run: python results/tests/mew_wally_slot_frontier/lock_extension.py
