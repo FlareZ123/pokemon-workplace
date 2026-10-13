@@ -1,0 +1,24 @@
+name: Validate Shadow Rider Dialga connector fork
+
+on:
+  push:
+    paths:
+      - "tools/shadow_rider_dialga_connector_fork.py"
+      - "results/tests/shadow_rider_dialga_connector_fork/**"
+      - ".github/workflows/validate-shadow-rider-dialga-connector-fork.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-connector-fork:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Source-check Aichi champion and run 400680 physical toy deals
+        run: python -m results.tests.shadow_rider_dialga_connector_fork.reproduce
