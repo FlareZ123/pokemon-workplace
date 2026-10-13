@@ -121,6 +121,31 @@ function run() {
   assert.deepEqual([...pairs].sort(), [
     ['100,101', 2], ['100,102', 2], ['101,102', 2]
   ]);
+  // A randomized two-of-n sample has n*(n-1) equally likely ordered
+  // selections, and each unordered pair appears in exactly two of them.
+  for (const n of [5, 7]) {
+    const counts = new Map();
+    let hitsOnSingleton = 0;
+    for (let first = 0; first < n; first++) {
+      for (let second = 0; second < n - 1; second++) {
+        const result = exercise([
+          (first + 0.5) / n, (second + 0.5) / (n - 1)
+        ], n);
+        assert.equal(result.rngCalls, 2);
+        assert.equal(new Set([...result.deck, ...result.remaining]).size, n);
+        const pair = result.selected.slice().sort((a, b) => a - b).join(',');
+        counts.set(pair, (counts.get(pair) || 0) + 1);
+        if (result.selected.includes(100)) hitsOnSingleton++;
+      }
+    }
+    assert.equal(counts.size, n * (n - 1) / 2);
+    assert.ok([...counts.values()].every(value => value === 2));
+    assert.equal(hitsOnSingleton, 2 * (n - 1),
+      'Random Night Watch removes one named critical card with chance 2/n');
+    console.log('[night-watch-live-hook] PASS: ' + n +
+      '-card hand: ' + counts.size + ' unordered pairs, each exactly 2/' +
+      (n * (n - 1)) + '; singleton-hit probability 2/' + n);
+  }
   const singleton = exercise([0.99], 1);
   assert.deepEqual(singleton.selected, [100]);
   assert.equal(singleton.rngCalls, 1);
