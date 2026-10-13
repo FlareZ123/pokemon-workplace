@@ -1,0 +1,20 @@
+name: Validate Shadow Rider Treasure payment frontier
+on:
+  push:
+    paths:
+      - 'results/tests/shadow_rider_treasure_payment/**'
+      - 'results/shadow_rider_path_counter_frontier/**'
+      - 'results/competitive_deck_baselines/shadow_rider_reproduce.py'
+      - '.github/workflows/validate-shadow-rider-treasure-payment.yml'
+  workflow_dispatch:
+jobs:
+  exact-payment:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reproduce exact baseline and independent physical-card oracle
+        run: python -m results.tests.shadow_rider_treasure_payment.reproduce
