@@ -117,7 +117,9 @@ jobs:
         run: node simulation/twinleaf/test-night-watch-live-hook.cjs
       - name: Verify Night Watch resolves against the real Twinleaf Store
         run: node simulation/twinleaf/test-night-watch-real-store.cjs
-      - name: Verify live match installs all four verified card rules hooks
+      - name: Verify ten single-card random opponent-hand source guards
+        run: node simulation/twinleaf/test-random-hand-single-hook.cjs
+      - name: Verify live runner records every verified random-hand guard
         run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
       - name: Verify lock-guarded atomic JSON artifact writer
         run: node simulation/twinleaf/test-report-atomic.cjs
