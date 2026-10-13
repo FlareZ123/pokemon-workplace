@@ -12,6 +12,7 @@ from results.competitive_deck_baselines.shadow_rider_reproduce import (
 from tools.shadow_rider_dialga_connector_fork import (
     champion_results, validate_toy_worlds,
 )
+from tools.shadow_rider_dialga_quick_ball_rescue import validate as validate_quick_ball
 
 
 def card(root: Path, name: str) -> dict:
@@ -53,8 +54,12 @@ def reproduce() -> None:
     assert "Psychic or Dragon Pokémon" in treasure
     fog = card(root, "Fog Crystal")["rules"][0]
     assert "Basic Psychic Pokémon" in fog
+    quick = card(root, "Quick Ball")["rules"]
+    assert "discard another card from your hand" in quick[0]
+    assert "Search your deck for a Basic Pokémon" in quick[1]
 
     validate_toy_worlds()
+    validate_quick_ball()
     actual = champion_results()
     basic_valid = Fraction(9797437, 11703240)
     expected_unconditional = {
