@@ -42,3 +42,5 @@ The SFT uses a controlled Store effect adapter to assert physical move semantics
 Card-specific changes are confined to research-owned hooks. They are source-pinned: if the Twinleaf gitlink advances, rerun semantic and engine integration tests before treating this patch as compatible.
 
 The headless SimpleTacticsAi policy has independently documented hidden deck-order observation weaknesses and insufficient competitive playing strength. This repair closes a real stochastic fairness gap in one Aichi list and contributes to future engine-valid match data, while matchup results remain policy- and coverage-dependent.
+
+**Live SFT CI:** [38331907995](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331907995) **PASSED** against the pinned compiled Twinleaf engine, including actual reducer/card-move/reveal/shuffle fixture and live runner hook marker test.
