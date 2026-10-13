@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('node:assert/strict');
 
-const MODES = Object.freeze(['native','attack_before_retreat','vip_first','vip_attack_before_retreat']);
+const MODES = Object.freeze(['native','attack_before_retreat','vip_first','vip_attack_before_retreat','double_dragon_first']);
 
 /**
  * Research-owned alternatives to the pinned upstream SimpleTacticsAi priority.
@@ -11,9 +11,10 @@ const MODES = Object.freeze(['native','attack_before_retreat','vip_first','vip_a
  * @param {string} mode One of MODES
  * @param {T[]} tactics Native pinned tactic constructors
  * @param {T} [vipTactic] Research VIP constructor, required for VIP modes
+ * @param {T} [doubleDragonTactic] Explicit dynamic Special Energy tactic
  * @returns {T[]} New constructor array
  */
-function makeTacticOrder(mode, tactics, vipTactic) {
+function makeTacticOrder(mode, tactics, vipTactic, doubleDragonTactic) {
   assert.ok(MODES.includes(mode), 'Unknown research tactic order: ' + mode);
   assert.ok(Array.isArray(tactics) && tactics.length > 1);
   const ordered = [...tactics];
@@ -32,6 +33,10 @@ function makeTacticOrder(mode, tactics, vipTactic) {
   if (mode === 'vip_first' || mode === 'vip_attack_before_retreat') {
     assert.equal(typeof vipTactic, 'function', 'VIP modes require the research tactic constructor');
     ordered.unshift(vipTactic);
+  }
+  if(mode==='double_dragon_first'){
+    assert.equal(typeof doubleDragonTactic,'function','Double Dragon mode requires an explicit research tactic');
+    ordered.unshift(doubleDragonTactic);
   }
   return ordered;
 }

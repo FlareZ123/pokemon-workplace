@@ -6,8 +6,9 @@ class UseAbilityTactic {}
 class RetreatTactic {}
 class AttackTactic {}
 class ResearchVipFirstTactic {}
+class DynamicDoubleDragonTactic {}
 const native = [EvolveTactic, UseAbilityTactic, RetreatTactic, AttackTactic];
-assert.deepEqual(MODES, ['native', 'attack_before_retreat', 'vip_first', 'vip_attack_before_retreat']);
+assert.deepEqual(MODES, ['native', 'attack_before_retreat', 'vip_first', 'vip_attack_before_retreat', 'double_dragon_first']);
 const untouched = makeTacticOrder('native', native);
 const alternate = makeTacticOrder('attack_before_retreat', native);
 assert.deepEqual(untouched, native);
