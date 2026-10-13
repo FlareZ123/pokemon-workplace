@@ -39,5 +39,7 @@ jobs:
         run: ./node_modules/.bin/tsc --project tsconfig.json
       - name: Validate experimental Mew Tapu Wally source to pinned engine fullName
         run: node simulation/twinleaf/test-mew-tapu-wally-deck.cjs
+      - name: Validate 2 Wally 1 Tapu counterfactual 60 printed engine cards
+        run: node simulation/twinleaf/test-mew-wally2-tapu1-deck.cjs
       - name: Revalidate original and donor tournament card mappings
         run: node simulation/twinleaf/test-tournament-deck-loader.cjs
