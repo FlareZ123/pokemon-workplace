@@ -48,6 +48,19 @@ The [Hisuian Heavy Ball prize rescue bridge](heavy_ball_prize_bridge.py) covers 
 
 Neither extension updates true opponent-frequency or match-win estimates. The improved first-turn endpoint remains a partial subset of legal lines and omits post-attack resource costs.
 
+## Joint Hisuian Heavy Ball target competition
+
+The one-target [joint prize-aware policy](heavy_ball_joint_policy.py) resolves the same source deck's naturally held Hisuian Heavy Ball as a **single consumable Item**. If an ordinary held-Wally or Lele-to-Wally line already works, it is counted in baseline access. Otherwise the policy first tests whether rescuing the singleton Prized Tapu Lele-GX can obtain Wally; if not, it tests retrieving a Prized Genesect V while separately accessing Wally. Every initial hand and first draw are counted once, with the **joint Prize composition of Genesect, Mew VMAX, Wally and Lele** enumerated by multivariate hypergeometric combinatorics. It cannot retrieve both Basics with one Heavy Ball.
+
+| Fixed 60-card candidate | Prior restricted first-turn access | Extra Lele Prize rescue | Extra Genesect Prize rescue | Joint union |
+|---|---:|---:|---:|---:|
+| Wally 1, Lele 1, Red Card 1 | 7.326281829134% | 0.125979638889% | 0.125177876594% | **7.577439344617%** |
+| Wally 2, Lele 1, Red Card 0 | 8.762569342969% | 0.126438025767% | 0.138501806794% | **9.027509175530%** |
+
+These three columns are **mutually exclusive by action-policy classification**. The additional Genesect retrieval is an opportunity already present in the existing one-copy Hisuian Heavy Ball. All computations demand a naturally held Heavy Ball, a Prized target Basic, and the other missing resources. The policy remains simplified in the strategic valuation of Ball discard payments, timing and opponent restrictions, and may omit lines involving other search/draw cards.
+
+Three independent physically labeled N=11, 12 and 13 deck/Prize/draw enumerations match the joint analytical classifier, which also reproduces exactly the separate legacy opening and Lele-Prize-rescue probabilities. [Manual CI run 38332311041 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38332311041). The result is still a **strict subset of opening access**, with no claim of competitive match win rates.
+
 ## Independent validation and limitations
 
 - Original English card texts are asserted for Wally `xy6-94`, Tapu Lele-GX `sm2-60`, and Battle VIP Pass `swsh8-225`; duplicate Wally is legal under the ordinary four-copy rule.

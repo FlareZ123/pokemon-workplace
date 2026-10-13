@@ -65,6 +65,10 @@ Against an already-active Iron Thorns ex (230 HP), Wonder Tag is suppressed. The
 
 With no Ability/Item lock, [Hisuian Heavy Ball](../../tests/mew_wally_slot_frontier/heavy_ball_prize_bridge.py) in the opening hand can exchange itself for the otherwise Prized singleton Tapu Lele-GX and enable Wonder Tag. This adds a disjoint **0.126438025767 percentage points** to the candidate's restricted opening attack access, reaching **8.889007368736%** when that one Prize-rescue route is included. The underlying card text, exact Prize conditioning and three independent tiny-deck physical oracles passed [CI 38331868821](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331868821). These mechanical opportunities remain untested against real opponents.
 
+## Joint Prize-retrieval policy
+
+A [joint exhaustive Prize-action model](../../tests/mew_wally_slot_frontier/heavy_ball_joint_policy.py) now permits the single naturally held Hisuian Heavy Ball to retrieve **either Prized Tapu Lele-GX or Prized Genesect V**, whichever can rescue the otherwise failing Wally launch line. The two extra mutually exclusive first-turn access cases contribute **0.126438025767** and **0.138501806794 percentage points** respectively, raising this candidate's limited first-turn attack-access union from **8.762569342969%** to **9.027509175530%**. [CI 38332311041](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38332311041) independently validates physical Prize configurations, original non-Heavy pathways and source-specific card rules. It remains a bound on one route family, not an overall setup or winning probability.
+
 ## Play plan and tradeoffs
 
 For a going-second opening with Mew V Active, access Wally directly or use Quick/Ultra Ball to fetch Tapu Lele-GX **into hand**, bench it to trigger Wonder Tag, find Wally, and evolve into Mew VMAX immediately. Attach DCE and copy a Benched Genesect V's Techno Blast via Cross Fusion Strike for 210 before modifiers. Battle VIP Pass can provide Genesect but cannot trigger Wonder Tag by directly Benching Tapu.
