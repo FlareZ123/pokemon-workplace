@@ -21,6 +21,24 @@ These are exact rational calculations printed by [reproduce.py](reproduce.py). W
 
 A simple hypothetical model lets an externally supplied probability `p` determine whether Wonder Tag is continuously suppressed before this attack, with no partial recovery. **2 Wally / 1 Lele** and **3 Wally / 0 Lele** tie at exactly `4987144017417877/6246593684973178` = **79.837816719454%** suppression probability. Below that, the 2/1 allocation has higher restricted expected access; above it, 3/0 does. **This is not an estimated metagame frequency.** Against active Path to the Peak removable by a naturally held Sky Field/Field Blower/Lost Vacuum, the true frontier is different; see [joint Path access](../mew_wally_path_joint/) and the [conditional lock matrix](../mew_wally_lock_matrix/). Under Supporter lock, all modeled Wally-based routes disappear.
 
+
+## Conditional Path / Item / Ability-lock extension
+
+[lock_extension.py](lock_extension.py) composes the previous [validated physical Path and lock model](../mew_wally_lock_matrix/) with all six slot allocations. Under the same restricted opener and six-Prize model, the table below compares the two Lele/Wally mixtures against three Wally. Opponent states are **given**, with no estimate of how often they happen. Path can be removed through naturally seen Sky Field, Field Blower or a mechanically payable Lost Vacuum, if Items are unlocked. The named Item lock blocks Balls/VIP, while independent Ability suppression disables Wonder Tag even after Path removal.
+
+| Opponent's already-live state | 2 Wally / 1 Lele | 1 Wally / 2 Lele | 3 Wally / 0 Lele |
+|---|---:|---:|---:|
+| No lock | **8.762569342969%** | 8.483774670866% | 3.975499350086% |
+| Path to the Peak | **4.611126463163%** | 3.611835530928% | 3.975499350086% |
+| Item lock | 1.606679962468% | 1.493180752307% | **1.612285672862%** |
+| Item lock + Path | 1.193927481675% | 0.721764900478% | **1.612285672862%** |
+| Persistent Wonder Tag suppression | 2.766576228949% | 1.444045204289% | **3.975499350086%** |
+| Item lock + persistent suppression | 1.117932655318% | 0.581386703842% | **1.612285672862%** |
+
+**2 Wally / 1 Lele remains above 1 Wally / 2 Lele in all eight Path × Item × Ability conditional cases** of this model. Three Wally can be preferable when Items and/or Abilities are heavily locked. The earlier 79.8378% blocker-mixture threshold describes only the no-Path/no-Item two-state experiment. These conditional scenarios do not assert that independent locks necessarily coexist physically; their sources can suppress one another. An established Active Supporter lock shuts off this particular Wally route across all variants.
+
+Independent physical-card Prize/opening oracles for two repeated-copy N=12 populations passed across all 16 Path × Item × Ability × Supporter states. [Manual CI run 38331341671 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331341671). This quantifies conditional action availability, not opponent board establishment or win probability.
+
 ## Independent validation and limitations
 
 - Original English card texts are asserted for Wally `xy6-94`, Tapu Lele-GX `sm2-60`, and Battle VIP Pass `swsh8-225`; duplicate Wally is legal under the ordinary four-copy rule.

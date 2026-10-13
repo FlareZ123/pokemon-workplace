@@ -54,6 +54,17 @@ def main() -> None:
                         f"{name:27s} Path={int(path)} Item={int(item)} "
                         f"Ability={int(ability)} chance={float(result):.12%}; exact={result}"
                     )
+    expected = {
+        (False, False, False): Fraction(207472683238253, 2367715165697700),
+        (True, False, False): Fraction(6843086873823, 148403799559400),
+        (False, True, False): Fraction(741946199453, 46178841884175),
+        (True, True, False): Fraction(2205367535897, 184715367536700),
+        (False, False, True): Fraction(3611784934223, 130550710890600),
+        (False, True, True): Fraction(10535680679, 942425344575),
+    }
+    for flags, fraction in expected.items():
+        assert rows[("two_Wally_one_Lele", *flags)] == fraction, flags
+
     assert rows["two_Wally_one_Lele", False, False, False] > rows[
         "one_Wally_two_Lele", False, False, False
     ]

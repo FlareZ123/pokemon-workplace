@@ -53,6 +53,11 @@ The [exact two-slot frontier study](../../tests/mew_wally_slot_frontier/) gives 
 
 **Total: 15 Pokémon + 41 Trainers + 4 Energy = 60 cards.** Twelve Basic Pokémon, one ACE SPEC (Secret Box), four DCE. The [machine-readable manifest](deck.json) fixes every representative print ID.
 
+
+## Opponent-lock access scenarios
+
+The [source-aware conditional lock extension](../../tests/mew_wally_slot_frontier/lock_extension.py) tests the same experimental 60 against already-active restrictions. Its restricted opening Techno Blast access is **4.611126463163%** under opponent Path to the Peak if Sky Field, Field Blower or a payable Lost Vacuum may clear Path; **1.606679962468%** under Item lock; and **1.193927481675%** under combined Item lock plus Path, using naturally seen Sky Field as the remaining counter. Fully independent Wonder Tag suppression leaves 2.766576228949%, or 1.117932655318% if Items are also locked. Source conditional effects and two independent small physical-card oracles were verified by [CI 38331341671](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331341671). Locked board feasibility, timing and real-game outcomes remain unmeasured.
+
 ## Play plan and tradeoffs
 
 For a going-second opening with Mew V Active, access Wally directly or use Quick/Ultra Ball to fetch Tapu Lele-GX **into hand**, bench it to trigger Wonder Tag, find Wally, and evolve into Mew VMAX immediately. Attach DCE and copy a Benched Genesect V's Techno Blast via Cross Fusion Strike for 210 before modifiers. Battle VIP Pass can provide Genesect but cannot trigger Wonder Tag by directly Benching Tapu.
