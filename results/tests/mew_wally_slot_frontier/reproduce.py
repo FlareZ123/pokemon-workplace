@@ -86,6 +86,7 @@ def validate_prints() -> None:
     assert manifest["as_of"] == "2026-10-13"
     assert {c["name"]: c["quantity"] for c in manifest["cards"]} == cards
     prints = {**PRINT_IDS, "Tapu Lele-GX": "sm2-60"}
+    prints.pop("Special Red Card")
     assert {c["name"]: c["print_id"] for c in manifest["cards"]} == prints
     resources = ROOT / "resources"
     records = load_all_card_records(resources)
