@@ -78,7 +78,9 @@ def exact(
                 if held_t != 1 or held_g != 0:
                     continue
                 held_filler = opened[4] + int(draw_index == 4)
-                max_prize_v = max(0, left[1] - needed_v)
+                max_prize_v = left[1] - needed_v
+                if max_prize_v < 0:
+                    continue
                 non_v = sum(left) - left[1]
                 prize_ways = sum(
                     choose(left[1], prized_v) *
