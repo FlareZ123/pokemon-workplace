@@ -113,7 +113,9 @@ jobs:
         run: node simulation/twinleaf/test-regidrago-celestial-roar-store.cjs
       - name: Verify Stoutland Wild Tackle source self-damage and coin branches
         run: node simulation/twinleaf/test-stoutland-wild-tackle.cjs
-      - name: Verify live match installs legal Underworld Door target guard
+      - name: Verify Night Watch uses two seeded uniformly random physical hand cards
+        run: node simulation/twinleaf/test-night-watch-live-hook.cjs
+      - name: Verify live match installs all four verified card rules hooks
         run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
       - name: Verify lock-guarded atomic JSON artifact writer
         run: node simulation/twinleaf/test-report-atomic.cjs
