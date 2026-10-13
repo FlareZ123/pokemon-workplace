@@ -80,3 +80,24 @@ These restricted forks occur in a small minority of Basic-valid opening deals. T
 Promising continuation: score choices using subsequent Regidrago Apex Dragon timing, surviving Mimikyu access, Dialga actually reaching discard, paid search resources, and the opponent's likely attack response. Cross-reference [Dialga discard payoff sensitivity](../../shadow_rider_dialga_payload_discard/) and [direct-Radiant-to-Max-Geist continuation](../shadow_rider_direct_launch_attack/).
 
 **Windows CI:** [exact source and 400,680 labeled-deal regression passed, run 38331103493](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331103493).
+
+
+## Quick Ball paid second-search rescue, 13 October extension
+
+The same source 60 has exactly **one Quick Ball** (swsh1-179), which can search any Basic Pokémon but requires a **second card discarded from hand**. In the subset with exactly one held/drawn Mysterious Treasure and zero held/drawn Fog Crystal, a Quick Ball provides another theoretical search channel. If at least **two Psychic Energy** are held/drawn, discarding one of them for Quick Ball after paying Dialga for Treasure is one explicitly available two-discard payment pattern that preserves another Psychic Energy.
+
+The extended exact enumeration splits the previous **1.490683850%** parent (Basic-valid conditional) as follows:
+
+| Restriction inside the parent event | Probability of Basic-valid opening |
+| --- | ---: |
+| Parent: one Treasure, no Fog | 1.490683850% |
+| Parent with Quick Ball also held/drawn, irrespective of further discard quality | **0.168974085%** |
+| Parent with Quick Ball and at least two Psychic Energy held/drawn | **0.045096166%** |
+
+The exact unconditioned probabilities are **79745583049/56374170611850** for Quick Ball access, and **79455309571/210463570284240** with the two-Energy payment safeguard. The source contains 11 basic Psychic Energy and 22 other cards inside the original 34-card residual group, plus its singleton Quick Ball.
+
+The grouping proof conditions on the number of residual-group cards selected into the opening hand plus first draw. If that selected number is s, Quick Ball is among them with probability s/34; conditional on Quick Ball, the remaining s-1 are sampled without replacement from 11 Energy plus 22 other cards. The probability of at least two Energy is a hypergeometric tail. Thus exact rational weights recover the fully physically labelled 60-card event.
+
+An independent brute physical oracle checked **102,960 + 300,300 + 675,675 = 1,078,935** toy deals with distinguished Quick Ball and Psychic Energy identities. All exact category counts matched. The [extended kernel](../../../tools/shadow_rider_dialga_quick_ball_rescue.py) is executed from the same [source reproducer](reproduce.py) and checks the printed Quick Ball mandatory discard/search wording.
+
+The two-Energy rule is a **hypothetical sufficient payment safeguard**, not a rule restriction. A single Energy or other acceptable card may be discarded in real games. The Quick Ball-access figure is a ceiling on this named second connector's availability within the parent event, and the conservative guarded subset establishes constructively feasible discard inputs. This extension does not determine whether the resulting turn or the later Regidrago counter is the best policy.
