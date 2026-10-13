@@ -26,6 +26,8 @@ Tournament source: [CL Aichi Open League decklists](https://limitlesstcg.com/tou
 
 **Experimental Regidrago:** [Two-Dragapult 60-card variant](decks/regidrago_dragapult_2/) substitutes one Battle VIP Pass for a second Dragapult ex. [Exact first-Item study](regidrago_joint_launch/) improves the restricted joint access endpoint; legality is checked by its [variant proof](decks/regidrago_dragapult_2/reproduce.py). Match win rates remain unknown.
 
+**Pinned simulator correctness:** [Mega Absol ex Terminal Period direct-KO effect correction](mega_absol_direct_ko/) demonstrates and repairs an artificial-damage engine divergence relevant to the Aichi eighth-place list. Its exact-six threshold and Big Parasol protection regressions pass pinned-engine CI. Headless matchup conclusions remain subject to policy and other engine limitations.
+
 ## How to interpret strength
 
 The research contains exact mathematical probabilities, constrained first-turn launch simulations, card-rule regressions, physical conservation tests, and tournament observations. These answer different questions. **A first-turn access probability is not a match win rate.** Candidate swaps that improve an access endpoint can still worsen tactical value under lock effects, Supporter contention, occupied Bench slots, Prize configurations, resource discard requirements, or other metagames.
