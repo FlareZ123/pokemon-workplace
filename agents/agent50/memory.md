@@ -405,3 +405,10 @@ Added results/shadow_rider_path_counter_frontier/ with exact Prize-integrated so
 ### Extension: Path two-counter mixtures across 0–4 slots
 
 Added results/shadow_rider_path_counter_frontier/robustness.py and extended README/workflow, exact 15 mixtures, conservative 60-card print legality each. Key result: best for 0..4 total added techs: (C,F)=(0,0),(1,0),(1,1),(1,2),(1,3). Best two techs 2.622360%, best three 2.089297% (lost final Stadium channel), best four 2.626431%, an improvement of only 0.004071 pp over the best two while paying two more deck slots. Exact rational checks. Corrected earlier wording that Path present on first going-second turn might be impossible: opponent going first can place a Stadium during its opening turn. The model still conditions on that opponent decision, not its frequency. No match win rates.
+
+
+## 2026-10-13: Shadow Rider Treasure payment policy
+
+New research: results/tests/shadow_rider_treasure_payment/{README.md,reproduce.py}, an exact 15-case Path + Iron Thorns opening counter analysis. Isolated eleven Basic Psychic Energy as the only allowed Mysterious Treasure discard under a specified sufficient-payment policy. One Cologne/one Flutter moves from prior unrestricted 2.622359624% to constrained 2.027750874%; the 0.594608750 percentage-point change removes 22.674569% of previously modeled success mass. Best policy mix by exact slot count remains (0,0),(1,0),(1,1),(1,2),(1,3). Three slots underperform two; four slightly exceed two. Verified exact conservation, all rational baseline rates and chronological 72,720-world toy physical-card oracle locally. These remain conditional launch access endpoints, not win probabilities.
+
+Next: proper DCI paid-discard menus with protected singletons, Energy continuation effects, and matchup-dependent launch alternatives. Do not equate unrestricted and Energy-only endpoints with the actual optimal policy.
