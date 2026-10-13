@@ -9,6 +9,8 @@ on:
       - "simulation/twinleaf/test-night-watch-live-hook.cjs"
       - "simulation/twinleaf/test-night-watch-real-store.cjs"
       - "simulation/twinleaf/test-random-hand-source-gaps.cjs"
+      - "simulation/twinleaf/random-hand-single-card-hook.cjs"
+      - "simulation/twinleaf/test-random-hand-single-hook.cjs"
       - ".github/workflows/validate-twinleaf-night-watch-live.yml"
   workflow_dispatch:
 
@@ -56,5 +58,7 @@ jobs:
         run: node simulation/twinleaf/test-night-watch-real-store.cjs
       - name: Reproduce independent pinned random-hand source defects
         run: node simulation/twinleaf/test-random-hand-source-gaps.cjs
+      - name: Validate ten source-pinned random-hand one-card reducer hooks
+        run: node simulation/twinleaf/test-random-hand-single-hook.cjs
       - name: Verify live matchup runner installs four rules hooks
         run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
