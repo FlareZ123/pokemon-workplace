@@ -1,0 +1,48 @@
+name: Validate pinned Twinleaf Night Watch live random hook
+
+on:
+  push:
+    paths:
+      - "simulation/twinleaf/night-watch-random-hook.cjs"
+      - "simulation/twinleaf/tournament-bounded-match.cjs"
+      - "simulation/twinleaf/test-tournament-engine-hooks.cjs"
+      - "simulation/twinleaf/test-night-watch-live-hook.cjs"
+      - ".github/workflows/validate-twinleaf-night-watch-live.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  night-watch-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Initialize pinned Twinleaf only
+        run: git submodule update --init --depth=1 vendor/twinleafgg
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: vendor/twinleafgg/.nvmrc
+          cache: npm
+          cache-dependency-path: vendor/twinleafgg/ptcg-server/package-lock.json
+      - name: Install dependencies
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Restore compiled server
+        id: compiled
+        uses: actions/cache/restore@v4
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-3348ebdc
+      - name: Compile pinned server if uncached
+        if: steps.compiled.outputs.cache-hit != 'true'
+        working-directory: vendor/twinleafgg/ptcg-server
+        run: ./node_modules/.bin/tsc --project tsconfig.json
+      - name: Verify real reducer random choice and physical zones
+        run: node simulation/twinleaf/test-night-watch-live-hook.cjs
+      - name: Verify live matchup runner installs four rules hooks
+        run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
