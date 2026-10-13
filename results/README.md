@@ -22,6 +22,8 @@ Tournament source: [CL Aichi Open League decklists](https://limitlesstcg.com/tou
 
 **Promising experimental candidate:** [Mew/Genesect with a fourth Battle VIP Pass](decks/mew-genesect-vip4-aichi-counterfactual/) swaps one Special Red Card for an additional first-turn setup Item. The [exact restricted setup model](mew_genesect_vip_opening/) quantifies improvement in a defined Mew-plus-Genesect early-access endpoint; its lost Red Card disruption value and actual match results remain untested. This is an experiment, not a replacement for the fifth-place published list.
 
+**Experimental Mew Wally/Tapu frontier:** [A fully specified 2 Wally / 1 Tapu Lele-GX 60](decks/mew-genesect-wally2-tapu1/) and its [six-allocation exact opening-access comparison](tests/mew_wally_slot_frontier/) test replacing both Special Red Cards in the Aichi fifth-place source. A restricted going-second 210-damage Wally route reaches 8.762569342969% with Wonder Tag available, 2.766576228949% with Wonder Tag fully suppressed. These are untested, simplified access hypotheses, with late-game disruption lost and no match outcomes.
+
 **Experimental Regidrago:** [Two-Dragapult 60-card variant](decks/regidrago_dragapult_2/) substitutes one Battle VIP Pass for a second Dragapult ex. [Exact first-Item study](regidrago_joint_launch/) improves the restricted joint access endpoint; legality is checked by its [variant proof](decks/regidrago_dragapult_2/reproduce.py). Match win rates remain unknown.
 
 ## How to interpret strength
