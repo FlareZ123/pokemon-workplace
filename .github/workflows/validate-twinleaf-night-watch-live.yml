@@ -7,6 +7,7 @@ on:
       - "simulation/twinleaf/tournament-bounded-match.cjs"
       - "simulation/twinleaf/test-tournament-engine-hooks.cjs"
       - "simulation/twinleaf/test-night-watch-live-hook.cjs"
+      - "simulation/twinleaf/test-night-watch-real-store.cjs"
       - ".github/workflows/validate-twinleaf-night-watch-live.yml"
   workflow_dispatch:
 
@@ -44,5 +45,7 @@ jobs:
         run: ./node_modules/.bin/tsc --project tsconfig.json
       - name: Verify real reducer random choice and physical zones
         run: node simulation/twinleaf/test-night-watch-live-hook.cjs
+      - name: Verify real Twinleaf Store resolves random Night Watch physical movement
+        run: node simulation/twinleaf/test-night-watch-real-store.cjs
       - name: Verify live matchup runner installs four rules hooks
         run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
