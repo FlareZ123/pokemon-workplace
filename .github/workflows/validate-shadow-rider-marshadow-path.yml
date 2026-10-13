@@ -1,0 +1,20 @@
+name: Validate Shadow Rider Marshadow Path correction
+on:
+  push:
+    paths:
+      - 'results/tests/shadow_rider_marshadow_path/**'
+      - 'results/tests/shadow_rider_treasure_payment/reproduce.py'
+      - 'results/shadow_rider_path_counter_frontier/robustness.py'
+      - '.github/workflows/validate-shadow-rider-marshadow-path.yml'
+  workflow_dispatch:
+jobs:
+  exact-marshadow:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate legal Path answer, exact policies, and physical oracle
+        run: python -m results.tests.shadow_rider_marshadow_path.reproduce
