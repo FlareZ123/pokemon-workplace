@@ -1,5 +1,7 @@
 # Path to the Peak changes the Shadow Rider anti-Thorns frontier
 
+**Later scope correction (13 October 2026):** The actual champion's 60 already includes Marshadow (sm10-81), whose non-Rule-Box *Resetting Hole* Ability can discard Path to the Peak while Marshadow is on the Bench. This study's exact probabilities include only Field Blower and replacement Stadiums as Path answers, so its ranked frontier is conditional on that restricted menu. [The corrected Marshadow-aware model](../tests/shadow_rider_marshadow_path/) retains these results as a baseline and adds the omitted legal route. Its Energy-only one-Cologne/one-Flutter access is 2.811878%, compared with 2.027751% when Marshadow is omitted. Deck-wide strategic preference and match outcomes remain unmeasured.
+
 ## Mechanism
 
 The 2026 Aichi champion Shadow Rider list contains one Field Blower, two Sky Field and one Dimension Valley. The separate [Cologne rescue study](../shadow_rider_cologne_thorns_counter/) and [Flutter Mane study](../shadow_rider_mixed_counter_frontier/) show how to remove the opposing Active Iron Thorns ex's Initialization suppression. Here we additionally require Path to the Peak to be in play on entry. Path suppresses Radiant Eternatus's Climactic Gate independently of Initialization.
