@@ -1,5 +1,7 @@
 # Shadow Rider Mysterious Treasure payment sensitivity
 
+**Scope correction (13 October 2026):** The champion also contains Marshadow (sm10-81), a non-Rule-Box Basic whose Bench-only *Resetting Hole* discards Path to the Peak. The Treasure-payment comparison below intentionally inherits the previous model's narrower Path-answer menu. [The subsequent Marshadow-aware exact model](../shadow_rider_marshadow_path/) raises the one-Cologne/one-Flutter held-Energy-payment endpoint from 2.027751% to 2.811878%. Neither restricted number captures every legal search route or match outcomes.
+
 ## Question and source
 
 This is a rules-grounded extension of the [Path + Iron Thorns counter frontier](../../shadow_rider_path_counter_frontier/). The published 2026 Aichi champion contains four **Mysterious Treasure**, eleven **Basic Psychic Energy**, and one **Radiant Eternatus**. Treasure print sm6-113 requires discarding a card from hand before searching for the Dragon-type Radiant.
