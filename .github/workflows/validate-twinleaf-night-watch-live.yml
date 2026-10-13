@@ -38,11 +38,17 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: vendor/twinleafgg/ptcg-server/output
-          key: twinleaf-cjs-node20-3348ebdc
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
       - name: Compile pinned server if uncached
         if: steps.compiled.outputs.cache-hit != 'true'
         working-directory: vendor/twinleafgg/ptcg-server
         run: ./node_modules/.bin/tsc --project tsconfig.json
+      - name: Cache compiled server for other pinned-match workflows
+        if: steps.compiled.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: vendor/twinleafgg/ptcg-server/output
+          key: twinleaf-cjs-node20-${{ hashFiles('vendor/twinleafgg/ptcg-server/package-lock.json', 'vendor/twinleafgg/ptcg-server/tsconfig.json', 'vendor/twinleafgg/ptcg-server/src/**/*.ts') }}
       - name: Verify real reducer random choice and physical zones
         run: node simulation/twinleaf/test-night-watch-live-hook.cjs
       - name: Verify real Twinleaf Store resolves random Night Watch physical movement
