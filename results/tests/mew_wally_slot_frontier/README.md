@@ -39,6 +39,15 @@ A simple hypothetical model lets an externally supplied probability `p` determin
 
 Independent physical-card Prize/opening oracles for two repeated-copy N=12 populations passed across all 16 Path × Item × Ability × Supporter states. [Manual CI run 38331341671 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331341671). This quantifies conditional action availability, not opponent board establishment or win probability.
 
+
+## Two card-specific first-turn extensions
+
+The [Iron Thorns 230-HP damage bridge](iron_thorns_bridge.py) reuses the existing [Muscle Band +20 damage / Iron Thorns Initialization source verifier](../mew_wally_iron_thorns_230/). For an unprotected Active Iron Thorns ex with Wonder Tag disabled, natural Muscle Band + Wally + DCE and a Genesect source enable Mew VMAX's copied Techno Blast to deal **exactly 230 damage**. Wally copy counts 1, 2, 3 yield restricted first-turn-going-second OHKO access **0.235122083152%**, **0.454785706377%**, and **0.659690854468%**, respectively. These exclude further Trainer/Ability draws, opponent protection, and actual opponent setup. Two independently labeled repeated-Wally toy populations reproduce the exact calculation.
+
+The [Hisuian Heavy Ball prize rescue bridge](heavy_ball_prize_bridge.py) covers a disjoint branch excluded from the main study: one singleton Tapu Lele-GX is **Prized**, Wally is absent from the visible eight but survives in deck, Hisuian Heavy Ball `swsh10-146` is in hand, and Genesect is otherwise available to Bench. Hisuian Heavy Ball returns the Prized Basic directly to hand, so playing Tapu Lele triggers Wonder Tag. Conditional on singleton Lele being in the six Prizes, the remaining five Prize selections must jointly leave Wally, Mew VMAX and (when required) Genesect in deck. The exact additional access is **0.125979638889 percentage points** for W1L1 and **0.126438025767 points** for W2L1. Adding only this disjoint route produces **7.452261468023%** W1L1 and **8.889007368736%** W2L1 restricted access; other Heavy Ball routes such as rescuing a Prized Genesect are **still omitted**. Three independent labeled Prize/deal oracle fixtures verify the rescue effect and actual card text. Full [CI 38331868821](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331868821) passed.
+
+Neither extension updates true opponent-frequency or match-win estimates. The improved first-turn endpoint remains a partial subset of legal lines and omits post-attack resource costs.
+
 ## Independent validation and limitations
 
 - Original English card texts are asserted for Wally `xy6-94`, Tapu Lele-GX `sm2-60`, and Battle VIP Pass `swsh8-225`; duplicate Wally is legal under the ordinary four-copy rule.

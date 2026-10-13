@@ -58,6 +58,13 @@ The [exact two-slot frontier study](../../tests/mew_wally_slot_frontier/) gives 
 
 The [source-aware conditional lock extension](../../tests/mew_wally_slot_frontier/lock_extension.py) tests the same experimental 60 against already-active restrictions. Its restricted opening Techno Blast access is **4.611126463163%** under opponent Path to the Peak if Sky Field, Field Blower or a payable Lost Vacuum may clear Path; **1.606679962468%** under Item lock; and **1.193927481675%** under combined Item lock plus Path, using naturally seen Sky Field as the remaining counter. Fully independent Wonder Tag suppression leaves 2.766576228949%, or 1.117932655318% if Items are also locked. Source conditional effects and two independent small physical-card oracles were verified by [CI 38331341671](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331341671). Locked board feasibility, timing and real-game outcomes remain unmeasured.
 
+
+## Card-specific resilience extensions
+
+Against an already-active Iron Thorns ex (230 HP), Wonder Tag is suppressed. The [checked Muscle Band line](../../tests/mew_wally_slot_frontier/iron_thorns_bridge.py) permits copied Genesect Techno Blast to reach exactly **230 damage**. The candidate's two Wally give **0.454785706377%** restricted going-second first-turn knockout access through naturally held Muscle Band, compared with **0.235122083152%** for original one-Wally Mew, with other setup/search opportunities omitted.
+
+With no Ability/Item lock, [Hisuian Heavy Ball](../../tests/mew_wally_slot_frontier/heavy_ball_prize_bridge.py) in the opening hand can exchange itself for the otherwise Prized singleton Tapu Lele-GX and enable Wonder Tag. This adds a disjoint **0.126438025767 percentage points** to the candidate's restricted opening attack access, reaching **8.889007368736%** when that one Prize-rescue route is included. The underlying card text, exact Prize conditioning and three independent tiny-deck physical oracles passed [CI 38331868821](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331868821). These mechanical opportunities remain untested against real opponents.
+
 ## Play plan and tradeoffs
 
 For a going-second opening with Mew V Active, access Wally directly or use Quick/Ultra Ball to fetch Tapu Lele-GX **into hand**, bench it to trigger Wonder Tag, find Wally, and evolve into Mew VMAX immediately. Attach DCE and copy a Benched Genesect V's Techno Blast via Cross Fusion Strike for 210 before modifiers. Battle VIP Pass can provide Genesect but cannot trigger Wonder Tag by directly Benching Tapu.
