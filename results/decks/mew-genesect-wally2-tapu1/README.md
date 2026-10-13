@@ -69,6 +69,9 @@ With no Ability/Item lock, [Hisuian Heavy Ball](../../tests/mew_wally_slot_front
 
 A [joint exhaustive Prize-action model](../../tests/mew_wally_slot_frontier/heavy_ball_joint_policy.py) now permits the single naturally held Hisuian Heavy Ball to retrieve **either Prized Tapu Lele-GX or Prized Genesect V**, whichever can rescue the otherwise failing Wally launch line. The two extra mutually exclusive first-turn access cases contribute **0.126438025767** and **0.138501806794 percentage points** respectively, raising this candidate's limited first-turn attack-access union from **8.762569342969%** to **9.027509175530%**. [CI 38332311041](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38332311041) independently validates physical Prize configurations, original non-Heavy pathways and source-specific card rules. It remains a bound on one route family, not an overall setup or winning probability.
 
+
+The same Heavy Ball may alternatively recover a Prized Genesect V **even when the original first-turn route was already possible**. [Exact connector-preservation analysis](../../tests/mew_wally_slot_frontier/heavy_ball_connector_preservation.py) finds that keeping an otherwise needed paid Ball unspent is an available option in **0.101875982342%** of opening deals for this candidate. This is entirely contained in the already-counted successful launches and cannot be added to the 9.027509% access union. It may be useful in a later turn if the retained search Item and saved discard resources matter.
+
 ## Play plan and tradeoffs
 
 For a going-second opening with Mew V Active, access Wally directly or use Quick/Ultra Ball to fetch Tapu Lele-GX **into hand**, bench it to trigger Wonder Tag, find Wally, and evolve into Mew VMAX immediately. Attach DCE and copy a Benched Genesect V's Techno Blast via Cross Fusion Strike for 210 before modifiers. Battle VIP Pass can provide Genesect but cannot trigger Wonder Tag by directly Benching Tapu.

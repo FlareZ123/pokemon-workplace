@@ -61,6 +61,15 @@ These three columns are **mutually exclusive by action-policy classification**. 
 
 Three independent physically labeled N=11, 12 and 13 deck/Prize/draw enumerations match the joint analytical classifier, which also reproduces exactly the separate legacy opening and Lele-Prize-rescue probabilities. [Manual CI run 38332311041 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38332311041). The result is still a **strict subset of opening access**, with no claim of competitive match win rates.
 
+
+## Heavy Ball and the value of an unspent search connector
+
+The [exact alternative-action study](heavy_ball_connector_preservation.py) counts an option **within already-successful baseline launches**. A naturally held Heavy Ball can recover a Prized Genesect V while a Genesect-searching Quick Ball or Ultra Ball that would otherwise have been spent remains in hand. The comparison requires no naturally held Genesect or Battle VIP Pass, at least one Genesect V still searchable in deck, a Prized Genesect available to Heavy, and enough separate Ball bandwidth to obtain Wally when Lele itself must be fetched from deck.
+
+With one Wally/one Lele, such option availability occurs in **0.082197062134%** of shuffled openings; with two Wally/one Lele, it occurs in **0.101875982342%**. Relative to those candidates' prior baseline route-access mass, the fractions are about **1.122%** and **1.163%** respectively. The alternative route does **not** add to the 7.5774%/9.0275% joint launch unions: they already classify the corresponding states as successes. The measurable output is an *unused paid Ball*, whose later-turn value depends on context. Using Heavy also consumes that Item and moves it into the Prize cards, so this is an option rather than proof of strictly better play.
+
+Three physically labeled toy-deal enumerations match exact rational calculations, with positive named events for N=12 and N=13. The card-specific requirement and [manual CI 38332595658](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38332595658) passed. This is a narrow, testable example of **connector opportunity cost and state-dependent discardability (DCI/AMR)**.
+
 ## Independent validation and limitations
 
 - Original English card texts are asserted for Wally `xy6-94`, Tapu Lele-GX `sm2-60`, and Battle VIP Pass `swsh8-225`; duplicate Wally is legal under the ordinary four-copy rule.
