@@ -1,0 +1,30 @@
+# Wally and Tapu Lele-GX: two flexible slots in Aichi Mew/Genesect
+
+This study compares **all six ways to allocate the two original Special Red Card slots** among additional Wally and Tapu Lele-GX copies, retaining the original Wally singleton. Its strongest restricted-access candidate is an experimental [2 Wally / 1 Tapu Lele-GX playable 60](../../decks/mew-genesect-wally2-tapu1/). All options are derived from the same [published fifth-place Aichi 2026 Mew/Genesect list](../../decks/mew-genesect/). No variant has demonstrated match win-rate improvement.
+
+## First-turn going-second experiment
+
+Use the existing [physical Prize and first-draw solver](../mew_wally_tapu_variant/reproduce.py) and its **independent labeled-card exhaustive oracle**, which now additionally checks multiple Wally/Lele multiplicities at three small-deck sizes. Model opening 7 plus first natural draw, six random Prize cards, initial Active Mew V, DCE attached from hand, Wally evolved Mew V through a deck-surviving Mew VMAX, and Benched Genesect V as the source of Cross Fusion Strike copying Techno Blast (210 damage before modifiers). Genesect is held, or reached by an accessible Battle VIP Pass/Quick Ball/Ultra Ball. If Wally is absent, Tapu Lele-GX may be held or searched **into hand** by a Ball, played onto Bench to use Wonder Tag, then obtain a deck-surviving Wally. VIP direct-to-Bench cannot trigger Wonder Tag.
+
+The source and all compared hypothetical 60-card populations contain Mew V4, Genesect V4, Mew VMAX3, DCE4, VIP3, Quick4, Ultra4. Only Wally/Lele/Red Card multiplicities change. Ball discard costs are **mechanically payable in these counted hands**, and are not priced strategically. No Genesect/Dedenne/Crobat draws, Trainers' Mail, Secret Box, Forest Seal Stone, opponent response, or next-turn attack are included. This endpoint is a **restricted subset of first-turn lines**, not a game win rate.
+
+| Wally | Tapu Lele-GX | Remaining Special Red Card | Normal access | Persistent Wonder Tag suppression |
+|---:|---:|---:|---:|---:|
+|1|0|2 (published)|1.444045204289%|1.444045204289%|
+|1|1|1 (earlier variant)|7.326281829134%|1.444045204289%|
+|2|0|1|2.766576228949%|2.766576228949%|
+|1|2|0|8.483774670866%|1.444045204289%|
+|**2**|**1**|**0**|**8.762569342969%**|**2.766576228949%**|
+|3|0|0|3.975499350086%|3.975499350086%|
+
+These are exact rational calculations printed by [reproduce.py](reproduce.py). With these restricted goals, **2 Wally / 1 Lele beats 1 Wally / 2 Lele under both normal access and fully suppressed Wonder Tag**. It uses one fewer two-Prize non-Fusion Strike Bench occupant as well. The larger two-Wally/one-Lele attack-access probability does not establish overall deck dominance: both variants sacrifice both late-game Special Red Cards, and second Lele could have other tactical or Prize-survival roles omitted here.
+
+A simple hypothetical model lets an externally supplied probability `p` determine whether Wonder Tag is continuously suppressed before this attack, with no partial recovery. **2 Wally / 1 Lele** and **3 Wally / 0 Lele** tie at exactly `4987144017417877/6246593684973178` = **79.837816719454%** suppression probability. Below that, the 2/1 allocation has higher restricted expected access; above it, 3/0 does. **This is not an estimated metagame frequency.** Against active Path to the Peak removable by a naturally held Sky Field/Field Blower/Lost Vacuum, the true frontier is different; see [joint Path access](../mew_wally_path_joint/) and the [conditional lock matrix](../mew_wally_lock_matrix/). Under Supporter lock, all modeled Wally-based routes disappear.
+
+## Independent validation and limitations
+
+- Original English card texts are asserted for Wally `xy6-94`, Tapu Lele-GX `sm2-60`, and Battle VIP Pass `swsh8-225`; duplicate Wally is legal under the ordinary four-copy rule.
+- The full new candidate is verified by the existing dated paper Expanded `adjudicate_deck` against every print ID, with 60 cards, 12 Basics, one ACE SPEC, and valid set restrictions.
+- Three small physically labeled decks (N=12, N=12, N=13) independently enumerate initial hands, Prize sets and first natural draw for repeated Wally/Lele multiplicities. Each category agrees with the exact hypergeometric solver.
+
+The main loss from using both Special Red Card slots is opposing-hand disruption when the opponent has three or fewer Prizes remaining. The Lele Bench space, Rule Box Ability vulnerability, early lock timing, two-Prize exposure, Mew's Techno Blast next-turn attack prohibition, and potential later Wally dead draws all require actual match modeling. This is a rational opening-access **hypothesis**, with any tournament placement attributable only to the unchanged source list.
