@@ -78,3 +78,5 @@ The reproducer also checks the actual champion source counts and the exact Engli
 These restricted forks occur in a small minority of Basic-valid opening deals. They expose real **connector opportunity cost** and the difference between a paid single-output search and combining independent search channels. They should **not** motivate card slots on frequency alone. The effect of preserving a future Mimikyu/Timeless-GX counter, as well as whether the opponent even plays Regidrago, must be evaluated in full game states.
 
 Promising continuation: score choices using subsequent Regidrago Apex Dragon timing, surviving Mimikyu access, Dialga actually reaching discard, paid search resources, and the opponent's likely attack response. Cross-reference [Dialga discard payoff sensitivity](../../shadow_rider_dialga_payload_discard/) and [direct-Radiant-to-Max-Geist continuation](../shadow_rider_direct_launch_attack/).
+
+**Windows CI:** [exact source and 400,680 labeled-deal regression passed, run 38331103493](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331103493).
