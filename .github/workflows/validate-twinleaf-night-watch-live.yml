@@ -8,6 +8,7 @@ on:
       - "simulation/twinleaf/test-tournament-engine-hooks.cjs"
       - "simulation/twinleaf/test-night-watch-live-hook.cjs"
       - "simulation/twinleaf/test-night-watch-real-store.cjs"
+      - "simulation/twinleaf/test-random-hand-source-gaps.cjs"
       - ".github/workflows/validate-twinleaf-night-watch-live.yml"
   workflow_dispatch:
 
@@ -53,5 +54,7 @@ jobs:
         run: node simulation/twinleaf/test-night-watch-live-hook.cjs
       - name: Verify real Twinleaf Store resolves random Night Watch physical movement
         run: node simulation/twinleaf/test-night-watch-real-store.cjs
+      - name: Reproduce independent pinned random-hand source defects
+        run: node simulation/twinleaf/test-random-hand-source-gaps.cjs
       - name: Verify live matchup runner installs four rules hooks
         run: node simulation/twinleaf/test-tournament-engine-hooks.cjs
