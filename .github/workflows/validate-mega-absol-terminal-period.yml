@@ -6,6 +6,7 @@ on:
     paths:
       - simulation/twinleaf/hooks/mega-absol-terminal-period.cjs
       - simulation/twinleaf/test-mega-absol-terminal-period.cjs
+      - simulation/twinleaf/test-mega-absol-parasol.cjs
       - .github/workflows/validate-mega-absol-terminal-period.yml
 
 permissions:
@@ -41,3 +42,5 @@ jobs:
         run: ./node_modules/.bin/tsc --project tsconfig.json
       - name: Assert Mega Absol exact conditional Knock Out
         run: node simulation/twinleaf/test-mega-absol-terminal-period.cjs
+      - name: Assert Big Parasol prevention
+        run: node simulation/twinleaf/test-mega-absol-parasol.cjs
