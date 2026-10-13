@@ -26,3 +26,5 @@ jobs:
         run: python results/tests/mew_wally_slot_frontier/heavy_ball_joint_policy.py
       - name: Check Ball preservation by alternative Heavy Ball retrieval
         run: python results/tests/mew_wally_slot_frontier/heavy_ball_connector_preservation.py
+      - name: Verify Mew Techno Blast attack reuse over two turns
+        run: python results/tests/mew_wally_slot_frontier/two_turn_reuse.py
