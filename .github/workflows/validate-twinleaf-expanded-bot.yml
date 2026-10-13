@@ -25,6 +25,16 @@ on:
           - regidrago
           - mew_genesect
           - absol_garbodor
+      tactic_order:
+        description: Research bot tactic ordering
+        type: choice
+        required: true
+        default: native
+        options:
+          - native
+          - attack_before_retreat
+          - vip_first
+          - vip_attack_before_retreat
       seeds:
         description: One to three unique unsigned 32-bit seeds, separated by commas
         type: string
@@ -139,6 +149,7 @@ jobs:
           TWINLEAF_DECK_A: ${{ inputs.deck_a }}
           TWINLEAF_DECK_B: ${{ inputs.deck_b }}
           TWINLEAF_SEEDS: ${{ inputs.seeds }}
+          TWINLEAF_TACTIC_ORDER: ${{ inputs.tactic_order }}
           TWINLEAF_REPORT_PATH: tournament-match-report.json
       - name: Preserve paired source-controlled report and traces
         if: always()
