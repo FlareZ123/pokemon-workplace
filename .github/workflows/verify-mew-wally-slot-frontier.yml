@@ -20,3 +20,5 @@ jobs:
         run: python results/tests/mew_wally_slot_frontier/lock_extension.py
       - name: Verify natural Muscle Band 230 damage versus Iron Thorns
         run: python results/tests/mew_wally_slot_frontier/iron_thorns_bridge.py
+      - name: Verify Hisuian Heavy Ball Prize rescue bridge
+        run: python results/tests/mew_wally_slot_frontier/heavy_ball_prize_bridge.py
