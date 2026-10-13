@@ -30,6 +30,7 @@ const {makeRandomStreamLedger}=require('./random-stream-ledger.cjs');
 const {install:installUnderworldDoorGuard}=require('./hooks/shadow-rider-underworld-door.cjs');
 const {install:installCelestialRoarGuard}=require('./hooks/regidrago-celestial-roar.cjs');
 const {install:installStoutlandWildTackleGuard}=require('./hooks/stoutland-wild-tackle.cjs');
+const {install:installMegaAbsolTerminalPeriod}=require('./hooks/mega-absol-terminal-period.cjs');
 const {installNightWatchRandomHook}=require('./night-watch-random-hook.cjs');
 const {buildPinnedSingleCardSpecs,installPinnedSingleCardRandomHooks}=
   require('./random-hand-single-card-hook.cjs');
@@ -47,6 +48,7 @@ function ensureResearchEngineHooks() {
   installUnderworldDoorGuard();
   installCelestialRoarGuard();
   installStoutlandWildTackleGuard();
+  installMegaAbsolTerminalPeriod();
   // Deferred RNG binding is essential: runOne installs hooks before swapping
   // Math.random to its seeded physical-game ledger.
   installNightWatchRandomHook({
@@ -60,7 +62,8 @@ function ensureResearchEngineHooks() {
   assert.equal(correctedSingleRandomCards.length,10,
     'Pinned one-card random-hand scope changed without research review');
   return ['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1',
-    'stoutland_wild_tackle_self20_v1','night_watch_uniform_discard_v1',
+    'stoutland_wild_tackle_self20_v1','mega_absol_terminal_period_direct_ko_v1',
+    'night_watch_uniform_discard_v1',
     'random_hand_ten_single_card_prints_v1'];
 }
 /** Register every exact implementation used by the two source lists once. @param {string[][]} lists */
@@ -188,7 +191,8 @@ function main() {
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
     tactic_order:config.tacticOrder,
     engine_hooks:['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1',
-      'stoutland_wild_tackle_self20_v1','night_watch_uniform_discard_v1',
+      'stoutland_wild_tackle_self20_v1','mega_absol_terminal_period_direct_ko_v1',
+    'night_watch_uniform_discard_v1',
       'random_hand_ten_single_card_prints_v1'],
     decks:[a.id,b.id],deck_sha256:[deckDigest(a),deckDigest(b)],
     deck_sources:[a.source||'aichi_reference',b.source||'aichi_reference'],
