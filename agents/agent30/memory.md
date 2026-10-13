@@ -88,3 +88,20 @@ In champion Shadow Rider, 1 Dialga-GX (`sm5-100`) is a Dragon-type Basic that ca
 Key combinatorial theorem: conditioned on the 6-class opening/prizes/draw with `b` other Basics among the opening 7 and first draw indicator `d` for a Basic, exactly one of the 13 interchangeable Basic labels is Dialga. It is held/discardable with conditional probability `((b if b>=2 else 0) + d)/13` in relevant launch states. A first wrong guess using `b-1` was detected and falsified by an independent physically labeled toy enumerator; corrected and checked in 3 toy pools with B=1/2/3 covering 6,720+18,312+41,328=66,360 accepted deals. This test is a useful example of choosing an initial Active non-anticipatively: a Basic drawn on the first turn cannot correct a forced Dialga start. Code checks Dialga's actual Basic Dragon type and Timeless-GX against bundled `sm5.json`.
 
 The result is a Regidrago-specific discardability sensitivity, **not** a prediction of win-rate improvement. Mysterious Treasure connector choice conflicts with searching Mimikyu, and the later attack must meet Energy/opponent/matchup requirements. Follow up with agent7 to coordinate broader Shadow Rider launch decision research.
+
+
+## 2026-10-13 incarnation: Aichi champion Dialga/Mimikyu/Radiant search contention
+
+Lease successfully claimed at 2026-10-13T01:07:32.076Z (commit af04dc835274864bc7465d70fad629994d75066b). Existing Agent 30 memory and Agent 6 coverage messages inspected. Current pinned Twinleaf revision from prior identity memory: 3348ebdc898f175a2ed8f999133cd13d1afd01f5.
+
+New compact study:
+- tools/shadow_rider_dialga_connector_fork.py
+- results/tests/shadow_rider_dialga_connector_fork/{README.md,reproduce.py}
+- .github/workflows/validate-shadow-rider-dialga-connector-fork.yml
+- Windows CI https://github.com/FlareZ123/pokemon-workplace/actions/runs/38331103493 succeeded.
+
+Exact physical categories for champion 60: singleton Dialga/Mimikyu/Radiant, 11 other Basics, 4 VMAX, 4 Mysterious Treasure, 4 Fog Crystal, 34 others. First 7, 6 Prizes, first natural draw; no additional search channels. Require Dialga held and discardable without forcing it Active, Mimikyu and Radiant still in deck, >=2 VMAX in deck, at least one Treasure held/drawn, and another eligible Basic initially in opening. Of Basic-valid hands (probability 9797437/11703240), this fork occurs 2.772251473%; 0.984274407% include a held/drawn Fog Crystal that can retrieve Mimikyu independently, and 1.490683850% have exactly one Treasure and no Fog. These probabilities are reachability constraints, not win rates or an optimal discard policy.
+
+Independent physically labeled oracle matches grouped exact counts across 12,600+27,720+360,360=400,680 toy deals, and the source reproducer asserts all five exact print card effects. Do not double-count the second Mysterious Treasure as playable without additional discard assessment; Climactic Gate ends turn, so execute other searches before it.
+
+Next: collaborate with agents 7/14/35 over stronger joint turn1 to turn2 line probabilities, and compare the tactical payoff of counter-ready Mimikyu/Dialga against an immediate Radiant VMAX line with late Regidrago pressure and real opposing action rights. Preserve distinction between reachability and executable legal lines. Avoid editing results/README.md to append atomic tests, as the owner wants that index compact.
