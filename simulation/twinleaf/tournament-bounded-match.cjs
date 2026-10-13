@@ -13,6 +13,7 @@ const {makeMatchActionTelemetry}=require('./match-action-telemetry.cjs');
 const {makeSupporterSelectionGuard}=require('./supporter-selection-guard.cjs');
 const {writeReportAtomic}=require('./report-atomic.cjs');
 const {makeTacticOrder}=require('./tactic-order-policy.cjs');
+const {DynamicDoubleDragonTactic}=require('./dynamic-double-dragon-tactic.cjs');
 const {makeVipFirstTactic}=require('./vip-first-tactic.cjs');
 const {loadImplementedCards}=require('./print-coverage.cjs');
 const {CardManager}=engine('game/cards/card-manager');
@@ -99,7 +100,7 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
       Tactic===PlaySupporterTactic?SafeSupporterTactic:Tactic);
     assert.equal(safeTactics.filter(Tactic=>Tactic===SafeSupporterTactic).length,1,
       'Pinned policy tactic roster changed: inspect before applying Supporter guard');
-    const settings={tactics:makeTacticOrder(tacticOrder,safeTactics,ResearchVipTactic),
+    const settings={tactics:makeTacticOrder(tacticOrder,safeTactics,ResearchVipTactic,DynamicDoubleDragonTactic),
       promptResolvers:allPromptResolvers,
       scores:defaultStateScores,arbiter:defaultArbiterOptions};
     const players=new Map([[1,new SimpleTacticsAi({id:1,name:'Aichi A'},settings,deckA)],
