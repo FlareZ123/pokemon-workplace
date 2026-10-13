@@ -70,6 +70,34 @@ With one Wally/one Lele, such option availability occurs in **0.082197062134%** 
 
 Three physically labeled toy-deal enumerations match exact rational calculations, with positive named events for N=12 and N=13. The card-specific requirement and [manual CI 38332595658](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38332595658) passed. This is a narrow, testable example of **connector opportunity cost and state-dependent discardability (DCI/AMR)**.
 
+
+## The late Special Red Card tradeoff
+
+A high early-attack rate does not determine match strength. The [same-print Red Card Pareto test](red_card_pareto.py) computes a *separate* late-game access metric: probability of having naturally observed at least one Special Red Card in the initial seven plus six or ten additional draws from the non-Prized deck, **conditional on a Basic-valid initial seven**. The current `me4-82` Special Red Card can only be used when the opponent has three or fewer Prizes remaining; it returns the opponent's hand to the bottom of their deck and makes them draw three cards if they returned any. Seeing a Red early does not mean being able to play it then.
+
+| Exact-print 60 | Strict Wally 210-damage access incl. one Heavy Ball target | At least one Special Red Card seen, +6 draws | At least one seen, +10 draws |
+|---|---:|---:|---:|
+| Published Wally 1 / Lele 0 / Red 2 (11 Basics) | 1.460553014253% | **37.885637463882%** | **48.113534347720%** |
+| Wally 1 / Lele 1 / Red 1 (12 Basics) | 7.577439344617% | 21.057410523978% | 27.775928777257% |
+| Wally 2 / Lele 1 / Red 0 (12 Basics) | **9.027509175530%** | 0% | 0% |
+
+The early-attack axis is unconditional on Basic-valid openings (invalid openings contribute zero). The Red axis is conditioned on Basic-valid openings. Their denominators and strategic payoffs differ, so differences across columns must not be compared as equal units of match value. The first column incorporates the original singleton Hisuian Heavy Ball rescuing a Prized Genesect, even when the source list has no Tapu Lele.
+
+Replacing the **last** Special Red Card with a second Wally raises the restricted early access by **1.450069830913 percentage points**, while natural Red acquisition at +6 draws falls from **21.057410523978% to zero**. No other card now produces this exact Item effect. This is a tactical value and Supporter-contention tradeoff that may favor retaining one Red. The previously published [Mew/VIP Red-access research](../../mew_genesect_vip_opening/) independently identified the importance of late natural Red access in the original Basic mix. Three new physical toy openers/Prize/draw samples reproduce the exact conditional formula, and the source's Lele-free Heavy Ball opener was verified directly.
+
+## Turn-two Techno Blast reuse after Wally
+
+The [two-turn direct-access witness](two_turn_reuse.py) makes the attack's delayed restriction explicit. After Wally evolves Active Mew V to Mew VMAX and DCE enables Cross Fusion Strike copying Genesect V's Techno Blast on turn one going second, the attack prevents **that Mew** from attacking on its next turn. Assuming it survives the opponent's turn and no lock prevents the action, its **zero-cost retreat** into Benched Genesect clears that restriction. A subsequently played Escape Rope can promote Mew back for another attack. Guzma can instead do so when the opponent has a Benched Pokémon to gust, consuming that turn's Supporter quota.
+
+This particularly strict witness uses a **naturally held Genesect, DCE and Wally**, a deck-surviving Mew VMAX, and an Escape Rope or conditionally usable Guzma either in the first eight seen cards or as the **next natural draw after the Wally search and shuffle**. It excludes all paid Ball/VIP searches, additional draw, Trainer access, opponent disruption, and knockouts. It correctly thins the deck by one Mew VMAX before that next draw.
+
+| Wally count | With opponent Bench, Rope or Guzma | No opponent Bench, Rope only |
+|---:|---:|---:|
+| 1 | 0.153496313165% | 0.055386457101% |
+| 2 | **0.297171960634%** | **0.107295776265%** |
+
+The six-Prize and two-natural-draw analysis uses exact fractions. Independently labeled N=11 and N=13 miniature physical games reproduce both alternatives, including how the Wally search changes the second draw's sample space. Source English card text for retreat cost, Cross Fusion Strike, Techno Blast, Wally, Guzma and Escape Rope is asserted. [Manual CI 38333293843](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38333293843) passed. These values are conditional *two-turn continuation opportunities*, not match-winning probabilities.
+
 ## Independent validation and limitations
 
 - Original English card texts are asserted for Wally `xy6-94`, Tapu Lele-GX `sm2-60`, and Battle VIP Pass `swsh8-225`; duplicate Wally is legal under the ordinary four-copy rule.

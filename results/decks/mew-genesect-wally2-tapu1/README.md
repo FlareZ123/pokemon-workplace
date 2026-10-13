@@ -72,6 +72,17 @@ A [joint exhaustive Prize-action model](../../tests/mew_wally_slot_frontier/heav
 
 The same Heavy Ball may alternatively recover a Prized Genesect V **even when the original first-turn route was already possible**. [Exact connector-preservation analysis](../../tests/mew_wally_slot_frontier/heavy_ball_connector_preservation.py) finds that keeping an otherwise needed paid Ball unspent is an available option in **0.101875982342%** of opening deals for this candidate. This is entirely contained in the already-counted successful launches and cannot be added to the 9.027509% access union. It may be useful in a later turn if the retained search Item and saved discard resources matter.
 
+
+## Tested but unresolved late-game tradeoff
+
+The [exact early/late Pareto study](../../tests/mew_wally_slot_frontier/red_card_pareto.py) isolates an important cost of this build. Keeping **one Special Red Card** in the 1 Wally / 1 Lele alternative gives **21.057410523978%** naturally seeing it by the initial seven plus six more cards, conditional on a Basic-valid opener; this 2 Wally / 1 Lele list has no Red Card at all. The late card only becomes playable with three or fewer opponent Prizes. Against that, the second Wally increases limited first-turn 210-attack access from **7.577439344617% to 9.027509175530%** when both candidates' existing Hisuian Heavy Ball targets are modeled. No match-based payoff comparison has been made. A tested variant retaining at least one Red Card may prove stronger overall.
+
+The [two-turn Techno Blast continuation study](../../tests/mew_wally_slot_frontier/two_turn_reuse.py) also validates the source-specific action requirement: retreat attacking Mew VMAX for free to Genesect, clearing the prior no-attack effect, then switch Mew back Active with Escape Rope or, when the opponent has a Bench, Guzma. With Genesect, Wally and DCE naturally held, plus Rope/Guzma retained or drawn by next turn, the strict two-turn reuse witness is **0.297171960634%** for two Wally versus **0.153496313165%** with one Wally under the opponent-Bench case. This excludes other search/draw lines and requires Mew to survive between turns.
+
+## Pinned Twinleaf physical materialization
+
+The [research-only deck loader](../../../simulation/twinleaf/mew-wally2-tapu1-deck.cjs) derives all 60 engine names from the source Aichi Mew mapping and the validated Tapu Lele donor, then replaces the second Red Card with exactly the source's Wally print. Its [manifest-checking test](../../../simulation/twinleaf/test-mew-wally2-tapu1-deck.cjs) and original mapping tests passed in [manual CI 38332932899](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38332932899). Pinned Twinleaf can **materialize** this proposed 60, but mapping success does not validate Wally/Lele effect behavior, competent bot policy, or competitive outcomes.
+
 ## Play plan and tradeoffs
 
 For a going-second opening with Mew V Active, access Wally directly or use Quick/Ultra Ball to fetch Tapu Lele-GX **into hand**, bench it to trigger Wonder Tag, find Wally, and evolve into Mew VMAX immediately. Attach DCE and copy a Benched Genesect V's Techno Blast via Cross Fusion Strike for 210 before modifiers. Battle VIP Pass can provide Genesect but cannot trigger Wonder Tag by directly Benching Tapu.
