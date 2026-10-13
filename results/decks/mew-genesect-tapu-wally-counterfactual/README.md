@@ -8,7 +8,7 @@
 
 | Qty | Card | Print |
 |---:|---|---|
-|4|Mew V (Fusion Strike)|swsh8-113|
+|4|Mew V|swsh8-113|
 |3|Mew VMAX|swsh8-114|
 |4|Genesect V|swsh8-185|
 |1|Dedenne-GX|sm10-57|
@@ -37,7 +37,7 @@
 |1|Lost Vacuum|swsh11-162|
 |1|Escape Rope|swsh5-125|
 |1|Hisuian Heavy Ball|swsh10-146|
-|1|Secret Box (ACE SPEC)|sv6-163|
+|1|Secret Box|sv6-163|
 |2|Muscle Band|xy1-121|
 |2|Float Stone|xy8-137|
 |1|Forest Seal Stone|swsh12-156|
