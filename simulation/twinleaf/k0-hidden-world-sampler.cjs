@@ -4,7 +4,7 @@ const {createHash}=require('node:crypto');
 
 /** Canonically shuffle a multiset into a stable counter-derived physical order. */
 function permute(cards,key){
-  const output=[...cards].sort((a,b)=>a.fullName.localeCompare(b.fullName));
+  const output=[...cards].sort((a,b)=>a.fullName.localeCompare(b.fullName) || a.id-b.id);
   let counter=0;
   const random=bound=>{
     const limit=4294967296-(4294967296%bound);
