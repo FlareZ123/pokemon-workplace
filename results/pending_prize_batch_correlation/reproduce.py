@@ -56,7 +56,7 @@ def example() -> tuple[TopPrizePhysicalState, ObserverTopPrizeBeliefs]:
         CardInstance("p2", "C", "Prize C", "prize"),
     )
     physical = TopPrizePhysicalState(
-        IdentityLedger(ZoneCountState(), rows),
+        IdentityLedger(ZoneCountState(), tuple(sorted(rows, key=lambda row: row.instance_id))),
         "top",
         ("p0", "p1", "p2"),
         (False, False, False),
