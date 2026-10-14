@@ -30,7 +30,7 @@ const {GamePhase}=engine('game/store/state/state');
 const {AddPlayerAction}=engine('game/store/actions/add-player-action');
 const {PlayCardAction,PlayerType,SlotType}=engine('game/store/actions/play-card-action');
 const {SimpleTacticsAi}=engine('simple-bot/simple-tactics-ai');
-const {Simulator}=engine('game/bots/simulator');
+const {deepClone}=engine('utils');
 const {PlayTrainerTactic}=engine('simple-bot/simple-tactics/play-trainer-tactic');
 const {PlaySupporterTactic}=engine('simple-bot/simple-tactics/play-supporter-tactic');
 const {BotArbiter,BotFlipMode,BotShuffleMode}=engine('game/bots/bot-arbiter');
@@ -56,7 +56,7 @@ const BlindTopdeckTrainerTactic=makeBlindTopdeckTrainerTactic(PlayTrainerTactic,
 const BlindPaidSearchTactic=makeBlindPaidSearchTactic(PlayTrainerTactic,
   {TrainerCard,TrainerType,PokemonCard,Stage,CardType,pokemonHasCardType,
     PlayCardAction,PlayerType,SlotType,StateScore});
-const sampleK0HiddenWorld=makeK0HiddenWorldSampler(Simulator);
+const sampleK0HiddenWorld=makeK0HiddenWorldSampler(deepClone);
 /** Install verified rules-correctness hooks for every live match, including direct runOne callers.
  * @returns {readonly string[]}
  */
