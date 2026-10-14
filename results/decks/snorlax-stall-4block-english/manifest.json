@@ -1,0 +1,247 @@
+{
+  "source": {
+    "event": "CL Aichi Open League",
+    "date": "2026-05-10",
+    "place": 3,
+    "player": "Haruto Miki",
+    "url": "https://limitlesstcg.com/tournaments/566/decklists",
+    "original_region": "Japan",
+    "original_player_ceremony_copies": 1
+  },
+  "transformation": {
+    "remove": "1 Player's Ceremony (Japanese-only)",
+    "add": "1 Snorlax (bw8-101)",
+    "other_source_name_quantities_preserved": true,
+    "international_english_snapshot_adaptation": true
+  },
+  "cards": [
+    {
+      "category": "Pokémon",
+      "name": "Snorlax",
+      "quantity": 4,
+      "print_id": "bw8-101"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Galarian Stunfisk",
+      "quantity": 2,
+      "print_id": "swsh1-132"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Regirock",
+      "quantity": 1,
+      "print_id": "xy7-40"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Mimikyu",
+      "quantity": 1,
+      "print_id": "sv2-97"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Girafarig",
+      "quantity": 1,
+      "print_id": "sm8-94"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Bunnelby",
+      "quantity": 1,
+      "print_id": "xy5-121"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Articuno-GX",
+      "quantity": 1,
+      "print_id": "sm7-31"
+    },
+    {
+      "category": "Pokémon",
+      "name": "Rotom V",
+      "quantity": 1,
+      "print_id": "swsh11-58"
+    },
+    {
+      "category": "Trainer",
+      "name": "Plumeria",
+      "quantity": 4,
+      "print_id": "sm3-120"
+    },
+    {
+      "category": "Trainer",
+      "name": "Arven",
+      "quantity": 4,
+      "print_id": "sv1-166"
+    },
+    {
+      "category": "Trainer",
+      "name": "Team Flare Grunt",
+      "quantity": 2,
+      "print_id": "xy1-129"
+    },
+    {
+      "category": "Trainer",
+      "name": "Teammates",
+      "quantity": 2,
+      "print_id": "xy5-141"
+    },
+    {
+      "category": "Trainer",
+      "name": "Lusamine",
+      "quantity": 2,
+      "print_id": "sm4-96"
+    },
+    {
+      "category": "Trainer",
+      "name": "Team Rocket's Handiwork",
+      "quantity": 1,
+      "print_id": "xy10-112"
+    },
+    {
+      "category": "Trainer",
+      "name": "Gladion",
+      "quantity": 1,
+      "print_id": "sm4-95"
+    },
+    {
+      "category": "Trainer",
+      "name": "Guzma",
+      "quantity": 1,
+      "print_id": "sm3-115"
+    },
+    {
+      "category": "Trainer",
+      "name": "Faba",
+      "quantity": 1,
+      "print_id": "sm8-173"
+    },
+    {
+      "category": "Trainer",
+      "name": "Penny",
+      "quantity": 1,
+      "print_id": "sv1-183"
+    },
+    {
+      "category": "Trainer",
+      "name": "Eri",
+      "quantity": 1,
+      "print_id": "sv5-146"
+    },
+    {
+      "category": "Trainer",
+      "name": "Lillie's Determination",
+      "quantity": 1,
+      "print_id": "me1-119"
+    },
+    {
+      "category": "Trainer",
+      "name": "Nest Ball",
+      "quantity": 3,
+      "print_id": "sv1-181"
+    },
+    {
+      "category": "Trainer",
+      "name": "VS Seeker",
+      "quantity": 3,
+      "print_id": "xy6-110"
+    },
+    {
+      "category": "Trainer",
+      "name": "Enhanced Hammer",
+      "quantity": 2,
+      "print_id": "sv6-148"
+    },
+    {
+      "category": "Trainer",
+      "name": "Trainers' Mail",
+      "quantity": 2,
+      "print_id": "xy6-92"
+    },
+    {
+      "category": "Trainer",
+      "name": "Counter Catcher",
+      "quantity": 2,
+      "print_id": "sv4-160"
+    },
+    {
+      "category": "Trainer",
+      "name": "Scoop Up Cyclone",
+      "quantity": 1,
+      "print_id": "sv6-162"
+    },
+    {
+      "category": "Trainer",
+      "name": "Quick Ball",
+      "quantity": 1,
+      "print_id": "swsh1-179"
+    },
+    {
+      "category": "Trainer",
+      "name": "Hisuian Heavy Ball",
+      "quantity": 1,
+      "print_id": "swsh10-146"
+    },
+    {
+      "category": "Trainer",
+      "name": "Night Stretcher",
+      "quantity": 1,
+      "print_id": "sv6pt5-61"
+    },
+    {
+      "category": "Trainer",
+      "name": "Float Stone",
+      "quantity": 1,
+      "print_id": "xy8-137"
+    },
+    {
+      "category": "Trainer",
+      "name": "Stealthy Hood",
+      "quantity": 1,
+      "print_id": "sm10-186"
+    },
+    {
+      "category": "Trainer",
+      "name": "Tool Jammer",
+      "quantity": 1,
+      "print_id": "swsh5-136"
+    },
+    {
+      "category": "Trainer",
+      "name": "Forest Seal Stone",
+      "quantity": 1,
+      "print_id": "swsh12-156"
+    },
+    {
+      "category": "Trainer",
+      "name": "Tropical Beach",
+      "quantity": 1,
+      "print_id": "bwp-BW28"
+    },
+    {
+      "category": "Trainer",
+      "name": "Temple of Sinnoh",
+      "quantity": 1,
+      "print_id": "swsh10-155"
+    },
+    {
+      "category": "Energy",
+      "name": "Capture Energy",
+      "quantity": 3,
+      "print_id": "swsh2-171"
+    },
+    {
+      "category": "Energy",
+      "name": "Water Energy",
+      "quantity": 2,
+      "print_id": "bw1-107"
+    }
+  ],
+  "counterfactual": {
+    "base_english_manifest": "results/decks/snorlax-stall-aichi-2026-english/manifest.json",
+    "from_base_remove": "1 Tropical Beach",
+    "from_base_add": "1 Snorlax",
+    "status": "untested experimental English paper Expanded 60"
+  }
+}
