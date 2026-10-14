@@ -1,0 +1,19 @@
+name: validate Iron Thorns one-Mail physical frontier
+
+on:
+  push:
+    paths:
+      - "tools/iron_thorns_mail_frontier.py"
+      - "results/tests/iron_thorns_mail_frontier/**"
+      - ".github/workflows/validate-iron-thorns-mail-frontier.yml"
+  workflow_dispatch:
+
+jobs:
+  reproducible-one-mail:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m results.tests.iron_thorns_mail_frontier.reproduce
