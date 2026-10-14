@@ -1,0 +1,16 @@
+name: Validate Shadow Rider next draw energy
+on:
+  workflow_dispatch:
+
+jobs:
+  next-turn-energy:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact next-turn draw and physical-card oracle
+        run: python -m results.shadow_rider_next_draw_energy.reproduce
+      - name: Source-deck retention before the later draw
+        run: python -m results.shadow_rider_energy_reserve.reproduce
