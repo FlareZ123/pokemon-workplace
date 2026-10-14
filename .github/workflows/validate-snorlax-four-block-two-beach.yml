@@ -1,0 +1,24 @@
+name: Validate Snorlax 4Block two-Beach alternative
+
+on:
+  push:
+    paths:
+      - "results/decks/snorlax-stall-4block-2beach-english/**"
+      - "results/tests/snorlax_four_block_plumeria_trade/**"
+      - "results/tests/snorlax_starter_draw_frontier/reproduce.py"
+      - ".github/workflows/validate-snorlax-four-block-two-beach.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify Plumeria and Beach frontier
+        run: python results/tests/snorlax_four_block_plumeria_trade/reproduce.py
