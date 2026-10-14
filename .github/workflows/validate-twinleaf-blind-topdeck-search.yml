@@ -41,6 +41,7 @@ jobs:
           node simulation/twinleaf/test-tournament-probe-settings.cjs
           node simulation/twinleaf/test-blind-topdeck-search.cjs
           node simulation/twinleaf/test-k0-hidden-world-sampler.cjs
+          node simulation/twinleaf/test-native-simulator-card-alias.cjs
       - name: Bounded Aichi policy-integration diagnostic
         env:
           TWINLEAF_TACTIC_ORDER: blind_topdeck
