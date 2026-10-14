@@ -429,3 +429,11 @@ Created results/tests/shadow_rider_fog_marshadow/{README.md,reproduce.py}, manua
 This is conditional turn-one endpoint access, NOT match win rate. Excludes Fog searching Shadow Rider V or Psychic Energy, paid Treasure for Marshadow, Quick Ball, sequencing of alternative tutors, additional draws, cost of cut slots, opponent responses and continuation. Main next task: explicitly allocate shared Fog searches between Marshadow and Shadow Rider V needed to use Forest Seal Stone, with Prize constraints, without double-counting one Fog. Paid Treasure competition is another larger route.
 
 The original Marshadow study and current Fog extension intentionally retain source-code and card-print regression. Do not report the older 2.811878% as complete opening access when four Fog Crystal are available.
+
+### Second 2026-10-14 result: competing Fog-to-V versus Fog-to-Marshadow
+
+Created results/tests/shadow_rider_fog_allocation/{README.md,reproduce.py} and manual-only Windows CI .github/workflows/validate-shadow-rider-fog-allocation.yml. GitHub Actions run 38610852773 **passed**. Physically allocates each held Fog Crystal between Basic Psychic Marshadow and Basic Psychic Shadow Rider Calyrex V; latter can enable held Forest Seal Stone. Explicit constraint fog_for_marshadow+fog_for_v <= held Fog count, Prize survival of five distinct roles, two VMAX remaining, and 247,590 independently enumerated labeled toy worlds.
+
+For C1/F1, Energy-only paid Treasure line access increases from the Fog-to-Marshadow result 5.039162596% to 5.426283560%, +0.387120964 percentage points. All 15 60-card configurations computed, winner by tech-slot count remains one C plus other F. CI checks earlier 1/1 baseline rational exactly. Never sum independent Fog-path probabilities; sources compete. This is still restricted first-turn access, not match wins.
+
+Next experiment: model Mysterious Treasure and Quick Ball with real shared Energy-only discard payments, and Fog Crystal fetching Psychic Energy to pay search costs. A finite source-allocation planner can enumerate legal roles R/M/V, cost paid search count, and allow Forest Seal Stone only once, then use exact 5-bit Prize mask. Search decisions must be compared as mutually exclusive resource assignments, including free held roles.
