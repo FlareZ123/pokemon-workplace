@@ -114,6 +114,8 @@ jobs:
         run: node simulation/twinleaf/test-regidrago-celestial-roar-store.cjs
       - name: Verify Stoutland Wild Tackle source self-damage and coin branches
         run: node simulation/twinleaf/test-stoutland-wild-tackle.cjs
+      - name: Verify pinned Mega Absol direct Knock Out hook before Night Watch
+        run: node simulation/twinleaf/test-mega-absol-terminal-period.cjs
       - name: Verify Night Watch uses two seeded uniformly random physical hand cards
         run: node simulation/twinleaf/test-night-watch-live-hook.cjs
       - name: Verify Night Watch resolves against the real Twinleaf Store
