@@ -25,6 +25,7 @@ const {PlayCardAction, PlayerType, SlotType} = engine('game/store/actions/play-c
 const {StateScore} = engine('simple-bot/state-score/state-score.ts');
 const {makeBlindPaidSearchTactic} = require('./blind-paid-search-tactic.cjs');
 const {UltraBall} = engine('sets/10-scarlet-and-violet/set-scarlet-and-violet/ultra-ball.ts');
+const {UltraBallBRS} = engine('sets/09-sword-and-shield/set-brilliant-stars/other-prints.ts');
 const {MysteriousTreasure} = engine('sets/08-sun-and-moon/set-forbidden-light/mysterious-treasure.ts');
 const {RegidragoV} = engine('sets/09-sword-and-shield/set-silver-tempest/regidrago-v.ts');
 const {GrassEnergy} = engine('sets/06-black-and-white/set-black-and-white/basic-energies.ts');
@@ -35,10 +36,11 @@ const {defaultStateScores, defaultArbiterOptions, allPromptResolvers} =
 
 const cases = [
   {name: 'Ultra Ball SVI', Item: UltraBall, payment: 2},
+  {name: 'Ultra Ball BRS', Item: UltraBallBRS, payment: 2},
   {name: 'Mysterious Treasure FLI', Item: MysteriousTreasure, payment: 1},
 ];
 const manager = CardManager.getInstance();
-for (const card of [new UltraBall(), new MysteriousTreasure(),
+for (const card of [new UltraBall(), new UltraBallBRS(), new MysteriousTreasure(),
   new RegidragoV(), new GrassEnergy()]) {
   if (!manager.isCardDefined(card.fullName)) manager.defineCard(card);
 }
@@ -182,7 +184,7 @@ for (const {name, Item, payment} of cases) {
     pin,
   }));
 }
-console.log('[hidden-prize-extended] PASS: 104 private worlds across both paid search Items');
+console.log('[hidden-prize-extended] PASS: 156 private worlds across three source prints of two paid-search names');
 
 for (const {Item, payment, name} of cases) {
   const noTargets = world(Item, 'deck', 0);
@@ -196,4 +198,4 @@ for (const {Item, payment, name} of cases) {
   assert.equal(blind.useTactic(noPayment, noPayment.players[0]), undefined,
     name+' must respect its printed payment requirement');
 }
-console.log('[blind-paid-search] PASS: 104 hidden extended Item placements yield the same native-bot policy action');
+console.log('[blind-paid-search] PASS: 156 hidden extended Item placements yield the same native-bot policy action');
