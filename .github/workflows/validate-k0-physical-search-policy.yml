@@ -1,0 +1,18 @@
+name: Validate K0 physical search policy
+on:
+  workflow_dispatch:
+
+jobs:
+  observation-consistent-search:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: K0 belief and exact discard regressions
+        run: python results/k0_physical_search_policy/reproduce.py
+      - name: Physical search sequencing regression
+        run: python results/physical_search_sequence_policy/reproduce.py
+      - name: One-stage physical search regression
+        run: python results/physical_staged_trainer_policy/reproduce.py
