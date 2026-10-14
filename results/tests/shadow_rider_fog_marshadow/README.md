@@ -38,6 +38,8 @@ Conditional first-turn access in the **Energy-only Treasure** policy:
 
 For the two-tech one-Cologne/one-Flutter configuration, the revised **5.039163%** exceeds the earlier **2.811878%** by **2.227285 percentage points**, a **79.21% relative increase**. The restricted access-maximizing choice remains one Cologne plus the other allocated Flutter copies at tech counts one through four. That comparison prices no displaced cards and therefore does **not** establish that adding more tech cards improves the champion deck.
 
+**Information-state caveat:** These exact card-access figures permit the feasibility evaluator to choose a path using the realized hidden Prize configuration, before any required deck inspection. Treat them as information-privileged feasibility bounds for the initial K0 state. A nonanticipatory opening policy must first choose an action using only observable cards and can condition later search decisions on K1 knowledge actually acquired. [The subsequent paid-search study](../shadow_rider_paid_search_allocation/) documents the distinction and additional connector competition.
+
 ## Derivation and replication
 
 The [self-contained reproducer](reproduce.py) uses exact integer combinatorial weights and `fractions.Fraction`. It enumerates accepted opening-seven compositions and the next natural draw. For Prizes, a 4-bit exhaustion mask for the Radiant, Cologne, Marshadow, and other Path-answer identities is computed by inclusion-exclusion; VMAX survival is checked independently with the two-required-in-deck condition. This compresses the Prize assignments without approximating physical-card probabilities.
