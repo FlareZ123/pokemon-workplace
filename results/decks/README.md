@@ -7,6 +7,7 @@ The candidate deck pages below contain all 60 cards, with English print IDs for 
 | 2026 Aichi champion | [Shadow Rider Calyrex VMAX](shadow-rider-calyrex/) | Underworld Door board-building, Radiant Eternatus, tactical Regidrago counterplay |
 | 2026 Aichi runner-up | [Vileplume / Pidgeot / Stoutland Control](vileplume-control/) | First-turn Ω Barrage / TM Evolution line, Item and Supporter locks |
 | 2026 Aichi third, **English adaptation** | [Snorlax Stall](snorlax-stall-aichi-2026-english/) | Block retreat denial, recurring Energy discard, 59-card source preservation, [English print proof](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38295529740) |
+| **Experimental Aichi third-place derivative** | [Four-Block Snorlax Stall](snorlax-stall-4block-english/) | Replaces Japanese-only Player's Ceremony with fourth Block Snorlax, retains original single Tropical Beach; [exact opening access and English-print proof](../tests/snorlax_starter_draw_frontier/) |
 | 2026 Aichi fourth place | [Raichu / Electrode Combo](raichu-electrode-aichi-2026/) | Extra Energy Bomb, conditional Reversal/Counter Energy, Electro Rain spreading |
 | 2026 Aichi fifth place | [Mew VMAX / Genesect V](mew-genesect/) | Fusion Strike engine, rapid Item-search access, lock vulnerability |
 | 2026 Aichi sixth, **English adaptation** | [Iron Thorns ex quad-lock](iron_thorns_aichi_english/) | Lock-focused, 57 source cards preserved, three Japanese-only substitutions; [English proof](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38292730598) |
