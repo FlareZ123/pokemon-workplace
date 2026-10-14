@@ -1,6 +1,6 @@
 # A bounded, observation-blind search-Item decision policy
 
-**Status:** experimental pinned-engine tactic and physical-state invariance regression. This is a narrow research policy correction; it does **not** validate real match win rates, nor guarantee whole-bot observation consistency.
+**Status:** experimental pinned-engine tactic and physical-state invariance regression. The isolated SFT [passed pinned CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38607914259). This is a narrow research policy correction; it does **not** validate real match win rates, nor guarantee whole-bot observation consistency.
 
 ## Why this matters
 
@@ -47,7 +47,7 @@ One additional test places the single Boss's Orders in a face-down Prize rather 
 
 ## Scope and remaining correctness work
 
-The new tactic is kept **opt-in** and is not yet installed into the general tournament runner. Its purpose is to provide a reproducible narrow countermeasure and an invariance regression before deciding how to compose it with other policies. The live runner still honestly marks `unmasked_native_SimpleTacticsAi_order_oracle` until a fuller observation-only policy is implemented.
+The bounded tournament runner now supports the **opt-in diagnostic** `TWINLEAF_TACTIC_ORDER=blind_topdeck`. The default mode remains native. The alternate mode replaces exactly one Trainer tactic constructor, preserving all other priority slots and the existing Supporter-selection repair. Traces record `blind_k0_topdeck_item_v1` as an additional policy hook, and continue to report `unmasked_native_SimpleTacticsAi_order_oracle` because other tactics can still inspect hidden information. This mode is intended for controlled bot-behavior comparisons.
 
 A complete repair must use each player's information history to construct an observation/belief state, mask hidden opponent hand and Prize identities, treat known deck/Prize location information accurately after a search (K1), evaluate non-search actions without secret deck order, and prevent scoring simulations from silently conditioning on unseen outcomes. It must then be validated across many different public states and real headless matches, with opponent-field and engine-semantic coverage.
 
