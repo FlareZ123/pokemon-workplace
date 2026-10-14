@@ -12,6 +12,7 @@ const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
 const {makeMatchActionTelemetry}=require('./match-action-telemetry.cjs');
 const {makeSupporterSelectionGuard}=require('./supporter-selection-guard.cjs');
 const {makeBlindTopdeckTrainerTactic}=require('./blind-topdeck-trainer-tactic.cjs');
+const {makeK0HiddenWorldSampler}=require('./k0-hidden-world-sampler.cjs');
 const {writeReportAtomic}=require('./report-atomic.cjs');
 const {makeTacticOrder}=require('./tactic-order-policy.cjs');
 const {DynamicDoubleDragonTactic}=require('./dynamic-double-dragon-tactic.cjs');
@@ -25,6 +26,7 @@ const {GamePhase}=engine('game/store/state/state');
 const {AddPlayerAction}=engine('game/store/actions/add-player-action');
 const {PlayCardAction,PlayerType,SlotType}=engine('game/store/actions/play-card-action');
 const {SimpleTacticsAi}=engine('simple-bot/simple-tactics-ai');
+const {Simulator}=engine('game/bots/simulator');
 const {PlayTrainerTactic}=engine('simple-bot/simple-tactics/play-trainer-tactic');
 const {PlaySupporterTactic}=engine('simple-bot/simple-tactics/play-supporter-tactic');
 const {BotArbiter,BotFlipMode,BotShuffleMode}=engine('game/bots/bot-arbiter');
@@ -47,6 +49,7 @@ const UniformBotArbiter=makeUniformShuffleArbiter(BotArbiter);
 const ResearchVipTactic=makeVipFirstTactic(PlayCardAction,PlayerType,SlotType);
 const BlindTopdeckTrainerTactic=makeBlindTopdeckTrainerTactic(PlayTrainerTactic,
   {TrainerCard,TrainerType,PlayCardAction,PlayerType,SlotType});
+const sampleK0HiddenWorld=makeK0HiddenWorldSampler(Simulator);
 /** Install verified rules-correctness hooks for every live match, including direct runOne callers.
  * @returns {readonly string[]}
  */
@@ -136,7 +139,9 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
       let move;
       try {
         move=prompt?trackRandom('arbiter',()=>arbiter.resolvePrompt(state,prompt)):undefined;
-        if(!move)move=trackRandom('policy',()=>supporterSelectionGuard.decode(bot,state,id));
+        if(!move)move=trackRandom('policy',()=>supporterSelectionGuard.decode(bot,
+          tacticOrder==='sampled_k0' && state.phase===GamePhase.PLAYER_TURN?
+            sampleK0HiddenWorld(state,id):state,id));
       }
       catch(e){status='policy_error';error=String(e);break;}
       if(!move){status='no_action';break;}
@@ -158,8 +163,12 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     const rng=ledger.snapshot();
     return {seed,status,actions,attacks,engine_hooks:engineHooks,first_actor:firstActor,
       first_turn_hands:openingHands,
-      policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
-      policy_hooks:tacticOrder==='blind_topdeck'?
+      policy_hidden_information:tacticOrder==='sampled_k0'?
+        'k0_open_list_single_hypothetical_world_unvalidated':
+        'unmasked_native_SimpleTacticsAi_order_oracle',
+      policy_hooks:tacticOrder==='sampled_k0'?
+        ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_canonical_hidden_world_v1']:
+        tacticOrder==='blind_topdeck'?
         ['supporter_prevalidation_and_dispatch_counter_restore_v2','blind_k0_topdeck_item_v1']:
         ['supporter_prevalidation_and_dispatch_counter_restore_v2'],
       policy_repair_stats:supporterSelectionGuard.snapshot(),
@@ -198,9 +207,13 @@ function main() {
       {cwd:path.resolve(__dirname,'../..'),encoding:'utf8'}).trim(),
     shuffle_policy:'research_uniform_fisher_yates_v1',
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
-    policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
+    policy_hidden_information:config.tacticOrder==='sampled_k0'?
+      'k0_open_list_single_hypothetical_world_unvalidated':
+      'unmasked_native_SimpleTacticsAi_order_oracle',
     policy_hidden_information_evidence:'results/tests/twinleaf_hidden_topdeck_oracle/README.md',
-    policy_hooks:config.tacticOrder==='blind_topdeck'?
+    policy_hooks:config.tacticOrder==='sampled_k0'?
+      ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_canonical_hidden_world_v1']:
+      config.tacticOrder==='blind_topdeck'?
       ['supporter_prevalidation_and_dispatch_counter_restore_v2','blind_k0_topdeck_item_v1']:
       ['supporter_prevalidation_and_dispatch_counter_restore_v2'],
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
