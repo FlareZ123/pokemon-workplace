@@ -7,7 +7,7 @@ Card-specific effect conditions remain downstream.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from functools import lru_cache
 from typing import Mapping, Sequence
 
@@ -92,7 +92,17 @@ def execution_window_from_state(
         turn=turn,
         supporter_plays_remaining=state.budget.remaining(TurnAction.SUPPORTER),
         stadium_plays_remaining=state.budget.remaining(TurnAction.STADIUM_PLAY),
-        channels=state.channels,
+        channels=(
+            replace(
+                state.channels,
+                item_play=False,
+                tool_play=False,
+                supporter_play=False,
+                stadium_play=False,
+            )
+            if state.budget.turn_ended
+            else state.channels
+        ),
     )
 
 
