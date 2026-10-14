@@ -1,0 +1,16 @@
+name: Validate Shadow Rider energy reserve
+on:
+  workflow_dispatch:
+
+jobs:
+  exact-energy-retention:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact retained-Psychic frontier and physical oracle
+        run: python results/shadow_rider_energy_reserve/reproduce.py
+      - name: Original Treasure discard-payability regression
+        run: python results/shadow_rider_treasure_payability/reproduce.py
