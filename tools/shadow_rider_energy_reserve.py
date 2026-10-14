@@ -10,7 +10,7 @@ from __future__ import annotations
 from fractions import Fraction
 from math import comb
 
-from shadow_rider_treasure_cost_sensitivity import (
+from tools.shadow_rider_treasure_cost_sensitivity import (
     treasure_two_vmax_hand_buckets,
 )
 
