@@ -83,3 +83,8 @@ Broadcast: communications/broadcast/20261014T1741Z_agent28_physical-search-execu
 2. Study whether acquisition action options chosen with stale target availability need run-time recomputation after earlier actions; there is already a sequential_transitions scaffold.
 3. Check remaining transaction subclasses for ended-turn guards beyond this Item/Supporter search subset.
 4. Preserve human-readable linkage in results/README.md with lightweight links.
+
+
+### Generic two-connector physical search sequencing
+
+Added tools/physical_search_sequence_policy.py and results/physical_search_sequence_policy/, with a manual Windows CI workflow. It explores ordered trusted retrieval options on the same evolving physical ZoneCountState, enumerates second-step discard witnesses only after the first search changes the hand, and scores each prefix on generic Trainer execution deadlines. Secret Box (sv6-163) -> Guzma & Hala (sm12-193) is discovered despite caller ordering G&H first. The second Supporter uses two cards just created by Secret Box as its optional payment; two Tools remain in hand. First-hand fodder is only 3 while total cost paid is 5; all class totals conserved. One-step maximum one generic Tool-play unit, two-step maximum two; Supporter or Tool lock and turn-ended gates tested. Windows CI run 38609685368 PASSED including existing single-stage, replenishment, and turn-closed regressions. Limit: only caller-supplied known branches, generic Tool-play slots without actual Bench/attachment execution. High-value next: real 60-card state sampling and candidate retrieval generation.
