@@ -73,7 +73,8 @@ def verify() -> None:
 
     # One-Mail can spend the sole second safe G&H payment.
     hand = Counter({"L": 1, "S": 1, "G": 1, "O": 4})
-    stock = Counter({"M": 1, "D": 2, "B": 1, "O": 42})
+    stock = (Counter(deck(2, 1)) - hand - Counter({"I": 1})
+             - Counter({"O": 6}))
     assert evaluate(hand, stock).attack
     top4 = ("B", "O", "O", "O")
     assert not k0_action(hand, stock, top4, 2, False).attack
