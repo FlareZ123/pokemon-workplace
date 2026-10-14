@@ -1,0 +1,26 @@
+name: Validate Snorlax Block starter frontier
+
+on:
+  push:
+    paths:
+      - "results/decks/snorlax-stall-4block-english/**"
+      - "results/decks/snorlax-stall-aichi-2026-english/manifest.json"
+      - "results/tests/snorlax_starter_draw_frontier/**"
+      - "tools/deck_validator.py"
+      - "tools/deck_legality_proof.py"
+      - ".github/workflows/validate-snorlax-starter-draw-frontier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify legal prints and exact opening probabilities
+        run: python results/tests/snorlax_starter_draw_frontier/reproduce.py
