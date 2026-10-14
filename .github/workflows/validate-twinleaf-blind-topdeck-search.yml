@@ -5,6 +5,9 @@ on:
       - 'simulation/twinleaf/blind-topdeck-trainer-tactic.cjs'
       - 'simulation/twinleaf/test-blind-topdeck-search.cjs'
       - '.github/workflows/validate-twinleaf-blind-topdeck-search.yml'
+      - 'simulation/twinleaf/tactic-order-policy.cjs'
+      - 'simulation/twinleaf/test-tactic-order-policy.cjs'
+      - 'simulation/twinleaf/tournament-bounded-match.cjs'
   workflow_dispatch:
 
 permissions:
@@ -34,5 +37,15 @@ jobs:
       - name: Compile pinned engine
         working-directory: vendor/twinleafgg/ptcg-server
         run: npx tsc --project tsconfig.json
-      - name: Verify K0-invariant Item choices
-        run: node simulation/twinleaf/test-blind-topdeck-search.cjs
+      - name: Verify opt-in mode and exact K0 Item decisions
+        run: |
+          node simulation/twinleaf/test-tactic-order-policy.cjs
+          node simulation/twinleaf/test-tournament-probe-settings.cjs
+          node simulation/twinleaf/test-blind-topdeck-search.cjs
+      - name: Bounded Aichi policy-integration diagnostic
+        env:
+          TWINLEAF_TACTIC_ORDER: blind_topdeck
+          TWINLEAF_SEEDS: '20261012'
+          TWINLEAF_DECK_A: vileplume
+          TWINLEAF_DECK_B: mew_genesect
+        run: node simulation/twinleaf/tournament-bounded-match.cjs
