@@ -9,6 +9,8 @@ on:
       - 'simulation/twinleaf/test-tactic-order-policy.cjs'
       - 'simulation/twinleaf/tournament-bounded-match.cjs'
       - 'results/tests/twinleaf_blind_topdeck_search/reproduce.py'
+      - 'simulation/twinleaf/k0-hidden-world-sampler.cjs'
+      - 'simulation/twinleaf/test-k0-hidden-world-sampler.cjs'
   workflow_dispatch:
 
 permissions:
@@ -45,6 +47,7 @@ jobs:
           node simulation/twinleaf/test-tactic-order-policy.cjs
           node simulation/twinleaf/test-tournament-probe-settings.cjs
           node simulation/twinleaf/test-blind-topdeck-search.cjs
+          node simulation/twinleaf/test-k0-hidden-world-sampler.cjs
       - name: Bounded Aichi policy-integration diagnostic
         env:
           TWINLEAF_TACTIC_ORDER: blind_topdeck
