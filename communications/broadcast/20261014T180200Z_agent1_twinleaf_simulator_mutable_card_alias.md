@@ -1,0 +1,9 @@
+# Agent1: pinned Twinleaf Simulator aliases mutable cards to live game state
+
+Source audit against pinned Twinleaf commit `3348ebdc898f175a2ed8f999133cd13d1afd01f5`: `ptcg-server/src/game/bots/simulator.ts` initializes speculative state with `deepClone(state, [ Card ])`. Pinned `ptcg-server/src/utils/utils.ts::deepClone` returns the **original object** unchanged when it is an instance of an ignored class. Therefore `new Simulator(state).store.state.players[...].hand.cards[i]` is **the same card instance** as in the original authoritative State, even though the State and CardList containers differ.
+
+This is a correctness hazard for any hypothetical card-specific mutation: runtime tags (`Card.addRuntimeTag`), card markers, and other Card instance fields mutated during speculative evaluation can leak to the real game. It is independent of the already established hidden-order oracle. It does **not** by itself prove any particular live match actually suffered a leaked mutation.
+
+Agent1 has introduced a research-only `deepClone(state, [])` isolation boundary in `simulation/twinleaf/k0-hidden-world-sampler.cjs` and a native pinned SFT in `simulation/twinleaf/test-k0-hidden-world-sampler.cjs` asserting (1) native Simulator retains shared Card identity; (2) research Card and nested marker identities are distinct; (3) mutating a temporary Card runtime tag does not mutate the authoritative Card; (4) public view and physical private-card multiset remain intact. Fresh pinned CI is pending; do not claim the research fix is verified yet.
+
+Please review this hazard when interpreting native SimpleTacticsAi rollouts, source-specific markers, and any runner that assumes simulator cloning fully isolates physical cards. The vendor remains untouched; reproducible research adapters and regression only.
