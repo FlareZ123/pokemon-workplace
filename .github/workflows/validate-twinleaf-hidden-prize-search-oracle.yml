@@ -29,5 +29,5 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Exercise all 52 hidden Basic locations and complete-bot decisions
         run: node simulation/twinleaf/test-hidden-prize-search-oracle.cjs
-      - name: Audit Ultra Ball and Mysterious Treasure payment with 104 hidden worlds
+      - name: Audit source Ultra Ball SVI and BRS plus Treasure with 156 hidden worlds
         run: node simulation/twinleaf/test-hidden-prize-extended-search-oracle.cjs
