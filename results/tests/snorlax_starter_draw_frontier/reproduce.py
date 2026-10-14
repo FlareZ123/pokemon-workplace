@@ -72,6 +72,27 @@ def all_prized_given_not_in_hand(copies: int) -> Fraction:
     )
 
 
+def at_least_unprized(copies: int, minimum: int) -> Fraction:
+    """Chance initial six Prizes leave at least `minimum` copies accessible."""
+    return sum(
+        (
+            Fraction(
+                combinations(copies, k) * combinations(60 - copies, 6 - k),
+                combinations(60, 6),
+            )
+            for k in range(copies + 1)
+            if copies - k >= minimum
+        ),
+        Fraction(0),
+    )
+
+
+def expected_mulligans(basics: int) -> Fraction:
+    """Expected number of rejected opening sevens before the first valid one."""
+    valid = at_least_one_in_seven(basics)
+    return (1 - valid) / valid
+
+
 def counts(rows: list[dict]) -> Counter:
     return Counter({row["name"]: row["quantity"] for row in rows})
 
@@ -140,6 +161,8 @@ def main() -> None:
     assert all_prized_given_not_in_hand(1) == Fraction(6, 53)
     assert all_prized_given_not_in_hand(2) == Fraction(15, 1378)
     assert all_copies_prized(2) < all_copies_prized(1)
+    assert at_least_unprized(4, 2) > at_least_unprized(3, 2)
+    assert expected_mulligans(12) < expected_mulligans(11)
 
     print("PASS: 60 cards, all English-print eligibility checks for both 60s")
     print("PASS: actual tournament source 59/60 card-name quantities retained")
@@ -155,6 +178,12 @@ def main() -> None:
             print(f"  {key}: {float(value) * 100:.8f}%")
     print("All copies Prized: 1 Beach = 10%; 2 Beach = 0.84745763%")
     print("All copies Prized: 1 Stunfisk = 10%; 2 Stunfisk = 0.84745763%")
+    print("Two or more un-Prized Block Snorlax (source, proposal):")
+    print(f"  {float(at_least_unprized(3, 2)) * 100:.8f}%")
+    print(f"  {float(at_least_unprized(4, 2)) * 100:.8f}%")
+    print("Expected opening-hand mulligans (source, proposal):")
+    print(f"  {float(expected_mulligans(11)):.8f}")
+    print(f"  {float(expected_mulligans(12)):.8f}")
     print("LIMIT: opening access only; legal line execution and wins untested")
 
 
