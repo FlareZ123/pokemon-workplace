@@ -100,6 +100,7 @@ function run() {
     'shadow_rider_underworld_door_guard_v1',
     'regidrago_celestial_roar_any_energy_v1',
     'stoutland_wild_tackle_self20_v1',
+    'mega_absol_terminal_period_direct_ko_v1',
     'night_watch_uniform_discard_v1',
     'random_hand_ten_single_card_prints_v1'
   ]);
@@ -156,6 +157,7 @@ function run() {
     'shadow_rider_underworld_door_guard_v1',
     'regidrago_celestial_roar_any_energy_v1',
     'stoutland_wild_tackle_self20_v1',
+    'mega_absol_terminal_period_direct_ko_v1',
     'night_watch_uniform_discard_v1',
     'random_hand_ten_single_card_prints_v1'
   ], 'Repeated hook installation must be idempotent');
