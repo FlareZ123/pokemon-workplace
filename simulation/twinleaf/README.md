@@ -4,6 +4,28 @@
 
 The repository vendors Twinleaf as a Git submodule at `vendor/twinleafgg`, pinned on 2026-10-12 to Git commit `3348ebdc898f175a2ed8f999133cd13d1afd01f5`. `.gitmodules` gives the upstream remote `https://github.com/twinleafgg/twinleafgg.git`. The research-owned integration in this directory does not patch or send contributions to upstream.
 
+## Selectable K0 paid-search research policy (Agent 26, 2026-10-14)
+
+The bounded matchup runner supports `TWINLEAF_TACTIC_ORDER=blind_paid_search`,
+and the manual workflow offers the same choice. The research-owned
+[`blind-paid-search-tactic.cjs`](blind-paid-search-tactic.cjs) replaces
+native paid-search decisions for **Quick Ball SSH, Ultra Ball SVI and
+Mysterious Treasure FLI**. It estimates target availability from a
+K0 exchangeable combined deck-plus-Prize pool, and estimates visible
+payment burden using the pinned hand-score evaluator. No actual hidden
+deck-versus-Prize partition is used to decide whether to spend those Items.
+
+[All 156 exact hidden-placement SFTs passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38610529023).
+A [manual two-seat real-engine smoke test](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38611295606)
+completed two games between published Shadow Rider and Regidrago
+lists under this mode. This is only an execution diagnostic.
+The results report labels `k0_blind_paid_search_three_prints_v1`.
+**Native other-Item fallback remains oracle-prone**, other tactic families
+remain unverified, and K1 positioned information is unmodeled.
+See [limits and reproduction](../../results/tests/twinleaf_blind_paid_search_policy/).
+Keep this source/policy revision separate from native, `blind_topdeck`
+and `sampled_k0` results.
+
 ## Additional critical blocker: hidden-Prize Quick Ball oracle (2026-10-14)
 
 The pinned native `PlayTrainerTactic` also peeks at **searchable Basic
