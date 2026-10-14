@@ -178,12 +178,12 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
       policy_hidden_information:tacticOrder==='sampled_k0'?
         'k0_open_list_single_hypothetical_world_unvalidated':
         tacticOrder==='blind_paid_search'?
-        'three_paid_search_prints_k0_blind_other_native_tactics_unmasked':
+        'four_paid_search_prints_k0_blind_other_native_tactics_unmasked':
         'unmasked_native_SimpleTacticsAi_order_oracle',
       policy_hooks:tacticOrder==='sampled_k0'?
         ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_canonical_hidden_world_v1']:
         tacticOrder==='blind_paid_search'?
-        ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_blind_paid_search_three_prints_v1']:
+        ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_blind_paid_search_four_prints_v2']:
         tacticOrder==='blind_topdeck'?
         ['supporter_prevalidation_and_dispatch_counter_restore_v2','blind_k0_topdeck_item_v1']:
         ['supporter_prevalidation_and_dispatch_counter_restore_v2'],
@@ -226,13 +226,13 @@ function main() {
     policy_hidden_information:config.tacticOrder==='sampled_k0'?
       'k0_open_list_single_hypothetical_world_unvalidated':
       config.tacticOrder==='blind_paid_search'?
-      'three_paid_search_prints_k0_blind_other_native_tactics_unmasked':
+      'four_paid_search_prints_k0_blind_other_native_tactics_unmasked':
       'unmasked_native_SimpleTacticsAi_order_oracle',
     policy_hidden_information_evidence:'results/tests/twinleaf_hidden_topdeck_oracle/README.md',
     policy_hooks:config.tacticOrder==='sampled_k0'?
       ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_canonical_hidden_world_v1']:
       config.tacticOrder==='blind_paid_search'?
-      ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_blind_paid_search_three_prints_v1']:
+      ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_blind_paid_search_four_prints_v2']:
       config.tacticOrder==='blind_topdeck'?
       ['supporter_prevalidation_and_dispatch_counter_restore_v2','blind_k0_topdeck_item_v1']:
       ['supporter_prevalidation_and_dispatch_counter_restore_v2'],
