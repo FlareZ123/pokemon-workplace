@@ -1,0 +1,22 @@
+name: Validate closed-turn Trainer boundary
+on:
+  workflow_dispatch:
+
+jobs:
+  closed-turn-regressions:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Closed-turn regression
+        run: python results/closed_turn_trainer_boundary/reproduce.py
+      - name: Original Trainer transaction regression
+        run: python results/trainer_search_transaction/reproduce.py
+      - name: Acquired Trainer execution regressions
+        run: python results/searched_trainer_execution_window/reproduce.py
+      - name: Joint execution capacity regression
+        run: python results/acquired_trainer_execution_capacity/reproduce.py
+      - name: Staged acquisition objective regression
+        run: python results/staged_trainer_objectives/reproduce.py
