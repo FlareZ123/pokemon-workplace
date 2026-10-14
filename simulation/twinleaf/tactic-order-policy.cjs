@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('node:assert/strict');
 
-const MODES = Object.freeze(['native','attack_before_retreat','vip_first','vip_attack_before_retreat','double_dragon_first','blind_topdeck','sampled_k0']);
+const MODES = Object.freeze(['native','attack_before_retreat','vip_first','vip_attack_before_retreat','double_dragon_first','blind_topdeck','sampled_k0','blind_paid_search']);
 
 /**
  * Research-owned alternatives to the pinned upstream SimpleTacticsAi priority.
