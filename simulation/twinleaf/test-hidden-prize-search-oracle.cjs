@@ -17,7 +17,13 @@ const {State, GamePhase} = engine('game/store/state/state.ts');
 const {Player} = engine('game/store/state/player.ts');
 const {CardList} = engine('game/store/state/card-list.ts');
 const {CardManager} = engine('game/cards/card-manager.ts');
-const {Format} = engine('game/store/card/card-types.ts');
+const {Format, Stage, CardType, TrainerType} = engine('game/store/card/card-types.ts');
+const {TrainerCard} = engine('game/store/card/trainer-card.ts');
+const {PokemonCard} = engine('game/store/card/pokemon-card.ts');
+const {pokemonHasCardType} = engine('game/index.ts');
+const {PlayCardAction, PlayerType, SlotType} = engine('game/store/actions/play-card-action.ts');
+const {StateScore} = engine('simple-bot/state-score/state-score.ts');
+const {makeBlindPaidSearchTactic} = require('./blind-paid-search-tactic.cjs');
 const {QuickBall} = engine('sets/09-sword-and-shield/set-sword-and-shield/quick-ball.ts');
 const {RegidragoV} = engine('sets/09-sword-and-shield/set-silver-tempest/regidrago-v.ts');
 const {GrassEnergy} = engine('sets/06-black-and-white/set-black-and-white/basic-energies.ts');
@@ -118,6 +124,11 @@ const options = {
   promptResolvers: allPromptResolvers,
 };
 const native = new PlayTrainerTactic(options);
+const BlindPaidSearchTactic = makeBlindPaidSearchTactic(PlayTrainerTactic, {
+  TrainerCard, TrainerType, PokemonCard, Stage, CardType, pokemonHasCardType,
+  PlayCardAction, PlayerType, SlotType, StateScore
+});
+const blind = new BlindPaidSearchTactic(options);
 const hit = fixture('deck', 0);
 const miss = fixture('prize', 0);
 assert.equal(publicObservation(hit), publicObservation(miss));
@@ -149,6 +160,10 @@ for (const zone of ['deck', 'prize']) {
     assert.equal(publicObservation(state), publicObservation(hit));
     assert.equal(hiddenInventory(state), hiddenInventory(hit));
     const action = native.useTactic(state, state.players[0]);
+    const blindAction = blind.useTactic(state, state.players[0]);
+    assert.equal(blindAction?.type, 'PLAY_CARD_ACTION',
+      'Exchangeable K0 search policy must choose identically at '+zone+'/'+position);
+    assert.equal(blindAction.handIndex, 0);
     assert.equal(action?.type === 'PLAY_CARD_ACTION', zone === 'deck',
       'The native choice must track secret Basic location ' + zone + '/' + position);
     if (action) {
@@ -168,6 +183,21 @@ for (const zone of ['deck', 'prize']) {
     {...options, tactics: [PlayTrainerTactic]}, null);
   const action = bot.decodeNextAction(state);
   assert.equal(action?.type, zone === 'deck' ? 'PLAY_CARD_ACTION' : 'PASS_TURN');
+  const visibleBot = new SimpleTacticsAi({id: 1, name: 'K0 blind paid search bot'},
+    {...options, tactics: [BlindPaidSearchTactic]}, null);
+  const visibleAction = visibleBot.decodeNextAction(fixture(zone, 0));
+  assert.equal(visibleAction?.type, 'PLAY_CARD_ACTION');
 }
 console.log('[hidden-prize-search] PASS: 46 unseen deck slots cause Quick Ball play, ' +
   'six face-down Prize slots cause hold; the full native bot reproduces the divergence');
+
+const noTarget = fixture('deck', 0);
+noTarget.players[0].deck.cards[0] = new GrassEnergy();
+assert.equal(blind.useTactic(noTarget, noTarget.players[0]), undefined,
+  'The K0 pooled estimate must decline a paid search when there are no eligible hidden targets');
+const noPayment = fixture('deck', 0);
+const movedEnergy = noPayment.players[0].hand.cards.splice(1);
+noPayment.players[0].deck.cards.push(...movedEnergy);
+assert.equal(blind.useTactic(noPayment, noPayment.players[0]), undefined,
+  'The K0 policy must respect the printed one-other-card discard payment');
+console.log('[blind-paid-search] PASS: all 52 hidden Quick Ball locations have the same actual bot action');
