@@ -22,8 +22,12 @@ const {Pokegear30}=load('sets/10-scarlet-and-violet/set-scarlet-and-violet/pokeg
 const {BossOrders}=load('sets/10-scarlet-and-violet/set-paldea-evolved/boss-orders');
 const {RegidragoV}=load('sets/09-sword-and-shield/set-silver-tempest/regidrago-v');
 const {GrassEnergy}=load('sets/06-black-and-white/set-black-and-white/basic-energies');
-const {makeK0HiddenWorldSampler,publicKey}=require('./k0-hidden-world-sampler.cjs');
+const {makeK0HiddenWorldSampler,publicKey,permute}=require('./k0-hidden-world-sampler.cjs');
 const sample=makeK0HiddenWorldSampler(deepClone);
+const duplicates=Array.from({length:7},(_,i)=>({fullName:'Grass Energy BRS',id:i+1}));
+assert.deepEqual(permute(duplicates,'same-known-public-state').map(c=>c.id),
+  permute([...duplicates].reverse(),'same-known-public-state').map(c=>c.id),
+  'Equal-print original position must not leak into deterministic sampled identity order');
 for(const obj of [new Pokegear30(),new BossOrders(),new RegidragoV(),new GrassEnergy()]){
   const manager=CardManager.getInstance();
   if(!manager.isCardDefined(obj.fullName))manager.defineCard(obj);
