@@ -8,10 +8,12 @@ class AttackTactic {}
 class ResearchVipFirstTactic {}
 class DynamicDoubleDragonTactic {}
 const native = [EvolveTactic, UseAbilityTactic, RetreatTactic, AttackTactic];
-assert.deepEqual(MODES, ['native', 'attack_before_retreat', 'vip_first', 'vip_attack_before_retreat', 'double_dragon_first','blind_topdeck','sampled_k0']);
+assert.deepEqual(MODES, ['native', 'attack_before_retreat', 'vip_first', 'vip_attack_before_retreat', 'double_dragon_first','blind_topdeck','sampled_k0','blind_paid_search']);
 const untouched = makeTacticOrder('native', native);
 const alternate = makeTacticOrder('attack_before_retreat', native);
 assert.deepEqual(untouched, native);
+assert.deepEqual(makeTacticOrder('blind_paid_search',native),native,
+  'The K0 paid-search tactic is selected by the runner without rearranging actions');
 assert.deepEqual(makeTacticOrder('blind_topdeck',native),native,
   'Blind search changes only the chosen Trainer tactic, not constructor order');
 assert.deepEqual(makeTacticOrder('sampled_k0',native),native,
