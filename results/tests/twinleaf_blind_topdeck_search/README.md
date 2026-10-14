@@ -45,6 +45,16 @@ The regression uses 60 physical cards on each side, an actor holding the Item an
 
 One additional test places the single Boss's Orders in a face-down Prize rather than the deck. The model's K0 choice remains identical to the same otherwise unobserved pool with Boss's Orders in deck. The original native tactic's Pokégear decisions diverge on alternative deck-order worlds. The test covers five paired physical-world comparisons, full `SimpleTacticsAi` output and direct tactic output, matching existing native oracle evidence. All fixed worlds are artificial and are not tournament games.
 
+## Exact sensitivity to Prize knowledge (K1)
+
+An [exact reproducer](reproduce.py) conditions 52 initially unseen cards on the target count among six Prizes, verifies posterior normalization, and independently enumerates small physical cases.
+
+For four eligible Supporters and a seven-card search, the K0 heuristic plays. With complete K1 Prize knowledge it would instead hold when at least two Supporters are Prized. This condition occupies **3292/54145 = 6.0799704497%** of the random Prize configurations.
+
+For eight eligible Trainers and a four-card search, the K0 heuristic plays. After K1 it would hold when at least four Trainers are Prized, occupying **1227/363545 = 0.3375097993%** of configurations.
+
+These are theoretical policy-decision reversals within the restricted model. They do not measure real-game misplays or match strength.
+
 ## Scope and remaining correctness work
 
 The bounded tournament runner now supports the **opt-in diagnostic** `TWINLEAF_TACTIC_ORDER=blind_topdeck`. The default mode remains native. The alternate mode replaces exactly one Trainer tactic constructor, preserving all other priority slots and the existing Supporter-selection repair. Traces record `blind_k0_topdeck_item_v1` as an additional policy hook, and continue to report `unmasked_native_SimpleTacticsAi_order_oracle` because other tactics can still inspect hidden information. This mode is intended for controlled bot-behavior comparisons.
