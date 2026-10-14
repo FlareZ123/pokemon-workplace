@@ -1,0 +1,18 @@
+name: Validate physical staged Trainer policy
+on:
+  workflow_dispatch:
+
+jobs:
+  physical-search-policy:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Physical search-to-play policy
+        run: python results/physical_staged_trainer_policy/reproduce.py
+      - name: Closed-turn policy boundary
+        run: python results/closed_turn_trainer_boundary/reproduce.py
+      - name: Trainer transaction regression
+        run: python results/trainer_search_transaction/reproduce.py
