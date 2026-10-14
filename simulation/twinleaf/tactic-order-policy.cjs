@@ -1,14 +1,14 @@
 'use strict';
 const assert = require('node:assert/strict');
 
-const MODES = Object.freeze(['native','attack_before_retreat','vip_first','vip_attack_before_retreat','double_dragon_first']);
+const MODES = Object.freeze(['native','attack_before_retreat','vip_first','vip_attack_before_retreat','double_dragon_first','blind_topdeck']);
 
 /**
  * Research-owned alternatives to the pinned upstream SimpleTacticsAi priority.
  * Implementations remain upstream except for the independently constructed
  * first-turn VIP tactic. Original constructors and arrays are never mutated.
  * @template T
- * @param {string} mode One of MODES
+ * @param {string} mode One of MODES; blind_topdeck selects a tactic in the runner
  * @param {T[]} tactics Native pinned tactic constructors
  * @param {T} [vipTactic] Research VIP constructor, required for VIP modes
  * @param {T} [doubleDragonTactic] Explicit dynamic Special Energy tactic
