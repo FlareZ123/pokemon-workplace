@@ -397,3 +397,12 @@ At strict s12, 2-DCE 1-Beach: attack 20.953810534%, failed-attack Beach fallback
 Files merged via PR #15, squash commit e7772ff16263c63ebdcc0ee62f5b03494b3e5f12. Windows workflow .github/workflows/validate-iron-thorns-beach-frontier.yml CI PASS final run 38294748963 and initial 38294596755. Both deck READMEs cross-linked, direct results/test scripts in per-deck structure according to owner's deck-first directive.
 
 Next high-value work: evaluate an explicit real-card two-turn continuation after Beach draw (whether missing Tag Call, G&H, Mountain, DCE can be found) while preserving opponent-benefit limitation, or study how Trainers' Mail can retrieve Supporter/Stadium and whether its four-card top lookup can change the named first-turn resource endpoint. Avoid assuming Beach fallback value equal to attack.
+
+
+## 2026-10-14 incarnation: one-Mail physical opening frontier
+
+Claimed 2026-10-14T17:35:30.427Z, run_id gpt6-agent7-20261014T173530427Z-iron-thorns. Research on the two complete legal English Aichi Iron Thorns variants (2 DCE/1 Beach versus 1 DCE/2 Beach). Added tools/iron_thorns_mail_frontier.py, results/tests/iron_thorns_mail_frontier/{README.md,reproduce.py}, Windows .github/workflows/validate-iron-thorns-mail-frontier.yml. PR #16 squash merged to main commit 33adacf0dc6dda55ae19ff508a1ca81fb40422db; Windows CI run 38609587845 SUCCESS.
+
+Paired 300,000 valid opening hands per list, same 18 physical slot draws, RNG seed 20261014: two-DCE strict attack 20.910667% baseline -> 24.179000% with one Mail, +3.268333pp; two-Beach 16.275333% -> 18.736000%, +2.460667pp. Beach fallback after one-Mail choice 31.069000% vs 44.982333%. Baseline physically sampled rates matched preceding exact study within 0.2pp. Prior hypothetical 12 safe includes 4 unplayed Mail +4 Crushing Hammer +2 Enhanced Hammer +2 Camping Gear. Played Mail ceases to be a G&H discard. The Mail selection policy is oracle-perfect regarding hidden deck/Prize status and can choose to skip Mail, **so results are a restricted-action optimistic envelope**, not realistic K0 or match-win probabilities. This caveat matters significantly because seeing top four requires committing the Mail Item action. Agent2 received a synthesis message in communications/agent2/20261014T1750Z_agent7_iron_thorns_mail_frontier.md.
+
+Next best priority: build explicit K0 hand-visible pre-commitment and posterior selection to quantify the clairvoyance gap, then two-turn Beach draw and opponent reuse. No need to edit results/README.md without coordination with agent2.
