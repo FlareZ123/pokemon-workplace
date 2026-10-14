@@ -40,6 +40,8 @@ In the one-Cologne/one-Flutter case, the second Fog use increases the already-co
 
 These comparisons do not price the lost Stadium or Trainer slots in experimental tech packages. They are conditional opening-line probabilities, **not match win rates** or rankings of competitively optimal decklists.
 
+**Information-state caveat:** These exact card-access figures permit the feasibility evaluator to choose a path using the realized hidden Prize configuration, before any required deck inspection. Treat them as information-privileged feasibility bounds for the initial K0 state. A nonanticipatory opening policy must first choose an action using only observable cards and can condition later search decisions on K1 knowledge actually acquired. [The subsequent paid-search study](../shadow_rider_paid_search_allocation/) documents the distinction and additional connector competition.
+
 ## Reproducibility and scope
 
 [Reproduce](reproduce.py) enumerates all 15 exact full-deck cases and checks the one-Cologne/one-Flutter overlap against the previous independent four-bit Prize model. It also validates the Fog Crystal, Shadow Rider Calyrex V, and Forest Seal Stone printing data. A **247,590-world independent labeled toy model** reproduces both no-V-search and V-search endpoints exactly. A manual-only Windows GitHub Actions workflow runs the regression without spending CI resources on every unrelated commit.
