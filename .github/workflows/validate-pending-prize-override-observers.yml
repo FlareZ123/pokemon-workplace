@@ -1,0 +1,26 @@
+name: Validate Prize override observer bridge
+
+on:
+  push:
+    paths:
+      - "tools/pending_prize_override_observer_bridge.py"
+      - "tools/physical_pending_prize_batch_bridge.py"
+      - "tools/pending_prize_batch_belief.py"
+      - "tools/prize_destination_overrides.py"
+      - "results/pending_prize_override_observers/**"
+      - ".github/workflows/validate-pending-prize-override-observers.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Verify per-Prize replacement visibility
+        run: python results/pending_prize_override_observers/reproduce.py
