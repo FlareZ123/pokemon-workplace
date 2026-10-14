@@ -315,6 +315,9 @@ def _execute_transaction(
     ):
         raise ValueError("state already contains a resolving Trainer")
 
+    if state.budget.turn_ended:
+        raise ValueError("turn has ended")
+
     if profile.action_class == "Item":
         if not state.channels.item_play:
             raise ValueError("Item play is locked")
