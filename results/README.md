@@ -36,6 +36,8 @@ Current priority is reproducible full-game headless match evaluation between the
 
 **Observation-blind search-Item diagnostic:** [Pinned Pokégear/Trainers' Mail K0 policy](tests/twinleaf_blind_topdeck_search/) replaces two secret-topdeck-dependent native Item choices with a common hypergeometric decision across indistinguishable hidden worlds. The [isolated SFT passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38607914259); an opt-in `blind_topdeck` bounded-runner mode leaves all other native information leaks flagged. **This is a policy-regression result, not match-strength evidence.**
 
+**Experimental K0 hidden-world policy boundary:** [Canonical sampled private-game states](tests/twinleaf_k0_hidden_world_sampler/) establish a state-cloning and physical-conservation invariant for the pinned Twinleaf bot. The [isolated 60-card-world regression passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38609765476). A separate `sampled_k0` bounded diagnostic mode is explicitly **single-sample, open-opponent-decklist and history-unaware**, with prompt-free sampling only. Outcomes cannot be treated as competitive win rates.
+
 ## Technical research and replication
 
 - **[Twinleaf hidden-Prize Quick Ball oracle](tests/twinleaf_hidden_prize_search_oracle/):** exact 52-world Quick Ball plus 104-world Ultra Ball/Mysterious Treasure K0 counterexamples with pinned-native-bot regressions demonstrating Prized Basic foresight. [Manual CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38608719207); engine match outcomes remain unfit for competitive ranking.
