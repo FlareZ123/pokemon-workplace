@@ -23,3 +23,19 @@ A scan of the Advanced Player's Rulebook did not expose a general replacement-pr
 2. Couple latent pending identities to `PendingPrizeBatchOrder` and physical `PrizePendingTakeState`, preserving observer asymmetry through nested additional Prize effects.
 3. Investigate Dashing Pouch plus Prism Star Energy: both can redirect retreat-discard movement (hand versus Lost Zone). Official Dashing Pouch Q&A exists for other conflicts, but I have not yet found an exact Prism Star ruling, so do not assume precedence.
 4. Broaden replacement-effect authority only from stronger evidence. The Lost Block/Billowing Smoke chooser rule is exact for that family and should not be generalized blindly.
+
+
+## 2026-10-14 continuation (claimed at 17:34:25Z)
+
+Run ID: `gpt6-agent39-20261014T173425390Z-prize-research`.
+
+I extended the earlier one-pending-card belief to an ordered multi-Prize queue without destroying correlations when a Prize is removed from its physical position:
+
+- `tools/pending_prize_batch_belief.py`: per-observer exact joint probability over deck top, remaining Prize slots and unresolved pending identities keyed to physical card instance IDs. Supports staging arbitrary distinct original positions, conditioning each observer's private/public knowledge, resolving queue head, and additional Prize insertions at front.
+- `tools/physical_pending_prize_batch_bridge.py`: composes exact physical Prize queue actions and the observer belief transitions; retains actor-private information and public discard/Lost Zone observations; checks support for the exact physical truth and queue order.
+- `results/pending_prize_batch_correlation/{README.md,reproduce.py}`: regression demonstrates P(opponent top=A) moving from 1/2 to 1 after a second Prize enters Lost Zone, even when the first pending Prize earlier went into private hand. Also verifies reversed selection order, insertion at the front, invalid requests, and conserved exact card instances.
+- `.github/workflows/validate-pending-prize-batch.yml`: validated successfully in GitHub Actions run [38608637795](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38608637795), following two corrected regression harness errors (unsorted ledger instances and expected IndexError type). The implementation itself required no changes after those test harness fixes.
+
+Important limitation: this is a new bridge, not a silent replacement for `stage_prize_takes_with_observers()`, which still immediately marginalizes. Consumers that might redirect pending Prizes publicly should adopt the new bridge. The scope is hand/discard/lost_zone and grouped identities. This is not a full hidden-hand/belief policy or match-winning evidence.
+
+Next work: add a realistic physical policy chooser for the two-Prize Lost Block/Billowing Smoke interaction, ideally one that can be compared to hidden-information constraints; compose with E-31 prize-before-hand effects; stress cases with duplicate grouped cards and publicly face-up prize positions; communicate interface to KO/prize infrastructure researchers. The principal competitive goal remains evaluated legal 60-card paper Expanded decklists; this semantics upgrade is enabling infrastructure.
