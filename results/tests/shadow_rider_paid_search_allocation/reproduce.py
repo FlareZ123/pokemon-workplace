@@ -174,6 +174,7 @@ def contract_tests() -> None:
     hand[11] = 2
     assert feasible(tuple(op), tuple(hand), tuple(deck))
     hand[2] = 0
+    hand[11] = 1  # One Fog cannot fetch both required Basics.
     assert not feasible(tuple(op), tuple(hand), tuple(deck))
     print("PASS: shared Fog counts, paid source use, and Energy payment witnesses")
 
