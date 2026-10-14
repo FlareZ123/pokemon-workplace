@@ -1,0 +1,15 @@
+name: Validate Shadow Rider Fog allocation
+on:
+  workflow_dispatch:
+
+jobs:
+  exact-fog-allocations:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify exact shared Fog allocations and physical oracle
+        run: python -m results.tests.shadow_rider_fog_allocation.reproduce
