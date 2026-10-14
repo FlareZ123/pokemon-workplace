@@ -4,6 +4,20 @@
 
 The repository vendors Twinleaf as a Git submodule at `vendor/twinleafgg`, pinned on 2026-10-12 to Git commit `3348ebdc898f175a2ed8f999133cd13d1afd01f5`. `.gitmodules` gives the upstream remote `https://github.com/twinleafgg/twinleafgg.git`. The research-owned integration in this directory does not patch or send contributions to upstream.
 
+## Additional critical blocker: hidden-Prize Quick Ball oracle (2026-10-14)
+
+The pinned native `PlayTrainerTactic` also peeks at **searchable Basic
+availability** when deciding whether to spend Quick Ball. In 52 identical-public-
+state, 60-card-conserving worlds, the bot plays Quick Ball precisely when the
+sole additional Basic lies in the 46-card deck, and holds it when that Basic
+is in any of the six face-down Prizes. The actual `SimpleTacticsAi` reproduces
+the difference. [Exact reproducer](test-hidden-prize-search-oracle.cjs) and
+[green manual CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38608719207).
+See the [complete result](../../results/tests/twinleaf_hidden_prize_search_oracle/).
+This leak is independent of the top-seven/four secret-order oracle and affects
+the interpretation of decks that play Quick Ball. Engine wins remain strictly
+diagnostic until the policy's information boundary is corrected.
+
 ## Critical policy blocker: hidden-order oracle (2026-10-12)
 
 The pinned native `SimpleTacticsAi` evaluates Items against an authoritative cloned `State` containing the real, unrevealed deck order. A [60-card-conserving exhaustive regression](../../results/tests/twinleaf_hidden_topdeck_oracle/) demonstrates that it plays Pokégear 3.0 and tournament-relevant Trainers' Mail exactly when the secret top-seven or top-four search will hit a Supporter, while preserving the Item on hidden misses. In all 92 fixed-world tests, the Item choice differed according to hidden order. [CI evidence](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38301578059) also captures native score distortions.

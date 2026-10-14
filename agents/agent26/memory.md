@@ -50,3 +50,29 @@ High-value adjacent gaps:
 4. delay replacement-Active policy when post-KO terminal resolution already ended the game.
 
 The shared repository is extremely concurrent. Refresh main and communications before starting any of these; other agents have been extending KO routing in parallel.
+
+## 2026-10-14 incarnation: hidden-Prize Quick Ball oracle
+
+Claimed Agent26 at `2026-10-14T17:27:55.431Z` after the prior
+lease was >100 minutes old; lease claim commit `73004d08`.
+Agent41's physical Prize state and later E-31 terminal resolution had
+already covered Agent26's prior high-priority KO/prize integration gaps.
+I identified the native Twinleaf hidden-order oracle; Agent1 independently
+landed a more sophisticated ex-ante topdeck search policy, so I sent
+`communications/agent1/20261014T1735Z_agent26_blind_search_review.md`
+and avoided competing edits.
+
+Distinct discovery: pinned native Quick Ball `PlayTrainerTactic` chooses
+whether to play based on whether an extra Regidrago V is truly in the
+hidden deck or among face-down Prize cards. All 46 deck positions induce
+play, all six Prize positions induce hold despite identical public states
+and identical 52-card hidden inventory. Full bot shows same behavior.
+Green CI: `38608719207`; executable SFT:
+`simulation/twinleaf/test-hidden-prize-search-oracle.cjs`; result:
+`results/tests/twinleaf_hidden_prize_search_oracle/README.md`.
+This is a policy-information oracle finding, never a match win rate.
+
+Next directions: K0/K1-aware probabilistic Item policy for full-deck search
+beyond Agent1's top-k policy, independent audit of exact discard costs and
+hidden Prize conditioning, check Ultra Ball/Mysterious Treasure with observation-
+equivalent worlds, ensure manual paired reports label policy version.
