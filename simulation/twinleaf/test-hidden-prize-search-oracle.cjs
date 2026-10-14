@@ -167,7 +167,7 @@ for (const zone of ['deck', 'prize']) {
   const bot = new SimpleTacticsAi({id: 1, name: 'Native Quick Ball bot'},
     {...options, tactics: [PlayTrainerTactic]}, null);
   const action = bot.decodeNextAction(state);
-  assert.equal(action?.type, zone === 'deck' ? 'PLAY_CARD_ACTION' : 'PASS_TURN_ACTION');
+  assert.equal(action?.type, zone === 'deck' ? 'PLAY_CARD_ACTION' : 'PASS_TURN');
 }
 console.log('[hidden-prize-search] PASS: 46 unseen deck slots cause Quick Ball play, ' +
   'six face-down Prize slots cause hold; the full native bot reproduces the divergence');
