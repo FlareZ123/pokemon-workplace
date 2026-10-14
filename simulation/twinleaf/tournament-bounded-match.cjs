@@ -12,6 +12,7 @@ const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
 const {makeMatchActionTelemetry}=require('./match-action-telemetry.cjs');
 const {makeSupporterSelectionGuard}=require('./supporter-selection-guard.cjs');
 const {makeBlindTopdeckTrainerTactic}=require('./blind-topdeck-trainer-tactic.cjs');
+const {makeBlindPaidSearchTactic}=require('./blind-paid-search-tactic.cjs');
 const {makeK0HiddenWorldSampler}=require('./k0-hidden-world-sampler.cjs');
 const {writeReportAtomic}=require('./report-atomic.cjs');
 const {makeTacticOrder}=require('./tactic-order-policy.cjs');
@@ -20,8 +21,11 @@ const {makeVipFirstTactic}=require('./vip-first-tactic.cjs');
 const {loadImplementedCards}=require('./print-coverage.cjs');
 const {CardManager}=engine('game/cards/card-manager');
 const {Store}=engine('game/store/store');
-const {Format,TrainerType}=engine('game/store/card/card-types');
+const {Format,TrainerType,Stage,CardType}=engine('game/store/card/card-types');
 const {TrainerCard}=engine('game/store/card/trainer-card');
+const {PokemonCard}=engine('game/store/card/pokemon-card');
+const {pokemonHasCardType}=engine('game');
+const {StateScore}=engine('simple-bot/state-score/state-score');
 const {GamePhase}=engine('game/store/state/state');
 const {AddPlayerAction}=engine('game/store/actions/add-player-action');
 const {PlayCardAction,PlayerType,SlotType}=engine('game/store/actions/play-card-action');
@@ -49,6 +53,9 @@ const UniformBotArbiter=makeUniformShuffleArbiter(BotArbiter);
 const ResearchVipTactic=makeVipFirstTactic(PlayCardAction,PlayerType,SlotType);
 const BlindTopdeckTrainerTactic=makeBlindTopdeckTrainerTactic(PlayTrainerTactic,
   {TrainerCard,TrainerType,PlayCardAction,PlayerType,SlotType});
+const BlindPaidSearchTactic=makeBlindPaidSearchTactic(PlayTrainerTactic,
+  {TrainerCard,TrainerType,PokemonCard,Stage,CardType,pokemonHasCardType,
+    PlayCardAction,PlayerType,SlotType,StateScore});
 const sampleK0HiddenWorld=makeK0HiddenWorldSampler(Simulator);
 /** Install verified rules-correctness hooks for every live match, including direct runOne callers.
  * @returns {readonly string[]}
@@ -88,7 +95,7 @@ function registerLists(lists) {
 /** Run a capped native Store trace. Results are engine/policy diagnostics, not win-rate samples.
  * @param {string[]} deckA @param {string[]} deckB @param {number} seed
  * @param {number} maxActions @param {number} wallMilliseconds
- * @param {'native'|'attack_before_retreat'|'vip_first'|'vip_attack_before_retreat'} tacticOrder
+ * @param {'native'|'attack_before_retreat'|'vip_first'|'vip_attack_before_retreat'|'blind_topdeck'|'blind_paid_search'|'sampled_k0'} tacticOrder
  */
 function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrder='native') {
   const engineHooks=ensureResearchEngineHooks();
@@ -107,12 +114,17 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     const safeTactics=allSimpleTactics.map(Tactic=>
       Tactic===PlaySupporterTactic?SafeSupporterTactic:
         Tactic===PlayTrainerTactic && tacticOrder==='blind_topdeck'?
-          BlindTopdeckTrainerTactic:Tactic);
+          BlindTopdeckTrainerTactic:
+        Tactic===PlayTrainerTactic && tacticOrder==='blind_paid_search'?
+          BlindPaidSearchTactic:Tactic);
     assert.equal(safeTactics.filter(Tactic=>Tactic===SafeSupporterTactic).length,1,
       'Pinned policy tactic roster changed: inspect before applying Supporter guard');
     if(tacticOrder==='blind_topdeck')
       assert.equal(safeTactics.filter(Tactic=>Tactic===BlindTopdeckTrainerTactic).length,1,
         'Pinned Item policy changed; inspect blind topdeck integration');
+    if(tacticOrder==='blind_paid_search')
+      assert.equal(safeTactics.filter(Tactic=>Tactic===BlindPaidSearchTactic).length,1,
+        'Pinned Item policy changed; inspect K0 paid-search integration');
     const settings={tactics:makeTacticOrder(tacticOrder,safeTactics,ResearchVipTactic,DynamicDoubleDragonTactic),
       promptResolvers:allPromptResolvers,
       scores:defaultStateScores,arbiter:defaultArbiterOptions};
@@ -165,9 +177,13 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
       first_turn_hands:openingHands,
       policy_hidden_information:tacticOrder==='sampled_k0'?
         'k0_open_list_single_hypothetical_world_unvalidated':
+        tacticOrder==='blind_paid_search'?
+        'three_paid_search_prints_k0_blind_other_native_tactics_unmasked':
         'unmasked_native_SimpleTacticsAi_order_oracle',
       policy_hooks:tacticOrder==='sampled_k0'?
         ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_canonical_hidden_world_v1']:
+        tacticOrder==='blind_paid_search'?
+        ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_blind_paid_search_three_prints_v1']:
         tacticOrder==='blind_topdeck'?
         ['supporter_prevalidation_and_dispatch_counter_restore_v2','blind_k0_topdeck_item_v1']:
         ['supporter_prevalidation_and_dispatch_counter_restore_v2'],
@@ -209,10 +225,14 @@ function main() {
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
     policy_hidden_information:config.tacticOrder==='sampled_k0'?
       'k0_open_list_single_hypothetical_world_unvalidated':
+      config.tacticOrder==='blind_paid_search'?
+      'three_paid_search_prints_k0_blind_other_native_tactics_unmasked':
       'unmasked_native_SimpleTacticsAi_order_oracle',
     policy_hidden_information_evidence:'results/tests/twinleaf_hidden_topdeck_oracle/README.md',
     policy_hooks:config.tacticOrder==='sampled_k0'?
       ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_canonical_hidden_world_v1']:
+      config.tacticOrder==='blind_paid_search'?
+      ['supporter_prevalidation_and_dispatch_counter_restore_v2','k0_blind_paid_search_three_prints_v1']:
       config.tacticOrder==='blind_topdeck'?
       ['supporter_prevalidation_and_dispatch_counter_restore_v2','blind_k0_topdeck_item_v1']:
       ['supporter_prevalidation_and_dispatch_counter_restore_v2'],
