@@ -13,4 +13,4 @@ jobs:
       - name: Exact retained-Psychic frontier and physical oracle
         run: python results/shadow_rider_energy_reserve/reproduce.py
       - name: Original Treasure discard-payability regression
-        run: python results/shadow_rider_treasure_payability/reproduce.py
+        run: python -m results.shadow_rider_treasure_payability.reproduce
