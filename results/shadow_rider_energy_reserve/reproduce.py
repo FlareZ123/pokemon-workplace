@@ -80,11 +80,11 @@ def physical_toy_oracle() -> int:
                 # Same named Treasure_2 physical condition as the exact
                 # six-group classifier: an eligible other Basic starts
                 # Active, Radiant is still in the deck, and both VMAX
-                # copies remain searchable there.
+                # copies remain searchable there. A held Heavy Ball does
+                # not supersede Treasure when Radiant is still in deck.
                 eligible = (
                     opened[4] >= 1
                     and hand[0] == 0
-                    and hand[3] == 0
                     and hand[2] >= 1
                     and searchable[0] == 1
                     and searchable[1] == 2
@@ -110,7 +110,7 @@ def physical_toy_oracle() -> int:
     grouped = treasure_two_vmax_hand_buckets(
         caps, opening_size=3, prize_count=2
     )
-    assert sum(grouped.values()) == Fraction(41, 1526)
+    assert sum(grouped.values()) == Fraction(33, 763)
     assert denominator == 18312
 
     for required in range(3):
