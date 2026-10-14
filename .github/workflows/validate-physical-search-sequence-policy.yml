@@ -1,0 +1,20 @@
+name: Validate physical search sequence policy
+on:
+  workflow_dispatch:
+
+jobs:
+  search-sequence:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Physical ordered sequence
+        run: python results/physical_search_sequence_policy/reproduce.py
+      - name: Physical single-action policy
+        run: python results/physical_staged_trainer_policy/reproduce.py
+      - name: Original sequential replenishment
+        run: python results/sequential_trainer_replenishment/reproduce.py
+      - name: Closed-turn guard
+        run: python results/closed_turn_trainer_boundary/reproduce.py
