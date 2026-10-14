@@ -38,7 +38,7 @@ Current priority is reproducible full-game headless match evaluation between the
 
 ## Technical research and replication
 
-- **[Twinleaf hidden-Prize Quick Ball oracle](tests/twinleaf_hidden_prize_search_oracle/):** exact 52-world K0 counterexample and pinned-native-bot regression demonstrating Prized Basic foresight. [Manual CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38608719207); engine match outcomes remain unfit for competitive ranking.
+- **[Twinleaf hidden-Prize Quick Ball oracle](tests/twinleaf_hidden_prize_search_oracle/):** exact 52-world Quick Ball plus 104-world Ultra Ball/Mysterious Treasure K0 counterexamples with pinned-native-bot regressions demonstrating Prized Basic foresight. [Manual CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38608719207); engine match outcomes remain unfit for competitive ranking.
 - **[Competitive deck baselines](competitive_deck_baselines/):** primary tournament transcription, full 60-card print lists, reproducible legality and key-text checks.
 - **[Aichi Vileplume ALS](aichi_vileplume_als/):** constrained turn-one setup and timing analysis. The model's Item-lock endpoint is not a game outcome.
 - **[Mew/Genesect VIP4 opening analysis](mew_genesect_vip_opening/):** exact early Pokémon-access comparisons for source-aware paid search.
