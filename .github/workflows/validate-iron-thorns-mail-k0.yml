@@ -1,0 +1,19 @@
+name: Iron Thorns K0 Mail policy
+
+on:
+  push:
+    paths:
+      - 'tools/iron_thorns_mail_k0.py'
+      - 'results/tests/iron_thorns_mail_k0/**'
+      - '.github/workflows/validate-iron-thorns-mail-k0.yml'
+  workflow_dispatch:
+
+jobs:
+  k0-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m results.tests.iron_thorns_mail_k0.reproduce
