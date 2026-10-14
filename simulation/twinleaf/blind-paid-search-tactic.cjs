@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const {atLeastOne} = require('./blind-topdeck-trainer-tactic.cjs');
 
 /**
- * Observation-consistent K0 estimator for three exact full-deck paid-search
+ * Observation-consistent K0 estimator for four exact printed implementations of three full-deck paid-search
  * Items in the pinned Twinleaf engine. The combined hidden deck-plus-Prize
  * multiset is reconstructed as an exchangeable pre-first-search pool.
  * K1 deck inspections, positioned Prize knowledge and deliberate deck-order
@@ -35,6 +35,7 @@ function makeBlindPaidSearchTactic(NativeTactic, engine) {
   const paidSpecs = Object.freeze({
     'Quick Ball SSH': {payment: 1, eligible: isBasic},
     'Ultra Ball SVI': {payment: 2, eligible: isPokemon},
+    'Ultra Ball BRS': {payment: 2, eligible: isPokemon},
     'Mysterious Treasure FLI': {payment: 1, eligible: isTreasure},
   });
 
