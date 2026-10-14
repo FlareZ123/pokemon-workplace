@@ -11,6 +11,7 @@ on:
       - 'results/tests/twinleaf_blind_topdeck_search/reproduce.py'
       - 'simulation/twinleaf/k0-hidden-world-sampler.cjs'
       - 'simulation/twinleaf/test-k0-hidden-world-sampler.cjs'
+      - 'simulation/twinleaf/tournament-bounded-match.cjs'
   workflow_dispatch:
 
 permissions:
@@ -51,6 +52,13 @@ jobs:
       - name: Bounded Aichi policy-integration diagnostic
         env:
           TWINLEAF_TACTIC_ORDER: blind_topdeck
+          TWINLEAF_SEEDS: '20261012'
+          TWINLEAF_DECK_A: vileplume
+          TWINLEAF_DECK_B: mew_genesect
+        run: node simulation/twinleaf/tournament-bounded-match.cjs
+      - name: Bounded canonical hidden-world diagnostic
+        env:
+          TWINLEAF_TACTIC_ORDER: sampled_k0
           TWINLEAF_SEEDS: '20261012'
           TWINLEAF_DECK_A: vileplume
           TWINLEAF_DECK_B: mew_genesect
