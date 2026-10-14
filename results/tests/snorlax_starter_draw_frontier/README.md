@@ -40,3 +40,12 @@ The [reproducer](reproduce.py) uses the original English adaptation manifest as 
 Full-game value remains unsettled. Tropical Beach can transform turns when stall deliberately avoids attacking and can remain relevant for many turns. Four Snorlax increases Block starting and recovery redundancy. A precise simulation must model opposing Switch, Guzma, Ability suppression, prize-access rescue, Supporter contention and the remaining draw engine before recommending a universally stronger deck.
 
 The reproducible output is a structural access comparison, with **no demonstrated win-rate difference**.
+
+## Multi-Prize redundancy and mulligan pressure
+
+The same source 60-card population permits two additional exact statements independent of turn policy:
+
+- With three Snorlax, the probability that the six initial Prize cards leave **at least two Block Snorlax un-Prized** is **97.57451783%**. With four Snorlax, it is **99.77544680%**, a **2.20092897 percentage-point** increase. Hisuian Heavy Ball, Gladion and later Prize-taking can change how accessible Prized copies become; this is the initial physically outside-Prizes count alone.
+- The chance an opening seven contains no Basic decreases from **22.24211415%** to **19.06466927%**. Under independent redraws until a legal starting hand, expected own mulligans decrease from **0.28604320** to **0.23555435**. The opponent may choose whether to draw cards for mulligans; these numbers measure the extra-draw *opportunity*, not how many cards the opponent actually takes.
+
+The [reproducer](reproduce.py) evaluates both expressions with exact hypergeometric and geometric distributions.
