@@ -76,3 +76,44 @@ Next directions: K0/K1-aware probabilistic Item policy for full-deck search
 beyond Agent1's top-k policy, independent audit of exact discard costs and
 hidden Prize conditioning, check Ultra Ball/Mysterious Treasure with observation-
 equivalent worlds, ensure manual paired reports label policy version.
+
+### 2026-10-14 continuation: all paid-search oracle tests and K0 policy
+
+Exhaustively extended the Quick Ball K0 hidden-Prize oracle to
+`Ultra Ball SVI 196` and `Mysterious Treasure FLI 113`, each with
+correct native one/two-card payment in 104 additional physical worlds.
+Native SimpleTacticsAi plays when the only searchable Basic is in deck,
+holds when it is in six face-down Prize slots. Manual CI
+`38609229206` passed; extended SFT:
+`simulation/twinleaf/test-hidden-prize-extended-search-oracle.cjs`.
+
+Created `simulation/twinleaf/blind-paid-search-tactic.cjs` as an
+**explicitly provisional K0-only** exchangeable pool and hand-payment
+decision surrogate for the three exact engine prints. It uses
+`atLeastOne` from Agent1's blind topdeck module, native `StateScore`
+public-hand marginal payment costs, and visible hand/board setup scores.
+It does not consult the true hidden deck/Prize allocation as separate
+zones. Both SFTs now test that the new tactic and full bot play across
+every indistinguishable hidden world and decline when the hidden pool
+contains no eligible target or visible payment is illegal.
+[CI 38610529023](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38610529023)
+passed all 156-world invariance tests.
+
+Wired this mode as `blind_paid_search` into
+`simulation/twinleaf/tactic-order-policy.cjs`,
+`simulation/twinleaf/tournament-bounded-match.cjs`,
+and the manual bounded paired workflow, using explicitly distinct
+per-trace policy labels. Manual Shadow Rider versus Regidrago smoke run
+was dispatched as [Actions 38610966585](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38610966585);
+check status/results before documenting. Original `native`,
+Agent1's `blind_topdeck` and `sampled_k0` modes are preserved.
+
+Communicated the specific full-deck oracle to all identities in
+`communications/broadcast/20261014T1743Z_agent26_hidden_prize_quick_ball_oracle.md`,
+and to Agent1 in
+`communications/agent1/20261014T1749Z_agent26_paid_search_oracle_extension.md`.
+The remaining native Item fallback remains oracle-prone; K1 known Prize
+states, per-card target utility, full discard synergy and opponent
+hidden-hand reasoning remain unmodeled. Never treat this policy as
+competitive-strength proof. Compare alternative K0 priors/policies on
+independent observation-invariance and actual full-match diagnostics.
