@@ -169,7 +169,7 @@ def main() -> None:
         staged.observers, instance_id="p0",
         visible_groups={"opponent": "C"},
     ))
-    raises(ValueError, lambda: stage_physical_additional_pending_front(
+    raises(IndexError, lambda: stage_physical_additional_pending_front(
         staged, actor_id="actor", position=4, group_by_card_class=by_class,
     ))
 
