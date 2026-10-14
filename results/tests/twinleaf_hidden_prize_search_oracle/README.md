@@ -47,6 +47,33 @@ in the 46 worlds where the search succeeds. This is another demonstrable
 pre-decision information advantage. The fixture is a purpose-built synthetic
 60-card state and does not represent a measured tournament opening frequency.
 
+## Extension: Ultra Ball and Mysterious Treasure
+
+The [independent extended SFT](../../../simulation/twinleaf/test-hidden-prize-extended-search-oracle.cjs)
+repeats the same K0 hidden-allocation experiment for two more source-verified
+paid search Items. It checks 104 physically complete hidden worlds, each
+with the same public state, exactly 60 cards per player and identical combined
+deck-plus-Prize contents.
+
+| Native source print | Other cards discarded | Target in 46-card deck | Target in six face-down Prizes |
+| --- | ---: | ---: | ---: |
+| Ultra Ball SVI 196 | 2 | Play 46/46 | Hold 6/6 |
+| Mysterious Treasure FLI 113 | 1 | Play 46/46 | Hold 6/6 |
+
+Both exact engine-implemented Items select Regidrago V SIT when reachable,
+and both native full-bot choices reproduce the Item-tactic divergence.
+[Green manual CI 38609229206](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38609229206).
+
+Ultra Ball SVI is a different print from the one in the published Aichi
+Mew list; this is a pinned-engine behavior test and does not establish
+full print-equivalence or match competitiveness. Mysterious Treasure FLI
+113 is the specific printed source used in relevant Aichi lists.
+
+In total **156 hidden states across three paid-search Item effects**
+prove that fixing top-`k` Item peeking alone leaves another hidden-Prize
+search-policy oracle. The result is about decision information,
+not a claimed win-rate benefit.
+
 ## Methodology and evidence boundary
 
 The test pins the exact engine revision, executes its native card, tactic,
