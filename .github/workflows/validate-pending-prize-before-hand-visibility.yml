@@ -1,0 +1,25 @@
+name: Validate E-31 pending Prize visibility
+
+on:
+  push:
+    paths:
+      - "tools/physical_before_hand_batch_bridge.py"
+      - "tools/pending_prize_batch_belief.py"
+      - "tools/physical_pending_prize_batch_bridge.py"
+      - "results/pending_prize_before_hand_visibility/**"
+      - ".github/workflows/validate-pending-prize-before-hand-visibility.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check E-31 Prize visibility
+        run: python results/pending_prize_before_hand_visibility/reproduce.py
