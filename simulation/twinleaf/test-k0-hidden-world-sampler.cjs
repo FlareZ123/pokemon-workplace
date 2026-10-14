@@ -8,11 +8,12 @@ assert.equal(cp.execFileSync('git',['rev-parse','HEAD'],
   {cwd:vendor,encoding:'utf8'}).trim(),pin);
 const load=p=>require(path.join(vendor,'ptcg-server/output',p));
 const {Simulator}=load('game/bots/simulator');
+const {deepClone}=load('utils');
 const {State,GamePhase}=load('game/store/state/state');
 const {Player}=load('game/store/state/player');
 const {CardList}=load('game/store/state/card-list');
 const {CardManager}=load('game/cards/card-manager');
-const {Format}=load('game/store/card/card-types');
+const {Format,CardTag}=load('game/store/card/card-types');
 const {PlayTrainerTactic}=load('simple-bot/simple-tactics/play-trainer-tactic');
 const {SimpleTacticsAi}=load('simple-bot/simple-tactics-ai');
 const {defaultStateScores,defaultArbiterOptions,allPromptResolvers}=
@@ -22,7 +23,7 @@ const {BossOrders}=load('sets/10-scarlet-and-violet/set-paldea-evolved/boss-orde
 const {RegidragoV}=load('sets/09-sword-and-shield/set-silver-tempest/regidrago-v');
 const {GrassEnergy}=load('sets/06-black-and-white/set-black-and-white/basic-energies');
 const {makeK0HiddenWorldSampler,publicKey}=require('./k0-hidden-world-sampler.cjs');
-const sample=makeK0HiddenWorldSampler(Simulator);
+const sample=makeK0HiddenWorldSampler(deepClone);
 for(const obj of [new Pokegear30(),new BossOrders(),new RegidragoV(),new GrassEnergy()]){
   const manager=CardManager.getInstance();
   if(!manager.isCardDefined(obj.fullName))manager.defineCard(obj);
@@ -68,6 +69,11 @@ const opts={scores:defaultStateScores,arbiter:defaultArbiterOptions,
 const native=new PlayTrainerTactic(opts);
 assert.equal(native.useTactic(source[0],source[0].players[0])?.type,'PLAY_CARD_ACTION');
 assert.equal(native.useTactic(source[1],source[1].players[0]),undefined);
+// Pinned Simulator's ignored Card class gives both states the same mutable
+// card objects. A policy clone must provide a stronger isolation boundary.
+const unsafe=new Simulator(source[0]).store.state;
+assert.strictEqual(unsafe.players[0].hand.cards[0],source[0].players[0].hand.cards[0],
+  'Pinned Simulator must expose the documented mutable-card alias');
 const original=source.map(s=>privateNames(s));
 const hypothetical=source.map(s=>sample(s,1));
 for(let i=1;i<hypothetical.length;i++){
@@ -75,6 +81,12 @@ for(let i=1;i<hypothetical.length;i++){
     'Indistinguishable worlds must yield identical canonical sampled names');
 }
 for(let i=0;i<source.length;i++){
+  assert.notStrictEqual(hypothetical[i].players[0].hand.cards[0],
+    source[i].players[0].hand.cards[0],
+    'Hypothetical card mutations must never reach the authoritative state');
+  assert.notStrictEqual(hypothetical[i].players[0].hand.cards[0].marker,
+    source[i].players[0].hand.cards[0].marker,
+    'Attached card markers must also be isolated');
   assert.deepEqual(privateNames(source[i]),original[i],
     'Sampling must never change the authoritative physical State');
   assert.equal(publicView(hypothetical[i]),publicView(source[i]),
@@ -82,6 +94,14 @@ for(let i=0;i<source.length;i++){
   assert.deepEqual(hypothetical[i].players[0].hand.cards.map(c=>c.fullName),
     source[i].players[0].hand.cards.map(c=>c.fullName));
 }
+const actorCard=source[0].players[0].hand.cards[0];
+const mockCard=hypothetical[0].players[0].hand.cards[0];
+assert.equal(actorCard.hasTag(CardTag.FUTURE),false);
+mockCard.addRuntimeTag(CardTag.FUTURE);
+assert.equal(mockCard.hasTag(CardTag.FUTURE),true);
+assert.equal(actorCard.hasTag(CardTag.FUTURE),false,
+  'Native hypothetical card effect must not alter live card runtime tags');
+mockCard.removeRuntimeTag(CardTag.FUTURE);
 const tdecisions=hypothetical.map(s=>native.useTactic(s,s.players[0])?.type||null);
 assert.ok(tdecisions.every(x=>x===tdecisions[0]));
 const bdecisions=hypothetical.map(s=>{
