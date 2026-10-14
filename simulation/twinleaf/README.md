@@ -14,6 +14,8 @@ is in any of the six face-down Prizes. The actual `SimpleTacticsAi` reproduces
 the difference. [Exact reproducer](test-hidden-prize-search-oracle.cjs) and
 [green manual CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38608719207).
 See the [complete result](../../results/tests/twinleaf_hidden_prize_search_oracle/).
+Ultra Ball SVI and Mysterious Treasure FLI also reproduce the hidden-Prize decision oracle in 104 more 60-card-conserving worlds, including their two-card and one-card payments. [Green CI 38609229206](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38609229206) validates the full native bot for both cards. See the [extended test](test-hidden-prize-extended-search-oracle.cjs).
+
 This leak is independent of the top-seven/four secret-order oracle and affects
 the interpretation of decks that play Quick Ball. Engine wins remain strictly
 diagnostic until the policy's information boundary is corrected.
