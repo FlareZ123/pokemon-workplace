@@ -71,5 +71,6 @@ def evaluate_acquired_trainer_action_window(
             copies_in_hand > 0
             and channel_open
             and quota_open
+            and not state.budget.turn_ended
         ),
     )
