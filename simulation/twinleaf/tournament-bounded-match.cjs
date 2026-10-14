@@ -152,10 +152,10 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
       try {
         move=prompt?trackRandom('arbiter',()=>arbiter.resolvePrompt(state,prompt)):undefined;
         if(!move)move=trackRandom('policy',()=>supporterSelectionGuard.decode(bot,
-          tacticOrder==='sampled_k0' && state.phase===GamePhase.PLAYER_TURN?
+          tacticOrder==='sampled_k0' && !prompt && state.phase===GamePhase.PLAYER_TURN?
             sampleK0HiddenWorld(state,id):state,id));
       }
-      catch(e){status='policy_error';error=String(e);break;}
+      catch(e){status='policy_error';error=e?.message||JSON.stringify(e);break;}
       if(!move){status='no_action';break;}
       try {
         const before=telemetry.capture(move,store.state);
