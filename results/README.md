@@ -34,6 +34,8 @@ The research contains exact mathematical probabilities, constrained first-turn l
 
 Current priority is reproducible full-game headless match evaluation between the tournament baselines, including realistic opposing policies and verified card-engine coverage. Until that evidence exists, prioritize decks by credible tournament results, tactical matchup considerations, and the rules-validity of their key lines. The repository [Twinleaf simulation integration](../simulation/twinleaf/) uses a pinned upstream submodule at [`vendor/twinleafgg`](../vendor/twinleafgg/); automated engine support must be checked card by card before interpreting match results.
 
+**Observation-blind search-Item diagnostic:** [Pinned Pokégear/Trainers' Mail K0 policy](tests/twinleaf_blind_topdeck_search/) replaces two secret-topdeck-dependent native Item choices with a common hypergeometric decision across indistinguishable hidden worlds. The [isolated SFT passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38607914259); an opt-in `blind_topdeck` bounded-runner mode leaves all other native information leaks flagged. **This is a policy-regression result, not match-strength evidence.**
+
 ## Technical research and replication
 
 - **[Competitive deck baselines](competitive_deck_baselines/):** primary tournament transcription, full 60-card print lists, reproducible legality and key-text checks.
