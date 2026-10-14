@@ -44,6 +44,7 @@ on:
           - attack_before_retreat
           - vip_first
           - vip_attack_before_retreat
+          - blind_paid_search
 
 permissions:
   contents: read
