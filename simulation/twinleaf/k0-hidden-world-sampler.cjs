@@ -40,11 +40,11 @@ function publicKey(state,actorId){
 
 /** Make hypothetical decision state without changing the authoritative game.
  * Research assumption: entire unknown opponent inventory is an open-list prior.
- * @param {Function} Simulator Pinned Twinleaf Simulator class
+ * @param {Function} deepClone Pinned engine deepClone, with no Card exclusions
  * @returns {(state:object,actorId:number)=>object}
  */
-function makeK0HiddenWorldSampler(Simulator){
-  assert.equal(typeof Simulator,'function');
+function makeK0HiddenWorldSampler(deepClone){
+  assert.equal(typeof deepClone,'function');
   function redistribute(p,hideHand,seed){
     const lengths=[...(hideHand?[p.hand.cards.length]:[]),
       p.deck.cards.length,...p.prizes.map(x=>x.cards.length)];
@@ -61,7 +61,9 @@ function makeK0HiddenWorldSampler(Simulator){
   }
   return (state,actorId)=>{
     const key=createHash('sha256').update(publicKey(state,actorId)).digest('hex');
-    const clone=new Simulator(state).store.state;
+    assert.ok(!state.prompts.some(p=>p.result===undefined),
+      'Do not sample unresolved prompt states');
+    const clone=deepClone(state,[]);
     assert.ok(clone.players.some(p=>p.id===actorId),'Actor missing');
     for(const p of clone.players)redistribute(p,p.id!==actorId,key+':'+p.id);
     return clone;
