@@ -2,7 +2,7 @@
 
 # Competitive paper Expanded: playable decks and research
 
-*Updated 12 October 2026. Paper Pokémon TCG Expanded, Black & White onward.*
+*Updated 14 October 2026. Paper Pokémon TCG Expanded, Black & White onward.*
 
 ## Best documented playable candidates
 
@@ -47,6 +47,7 @@ Current priority is reproducible full-game headless match evaluation between the
 - **[Prize-to-Bench E-31 execution](prize_before_hand_bench_entry/):** official-ruling-backed KO Bench geometry, recursive Jirachi/Chansey Prize chain and Billowing Smoke hand-destination gate; verified by [CI run 38291234939](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38291234939).
 - **[Raichu physical Item payment](tests/raichu_target_payment_frontier/):** exact one-turn Alolan Raichu search through Ultra Ball/Computer Search with six hidden Prizes, Gladion fallback and mutually competing two-card discard costs; restricted access **30.578700%** under strict payment and **33.390969%** under an Ultra-for-Computer-sacrifice policy. [Migrated Windows CI 38292324506 passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38292324506); this is card access, not wins.
 - **[Marshadow Path counter correction](tests/shadow_rider_marshadow_path/):** the champion's existing non-Rule-Box Marshadow supplies a Bench-based Resetting Hole answer omitted in earlier restricted models. Adding it raises the one-Cologne/one-Flutter Energy-only conditional first-turn launch from 2.027751% to 2.811878% and changes the three-slot ordering; exact Windows [regression passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38400970326). No match wins established.
+- **[Shadow Rider Fog Crystal-to-Marshadow correction](tests/shadow_rider_fog_marshadow/):** four existing Fog Crystal add a missing legal search route to the champion's Marshadow Path answer. For one Cologne/one Flutter, the restricted Path + Iron Thorns first-turn launch endpoint rises from **2.811878% to 5.039163%** under an Energy-only Mysterious Treasure discard policy; all 15 exact 60-card scenarios and a 135,072-world physical oracle are reproduced. This remains conditional access, not match strength.
 - **[Shadow Rider Treasure payment sensitivity](tests/shadow_rider_treasure_payment/):** exact Path + Iron Thorns counter-launch access falls from 2.622360% to 2.027751% with an Energy-only Mysterious Treasure discard policy. The source-tested endpoints are conditional first-turn access, not match outcomes.
 - **[First-action information value](first_action_information_value/):** exact information value under hidden-Prize decisions, with restricted Regidrago cases.
 - **[Two-player identity conservation](match_scoped_identity_liveness/):** reusable exact physical-card invariant for joint match modeling.
