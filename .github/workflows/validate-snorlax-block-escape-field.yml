@@ -1,0 +1,24 @@
+name: Validate Snorlax Block opponent counter field
+
+on:
+  push:
+    paths:
+      - "results/tests/snorlax_block_escape_field/**"
+      - "results/decks/**/README.md"
+      - "results/decks/snorlax-stall-4block-english/manifest.json"
+      - ".github/workflows/validate-snorlax-block-escape-field.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check Block escape-resource texts and inventory
+        run: python results/tests/snorlax_block_escape_field/reproduce.py
