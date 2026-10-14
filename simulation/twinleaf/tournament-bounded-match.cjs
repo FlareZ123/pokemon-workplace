@@ -11,6 +11,7 @@ const {summarizeScoreBounds}=require('./paired-score-bounds.cjs');
 const {parseProbeSettings}=require('./tournament-probe-settings.cjs');
 const {makeMatchActionTelemetry}=require('./match-action-telemetry.cjs');
 const {makeSupporterSelectionGuard}=require('./supporter-selection-guard.cjs');
+const {makeBlindTopdeckTrainerTactic}=require('./blind-topdeck-trainer-tactic.cjs');
 const {writeReportAtomic}=require('./report-atomic.cjs');
 const {makeTacticOrder}=require('./tactic-order-policy.cjs');
 const {DynamicDoubleDragonTactic}=require('./dynamic-double-dragon-tactic.cjs');
@@ -18,11 +19,13 @@ const {makeVipFirstTactic}=require('./vip-first-tactic.cjs');
 const {loadImplementedCards}=require('./print-coverage.cjs');
 const {CardManager}=engine('game/cards/card-manager');
 const {Store}=engine('game/store/store');
-const {Format}=engine('game/store/card/card-types');
+const {Format,TrainerType}=engine('game/store/card/card-types');
+const {TrainerCard}=engine('game/store/card/trainer-card');
 const {GamePhase}=engine('game/store/state/state');
 const {AddPlayerAction}=engine('game/store/actions/add-player-action');
 const {PlayCardAction,PlayerType,SlotType}=engine('game/store/actions/play-card-action');
 const {SimpleTacticsAi}=engine('simple-bot/simple-tactics-ai');
+const {PlayTrainerTactic}=engine('simple-bot/simple-tactics/play-trainer-tactic');
 const {PlaySupporterTactic}=engine('simple-bot/simple-tactics/play-supporter-tactic');
 const {BotArbiter,BotFlipMode,BotShuffleMode}=engine('game/bots/bot-arbiter');
 const {allSimpleTactics,allPromptResolvers,defaultStateScores,defaultArbiterOptions}=engine('simple-bot/simple-bot-definitions');
@@ -42,6 +45,8 @@ const {TrainerEffect}=engine('game/store/effects/play-card-effects');
 const singleCardRandomSpecs=buildPinnedSingleCardSpecs(engine);
 const UniformBotArbiter=makeUniformShuffleArbiter(BotArbiter);
 const ResearchVipTactic=makeVipFirstTactic(PlayCardAction,PlayerType,SlotType);
+const BlindTopdeckTrainerTactic=makeBlindTopdeckTrainerTactic(PlayTrainerTactic,
+  {TrainerCard,TrainerType,PlayCardAction,PlayerType,SlotType});
 /** Install verified rules-correctness hooks for every live match, including direct runOne callers.
  * @returns {readonly string[]}
  */
@@ -97,9 +102,14 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     store.state.gameSettings.recordingEnabled=false;
     const SafeSupporterTactic=supporterSelectionGuard.wrapTactic(PlaySupporterTactic);
     const safeTactics=allSimpleTactics.map(Tactic=>
-      Tactic===PlaySupporterTactic?SafeSupporterTactic:Tactic);
+      Tactic===PlaySupporterTactic?SafeSupporterTactic:
+        Tactic===PlayTrainerTactic && tacticOrder==='blind_topdeck'?
+          BlindTopdeckTrainerTactic:Tactic);
     assert.equal(safeTactics.filter(Tactic=>Tactic===SafeSupporterTactic).length,1,
       'Pinned policy tactic roster changed: inspect before applying Supporter guard');
+    if(tacticOrder==='blind_topdeck')
+      assert.equal(safeTactics.filter(Tactic=>Tactic===BlindTopdeckTrainerTactic).length,1,
+        'Pinned Item policy changed; inspect blind topdeck integration');
     const settings={tactics:makeTacticOrder(tacticOrder,safeTactics,ResearchVipTactic,DynamicDoubleDragonTactic),
       promptResolvers:allPromptResolvers,
       scores:defaultStateScores,arbiter:defaultArbiterOptions};
@@ -149,7 +159,9 @@ function runOne(deckA,deckB,seed,maxActions=350,wallMilliseconds=25000,tacticOrd
     return {seed,status,actions,attacks,engine_hooks:engineHooks,first_actor:firstActor,
       first_turn_hands:openingHands,
       policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
-      policy_hooks:['supporter_prevalidation_and_dispatch_counter_restore_v2'],
+      policy_hooks:tacticOrder==='blind_topdeck'?
+        ['supporter_prevalidation_and_dispatch_counter_restore_v2','blind_k0_topdeck_item_v1']:
+        ['supporter_prevalidation_and_dispatch_counter_restore_v2'],
       policy_repair_stats:supporterSelectionGuard.snapshot(),
       random_calls:rng.calls,
       game_random_calls:rng.gameCalls,policy_random_calls:rng.policyCalls,
@@ -188,7 +200,9 @@ function main() {
     random_stream_policy:'separated_live_game_and_counterfactual_policy_v1',
     policy_hidden_information:'unmasked_native_SimpleTacticsAi_order_oracle',
     policy_hidden_information_evidence:'results/tests/twinleaf_hidden_topdeck_oracle/README.md',
-    policy_hooks:['supporter_prevalidation_and_dispatch_counter_restore_v2'],
+    policy_hooks:config.tacticOrder==='blind_topdeck'?
+      ['supporter_prevalidation_and_dispatch_counter_restore_v2','blind_k0_topdeck_item_v1']:
+      ['supporter_prevalidation_and_dispatch_counter_restore_v2'],
     ci_budget_policy:'max_three_seed_pairs_350_actions_25000ms_per_game',
     tactic_order:config.tacticOrder,
     engine_hooks:['shadow_rider_underworld_door_guard_v1','regidrago_celestial_roar_any_energy_v1',
