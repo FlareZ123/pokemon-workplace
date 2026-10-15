@@ -1,5 +1,6 @@
 """Reproduce source-wide Stage 1/Stage 2 printed evolution-parent anomalies."""
 
+import json
 from pathlib import Path
 
 from tools.build_expanded_legality_baseline import load_json
@@ -51,5 +52,5 @@ print("Evolution parent source-wide integrity audit: PASS")
 print("Total source cards:", len(archive))
 print("Stage 1/Stage 2 cards:", len(evolutions))
 print("Missing raw parents:", raw_missing)
-print("Unknown raw parent names:", raw_unknown)
-print("Remaining unknown after official-print corrections:", fixed_unknown)
+print("Unknown raw parent names:", json.dumps(raw_unknown, ensure_ascii=True))
+print("Remaining unknown after official-print corrections:", json.dumps(fixed_unknown, ensure_ascii=True))
