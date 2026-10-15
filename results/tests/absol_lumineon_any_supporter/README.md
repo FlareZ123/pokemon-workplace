@@ -37,4 +37,4 @@ This model **does not credit Crobat V's Dark Asset** (the source deck's separate
 
 ## Replication
 
-The source code is at `tools/absol_support_tutor_frontier.py`; the runnable Python module is `results.tests.absol_lumineon_any_supporter.reproduce`. Manual Windows validation is attached to `.github/workflows/validate-agent1-stone-bridge.yml`, which re-runs the existing related exact models and this new study.
+The source code is at `tools/absol_support_tutor_frontier.py`; the runnable Python module is `results.tests.absol_lumineon_any_supporter.reproduce`. The dedicated manual Windows workflow is `.github/workflows/validate-agent1-lumineon-any-supporter.yml`. The related existing studies and this new reproducer all passed together in [Windows CI 38731566004](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38731566004).
