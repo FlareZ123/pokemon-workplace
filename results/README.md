@@ -40,6 +40,8 @@ Current priority is reproducible full-game headless match evaluation between the
 
 ## Technical research and replication
 
+- **[Alolan Muk versus Iron Thorns ex source precedence](ability_lock_muk_thorns_precedence/):** exact-print shared Ability-lock graph regression shows Bench Muk suppresses Active Thorns Initialization, restoring Rule-Box Evolution Abilities but suppressing Basic support. Stealthy Hood and Jamming Tower change the dependency. Conditional mechanics only, not match-win evidence.
+
 - **[Twinleaf hidden-Prize Quick Ball oracle](tests/twinleaf_hidden_prize_search_oracle/):** exact 52-world Quick Ball plus 104-world Ultra Ball/Mysterious Treasure K0 counterexamples with pinned-native-bot regressions demonstrating Prized Basic foresight. [Manual CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38608719207); engine match outcomes remain unfit for competitive ranking.
 - **[Observation-consistent K0 paid-search policy](tests/twinleaf_blind_paid_search_policy/):** separately selectable first-order expected Item decision heuristic for three paid searches; all 156 hidden-world action invariance tests and one two-seat bounded engine smoke test passed. Stronger K1 tracking and whole-bot audits remain open.
 - **[Competitive deck baselines](competitive_deck_baselines/):** primary tournament transcription, full 60-card print lists, reproducible legality and key-text checks.

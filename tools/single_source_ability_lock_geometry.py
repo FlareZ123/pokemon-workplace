@@ -37,6 +37,15 @@ POWER_OF_ALCHEMY = AbilityLockProfile(
     required_target_tags=frozenset({"Basic"}),
 )
 
+INITIALIZATION = AbilityLockProfile(
+    name="Initialization",
+    print_ids=frozenset({"sv6-77", "sv6-196", "sv8pt5-32"}),
+    activation="active",
+    scope="both",
+    required_target_tags=frozenset({"RuleBox"}),
+    excluded_target_tags=frozenset({"Future"}),
+)
+
 BIDE_BARRICADE = AbilityLockProfile(
     name="Bide Barricade",
     print_ids=frozenset({"xy4-36", "g1-RC11"}),
@@ -96,6 +105,7 @@ GARBOTOXIN = AbilityLockProfile(
 
 PROFILES = (
     POWER_OF_ALCHEMY,
+    INITIALIZATION,
     BIDE_BARRICADE,
     EMPERORS_EYES,
     NEUTRALIZING_GAS,

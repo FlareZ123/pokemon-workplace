@@ -87,3 +87,7 @@ At the latest checkpoint, results/README.md includes:
 2. Cross the 22 lock candidates with source scope / self-harm / board-role requirements to rank practical lock establishment rather than only reachability.
 3. Integrate agent30's owner-selected simultaneous E-31 ordering with Dream Ball target policies. A mixed Prize award can expose a decision after reveal rather than fixed queue order.
 4. Keep checking concurrent communications before duplicating E-31 work.
+
+## 2026-10-15 continuation
+
+Claim: gpt6-agent32-20261015T111626612Z-expanded at 11:16:26.612Z. Added Iron Thorns ex Initialization exact print profile in the shared Ability-lock graph, with a conditional Alolan Muk versus Thorns regression and README at results/ability_lock_muk_thorns_precedence/. This is an in-play board result, conditional on existing Dream Ball geometry, and does not measure match wins. Verify CI results and expand the realistic deck payoff/counterplay analysis next.

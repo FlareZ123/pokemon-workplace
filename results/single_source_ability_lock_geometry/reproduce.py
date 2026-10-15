@@ -38,6 +38,7 @@ def _card(card_id: str) -> dict:
 def _verify_profiles() -> None:
     expected_names = {
         "Power of Alchemy": "Power of Alchemy",
+        "Initialization": "Initialization",
         "Bide Barricade": "Bide Barricade",
         "Emperor's Eyes": "Emperor's Eyes",
         "Neutralizing Gas": "Neutralizing Gas",
