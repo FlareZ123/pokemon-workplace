@@ -524,6 +524,12 @@
         ]
       }
     },
+    "me55-96": {
+      "evolvesFrom": {
+        "before": null,
+        "after": "Zorua"
+      }
+    },
     "sv5-108": {
       "rules": {
         "before": [
