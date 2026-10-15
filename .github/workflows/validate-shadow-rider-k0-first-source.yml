@@ -1,0 +1,17 @@
+name: Validate Shadow Rider K0 first search source
+on:
+  workflow_dispatch:
+
+jobs:
+  source-policy:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check physical-card oracle and legal first-source gates
+        run: python -m results.tests.shadow_rider_k0_first_source.physical_oracle
+      - name: Compare exact observable source policy and K1 upper bound
+        run: python -m results.tests.shadow_rider_k0_first_source.reproduce
