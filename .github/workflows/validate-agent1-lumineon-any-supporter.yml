@@ -21,3 +21,5 @@ jobs:
           python-version: "3.12"
       - name: Reproduce three fully labeled toy oracles and legal 60-card swap
         run: python -m results.tests.absol_lumineon_any_supporter.reproduce
+      - name: Exact union with shared Star Alchemy and six physical toy oracles
+        run: python -m results.tests.absol_any_supporter_stone.reproduce
