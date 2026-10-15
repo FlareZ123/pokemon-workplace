@@ -38,6 +38,22 @@ function publicKey(state,actorId){
     activePlayer:state.activePlayer,view});
 }
 
+/** Reallocate an unknown private card pool without inspecting its original ordering. */
+function redistribute(p,hideHand,seed){
+  const lengths=[...(hideHand?[p.hand.cards.length]:[]),
+    p.deck.cards.length,...p.prizes.map(x=>x.cards.length)];
+  const pool=[...(hideHand?p.hand.cards:[]),...p.deck.cards,
+    ...p.prizes.flatMap(x=>x.cards)];
+  const shuffled=permute(pool,seed);
+  let start=0,slot=0;
+  if(hideHand){p.hand.cards=shuffled.slice(start,start+lengths[slot]);start+=lengths[slot++];}
+  p.deck.cards=shuffled.slice(start,start+lengths[slot]);start+=lengths[slot++];
+  for(const prize of p.prizes){
+    prize.cards=shuffled.slice(start,start+lengths[slot]);start+=lengths[slot++];
+  }
+  assert.equal(start,shuffled.length,'Conservation of private cards');
+}
+
 /** Make hypothetical decision state without changing the authoritative game.
  * Research assumption: entire unknown opponent inventory is an open-list prior.
  * @param {Function} deepClone Pinned engine deepClone, with no Card exclusions
@@ -45,20 +61,6 @@ function publicKey(state,actorId){
  */
 function makeK0HiddenWorldSampler(deepClone){
   assert.equal(typeof deepClone,'function');
-  function redistribute(p,hideHand,seed){
-    const lengths=[...(hideHand?[p.hand.cards.length]:[]),
-      p.deck.cards.length,...p.prizes.map(x=>x.cards.length)];
-    const pool=[...(hideHand?p.hand.cards:[]),...p.deck.cards,
-      ...p.prizes.flatMap(x=>x.cards)];
-    const shuffled=permute(pool,seed);
-    let start=0,slot=0;
-    if(hideHand){p.hand.cards=shuffled.slice(start,start+lengths[slot]);start+=lengths[slot++];}
-    p.deck.cards=shuffled.slice(start,start+lengths[slot]);start+=lengths[slot++];
-    for(const prize of p.prizes){
-      prize.cards=shuffled.slice(start,start+lengths[slot]);start+=lengths[slot++];
-    }
-    assert.equal(start,shuffled.length,'Conservation of private cards');
-  }
   return (state,actorId)=>{
     const key=createHash('sha256').update(publicKey(state,actorId)).digest('hex');
     assert.ok(!state.prompts.some(p=>p.result===undefined),
@@ -69,4 +71,40 @@ function makeK0HiddenWorldSampler(deepClone){
     return clone;
   };
 }
-module.exports={permute,publicKey,makeK0HiddenWorldSampler};
+/** Sample a K1 world only AFTER legitimate first deck inspection.
+ * Prize contents are then known as a multiset, but face-down slot identities
+ * and deck ordering are still unknown. Calling this at K0 would leak secrets.
+ * @param {Function} deepClone Pinned engine deepClone with Card preservation
+ * @returns {(state:object,actorId:number)=>object}
+ */
+function makeK1HiddenWorldSampler(deepClone){
+  assert.equal(typeof deepClone,'function');
+  return (state,actorId)=>{
+    assert.ok(!state.prompts.some(p=>p.result===undefined),
+      'Do not sample unresolved prompt states');
+    const actor=state.players.find(p=>p.id===actorId);
+    assert.ok(actor,'Actor missing');
+    const knownPrizeNames=actor.prizes.flatMap(slot=>slot.cards.map(card=>card.fullName)).sort();
+    const key=createHash('sha256').update(
+      JSON.stringify({public:publicKey(state,actorId),knowledge:'K1',
+        knownPrizeNames})).digest('hex');
+    const clone=deepClone(state,[]);
+    for(const p of clone.players){
+      if(p.id!==actorId){
+        redistribute(p,true,key+':'+p.id);
+        continue;
+      }
+      p.deck.cards=permute(p.deck.cards,key+':own-deck');
+      const shuffled=permute(p.prizes.flatMap(slot=>slot.cards),key+':own-prizes');
+      let start=0;
+      for(const slot of p.prizes){
+        const size=slot.cards.length;
+        slot.cards=shuffled.slice(start,start+size);
+        start+=size;
+      }
+      assert.equal(start,shuffled.length,'Conservation of known Prize cards');
+    }
+    return clone;
+  };
+}
+module.exports={permute,publicKey,makeK0HiddenWorldSampler,makeK1HiddenWorldSampler};
