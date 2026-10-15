@@ -10,7 +10,7 @@ const {
 } = require('./verified-card-metadata.cjs');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const SETS = ['me5', 'me2pt5', 'me3', 'sv5', 'sv6', 'sv8pt5'];
+const SETS = ['me5', 'me2pt5', 'me3', 'sv5', 'sv6', 'sv8pt5', 'me55'];
 
 /** @type {Map<string, Record<string, unknown>>} */
 const cards = new Map();
@@ -19,7 +19,7 @@ for (const setId of SETS) {
   for (const card of JSON.parse(input)) cards.set(card.id, card);
 }
 
-assert.equal(AUDITED_CARD_METADATA_IDS.length, 72);
+assert.equal(AUDITED_CARD_METADATA_IDS.length, 73);
 assert.deepEqual(AUDITED_CARD_METADATA_IDS, Object.keys(manifest.patches));
 /** @type {Record<string, number>} */
 const countBySet = {};
@@ -46,6 +46,11 @@ assert.strictEqual(normalizeVerifiedCardMetadata(unaffected), unaffected);
 const corrupted = structuredClone(cards.get('me2pt5-89'));
 corrupted.rules[0] = 'Unexpected changed Rule Box';
 assert.throws(() => normalizeVerifiedCardMetadata(corrupted), /source text changed/);
+
+const malformedParent = structuredClone(cards.get('me55-96'));
+malformedParent.evolvesFrom = 'Hisuian Zorua';
+assert.throws(() => normalizeVerifiedCardMetadata(malformedParent), /source text changed/);
+assert.equal(normalizeVerifiedCardMetadata(cards.get('me55-96')).evolvesFrom, 'Zorua');
 
 console.log('verified print metadata CJS parity: PASS');
 console.log('Audited print count:', AUDITED_CARD_METADATA_IDS.length);
