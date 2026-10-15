@@ -81,7 +81,7 @@ def collapse_roles(state: dict[str, int], luminous_sign: bool) -> dict[str, int]
         0 if luminous_sign else state["host"]
     )
     out["filler"] = state["filler"] + state["stone"] + state["bag"]
-    return out
+    return {key: out[key] for key in BASE_CATEGORIES}
 
 
 def route_flags(
