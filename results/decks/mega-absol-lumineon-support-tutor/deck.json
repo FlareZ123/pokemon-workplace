@@ -1,0 +1,234 @@
+{
+  "source": {
+    "event": "Counterfactual derived from 2026-05-10 CL Aichi eighth-place deck",
+    "date": "2026-10-15",
+    "place": null,
+    "player": null,
+    "url": "https://limitlesstcg.com/tournaments/566/decklists",
+    "source_scope": "Experimental single-print replacement of Crobat V with Lumineon V, preserving 59 physical baseline slots. The original tournament player did not play this proposed list; no match results are asserted."
+  },
+  "cards": [
+    {
+      "category": "Pokémon",
+      "quantity": 2,
+      "name": "Mega Absol ex",
+      "print_id": "me1-86"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 2,
+      "name": "Trubbish",
+      "print_id": "bw11-67"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 2,
+      "name": "Garbodor",
+      "print_id": "bw11-68"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Tapu Koko ◇",
+      "print_id": "sm9-51"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Dedenne-GX",
+      "print_id": "sm10-57"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Lumineon V",
+      "print_id": "swsh9-40"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Squawkabilly ex",
+      "print_id": "sv2-169"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Tapu Lele-GX",
+      "print_id": "sm2-60"
+    },
+    {
+      "category": "Pokémon",
+      "quantity": 1,
+      "name": "Budew",
+      "print_id": "sv8pt5-4"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Lillie's Determination",
+      "print_id": "me1-119"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Carmine",
+      "print_id": "sv6-145"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Iono",
+      "print_id": "sv2-185"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Roxanne",
+      "print_id": "swsh10-150"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Guzma",
+      "print_id": "sm3-115"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Crispin",
+      "print_id": "sv7-133"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Wally",
+      "print_id": "xy6-94"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Karen",
+      "print_id": "xyp-XY177"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 4,
+      "name": "Quick Ball",
+      "print_id": "swsh1-179"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 4,
+      "name": "Dark Patch",
+      "print_id": "swsh10-139"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 3,
+      "name": "VS Seeker",
+      "print_id": "xy6-110"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Battle Compressor Team Flare Gear",
+      "print_id": "xy4-92"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Ultra Ball",
+      "print_id": "swsh9-150"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Battle VIP Pass",
+      "print_id": "swsh8-225"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Boost Shake",
+      "print_id": "swsh7-142"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Secret Box",
+      "print_id": "sv6-163"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Night Stretcher",
+      "print_id": "sv6pt5-61"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Super Rod",
+      "print_id": "sv2-188"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Pokémon Communication",
+      "print_id": "sm9-152"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Hisuian Heavy Ball",
+      "print_id": "swsh10-146"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Field Blower",
+      "print_id": "sm2-125"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Adventure Bag",
+      "print_id": "sm8-167"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 4,
+      "name": "Float Stone",
+      "print_id": "xy8-137"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Muscle Band",
+      "print_id": "xy1-121"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 1,
+      "name": "Forest Seal Stone",
+      "print_id": "swsh12-156"
+    },
+    {
+      "category": "Trainer",
+      "quantity": 2,
+      "name": "Temple of Sinnoh",
+      "print_id": "swsh10-155"
+    },
+    {
+      "category": "Energy",
+      "quantity": 5,
+      "name": "Darkness Energy",
+      "print_id": "bw1-111"
+    },
+    {
+      "category": "Energy",
+      "quantity": 2,
+      "name": "Lightning Energy",
+      "print_id": "bw1-108"
+    }
+  ]
+}
