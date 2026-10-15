@@ -14,6 +14,6 @@ Run `python -m results.maintenance_shuffle_equivalence.reproduce`. Windows CI is
 
 ## Limits
 
-This is a **conditional state-transition proof** assuming the played Trainer is outside the hand during its own effect. It does not itself establish a present-day legal printed-category interpretation for pre-Supporter, pre-Item Base Set Trainer cards. Old-print paper Expanded acceptance and current reprint equivalence should only be certified with applicable official tournament policy. The simulation does not estimate a deck's win rate.
+This is a **conditional state-transition proof** assuming the played Trainer is outside the hand during its own effect. [The Pokémon Company's Black & White introduction](https://www.pokemon.com/uk/pokemon-tcg/black-white) explicitly describes Item as the new name for old Trainer cards, citing Poké Ball and PlusPower, and explains the modern Trainer subclass structure. Applying this category-wide rule to Maintenance is consistent with treating the older plain Trainer print as an Item, provided it has not been redesignated as another Trainer subclass. Old-print paper Expanded acceptance remains subject to applicable reprint equivalence and tournament policy. The official generic-category statement alone does not certify specific Maintenance copies. The simulation does not estimate a deck's win rate.
 
 The audit does not assert equivalence of other reprints with different effect text or categories.
