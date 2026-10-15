@@ -10,9 +10,9 @@ The complete Pokémon TCG research code needs a single reusable definition of ve
 - 1 missing Tera subtype and Bench immunity on Prismatic Evolutions Terapagos ex.
 - 45 extra generic two-Prize rules on current Mega Evolution ex prints.
 - 24 duplicate Tera Bench immunity statements on older Tera ex prints.
-- 1 missing evolution parent (30th Celebration Zoroark evolves from Zorua), backed by [the official card page](https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/series/30th/96).
+- 3 missing or misspelled evolution parents: 30th Celebration Zoroark evolves from Zorua, and two White Flare Archen prints evolve from Antique Plume Fossil, verified using [official Zoroark](https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/series/30th/96) and [official Fossil](https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/series/rsv10pt5/79) card pages.
 
-All **73** print IDs are mutually disjoint in this snapshot. Each repair preserves the immutable card archive, allows already-corrected input, and refuses unexpected source mutations. The shared interface preserves original object identity when the print ID is unrelated, avoiding unnecessary deep copies across the full card universe.
+All **75** print IDs are mutually disjoint in this snapshot. Each repair preserves the immutable card archive, allows already-corrected input, and refuses unexpected source mutations. The shared interface preserves original object identity when the print ID is unrelated, avoiding unnecessary deep copies across the full card universe.
 
 Both `tools/current_card_semantics.py` and `tools/deck_validator.py` now call the same function, reducing the chance of a card being represented differently during deck validation and card equivalence analysis.
 
@@ -32,7 +32,7 @@ Windows CI in `.github/workflows/validate-verified-card-metadata-boundary.yml` r
 
 ## Cross-language manifest for JavaScript research
 
-The deterministic JSON artifact [`overrides.json`](overrides.json) enumerates all 73 source-print field corrections as exact `before` and `after` pairs, with immutable print IDs. This permits the Node-based Twinleaf research adapters to consume the same provenance-guarded corrections without porting the underlying Python normalizers. The manifest also covers the `evolvesFrom` field, which the source record omitted.
+The deterministic JSON artifact [`overrides.json`](overrides.json) enumerates all 75 source-print field corrections as exact `before` and `after` pairs, with immutable print IDs. This permits the Node-based Twinleaf research adapters to consume the same provenance-guarded corrections without porting the underlying Python normalizers. The manifest also covers the `evolvesFrom` field, which the source record omitted.
 
 The canonical generator is `tools/export_verified_card_metadata.py`. Run `python -m results.verified_card_metadata_boundary.reproduce_export` to assert that the checked-in artifact is byte-for-byte regenerable from the bundled archive and audited Python repair functions. The Node CommonJS consumer `simulation/twinleaf/verified-card-metadata.cjs` uses deep equality checks and copies only changed arrays. Its runnable SFT is `node simulation/twinleaf/test-verified-card-metadata.cjs`.
 
@@ -40,4 +40,4 @@ These interfaces only correct source card records. They do not add cards to Twin
 
 ## Limits
 
-The 73 audited identities are a **coverage set**, rather than a claim that the rest of the 20,000-plus-card archive has no anomalies. The shared boundary does not automatically modify unrelated print IDs and is deliberately separate from official tournament legality and competitive win-rate estimation.
+The 75 audited identities are a **coverage set**, rather than a claim that the rest of the 20,000-plus-card archive has no anomalies. The shared boundary does not automatically modify unrelated print IDs and is deliberately separate from official tournament legality and competitive win-rate estimation.
