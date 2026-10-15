@@ -1,0 +1,30 @@
+name: Validate 30th Zoroark evolution parent
+
+on:
+  push:
+    paths:
+      - "tools/verified_evolution_parent_repairs.py"
+      - "tools/verified_card_metadata.py"
+      - "tools/export_verified_card_metadata.py"
+      - "results/verified_evolution_parent_semantics/**"
+      - "results/verified_card_metadata_boundary/**"
+      - ".github/workflows/validate-verified-evolution-parent.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify Zoroark official evolution parent
+        run: python -m results.verified_evolution_parent_semantics.reproduce
+      - name: Verify shared metadata identity and provenance
+        run: python -m results.verified_card_metadata_boundary.reproduce
+      - name: Verify deterministic patch manifest
+        run: python -m results.verified_card_metadata_boundary.reproduce_export
