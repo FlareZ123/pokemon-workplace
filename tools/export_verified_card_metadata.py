@@ -12,7 +12,7 @@ from tools.verified_card_metadata import (
 
 
 def build_metadata_patch_manifest(resources_root: Path) -> dict[str, Any]:
-    """Compile changed fields for all 72 audited physical source prints."""
+    """Compile changed fields for all audited physical source prints."""
     patches: dict[str, dict[str, Any]] = {}
     by_set: dict[str, set[str]] = {}
     for card_id in AUDITED_CARD_METADATA_IDS:
@@ -28,7 +28,7 @@ def build_metadata_patch_manifest(resources_root: Path) -> dict[str, Any]:
             corrected = normalize_verified_card_metadata(card)
             changes = {
                 field: {"before": card.get(field), "after": corrected.get(field)}
-                for field in ("subtypes", "rules")
+                for field in ("subtypes", "rules", "evolvesFrom")
                 if card.get(field) != corrected.get(field)
             }
             if not changes:
