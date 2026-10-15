@@ -1,0 +1,23 @@
+name: Validate Shadow Rider two-target Fog contention
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/shadow_rider_tech_rider_fog_joint.py"
+      - "results/shadow_rider_tech_rider_fog_joint/**"
+      - ".github/workflows/validate-shadow-rider-tech-rider-fog-joint.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact two-target Fog competition and toy oracle
+        run: python results/shadow_rider_tech_rider_fog_joint/reproduce.py
