@@ -10,7 +10,7 @@ const {
 } = require('./verified-card-metadata.cjs');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const SETS = ['me5', 'me2pt5', 'me3', 'sv5', 'sv6', 'sv8pt5', 'me55'];
+const SETS = ['me5', 'me2pt5', 'me3', 'sv5', 'sv6', 'sv8pt5', 'me55', 'rsv10pt5'];
 
 /** @type {Map<string, Record<string, unknown>>} */
 const cards = new Map();
@@ -19,7 +19,7 @@ for (const setId of SETS) {
   for (const card of JSON.parse(input)) cards.set(card.id, card);
 }
 
-assert.equal(AUDITED_CARD_METADATA_IDS.length, 73);
+assert.equal(AUDITED_CARD_METADATA_IDS.length, 75);
 assert.deepEqual(AUDITED_CARD_METADATA_IDS, Object.keys(manifest.patches));
 /** @type {Record<string, number>} */
 const countBySet = {};
@@ -51,6 +51,12 @@ const malformedParent = structuredClone(cards.get('me55-96'));
 malformedParent.evolvesFrom = 'Hisuian Zorua';
 assert.throws(() => normalizeVerifiedCardMetadata(malformedParent), /source text changed/);
 assert.equal(normalizeVerifiedCardMetadata(cards.get('me55-96')).evolvesFrom, 'Zorua');
+for (const id of ['rsv10pt5-50', 'rsv10pt5-131']) {
+  assert.equal(normalizeVerifiedCardMetadata(cards.get(id)).evolvesFrom, 'Antique Plume Fossil');
+}
+const changedArchen = structuredClone(cards.get('rsv10pt5-50'));
+changedArchen.evolvesFrom = 'Plume Fossil';
+assert.throws(() => normalizeVerifiedCardMetadata(changedArchen), /source text changed/);
 
 console.log('verified print metadata CJS parity: PASS');
 console.log('Audited print count:', AUDITED_CARD_METADATA_IDS.length);
