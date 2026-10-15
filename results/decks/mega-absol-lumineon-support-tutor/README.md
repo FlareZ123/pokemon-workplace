@@ -72,4 +72,6 @@ Lumineon is also a Pokémon V and therefore remains a host for the deck's existi
 
 See [the eight-Supporter physical experiment](../../tests/absol_lumineon_any_supporter/) for the precise assumptions and reproduced results. Its success condition is having **any** of the eight named Supporter cards in hand by the first natural draw or one payable Basic-tutor Item followed by a hand-to-Bench Tutor Ability. It accounts for a seven-card Basic-valid hand, six Prizes, start-Active constraint, search target Prizing, Quick/Ultra Ball Energy-only discards, Pokémon Communication's spare Pokémon, and Hisuian Heavy Ball. Battle VIP Pass directly placing a tutor from deck does not trigger Wonder Tag or Luminous Sign.
 
+A [joint eight-Supporter plus Forest Seal Stone analysis](../../tests/absol_any_supporter_stone/) further reduces the restricted Lumineon gain from **3.997939 to 3.185402 percentage points**, because both Crobat and Lumineon can use Star Alchemy. These figures remain conditional material-access measurements.
+
 This is an opening material-access model with a selected line of play, no opponent, no later turn, no Ability-lock timing, no Crobat draw and no actual matchup win rate. The source Aichi eighth-place 60 remains the stronger supported tournament starting point.
