@@ -124,7 +124,18 @@ def main() -> None:
     }
     print(f"K1 oracle access: {float(oracle):.9%}")
     print(f"K0 first-search policy access: {float(k0):.9%}")
-    print("PASS: zero first-source information gap under restricted model")
+    for c, f, numerator, denominator in (
+        (1, 0, 16145351154179404, 358964655944294400),
+        (0, 1, 14480600858376261, 367753188390588000),
+    ):
+        previous, sequential, _ = exact(capacities(c, f))
+        expected = Fraction(numerator, denominator)
+        assert previous == sequential == expected
+        print(
+            f"C={c} F={f} K0/K1 access: {float(sequential):.9%}",
+            flush=True,
+        )
+    print("PASS: no first-source information gap in all three tech packages")
 
 
 if __name__ == "__main__":
