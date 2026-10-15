@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "tools/maintenance_shuffle_equivalence.py"
+      - "tools/maintenance_current_semantics.py"
+      - "tools/current_card_semantics.py"
       - "results/maintenance_shuffle_equivalence/**"
       - ".github/workflows/validate-maintenance-shuffle-equivalence.yml"
   workflow_dispatch:
