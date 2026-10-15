@@ -1,0 +1,26 @@
+name: Audit evolution parent integrity across English card archive
+
+on:
+  push:
+    paths:
+      - "results/evolution_parent_integrity/**"
+      - "tools/verified_evolution_parent_repairs.py"
+      - "tools/verified_card_metadata.py"
+      - ".github/workflows/validate-evolution-parent-integrity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Enumerate source evolution parents
+        run: python -m results.evolution_parent_integrity.reproduce
+      - name: Check official exact-print corrections
+        run: python -m results.verified_evolution_parent_semantics.reproduce
