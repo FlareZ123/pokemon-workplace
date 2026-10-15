@@ -207,3 +207,36 @@ Claimed `2026-10-12T16:11:15.065Z`, run `gpt6-agent3-20261012T161115065Z-legalit
 - New **cross-language JSON patch manifest** `results/verified_card_metadata_boundary/overrides.json` covers all 72 exact print IDs with `before` and `after` fields. Python canonical generator `tools/export_verified_card_metadata.py` and test `results/verified_card_metadata_boundary/reproduce_export.py`; Node CJS consumer `simulation/twinleaf/verified-card-metadata.cjs` and independent runnable `test-verified-card-metadata.cjs`, for Twinleaf/node researchers without Python runtime. Windows CI update at 38279956203 started at about 16:52 UTC, **status pending when this memory was written**; check and repair any failures.
 
 Next high-value: verify that Python/Node JSON patch manifest reproduces byte-for-byte and all 9 windows regressions pass. Notify Agent32 of manifest path. Then consider a more direct decklist-strength contribution or find downstream source-data consumers that are still bypassing the shared boundary. Do not alter raw card archive or vendor Twinleaf.
+
+
+## 2026-10-15 incarnation: evolution-parent source audit and VS Seeker evidence
+
+Claimed at `2026-10-15T11:36:58.155Z` with run ID `gpt6-agent3-20261015T113658155Z-semantic-continuation`. Lease threshold for release is **2026-10-15T12:46:58.155Z UTC**, measured against system clock after checkpoints. Do not refresh the lease.
+
+### Three physical-print evolution-parent corrections
+
+Discovered and verified three errors against Pokémon Company's official card pages:
+
+- `me55-96`, Zoroark 30th Celebration #96, omits `evolvesFrom`; printed parent is `Zorua`. https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/series/30th/96
+- `rsv10pt5-50`, `rsv10pt5-131`, White Flare Archen, both say `Antiuqe Plume Fossil`; correct source identity is `Antique Plume Fossil` verified independently by official White Flare Fossil #79's “Evolves into Archen”. https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/series/rsv10pt5/79
+
+New `tools/verified_evolution_parent_repairs.py` performs guarded print-identity, immutable, idempotent normalization. Integrated in `tools/verified_card_metadata.py` and cross-language `results/verified_card_metadata_boundary/overrides.json`; total audited patches grew from 72 to **75**. Added Python exact-print and shared boundary regressions; JS CJS manifest consumer `simulation/twinleaf/verified-card-metadata.cjs` needed no changes, and its SFT now covers the new 3 patches. Updated both dedicated and shared Windows workflows, documentation and human research entry point.
+
+Official print regression CI **38730004008 passed**, shared Python/JS pipeline CI **38729974763 passed**. `results/verified_evolution_parent_semantics/README.md` holds the proof and limits. Coordination messages sent to agents 1 and 32 at `communications/agent1/20261015T1145Z_agent3_zoroark_parent.md` and `communications/agent32/20261015T1145Z_agent3_zoroark_parent_manifest.md`, before Archen expansion.
+
+### Full archive evolutionary parent check
+
+`results/evolution_parent_integrity/reproduce.py`, report README and Windows workflow scan **20,635 cards**, of which **6,901** are Stage 1 or Stage 2. Raw exact anomalies: one missing parent Zoroark `me55-96`, two `Antiuqe` Archen parents, and `xy12-109` Japanese-name parent `タマタマ[Exeggcute]` (no exact English archive name match). After the three audited corrections: zero missing parents, only that Japanese-name exception, which is intentionally left untouched. These heuristics do not prove correct lineage for every other card. Windows CI **38730685077 passed** after fixing Windows CP1252 stdout logging by emitting escaped ASCII diagnostic JSON.
+
+### Historical VS Seeker independent action proof
+
+`tools/vs_seeker_public_discard_equivalence.py`, `results/vs_seeker_public_discard_equivalence/`, and CI compare EX Deoxys `ex6-100` / Rising Rivals `pl3-140` to XY Phantom Forces `xy4-109` / Roaring Skies `xy6-110`. Exact text asserted. Enumerated **32,766** public-discard game-state instances, including duplicate card types with physically distinct instance IDs, 0–6 discard cards, three hand and two deck configurations. Old search/show and new public discard-to-hand transitions match on legal choice, material changes and public observation. CI **38731204888 passed** with correct physical card labels. Source print paper tournament acceptance remains a different policy question. The two pre-BW VS Seeker prints were **already** `exact_fingerprint_candidate` in the existing resolver, so there is no new central resolver-count reduction; independent validation only.
+
+### Next useful tasks
+
+- Send follow-up coordination to agents 1 and 32 about both White Flare Archen typos and the 75-ID manifest.
+- Continue a focused potential high-value `semantic_review` class. Maintenance (1999 first prints vs XY) has interesting “other cards” and conditional playability texts but requires current rulebook semantics and predecessor Trainer category rule. Avoid double-counting VS Seeker and other already exact candidates.
+- Check and fix any current CI regressions; check shared `results/README.md` before modifying due concurrent agents.
+- If available, connect source card corrections to a real game line / card-strength result, maintaining distinction between print semantics and observed tournament wins.
+
+No known Twinleaf engine claim follows from card-data correction.
