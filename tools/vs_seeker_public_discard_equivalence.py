@@ -26,7 +26,7 @@ def _outcomes(
     """Choose one visible Supporter; public removal identifies it in either text."""
     found: set[Outcome] = set()
     for i, card in enumerate(discard):
-        if card not in supporter:
+        if card.split("#", 1)[0] not in supporter:
             continue
         remaining = discard[:i] + discard[i + 1 :]
         # Both explicit showing and moving one observed face-up card disclose
@@ -62,13 +62,14 @@ def exhaustively_compare() -> dict[str, int]:
     supporter = frozenset(("S0", "S1"))
     worlds = transitions = playable_worlds = 0
     for n in range(7):
-        for discard in product(symbols, repeat=n):
+        for card_types in product(symbols, repeat=n):
+            discard = tuple(f"{card_type}#{i}" for i, card_type in enumerate(card_types))
             for hand in ((), ("H0",), ("H0", "H1")):
                 for deck in ((), ("D0",)):
                     old = historical_actions(hand, discard, deck, supporter)
                     new = current_actions(hand, discard, deck, supporter)
                     assert old == new, (hand, discard, deck, old ^ new)
-                    expected = any(c in supporter for c in discard)
+                    expected = any(c.split("#", 1)[0] in supporter for c in discard)
                     assert bool(old) == expected
                     assert all(o.deck == deck for o in old)
                     assert all(o.revealed_to_opponent == (o.chosen,) for o in old)
