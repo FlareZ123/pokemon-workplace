@@ -1,0 +1,24 @@
+name: Enumerate unresolved historical Trainer reprint evidence
+
+on:
+  push:
+    paths:
+      - "results/trainer_semantic_review_frontier/**"
+      - "tools/reprint_errata_resolution.py"
+      - "tools/current_card_semantics.py"
+      - ".github/workflows/validate-trainer-semantic-review-frontier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  enumerate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Reproduce unresolved Trainer identities
+        run: python -m results.trainer_semantic_review_frontier.reproduce
