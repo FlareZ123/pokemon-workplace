@@ -21,3 +21,5 @@ jobs:
         run: python -m results.absol_lumineon_supporter_frontier.reproduce
       - name: Reproduce exact Star Alchemy and Luminous Sign overlap
         run: python -m results.absol_lumineon_stone_overlap.reproduce
+      - name: Reproduce all-eight-Supporter Lumineon comparison and exact toy oracle
+        run: python -m results.tests.absol_lumineon_any_supporter.reproduce
