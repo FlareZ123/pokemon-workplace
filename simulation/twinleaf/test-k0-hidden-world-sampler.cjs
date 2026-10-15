@@ -123,7 +123,7 @@ assert.ok(knownDeckWorlds.every(w=>
 'K1 samples must ignore true deck order and the opponent\'s unknown hand allocation');
 const prizeKnown=sampleK1(source[2],1);
 const prizeNames=p=>p.prizes.flatMap(slot=>slot.cards.map(c=>c.fullName));
-const boss='Boss\'s Orders PAL';
+const boss=new BossOrders().fullName;
 const inZones=w=>({
   deck:w.players[0].deck.cards.filter(c=>c.fullName===boss).length,
   prizes:prizeNames(w.players[0]).filter(name=>name===boss).length
