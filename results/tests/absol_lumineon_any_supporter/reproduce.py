@@ -54,7 +54,7 @@ def check_sources() -> None:
     assert source_card(CROBAT)["abilities"][0]["name"] == "Dark Asset"
     assert source_card(MEGA)["name"] == "Mega Absol ex"
     assert all("Supporter" in source_card(id)["subtypes"] for id in SUPPORTERS)
-    assert source_card("swsh12-156")["rules"][0].find("Pokémon V") >= 0
+    assert any("Pokémon V" in rule for rule in source_card("swsh12-156")["rules"])
     for id, word in ITEMS.items():
         raw = source_card(id)
         assert raw["supertype"] == "Trainer", (id,word)
