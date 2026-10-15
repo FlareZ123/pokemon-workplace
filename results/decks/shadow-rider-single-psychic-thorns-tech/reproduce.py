@@ -59,7 +59,9 @@ def documented_variants():
             qty, cid = match.groups()
             a[cid] += int(qty)
             b[cid] += int(qty)
-    # Counter retains explicit zero rows for the other variant tech.\n    # Remove these rows before checking printed deck diversity and counts.\n    return {"A": +a, "B": +b}\n
+    # Counter retains zero quantities for the other variant's counter.
+    # Remove explicit zero rows before comparing playable lists.
+    return {"A": +a, "B": +b}
 
 def main() -> None:
     original = expected_original()
