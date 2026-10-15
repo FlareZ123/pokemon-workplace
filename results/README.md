@@ -46,6 +46,8 @@ Current priority is reproducible full-game headless match evaluation between the
 
 ## Technical research and replication
 
+- **[Verified evolution parents in current paper Expanded](verified_evolution_parent_semantics/):** official card identity checks repair missing Zoroark `evolvesFrom: Zorua` and misspelled Antique Plume Fossil parents on two White Flare Archen prints. All three are included in the reproducible 75-print Python/Node [source-normalization manifest](verified_card_metadata_boundary/), with exact-print mutation guards and Windows regression. These are card-data corrections; deck match effects remain untested.
+
 - **[Wobbuffet versus Flutter Mane under Iron Thorns](wobbuffet_flutter_thorns_continuation/):** exact-print lock graph distinguishes Psychic Wobbuffet's suppression of Iron Thorns and Radiant Eternatus from Flutter Mane's suppression of Thorns alone. Wobbuffet restores established Psychic Underworld Door but cannot simultaneously enable Radiant Eternatus's Dragon-type launch while Active. Stealthy Hood and Jamming Tower are tested. Conditional rules result, not match evidence.
 
 - **[Dream Ball / Alolan Muk exact opening-Prize allocation](dream_ball_muk_opening_allocation/):** an exact static opening calculation for a hypothetical 14-Basic, singleton-Muk, one-to-four-Dream-Ball deck. With one Dream Ball among the first uniformly awarded Prize, the conditional Basic-valid event is 1.344856%; three tiny decks confirm the formula by exhaustive labeled enumeration. This is an opening allocation prerequisite, not an achievable gameplay rate or match-win estimate.
