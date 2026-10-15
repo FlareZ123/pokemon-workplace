@@ -1,0 +1,22 @@
+name: Validate Shadow Rider single Psychic Thorns tech variants
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "results/decks/shadow-rider-single-psychic-thorns-tech/**"
+      - ".github/workflows/validate-shadow-rider-single-psychic-thorns-tech.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Check both full 60s and paper Expanded legality
+        run: python results/decks/shadow-rider-single-psychic-thorns-tech/reproduce.py
