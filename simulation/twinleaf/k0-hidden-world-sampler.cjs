@@ -75,19 +75,24 @@ function makeK0HiddenWorldSampler(deepClone){
  * Prize contents are then known as a multiset, but face-down slot identities
  * and deck ordering are still unknown. Calling this at K0 would leak secrets.
  * @param {Function} deepClone Pinned engine deepClone with Card preservation
- * @returns {(state:object,actorId:number)=>object}
+ * @returns {(state:object,actorId:number,knownPrizeNames:string[])=>object}
  */
 function makeK1HiddenWorldSampler(deepClone){
   assert.equal(typeof deepClone,'function');
-  return (state,actorId)=>{
+  return (state,actorId,knownPrizeNames)=>{
     assert.ok(!state.prompts.some(p=>p.result===undefined),
       'Do not sample unresolved prompt states');
     const actor=state.players.find(p=>p.id===actorId);
     assert.ok(actor,'Actor missing');
-    const knownPrizeNames=actor.prizes.flatMap(slot=>slot.cards.map(card=>card.fullName)).sort();
+    assert.ok(Array.isArray(knownPrizeNames),
+      'K1 requires an externally recorded, observed Prize multiset');
+    const observed=[...knownPrizeNames].sort();
+    const physical=actor.prizes.flatMap(slot=>slot.cards.map(card=>card.fullName)).sort();
+    assert.deepEqual(observed,physical,
+      'K1 Prize record is stale or inconsistent with physical state');
     const key=createHash('sha256').update(
       JSON.stringify({public:publicKey(state,actorId),knowledge:'K1',
-        knownPrizeNames})).digest('hex');
+        knownPrizeNames:observed})).digest('hex');
     const clone=deepClone(state,[]);
     for(const p of clone.players){
       if(p.id!==actorId){
