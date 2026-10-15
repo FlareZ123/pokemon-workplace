@@ -1,0 +1,23 @@
+name: Validate Shadow Rider Psychic Fog tech access
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/shadow_rider_psychic_tech_fog_opening.py"
+      - "results/shadow_rider_psychic_tech_fog_opening/**"
+      - ".github/workflows/validate-shadow-rider-psychic-fog-tech.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Enumerate exact labeled opening worlds
+        run: python results/shadow_rider_psychic_tech_fog_opening/reproduce.py
