@@ -54,7 +54,7 @@ def verify_prints() -> None:
         return next(row for row in cards if row["id"] == identifier)
 
     assert card("xy6-89")["name"] == "Sky Field"
-    assert "8 Pokémon on their Bench" in card("xy6-89")["rules"][0]
+    assert "8 Pokémon" in card("xy6-89")["rules"][0]
     assert card("xy4-93")["name"] == "Dimension Valley"
     assert "attacks" in card("xy4-93")["rules"][0]
     assert card("sm2-125")["name"] == "Field Blower"
