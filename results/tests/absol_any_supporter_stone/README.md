@@ -8,6 +8,20 @@ The original 2026 Aichi eighth-place [Mega Absol/Garbodor deck](../../decks/mega
 
 Forest Seal Stone adds a second form of redundancy. A host Pokémon V can use the **Star Alchemy** VSTAR Power granted by the Stone to search *any* card, including a Supporter. The Crobat and Lumineon variants both have exactly one Pokémon V host, so both can use this source. This model measures the union of: a held Supporter; a legal Tapu Lele Wonder Tag / Lumineon Luminous Sign line; and a Forest Seal Stone Star Alchemy line.
 
+## Validated exact result
+
+| Event, after Basic-valid opening and first natural draw | Published Crobat V | Lumineon V swap |
+| --- | ---: | ---: |
+| Any of eight Supporters already held | 68.327837% | 68.327837% |
+| Held or available via one payable hand-to-Bench tutor | 83.017823% | 87.015762% |
+| Independently available Stone source, before union | 6.349024% | 6.349024% |
+| Additional Stone-only success beyond held/tutor | 1.091487% | 0.278950% |
+| **Held, tutor, or Star Alchemy union** | **84.109310%** | **87.294712%** |
+
+The Lumineon uplift was **3.997939 percentage points** without the Stone route. It becomes **3.185402 points** after the shared Stone option and all overlaps are counted. The **0.812537-point contraction** measures redundant successes in the restricted event. The Stone source's standalone **6.349024%** occurrence is identical between variants because each preserves a single Pokémon V host, one Stone and one Adventure Bag.
+
+All exact rational outputs, six independent labeled physical toy oracles, original Tutor-only reduction and two full 60-card eligibility proofs passed [Windows CI run 38732725124](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38732725124). These numbers are feasibility percentages, never tournament or match win rates.
+
 ## Physical assumptions
 
 The denominators condition on a Basic-valid seven-card opening hand, six random physical Prizes, and the first natural draw. Roles are tracked separately for Lele, the single Pokémon V host, all eight Supporters, Forest Seal Stone, Adventure Bag, Mega Absol, other Basics, evolutions and named search Items.
