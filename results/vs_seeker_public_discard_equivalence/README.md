@@ -10,7 +10,7 @@ Two archival sources, **EX Deoxys `ex6-100`** and **Platinum Rising Rivals `pl3-
 
 A public discard has distinguishable physical card instances. Both effects allow choosing exactly one Supporter in that pile, moving that physical instance to the hand while keeping the deck unchanged, and disclose the retrieved card's identity to the opponent. In the older wording this observation is explicit; the XY wording moves an identifiable face-up card out of a public zone. If no Supporter is available, neither Item changes the game state or has a legal useful action.
 
-The executable test enumerates all ordered discard piles of length 0–6 from two Supporter types and two ineligible types, including duplicate type copies, with three hand variants and two deck variants. It compares the chosen instance, hand/discard/deck material changes, opponent's public observation, and availability for every state.
+The executable test enumerates all ordered discard piles of length 0–6 from two Supporter types and two ineligible types, including duplicate type copies with unique physical-instance labels, with three hand variants and two deck variants. It compares the chosen instance, hand/discard/deck material changes, opponent's public observation, and availability for every state.
 
 This is a bounded exhaustive *model* of the relevant transfer and public information. An arbitrary-size extension follows by the same one-card deletion/insertion bijection for each eligible physical Supporter, assuming the discard is fully public. It does not simulate opponents, match win rates, or chain-specific card effect semantics.
 
