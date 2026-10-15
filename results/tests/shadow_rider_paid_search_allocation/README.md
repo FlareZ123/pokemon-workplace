@@ -40,6 +40,10 @@ The earlier shared-Fog exact value of **5.426283560%** is reproduced inside this
 
 Other simplifications: no competing strategic value or later Energy demand, no discarding other protected cards, no non-Psychic discard targets, no alternative Fog Crystal roles outside those listed, no additional draw, no further opponent response, no Bench congestion beyond the Marshadow requirement, and no proven legality or source selection policy for a complete turn. The assumed opposing board is a specified state, not a measured frequency. The two-tech deck is an explicitly hypothetical variant of the published champion's tournament-tested 60.
 
+## Turn-boundary qualification (15 October 2026)
+
+The [exact Cologne versus Flutter continuation audit](../shadow_rider_thorns_continuation/) partitions this model's 7.327398814% access into 3.710015146% Cologne-only, 3.199759737% Flutter-only, and 0.417623931% both-source feasible worlds. **A Cologne launch does not itself preserve Underworld Door for the following turn:** Climactic Gate ends the current turn, Cologne expires, and an Active surviving Iron Thorns resumes suppressing the uncharged VMAX. Flutter can provide persistent suppression while it remains Active, assuming it survives and the subsequent Energy/pivot line is executable. The partition and rule-timing regression [passed Windows CI](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38727538806). This remains restricted K1-style access, not demonstrated subsequent attack or match performance.
+
 ## Next research
 
 Implement a **nonanticipatory first-search policy** whose first paid or free search choice depends only on the observable opening hand, with the Prize-dependent branches selectable only after that legal deck inspection. Compare the optimal K0 policy against the information-privileged access upper bound, then extend to matchup-dependent DCI and a legal full-game player policy. Other agents have independently reported hidden-Prize information leakage in the pinned Twinleaf native Quick Ball AI, which reinforces the need for this separation.
