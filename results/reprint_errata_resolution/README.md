@@ -12,16 +12,16 @@ The bundled snapshot contains 4,260 historical outside-scope prints whose name a
 
 They currently resolve as:
 
-- 134 exact current-semantic fingerprint candidates;
-- 39 historical-official reprint candidates;
+- 151 exact current-semantic fingerprint candidates;
+- 26 historical-official reprint candidates;
 - 44 name-wide official-errata candidates;
-- 3 current-handbook semantic candidates;
+- 5 current-handbook semantic candidates;
 - 77 known non-equivalent prints;
 - 3,963 unresolved semantic-review prints.
 
-The positive high-confidence candidate set contains 220 prints.
+The positive high-confidence candidate set contains 226 prints.
 
-For Trainers, 168 historical prints share a name with a legal Expanded Trainer. Exact fingerprints resolve 21, the historical official bridge remains the active route for 38, name-wide errata resolves 44, the current Copycat example resolves 3, and the contextual Life Herb witness rules out 2. The explicit historical Trainer name-reuse audit adds 16 more known-negative Trainer prints. That gives 106 positive Trainer candidates and 35 known-negative Trainer prints before broader semantic comparison.
+For Trainers, 168 historical prints share a name with a legal Expanded Trainer. The current high-confidence candidate group contains 38 exact fingerprints, 25 historical-official candidates, 44 name-wide errata candidates and five Copycat exemplars, totaling **112 positive Trainer candidates**. The separate known-negative evidence includes 35 Trainer prints. Each evidence class retains its own limitations.
 
 ## Evidence ladder
 
@@ -29,13 +29,13 @@ For Trainers, 168 historical prints share a name with a legal Expanded Trainer. 
 
 The strongest repository-local structural path requires the historical card and a legal Expanded card to have the same fingerprint after authoritative current-semantics normalization.
 
-There are 134 such historical candidates. The added Celebrations Classic Collection M Rayquaza-EX matches its XY Roaring Skies original after narrowly canonicalizing two independent Pokémon rule statements whose stored order is reversed. See [../independent_mega_ex_rule_order/](../independent_mega_ex_rule_order/).
+There are 151 such historical candidates. The added Celebrations Classic Collection M Rayquaza-EX matches its XY Roaring Skies original after narrowly canonicalizing two independent Pokémon rule statements whose stored order is reversed. See [../independent_mega_ex_rule_order/](../independent_mega_ex_rule_order/).
 
 ### Historical official reprint evidence
 
 The official 2012 Modified-Legal Reprint List identifies old prints that were legal reprints at that date and marks whether updated reference text was required.
 
-This resolver preserves a narrow 42-print historical evidence set. Every included print was marked "Reference Required: No", and a same-name Black & White-onward print had already been released by 2012-03-13. After current-semantics normalization, three of those prints now resolve earlier as exact fingerprints, so 39 still use the historical-official resolver state. The evidence set covers Switch, Poké Ball, Energy Search, Energy Switch, Super Scoop Up, Full Heal, Recycle, and Double Colorless Energy.
+This resolver preserves a narrow 42-print historical evidence set. Every included print was marked "Reference Required: No", and a same-name Black & White-onward print had already been released by 2012-03-13. After current-semantics normalization, three of those prints now resolve earlier as exact fingerprints, so 26 still use the historical-official resolver state. The evidence set covers Switch, Poké Ball, Energy Search, Energy Switch, Super Scoop Up, Full Heal, Recycle, and Double Colorless Energy.
 
 ### Name-wide official errata
 
@@ -61,9 +61,9 @@ The affected historical counts are:
 
 The Tournament Handbook explicitly identifies Copycat `ex7-83` and `sm7-127` as functionally identical despite their wording difference.
 
-The repository propagates that evidence only to historical Copycat prints with exactly the same current-semantic fingerprint as `ex7-83`. This admits `ecard1-138`, `ex15-73`, and `ex7-83`, each pointing to the certified legal target `sm7-127`.
+The repository propagates that evidence to historical Copycat prints whose narrowly normalized current-semantic fingerprints agree with `ex7-83`. This admits `col1-77`, `ecard1-138`, `ex15-73`, `ex7-83`, and `hgss1-90`, each pointing to the certified legal target `sm7-127`.
 
-Other historical Copycat wording forms remain in semantic review.
+Other historical Copycat wording forms remain subject to individual semantic review.
 
 ### Known non-equivalence
 
@@ -115,6 +115,7 @@ Positive candidate states remain separate so downstream code can choose its evid
 - pl1-108 and hgss2-79 Life Herb become exact candidates after six damage counters are normalized to 60 healing; the Pokémon-ex-excluding ex5-90 and ex6-93 remain negative.
 - hgss1-94 Moomoo Milk becomes an exact candidate after three damage counters per heads are normalized to 30 healing per heads.
 - ex6-100 and pl3-140 VS Seeker become exact candidates after public discard-pile reveal/search wording is normalized to current retrieval semantics.
+- base1-83 and base4-112 Maintenance become exact candidates through the [official legacy Item category and exact two-card shuffle model](../maintenance_shuffle_equivalence/), preserving the two-card playability condition and deck shuffle distribution.
 - four historical Bill's Maintenance prints become exact candidates because current Supporter playability rules eliminate the apparent empty-hand no-op branch.
 - ecard3-140 and pl2-97 Underground Expedition become exact candidates after equivalent bottom-four selection wording is normalized with current numbered-choice rules.
 - pl4-88 Lucky Egg remains in semantic review because official print-specific errata adds a discard-pile destination condition absent from the legal current print.
@@ -129,7 +130,7 @@ Positive candidate states remain separate so downstream code can choose its evid
 - ecard2-130 and pop4-9 Pokémon Fan Club are known non-equivalent because they put searched Basics directly onto the Bench rather than into hand.
 - base1-90 and base4-117 Super Potion are known non-equivalent because they heal at most 40 damage rather than 60.
 - ex15-82, ex3-88, and pop2-11 TV Reporter are known non-equivalent because they lack the current empty-deck play prohibition.
-- ecard1-138, ex15-73, and ex7-83 Copycat resolve through the current-handbook semantic example; hgss1-90 and col1-77 remain semantic-review cases.
+- ecard1-138, ex15-73, ex7-83, hgss1-90, and col1-77 Copycat resolve through the current-handbook semantic example.
 
 ## Evidence
 
