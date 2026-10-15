@@ -4,7 +4,7 @@
 
 This result builds an auditable evidence ladder for historical prints that share a name with a legal paper Expanded card.
 
-The resolver applies current card semantics before comparing prints. Current semantics now includes official print-specific errata, the current Pokémon Tool category rule, exact generic Item/Supporter category-boilerplate normalization, and narrow rules-grounded Fisherman/Life Herb wording normalization.
+The resolver applies current card semantics before comparing prints. Current semantics now includes official print-specific errata, the current Pokémon Tool category rule, exact generic Item/Supporter category-boilerplate normalization, narrow rules-grounded Fisherman/Life Herb wording normalization, and the [historical Maintenance Item/transfer correction](../maintenance_shuffle_equivalence/).
 
 ## Current partition
 
@@ -27,7 +27,7 @@ For Trainers, 168 historical prints share a name with a legal Expanded Trainer. 
 
 ### Exact current-semantic fingerprint
 
-The strongest repository-local structural path requires the historical card and a legal Expanded card to have the same fingerprint after authoritative current-semantics normalization.
+The strongest repository-local structural path requires the historical card and a legal Expanded card to have the same fingerprint after audited current-semantics normalization.
 
 There are 151 such historical candidates. The added Celebrations Classic Collection M Rayquaza-EX matches its XY Roaring Skies original after narrowly canonicalizing two independent Pokémon rule statements whose stored order is reversed. See [../independent_mega_ex_rule_order/](../independent_mega_ex_rule_order/).
 
@@ -35,7 +35,7 @@ There are 151 such historical candidates. The added Celebrations Classic Collect
 
 The official 2012 Modified-Legal Reprint List identifies old prints that were legal reprints at that date and marks whether updated reference text was required.
 
-This resolver preserves a narrow 42-print historical evidence set. Every included print was marked "Reference Required: No", and a same-name Black & White-onward print had already been released by 2012-03-13. After current-semantics normalization, three of those prints now resolve earlier as exact fingerprints, so 26 still use the historical-official resolver state. The evidence set covers Switch, Poké Ball, Energy Search, Energy Switch, Super Scoop Up, Full Heal, Recycle, and Double Colorless Energy.
+This resolver preserves a narrow 42-print historical evidence set. Every included print was marked "Reference Required: No", and a same-name Black & White-onward print had already been released by 2012-03-13. After current-semantics normalization and other higher-priority evidence classes, 26 still use the historical-official resolver state. The evidence set covers Switch, Poké Ball, Energy Search, Energy Switch, Super Scoop Up, Full Heal, Recycle, and Double Colorless Energy.
 
 ### Name-wide official errata
 
