@@ -46,6 +46,8 @@ Current priority is reproducible full-game headless match evaluation between the
 
 ## Technical research and replication
 
+- **[Exact initial-seven Fog Crystal access to singleton Psychic counter](shadow_rider_psychic_tech_fog_opening/):** both complete one-card Flutter and Wobbuffet alternatives retain four Fog Crystal; a tech directly in the seven or searchable by an in-hand Fog with tech still in deck is present in 43.311704% of Basic-valid opening-seven allocations. This K0/static source-availability metric omits connector opportunity cost, Active pivot, and winning games. Independently checked with labeled toy enumeration.
+
 - **[Verified evolution parents in current paper Expanded](verified_evolution_parent_semantics/):** official card identity checks repair missing Zoroark `evolvesFrom: Zorua` and misspelled Antique Plume Fossil parents on two White Flare Archen prints. All three are included in the reproducible 75-print Python/Node [source-normalization manifest](verified_card_metadata_boundary/), with exact-print mutation guards and Windows regression. These are card-data corrections; deck match effects remain untested.
 
 - **[Wobbuffet versus Flutter Mane under Iron Thorns](wobbuffet_flutter_thorns_continuation/):** exact-print lock graph distinguishes Psychic Wobbuffet's suppression of Iron Thorns and Radiant Eternatus from Flutter Mane's suppression of Thorns alone. Wobbuffet restores established Psychic Underworld Door but cannot simultaneously enable Radiant Eternatus's Dragon-type launch while Active. Stealthy Hood and Jamming Tower are tested. Conditional rules result, not match evidence.
