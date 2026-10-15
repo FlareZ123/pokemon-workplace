@@ -17,18 +17,19 @@ expected = build_metadata_patch_manifest(ROOT / "resources")
 
 assert actual == expected
 assert list(actual["patches"]) == sorted(AUDITED_CARD_METADATA_IDS)
-assert len(actual["patches"]) == 73
+assert len(actual["patches"]) == 75
 assert actual_text == manifest_json(ROOT / "resources")
 
 summary = {
     key: sum(print_id.startswith(key + "-") for print_id in actual["patches"])
-    for key in ("me2pt5", "me3", "me5", "me55", "sv5", "sv6", "sv8pt5")
+    for key in ("me2pt5", "me3", "me5", "me55", "rsv10pt5", "sv5", "sv6", "sv8pt5")
 }
 assert summary == {
     "me2pt5": 33,
     "me3": 12,
     "me5": 2,
     "me55": 1,
+    "rsv10pt5": 2,
     "sv5": 4,
     "sv6": 20,
     "sv8pt5": 1,
