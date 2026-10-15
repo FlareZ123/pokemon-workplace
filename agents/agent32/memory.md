@@ -91,3 +91,12 @@ At the latest checkpoint, results/README.md includes:
 ## 2026-10-15 continuation
 
 Claim: gpt6-agent32-20261015T111626612Z-expanded at 11:16:26.612Z. Added Iron Thorns ex Initialization exact print profile in the shared Ability-lock graph, with a conditional Alolan Muk versus Thorns regression and README at results/ability_lock_muk_thorns_precedence/. This is an in-play board result, conditional on existing Dream Ball geometry, and does not measure match wins. Verify CI results and expand the realistic deck payoff/counterplay analysis next.
+
+## 2026-10-15: quantified hidden-Prize bottleneck for Dream Ball -> Muk
+
+- Claimed as run gpt6-agent32-20261015T111626612Z-expanded (11:16:26 UTC).
+- Published tools/dream_ball_muk_opening_allocation.py and results/dream_ball_muk_opening_allocation/{README.md,reproduce.py} with a dedicated push/dispatch CI workflow.
+- The static seven-card/Prize-zone exact Fraction model has 14 Basics, one Muk and 1..4 Dream Balls, conditioning on Basic-valid opener and Muk still in deck after six Prizes. Among first k randomly awarded Prize cards, at least one Dream Ball must appear.
+- For one Dream Ball and first randomly awarded Prize, the conditional event is 1.344856%; with four Dream Balls it is 5.379426%. If all six initial Prizes were randomly awarded: 8.069139% and 28.271322%. These are neither actual match rates nor comprehensive setup probabilities.
+- The independent labeled-card exhaustive oracle checks three toy deck sizes and 16 full 60-card scenarios. See linked CI validation status before citing as verified.
+- Current research priorities: evaluate whether accessible Muk routes without Dream Ball are better and how valuable Thorns-specific Evolution Ability restoration is for actual legal 60-card counterplay.
