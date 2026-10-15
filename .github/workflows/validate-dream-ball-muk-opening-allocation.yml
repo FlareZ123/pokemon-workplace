@@ -1,0 +1,23 @@
+name: Validate Dream Ball Muk opening allocation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/dream_ball_muk_opening_allocation.py"
+      - "results/dream_ball_muk_opening_allocation/**"
+      - ".github/workflows/validate-dream-ball-muk-opening-allocation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Exact opening allocation regression
+        run: python results/dream_ball_muk_opening_allocation/reproduce.py
