@@ -15,35 +15,27 @@ class Outcome:
     revealed_to_opponent: tuple[str, ...]
 
 
-def _outcomes(
-    hand: tuple[str, ...],
-    discard: tuple[str, ...],
-    deck: tuple[str, ...],
-    supporter: frozenset[str],
-    *,
-    explicit_show: bool,
-) -> set[Outcome]:
-    """Choose one visible Supporter; public removal identifies it in either text."""
-    found: set[Outcome] = set()
-    for i, card in enumerate(discard):
-        if card.split("#", 1)[0] not in supporter:
-            continue
-        remaining = discard[:i] + discard[i + 1 :]
-        # Both explicit showing and moving one observed face-up card disclose
-        # the identity of exactly the retrieved card to the opponent.
-        visible = (card,) if explicit_show else (discard[i],)
-        found.add(Outcome(card, hand + (card,), remaining, deck, visible))
-    return found
-
-
 def historical_actions(
     hand: tuple[str, ...],
     discard: tuple[str, ...],
     deck: tuple[str, ...],
     supporter: frozenset[str],
 ) -> set[Outcome]:
-    """EX Deoxys / Platinum Rising Rivals: search, show, move to hand."""
-    return _outcomes(hand, discard, deck, supporter, explicit_show=True)
+    """Old wording: search the public pile, show one Supporter, return it."""
+    choices: set[Outcome] = set()
+    for index, shown in enumerate(discard):
+        if shown.partition("#")[0] not in supporter:
+            continue
+        choices.add(
+            Outcome(
+                shown,
+                hand + (shown,),
+                discard[:index] + discard[index + 1 :],
+                deck,
+                (shown,),  # Explicit reveal from a public zone.
+            )
+        )
+    return choices
 
 
 def current_actions(
@@ -52,8 +44,26 @@ def current_actions(
     deck: tuple[str, ...],
     supporter: frozenset[str],
 ) -> set[Outcome]:
-    """XY Phantom Forces / Roaring Skies: put Supporter from discard to hand."""
-    return _outcomes(hand, discard, deck, supporter, explicit_show=False)
+    """XY wording: physically move any one Supporter from public discard."""
+    choices: set[Outcome] = set()
+    for selected in discard:
+        if selected.partition("#")[0] not in supporter:
+            continue
+        new_discard = list(discard)
+        new_discard.remove(selected)
+        new_hand = list(hand)
+        new_hand.append(selected)
+        observed_departure = (selected,)
+        choices.add(
+            Outcome(
+                selected,
+                tuple(new_hand),
+                tuple(new_discard),
+                deck,
+                observed_departure,
+            )
+        )
+    return choices
 
 
 def exhaustively_compare() -> dict[str, int]:
