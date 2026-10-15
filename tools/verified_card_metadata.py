@@ -18,12 +18,18 @@ from tools.verified_tera_duplicate_rules import (
     AUDITED_DUPLICATE_TERA_PRINTS,
     normalize_verified_tera_duplicate_rules,
 )
+from tools.verified_evolution_parent_repairs import (
+    CARD_ID as ZOROARK_EVOLUTION_PRINT_ID,
+    normalize_verified_evolution_parent,
+)
 
 # Stable compatibility boundary: all audited corrections are applied with
 # identical ordering in card identity, deck validation, and future consumers.
 AUDITED_CARD_METADATA_IDS = frozenset(KNOWN_STAGE_REPAIRS) | frozenset(
     {TERAPAGOS_TERA_PRINT_ID}
-) | AUDITED_DUPLICATED_RULE_PRINTS | AUDITED_DUPLICATE_TERA_PRINTS
+) | AUDITED_DUPLICATED_RULE_PRINTS | AUDITED_DUPLICATE_TERA_PRINTS | {
+    ZOROARK_EVOLUTION_PRINT_ID
+}
 
 
 def normalize_verified_card_metadata(card: dict[str, Any]) -> dict[str, Any]:
@@ -38,4 +44,5 @@ def normalize_verified_card_metadata(card: dict[str, Any]) -> dict[str, Any]:
     corrected = normalize_verified_stage_metadata(card)
     corrected = normalize_verified_tera_metadata(corrected)
     corrected = normalize_verified_mega_prize_rules(corrected)
-    return normalize_verified_tera_duplicate_rules(corrected)
+    corrected = normalize_verified_tera_duplicate_rules(corrected)
+    return normalize_verified_evolution_parent(corrected)
