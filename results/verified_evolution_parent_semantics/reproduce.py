@@ -3,7 +3,7 @@
 from copy import deepcopy
 from pathlib import Path
 
-from tools.build_expanded_legality_baseline import load_json
+from tools.build_expanded_legality_baseline import gameplay_fingerprint, load_json
 from tools.current_card_semantics import (
     current_semantic_fingerprint,
     normalize_current_card_semantics,
@@ -31,8 +31,8 @@ assert zoroark == raw_snapshot
 assert normalize_verified_evolution_parent(normalized) is normalized
 assert normalize_current_card_semantics(zoroark)["evolvesFrom"] == PARENT
 assert current_semantic_fingerprint(zoroark) == current_semantic_fingerprint(normalized)
-assert current_semantic_fingerprint(zoroark) != current_semantic_fingerprint(
-    {**zoroark, "evolvesFrom": "Hisuian Zorua"}
+assert gameplay_fingerprint(normalized) != gameplay_fingerprint(
+    {**normalized, "evolvesFrom": "Hisuian Zorua"}
 )
 
 other_stage_1 = next(c for c in cards if c["id"] != CARD_ID and "Stage 1" in (c.get("subtypes") or []))
