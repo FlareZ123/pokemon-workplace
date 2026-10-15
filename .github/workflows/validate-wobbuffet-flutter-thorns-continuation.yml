@@ -1,0 +1,24 @@
+name: Validate Wobbuffet Flutter Thorns continuation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "tools/single_source_ability_lock_geometry.py"
+      - "tools/ability_lock_dependency_graph.py"
+      - "results/wobbuffet_flutter_thorns_continuation/**"
+      - ".github/workflows/validate-wobbuffet-flutter-thorns-continuation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Reproduce Wobbuffet versus Flutter timelines
+        run: python results/wobbuffet_flutter_thorns_continuation/reproduce.py
