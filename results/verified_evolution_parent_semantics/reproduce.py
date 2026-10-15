@@ -11,6 +11,9 @@ from tools.current_card_semantics import (
 from tools.verified_evolution_parent_repairs import (
     CARD_ID,
     PARENT,
+    ARCHEN_IDS,
+    ARCHEN_PARENT,
+    ARCHEN_SOURCE_PARENT,
     normalize_verified_evolution_parent,
 )
 
@@ -51,6 +54,45 @@ for changed in (
         raise AssertionError("Unrecognized Zoroark source mutation accepted")
 
 assert len([c for c in cards if c.get("id") == CARD_ID]) == 1
+
+# White Flare fossil's printed title (and Evolves-into-Archen label) supplies
+# an independent official identity witness for the two misspelled parents.
+white_flare = {
+    c["id"]: c
+    for c in load_json(ROOT / "resources" / "cards" / "en" / "rsv10pt5.json")
+}
+fossil = white_flare["rsv10pt5-79"]
+assert fossil["name"] == ARCHEN_PARENT
+assert fossil["supertype"] == "Trainer"
+assert "Item" in fossil["subtypes"]
+assert len(ARCHEN_IDS) == 2
+for card_id in sorted(ARCHEN_IDS):
+    raw = white_flare[card_id]
+    original = deepcopy(raw)
+    assert raw["name"] == "Archen"
+    assert raw["subtypes"] == ["Stage 1"]
+    assert raw["evolvesFrom"] == ARCHEN_SOURCE_PARENT
+    fixed = normalize_verified_evolution_parent(raw)
+    assert fixed["evolvesFrom"] == ARCHEN_PARENT
+    assert normalize_verified_evolution_parent(fixed) is fixed
+    assert normalize_current_card_semantics(raw)["evolvesFrom"] == ARCHEN_PARENT
+    assert current_semantic_fingerprint(raw) == current_semantic_fingerprint(fixed)
+    assert raw == original
+    for invalid in (
+        {**raw, "name": "Archeops"},
+        {**raw, "evolvesFrom": "Plume Fossil"},
+    ):
+        try:
+            normalize_verified_evolution_parent(invalid)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("Archen audit allowed unexpected source data")
+
+assert current_semantic_fingerprint(white_flare["rsv10pt5-50"]) == current_semantic_fingerprint(
+    white_flare["rsv10pt5-131"]
+)
+print("White Flare Archen physical evolution parents: PASS")
 print("30th Celebration Zoroark exact-print evolution parent: PASS")
 print("Raw source parent: missing; verified parent:", normalized["evolvesFrom"])
 print("Current-semantic fingerprint:", current_semantic_fingerprint(zoroark))
