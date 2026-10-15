@@ -42,6 +42,8 @@ Current priority is reproducible full-game headless match evaluation between the
 
 ## Technical research and replication
 
+- **[Dream Ball / Alolan Muk exact opening-Prize allocation](dream_ball_muk_opening_allocation/):** an exact static opening calculation for a hypothetical 14-Basic, singleton-Muk, one-to-four-Dream-Ball deck. With one Dream Ball among the first uniformly awarded Prize, the conditional Basic-valid event is 1.344856%; three tiny decks confirm the formula by exhaustive labeled enumeration. This is an opening allocation prerequisite, not an achievable gameplay rate or match-win estimate.
+
 - **[Alolan Muk versus Iron Thorns ex source precedence](ability_lock_muk_thorns_precedence/):** exact-print shared Ability-lock graph regression shows Bench Muk suppresses Active Thorns Initialization, restoring Rule-Box Evolution Abilities but suppressing Basic support. Stealthy Hood and Jamming Tower change the dependency. Conditional mechanics only, not match-win evidence.
 
 - **[Twinleaf hidden-Prize Quick Ball oracle](tests/twinleaf_hidden_prize_search_oracle/):** exact 52-world Quick Ball plus 104-world Ultra Ball/Mysterious Treasure K0 counterexamples with pinned-native-bot regressions demonstrating Prized Basic foresight. [Manual CI passed](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38608719207); engine match outcomes remain unfit for competitive ranking.
