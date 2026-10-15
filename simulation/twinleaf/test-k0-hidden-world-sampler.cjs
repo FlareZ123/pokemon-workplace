@@ -22,8 +22,9 @@ const {Pokegear30}=load('sets/10-scarlet-and-violet/set-scarlet-and-violet/pokeg
 const {BossOrders}=load('sets/10-scarlet-and-violet/set-paldea-evolved/boss-orders');
 const {RegidragoV}=load('sets/09-sword-and-shield/set-silver-tempest/regidrago-v');
 const {GrassEnergy}=load('sets/06-black-and-white/set-black-and-white/basic-energies');
-const {makeK0HiddenWorldSampler,publicKey,permute}=require('./k0-hidden-world-sampler.cjs');
+const {makeK0HiddenWorldSampler,makeK1HiddenWorldSampler,publicKey,permute}=require('./k0-hidden-world-sampler.cjs');
 const sample=makeK0HiddenWorldSampler(deepClone);
+const sampleK1=makeK1HiddenWorldSampler(deepClone);
 const duplicates=Array.from({length:7},(_,i)=>({fullName:'Grass Energy BRS',id:i+1}));
 assert.deepEqual(permute(duplicates,'same-known-public-state').map(c=>c.id),
   permute([...duplicates].reverse(),'same-known-public-state').map(c=>c.id),
@@ -114,6 +115,45 @@ const bdecisions=hypothetical.map(s=>{
   return bot.decodeNextAction(s)?.constructor.name;
 });
 assert.ok(bdecisions.every(x=>x===bdecisions[0]));
+// K1 is a separate, explicitly authorized information regime: once a player
+// genuinely inspected their deck, Prize composition is known but positions are not.
+const prizeNames=p=>p.prizes.flatMap(slot=>slot.cards.map(c=>c.fullName));
+const observed=w=>prizeNames(w.players[0]);
+const knownDeckWorlds=[source[0],source[1],source[3]].map(s=>sampleK1(s,1,observed(s)));
+assert.ok(knownDeckWorlds.every(w=>
+  JSON.stringify(privateNames(w))===JSON.stringify(privateNames(knownDeckWorlds[0]))),
+'K1 samples must ignore true deck order and the opponent\'s unknown hand allocation');
+const prizeKnown=sampleK1(source[2],1,observed(source[2]));
+const boss=new BossOrders().fullName;
+const inZones=w=>({
+  deck:w.players[0].deck.cards.filter(c=>c.fullName===boss).length,
+  prizes:prizeNames(w.players[0]).filter(name=>name===boss).length
+});
+assert.deepEqual(inZones(knownDeckWorlds[0]),{deck:1,prizes:0});
+assert.deepEqual(inZones(prizeKnown),{deck:0,prizes:1},
+  'K1 must preserve observed Prize composition rather than re-drawing from K0');
+const swapped=world(13,true);
+[swapped.players[0].prizes[0].cards[0],swapped.players[0].prizes[5].cards[0]]=
+  [swapped.players[0].prizes[5].cards[0],swapped.players[0].prizes[0].cards[0]];
+assert.equal(publicView(swapped),publicView(source[2]));
+assert.deepEqual(privateNames(sampleK1(swapped,1,observed(swapped))),privateNames(prizeKnown),
+  'K1 sampling must ignore hidden face-down Prize locations');
+assert.notStrictEqual(prizeKnown.players[0].prizes[0].cards[0],
+  source[2].players[0].prizes[0].cards[0],
+  'K1 must isolate physical Card instances from the authoritative match');
+const originalCard=source[2].players[0].hand.cards[0];
+prizeKnown.players[0].hand.cards[0].addRuntimeTag(CardTag.FUTURE);
+assert.equal(originalCard.hasTag(CardTag.FUTURE),false);
+assert.deepEqual(privateNames(source[2]),original[2],
+  'K1 sample cannot mutate real secret cards');
+source[2].prompts.push({result:undefined});
+assert.throws(()=>sampleK1(source[2],1,observed(source[2])),/unresolved prompt/);
+source[2].prompts.pop();
+assert.throws(()=>sampleK1(source[2],1),/externally recorded/,
+  'K1 sampling cannot silently inspect authoritative Prizes');
+assert.throws(()=>sampleK1(source[2],1,observed(source[0])),/stale or inconsistent/,
+  'K1 tracking must invalidate on unobserved Prize composition changes');
+console.log('[k1-prize-sampler] PASS: observed prize composition, opaque slot positions, opponent privacy, isolated cards');
 console.log('[k0-world-sampler] '+JSON.stringify({pin,worlds:source.length,
   native_oracle_before:['PLAY_CARD_ACTION',null],
   sampled_native_decision:tdecisions[0],
