@@ -44,6 +44,8 @@ Current priority is reproducible full-game headless match evaluation between the
 
 ## Technical research and replication
 
+- **[Wobbuffet versus Flutter Mane under Iron Thorns](wobbuffet_flutter_thorns_continuation/):** exact-print lock graph distinguishes Psychic Wobbuffet's suppression of Iron Thorns and Radiant Eternatus from Flutter Mane's suppression of Thorns alone. Wobbuffet restores established Psychic Underworld Door but cannot simultaneously enable Radiant Eternatus's Dragon-type launch while Active. Stealthy Hood and Jamming Tower are tested. Conditional rules result, not match evidence.
+
 - **[Dream Ball / Alolan Muk exact opening-Prize allocation](dream_ball_muk_opening_allocation/):** an exact static opening calculation for a hypothetical 14-Basic, singleton-Muk, one-to-four-Dream-Ball deck. With one Dream Ball among the first uniformly awarded Prize, the conditional Basic-valid event is 1.344856%; three tiny decks confirm the formula by exhaustive labeled enumeration. This is an opening allocation prerequisite, not an achievable gameplay rate or match-win estimate.
 
 - **[Alolan Muk versus Iron Thorns ex source precedence](ability_lock_muk_thorns_precedence/):** exact-print shared Ability-lock graph regression shows Bench Muk suppresses Active Thorns Initialization, restoring Rule-Box Evolution Abilities but suppressing Basic support. Stealthy Hood and Jamming Tower change the dependency. Conditional mechanics only, not match-win evidence.
