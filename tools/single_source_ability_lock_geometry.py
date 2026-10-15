@@ -46,6 +46,15 @@ INITIALIZATION = AbilityLockProfile(
     excluded_target_tags=frozenset({"Future"}),
 )
 
+MIDNIGHT_FLUTTERING = AbilityLockProfile(
+    name="Midnight Fluttering",
+    print_ids=frozenset({"sv5-78", "sv8pt5-43", "svp-97"}),
+    activation="active",
+    scope="opponent",
+    target_position="active",
+    exempt_print_ids=frozenset({"sv5-78", "sv8pt5-43", "svp-97"}),
+)
+
 BIDE_BARRICADE = AbilityLockProfile(
     name="Bide Barricade",
     print_ids=frozenset({"xy4-36", "g1-RC11"}),
@@ -106,6 +115,7 @@ GARBOTOXIN = AbilityLockProfile(
 PROFILES = (
     POWER_OF_ALCHEMY,
     INITIALIZATION,
+    MIDNIGHT_FLUTTERING,
     BIDE_BARRICADE,
     EMPERORS_EYES,
     NEUTRALIZING_GAS,
