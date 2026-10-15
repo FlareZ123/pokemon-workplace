@@ -1,0 +1,23 @@
+name: Validate eight-Supporter Lumineon frontier
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact research revision
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Use Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce three fully labeled toy oracles and legal 60-card swap
+        run: python -m results.tests.absol_lumineon_any_supporter.reproduce
