@@ -18,7 +18,7 @@ print("resolver counts before assertions:", counts)
 print("historical candidates by name before assertions:", summary["historical_official_candidates_by_name"])
 
 assert counts["same_name_review_pool_prints"] == 4260
-assert counts["exact_fingerprint_candidate_prints"] == 149
+assert counts["exact_fingerprint_candidate_prints"] == 151
 assert counts["historical_official_reprint_candidate_prints"] == 26
 assert counts["historical_official_reprint_candidate_names"] == 8
 assert counts["official_errata_candidate_prints"] == 44
@@ -27,12 +27,12 @@ assert counts["known_non_equivalent_prints"] == 77
 assert counts["known_non_equivalent_names"] == 22
 assert counts["official_semantic_candidate_prints"] == 5
 assert counts["official_semantic_candidate_names"] == 1
-assert counts["semantic_review_prints"] == 3959
-assert counts["high_confidence_candidate_prints"] == 224
-assert counts["exact_fingerprint_trainer_candidate_prints"] == 36
+assert counts["semantic_review_prints"] == 3957
+assert counts["high_confidence_candidate_prints"] == 226
+assert counts["exact_fingerprint_trainer_candidate_prints"] == 38
 assert counts["trainer_same_name_review_pool_prints"] == 168
 assert counts["historical_official_trainer_candidate_prints"] == 25
-assert counts["high_confidence_trainer_candidate_prints"] == 110
+assert counts["high_confidence_trainer_candidate_prints"] == 112
 assert counts["name_wide_trainer_errata_names"] == 15
 
 assert summary["official_semantic_candidates_by_name"] == {"Copycat": 5}
@@ -116,6 +116,8 @@ assert resolver.resolve("ex15-82").kind == "known_non_equivalent"
 assert resolver.resolve("base1-95").kind == "historical_official_reprint_candidate"
 assert resolver.resolve("hgss1-102").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("hgss1-91").kind == "exact_fingerprint_candidate"
+assert resolver.resolve("base1-83").kind == "exact_fingerprint_candidate"
+assert resolver.resolve("base4-112").kind == "exact_fingerprint_candidate"
 assert resolver.resolve("base1-96").kind == "historical_official_reprint_candidate"
 assert resolver.resolve("dp4-99").kind == "official_errata_candidate"
 assert resolver.resolve("ex2-88").kind == "official_errata_candidate"
