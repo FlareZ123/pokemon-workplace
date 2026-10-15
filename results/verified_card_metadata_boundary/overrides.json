@@ -530,6 +530,18 @@
         "after": "Zorua"
       }
     },
+    "rsv10pt5-131": {
+      "evolvesFrom": {
+        "before": "Antiuqe Plume Fossil",
+        "after": "Antique Plume Fossil"
+      }
+    },
+    "rsv10pt5-50": {
+      "evolvesFrom": {
+        "before": "Antiuqe Plume Fossil",
+        "after": "Antique Plume Fossil"
+      }
+    },
     "sv5-108": {
       "rules": {
         "before": [
