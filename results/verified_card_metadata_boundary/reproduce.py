@@ -14,7 +14,7 @@ from tools.verified_stage_metadata_repairs import KNOWN_STAGE_REPAIRS
 from tools.verified_tera_metadata_repairs import CARD_ID as TERAPAGOS_TERA_PRINT_ID
 from tools.verified_mega_prize_rules import AUDITED_DUPLICATED_RULE_PRINTS
 from tools.verified_tera_duplicate_rules import AUDITED_DUPLICATE_TERA_PRINTS
-from tools.verified_evolution_parent_repairs import CARD_ID as ZOROARK_EVOLUTION_PRINT_ID
+from tools.verified_evolution_parent_repairs import AUDITED_EVOLUTION_PARENT_PRINTS
 
 ROOT = Path(__file__).resolve().parents[2]
 subsets = (
@@ -22,13 +22,13 @@ subsets = (
     {TERAPAGOS_TERA_PRINT_ID},
     set(AUDITED_DUPLICATED_RULE_PRINTS),
     set(AUDITED_DUPLICATE_TERA_PRINTS),
-    {ZOROARK_EVOLUTION_PRINT_ID},
+    set(AUDITED_EVOLUTION_PARENT_PRINTS),
 )
-assert list(map(len, subsets)) == [2, 1, 45, 24, 1]
-assert sum(map(len, subsets)) == len(set.union(*subsets)) == len(AUDITED_CARD_METADATA_IDS) == 73
+assert list(map(len, subsets)) == [2, 1, 45, 24, 3]
+assert sum(map(len, subsets)) == len(set.union(*subsets)) == len(AUDITED_CARD_METADATA_IDS) == 75
 
 cards = {}
-for set_id in ("me5", "me2pt5", "me3", "sv5", "sv6", "sv8pt5", "me55"):
+for set_id in ("me5", "me2pt5", "me3", "sv5", "sv6", "sv8pt5", "me55", "rsv10pt5"):
     for card in load_json(ROOT / "resources" / "cards" / "en" / f"{set_id}.json"):
         cards[card["id"]] = card
 
