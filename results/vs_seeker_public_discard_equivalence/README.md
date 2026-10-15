@@ -18,4 +18,6 @@ This is a bounded exhaustive *model* of the relevant transfer and public informa
 
 Run `python -m results.vs_seeker_public_discard_equivalence.reproduce`. The test checks exact four-print card text and calls `tools/vs_seeker_public_discard_equivalence.py`. The Windows workflow `.github/workflows/validate-vs-seeker-public-discard.yml` runs the regression.
 
+**Existing resolver context:** `ex6-100` and `pl3-140` were already classified as `exact_fingerprint_candidate` by `tools/reprint_errata_resolution.py` before this test. The new proof independently validates the public-discard action and information model. It does not change aggregate candidate counts.
+
 **Tournament printing policy remains unresolved for pre-Black & White physical prints.** This analysis establishes action/observation agreement in the modeled public-discard state, and does not independently certify EX Deoxys or Platinum VS Seeker prints as presently admissible for paper Expanded. Distinguish it from the legality of the XY print used as the target.
