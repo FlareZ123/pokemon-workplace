@@ -1,0 +1,23 @@
+name: Validate VS Seeker historical public-discard equivalence
+
+on:
+  push:
+    paths:
+      - "tools/vs_seeker_public_discard_equivalence.py"
+      - "results/vs_seeker_public_discard_equivalence/**"
+      - ".github/workflows/validate-vs-seeker-public-discard.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  model:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Exhaustive VS Seeker public-discard model
+        run: python -m results.vs_seeker_public_discard_equivalence.reproduce
