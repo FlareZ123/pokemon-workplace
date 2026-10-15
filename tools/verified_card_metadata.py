@@ -19,7 +19,7 @@ from tools.verified_tera_duplicate_rules import (
     normalize_verified_tera_duplicate_rules,
 )
 from tools.verified_evolution_parent_repairs import (
-    CARD_ID as ZOROARK_EVOLUTION_PRINT_ID,
+    AUDITED_EVOLUTION_PARENT_PRINTS,
     normalize_verified_evolution_parent,
 )
 
@@ -27,9 +27,7 @@ from tools.verified_evolution_parent_repairs import (
 # identical ordering in card identity, deck validation, and future consumers.
 AUDITED_CARD_METADATA_IDS = frozenset(KNOWN_STAGE_REPAIRS) | frozenset(
     {TERAPAGOS_TERA_PRINT_ID}
-) | AUDITED_DUPLICATED_RULE_PRINTS | AUDITED_DUPLICATE_TERA_PRINTS | {
-    ZOROARK_EVOLUTION_PRINT_ID
-}
+) | AUDITED_DUPLICATED_RULE_PRINTS | AUDITED_DUPLICATE_TERA_PRINTS | AUDITED_EVOLUTION_PARENT_PRINTS
 
 
 def normalize_verified_card_metadata(card: dict[str, Any]) -> dict[str, Any]:
