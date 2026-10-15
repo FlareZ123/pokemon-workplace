@@ -4,12 +4,14 @@ on:
   push:
     paths:
       - "tools/verified_card_metadata.py"
+      - "tools/verified_evolution_parent_repairs.py"
       - "tools/export_verified_card_metadata.py"
       - "simulation/twinleaf/verified-card-metadata.cjs"
       - "simulation/twinleaf/test-verified-card-metadata.cjs"
       - "tools/current_card_semantics.py"
       - "tools/deck_validator.py"
       - "results/verified_card_metadata_boundary/**"
+      - "results/verified_evolution_parent_semantics/**"
       - ".github/workflows/validate-verified-card-metadata-boundary.yml"
   workflow_dispatch:
 
@@ -37,6 +39,8 @@ jobs:
         run: python -m results.verified_mega_prize_rules.reproduce
       - name: Audited duplicated Tera rules
         run: python -m results.verified_tera_duplicate_rules.reproduce
+      - name: Audited Zoroark evolution parent
+        run: python -m results.verified_evolution_parent_semantics.reproduce
       - name: Deck validator
         run: python -m results.deck_validator.reproduce
       - name: Historical reprint resolver
