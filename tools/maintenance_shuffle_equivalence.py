@@ -26,7 +26,6 @@ def historical_actions(
     for selected in combinations(other_hand, 2):
         kept = tuple(card for card in other_hand if card not in selected)
         possible = deck + selected
-        p = Fraction(1, len(possible) * (len(possible) - 1))
         # Uniform shuffle: 1/(n!) for each complete shuffle order.
         p = Fraction(1, 1)
         for i in range(2, len(possible) + 1):
