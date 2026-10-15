@@ -13,5 +13,7 @@ jobs:
           python-version: '3.12'
       - name: Check physical-card oracle and legal first-source gates
         run: python -m results.tests.shadow_rider_k0_first_source.physical_oracle
+      - name: Check first Fog versus two Prize-dependent targets
+        run: python -m results.tests.shadow_rider_k0_first_source.prize_target_witness
       - name: Compare exact observable source policy and K1 upper bound
         run: python -m results.tests.shadow_rider_k0_first_source.reproduce
