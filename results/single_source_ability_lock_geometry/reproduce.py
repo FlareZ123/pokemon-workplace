@@ -39,6 +39,7 @@ def _verify_profiles() -> None:
     expected_names = {
         "Power of Alchemy": "Power of Alchemy",
         "Initialization": "Initialization",
+        "Midnight Fluttering": "Midnight Fluttering",
         "Bide Barricade": "Bide Barricade",
         "Emperor's Eyes": "Emperor's Eyes",
         "Neutralizing Gas": "Neutralizing Gas",
