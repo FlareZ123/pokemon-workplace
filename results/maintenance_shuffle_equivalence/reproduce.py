@@ -4,6 +4,7 @@ from copy import deepcopy
 from pathlib import Path
 
 from tools.build_expanded_legality_baseline import load_json
+from tools.reprint_errata_resolution import build_reprint_resolver
 from tools.maintenance_shuffle_equivalence import exhaustively_compare
 from tools.current_card_semantics import current_semantic_fingerprint, normalize_current_card_semantics
 from tools.maintenance_current_semantics import (
@@ -66,6 +67,12 @@ for card_id in historical:
             raise AssertionError("Unknown old Maintenance source mutation accepted")
 
 assert normalize_historical_maintenance(by_id["xy3-96"]) is by_id["xy3-96"]
+resolver = build_reprint_resolver(ROOT / "resources")
+for print_id in historical:
+    row = resolver.resolve(print_id)
+    assert row.kind == "exact_fingerprint_candidate", (print_id, row)
+    assert "xy3-96" in row.target_print_ids
+    assert "xy12-79" in row.target_print_ids
 assert LEGACY_RULE == by_id["base1-83"]["rules"][0]
 
 summary = exhaustively_compare()
