@@ -77,7 +77,7 @@ def parse_source(html: str) -> list[dict]:
             raise ValueError(f"Duplicate placing {position}; inspect the actual tied rankings")
         seen.add(position)
         if not deck["archetype"] or set(deck["declared"]) != {"pokemon", "trainer", "energy"}:
-            raise ValueError(f"Missing archetype or category for placement {position}")
+            raise ValueError(f"Placement {position}: archetype={deck['archetype']}; categories={list(deck['declared'])}")
         for category, expected in deck["declared"].items():
             actual = sum(card["count"] for card in deck[category])
             if actual != expected:
