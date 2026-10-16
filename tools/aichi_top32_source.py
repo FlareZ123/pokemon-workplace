@@ -34,7 +34,7 @@ def parse_source(html: str) -> list[dict]:
     awaiting_archetype = False
     for line in lines:
         rank_match = RANK.fullmatch(line)
-        if rank_match:
+        if rank_match and "•" not in line:
             if current:
                 entries.append(current)
             current = {"placing": int(rank_match.group(1)),
