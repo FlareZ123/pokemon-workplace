@@ -1,5 +1,6 @@
 name: Validate Maintenance
-on: [push, workflow_dispatch]
+# Manual-only under repository CI budget rule.
+on: workflow_dispatch
 jobs:
   check:
     runs-on: ubuntu-latest
