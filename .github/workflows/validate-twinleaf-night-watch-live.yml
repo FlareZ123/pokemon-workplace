@@ -1,17 +1,7 @@
 name: Validate pinned Twinleaf Night Watch live random hook
 
 on:
-  push:
-    paths:
-      - "simulation/twinleaf/night-watch-random-hook.cjs"
-      - "simulation/twinleaf/tournament-bounded-match.cjs"
-      - "simulation/twinleaf/test-tournament-engine-hooks.cjs"
-      - "simulation/twinleaf/test-night-watch-live-hook.cjs"
-      - "simulation/twinleaf/test-night-watch-real-store.cjs"
-      - "simulation/twinleaf/test-random-hand-source-gaps.cjs"
-      - "simulation/twinleaf/random-hand-single-card-hook.cjs"
-      - "simulation/twinleaf/test-random-hand-single-hook.cjs"
-      - ".github/workflows/validate-twinleaf-night-watch-live.yml"
+  # Manual-only under repository CI budget rule.
   workflow_dispatch:
 
 permissions:
