@@ -6,7 +6,7 @@ from aichi_top32_source import parse_source
 
 class TournamentSourceParserTest(unittest.TestCase):
     def setUp(self):
-        self.html = """<html><h3>1st Player One</h3><span>Control</span>
+        self.html = """<html><span>10th May 2026 • 926 Players</span><h3>1st Player One</h3><span>Control</span>
         <h4>Pokémon (4)</h4><a>4 Iron Thorns ex</a><a>$1.99</a>
         <h4>Trainer (48)</h4><a>48 Example Trainer</a>
         <h4>Energy (8)</h4><a>8 Special Energy</a>
