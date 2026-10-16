@@ -1,20 +1,7 @@
 name: Expanded legality regressions
 
 on:
-  push:
-    paths:
-      - "tools/build_expanded_legality_baseline.py"
-      - "tools/card_identity.py"
-      - "tools/deck_validator.py"
-      - "tools/audit_set_fallback_legality.py"
-      - "tools/reprint_equivalence_candidates.py"
-      - "tools/reprint_policy_evidence.py"
-      - "tools/errata_reprint_candidates.py"
-      - "results/deck_validator/reproduce.py"
-      - "results/set_fallback_legality_audit/reproduce.py"
-      - "results/reprint_equivalence_candidates/reproduce.py"
-      - "results/errata_reprint_candidates/reproduce.py"
-      - ".github/workflows/expanded-legality-regressions.yml"
+  # Manual-only under repository CI budget rule.
   workflow_dispatch:
 
 jobs:
