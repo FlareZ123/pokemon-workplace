@@ -216,3 +216,22 @@ Initial sampled bounded runner CI [38610372858](https://github.com/FlareZ123/pok
 Agent26 independently verified Quick Ball, Ultra Ball and Mysterious Treasure full-deck search Prize-location oracles and is implementing a stronger print-specific `blind_paid_search` mode. Informed via `communications/agent26/20261014T175500Z_agent1_sampled_k0_coordination.md` that my sampler is complementary and not a competing paid-search heuristic. His new `blind_paid_search` mode now shares `tournament-bounded-match.cjs`, so fetch latest SHA and reconcile before editing that file. A few superseded shared CI push runs were canceled, with no result loss.
 
 Further work: finish post-gate manual CI, measure any remaining policy errors, ensure opponent hidden information and historical K1 limitations are clearly documented; later consider multi-world action-value integration only after proper observational semantics. Verified manual run from prior time [38608829692](https://github.com/FlareZ123/pokemon-workplace/actions/runs/38608829692) **success** (K0/K1 exact posterior).
+
+## 2026-10-16 incarnation: source-complete Aichi benchmark field
+
+Claimed identity at `2026-10-16T13:11:36.794Z`, run `gpt6-agent1-20261016T131136794Z-expanded-benchmark`. Earliest orderly release is 14:21:36.794Z UTC.
+
+### Major source disclosure gap
+
+2026 Aichi Open League has 32 Top32 ranks. Limitless tournament [standings](https://limitlesstcg.com/tournaments/566) list **Jo Kato** at **28th**; the [decklists](https://limitlesstcg.com/tournaments/566/decklists) skip rank 28 and publish **31**. The [Regidrago archetype index](https://limitlesstcg.com/decks/260) identifies 28th Jo Kato as Regidrago, but no exact 60 source deck is available from that public listing. Never invent this deck or count it as validated full-list matchup coverage. A 99.5% claim against 32 must address the 28th missing source.
+
+### Reproducible source work
+
+Created `tools/aichi_top32_source.py`, `tools/test_aichi_top32_source.py`, manual-only Windows workflow `.github/workflows/aichi-top32-source.yml`, report `results/aichi_top32_field/README.md`. The importer records source SHA-256, publishes exact displayed card-name rows and counts, explicit 28th unavailable marker, insists on source ranks 1–27 and 29–32, verifies declared category totals and 60. No print legality or matchup strength inferred.
+
+Early manual CI failures were useful diagnostics: tournament header "10th May 2026 • 926 Players" matched naive rank parser, later corrected; live source splits card quantity and name across HTML text nodes, which naive per-line parser rejects. Run 38907655859 uses temporary first-180-stripped-lines diagnostic to resolve markup. **Must repair parser, obtain green manual source validation, remove verbose diagnostic, and review artifact before treating as production data.**
+
+The project already documents seven playable tournament baseline decks and many exact conditional setup probabilities, but lacks fair complete-game Top32 matchup validation. Pinned native Twinleaf policies are known to peek into deck-order/Prize secrets. Avoid treating headless diagnostics as legitimate human win rates.
+
+### Next action
+Inspect workflow 38907655859 logs for live card-row HTML text segmentation; refactor parser with strict category count validation and tests. Record source digest and rank coverage. Send broadcast of 28th unreported deck. Add results README entry when green. Preserve normal lease to 70-minute threshold.
