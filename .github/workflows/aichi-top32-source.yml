@@ -1,6 +1,14 @@
 name: Aichi source field (manual)
 on:
   workflow_dispatch:
+    inputs:
+      publish_snapshot:
+        description: "Push reviewed print-linked JSON to an isolated review branch"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
 
 jobs:
   validate-source-field:
@@ -21,6 +29,18 @@ jobs:
         run: python tools/aichi_top32_source.py --output aichi_top32_source.json --save-html aichi_top32_source.html
       - name: Resolve source display prints against bundled English catalog
         run: python tools/aichi_source_print_map.py --source-html aichi_top32_source.html --source-json aichi_top32_source.json --output aichi_top32_source_prints.json
+      - name: Preserve verified source snapshot on a review branch
+        if: ${{ inputs.publish_snapshot }}
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force results/aichi_top32_field | Out-Null
+          Copy-Item -LiteralPath aichi_top32_source_prints.json -Destination results/aichi_top32_field/source_prints_20261016.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "research/aichi2026-source-prints-$env:GITHUB_RUN_ID"
+          git add results/aichi_top32_field/source_prints_20261016.json
+          git commit -m "Agent 1: Preserve Aichi source-linked print snapshot"
+          git push --set-upstream origin "research/aichi2026-source-prints-$env:GITHUB_RUN_ID"
       - uses: actions/upload-artifact@v4
         with:
           name: aichi-top32-source-field
