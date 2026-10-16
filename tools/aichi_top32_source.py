@@ -137,18 +137,28 @@ def main() -> None:
         for i, line in enumerate(debug_lines[:180]):
             print(f"HTML_TEXT[{i}] = {ascii(line)}")
         raise
-    expected = [placing for placing in range(1, 33) if placing != 28]
+    expected = [placing for placing in range(1, 33) if placing not in {23, 25, 28}]
     observed = [deck["placing"] for deck in decks]
     if observed != expected:
         raise ValueError(f"Unexpected source coverage; expected ranks {expected}, observed {observed}")
     result = {"event": "CL Aichi Open League 2026", "date": "2026-05-10",
               "source": SOURCE_URL, "source_html_sha256": hashlib.sha256(html.encode()).hexdigest(),
               "provenance": "Published source-name rows and quantities, not verified English print IDs",
-              "missing_ranked_opponents": [{"placing": 28, "player": "Jo Kato",
-                                            "archetype": "Regidrago",
-                                            "archetype_source": "https://limitlesstcg.com/decks/260",
-                                            "standing_source": "https://limitlesstcg.com/tournaments/566",
-                                            "source_deck_status": "not_published"}],
+              "missing_ranked_opponents": [
+                  {"placing": 23, "player": "Yuki Ueno", "archetype": "Regidrago",
+                   "archetype_source": "https://limitlesstcg.com/decks/260/results",
+                   "standing_source": "https://limitlesstcg.com/tournaments/566",
+                   "source_deck_status": "not_published"},
+                  {"placing": 25, "player": "Kazuki Kumegawa",
+                   "archetype": "Raichu Electrode Combo",
+                   "archetype_source": "https://limitlesstcg.com/decks/282/results",
+                   "standing_source": "https://limitlesstcg.com/tournaments/566",
+                   "source_deck_status": "not_published"},
+                  {"placing": 28, "player": "Jo Kato", "archetype": "Regidrago",
+                   "archetype_source": "https://limitlesstcg.com/decks/260/results",
+                   "standing_source": "https://limitlesstcg.com/tournaments/566",
+                   "source_deck_status": "not_published"}
+              ],
               "decks": decks}
     save_atomic_locked(args.output, json.dumps(result, ensure_ascii=False, indent=2) + "\n")
     print(f"Verified {len(decks)} published 60-card source decks; source sha256={result['source_html_sha256']}")
