@@ -118,7 +118,13 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     html = args.html.read_text(encoding="utf-8") if args.html else fetch_source()
-    decks = parse_source(html)
+    try:
+        decks = parse_source(html)
+    except ValueError:
+        debug_lines = list(BeautifulSoup(html, "html.parser").stripped_strings)
+        for i, line in enumerate(debug_lines[:180]):
+            print(f"HTML_TEXT[{i}] = {line!r}")
+        raise
     expected = [placing for placing in range(1, 33) if placing != 28]
     observed = [deck["placing"] for deck in decks]
     if observed != expected:
