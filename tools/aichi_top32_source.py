@@ -32,6 +32,7 @@ def parse_source(html: str) -> list[dict]:
     current = None
     section = None
     awaiting_archetype = False
+    pending_qty = None
     for line in lines:
         rank_match = RANK.fullmatch(line)
         if rank_match and "•" not in line:
@@ -43,6 +44,7 @@ def parse_source(html: str) -> list[dict]:
                        "declared": {}}
             section = None
             awaiting_archetype = True
+            pending_qty = None
             continue
         if current is None:
             continue
@@ -52,6 +54,7 @@ def parse_source(html: str) -> list[dict]:
                        "Trainer": "trainer", "Energy": "energy"}[section_match.group(1)]
             current["declared"][section] = int(section_match.group(2))
             awaiting_archetype = False
+            pending_qty = None
             continue
         if awaiting_archetype and line not in {"USD", "EUR"} and not line.startswith("$"):
             if not (line.startswith("Language") or line.startswith("Card versions")):
@@ -65,6 +68,15 @@ def parse_source(html: str) -> list[dict]:
             qty, name = int(card_match.group(1)), card_match.group(2)
             if 1 <= qty <= 60 and not name.startswith(("$", "USD", "EUR")):
                 current[section].append({"count": qty, "name": name})
+                pending_qty = None
+            continue
+        if line.isdecimal() and 1 <= int(line) <= 60:
+            pending_qty = int(line)
+            continue
+        if pending_qty is not None:
+            if not line.startswith(("$", "USD", "EUR")):
+                current[section].append({"count": pending_qty, "name": line})
+            pending_qty = None
     if current:
         entries.append(current)
 
