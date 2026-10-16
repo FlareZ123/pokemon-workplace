@@ -116,7 +116,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--html", type=Path, help="Use saved source HTML rather than fetching")
     parser.add_argument("--output", type=Path, required=True)
-        args = parser.parse_args()
+    args = parser.parse_args()
     html = args.html.read_text(encoding="utf-8") if args.html else fetch_source()
     decks = parse_source(html)
     expected = [placing for placing in range(1, 33) if placing != 28]
@@ -127,6 +127,8 @@ def main() -> None:
               "source": SOURCE_URL, "source_html_sha256": hashlib.sha256(html.encode()).hexdigest(),
               "provenance": "Published source-name rows and quantities, not verified English print IDs",
               "missing_ranked_opponents": [{"placing": 28, "player": "Jo Kato",
+                                            "archetype": "Regidrago",
+                                            "archetype_source": "https://limitlesstcg.com/decks/260",
                                             "standing_source": "https://limitlesstcg.com/tournaments/566",
                                             "source_deck_status": "not_published"}],
               "decks": decks}
