@@ -77,7 +77,7 @@ def parse_source(html: str) -> list[dict]:
             raise ValueError(f"Duplicate placing {position}; inspect the actual tied rankings")
         seen.add(position)
         if not deck["archetype"] or set(deck["declared"]) != {"pokemon", "trainer", "energy"}:
-            raise ValueError(f"Placement {position}: archetype={deck['archetype']}; categories={list(deck['declared'])}")
+            raise ValueError(f"Missing archetype or category for placement {position}: archetype={deck['archetype']}; categories={list(deck['declared'])}")
         for category, expected in deck["declared"].items():
             actual = sum(card["count"] for card in deck[category])
             if actual != expected:
@@ -116,15 +116,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--html", type=Path, help="Use saved source HTML rather than fetching")
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--expected-entries", type=int, default=32)
-    args = parser.parse_args()
+        args = parser.parse_args()
     html = args.html.read_text(encoding="utf-8") if args.html else fetch_source()
     decks = parse_source(html)
-    if len(decks) != args.expected_entries:
-        raise ValueError(f"Expected {args.expected_entries} published lists, got {len(decks)}; review source")
+    expected = [placing for placing in range(1, 33) if placing != 28]
+    observed = [deck["placing"] for deck in decks]
+    if observed != expected:
+        raise ValueError(f"Unexpected source coverage; expected ranks {expected}, observed {observed}")
     result = {"event": "CL Aichi Open League 2026", "date": "2026-05-10",
               "source": SOURCE_URL, "source_html_sha256": hashlib.sha256(html.encode()).hexdigest(),
               "provenance": "Published source-name rows and quantities, not verified English print IDs",
+              "missing_ranked_opponents": [{"placing": 28, "player": "Jo Kato",
+                                            "standing_source": "https://limitlesstcg.com/tournaments/566",
+                                            "source_deck_status": "not_published"}],
               "decks": decks}
     save_atomic_locked(args.output, json.dumps(result, ensure_ascii=False, indent=2) + "\n")
     print(f"Verified {len(decks)} published 60-card source decks; source sha256={result['source_html_sha256']}")
