@@ -128,6 +128,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--html", type=Path, help="Use saved source HTML rather than fetching")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--save-html", type=Path, help="Save the exact public source HTML for print-link auditing")
     args = parser.parse_args()
     html = args.html.read_text(encoding="utf-8") if args.html else fetch_source()
     decks = parse_source(html)
@@ -155,6 +156,8 @@ def main() -> None:
               ],
               "decks": decks}
     save_atomic_locked(args.output, json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+    if args.save_html:
+        save_atomic_locked(args.save_html, html)
     print(f"Verified {len(decks)} published 60-card source decks; source sha256={result['source_html_sha256']}")
     for deck in decks:
         d = deck["declared"]
