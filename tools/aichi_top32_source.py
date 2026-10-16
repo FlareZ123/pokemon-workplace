@@ -123,7 +123,7 @@ def main() -> None:
     except ValueError:
         debug_lines = list(BeautifulSoup(html, "html.parser").stripped_strings)
         for i, line in enumerate(debug_lines[:180]):
-            print(f"HTML_TEXT[{i}] = {line!r}")
+            print(f"HTML_TEXT[{i}] = {ascii(line)}")
         raise
     expected = [placing for placing in range(1, 33) if placing != 28]
     observed = [deck["placing"] for deck in decks]
