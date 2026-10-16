@@ -1,32 +1,7 @@
 name: Twinleaf matchup evidence integrity
 
 on:
-  push:
-    paths:
-      - 'simulation/twinleaf/paired-result-summary.cjs'
-      - 'simulation/twinleaf/paired-score-bounds.cjs'
-      - 'simulation/twinleaf/test-paired-score-bounds.cjs'
-      - 'simulation/twinleaf/matchup-evidence-ledger.cjs'
-      - 'simulation/twinleaf/test-matchup-evidence-ledger.cjs'
-      - 'tools/uncertain_metagame_field.cjs'
-      - 'tools/test-uncertain-metagame-field.cjs'
-      - 'results/tests/aichi_2026_top32_proxy/**'
-      - 'simulation/twinleaf/report-atomic.cjs'
-      - 'simulation/twinleaf/test-report-atomic.cjs'
-      - '.github/workflows/twinleaf-evidence-integrity.yml'
-  pull_request:
-    paths:
-      - 'simulation/twinleaf/paired-result-summary.cjs'
-      - 'simulation/twinleaf/paired-score-bounds.cjs'
-      - 'simulation/twinleaf/test-paired-score-bounds.cjs'
-      - 'simulation/twinleaf/matchup-evidence-ledger.cjs'
-      - 'simulation/twinleaf/test-matchup-evidence-ledger.cjs'
-      - 'tools/uncertain_metagame_field.cjs'
-      - 'tools/test-uncertain-metagame-field.cjs'
-      - 'results/tests/aichi_2026_top32_proxy/**'
-      - 'simulation/twinleaf/report-atomic.cjs'
-      - 'simulation/twinleaf/test-report-atomic.cjs'
-      - '.github/workflows/twinleaf-evidence-integrity.yml'
+  # Manual-only: the repository owner prohibits per-commit workflows.
   workflow_dispatch:
 
 permissions:
